@@ -1,0 +1,37 @@
+All these features should be functional before every release
+----------------------- Teacher Tests -----------------------
+1. Teacher is able to create an account
+2. Teacher is able to log into their account
+3. Teacher is able to create a new class
+4. Teacher is able to view a list of all their classes from the side menu
+5. Teacher is able to access a specfic class & view the students in that class
+6. Teacher is able to share class code with students through messaging, social media, etc.
+7. Teacher is able to remove a student from their class
+8. Teacher is able to view a student's current assignment
+9. Teacher is able to view a student's assignment history
+10. Teacher is able to view a student's average grade
+11. Teacher is able to edit a student's current assignment
+12. Teacher is able to grade a student's current assignment
+13. Teacher is able to change/regrade a previous assignment
+14. Teacher is able to submit a new date's attendance
+15. Teacher is able to view a class's attendance for a specific date
+16. Teacher is able to change a previous date's attendance
+17. Teacher is able to delete a class
+18. Teacher is able to view & edit their profile information
+19. Teacher is able to view the credits screen
+20. Teacher is able to view the privacy policy
+21. Teacher is able to log out
+22. Teacher is able to change their password
+
+----------------------- Student Tests -----------------------
+1. Student is able to create an account
+2. Student is able to log into their account
+3. Student is able to join a new class
+4. Student is able to view all their classes in the side menu
+5. Student is able to view their current assignment within a particular class
+6. Student is able to change the status of their current assignment
+7. Student is able to view a list of their current assignments & their grades
+8. Student is able to view the privacy policy
+9. Student is able to view the credits screen
+10. Student is able to log out
+11. Student is able to change their password

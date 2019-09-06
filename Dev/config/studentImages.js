@@ -1,0 +1,47 @@
+export default {
+    images: [
+        require('assets/images/student-icons/msq1.png'), 
+        require('assets/images/student-icons/msq2.png'), 
+        require('assets/images/student-icons/msq3.png'),
+        require('assets/images/student-icons/msq4.png'),
+        require('assets/images/generic-icons/is-icon-17.png'), 
+        require('assets/images/generic-icons/is-icon-0.png'), 
+        require('assets/images/generic-icons/is-icon-15.png'), 
+        require('assets/images/generic-icons/is-icon-16.png'), 
+        require('assets/images/generic-icons/is-icon-5.png'), 
+        require('assets/images/student-icons/boyc2.png'), //
+        require('assets/images/student-icons/boy1.png'), 
+        require('assets/images/student-icons/boy2.png'),
+        require('assets/images/student-icons/boy3.png'), 
+        require('assets/images/student-icons/boy4.png'), 
+        require('assets/images/student-icons/boyc4.png'), //
+        require('assets/images/student-icons/boyc5.png'), //
+        require('assets/images/student-icons/boy5.png'), 
+        require('assets/images/student-icons/boy6.png'), 
+        require('assets/images/student-icons/boy7.png'), 
+        require('assets/images/student-icons/boy8.png'), 
+        require('assets/images/student-icons/boy9.png'),  
+        require('assets/images/student-icons/boy10.png'), 
+        require('assets/images/student-icons/boy11.png'), 
+        require('assets/images/student-icons/boy12.png'), 
+        require('assets/images/student-icons/girlc3.png'), // 
+        require('assets/images/student-icons/girl1.png'), 
+        require('assets/images/student-icons/girl2.png'), 
+        require('assets/images/student-icons/girl3.png'),
+        require('assets/images/student-icons/girl4.png'), 
+        require('assets/images/student-icons/girl5.png'),  
+        require('assets/images/student-icons/girl6.png'), 
+        require('assets/images/student-icons/girl7.png'), 
+        require('assets/images/student-icons/girl8.png'), 
+        require('assets/images/student-icons/girl9.png'), 
+        require('assets/images/student-icons/girl10.png'),
+        require('assets/images/student-icons/girl11.png'), 
+        require('assets/images/student-icons/girl12.png'), 
+        require('assets/images/student-icons/girl13.png'), 
+        require('assets/images/student-icons/girl14.png'), 
+        require('assets/images/student-icons/girl15.png'),  
+    ],
+    genderNeutralImages: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    maleImages: [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20, 21, 22, 23],
+    femaleImages: [24, 25, 26, 27, 28, 29, 30, 31, 32, 33]
+}

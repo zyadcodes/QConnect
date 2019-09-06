@@ -1,0 +1,6 @@
+framework module Pods_QuranConnect_tvOSTests {
+  umbrella header "Pods-QuranConnect-tvOSTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

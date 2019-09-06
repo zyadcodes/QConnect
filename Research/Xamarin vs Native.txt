@@ -1,0 +1,35 @@
+Xamarin vs Firebase
+
+Xamarin
+-------
+
+	Pros: 
+	-Uses the C# language based on .NET framework
+	-The performance metrics are comparable to those of Java for Android and Objective-C or Swift
+	-Xamarin.Android & Xamarin.iOS provide native-like experiences for the user
+	-Xamarin SDK is open-source
+	-Xamarin.Forms allows for the protoyping of apps to be more integrated
+	-Code sharing between platforms is very easy
+
+	Cons:
+	-Delayed support for the latest technologies released by Android and iOS (as with all non-native languages)
+	-Limited access to open source libraries
+	-Xamarin community members are little, so its difficult to find a community to aid with issues like stack overflow
+	-Larger app size due to associated libraries, content, Mono runtime, and Base Class Library (BCL) assemblies
+	-Compatibility isues with third party services
+	-Very buggy and requires constant rebuilding
+
+
+Native App Development
+----------------------
+
+	Pros:
+	-Uses languages we are familiar with, Java and Swift
+	-Up to date technologies
+	-Performence metrics very high
+	-Libraries fully up to date
+
+	Cons:
+	-No code sharing and application must be developed twice
+	-Developing in swift recquires learning a new language plus investing in a mac
+	-

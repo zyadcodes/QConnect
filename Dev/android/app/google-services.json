@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "613685750998",
+    "firebase_url": "https://quranconnect-4e4bc.firebaseio.com",
+    "project_id": "quranconnect-4e4bc",
+    "storage_bucket": "quranconnect-4e4bc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:613685750998:android:cb3bbf620cd8323c",
+        "android_client_info": {
+          "package_name": "com.yungdevz.quranconnect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "613685750998-v6dmmch83a3i3stvfb0htihdhab0tab8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk8i11x12TauWoCR9FpFdZD6fIkRh1OEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "613685750998-v6dmmch83a3i3stvfb0htihdhab0tab8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "613685750998-fivajubp6arauov4q7pjlaj5o9bkbegm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.yungdevz.quranconnect",
+                "app_store_id": "1459057386"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
