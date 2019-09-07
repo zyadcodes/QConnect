@@ -72,7 +72,7 @@ export class ClassEditScreen extends QcParentScreen {
                 <StudentCard
                   key={index}
                   studentName={item.name}
-                  profilePic={studentImages.images[item.imageId]}
+                  profilePic={studentImages.images[item.profileImageID]}
                   background={colors.white}
                   onPress={() => { }}
                   comp={<Icon
