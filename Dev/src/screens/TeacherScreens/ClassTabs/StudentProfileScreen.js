@@ -208,11 +208,11 @@ class StudentProfileScreen extends QcParentScreen {
 const styles = StyleSheet.create({
   bigText: {
     fontSize: 24,
-    fontFamily: 'regular',
+    fontFamily: 'Montserrat-Regular',
   },
   subText: {
     fontSize: 16,
-    fontFamily: 'regular',
+    fontFamily: 'Montserrat-Regular',
     color: colors.primaryDark
   },
   ratingDescText: {
@@ -222,13 +222,13 @@ const styles = StyleSheet.create({
   },
   assignmentTextSmall: {
     fontSize: 14,
-    fontFamily: 'regular',
+    fontFamily: 'Montserrat-Regular',
     color: colors.black,
     paddingTop: 2
   },
   assignmentTextLarge: {
     fontSize: 20,
-    fontFamily: 'regular',
+    fontFamily: 'Montserrat-Regular',
     color: colors.darkGrey,
     paddingLeft: 10,
     paddingRight: 2,
@@ -237,24 +237,24 @@ const styles = StyleSheet.create({
   },
   ratingText: {
     fontSize: 24,
-    fontFamily: 'regular',
+    fontFamily: 'Montserrat-Regular',
     color: colors.darkGrey,
     marginLeft: 10,
   },
   notesText: {
     fontSize: 14,
-    fontFamily: 'regular',
+    fontFamily: 'Montserrat-Regular',
     color: colors.black
   },
   assignmentActionText: {
     fontSize: 16,
-    fontFamily: 'regular',
+    fontFamily: 'Montserrat-Regular',
     color: colors.primaryDark,
     paddingLeft: 10,
     paddingRight: 10,
   },
   prevAssignmentTitleText: {
-    fontFamily: 'regular',
+    fontFamily: 'Montserrat-Regular',
     fontSize: 19,
     flex: 1,
     paddingLeft: 2
