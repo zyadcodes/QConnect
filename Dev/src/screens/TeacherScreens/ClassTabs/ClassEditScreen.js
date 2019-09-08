@@ -10,6 +10,7 @@ import ImageSelectionModal from 'components/ImageSelectionModal';
 import ImageSelectionRow from 'components/ImageSelectionRow';
 import QcParentScreen from "screens/QcParentScreen";
 import FirebaseFunctions from 'config/FirebaseFunctions';
+import LoadingSpinner from 'components/LoadingSpinner';
 
 export class ClassEditScreen extends QcParentScreen {
 
@@ -75,7 +76,23 @@ export class ClassEditScreen extends QcParentScreen {
   //This method adds a student manually without them actually having to have a profile
   async addManualStudent() {
 
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, newStudentName: '' });
+
+    //First pushes the manual student to the firebase database
+    const { newStudentName, profileImageID } = this.state;
+    const newStudent = await FirebaseFunctions.addManualStudent(newStudentName, profileImageID, this.state.classID);
+
+    //Appends the student to the current state
+    let newArrayOfStudents = this.state.students;
+    newArrayOfStudents.push(newStudent);
+
+    //Sets the new state
+    this.setState({
+      isLoading: false,
+      students: newArrayOfStudents
+    });
+
+    return 0;
 
   }
 
@@ -97,7 +114,7 @@ export class ClassEditScreen extends QcParentScreen {
   // ------- Render method: Main entry to render the screen's UI ------------------
 
   render() {
-    const { students, classID } = this.state;
+    const { classID, students } = this.state;
 
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -167,19 +184,23 @@ export class ClassEditScreen extends QcParentScreen {
                 selectedImageIndex={this.state.profileImageID}
               />
             </View>
-            <View style={{ flex: 1.3, justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ flex: 2, justifyContent: 'flex-end', alignItems: 'center' }}>
               <QcActionButton
                 text={strings.AddStudent}
-                onPress={() => {
+                onPress={async () => {
                   FirebaseFunctions.logEvent('TEACHER_ADD_STUDENT_MANUAL');
-                  this.addManualStudent();
+                  await this.addManualStudent();
                 }} />
             </View>
+          </View>
+          <View style={{ flex: 0.5 }}>
+            <LoadingSpinner isVisible={this.state.isLoading} />
           </View>
           <ScrollView style={styles.flatList}>
             <FlatList
               data={students}
               keyExtractor={(item, index) => item.id}
+              extraData={this.state}
               renderItem={({ item, index }) => (
                 <StudentCard
                   key={index}
@@ -236,7 +257,7 @@ const styles = StyleSheet.create({
   shareCodeContainer: {
     flexDirection: "column",
     backgroundColor: colors.white,
-    flex: 2,
+    flex: 2.5,
     alignItems: 'center',
   },
 });

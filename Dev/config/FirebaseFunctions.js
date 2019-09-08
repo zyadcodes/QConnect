@@ -345,18 +345,20 @@ export default class FirebaseFunctions {
             return -1;
         }
 
+        const studentObject = {
+            ID: studentID,
+            assignmentHistory: [],
+            attendanceHistory: {},
+            averageRating: 0,
+            currentAssignment: 'None',
+            isReady: true,
+            profileImageID: student.profileImageID,
+            name: student.name,
+            totalAssignments: 0
+        }
+
         await this.updateClassObject(classID, {
-            students: firebase.firestore.FieldValue.arrayUnion({
-                ID: studentID,
-                assignmentHistory: [],
-                attendanceHistory: {},
-                averageRating: 0,
-                currentAssignment: 'None',
-                isReady: true,
-                profileImageID: student.profileImageID,
-                name: student.name,
-                totalAssignments: 0
-            })
+            students: firebase.firestore.FieldValue.arrayUnion(studentObject)
         });
 
         await this.updateStudentObject(studentID, {
@@ -365,9 +367,39 @@ export default class FirebaseFunctions {
         });
         this.logEvent("JOIN_CLASS");
 
-        return 0;
+        return studentObject;
 
     }
+
+    //This function will be responsible for adding a student manually from a teacher's side. It will
+    //create a student object in the database & link it to the class like it would a normal student.
+    //The only difference here is that an account will not be created/associated with this student
+    //object. Additionally, it will have a property called "isManual" that indicates that this is a manual
+    //object, and not an actual student account. The function will take in a student name & a profile pic
+    //& a class ID and will return the newly created student object. (the class version)
+    static async addManualStudent(name, profileImageID, classID) {
+
+        const studentObject = {
+            classes: [classID],
+            currentClassID: classID,
+            emailAddress: "",
+            name,
+            phoneNumber: '',
+            profileImageID,
+            isManual: true
+        }
+        const studentAdded = await this.students.add(studentObject);
+        const studentID = studentAdded.id;
+        await this.updateStudentObject(studentID, {
+            ID: studentID
+        });
+        const student = await this.getStudentByID(studentID);
+        const finalObject = await this.joinClass(student, classID);
+
+        return finalObject;
+
+    }
+
 
     //This function will take in a student ID & a class ID and remove the connection between that student
     //and the class 
