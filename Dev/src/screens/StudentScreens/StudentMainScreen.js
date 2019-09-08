@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
         flex: 3
     },
     studentNameStyle: {
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
         fontSize: 18,
         color: colors.black,
     },
@@ -384,12 +384,12 @@ const styles = StyleSheet.create({
     },
     notesText: {
         fontSize: 14,
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
         color: colors.black
     },
     subText: {
         fontSize: 16,
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
         color: colors.primaryDark
     },
     corner: {
@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     prevAssignmentTitleText: {
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
         fontSize: 19,
         flex: 1,
         paddingLeft: 2
@@ -422,11 +422,11 @@ const styles = StyleSheet.create({
     },
     bigText: {
         fontSize: 24,
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
     },
     subText: {
         fontSize: 16,
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
         color: colors.primaryDark
     },
     ratingDescText: {
@@ -436,13 +436,13 @@ const styles = StyleSheet.create({
     },
     assignmentTextSmall: {
         fontSize: 14,
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
         color: colors.black,
         paddingTop: 2
     },
     assignmentTextLarge: {
         fontSize: 20,
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
         color: colors.darkGrey,
         paddingLeft: 10,
         paddingRight: 2,
@@ -451,7 +451,7 @@ const styles = StyleSheet.create({
     },
     ratingText: {
         fontSize: 24,
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
         color: colors.darkGrey,
         marginLeft: 10,
     },

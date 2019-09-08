@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     modalTitle: {
         fontSize: 16,
         marginVertical: 10,
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
         color: colors.darkGrey
     }
 });

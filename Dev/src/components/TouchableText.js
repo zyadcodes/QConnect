@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
     }
 });
 

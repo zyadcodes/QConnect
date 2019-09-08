@@ -107,11 +107,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginLeft: 7,
         marginTop: 30,
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
         backgroundColor: colors.white
     },
     textStyle: {
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
         fontSize: 20,
         color: colors.black,
         marginLeft: 20
