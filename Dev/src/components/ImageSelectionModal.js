@@ -12,9 +12,7 @@ import colors from 'config/colors'
 //---------------------------------------------------------------
 export default class ImageSelectionModal extends Component {
 
-    //log event and dispatch image selection event to screen
     onImageSelected(index) {
-
         this.props.onImageSelected(index);
     }
 
@@ -54,7 +52,6 @@ ImageSelectionModal.propTypes = {
     cancelText: PropTypes.string.isRequired,
     setModalVisible: PropTypes.func.isRequired,
     onImageSelected: PropTypes.func.isRequired,
-    screen: PropTypes.string.isRequired,
 }
 
 //Styles for the Teacher profile class
