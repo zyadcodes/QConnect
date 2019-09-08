@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     confirmationMessage: {
         fontSize: 16,
         marginVertical: 10,
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
         color: colors.darkGrey
     },
     modal: {

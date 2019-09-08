@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginLeft: 7,
         marginTop: 10,
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
     },
     removeStudentStyle: {
         flexWrap: 'wrap',
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     infoStyle: {
         flexDirection: 'column',
         justifyContent: 'center',
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
         flex: 1
     },
     profilePicStyle: {
@@ -90,13 +90,13 @@ const styles = StyleSheet.create({
         marginLeft: 20
     },
     studentNameStyle: {
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
         fontSize: 20,
         color: colors.black,
         marginLeft: 20
     },
     assignmentStyle: {
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
         fontSize: 16,
         color: colors.darkGrey,
         marginLeft: 20

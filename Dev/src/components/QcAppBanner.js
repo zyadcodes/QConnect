@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     titleText: {
         color: colors.primaryDark,
         fontSize: 30,
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     subtitleText: {
         color: colors.darkGrey,
         fontSize: 12,
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',

@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color: colors.primaryDark,
-    fontFamily: 'regular',
+    fontFamily: 'Montserrat-Regular',
   },
   textStyleNoFont: {
     color: colors.primaryDark,

@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     titleStyle: {
         fontSize: 22,
         color: colors.primaryDark,
-        fontFamily: 'regular',
+        fontFamily: 'Montserrat-Regular',
     },
     leftText: {
         fontSize: 15,
