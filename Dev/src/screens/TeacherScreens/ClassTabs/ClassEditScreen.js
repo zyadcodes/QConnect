@@ -199,7 +199,7 @@ export class ClassEditScreen extends QcParentScreen {
           <ScrollView style={styles.flatList}>
             <FlatList
               data={students}
-              keyExtractor={(item, index) => item.id}
+              keyExtractor={(item, index) => item.ID}
               extraData={this.state}
               renderItem={({ item, index }) => (
                 <StudentCard
