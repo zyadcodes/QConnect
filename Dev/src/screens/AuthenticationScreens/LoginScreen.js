@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, ImageBackground, Dimensions, StyleSheet, Alert } from 'react-native';
-import Form from './Form';
-import ButtonSubmit from './ButtonSubmit';
-import SignupSection from './SignupSection';
+import Form from 'components/Form';
+import ButtonSubmit from 'components/ButtonSubmit';
+import SignupSection from 'components/SignupSection';
 import QcAppBanner from 'components/QcAppBanner';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import strings from "config/strings";

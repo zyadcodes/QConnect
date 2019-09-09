@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { StyleSheet, KeyboardAvoidingView, View, TouchableOpacity, Image } from 'react-native';
 
 import UserInput from 'components/UserInput';
-import usernameImg from '../images/username.png';
-import passwordImg from '../images/password.png';
-import eyeImg from '../images/eye_black.png';
+import usernameImg from '../screens/images/username.png';
+import passwordImg from '..screens/images/password.png';
+import eyeImg from '..screens/images/eye_black.png';
 
 export default class Form extends Component {
   constructor(props) {
