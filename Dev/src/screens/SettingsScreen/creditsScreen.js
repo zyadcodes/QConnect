@@ -6,6 +6,7 @@ import strings from 'config/strings';
 import QcParentScreen from "screens/QcParentScreen";
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
 
 export default class CreditsScreen extends QcParentScreen {
 
@@ -18,7 +19,7 @@ export default class CreditsScreen extends QcParentScreen {
     render() {
 
         return (
-            <QCView style={styles.container}>
+            <QCView style={screenStyle.container}>
                 <ScrollView style={styles.creditsContainer} contentContainerStyle={{}}>
                     <Text style={{ marginTop: 10, }}>{strings.FirstScreenImageCredits}</Text>
                     <Text style={{ marginTop: 10, color: 'blue' }} onPress={() => {

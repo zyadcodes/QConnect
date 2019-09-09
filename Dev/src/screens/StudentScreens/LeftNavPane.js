@@ -15,6 +15,7 @@ import QcActionButton from 'components/QcActionButton';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
 
 class LeftNavPane extends QcParentScreen {
 
@@ -82,10 +83,9 @@ class LeftNavPane extends QcParentScreen {
         const studentImageId = profileImageID;
 
         return (
-            <QCView style={{ flex: 1, backgroundColor: colors.lightGrey }}>
+            <QCView style={screenStyle.container}>
                 <ScrollView>
                     <SafeAreaView
-                        style={styles.container}
                         forceInset={{ top: "always", horizontal: "never" }}>
                         <View
                             style={{

@@ -12,6 +12,7 @@ import TopBanner from 'components/TopBanner';
 import LeftNavPane from '../LeftNavPane';
 import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
 
 export class AddClassScreen extends QcParentScreen {
 
@@ -109,9 +110,9 @@ export class AddClassScreen extends QcParentScreen {
   render() {
     if (this.state.isLoading === true) {
       return (
-        <QCView style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+        <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
           <LoadingSpinner isVisible={true} />
-        </QCView>
+        </View>
       )
     }
     return (
@@ -121,9 +122,8 @@ export class AddClassScreen extends QcParentScreen {
         classes={this.state.classes}
         edgeHitWidth={0}
         navigation={this.props.navigation} />}>
-        <QCView style={styles.container}>
-          <View
-            style={styles.container}>
+        <QCView style={screenStyle.container}>
+          <View>
             <TopBanner
               LeftIconName="navicon"
               LeftOnPress={() => this.setState({ isOpen: true })}

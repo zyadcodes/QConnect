@@ -13,6 +13,7 @@ import FadeInView from "../../components/FadeInView";
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import { Icon } from 'react-native-elements';
 import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
 
 
 export class StudentWelcomeScreen extends QcParentScreen {
@@ -168,8 +169,8 @@ export class StudentWelcomeScreen extends QcParentScreen {
 
     return (
       <ScrollView>
-        <QCView style={styles.container}>
-          <View style={styles.container}>
+        <QCView style={screenStyle.container}>
+          <View>
             <ImageSelectionModal
               visible={this.state.modalVisible}
               images={studentImages.images}

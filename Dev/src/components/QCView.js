@@ -4,7 +4,8 @@
 //color and everything
 import React from 'react';
 import { View, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import screenStyle from 'config/screenStyle';
 
 //Creates the higher order component
 const QCViewHOC = (Comp) => {
@@ -13,10 +14,7 @@ const QCViewHOC = (Comp) => {
             <KeyboardAwareScrollView
                 resetScrollToCoords={{ x: 0, y: 0 }}
                 scrollEnabled={true}
-                contentContainerStyle={{
-                    flexDirection: 'column',
-                    flex: 1
-                }}
+                contentContainerStyle={screenStyle.container}
                 extraScrollHeight={5}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}>

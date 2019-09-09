@@ -12,6 +12,7 @@ import QcParentScreen from "screens/QcParentScreen";
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
 
 export class ClassEditScreen extends QcParentScreen {
 
@@ -118,7 +119,7 @@ export class ClassEditScreen extends QcParentScreen {
     const { classID, students } = this.state;
 
     return (
-      <QCView style={styles.container}>
+      <QCView style={screenStyle.container}>
         <ImageSelectionModal
           visible={this.state.modalVisible}
           images={studentImages.images}

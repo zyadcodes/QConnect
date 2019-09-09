@@ -9,6 +9,7 @@ import AssignmentEntryComponent from 'components/AssignmentEntryComponent';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
 
 class StudentProfileScreen extends QcParentScreen {
 
@@ -86,14 +87,14 @@ class StudentProfileScreen extends QcParentScreen {
     //If the screen is loading, a spinner will display
     if (isLoading === true) {
       return (
-        <QCView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <LoadingSpinner isVisible={true} />
-        </QCView>
+        </View>
       )
     }
 
     return (
-      <QCView style={styles.container}>
+      <QCView style={screenStyle.container}>
 
         <AssignmentEntryComponent
           visible={this.state.isDialogVisible}

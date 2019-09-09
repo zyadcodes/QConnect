@@ -13,6 +13,7 @@ import FadeInView from "../../components/FadeInView";
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import { Input, Icon } from 'react-native-elements';
 import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
 
 const initialState = {
   authCode: '',
@@ -180,7 +181,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   render() {
 
     return (
-      <QCView style={styles.container}>
+      <QCView style={screenStyle.container}>
         <ScrollView>
           <View>
             <ImageSelectionModal

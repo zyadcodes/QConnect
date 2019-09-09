@@ -14,6 +14,7 @@ import LeftNavPane from '../LeftNavPane';
 import TopBanner from 'components/TopBanner';
 import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
 
 export class ClassAttendanceScreen extends QcParentScreen {
 
@@ -90,9 +91,9 @@ export class ClassAttendanceScreen extends QcParentScreen {
 
         if (this.state.isLoading === true) {
             return (
-                <QCView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <LoadingSpinner isVisible={true} />
-                </QCView>
+                </View>
             )
         }
 
@@ -105,7 +106,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
                     classes={this.state.classes}
                     edgeHitWidth={0}
                     navigation={this.props.navigation} />}>
-                    <QCView style={styles.container}>
+                    <QCView style={screenStyle.container}>
                         <View style={{ flex: 1 }}>
                             <View>
                                 <TopBanner
@@ -164,7 +165,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
                 classes={this.state.classes}
                 edgeHitWidth={0}
                 navigation={this.props.navigation} />}>
-                <QCView style={styles.container}>
+                <QCView style={screenStyle.container}>
                     <ScrollView>
                         <View style={styles.saveAttendance}>
                             <DatePicker

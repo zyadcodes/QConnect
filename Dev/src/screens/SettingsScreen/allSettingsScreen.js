@@ -11,6 +11,7 @@ import StudentLeftNavPane from '../StudentScreens/LeftNavPane';
 import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
 import TopBanner from 'components/TopBanner';
+import screenStyle from 'config/screenStyle';
 
 export default class AllSettingsScreen extends QcParentScreen {
 
@@ -29,7 +30,7 @@ export default class AllSettingsScreen extends QcParentScreen {
     render() {
 
         const content = (
-            <QCView style={styles.container}>
+            <QCView style={screenStyle.container}>
                 <TopBanner
                     LeftIconName="navicon"
                     LeftOnPress={() => this.setState({ isOpen: true })}

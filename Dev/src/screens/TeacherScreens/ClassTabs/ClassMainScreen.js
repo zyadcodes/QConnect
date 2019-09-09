@@ -12,6 +12,7 @@ import TopBanner from 'components/TopBanner';
 import LeftNavPane from '../LeftNavPane';
 import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
 
 export class ClassMainScreen extends QcParentScreen {
 
@@ -49,9 +50,9 @@ export class ClassMainScreen extends QcParentScreen {
     const { isLoading, teacher, userID, currentClass, currentClassID } = this.state;
     if (isLoading === true) {
       return (
-        <QCView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <LoadingSpinner isVisible={true} />
-        </QCView>
+        </View>
       )
     }
     //---------------------------------no class state---------------------------------
@@ -63,7 +64,7 @@ export class ClassMainScreen extends QcParentScreen {
           classes={this.state.classes}
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
-          <QCView style={styles.container}>
+          <QCView style={screenStyle.container}>
             <View style={{ flex: 1 }}>
               <View>
                 <TopBanner
@@ -128,7 +129,7 @@ export class ClassMainScreen extends QcParentScreen {
           classes={this.state.classes}
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
-          <QCView style={styles.container}>
+          <QCView style={screenStyle.container}>
             <View style={{ flex: 1 }}>
               <View>
                 <TopBanner
@@ -187,7 +188,7 @@ export class ClassMainScreen extends QcParentScreen {
           classes={this.state.classes}
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
-          <QCView style={styles.container}>
+          <QCView style={screenStyle.container}>
             <ScrollView>
               <View>
                 <TopBanner

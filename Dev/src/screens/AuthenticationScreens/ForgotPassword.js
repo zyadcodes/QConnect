@@ -6,6 +6,7 @@ import colors from 'config/colors';
 import QcActionButton from 'components/QcActionButton';
 import { Alert } from 'react-native';
 import FirebaseFunctions from 'config/FirebaseFunctions';
+import screenStyle from 'config/screenStyle';
 
 class ForgotPassword extends Component {
 
@@ -24,7 +25,7 @@ class ForgotPassword extends Component {
 
     render() {
         return (
-            <QCView style={styles.container}>
+            <QCView style={screenStyle.container}>
                     <View style={{ flex: 1 }}></View>
                     <View style={{ flex: 1 }}>
                         <Text style={styles.header}>{strings.RecoverYourPassword}</Text>

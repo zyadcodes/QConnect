@@ -11,6 +11,7 @@ import TopBanner from 'components/TopBanner';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
 
 
 export class EvaluationPage extends QcParentScreen {
@@ -132,9 +133,9 @@ export class EvaluationPage extends QcParentScreen {
   render() {
     if (isLoading === true) {
       return (
-        <QCView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <LoadingSpinner isVisible={true} />
-        </QCView>
+        </View>
       )
     }
     const { notes, improvementAreas, readOnly, rating, classID, studentID, classStudent, assignmentName, isLoading, studentObject } = this.state;
@@ -144,7 +145,7 @@ export class EvaluationPage extends QcParentScreen {
       //----- outer view, gray background ------------------------
       //Makes it so keyboard is dismissed when clicked somewhere else
 
-      <QCView style={styles.container}>
+      <QCView style={screenStyle.container}>
         <ScrollView>
           {this.props.navigation.state.params.newAssignment === true ? <TopBanner
             LeftIconName="angle-left"
