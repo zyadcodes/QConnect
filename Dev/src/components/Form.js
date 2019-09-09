@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, KeyboardAvoidingView, View, TouchableOpacity, Image } from 'react-native';
-
+import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import UserInput from 'components/UserInput';
-import usernameImg from '../images/username.png';
-import passwordImg from '../images/password.png';
-import eyeImg from '../images/eye_black.png';
+import usernameImg from '../screens/images/username.png';
+import passwordImg from '../screens/images/password.png';
+import eyeImg from '../screens/images/eye_black.png';
 
 export default class Form extends Component {
   constructor(props) {
@@ -24,16 +23,18 @@ export default class Form extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        <UserInput
-          source={usernameImg}
-          placeholder="Username"
-          autoCapitalize={'none'}
-          returnKeyType={'done'}
-          autoCorrect={false}
-          onChangeText={this.props.onUserNameChange}
-        />
-        <View style={styles.container}>
+      <View style={styles.container}>
+        <View style={{ flex: 1 }}>
+          <UserInput
+            source={usernameImg}
+            placeholder="Username"
+            autoCapitalize={'none'}
+            returnKeyType={'done'}
+            autoCorrect={false}
+            onChangeText={this.props.onUserNameChange}
+          />
+        </View>
+        <View style={{ flex: 1 }}>
           <UserInput
             source={passwordImg}
             secureTextEntry={this.state.showPass}
@@ -50,14 +51,13 @@ export default class Form extends Component {
             <Image source={eyeImg} style={styles.iconEye} />
           </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
   },
   btnEye: {

@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { View, ImageBackground, Dimensions, StyleSheet, Alert } from 'react-native';
-import Form from './Form';
-import ButtonSubmit from './ButtonSubmit';
-import SignupSection from './SignupSection';
+import Form from 'components/Form';
+import ButtonSubmit from 'components/ButtonSubmit';
+import SignupSection from 'components/SignupSection';
 import QcAppBanner from 'components/QcAppBanner';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import strings from "config/strings";
 import colors from "config/colors";
 import LoadingSpinner from 'components/LoadingSpinner';
+import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -91,37 +93,42 @@ class LoginScreen extends Component {
 
     if (this.state.isLoading === true) {
       return (
-        <View style={{ flex: 1 }}>
+        <QCView style={screenStyle.container}>
           <ImageBackground source={BG_IMAGE} style={styles.bgImage}>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               <LoadingSpinner isVisible={true} />
             </View>
           </ImageBackground>
-        </View>
+        </QCView>
       )
     }
     return (
-      <View style={{ flex: 1 }}>
+      <QCView style={screenStyle.container}>
         <ImageBackground source={BG_IMAGE} style={styles.bgImage}>
-          <View style={{ flex: 3 }} />
-
-          <QcAppBanner />
-          <View style={{ flex: 1 }} />
-          <Form
-            onUserNameChange={this.onUserNameChange.bind(this)}
-            onPwChange={this.onPwChange.bind(this)}
-          />
-          <ButtonSubmit
-            text={strings.Login}
-            onSubmit={this.signIn.bind(this)}
-            navigation={this.props.navigation}
-            screen="LoginScreen" />
-          <SignupSection
-            onCreateAccount={this.onCreateAccount.bind(this)}
-            onForgotPassword={this.onForgotPassword.bind(this)}
-          />
+          <View style={{ flex: 4, justifyContent: 'center' }}>
+            <QcAppBanner />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Form
+              onUserNameChange={this.onUserNameChange.bind(this)}
+              onPwChange={this.onPwChange.bind(this)}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <ButtonSubmit
+              text={strings.Login}
+              onSubmit={this.signIn.bind(this)}
+              navigation={this.props.navigation}
+              screen="LoginScreen" />
+          </View>
+          <View style={{ flex: 0.5, justifyContent: 'flex-start' }}>
+            <SignupSection
+              onCreateAccount={this.onCreateAccount.bind(this)}
+              onForgotPassword={this.onForgotPassword.bind(this)}
+            />
+          </View>
         </ImageBackground>
-      </View>
+      </QCView>
     );
   }
 }

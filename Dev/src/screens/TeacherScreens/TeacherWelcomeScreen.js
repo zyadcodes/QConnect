@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Image, Text, TouchableWithoutFeedback, TouchableOpacity, KeyboardAvoidingView, Keyboard, Alert, Modal, ScrollView, LayoutAnimation, Platform } from "react-native";
+import { StyleSheet, View, Image, Text, TouchableWithoutFeedback, TouchableOpacity, Keyboard, Alert, Modal, ScrollView, LayoutAnimation, Platform } from "react-native";
 import QcActionButton from "components/QcActionButton";
 import Toast, { DURATION } from "react-native-easy-toast";
 import colors from "config/colors";
@@ -11,7 +11,9 @@ import strings from "config/strings";
 import QcParentScreen from "screens/QcParentScreen";
 import FadeInView from "../../components/FadeInView";
 import FirebaseFunctions from 'config/FirebaseFunctions';
-import { Input, Icon } from 'react-native-elements'
+import { Input, Icon } from 'react-native-elements';
+import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
 
 const initialState = {
   authCode: '',
@@ -179,75 +181,73 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   render() {
 
     return (
-      <View><ScrollView>
-        <KeyboardAvoidingView style={styles.container} behavior="padding">
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <View style={styles.container}>
-              <ImageSelectionModal
-                visible={this.state.modalVisible}
+      <QCView style={screenStyle.container}>
+        <ScrollView>
+          <View>
+            <ImageSelectionModal
+              visible={this.state.modalVisible}
+              images={teacherImages.images}
+              cancelText={strings.Cancel}
+              setModalVisible={this.setModalVisible.bind(this)}
+              onImageSelected={this.onImageSelected.bind(this)}
+              screen={this.name}
+            />
+
+            <View style={styles.picContainer}>
+              <View style={{ flex: 1, alignSelf: 'flex-start', flexDirection: 'row' }}>
+                <View style={{ flex: 0.25 }}></View>
+                <TouchableOpacity style={{ flex: 1, alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
+                  <Icon
+                    name={'angle-left'}
+                    type="font-awesome" />
+                </TouchableOpacity>
+                <View style={{ flex: 3 }}></View>
+              </View>
+              <View style={{ flex: 10 }}>
+                <FadeInView
+                  style={{ alignItems: 'center', justifyContent: 'center' }}>
+                  <Image
+                    style={styles.welcomeImage}
+                    source={require("assets/images/salam.png")}
+                  />
+                  <Text style={styles.quote}>{strings.TeacherWelcomeMessage}</Text>
+                </FadeInView>
+              </View>
+
+            </View>
+            <View style={styles.editInfo} behavior="padding">
+              <TeacherInfoEntries
+                name={this.state.name}
+                phoneNumber={this.state.phoneNumber}
+                emailAddress={this.state.emailAddress}
+                password={this.state.password}
+                onNameChanged={this.onNameChanged}
+                onPhoneNumberChanged={this.onPhoneNumberChanged}
+                onEmailAddressChanged={this.onEmailAddressChanged}
+                showPasswordField={true}
+                onPasswordChanged={this.onPasswordChanged}
+              />
+              <ImageSelectionRow
                 images={teacherImages.images}
-                cancelText={strings.Cancel}
-                setModalVisible={this.setModalVisible.bind(this)}
+                highlightedImagesIndices={this.state.highlightedImagesIndices}
                 onImageSelected={this.onImageSelected.bind(this)}
+                onShowMore={() => this.setModalVisible(true)}
+                selectedImageIndex={this.state.profileImageId}
                 screen={this.name}
               />
-
-              <View style={styles.picContainer}>
-                <View style={{ flex: 1, alignSelf: 'flex-start', flexDirection: 'row' }}>
-                  <View style={{ flex: 0.25 }}></View>
-                  <TouchableOpacity style={{ flex: 1, alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
-                    <Icon
-                      name={'angle-left'}
-                      type="font-awesome" />
-                  </TouchableOpacity>
-                  <View style={{ flex: 3 }}></View>
-                </View>
-                <View style={{ flex: 10 }}>
-                  <FadeInView
-                    style={{ alignItems: 'center', justifyContent: 'center' }}>
-                    <Image
-                      style={styles.welcomeImage}
-                      source={require("assets/images/salam.png")}
-                    />
-                    <Text style={styles.quote}>{strings.TeacherWelcomeMessage}</Text>
-                  </FadeInView>
-                </View>
-
-              </View>
-              <View style={styles.editInfo} behavior="padding">
-                <TeacherInfoEntries
-                  name={this.state.name}
-                  phoneNumber={this.state.phoneNumber}
-                  emailAddress={this.state.emailAddress}
-                  password={this.state.password}
-                  onNameChanged={this.onNameChanged}
-                  onPhoneNumberChanged={this.onPhoneNumberChanged}
-                  onEmailAddressChanged={this.onEmailAddressChanged}
-                  showPasswordField={true}
-                  onPasswordChanged={this.onPasswordChanged}
-                />
-                <ImageSelectionRow
-                  images={teacherImages.images}
-                  highlightedImagesIndices={this.state.highlightedImagesIndices}
-                  onImageSelected={this.onImageSelected.bind(this)}
-                  onShowMore={() => this.setModalVisible(true)}
-                  selectedImageIndex={this.state.profileImageId}
-                  screen={this.name}
-                />
-              </View>
-              <View style={styles.buttonsContainer}>
-                <QcActionButton
-                  text={strings.CreateAccount}
-                  onPress={() => this.onCreateOrConfirmAccount()}
-                  screen={this.name}
-                />
-              </View>
-              <View style={styles.filler} />
-              <Toast ref="toast" />
             </View>
-          </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
-      </ScrollView></View>
+            <View style={styles.buttonsContainer}>
+              <QcActionButton
+                text={strings.CreateAccount}
+                onPress={() => this.onCreateOrConfirmAccount()}
+                screen={this.name}
+              />
+            </View>
+            <View style={styles.filler} />
+            <Toast ref="toast" />
+          </View>
+        </ScrollView>
+      </QCView>
     );
   }
 }

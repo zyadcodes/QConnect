@@ -9,7 +9,9 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import TeacherLeftNavPane from '../TeacherScreens/LeftNavPane';
 import StudentLeftNavPane from '../StudentScreens/LeftNavPane';
 import SideMenu from 'react-native-side-menu';
+import QCView from 'components/QCView';
 import TopBanner from 'components/TopBanner';
+import screenStyle from 'config/screenStyle';
 
 export default class AllSettingsScreen extends QcParentScreen {
 
@@ -28,7 +30,7 @@ export default class AllSettingsScreen extends QcParentScreen {
     render() {
 
         const content = (
-            <View style={styles.container}>
+            <QCView style={screenStyle.container}>
                 <TopBanner
                     LeftIconName="navicon"
                     LeftOnPress={() => this.setState({ isOpen: true })}
@@ -66,7 +68,7 @@ export default class AllSettingsScreen extends QcParentScreen {
                         iconStyle={{ marginRight: 20 }}
                         color={colors.primaryDark} />
                 </TouchableOpacity>
-            </View>
+            </QCView>
         );
 
         return (

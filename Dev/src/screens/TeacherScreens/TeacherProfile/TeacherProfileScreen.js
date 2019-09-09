@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Image, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Alert, ScrollView } from 'react-native';
+import { StyleSheet, View, Image, TouchableWithoutFeedback, Keyboard, Alert, ScrollView } from 'react-native';
 import Toast, { DURATION } from 'react-native-easy-toast'
 import QcActionButton from 'components/QcActionButton';
 import TouchableText from 'components/TouchableText'
@@ -13,6 +13,8 @@ import QcParentScreen from 'screens/QcParentScreen';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import SideMenu from 'react-native-side-menu';
 import LeftNavPane from '../LeftNavPane';
+import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
 
 //To-Do: All info in this class is static, still needs to be hooked up to data base in order
 //to function dynamically
@@ -107,65 +109,57 @@ export class TeacherProfileScreen extends QcParentScreen {
                 classes={this.state.classes}
                 edgeHitWidth={0}
                 navigation={this.props.navigation} />}>
-                <View style={{
-                    flexDirection: "column",
-                    backgroundColor: colors.lightGrey,
-                    flex: 3
-                }}>
+                <QCView style={screenStyle.container}>
                     <TopBanner
                         LeftIconName="navicon"
                         LeftOnPress={() => this.setState({ isOpen: true })}
                         Title={strings.MyProfile} />
                     <ScrollView>
-                        <KeyboardAvoidingView style={styles.container} behavior="padding">
-                            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                                <View style={styles.container}>
-                                    <ImageSelectionModal
-                                        visible={this.state.modalVisible}
-                                        images={teacherImages.images}
-                                        cancelText={strings.Cancel}
-                                        setModalVisible={this.setModalVisible.bind(this)}
-                                        onImageSelected={this.onImageSelected.bind(this)}
-                                    />
-                                    <View style={styles.picContainer}>
-                                        <Image
-                                            style={styles.profilePic}
-                                            source={teacherImages.images[profileImageID]} />
-                                        <TouchableText
-                                            text={strings.UpdateProfileImage}
-                                            onPress={() => this.editProfilePic()} />
-                                    </View>
+                        <View>
+                            <ImageSelectionModal
+                                visible={this.state.modalVisible}
+                                images={teacherImages.images}
+                                cancelText={strings.Cancel}
+                                setModalVisible={this.setModalVisible.bind(this)}
+                                onImageSelected={this.onImageSelected.bind(this)}
+                            />
+                            <View style={styles.picContainer}>
+                                <Image
+                                    style={styles.profilePic}
+                                    source={teacherImages.images[profileImageID]} />
+                                <TouchableText
+                                    text={strings.UpdateProfileImage}
+                                    onPress={() => this.editProfilePic()} />
+                            </View>
 
-                                    <TeacherInfoEntries
-                                        name={name}
-                                        phoneNumber={phoneNumber}
-                                        emailAddress={emailAddress}
-                                        onNameChanged={this.onNameChanged}
-                                        noEmailField={true}
-                                        onPhoneNumberChanged={this.onPhoneNumberChanged}
-                                        onEmailAddressChanged={() => { }}
-                                    />
-                                    <View style={styles.buttonsContainer}>
-                                        <QcActionButton
-                                            text={strings.Cancel}
-                                            onPress={() => {
-                                                //Just goes back without saving anything
-                                                this.props.navigation.push('TeacherCurrentClass', {
-                                                    userID: this.state.userID
-                                                });
-                                            }}
-                                        />
-                                        <QcActionButton
-                                            text={strings.Save}
-                                            onPress={() => this.saveProfileInfo()}
-                                        />
-                                    </View>
-                                    <Toast ref="toast" />
-                                </View>
-                            </TouchableWithoutFeedback>
-                        </KeyboardAvoidingView>
+                            <TeacherInfoEntries
+                                name={name}
+                                phoneNumber={phoneNumber}
+                                emailAddress={emailAddress}
+                                onNameChanged={this.onNameChanged}
+                                noEmailField={true}
+                                onPhoneNumberChanged={this.onPhoneNumberChanged}
+                                onEmailAddressChanged={() => { }}
+                            />
+                            <View style={styles.buttonsContainer}>
+                                <QcActionButton
+                                    text={strings.Cancel}
+                                    onPress={() => {
+                                        //Just goes back without saving anything
+                                        this.props.navigation.push('TeacherCurrentClass', {
+                                            userID: this.state.userID
+                                        });
+                                    }}
+                                />
+                                <QcActionButton
+                                    text={strings.Save}
+                                    onPress={() => this.saveProfileInfo()}
+                                />
+                            </View>
+                            <Toast ref="toast" />
+                        </View>
                     </ScrollView>
-                </View>
+                </QCView>
             </SideMenu>
         )
     }
