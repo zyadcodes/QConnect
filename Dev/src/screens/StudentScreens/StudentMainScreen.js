@@ -157,9 +157,10 @@ class StudentMainScreen extends QcParentScreen {
 
                             <Text
                                 style={{
-                                    fontSize: 30,
+                                    fontSize: 25,
                                     color: colors.primaryDark,
                                     flexDirection: "row",
+                                    alignSelf: 'center'
                                 }} >
                                 {strings.HaventJoinedClassYet}
                             </Text>
