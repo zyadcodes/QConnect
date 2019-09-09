@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TextInput, Image, KeyboardAvoidingView, StyleSheet, Keyboard, TouchableWithoutFeedback, Alert } from "react-native";
+import { View, TextInput, Image, StyleSheet, Alert } from "react-native";
 import colors from "config/colors";
 import classImages from "config/classImages";
 import QcActionButton from "components/QcActionButton";
@@ -11,6 +11,7 @@ import strings from 'config/strings';
 import TopBanner from 'components/TopBanner';
 import LeftNavPane from '../LeftNavPane';
 import SideMenu from 'react-native-side-menu';
+import QCView from 'components/QCView';
 
 export class AddClassScreen extends QcParentScreen {
 
@@ -108,9 +109,9 @@ export class AddClassScreen extends QcParentScreen {
   render() {
     if (this.state.isLoading === true) {
       return (
-        <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+        <QCView style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
           <LoadingSpinner isVisible={true} />
-        </View>
+        </QCView>
       )
     }
     return (
@@ -120,56 +121,54 @@ export class AddClassScreen extends QcParentScreen {
         classes={this.state.classes}
         edgeHitWidth={0}
         navigation={this.props.navigation} />}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <KeyboardAvoidingView style={styles.container} behavior="padding">
-            <View
-              style={styles.container}>
-              <TopBanner
-                LeftIconName="navicon"
-                LeftOnPress={() => this.setState({ isOpen: true })}
-                Title={strings.AddNewClass} />
+        <QCView style={styles.container}>
+          <View
+            style={styles.container}>
+            <TopBanner
+              LeftIconName="navicon"
+              LeftOnPress={() => this.setState({ isOpen: true })}
+              Title={strings.AddNewClass} />
 
-              <ImageSelectionModal
-                visible={this.state.modalVisible}
-                images={classImages.images}
-                cancelText={strings.Cancel}
-                setModalVisible={this.setModalVisible.bind(this)}
-                onImageSelected={this.onImageSelected.bind(this)}
-                screen={this.name}
+            <ImageSelectionModal
+              visible={this.state.modalVisible}
+              images={classImages.images}
+              cancelText={strings.Cancel}
+              setModalVisible={this.setModalVisible.bind(this)}
+              onImageSelected={this.onImageSelected.bind(this)}
+              screen={this.name}
+            />
+
+            <View style={styles.picContainer}>
+              <Image
+                style={styles.profilePic}
+                source={classImages.images[this.state.classImageId]}
+                ResizeMode="contain" />
+              <TouchableText
+                text={strings.EditClassImage}
+                onPress={() => this.setModalVisible(true)} />
+            </View>
+
+            <View style={styles.bottomContainer}>
+              <TextInput
+                style={styles.textInputStyle}
+                placeholder={strings.WriteClassNameHere}
+                onChangeText={classInput =>
+                  this.setState({
+                    className: classInput
+                  })
+                }
               />
 
-              <View style={styles.picContainer}>
-                <Image
-                  style={styles.profilePic}
-                  source={classImages.images[this.state.classImageId]}
-                  ResizeMode="contain" />
-                <TouchableText
-                  text={strings.EditClassImage}
-                  onPress={() => this.setModalVisible(true)} />
-              </View>
-
-              <View style={styles.bottomContainer}>
-                <TextInput
-                  style={styles.textInputStyle}
-                  placeholder={strings.WriteClassNameHere}
-                  onChangeText={classInput =>
-                    this.setState({
-                      className: classInput
-                    })
-                  }
-                />
-
-                <QcActionButton
-                  text={strings.AddClass}
-                  onPress={() => {
-                    this.addNewClass();
-                  }}
-                  screen={this.name}
-                />
-              </View>
+              <QcActionButton
+                text={strings.AddClass}
+                onPress={() => {
+                  this.addNewClass();
+                }}
+                screen={this.name}
+              />
             </View>
-          </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
+          </View>
+        </QCView>
       </SideMenu>
     );
   }

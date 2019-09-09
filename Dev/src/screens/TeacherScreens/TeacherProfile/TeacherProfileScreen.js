@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Image, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Alert, ScrollView } from 'react-native';
+import { StyleSheet, View, Image, TouchableWithoutFeedback, Keyboard, Alert, ScrollView } from 'react-native';
 import Toast, { DURATION } from 'react-native-easy-toast'
 import QcActionButton from 'components/QcActionButton';
 import TouchableText from 'components/TouchableText'
@@ -13,6 +13,7 @@ import QcParentScreen from 'screens/QcParentScreen';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import SideMenu from 'react-native-side-menu';
 import LeftNavPane from '../LeftNavPane';
+import QCView from 'components/QCView';
 
 //To-Do: All info in this class is static, still needs to be hooked up to data base in order
 //to function dynamically
@@ -107,7 +108,7 @@ export class TeacherProfileScreen extends QcParentScreen {
                 classes={this.state.classes}
                 edgeHitWidth={0}
                 navigation={this.props.navigation} />}>
-                <View style={{
+                <QCView style={{
                     flexDirection: "column",
                     backgroundColor: colors.lightGrey,
                     flex: 3
@@ -117,8 +118,6 @@ export class TeacherProfileScreen extends QcParentScreen {
                         LeftOnPress={() => this.setState({ isOpen: true })}
                         Title={strings.MyProfile} />
                     <ScrollView>
-                        <KeyboardAvoidingView style={styles.container} behavior="padding">
-                            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                                 <View style={styles.container}>
                                     <ImageSelectionModal
                                         visible={this.state.modalVisible}
@@ -162,10 +161,8 @@ export class TeacherProfileScreen extends QcParentScreen {
                                     </View>
                                     <Toast ref="toast" />
                                 </View>
-                            </TouchableWithoutFeedback>
-                        </KeyboardAvoidingView>
                     </ScrollView>
-                </View>
+                </QCView>
             </SideMenu>
         )
     }

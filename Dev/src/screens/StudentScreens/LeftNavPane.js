@@ -14,6 +14,7 @@ import { Input } from 'react-native-elements';
 import QcActionButton from 'components/QcActionButton';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
+import QCView from 'components/QCView';
 
 class LeftNavPane extends QcParentScreen {
 
@@ -81,91 +82,93 @@ class LeftNavPane extends QcParentScreen {
         const studentImageId = profileImageID;
 
         return (
-            <ScrollView style={{ flex: 1, backgroundColor: colors.lightGrey }}>
-                <SafeAreaView
-                    style={styles.container}
-                    forceInset={{ top: "always", horizontal: "never" }}>
-                    <View
-                        style={{
-                            padding: 10,
-                            alignContent: "center",
-                            alignItems: "center",
-                            justifyContent: "center"
-                        }}>
-                        <QcAppBanner />
-                    </View>
-
-                    <QcDrawerItem
-                        title={profileCaption}
-                        image={studentImages.images[studentImageId]}
-                        onPress={() => this.props.navigation.push("StudentProfileScreen")} />
-
-                    <FlatList
-                        data={classes}
-                        keyExtractor={(item, index) => item.name} // fix, should be item.id (add id to classes)
-                        renderItem={({ item, index }) => (
-                            <QcDrawerItem
-                                title={item.name}
-                                image={classImages.images[item.classImageID]}
-                                onPress={() => this.openClass(item.ID)}
-                            />
-                        )} />
-
-                    <QcDrawerItem
-                        title={strings.JoinClass}
-                        icon="plus"
-                        onPress={() => {
-                            this.setState({ modalVisible: true });
-                        }} />
-                    <QcDrawerItem
-                        title={strings.Settings}
-                        icon="cogs"
-                        onPress={() => this.props.navigation.push("Settings", {
-                            isStudent: true,
-                            userID: this.state.userID,
-                            student: this.state.student,
-                            classes: this.state.classes
-                        })} />
-
-                    <Modal
-                        transparent={true}
-                        visible={this.state.modalVisible}
-                        onRequestClode={() => { }}>
-                        <View style={styles.modal}>
-                            {
-                                this.state.isLoading === true ? (
-                                    <View>
-                                        <LoadingSpinner isVisible={true} />
-                                    </View>
-                                ) : (
-                                        <View>
-                                            <Text style={styles.confirmationMessage}>{strings.TypeInAClassCode}</Text>
-                                            <Input
-                                                type='authCode'
-                                                keyboardType='numeric'
-                                                onChangeText={(text) => { this.setState({ classCode: text }) }}
-                                                value={this.state.classCode}
-                                                keyboardType='numeric' />
-                                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 5 }}>
-                                                <QcActionButton
-                                                    text={strings.Cancel}
-                                                    onPress={() => { this.setState({ modalVisible: false }) }} />
-                                                <QcActionButton
-                                                    text={strings.Confirm}
-                                                    onPress={() => {
-                                                        //Joins the class
-                                                        this.joinClass();
-                                                    }} />
-                                            </View>
-                                        </View>
-                                    )
-                            }
-
+            <QCView style={{ flex: 1, backgroundColor: colors.lightGrey }}>
+                <ScrollView>
+                    <SafeAreaView
+                        style={styles.container}
+                        forceInset={{ top: "always", horizontal: "never" }}>
+                        <View
+                            style={{
+                                padding: 10,
+                                alignContent: "center",
+                                alignItems: "center",
+                                justifyContent: "center"
+                            }}>
+                            <QcAppBanner />
                         </View>
-                    </Modal>
 
-                </SafeAreaView>
-            </ScrollView>
+                        <QcDrawerItem
+                            title={profileCaption}
+                            image={studentImages.images[studentImageId]}
+                            onPress={() => this.props.navigation.push("StudentProfileScreen")} />
+
+                        <FlatList
+                            data={classes}
+                            keyExtractor={(item, index) => item.name} // fix, should be item.id (add id to classes)
+                            renderItem={({ item, index }) => (
+                                <QcDrawerItem
+                                    title={item.name}
+                                    image={classImages.images[item.classImageID]}
+                                    onPress={() => this.openClass(item.ID)}
+                                />
+                            )} />
+
+                        <QcDrawerItem
+                            title={strings.JoinClass}
+                            icon="plus"
+                            onPress={() => {
+                                this.setState({ modalVisible: true });
+                            }} />
+                        <QcDrawerItem
+                            title={strings.Settings}
+                            icon="cogs"
+                            onPress={() => this.props.navigation.push("Settings", {
+                                isStudent: true,
+                                userID: this.state.userID,
+                                student: this.state.student,
+                                classes: this.state.classes
+                            })} />
+
+                        <Modal
+                            transparent={true}
+                            visible={this.state.modalVisible}
+                            onRequestClode={() => { }}>
+                            <View style={styles.modal}>
+                                {
+                                    this.state.isLoading === true ? (
+                                        <View>
+                                            <LoadingSpinner isVisible={true} />
+                                        </View>
+                                    ) : (
+                                            <View>
+                                                <Text style={styles.confirmationMessage}>{strings.TypeInAClassCode}</Text>
+                                                <Input
+                                                    type='authCode'
+                                                    keyboardType='numeric'
+                                                    onChangeText={(text) => { this.setState({ classCode: text }) }}
+                                                    value={this.state.classCode}
+                                                    keyboardType='numeric' />
+                                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 5 }}>
+                                                    <QcActionButton
+                                                        text={strings.Cancel}
+                                                        onPress={() => { this.setState({ modalVisible: false }) }} />
+                                                    <QcActionButton
+                                                        text={strings.Confirm}
+                                                        onPress={() => {
+                                                            //Joins the class
+                                                            this.joinClass();
+                                                        }} />
+                                                </View>
+                                            </View>
+                                        )
+                                }
+
+                            </View>
+                        </Modal>
+
+                    </SafeAreaView>
+                </ScrollView>
+            </QCView>
         );
     }
 }

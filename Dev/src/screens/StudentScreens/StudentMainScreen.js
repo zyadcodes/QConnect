@@ -15,6 +15,7 @@ import SideMenu from 'react-native-side-menu';
 import LoadingSpinner from 'components/LoadingSpinner';
 import { Input } from 'react-native-elements';
 import { TextInput } from 'react-native-gesture-handler';
+import QCView from 'components/QCView';
 
 class StudentMainScreen extends QcParentScreen {
 
@@ -122,9 +123,9 @@ class StudentMainScreen extends QcParentScreen {
 
         if (isLoading === true) {
             return (
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <QCView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <LoadingSpinner isVisible={true} />
-                </View>
+                </QCView>
             )
         }
 
@@ -136,7 +137,7 @@ class StudentMainScreen extends QcParentScreen {
                     classes={this.state.classes}
                     edgeHitWidth={0}
                     navigation={this.props.navigation} />}>
-                    <View style={styles.container}>
+                    <QCView style={styles.container}>
                         <View style={{ flex: 1 }}>
                             <TopBanner
                                 LeftIconName="navicon"
@@ -199,7 +200,7 @@ class StudentMainScreen extends QcParentScreen {
 
                             </View>
                         </Modal>
-                    </View>
+                    </QCView>
                 </SideMenu>
             )
         }

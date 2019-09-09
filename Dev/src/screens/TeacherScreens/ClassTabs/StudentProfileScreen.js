@@ -8,8 +8,7 @@ import QcParentScreen from 'screens/QcParentScreen';
 import AssignmentEntryComponent from 'components/AssignmentEntryComponent';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
-
-
+import QCView from 'components/QCView';
 
 class StudentProfileScreen extends QcParentScreen {
 
@@ -48,7 +47,6 @@ class StudentProfileScreen extends QcParentScreen {
     } else {
 
       const { classID, studentID } = this.state;
-      console.log(classID);
       //Updates the local state then pushes to firestore
       this.setState({ isDialogVisible: false, currentAssignment: newAssignmentName });
       FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, newAssignmentName);
@@ -88,14 +86,14 @@ class StudentProfileScreen extends QcParentScreen {
     //If the screen is loading, a spinner will display
     if (isLoading === true) {
       return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <QCView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <LoadingSpinner isVisible={true} />
-        </View>
+        </QCView>
       )
     }
 
     return (
-      <View style={styles.container}>
+      <QCView style={styles.container}>
 
         <AssignmentEntryComponent
           visible={this.state.isDialogVisible}
@@ -199,7 +197,7 @@ class StudentProfileScreen extends QcParentScreen {
             />
           </ScrollView>
         </View>
-      </View>
+      </QCView>
     );
   }
 };

@@ -8,6 +8,7 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import strings from "config/strings";
 import colors from "config/colors";
 import LoadingSpinner from 'components/LoadingSpinner';
+import QCView from 'components/QCView';
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -91,17 +92,17 @@ class LoginScreen extends Component {
 
     if (this.state.isLoading === true) {
       return (
-        <View style={{ flex: 1 }}>
+        <QCView style={{ flex: 1 }}>
           <ImageBackground source={BG_IMAGE} style={styles.bgImage}>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               <LoadingSpinner isVisible={true} />
             </View>
           </ImageBackground>
-        </View>
+        </QCView>
       )
     }
     return (
-      <View style={{ flex: 1 }}>
+      <QCView style={{ flex: 1 }}>
         <ImageBackground source={BG_IMAGE} style={styles.bgImage}>
           <View style={{ flex: 3 }} />
 
@@ -121,7 +122,7 @@ class LoginScreen extends Component {
             onForgotPassword={this.onForgotPassword.bind(this)}
           />
         </ImageBackground>
-      </View>
+      </QCView>
     );
   }
 }

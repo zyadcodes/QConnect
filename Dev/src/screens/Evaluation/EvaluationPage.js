@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text, TextInput, Image, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Alert, ScrollView } from 'react-native'
+import { StyleSheet, View, Text, TextInput, Image, Alert, ScrollView } from 'react-native'
 import { AirbnbRating } from 'react-native-elements';
 import colors from 'config/colors';
 import QcActionButton from 'components/QcActionButton';
@@ -10,6 +10,7 @@ import FlowLayout from 'components/FlowLayout';
 import TopBanner from 'components/TopBanner';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
+import QCView from 'components/QCView';
 
 
 export class EvaluationPage extends QcParentScreen {
@@ -131,9 +132,9 @@ export class EvaluationPage extends QcParentScreen {
   render() {
     if (isLoading === true) {
       return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <QCView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <LoadingSpinner isVisible={true} />
-        </View>
+        </QCView>
       )
     }
     const { notes, improvementAreas, readOnly, rating, classID, studentID, classStudent, assignmentName, isLoading, studentObject } = this.state;
@@ -142,92 +143,86 @@ export class EvaluationPage extends QcParentScreen {
     return (
       //----- outer view, gray background ------------------------
       //Makes it so keyboard is dismissed when clicked somewhere else
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 
-        <KeyboardAvoidingView
-          style={styles.container}
-          behavior="padding">
-
-          <ScrollView>
-            {this.props.navigation.state.params.newAssignment === true ? <TopBanner
+      <QCView style={styles.container}>
+        <ScrollView>
+          {this.props.navigation.state.params.newAssignment === true ? <TopBanner
+            LeftIconName="angle-left"
+            LeftOnPress={() => this.props.navigation.goBack()}
+            Title={strings.Evaluation}
+          /> :
+            readOnly === true ? <TopBanner
               LeftIconName="angle-left"
               LeftOnPress={() => this.props.navigation.goBack()}
               Title={strings.Evaluation}
-            /> :
-              readOnly === true ? <TopBanner
+              RightIconName="edit"
+              RightOnPress={() => { this.setState({ readOnly: false }) }}
+            /> : <TopBanner
                 LeftIconName="angle-left"
                 LeftOnPress={() => this.props.navigation.goBack()}
                 Title={strings.Evaluation}
-                RightIconName="edit"
-                RightOnPress={() => { this.setState({ readOnly: false }) }}
-              /> : <TopBanner
-                  LeftIconName="angle-left"
-                  LeftOnPress={() => this.props.navigation.goBack()}
-                  Title={strings.Evaluation}
-                />}
-            <View style={styles.evaluationContainer}>
-              <View style={styles.section}>
-                <Image source={studentImages.images[profileImageID]}
-                  style={styles.profilePic} />
-                <Text style={styles.titleText}>{classStudent.name}</Text>
-                <Text style={styles.subTitleText}>{assignmentName}</Text>
-              </View>
-
-              <View style={styles.section}>
-                <Text style={styles.mainQuestionText}>{headerTitle}</Text>
-                <View style={{ paddingVertical: 15 }}>
-                  <AirbnbRating
-                    defaultRating={rating}
-                    size={30}
-                    showRating={false}
-                    onFinishRating={(value) => this.setState({
-                      rating: value
-                    })}
-                    isDisabled={readOnly}
-                  />
-                </View>
-
-                <TextInput
-                  style={styles.notesStyle}
-                  multiline={true}
-                  height={100}
-                  onChangeText={(teacherNotes) => this.setState({
-                    notes: teacherNotes
-                  })}
-                  returnKeyType={"done"}
-                  blurOnSubmit={true}
-                  placeholder={strings.WriteANote}
-                  placeholderColor={colors.black}
-                  editable={!readOnly}
-                  value={notes}
-                />
-                <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                  <Text style={[{ flex: 1 }, styles.subCategoryText]}>{strings.ImprovementAreas}</Text>
-                </View>
-                <FlowLayout ref="flow"
-                  dataValue={improvementAreas}
-                  title="Improvement Areas"
-                  readOnly={readOnly}
-                  onSelectionChanged={(improvementAreas) => this.setState({ improvementAreas: improvementAreas })}
-                />
-              </View>
+              />}
+          <View style={styles.evaluationContainer}>
+            <View style={styles.section}>
+              <Image source={studentImages.images[profileImageID]}
+                style={styles.profilePic} />
+              <Text style={styles.titleText}>{classStudent.name}</Text>
+              <Text style={styles.subTitleText}>{assignmentName}</Text>
             </View>
-          </ScrollView>
-          <View style={styles.buttonsContainer}>
-            {!readOnly ?
-              <QcActionButton
-                text={strings.Submit}
 
-                onPress={() => {
-                  this.submitRating()
-                }}
-                screen={this.name}
-              /> : <View></View>}
+            <View style={styles.section}>
+              <Text style={styles.mainQuestionText}>{headerTitle}</Text>
+              <View style={{ paddingVertical: 15 }}>
+                <AirbnbRating
+                  defaultRating={rating}
+                  size={30}
+                  showRating={false}
+                  onFinishRating={(value) => this.setState({
+                    rating: value
+                  })}
+                  isDisabled={readOnly}
+                />
+              </View>
+
+              <TextInput
+                style={styles.notesStyle}
+                multiline={true}
+                height={100}
+                onChangeText={(teacherNotes) => this.setState({
+                  notes: teacherNotes
+                })}
+                returnKeyType={"done"}
+                blurOnSubmit={true}
+                placeholder={strings.WriteANote}
+                placeholderColor={colors.black}
+                editable={!readOnly}
+                value={notes}
+              />
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                <Text style={[{ flex: 1 }, styles.subCategoryText]}>{strings.ImprovementAreas}</Text>
+              </View>
+              <FlowLayout ref="flow"
+                dataValue={improvementAreas}
+                title="Improvement Areas"
+                readOnly={readOnly}
+                onSelectionChanged={(improvementAreas) => this.setState({ improvementAreas: improvementAreas })}
+              />
+            </View>
           </View>
-          <View style={styles.filler}></View>
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
+        </ScrollView>
+        <View style={styles.buttonsContainer}>
+          {!readOnly ?
+            <QcActionButton
+              text={strings.Submit}
 
+              onPress={() => {
+                this.submitRating()
+              }}
+              screen={this.name}
+            /> : <View></View>}
+        </View>
+        <View style={styles.filler}></View>
+      </QCView>
     )
   }
 }

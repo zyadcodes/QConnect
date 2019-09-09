@@ -13,6 +13,7 @@ import LoadingSpinner from 'components/LoadingSpinner';
 import LeftNavPane from '../LeftNavPane';
 import TopBanner from 'components/TopBanner';
 import SideMenu from 'react-native-side-menu';
+import QCView from 'components/QCView';
 
 export class ClassAttendanceScreen extends QcParentScreen {
 
@@ -89,9 +90,9 @@ export class ClassAttendanceScreen extends QcParentScreen {
 
         if (this.state.isLoading === true) {
             return (
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <QCView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <LoadingSpinner isVisible={true} />
-                </View>
+                </QCView>
             )
         }
 
@@ -104,7 +105,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
                     classes={this.state.classes}
                     edgeHitWidth={0}
                     navigation={this.props.navigation} />}>
-                    <View style={styles.container}>
+                    <QCView style={styles.container}>
                         <View style={{ flex: 1 }}>
                             <View>
                                 <TopBanner
@@ -148,7 +149,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
                                     userID: this.state.userID
                                 })} />
                         </View>
-                    </View>
+                    </QCView>
                 </SideMenu>
             )
         }
@@ -163,50 +164,52 @@ export class ClassAttendanceScreen extends QcParentScreen {
                 classes={this.state.classes}
                 edgeHitWidth={0}
                 navigation={this.props.navigation} />}>
-                <ScrollView style={styles.container}>
-                    <View style={styles.saveAttendance}>
-                        <DatePicker
-                            date={this.state.selectedDate}
-                            confirmBtnText={strings.Confirm}
-                            cancelBtnText={strings.Cancel}
-                            format="MM-DD-YYYY"
-                            duration={300}
-                            style={{ paddingLeft: 15 }}
-                            maxDate={new Date().toLocaleDateString("en-US")}
-                            customStyles={{ dateInput: { borderColor: colors.lightGrey } }}
-                            onDateChange={async (date) => {
-                                this.setState({
-                                    selectedDate: date,
-                                    isLoading: true
-                                });
-                                const absentStudents = await FirebaseFunctions.getAbsentStudentsByDate(this.state.selectedDate, this.state.currentClassID);
-                                this.setState({
-                                    isLoading: false,
-                                    absentStudents
-                                });
-                            }}
-                        />
-                        <QcActionButton
-                            text={strings.SaveAttendance}
-                            onPress={() => this.saveAttendance()}
-                            style={{ paddingRight: 30 }}
-                            screen={this.name}
-                        />
-                    </View>
-                    {this.state.students.map((student) => {
-                        let color = this.state.absentStudents.includes(student.ID) ? colors.red : colors.green;
-                        return (
-                            <StudentCard
-                                studentName={student.name}
-                                profilePic={studentImages.images[student.profileImageID]}
-                                currentAssignment={student.currentAssignment}
-                                background={color}
-                                onPress={() => this.onStudentSelected(student.ID)}
+                <QCView style={styles.container}>
+                    <ScrollView>
+                        <View style={styles.saveAttendance}>
+                            <DatePicker
+                                date={this.state.selectedDate}
+                                confirmBtnText={strings.Confirm}
+                                cancelBtnText={strings.Cancel}
+                                format="MM-DD-YYYY"
+                                duration={300}
+                                style={{ paddingLeft: 15 }}
+                                maxDate={new Date().toLocaleDateString("en-US")}
+                                customStyles={{ dateInput: { borderColor: colors.lightGrey } }}
+                                onDateChange={async (date) => {
+                                    this.setState({
+                                        selectedDate: date,
+                                        isLoading: true
+                                    });
+                                    const absentStudents = await FirebaseFunctions.getAbsentStudentsByDate(this.state.selectedDate, this.state.currentClassID);
+                                    this.setState({
+                                        isLoading: false,
+                                        absentStudents
+                                    });
+                                }}
                             />
-                        );
-                    })}
-                    <Toast ref="toast" />
-                </ScrollView>
+                            <QcActionButton
+                                text={strings.SaveAttendance}
+                                onPress={() => this.saveAttendance()}
+                                style={{ paddingRight: 30 }}
+                                screen={this.name}
+                            />
+                        </View>
+                        {this.state.students.map((student) => {
+                            let color = this.state.absentStudents.includes(student.ID) ? colors.red : colors.green;
+                            return (
+                                <StudentCard
+                                    studentName={student.name}
+                                    profilePic={studentImages.images[student.profileImageID]}
+                                    currentAssignment={student.currentAssignment}
+                                    background={color}
+                                    onPress={() => this.onStudentSelected(student.ID)}
+                                />
+                            );
+                        })}
+                        <Toast ref="toast" />
+                    </ScrollView>
+                </QCView>
             </SideMenu >
         );
     }

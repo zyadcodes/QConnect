@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, KeyboardAvoidingView, View, TouchableOpacity, Image } from 'react-native';
-
+import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
+import QCView from 'components/QCView';
 import UserInput from 'components/UserInput';
 import usernameImg from '../screens/images/username.png';
-import passwordImg from '..screens/images/password.png';
-import eyeImg from '..screens/images/eye_black.png';
+import passwordImg from '../screens/images/password.png';
+import eyeImg from '../screens/images/eye_black.png';
 
 export default class Form extends Component {
   constructor(props) {
@@ -24,7 +24,7 @@ export default class Form extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
+      <QCView style={styles.container}>
         <UserInput
           source={usernameImg}
           placeholder="Username"
@@ -50,7 +50,7 @@ export default class Form extends Component {
             <Image source={eyeImg} style={styles.iconEye} />
           </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
+      </QCView>
     );
   }
 }

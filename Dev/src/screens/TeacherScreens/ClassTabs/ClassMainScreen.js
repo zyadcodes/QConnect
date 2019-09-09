@@ -11,6 +11,7 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import TopBanner from 'components/TopBanner';
 import LeftNavPane from '../LeftNavPane';
 import SideMenu from 'react-native-side-menu';
+import QCView from 'components/QCView';
 
 export class ClassMainScreen extends QcParentScreen {
 
@@ -48,9 +49,9 @@ export class ClassMainScreen extends QcParentScreen {
     const { isLoading, teacher, userID, currentClass, currentClassID } = this.state;
     if (isLoading === true) {
       return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <QCView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <LoadingSpinner isVisible={true} />
-        </View>
+        </QCView>
       )
     }
     //---------------------------------no class state---------------------------------
@@ -62,7 +63,7 @@ export class ClassMainScreen extends QcParentScreen {
           classes={this.state.classes}
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
-          <View style={styles.container}>
+          <QCView style={styles.container}>
             <View style={{ flex: 1 }}>
               <View>
                 <TopBanner
@@ -101,7 +102,7 @@ export class ClassMainScreen extends QcParentScreen {
                   })
                 }} />
             </View>
-          </View>
+          </QCView>
         </SideMenu>
       )
     }
@@ -127,7 +128,7 @@ export class ClassMainScreen extends QcParentScreen {
           classes={this.state.classes}
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
-          <View style={styles.container}>
+          <QCView style={styles.container}>
             <View style={{ flex: 1 }}>
               <View>
                 <TopBanner
@@ -171,7 +172,7 @@ export class ClassMainScreen extends QcParentScreen {
                   userID: this.state.userID
                 })} />
             </View>
-          </View>
+          </QCView>
         </SideMenu>
       )
     }
@@ -186,43 +187,45 @@ export class ClassMainScreen extends QcParentScreen {
           classes={this.state.classes}
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
-          <ScrollView style={styles.container}>
-            <View>
-              <TopBanner
-                LeftIconName="navicon"
-                LeftOnPress={() => this.setState({ isOpen: true })}
-                Title={this.state.currentClass.name}
-                RightIconName="edit"
-                RightOnPress={() => this.props.navigation.push('ClassEdit', {
-                  classID: currentClassID,
-                  currentClass,
-                  userID: this.state.userID
-                })}
-              />
-            </View>
-            <FlatList
-              data={currentClass.students}
-              keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
-              renderItem={({ item }) => (
-                <StudentCard
-                  key={item.id}
-                  studentName={item.name}
-                  background={colors.white}
-                  profilePic={studentImages.images[item.profileImageID]}
-                  currentAssignment={item.currentAssignment}
-                  onPress={() =>
-                    this.props.navigation.push("TeacherStudentProfile", {
-                      userID: userID,
-                      studentID: item.ID,
-                      currentClass: currentClass,
-                      classID: currentClassID
-                    })
-                  }
-                  background={item.isReady === true ? colors.green : colors.red}
+          <QCView style={styles.container}>
+            <ScrollView>
+              <View>
+                <TopBanner
+                  LeftIconName="navicon"
+                  LeftOnPress={() => this.setState({ isOpen: true })}
+                  Title={this.state.currentClass.name}
+                  RightIconName="edit"
+                  RightOnPress={() => this.props.navigation.push('ClassEdit', {
+                    classID: currentClassID,
+                    currentClass,
+                    userID: this.state.userID
+                  })}
                 />
-              )}
-            />
-          </ScrollView>
+              </View>
+              <FlatList
+                data={currentClass.students}
+                keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
+                renderItem={({ item }) => (
+                  <StudentCard
+                    key={item.id}
+                    studentName={item.name}
+                    background={colors.white}
+                    profilePic={studentImages.images[item.profileImageID]}
+                    currentAssignment={item.currentAssignment}
+                    onPress={() =>
+                      this.props.navigation.push("TeacherStudentProfile", {
+                        userID: userID,
+                        studentID: item.ID,
+                        currentClass: currentClass,
+                        classID: currentClassID
+                      })
+                    }
+                    background={item.isReady === true ? colors.green : colors.red}
+                  />
+                )}
+              />
+            </ScrollView>
+          </QCView>
         </SideMenu>
       );
     }
