@@ -190,17 +190,18 @@ export class TeacherWelcomeScreen extends QcParentScreen {
               onImageSelected={this.onImageSelected.bind(this)}
               screen={this.name}
             />
-
             <View style={styles.picContainer}>
-              <View style={{ flex: 4 }}></View>
-              <View style={{ flex: 5, alignSelf: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
-                <TouchableOpacity style={{ alignItems: 'flex-start', justifyContent: 'center', flex: 1 }} onPress={() => { this.props.navigation.goBack() }}>
-                    <Icon
-                      name={'angle-left'}
-                      type="font-awesome" />
+              <View style={{ flex: 1 }}><Text> </Text></View>
+              <View style={{ flex: 1, alignSelf: 'flex-start', flexDirection: 'row' }}>
+                <View style={{ flex: 0.1 }}><Text>   </Text></View>
+                <TouchableOpacity style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
+                  <Icon
+                    name={'angle-left'}
+                    type="font-awesome" />
                 </TouchableOpacity>
+                <View style={{ flex: 3 }}></View>
               </View>
-              <View style={{ flex: 10 }}>
+              <View style={{ flex: 1 }}>
                 <FadeInView
                   style={{ alignItems: 'center', justifyContent: 'center' }}>
                   <Image
