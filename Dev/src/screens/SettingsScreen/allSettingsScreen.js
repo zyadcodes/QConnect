@@ -31,43 +31,45 @@ export default class AllSettingsScreen extends QcParentScreen {
 
         const content = (
             <QCView style={screenStyle.container}>
-                <TopBanner
-                    LeftIconName="navicon"
-                    LeftOnPress={() => this.setState({ isOpen: true })}
-                    Title={strings.Settings} />
-                <TouchableOpacity style={[styles.cardStyle, { marginTop: 25 }]} onPress={() => {
-                    this.props.navigation.push("CreditsScreen");
-                }}>
-                    <Text style={styles.textStyle}>{strings.Credits}</Text>
-                    <Icon
-                        name='angle-right'
-                        type='font-awesome'
-                        iconStyle={{ marginRight: 20 }}
-                        color={colors.primaryDark} />
-                </TouchableOpacity>
+                <View style={styles.container}>
+                    <TopBanner
+                        LeftIconName="navicon"
+                        LeftOnPress={() => this.setState({ isOpen: true })}
+                        Title={strings.Settings} />
+                    <TouchableOpacity style={[styles.cardStyle, { marginTop: 25 }]} onPress={() => {
+                        this.props.navigation.push("CreditsScreen");
+                    }}>
+                        <Text style={styles.textStyle}>{strings.Credits}</Text>
+                        <Icon
+                            name='angle-right'
+                            type='font-awesome'
+                            iconStyle={{ marginRight: 20 }}
+                            color={colors.primaryDark} />
+                    </TouchableOpacity>
 
-                <TouchableOpacity style={styles.cardStyle} onPress={() => {
-                    Linking.openURL('https://app.termly.io/document/privacy-policy/d3e756e4-a763-4095-9ec1-3965b609d015')
-                }}>
-                    <Text style={styles.textStyle}>{strings.PrivacyPolicy}</Text>
-                    <Icon
-                        name='angle-right'
-                        type='font-awesome'
-                        iconStyle={{ marginRight: 20 }}
-                        color={colors.primaryDark} />
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.cardStyle} onPress={() => {
+                        Linking.openURL('https://app.termly.io/document/privacy-policy/d3e756e4-a763-4095-9ec1-3965b609d015')
+                    }}>
+                        <Text style={styles.textStyle}>{strings.PrivacyPolicy}</Text>
+                        <Icon
+                            name='angle-right'
+                            type='font-awesome'
+                            iconStyle={{ marginRight: 20 }}
+                            color={colors.primaryDark} />
+                    </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.cardStyle, { marginTop: 25 }]} onPress={async () => {
-                    await FirebaseFunctions.logOut();
-                    this.props.navigation.push("FirstScreenLoader");
-                }}>
-                    <Text style={styles.textStyle}>{strings.LogOut}</Text>
-                    <Icon
-                        name='angle-right'
-                        type='font-awesome'
-                        iconStyle={{ marginRight: 20 }}
-                        color={colors.primaryDark} />
-                </TouchableOpacity>
+                    <TouchableOpacity style={[styles.cardStyle, { marginTop: 25 }]} onPress={async () => {
+                        await FirebaseFunctions.logOut();
+                        this.props.navigation.push("FirstScreenLoader");
+                    }}>
+                        <Text style={styles.textStyle}>{strings.LogOut}</Text>
+                        <Icon
+                            name='angle-right'
+                            type='font-awesome'
+                            iconStyle={{ marginRight: 20 }}
+                            color={colors.primaryDark} />
+                    </TouchableOpacity>
+                </View>
             </QCView>
         );
 
@@ -99,7 +101,6 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
         backgroundColor: colors.lightGrey,
-        flex: 1,
     },
     cardStyle: {
         flexDirection: 'row',
