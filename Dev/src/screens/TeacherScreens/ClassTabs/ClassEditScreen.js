@@ -167,14 +167,17 @@ export class ClassEditScreen extends QcParentScreen {
             <Text style={{ fontSize: 18 }}>  {strings.EnterYourStudentsName}</Text>
           </View>
           <View style={{ flex: 0.7, alignSelf: 'flex-start' }}>
-            <View style={{ flex: 1, flexDirection: 'row' }}>
-              <Text>  </Text>
-              <TextInput
-                placeholder={strings.StudentName}
-                onChangeText={newStudentName => this.setState({ newStudentName })}
-                value={this.state.newStudentName}
-              />
-            </View>
+            <TextInput
+              style={{
+                paddingLeft: 7,
+                fontSize: 14,
+                color: colors.darkGrey,
+                alignSelf: 'stretch'
+              }}
+              placeholder={strings.StudentName}
+              onChangeText={newStudentName => this.setState({ newStudentName })}
+              value={this.state.newStudentName}
+            />
           </View>
           <View style={{ flex: 1 }}>
             <ImageSelectionRow
