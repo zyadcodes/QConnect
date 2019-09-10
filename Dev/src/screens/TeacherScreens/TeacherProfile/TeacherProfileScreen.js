@@ -109,7 +109,12 @@ export class TeacherProfileScreen extends QcParentScreen {
                 classes={this.state.classes}
                 edgeHitWidth={0}
                 navigation={this.props.navigation} />}>
-                <QCView style={screenStyle.container}>
+                <QCView style={{
+                    flexDirection: 'column',
+                    backgroundColor: colors.lightGrey,
+                    width: Dimensions.get('window').width,
+                    height: Dimensions.get('window').height
+                }}>
                     <ScrollView style={styles.container}>
                         <TopBanner
                             LeftIconName="navicon"
