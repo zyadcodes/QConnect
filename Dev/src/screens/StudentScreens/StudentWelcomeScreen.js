@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Image, TouchableOpacity, Alert, Modal, ScrollView, LayoutAnimation, Platform } from "react-native";
+import { StyleSheet, View, Image, TouchableOpacity, Alert, ScrollView, LayoutAnimation, Platform } from "react-native";
 import QcActionButton from "components/QcActionButton";
 import Toast, { DURATION } from "react-native-easy-toast";
 import colors from "config/colors";
@@ -168,8 +168,8 @@ export class StudentWelcomeScreen extends QcParentScreen {
   render() {
 
     return (
-      <ScrollView>
-        <QCView style={screenStyle.container}>
+      <QCView style={screenStyle.container}>
+        <ScrollView>
           <View>
             <ImageSelectionModal
               visible={this.state.modalVisible}
@@ -232,8 +232,8 @@ export class StudentWelcomeScreen extends QcParentScreen {
             <View style={styles.filler} />
             <Toast ref="toast" />
           </View>
-        </QCView>
-      </ScrollView>
+        </ScrollView>
+      </QCView>
     );
   }
 }

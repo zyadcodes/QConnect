@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Image, Text, TouchableWithoutFeedback, TouchableOpacity, Keyboard, Alert, Modal, ScrollView, LayoutAnimation, Platform } from "react-native";
+import { StyleSheet, View, Image, Text, TouchableOpacity, Alert, ScrollView, LayoutAnimation, Platform } from "react-native";
 import QcActionButton from "components/QcActionButton";
 import Toast, { DURATION } from "react-native-easy-toast";
 import colors from "config/colors";
@@ -194,14 +194,13 @@ export class TeacherWelcomeScreen extends QcParentScreen {
             />
 
             <View style={styles.picContainer}>
-              <View style={{ flex: 1, alignSelf: 'flex-start', flexDirection: 'row' }}>
-                <View style={{ flex: 0.25 }}></View>
-                <TouchableOpacity style={{ flex: 1, alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
-                  <Icon
-                    name={'angle-left'}
-                    type="font-awesome" />
+              <View style={{ flex: 4 }}></View>
+              <View style={{ flex: 5, alignSelf: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
+                <TouchableOpacity style={{ alignItems: 'flex-start', justifyContent: 'center', flex: 1 }} onPress={() => { this.props.navigation.goBack() }}>
+                    <Icon
+                      name={'angle-left'}
+                      type="font-awesome" />
                 </TouchableOpacity>
-                <View style={{ flex: 3 }}></View>
               </View>
               <View style={{ flex: 10 }}>
                 <FadeInView
@@ -213,7 +212,6 @@ export class TeacherWelcomeScreen extends QcParentScreen {
                   <Text style={styles.quote}>{strings.TeacherWelcomeMessage}</Text>
                 </FadeInView>
               </View>
-
             </View>
             <View style={styles.editInfo} behavior="padding">
               <TeacherInfoEntries
