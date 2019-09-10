@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Image, TouchableOpacity, Alert, ScrollView, LayoutAnimation, Platform } from "react-native";
+import { StyleSheet, View, Image, TouchableOpacity, Alert, ScrollView, LayoutAnimation, Platform, Dimensions } from "react-native";
 import QcActionButton from "components/QcActionButton";
 import Toast, { DURATION } from "react-native-easy-toast";
 import colors from "config/colors";
@@ -181,14 +181,13 @@ export class StudentWelcomeScreen extends QcParentScreen {
             />
 
             <View style={styles.picContainer}>
-              <View style={{ flex: 1, alignSelf: 'flex-start', flexDirection: 'row' }}>
-                <View style={{ flex: 0.25 }}></View>
-                <TouchableOpacity style={{ flex: 1, alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
-                  <Icon
-                    name={'angle-left'}
-                    type="font-awesome" />
+              <View style={{ flex: 4 }}></View>
+              <View style={{ flex: 5, alignSelf: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
+                <TouchableOpacity style={{ alignItems: 'flex-start', justifyContent: 'center', flex: 1 }} onPress={() => { this.props.navigation.goBack() }}>
+                    <Icon
+                      name={'angle-left'}
+                      type="font-awesome" />
                 </TouchableOpacity>
-                <View style={{ flex: 3 }}></View>
               </View>
               <View style={{ flex: 10 }}>
                 <FadeInView
@@ -199,7 +198,6 @@ export class StudentWelcomeScreen extends QcParentScreen {
                   />
                 </FadeInView>
               </View>
-
             </View>
             <View style={styles.editInfo} behavior="padding">
               <TeacherInfoEntries
@@ -251,7 +249,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 15,
     marginBottom: 10,
-    backgroundColor: colors.white
+    backgroundColor: colors.white,
+    width: Dimensions.get('window').width
   },
   quote: {
     fontSize: 16,
@@ -268,13 +267,15 @@ const styles = StyleSheet.create({
   editInfo: {
     flexDirection: "column",
     backgroundColor: colors.white,
-    color: colors.darkGrey
+    color: colors.darkGrey,
+    width: Dimensions.get('window').width
   },
   buttonsContainer: {
     flexDirection: "column",
     marginTop: 10,
     backgroundColor: colors.white,
-    justifyContent: "center"
+    justifyContent: "center",
+    width: Dimensions.get('window').width
   },
   filler: {
     flexDirection: "column",

@@ -25,8 +25,6 @@ const initialState = {
 export class TeacherWelcomeScreen extends QcParentScreen {
   state = initialState;
 
-  name = "TeacherWelcomeScreen";
-
   getRandomGenderNeutralImage = () => {
     index = Math.floor(Math.random() * Math.floor(teacherImages.genderNeutralImages.length));
     imageIndex = teacherImages.genderNeutralImages[index];
