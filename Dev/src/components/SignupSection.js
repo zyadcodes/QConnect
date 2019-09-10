@@ -27,14 +27,15 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 5,
     flex: 1,
     width: DEVICE_WIDTH,
+    alignItems: 'flex-start',
     flexDirection: 'row',
     justifyContent: 'space-around',
   },
   text: {
     color: colors.black,
     backgroundColor: 'transparent',
+    fontSize: 15
   },
 });

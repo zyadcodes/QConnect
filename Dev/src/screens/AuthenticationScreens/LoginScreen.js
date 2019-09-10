@@ -108,13 +108,13 @@ class LoginScreen extends Component {
           <View style={{ flex: 4, justifyContent: 'center' }}>
             <QcAppBanner />
           </View>
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
             <Form
               onUserNameChange={this.onUserNameChange.bind(this)}
               onPwChange={this.onPwChange.bind(this)}
             />
           </View>
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
             <ButtonSubmit
               text={strings.Login}
               onSubmit={this.signIn.bind(this)}
@@ -127,6 +127,7 @@ class LoginScreen extends Component {
               onForgotPassword={this.onForgotPassword.bind(this)}
             />
           </View>
+          <View style={{ flex: 1 }}></View>
         </ImageBackground>
       </QCView>
     );

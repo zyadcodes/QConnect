@@ -83,7 +83,7 @@ class LeftNavPane extends QcParentScreen {
         const studentImageId = profileImageID;
 
         return (
-            <QCView style={screenStyle.container}>
+            <QCView style={[screenStyle.container, { alignItems: 'flex-start' }]}>
                 <ScrollView>
                     <SafeAreaView
                         forceInset={{ top: "always", horizontal: "never" }}>
