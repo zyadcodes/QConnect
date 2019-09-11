@@ -13,6 +13,7 @@ import QCView from 'components/QCView';
 import TopBanner from 'components/TopBanner';
 import screenStyle from 'config/screenStyle';
 
+
 export default class AllSettingsScreen extends QcParentScreen {
 
     //The state controlling the side menu
