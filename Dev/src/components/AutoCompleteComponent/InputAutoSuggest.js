@@ -31,7 +31,7 @@ class InputAutoSuggest extends Component {
       value: name,
     });
     this.props.onTextChanged(name);
-    
+
     onDataSelectedChange(existingItem);
     this.searchList;
   };
@@ -69,6 +69,7 @@ class InputAutoSuggest extends Component {
     onDataSelectedChange(suggestData.existingItem);
     this.setState({
       data: suggestData.suggest,
+
     });
   }
 
