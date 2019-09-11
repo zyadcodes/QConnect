@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, View, StyleSheet, FlatList, TouchableWithoutFeedback, Keyboard, Text, Alert, Share, TextInput } from "react-native";
+import { ScrollView, View, StyleSheet, FlatList, Dimensions, Text, Alert, Share, TextInput, PixelRatio } from "react-native";
 import StudentCard from "components/StudentCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages";
@@ -11,6 +11,9 @@ import ImageSelectionRow from 'components/ImageSelectionRow';
 import QcParentScreen from "screens/QcParentScreen";
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
+import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export class ClassEditScreen extends QcParentScreen {
 
@@ -76,21 +79,29 @@ export class ClassEditScreen extends QcParentScreen {
   //This method adds a student manually without them actually having to have a profile
   async addManualStudent() {
 
-    this.setState({ isLoading: true, newStudentName: '' });
+    if (this.state.newStudentName.trim() === '') {
 
-    //First pushes the manual student to the firebase database
-    const { newStudentName, profileImageID } = this.state;
-    const newStudent = await FirebaseFunctions.addManualStudent(newStudentName, profileImageID, this.state.classID);
+      Alert.alert(strings.Whoops, strings.PleaseInputAName);
 
-    //Appends the student to the current state
-    let newArrayOfStudents = this.state.students;
-    newArrayOfStudents.push(newStudent);
+    } else {
 
-    //Sets the new state
-    this.setState({
-      isLoading: false,
-      students: newArrayOfStudents
-    });
+      this.setState({ isLoading: true, newStudentName: '' });
+
+      //First pushes the manual student to the firebase database
+      const { newStudentName, profileImageID } = this.state;
+      const newStudent = await FirebaseFunctions.addManualStudent(newStudentName, profileImageID, this.state.classID);
+
+      //Appends the student to the current state
+      let newArrayOfStudents = this.state.students;
+      newArrayOfStudents.push(newStudent);
+
+      //Sets the new state
+      this.setState({
+        isLoading: false,
+        students: newArrayOfStudents
+      });
+
+    }
 
     return 0;
 
@@ -117,8 +128,13 @@ export class ClassEditScreen extends QcParentScreen {
     const { classID, students } = this.state;
 
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View style={styles.container}>
+      <QCView style={{
+        flexDirection: 'column',
+        backgroundColor: colors.lightGrey,
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height
+      }}>
+        <ScrollView style={styles.container}>
           <ImageSelectionModal
             visible={this.state.modalVisible}
             images={studentImages.images}
@@ -166,14 +182,17 @@ export class ClassEditScreen extends QcParentScreen {
               <Text style={{ fontSize: 18 }}>  {strings.EnterYourStudentsName}</Text>
             </View>
             <View style={{ flex: 0.7, alignSelf: 'flex-start' }}>
-              <View style={{ flex: 1, flexDirection: 'row' }}>
-                <Text>  </Text>
-                <TextInput
-                  placeholder={strings.StudentName}
-                  onChangeText={newStudentName => this.setState({ newStudentName })}
-                  value={this.state.newStudentName}
-                />
-              </View>
+              <TextInput
+                style={{
+                  paddingLeft: 7,
+                  fontSize: 14,
+                  color: colors.darkGrey,
+                  alignSelf: 'stretch'
+                }}
+                placeholder={strings.StudentName}
+                onChangeText={newStudentName => this.setState({ newStudentName })}
+                value={this.state.newStudentName}
+              />
             </View>
             <View style={{ flex: 1 }}>
               <ImageSelectionRow
@@ -196,7 +215,7 @@ export class ClassEditScreen extends QcParentScreen {
           <View style={{ flex: 0.5 }}>
             <LoadingSpinner isVisible={this.state.isLoading} />
           </View>
-          <ScrollView style={styles.flatList}>
+          <View style={styles.flatList}>
             <FlatList
               data={students}
               keyExtractor={(item, index) => item.ID}
@@ -208,12 +227,8 @@ export class ClassEditScreen extends QcParentScreen {
                   profilePic={studentImages.images[item.profileImageID]}
                   background={colors.white}
                   onPress={() => { }}
-                  comp={<Icon
-                    name='user-times'
-                    size={25}
-                    type='font-awesome'
-                    color={colors.primaryLight}
-                    onPress={() => {
+                  comp={
+                    <TouchableOpacity onPress={() => {
                       Alert.alert(
                         strings.RemoveStudent,
                         strings.AreYouSureYouWantToRemoveStudent,
@@ -235,11 +250,18 @@ export class ClassEditScreen extends QcParentScreen {
                           { text: strings.Cancel, style: 'cancel' },
                         ]
                       );
-                    }} />} />
+                    }}>
+                      <Icon
+                        name='user-times'
+                        size={PixelRatio.get() * 9}
+                        type='font-awesome'
+                        color={colors.primaryLight} />
+                    </TouchableOpacity>
+                  } />
               )} />
-          </ScrollView>
-        </View>
-      </TouchableWithoutFeedback >
+          </View>
+        </ScrollView>
+      </QCView>
     );
   }
 }
@@ -258,6 +280,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     backgroundColor: colors.white,
     flex: 2.5,
+    height: Dimensions.get('window').height * 0.5,
     alignItems: 'center',
   },
 });

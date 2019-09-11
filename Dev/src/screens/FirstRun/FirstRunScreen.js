@@ -5,6 +5,8 @@ import QcAppBanner from "components/QcAppBanner";
 import strings from "../../../config/strings";
 import QcParentScreen from "screens/QcParentScreen";
 import FirebaseFunctions from 'config/FirebaseFunctions';
+import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -34,7 +36,7 @@ class FirstRunScreen extends QcParentScreen {
   render() {
     const { navigation } = this.props;
     return (
-      <View style={styles.container}>
+      <QCView style={screenStyle.container}>
         <ImageBackground source={BG_IMAGE} style={styles.bgImage}>
           <View style={{ flex: 3 }} />
           <QcAppBanner />
@@ -56,14 +58,14 @@ class FirstRunScreen extends QcParentScreen {
           </View>
           <View style={{ flex: 1 }} />
         </ImageBackground>
-      </View>
+      </QCView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   spacer: {
     flex: 3

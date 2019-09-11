@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, StyleSheet, FlatList, View, Text, Image } from "react-native";
+import { ScrollView, StyleSheet, FlatList, View, Text, Image, Dimensions } from "react-native";
 import StudentCard from "components/StudentCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages"
@@ -11,6 +11,8 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import TopBanner from 'components/TopBanner';
 import LeftNavPane from '../LeftNavPane';
 import SideMenu from 'react-native-side-menu';
+import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
 
 export class ClassMainScreen extends QcParentScreen {
 
@@ -62,15 +64,13 @@ export class ClassMainScreen extends QcParentScreen {
           classes={this.state.classes}
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
-          <View style={styles.container}>
-            <View style={{ flex: 1 }}>
-              <View>
-                <TopBanner
-                  LeftIconName="navicon"
-                  LeftOnPress={() => this.setState({ isOpen: true })}
-                  Title={"Quran Connect"}
-                />
-              </View>
+          <QCView style={screenStyle.container}>
+            <View style={{ flex: 1, width: Dimensions.get('window').width }}>
+              <TopBanner
+                LeftIconName="navicon"
+                LeftOnPress={() => this.setState({ isOpen: true })}
+                Title={"Quran Connect"}
+              />
             </View>
             <View style={{ alignItems: "center", justifyContent: "flex-start", alignSelf: 'center', flex: 2 }}>
               <Image
@@ -81,7 +81,6 @@ export class ClassMainScreen extends QcParentScreen {
                   resizeMode: 'contain',
                 }}
               />
-
               <Text
                 style={{
                   fontSize: 30,
@@ -91,7 +90,6 @@ export class ClassMainScreen extends QcParentScreen {
               >
                 {strings.NoClass}
               </Text>
-
               <QcActionButton
                 text={strings.AddClassButton}
                 onPress={() => {
@@ -101,7 +99,7 @@ export class ClassMainScreen extends QcParentScreen {
                   })
                 }} />
             </View>
-          </View>
+          </QCView>
         </SideMenu>
       )
     }
@@ -127,21 +125,19 @@ export class ClassMainScreen extends QcParentScreen {
           classes={this.state.classes}
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
-          <View style={styles.container}>
-            <View style={{ flex: 1 }}>
-              <View>
-                <TopBanner
-                  LeftIconName="navicon"
-                  LeftOnPress={() => this.setState({ isOpen: true })}
-                  Title={this.state.currentClass.name}
-                  RightIconName="edit"
-                  RightOnPress={() => this.props.navigation.push('ClassEdit', {
-                    classID: currentClassID,
-                    currentClass,
-                    userID: this.state.userID
-                  })}
-                />
-              </View>
+          <QCView style={screenStyle.container}>
+            <View style={{ flex: 1, width: Dimensions.get('window').width }}>
+              <TopBanner
+                LeftIconName="navicon"
+                LeftOnPress={() => this.setState({ isOpen: true })}
+                Title={this.state.currentClass.name}
+                RightIconName="edit"
+                RightOnPress={() => this.props.navigation.push('ClassEdit', {
+                  classID: currentClassID,
+                  currentClass,
+                  userID: this.state.userID
+                })}
+              />
             </View>
             <View style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'center' }}>
               <Image
@@ -171,7 +167,7 @@ export class ClassMainScreen extends QcParentScreen {
                   userID: this.state.userID
                 })} />
             </View>
-          </View>
+          </QCView>
         </SideMenu>
       )
     }

@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, View, TextInput, KeyboardAvoidingView, Dimensions } from 'react-native';
+import { Text, StyleSheet, View, TextInput, Dimensions } from 'react-native';
+import QCView from 'components/QCView';
 import strings from 'config/strings';
 import colors from 'config/colors';
 import QcActionButton from 'components/QcActionButton';
 import { Alert } from 'react-native';
 import FirebaseFunctions from 'config/FirebaseFunctions';
+import screenStyle from 'config/screenStyle';
 
 class ForgotPassword extends Component {
 
@@ -23,9 +25,7 @@ class ForgotPassword extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
-
-                <KeyboardAvoidingView style={{ alignItems: 'center' }}>
+            <QCView style={screenStyle.container}>
                     <View style={{ flex: 1 }}></View>
                     <View style={{ flex: 1 }}>
                         <Text style={styles.header}>{strings.RecoverYourPassword}</Text>
@@ -67,8 +67,7 @@ class ForgotPassword extends Component {
                             }} />
                     </View>
                     <View style={{ flex: 1 }}></View>
-                </KeyboardAvoidingView>
-            </View>
+            </QCView>
         )
     }
 }

@@ -15,6 +15,8 @@ import SideMenu from 'react-native-side-menu';
 import LoadingSpinner from 'components/LoadingSpinner';
 import { Input } from 'react-native-elements';
 import { TextInput } from 'react-native-gesture-handler';
+import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
 
 class StudentMainScreen extends QcParentScreen {
 
@@ -136,7 +138,7 @@ class StudentMainScreen extends QcParentScreen {
                     classes={this.state.classes}
                     edgeHitWidth={0}
                     navigation={this.props.navigation} />}>
-                    <View style={styles.container}>
+                    <QCView style={screenStyle.container}>
                         <View style={{ flex: 1 }}>
                             <TopBanner
                                 LeftIconName="navicon"
@@ -155,9 +157,10 @@ class StudentMainScreen extends QcParentScreen {
 
                             <Text
                                 style={{
-                                    fontSize: 30,
+                                    fontSize: 25,
                                     color: colors.primaryDark,
                                     flexDirection: "row",
+                                    alignSelf: 'center'
                                 }} >
                                 {strings.HaventJoinedClassYet}
                             </Text>
@@ -199,7 +202,7 @@ class StudentMainScreen extends QcParentScreen {
 
                             </View>
                         </Modal>
-                    </View>
+                    </QCView>
                 </SideMenu>
             )
         }
@@ -211,7 +214,7 @@ class StudentMainScreen extends QcParentScreen {
                 classes={this.state.classes}
                 edgeHitWidth={0}
                 navigation={this.props.navigation} />}>
-                <View style={styles.container}>
+                <QCView style={screenStyle.container}>
                     <TopBanner
                         LeftIconName="navicon"
                         LeftOnPress={() => this.setState({ isOpen: true })}
@@ -304,7 +307,7 @@ class StudentMainScreen extends QcParentScreen {
                             />
                         </ScrollView>
                     </View>
-                </View>
+                </QCView>
             </SideMenu>
         )
     }

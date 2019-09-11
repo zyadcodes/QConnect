@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { ActivityIndicator, StatusBar, View } from 'react-native';
 import FirebaseFunctions from 'config/FirebaseFunctions';
+import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
 
 class FirstScreenLoader extends Component {
 
@@ -39,14 +41,14 @@ class FirstScreenLoader extends Component {
   // Placeholder loading in case async fetch takes too long
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <QCView style={screenStyle.container}>
         <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
           <ActivityIndicator />
         </View>
         <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
           <StatusBar barStyle="default" />
         </View>
-      </View>
+      </QCView>
     );
   }
 }
