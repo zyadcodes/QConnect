@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, View, StyleSheet, FlatList, TouchableWithoutFeedback, Keyboard, Text, Alert, Share, TextInput } from "react-native";
+import { ScrollView, View, StyleSheet, FlatList, Dimensions, Text, Alert, Share, TextInput } from "react-native";
 import StudentCard from "components/StudentCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages";
@@ -119,7 +119,12 @@ export class ClassEditScreen extends QcParentScreen {
     const { classID, students } = this.state;
 
     return (
-      <QCView style={screenStyle.container}>
+      <QCView style={{
+        flexDirection: 'column',
+        backgroundColor: colors.lightGrey,
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height
+      }}>
         <ImageSelectionModal
           visible={this.state.modalVisible}
           images={studentImages.images}
