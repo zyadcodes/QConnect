@@ -65,14 +65,12 @@ export class ClassMainScreen extends QcParentScreen {
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
           <QCView style={screenStyle.container}>
-            <View style={{ flex: 1 }}>
-              <View>
-                <TopBanner
-                  LeftIconName="navicon"
-                  LeftOnPress={() => this.setState({ isOpen: true })}
-                  Title={"Quran Connect"}
-                />
-              </View>
+            <View style={{ flex: 1, width: Dimensions.get('window').width }}>
+              <TopBanner
+                LeftIconName="navicon"
+                LeftOnPress={() => this.setState({ isOpen: true })}
+                Title={"Quran Connect"}
+              />
             </View>
             <View style={{ alignItems: "center", justifyContent: "flex-start", alignSelf: 'center', flex: 2 }}>
               <Image
