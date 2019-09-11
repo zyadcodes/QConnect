@@ -65,14 +65,12 @@ export class ClassMainScreen extends QcParentScreen {
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
           <QCView style={screenStyle.container}>
-            <View style={{ flex: 1 }}>
-              <View>
-                <TopBanner
-                  LeftIconName="navicon"
-                  LeftOnPress={() => this.setState({ isOpen: true })}
-                  Title={"Quran Connect"}
-                />
-              </View>
+            <View style={{ flex: 1, width: Dimensions.get('window').width }}>
+              <TopBanner
+                LeftIconName="navicon"
+                LeftOnPress={() => this.setState({ isOpen: true })}
+                Title={"Quran Connect"}
+              />
             </View>
             <View style={{ alignItems: "center", justifyContent: "flex-start", alignSelf: 'center', flex: 2 }}>
               <Image
@@ -129,17 +127,17 @@ export class ClassMainScreen extends QcParentScreen {
           navigation={this.props.navigation} />}>
           <QCView style={screenStyle.container}>
             <View style={{ flex: 1, width: Dimensions.get('window').width }}>
-                <TopBanner
-                  LeftIconName="navicon"
-                  LeftOnPress={() => this.setState({ isOpen: true })}
-                  Title={this.state.currentClass.name}
-                  RightIconName="edit"
-                  RightOnPress={() => this.props.navigation.push('ClassEdit', {
-                    classID: currentClassID,
-                    currentClass,
-                    userID: this.state.userID
-                  })}
-                />
+              <TopBanner
+                LeftIconName="navicon"
+                LeftOnPress={() => this.setState({ isOpen: true })}
+                Title={this.state.currentClass.name}
+                RightIconName="edit"
+                RightOnPress={() => this.props.navigation.push('ClassEdit', {
+                  classID: currentClassID,
+                  currentClass,
+                  userID: this.state.userID
+                })}
+              />
             </View>
             <View style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'center' }}>
               <Image
@@ -184,45 +182,43 @@ export class ClassMainScreen extends QcParentScreen {
           classes={this.state.classes}
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
-          <QCView style={screenStyle.container}>
-            <ScrollView>
-              <View>
-                <TopBanner
-                  LeftIconName="navicon"
-                  LeftOnPress={() => this.setState({ isOpen: true })}
-                  Title={this.state.currentClass.name}
-                  RightIconName="edit"
-                  RightOnPress={() => this.props.navigation.push('ClassEdit', {
-                    classID: currentClassID,
-                    currentClass,
-                    userID: this.state.userID
-                  })}
-                />
-              </View>
-              <FlatList
-                data={currentClass.students}
-                keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
-                renderItem={({ item }) => (
-                  <StudentCard
-                    key={item.id}
-                    studentName={item.name}
-                    background={colors.white}
-                    profilePic={studentImages.images[item.profileImageID]}
-                    currentAssignment={item.currentAssignment}
-                    onPress={() =>
-                      this.props.navigation.push("TeacherStudentProfile", {
-                        userID: userID,
-                        studentID: item.ID,
-                        currentClass: currentClass,
-                        classID: currentClassID
-                      })
-                    }
-                    background={item.isReady === true ? colors.green : colors.red}
-                  />
-                )}
+          <ScrollView style={styles.container}>
+            <View>
+              <TopBanner
+                LeftIconName="navicon"
+                LeftOnPress={() => this.setState({ isOpen: true })}
+                Title={this.state.currentClass.name}
+                RightIconName="edit"
+                RightOnPress={() => this.props.navigation.push('ClassEdit', {
+                  classID: currentClassID,
+                  currentClass,
+                  userID: this.state.userID
+                })}
               />
-            </ScrollView>
-          </QCView>
+            </View>
+            <FlatList
+              data={currentClass.students}
+              keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
+              renderItem={({ item }) => (
+                <StudentCard
+                  key={item.id}
+                  studentName={item.name}
+                  background={colors.white}
+                  profilePic={studentImages.images[item.profileImageID]}
+                  currentAssignment={item.currentAssignment}
+                  onPress={() =>
+                    this.props.navigation.push("TeacherStudentProfile", {
+                      userID: userID,
+                      studentID: item.ID,
+                      currentClass: currentClass,
+                      classID: currentClassID
+                    })
+                  }
+                  background={item.isReady === true ? colors.green : colors.red}
+                />
+              )}
+            />
+          </ScrollView>
         </SideMenu>
       );
     }
