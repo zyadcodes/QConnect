@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, Image, Text } from 'react-native';
+import { ScrollView, StyleSheet, View, Image, Text, Dimensions } from 'react-native';
 import Toast, { DURATION } from 'react-native-easy-toast'
 import DatePicker from 'react-native-datepicker';
 import StudentCard from 'components/StudentCard';
@@ -107,20 +107,18 @@ export class ClassAttendanceScreen extends QcParentScreen {
                     edgeHitWidth={0}
                     navigation={this.props.navigation} />}>
                     <QCView style={screenStyle.container}>
-                        <View style={{ flex: 1 }}>
-                            <View>
-                                <TopBanner
-                                    LeftIconName="navicon"
-                                    LeftOnPress={() => this.setState({ isOpen: true })}
-                                    Title={this.state.currentClass.name}
-                                    RightIconName="edit"
-                                    RightOnPress={() => this.props.navigation.push('ClassEdit', {
-                                        classID: this.state.currentClassID,
-                                        currentClass: this.state.currentClass,
-                                        userID: this.state.userID
-                                    })}
-                                />
-                            </View>
+                        <View style={{ flex: 1, width: Dimensions.get('window').width }}>
+                            <TopBanner
+                                LeftIconName="navicon"
+                                LeftOnPress={() => this.setState({ isOpen: true })}
+                                Title={this.state.currentClass.name}
+                                RightIconName="edit"
+                                RightOnPress={() => this.props.navigation.push('ClassEdit', {
+                                    classID: this.state.currentClassID,
+                                    currentClass: this.state.currentClass,
+                                    userID: this.state.userID
+                                })}
+                            />
                         </View>
                         <View style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'center' }}>
                             <Image
@@ -167,6 +165,19 @@ export class ClassAttendanceScreen extends QcParentScreen {
                 navigation={this.props.navigation} />}>
                 <QCView style={screenStyle.container}>
                     <ScrollView>
+                        <View style={{ flex: 1, width: Dimensions.get('window').width }}>
+                            <TopBanner
+                                LeftIconName="navicon"
+                                LeftOnPress={() => this.setState({ isOpen: true })}
+                                Title={this.state.currentClass.name}
+                                RightIconName="edit"
+                                RightOnPress={() => this.props.navigation.push('ClassEdit', {
+                                    classID: this.state.currentClassID,
+                                    currentClass: this.state.currentClass,
+                                    userID: this.state.userID
+                                })}
+                            />
+                        </View>
                         <View style={styles.saveAttendance}>
                             <DatePicker
                                 date={this.state.selectedDate}
