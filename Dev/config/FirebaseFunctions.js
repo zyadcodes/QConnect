@@ -61,11 +61,11 @@ export default class FirebaseFunctions {
 
     }
 
-    //This function takes in a user's email and sends them a code to reset their password (not async)
-    static sendForgotPasswordCode(email) {
+    //This function takes in a user's email and sends them a code to reset their password
+    static async sendForgotPasswordCode(email) {
 
         this.logEvent("SEND_FORGOT_PASSWORD_EMAIL");
-        this.auth.sendPasswordResetEmail(email);
+        await this.auth.sendPasswordResetEmail(email);
 
     }
 
