@@ -59,6 +59,9 @@ export default {
     ErrorSigningUp: "Error signing up",
     ErrorSigningIn: "Error signing in",
     InvalidPhoneNumber: "The phone number is invalid. Please enter a valid phone number.",
+    EmailExists: 'This email already exists.',
+    BadEmail: 'Please enter a valid email address',
+    PasswordError: 'Password must be longer than six characters',
 
 
     //----------------------- Teacher Main Screen ----------------------

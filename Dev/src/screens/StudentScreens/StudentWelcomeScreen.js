@@ -14,6 +14,7 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import { Icon } from 'react-native-elements';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import firebase from 'react-native-firebase';
 
 
 export class StudentWelcomeScreen extends QcParentScreen {
@@ -83,7 +84,7 @@ export class StudentWelcomeScreen extends QcParentScreen {
     this.setModalVisible(false);
   }
 
-  //this method saves the new profile information to the firestore database
+  // this method saves the new profile information to the firestore database
   // This is reused for student profile page and studnet welcome page
   // In studnet welcome page, student ID will be passed as undefined, in which case
   // we will generate a new ID before saving to the store.
@@ -113,7 +114,7 @@ export class StudentWelcomeScreen extends QcParentScreen {
   };
 
   //Creates new account, or launches confirmation dialog if account was created but not confirmed yet.
-  onCreateOrConfirmAccount() {
+  async onCreateOrConfirmAccount() {
     //validate entries first
     const { name, phoneNumber, emailAddress, password } = this.state;
     if (!name ||
@@ -127,9 +128,18 @@ export class StudentWelcomeScreen extends QcParentScreen {
       Alert.alert(strings.Whoops, strings.PleaseMakeSureAllFieldsAreFilledOut);
     } else if (!this.state.isPhoneValid) {
       Alert.alert(strings.Whoops, strings.InvalidPhoneNumber);
+    } else if (!emailAddress.includes("@")) {
+      Alert.alert(strings.Whoops, strings.BadEmail)
+    } else if (password.length <= 6) {
+      Alert.alert(strings.Whoops, strings.PasswordError)
     } else {
-      //else, create account and save profile info
-      this.saveProfileInfo()
+      const doesThisUserExist = await firebase.auth().fetchSignInMethodsForEmail(emailAddress);
+      if (doesThisUserExist.length > 0) {
+        Alert.alert(strings.Whoops, strings.EmailExists);
+      } else {
+        //else, create account and save profile info
+        this.saveProfileInfo()
+      }
     }
   }
 
