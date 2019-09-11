@@ -79,21 +79,29 @@ export class ClassEditScreen extends QcParentScreen {
   //This method adds a student manually without them actually having to have a profile
   async addManualStudent() {
 
-    this.setState({ isLoading: true, newStudentName: '' });
+    if (this.state.newStudentName.trim() === '') {
 
-    //First pushes the manual student to the firebase database
-    const { newStudentName, profileImageID } = this.state;
-    const newStudent = await FirebaseFunctions.addManualStudent(newStudentName, profileImageID, this.state.classID);
+      Alert.alert(strings.Whoops, strings.PleaseInputAName);
 
-    //Appends the student to the current state
-    let newArrayOfStudents = this.state.students;
-    newArrayOfStudents.push(newStudent);
+    } else {
 
-    //Sets the new state
-    this.setState({
-      isLoading: false,
-      students: newArrayOfStudents
-    });
+      this.setState({ isLoading: true, newStudentName: '' });
+
+      //First pushes the manual student to the firebase database
+      const { newStudentName, profileImageID } = this.state;
+      const newStudent = await FirebaseFunctions.addManualStudent(newStudentName, profileImageID, this.state.classID);
+
+      //Appends the student to the current state
+      let newArrayOfStudents = this.state.students;
+      newArrayOfStudents.push(newStudent);
+
+      //Sets the new state
+      this.setState({
+        isLoading: false,
+        students: newArrayOfStudents
+      });
+
+    }
 
     return 0;
 
@@ -247,7 +255,7 @@ export class ClassEditScreen extends QcParentScreen {
                         name='user-times'
                         size={PixelRatio.get() * 9}
                         type='font-awesome'
-                        color={colors.primaryLight}/>
+                        color={colors.primaryLight} />
                     </TouchableOpacity>
                   } />
               )} />
