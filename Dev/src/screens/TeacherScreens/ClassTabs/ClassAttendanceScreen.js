@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, Image, Text, Dimensions } from 'react-native';
+import { ScrollView, StyleSheet, View, Image, Text, Dimensions, Alert } from 'react-native';
 import Toast, { DURATION } from 'react-native-easy-toast'
 import DatePicker from 'react-native-datepicker';
 import StudentCard from 'components/StudentCard';
@@ -26,7 +26,11 @@ export class ClassAttendanceScreen extends QcParentScreen {
         userID: '',
         teacher: '',
         absentStudents: [],
-        selectedDate: new Date().toLocaleDateString("en-US"),
+        selectedDate: new Date().toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+        }),
         classes: '',
         isOpen: false
     }
@@ -83,7 +87,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
 
         let { absentStudents, selectedDate, currentClassID } = this.state;
         await FirebaseFunctions.saveAttendanceForClass(absentStudents, selectedDate, currentClassID);
-        this.refs.toast.show(strings.AttendanceFor + date + strings.HasBeenSaved, DURATION.LENGTH_SHORT);
+        this.refs.toast.show(strings.AttendanceFor + selectedDate + strings.HasBeenSaved, DURATION.LENGTH_SHORT);
 
     }
 
@@ -183,17 +187,21 @@ export class ClassAttendanceScreen extends QcParentScreen {
                                 date={this.state.selectedDate}
                                 confirmBtnText={strings.Confirm}
                                 cancelBtnText={strings.Cancel}
-                                format="MM-DD-YYYY"
+                                format="MM/DD/YYYY"
                                 duration={300}
                                 style={{ paddingLeft: 15 }}
-                                maxDate={new Date().toLocaleDateString("en-US")}
+                                maxDate={new Date().toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "2-digit",
+                                    day: "2-digit",
+                                })}
                                 customStyles={{ dateInput: { borderColor: colors.lightGrey } }}
                                 onDateChange={async (date) => {
                                     this.setState({
                                         selectedDate: date,
                                         isLoading: true
                                     });
-                                    const absentStudents = await FirebaseFunctions.getAbsentStudentsByDate(this.state.selectedDate, this.state.currentClassID);
+                                    const absentStudents = await FirebaseFunctions.getAbsentStudentsByDate(date, this.state.currentClassID);
                                     this.setState({
                                         isLoading: false,
                                         absentStudents
