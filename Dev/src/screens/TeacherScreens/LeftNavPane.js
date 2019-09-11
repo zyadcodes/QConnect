@@ -64,7 +64,7 @@ class LeftNavPane extends QcParentScreen {
     const teacherImageId = profileImageID ? profileImageID : 0;
 
     return (
-      <QCView style={screenStyle.container}>
+      <QCView style={[screenStyle.container, { alignItems: 'flex-start' }]}>
         <ScrollView>
           <SafeAreaView
             forceInset={{ top: "always", horizontal: "never" }}
@@ -101,12 +101,16 @@ class LeftNavPane extends QcParentScreen {
                 <QcDrawerItem
                   title={item.name}
                   image={classImages.images[item.classImageID]}
-                  onPress={() => {
+                  onPress={async () => {
                     if (this.state.deleteBool === true) {
                       //Deletes the class
-
+                      await FirebaseFunctions.deleteClass(item.ID, this.state.userID);
+                      this.props.navigation.push("TeacherCurrentClass", {
+                        userID: this.state.userID
+                      });
+                    } else {
+                      this.openClass(item.ID);
                     }
-                    this.openClass(item.ID);
                   }}
                   backColor={this.state.backColor}
                 />

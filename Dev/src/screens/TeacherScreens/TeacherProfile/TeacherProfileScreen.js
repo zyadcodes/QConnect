@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Image, TouchableWithoutFeedback, Keyboard, Alert, ScrollView } from 'react-native';
+import { StyleSheet, View, Image, TouchableWithoutFeedback, Keyboard, Alert, ScrollView, Dimensions } from 'react-native';
 import Toast, { DURATION } from 'react-native-easy-toast'
 import QcActionButton from 'components/QcActionButton';
 import TouchableText from 'components/TouchableText'
@@ -109,12 +109,17 @@ export class TeacherProfileScreen extends QcParentScreen {
                 classes={this.state.classes}
                 edgeHitWidth={0}
                 navigation={this.props.navigation} />}>
-                <QCView style={screenStyle.container}>
-                    <TopBanner
-                        LeftIconName="navicon"
-                        LeftOnPress={() => this.setState({ isOpen: true })}
-                        Title={strings.MyProfile} />
-                    <ScrollView>
+                <QCView style={{
+                    flexDirection: 'column',
+                    backgroundColor: colors.lightGrey,
+                    width: Dimensions.get('window').width,
+                    height: Dimensions.get('window').height
+                }}>
+                    <ScrollView style={styles.container}>
+                        <TopBanner
+                            LeftIconName="navicon"
+                            LeftOnPress={() => this.setState({ isOpen: true })}
+                            Title={strings.MyProfile} />
                         <View>
                             <ImageSelectionModal
                                 visible={this.state.modalVisible}
@@ -160,7 +165,7 @@ export class TeacherProfileScreen extends QcParentScreen {
                         </View>
                     </ScrollView>
                 </QCView>
-            </SideMenu>
+            </SideMenu >
         )
     }
 
@@ -172,7 +177,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: colors.lightGrey,
         flex: 1,
-        justifyContent: "flex-end"
     },
     picContainer: {
         paddingTop: 25,

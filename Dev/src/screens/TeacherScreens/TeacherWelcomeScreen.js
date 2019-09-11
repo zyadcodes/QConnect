@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Image, Text, TouchableWithoutFeedback, TouchableOpacity, Keyboard, Alert, Modal, ScrollView, LayoutAnimation, Platform } from "react-native";
+import { StyleSheet, View, Image, Text, TouchableOpacity, Alert, ScrollView, LayoutAnimation, Platform } from "react-native";
 import QcActionButton from "components/QcActionButton";
 import Toast, { DURATION } from "react-native-easy-toast";
 import colors from "config/colors";
@@ -24,8 +24,6 @@ const initialState = {
 //to function dynamically
 export class TeacherWelcomeScreen extends QcParentScreen {
   state = initialState;
-
-  name = "TeacherWelcomeScreen";
 
   getRandomGenderNeutralImage = () => {
     index = Math.floor(Math.random() * Math.floor(teacherImages.genderNeutralImages.length));
@@ -192,18 +190,18 @@ export class TeacherWelcomeScreen extends QcParentScreen {
               onImageSelected={this.onImageSelected.bind(this)}
               screen={this.name}
             />
-
             <View style={styles.picContainer}>
+              <View style={{ flex: 1 }}><Text> </Text></View>
               <View style={{ flex: 1, alignSelf: 'flex-start', flexDirection: 'row' }}>
-                <View style={{ flex: 0.25 }}></View>
-                <TouchableOpacity style={{ flex: 1, alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
+                <View style={{ flex: 0.1 }}><Text>   </Text></View>
+                <TouchableOpacity style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
                   <Icon
                     name={'angle-left'}
                     type="font-awesome" />
                 </TouchableOpacity>
                 <View style={{ flex: 3 }}></View>
               </View>
-              <View style={{ flex: 10 }}>
+              <View style={{ flex: 1 }}>
                 <FadeInView
                   style={{ alignItems: 'center', justifyContent: 'center' }}>
                   <Image
@@ -213,7 +211,6 @@ export class TeacherWelcomeScreen extends QcParentScreen {
                   <Text style={styles.quote}>{strings.TeacherWelcomeMessage}</Text>
                 </FadeInView>
               </View>
-
             </View>
             <View style={styles.editInfo} behavior="padding">
               <TeacherInfoEntries

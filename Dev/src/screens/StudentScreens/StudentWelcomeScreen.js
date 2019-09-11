@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Image, TouchableOpacity, Alert, Modal, ScrollView, LayoutAnimation, Platform } from "react-native";
+import { StyleSheet, View, Image, TouchableOpacity, Alert, ScrollView, LayoutAnimation, Platform, Dimensions, Text } from "react-native";
 import QcActionButton from "components/QcActionButton";
 import Toast, { DURATION } from "react-native-easy-toast";
 import colors from "config/colors";
@@ -168,8 +168,8 @@ export class StudentWelcomeScreen extends QcParentScreen {
   render() {
 
     return (
-      <ScrollView>
-        <QCView style={screenStyle.container}>
+      <QCView style={screenStyle.container}>
+        <ScrollView>
           <View>
             <ImageSelectionModal
               visible={this.state.modalVisible}
@@ -181,16 +181,17 @@ export class StudentWelcomeScreen extends QcParentScreen {
             />
 
             <View style={styles.picContainer}>
+              <View style={{ flex: 1 }}><Text> </Text></View>
               <View style={{ flex: 1, alignSelf: 'flex-start', flexDirection: 'row' }}>
-                <View style={{ flex: 0.25 }}></View>
-                <TouchableOpacity style={{ flex: 1, alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
+                <View style={{ flex: 0.1 }}><Text>   </Text></View>
+                <TouchableOpacity style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
                   <Icon
                     name={'angle-left'}
                     type="font-awesome" />
                 </TouchableOpacity>
                 <View style={{ flex: 3 }}></View>
               </View>
-              <View style={{ flex: 10 }}>
+              <View style={{ flex: 1 }}>
                 <FadeInView
                   style={{ alignItems: 'center', justifyContent: 'center' }}>
                   <Image
@@ -199,7 +200,6 @@ export class StudentWelcomeScreen extends QcParentScreen {
                   />
                 </FadeInView>
               </View>
-
             </View>
             <View style={styles.editInfo} behavior="padding">
               <TeacherInfoEntries
@@ -232,8 +232,8 @@ export class StudentWelcomeScreen extends QcParentScreen {
             <View style={styles.filler} />
             <Toast ref="toast" />
           </View>
-        </QCView>
-      </ScrollView>
+        </ScrollView>
+      </QCView>
     );
   }
 }
@@ -251,7 +251,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 15,
     marginBottom: 10,
-    backgroundColor: colors.white
+    backgroundColor: colors.white,
+    width: Dimensions.get('window').width,
+    flexDirection: 'column'
   },
   quote: {
     fontSize: 16,
@@ -268,13 +270,15 @@ const styles = StyleSheet.create({
   editInfo: {
     flexDirection: "column",
     backgroundColor: colors.white,
-    color: colors.darkGrey
+    color: colors.darkGrey,
+    width: Dimensions.get('window').width
   },
   buttonsContainer: {
     flexDirection: "column",
     marginTop: 10,
     backgroundColor: colors.white,
-    justifyContent: "center"
+    justifyContent: "center",
+    width: Dimensions.get('window').width
   },
   filler: {
     flexDirection: "column",
