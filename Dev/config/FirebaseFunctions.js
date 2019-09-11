@@ -320,16 +320,18 @@ export default class FirebaseFunctions {
 
         let currentClass = await this.getClassByID(classID);
         let arrayOfStudents = currentClass.students;
-        let updatedArrayOfStudents = arrayOfStudents.map((student) => {
-
+        arrayOfStudents.forEach((student, index) => {
             //If the attendance already exists, then the code will automatically replace
             //the old attendance with this one
-            student.attendanceHistory[selectedDate] = (absentStudents.includes(student.ID) ? false : true);
-
+            let copyOfStudent = student;
+            let { attendanceHistory } = copyOfStudent;
+            attendanceHistory[selectedDate] = (absentStudents.includes(student.ID) ? false : true);
+            copyOfStudent.attendanceHistory = attendanceHistory;
+            arrayOfStudents[index] = copyOfStudent;
         });
 
         await this.updateClassObject(classID, {
-            students: updatedArrayOfStudents
+            students: arrayOfStudents
         });
         this.logEvent("SAVE_ATTENDANCE");
 
@@ -346,10 +348,11 @@ export default class FirebaseFunctions {
         let absentStudents = [];
         let currentClass = await this.getClassByID(classID);
 
-        currentClass.students.map((student) => {
+        currentClass.students.forEach((student) => {
 
             let studentAttendanceHistory = student.attendanceHistory;
-            if (studentAttendanceHistory[date] && studentAttendanceHistory[date] === false) {
+            console.log(studentAttendanceHistory[date]);
+            if (studentAttendanceHistory[date] === false) {
                 absentStudents.push(student.ID);
             }
 
@@ -423,9 +426,31 @@ export default class FirebaseFunctions {
             ID: studentID
         });
         const student = await this.getStudentByID(studentID);
-        const finalObject = await this.joinClass(student, classID);
 
-        return finalObject;
+        const classToJoin = await this.classes.doc(classID).get();
+        if (!classToJoin.exists) {
+            return -1;
+        }
+
+        const studentClassObject = {
+            ID: studentID,
+            assignmentHistory: [],
+            attendanceHistory: {},
+            averageRating: 0,
+            currentAssignment: 'None',
+            isReady: true,
+            profileImageID: student.profileImageID,
+            name: student.name,
+            totalAssignments: 0
+        }
+
+        await this.updateClassObject(classID, {
+            students: firebase.firestore.FieldValue.arrayUnion(studentClassObject)
+        });
+
+        this.logEvent("MANUAL_STUDENT_ADDITION");
+
+        return studentClassObject;
 
     }
 
