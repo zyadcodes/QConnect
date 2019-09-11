@@ -182,6 +182,35 @@ export default class FirebaseFunctions {
 
     }
 
+    //This method will disasociate a class from a specific teacher. It will take in the class ID & the teacher ID and disconnect the
+    //two. The class object will be still stored in the firestore.
+    static async deleteClass(classID, teacherID) {
+
+        const thisClass = await this.getClassByID(classID);
+        const arrayOfTeachers = thisClass.teachers;
+        const indexOfTeacher = arrayOfTeachers.findIndex((element) => {
+            return element = teacherID
+        });
+        arrayOfTeachers.splice(indexOfTeacher, 1);
+        await this.updateClassObject(classID, {
+            teachers: arrayOfTeachers
+        });
+
+        const thisTeacher = await this.getTeacherByID(teacherID);
+        const arrayOfClasses = thisTeacher.classes;
+        const indexOfClass = arrayOfClasses.findIndex((element) => {
+            return element = classID;
+        });
+        arrayOfClasses.splice(indexOfClass, 1);
+        await this.updateTeacherObject(teacherID, {
+            classes: arrayOfClasses,
+            currentClassID: ''
+        });
+
+        return 0;
+
+    }
+
     //This function will update the assignment status of a particular student within a class. It will
     //simply reverse whatever the property is at the moment (true --> false & vice verca). This property
     //is located within a student object that is within a class object
@@ -209,7 +238,7 @@ export default class FirebaseFunctions {
     //and finally, the name of the new assignment which it will set the currentAssignment property 
     //to
     static async updateStudentCurrentAssignment(classID, studentID, newAssignmentName) {
-        
+
         let currentClass = await this.getClassByID(classID);
 
         let arrayOfStudents = currentClass.students;
