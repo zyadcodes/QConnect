@@ -227,36 +227,36 @@ export class ClassEditScreen extends QcParentScreen {
                   profilePic={studentImages.images[item.profileImageID]}
                   background={colors.white}
                   onPress={() => { }}
+                  compOnPress={() => {
+                    Alert.alert(
+                      strings.RemoveStudent,
+                      strings.AreYouSureYouWantToRemoveStudent,
+                      [
+                        {
+                          text: strings.Remove, onPress: () => {
+
+                            //Removes the student from the database and updates the local state
+                            FirebaseFunctions.removeStudent(classID, item.ID);
+                            let arrayOfClassStudents = students;
+                            let indexOfStudent = arrayOfClassStudents.findIndex((student) => {
+                              return student.ID === item.ID;
+                            });
+                            arrayOfClassStudents.splice(indexOfStudent, 1);
+                            this.setState({ students: arrayOfClassStudents });
+                          }
+                        },
+
+                        { text: strings.Cancel, style: 'cancel' },
+                      ]
+                    );
+
+                  }}
                   comp={
-                    <TouchableOpacity onPress={() => {
-                      Alert.alert(
-                        strings.RemoveStudent,
-                        strings.AreYouSureYouWantToRemoveStudent,
-                        [
-                          {
-                            text: strings.Remove, onPress: () => {
-
-                              //Removes the student from the database and updates the local state
-                              FirebaseFunctions.removeStudent(classID, item.ID);
-                              let arrayOfClassStudents = students;
-                              let indexOfStudent = arrayOfClassStudents.findIndex((student) => {
-                                return student.ID === item.ID;
-                              });
-                              arrayOfClassStudents.splice(indexOfStudent, 1);
-                              this.setState({ students: arrayOfClassStudents });
-                            }
-                          },
-
-                          { text: strings.Cancel, style: 'cancel' },
-                        ]
-                      );
-                    }}>
-                      <Icon
-                        name='user-times'
-                        size={PixelRatio.get() * 9}
-                        type='font-awesome'
-                        color={colors.primaryLight} />
-                    </TouchableOpacity>
+                    <Icon
+                      name='user-times'
+                      size={PixelRatio.get() * 9}
+                      type='font-awesome'
+                      color={colors.primaryLight} />
                   } />
               )} />
           </View>
