@@ -426,11 +426,31 @@ export default class FirebaseFunctions {
             ID: studentID
         });
         const student = await this.getStudentByID(studentID);
-        const finalObject = await this.joinClass(student, classID);
+
+        const classToJoin = await this.classes.doc(classID).get();
+        if (!classToJoin.exists) {
+            return -1;
+        }
+
+        const studentClassObject = {
+            ID: studentID,
+            assignmentHistory: [],
+            attendanceHistory: {},
+            averageRating: 0,
+            currentAssignment: 'None',
+            isReady: true,
+            profileImageID: student.profileImageID,
+            name: student.name,
+            totalAssignments: 0
+        }
+
+        await this.updateClassObject(classID, {
+            students: firebase.firestore.FieldValue.arrayUnion(studentClassObject)
+        });
 
         this.logEvent("MANUAL_STUDENT_ADDITION");
 
-        return finalObject;
+        return studentClassObject;
 
     }
 
