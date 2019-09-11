@@ -1,0 +1,98 @@
+User defaults from command line:
+    IDEArchivePathOverride = /var/folders/3q/jtlhvhvn65v7_916y15h9zd40000gn/T/__codesigndoc__595951922/QuranConnect.xcarchive
+
+note: Using new build system
+
+** CLEAN SUCCEEDED **
+
+note: Using new build system
+note: Planning build
+note: Constructing build description
+Build system information
+error: No profile for team 'B65Y7865Z9' matching '/Users/elyasse/Documents/comyungdevzquranconnect_AppStore.mobileprovision' found: Xcode couldn't find any provisioning profiles matching 'B65Y7865Z9//Users/elyasse/Documents/comyungdevzquranconnect_AppStore.mobileprovision'. Install the profile (by dragging and dropping it onto Xcode's dock item) or select a different one in the General tab of the target editor. (in target 'QuranConnect')
+
+Build system information
+warning: The iOS deployment target is set to 7.0, but the range of supported deployment target versions for this platform is 8.0 to 12.4.99. (in target 'GTMSessionFetcher')
+
+Build system information
+warning: The iOS deployment target is set to 7.0, but the range of supported deployment target versions for this platform is 8.0 to 12.4.99. (in target 'Protobuf')
+
+Build system information
+warning: The iOS deployment target is set to 7.0, but the range of supported deployment target versions for this platform is 8.0 to 12.4.99. (in target 'gRPC-C++-gRPCCertificates-Cpp')
+
+Build system information
+warning: The iOS deployment target is set to 7.0, but the range of supported deployment target versions for this platform is 8.0 to 12.4.99. (in target 'BoringSSL-GRPC')
+
+Build system information
+warning: The iOS deployment target is set to 4.3, but the range of supported deployment target versions for this platform is 8.0 to 12.4.99. (in target 'nanopb')
+
+Build system information
+warning: The iOS deployment target is set to 7.0, but the range of supported deployment target versions for this platform is 8.0 to 12.4.99. (in target 'gRPC-Core')
+
+Build system information
+warning: The iOS deployment target is set to 7.0, but the range of supported deployment target versions for this platform is 8.0 to 12.4.99. (in target 'Fabric')
+
+Build system information
+warning: The iOS deployment target is set to 7.0, but the range of supported deployment target versions for this platform is 8.0 to 12.4.99. (in target 'gRPC-C++')
+
+Build system information
+warning: The iOS deployment target is set to 7.0, but the range of supported deployment target versions for this platform is 8.0 to 12.4.99. (in target 'Crashlytics')
+
+Build system information
+warning: The iOS deployment target is set to 5.0, but the range of supported deployment target versions for this platform is 8.0 to 12.4.99. (in target 'leveldb-library')
+
+Build system information
+warning: The iOS deployment target is set to 7.0, but the range of supported deployment target versions for this platform is 8.0 to 12.4.99. (in target 'RNGestureHandler')
+
+Build system information
+warning: The iOS deployment target is set to 6.0, but the range of supported deployment target versions for this platform is 8.0 to 12.4.99. (in target 'GoogleIDFASupport')
+
+Build system information
+warning: ignoring duplicated output file: '/Users/elyasse/Library/Developer/Xcode/DerivedData/QuranConnect-gpjiokfetavpokazdfbiyjpzjcoy/Build/Intermediates.noindex/ArchiveIntermediates/QuranConnect/InstallationBuildProductsLocation/Applications/QuranConnect.app/AntDesign.ttf' in shell script build phase '[CP] Copy Pods Resources'. This warning represents an extremely serious project misconfiguration and will likely cause some shell scripts in your project to be skipped entirely, leading to other build failures or missing files in the build directory. This will be a hard error in the future. (in target 'QuranConnect')
+
+Build system information
+warning: ignoring duplicated output file: '/Users/elyasse/Library/Developer/Xcode/DerivedData/QuranConnect-gpjiokfetavpokazdfbiyjpzjcoy/Build/Intermediates.noindex/ArchiveIntermediates/QuranConnect/InstallationBuildProductsLocation/Applications/QuranConnect.app/Entypo.ttf' in shell script build phase '[CP] Copy Pods Resources'. This warning represents an extremely serious project misconfiguration and will likely cause some shell scripts in your project to be skipped entirely, leading to other build failures or missing files in the build directory. This will be a hard error in the future. (in target 'QuranConnect')
+
+Build system information
+warning: ignoring duplicated output file: '/Users/elyasse/Library/Developer/Xcode/DerivedData/QuranConnect-gpjiokfetavpokazdfbiyjpzjcoy/Build/Intermediates.noindex/ArchiveIntermediates/QuranConnect/InstallationBuildProductsLocation/Applications/QuranConnect.app/EvilIcons.ttf' in shell script build phase '[CP] Copy Pods Resources'. This warning represents an extremely serious project misconfiguration and will likely cause some shell scripts in your project to be skipped entirely, leading to other build failures or missing files in the build directory. This will be a hard error in the future. (in target 'QuranConnect')
+
+Build system information
+warning: ignoring duplicated output file: '/Users/elyasse/Library/Developer/Xcode/DerivedData/QuranConnect-gpjiokfetavpokazdfbiyjpzjcoy/Build/Intermediates.noindex/ArchiveIntermediates/QuranConnect/InstallationBuildProductsLocation/Applications/QuranConnect.app/Feather.ttf' in shell script build phase '[CP] Copy Pods Resources'. This warning represents an extremely serious project misconfiguration and will likely cause some shell scripts in your project to be skipped entirely, leading to other build failures or missing files in the build directory. This will be a hard error in the future. (in target 'QuranConnect')
+
+Build system information
+warning: ignoring duplicated output file: '/Users/elyasse/Library/Developer/Xcode/DerivedData/QuranConnect-gpjiokfetavpokazdfbiyjpzjcoy/Build/Intermediates.noindex/ArchiveIntermediates/QuranConnect/InstallationBuildProductsLocation/Applications/QuranConnect.app/FontAwesome.ttf' in shell script build phase '[CP] Copy Pods Resources'. This warning represents an extremely serious project misconfiguration and will likely cause some shell scripts in your project to be skipped entirely, leading to other build failures or missing files in the build directory. This will be a hard error in the future. (in target 'QuranConnect')
+
+Build system information
+warning: ignoring duplicated output file: '/Users/elyasse/Library/Developer/Xcode/DerivedData/QuranConnect-gpjiokfetavpokazdfbiyjpzjcoy/Build/Intermediates.noindex/ArchiveIntermediates/QuranConnect/InstallationBuildProductsLocation/Applications/QuranConnect.app/FontAwesome5_Brands.ttf' in shell script build phase '[CP] Copy Pods Resources'. This warning represents an extremely serious project misconfiguration and will likely cause some shell scripts in your project to be skipped entirely, leading to other build failures or missing files in the build directory. This will be a hard error in the future. (in target 'QuranConnect')
+
+Build system information
+warning: ignoring duplicated output file: '/Users/elyasse/Library/Developer/Xcode/DerivedData/QuranConnect-gpjiokfetavpokazdfbiyjpzjcoy/Build/Intermediates.noindex/ArchiveIntermediates/QuranConnect/InstallationBuildProductsLocation/Applications/QuranConnect.app/FontAwesome5_Regular.ttf' in shell script build phase '[CP] Copy Pods Resources'. This warning represents an extremely serious project misconfiguration and will likely cause some shell scripts in your project to be skipped entirely, leading to other build failures or missing files in the build directory. This will be a hard error in the future. (in target 'QuranConnect')
+
+Build system information
+warning: ignoring duplicated output file: '/Users/elyasse/Library/Developer/Xcode/DerivedData/QuranConnect-gpjiokfetavpokazdfbiyjpzjcoy/Build/Intermediates.noindex/ArchiveIntermediates/QuranConnect/InstallationBuildProductsLocation/Applications/QuranConnect.app/FontAwesome5_Solid.ttf' in shell script build phase '[CP] Copy Pods Resources'. This warning represents an extremely serious project misconfiguration and will likely cause some shell scripts in your project to be skipped entirely, leading to other build failures or missing files in the build directory. This will be a hard error in the future. (in target 'QuranConnect')
+
+Build system information
+warning: ignoring duplicated output file: '/Users/elyasse/Library/Developer/Xcode/DerivedData/QuranConnect-gpjiokfetavpokazdfbiyjpzjcoy/Build/Intermediates.noindex/ArchiveIntermediates/QuranConnect/InstallationBuildProductsLocation/Applications/QuranConnect.app/Fontisto.ttf' in shell script build phase '[CP] Copy Pods Resources'. This warning represents an extremely serious project misconfiguration and will likely cause some shell scripts in your project to be skipped entirely, leading to other build failures or missing files in the build directory. This will be a hard error in the future. (in target 'QuranConnect')
+
+Build system information
+warning: ignoring duplicated output file: '/Users/elyasse/Library/Developer/Xcode/DerivedData/QuranConnect-gpjiokfetavpokazdfbiyjpzjcoy/Build/Intermediates.noindex/ArchiveIntermediates/QuranConnect/InstallationBuildProductsLocation/Applications/QuranConnect.app/Foundation.ttf' in shell script build phase '[CP] Copy Pods Resources'. This warning represents an extremely serious project misconfiguration and will likely cause some shell scripts in your project to be skipped entirely, leading to other build failures or missing files in the build directory. This will be a hard error in the future. (in target 'QuranConnect')
+
+Build system information
+warning: ignoring duplicated output file: '/Users/elyasse/Library/Developer/Xcode/DerivedData/QuranConnect-gpjiokfetavpokazdfbiyjpzjcoy/Build/Intermediates.noindex/ArchiveIntermediates/QuranConnect/InstallationBuildProductsLocation/Applications/QuranConnect.app/Ionicons.ttf' in shell script build phase '[CP] Copy Pods Resources'. This warning represents an extremely serious project misconfiguration and will likely cause some shell scripts in your project to be skipped entirely, leading to other build failures or missing files in the build directory. This will be a hard error in the future. (in target 'QuranConnect')
+
+Build system information
+warning: ignoring duplicated output file: '/Users/elyasse/Library/Developer/Xcode/DerivedData/QuranConnect-gpjiokfetavpokazdfbiyjpzjcoy/Build/Intermediates.noindex/ArchiveIntermediates/QuranConnect/InstallationBuildProductsLocation/Applications/QuranConnect.app/MaterialCommunityIcons.ttf' in shell script build phase '[CP] Copy Pods Resources'. This warning represents an extremely serious project misconfiguration and will likely cause some shell scripts in your project to be skipped entirely, leading to other build failures or missing files in the build directory. This will be a hard error in the future. (in target 'QuranConnect')
+
+Build system information
+warning: ignoring duplicated output file: '/Users/elyasse/Library/Developer/Xcode/DerivedData/QuranConnect-gpjiokfetavpokazdfbiyjpzjcoy/Build/Intermediates.noindex/ArchiveIntermediates/QuranConnect/InstallationBuildProductsLocation/Applications/QuranConnect.app/MaterialIcons.ttf' in shell script build phase '[CP] Copy Pods Resources'. This warning represents an extremely serious project misconfiguration and will likely cause some shell scripts in your project to be skipped entirely, leading to other build failures or missing files in the build directory. This will be a hard error in the future. (in target 'QuranConnect')
+
+Build system information
+warning: ignoring duplicated output file: '/Users/elyasse/Library/Developer/Xcode/DerivedData/QuranConnect-gpjiokfetavpokazdfbiyjpzjcoy/Build/Intermediates.noindex/ArchiveIntermediates/QuranConnect/InstallationBuildProductsLocation/Applications/QuranConnect.app/Octicons.ttf' in shell script build phase '[CP] Copy Pods Resources'. This warning represents an extremely serious project misconfiguration and will likely cause some shell scripts in your project to be skipped entirely, leading to other build failures or missing files in the build directory. This will be a hard error in the future. (in target 'QuranConnect')
+
+Build system information
+warning: ignoring duplicated output file: '/Users/elyasse/Library/Developer/Xcode/DerivedData/QuranConnect-gpjiokfetavpokazdfbiyjpzjcoy/Build/Intermediates.noindex/ArchiveIntermediates/QuranConnect/InstallationBuildProductsLocation/Applications/QuranConnect.app/SimpleLineIcons.ttf' in shell script build phase '[CP] Copy Pods Resources'. This warning represents an extremely serious project misconfiguration and will likely cause some shell scripts in your project to be skipped entirely, leading to other build failures or missing files in the build directory. This will be a hard error in the future. (in target 'QuranConnect')
+
+Build system information
+warning: ignoring duplicated output file: '/Users/elyasse/Library/Developer/Xcode/DerivedData/QuranConnect-gpjiokfetavpokazdfbiyjpzjcoy/Build/Intermediates.noindex/ArchiveIntermediates/QuranConnect/InstallationBuildProductsLocation/Applications/QuranConnect.app/Zocial.ttf' in shell script build phase '[CP] Copy Pods Resources'. This warning represents an extremely serious project misconfiguration and will likely cause some shell scripts in your project to be skipped entirely, leading to other build failures or missing files in the build directory. This will be a hard error in the future. (in target 'QuranConnect')
+
+** ARCHIVE FAILED **
