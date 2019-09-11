@@ -4,7 +4,6 @@ import { Dimensions } from 'react-native';
 
 export default {
     container: {
-        alignItems: 'center',
         flexDirection: 'column',
         backgroundColor: colors.lightGrey,
         width: Dimensions.get('window').width,

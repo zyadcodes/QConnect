@@ -123,7 +123,7 @@ export class AddClassScreen extends QcParentScreen {
         edgeHitWidth={0}
         navigation={this.props.navigation} />}>
         <QCView style={screenStyle.container}>
-          <View>
+          <View style={{ flex: 1 }}>
             <TopBanner
               LeftIconName="navicon"
               LeftOnPress={() => this.setState({ isOpen: true })}
