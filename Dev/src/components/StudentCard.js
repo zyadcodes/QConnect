@@ -72,16 +72,16 @@ const styles = StyleSheet.create({
         fontFamily: 'Montserrat-Regular',
     },
     removeStudentStyle: {
-        flexWrap: 'wrap',
         flexDirection: 'row',
-        justifyContent: 'flex-end',
-        marginRight: 20
+        justifyContent: 'center',
+        marginRight: 20,
+        flex: 1
     },
     infoStyle: {
         flexDirection: 'column',
         justifyContent: 'center',
         fontFamily: 'Montserrat-Regular',
-        flex: 1
+        flex: 4
     },
     profilePicStyle: {
         width: 60,

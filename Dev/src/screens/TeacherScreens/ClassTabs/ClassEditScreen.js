@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, View, StyleSheet, FlatList, Dimensions, Text, Alert, Share, TextInput } from "react-native";
+import { ScrollView, View, StyleSheet, FlatList, Dimensions, Text, Alert, Share, TextInput, PixelRatio } from "react-native";
 import StudentCard from "components/StudentCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages";
@@ -13,6 +13,7 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export class ClassEditScreen extends QcParentScreen {
 
@@ -218,12 +219,8 @@ export class ClassEditScreen extends QcParentScreen {
                   profilePic={studentImages.images[item.profileImageID]}
                   background={colors.white}
                   onPress={() => { }}
-                  comp={<Icon
-                    name='user-times'
-                    size={25}
-                    type='font-awesome'
-                    color={colors.primaryLight}
-                    onPress={() => {
+                  comp={
+                    <TouchableOpacity onPress={() => {
                       Alert.alert(
                         strings.RemoveStudent,
                         strings.AreYouSureYouWantToRemoveStudent,
@@ -245,7 +242,14 @@ export class ClassEditScreen extends QcParentScreen {
                           { text: strings.Cancel, style: 'cancel' },
                         ]
                       );
-                    }} />} />
+                    }}>
+                      <Icon
+                        name='user-times'
+                        size={PixelRatio.get() * 9}
+                        type='font-awesome'
+                        color={colors.primaryLight}/>
+                    </TouchableOpacity>
+                  } />
               )} />
           </View>
         </ScrollView>
