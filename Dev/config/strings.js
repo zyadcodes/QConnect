@@ -29,7 +29,7 @@ export default {
     ErrorWithCode: 'PleaseEnterCode',
     RecoverYourPassword: 'Recover your password',
     EmailSent: 'Email Sent',
-    CheckEmail: 'We\'ve sent a link to your email to reset your password',
+    CheckEmail: 'If a user with this email exists, we\'ve sent a link to your email to reset your password',
     Ok: 'Ok',
 
     //--------------------- Evaluation Page ---------------------

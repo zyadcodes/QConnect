@@ -25,7 +25,9 @@ class ForgotPassword extends Component {
 
     render() {
         return (
-            <QCView style={screenStyle.container}>
+            <QCView style={[screenStyle.container, {
+                alignItems: 'center'
+            }]}>
                     <View style={{ flex: 1 }}></View>
                     <View style={{ flex: 1 }}>
                         <Text style={styles.header}>{strings.RecoverYourPassword}</Text>
