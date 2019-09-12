@@ -12,8 +12,6 @@ import QcParentScreen from "screens/QcParentScreen";
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
-import screenStyle from 'config/screenStyle';
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 export class ClassEditScreen extends QcParentScreen {
 
@@ -43,16 +41,17 @@ export class ClassEditScreen extends QcParentScreen {
     return imageIndex;
   }
 
+  defaultImageId = this.getRandomGenderNeutralImage();
+
   getHighlightedImages = () => {
-    defaultImageId = this.getRandomGenderNeutralImage();
 
     // get a second gender neutral image, make sure it is different than the first one
     do {
       secondGenericImageId = this.getRandomGenderNeutralImage();
-    } while (secondGenericImageId === defaultImageId)
+    } while (secondGenericImageId === this.defaultImageId)
 
     //initialize the array of suggested images
-    let proposedImages = [defaultImageId, secondGenericImageId, this.getRandomFemaleImage(), this.getRandomMaleImage()]
+    let proposedImages = [this.defaultImageId, secondGenericImageId, this.getRandomFemaleImage(), this.getRandomMaleImage()]
     return proposedImages;
   }
 
@@ -116,7 +115,7 @@ export class ClassEditScreen extends QcParentScreen {
     students: this.props.navigation.state.params.currentClass.students,
     newStudentName: '',
     isLoading: false,
-    profileImageID: this.getRandomGenderNeutralImage(),
+    profileImageID: this.defaultImageId,
     highlightedImagesIndices: this.getHighlightedImages(),
     modalVisible: false
 
@@ -126,7 +125,7 @@ export class ClassEditScreen extends QcParentScreen {
 
   render() {
     const { classID, students } = this.state;
-
+    console.log(this.state.profileImageID)
     return (
       <QCView style={{
         flexDirection: 'column',
