@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* QuranConnectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* QuranConnectTests.m */; };
 		012BCE3CBEAA4A4FBB0D99F8 /* girl12.png in Resources */ = {isa = PBXBuildFile; fileRef = F73D7C4B100641C491C10838 /* girl12.png */; };
@@ -195,7 +194,6 @@
 		016EA1752328BB8400CD20E2 /* Icon-App-60x60@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-App-60x60@3x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/Icon-App-60x60@3x.png"; sourceTree = "<group>"; };
 		016EA1762328BB8400CD20E2 /* Icon-App-76x76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-App-76x76@2x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/Icon-App-76x76@2x.png"; sourceTree = "<group>"; };
 		016EA1772328BB8400CD20E2 /* Icon-App-29x29@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-App-29x29@2x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/Icon-App-29x29@2x.png"; sourceTree = "<group>"; };
-		016EA1872328BB9600CD20E2 /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iTunesArtwork@2x.png"; path = "../../../../../../Downloads/icon/ios/iTunesArtwork@2x.png"; sourceTree = "<group>"; };
 		016EA1882328BB9700CD20E2 /* iTunesArtwork@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@1x.png"; sourceTree = "<group>"; };
 		016EA1892328BB9700CD20E2 /* iTunesArtwork@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@3x.png"; sourceTree = "<group>"; };
 		017E518423234B7600B71C11 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "QuranConnect/GoogleService-Info.plist"; sourceTree = "<group>"; };
