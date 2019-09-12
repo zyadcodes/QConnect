@@ -73,6 +73,7 @@ export class EvaluationPage extends QcParentScreen {
     this.props.navigation.push("TeacherStudentProfile", {
       studentID: this.state.studentID,
       currentClass,
+      userID: this.props.navigation.state.params.userID,
       classID: this.state.classID
     });
 
@@ -96,6 +97,7 @@ export class EvaluationPage extends QcParentScreen {
     this.props.navigation.push("TeacherStudentProfile", {
       studentID: this.state.studentID,
       currentClass,
+      userID: this.props.navigation.state.params.userID,
       classID: this.state.classID
     });
 
