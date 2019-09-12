@@ -146,6 +146,7 @@ class StudentProfileScreen extends QcParentScreen {
                       classID: classID,
                       studentID: studentID,
                       assignmentName: this.state.currentAssignment,
+                      userID: this.props.navigation.state.params.userID,
                       classStudent: classStudent,
                       newAssignment: true,
                       readOnly: false,
@@ -173,18 +174,23 @@ class StudentProfileScreen extends QcParentScreen {
                   rating: item.evaluation.rating,
                   notes: item.evaluation.notes,
                   improvementAreas: item.evaluation.improvementAreas,
+                  userID: this.props.navigation.state.params.userID,
+                  evaluationObject: item.evaluation,
                   evaluationID: item.ID,
                   readOnly: true,
                   newAssignment: false,
                 })}>
                   <View style={styles.prevAssignmentCard} key={index}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                      <Text style={[styles.subText]}>{item.completionDate}</Text>
-                      <View style={{ alignItems: 'center', flexWrap: 'wrap', alignSelf: 'baseline', flex: 1 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-start' }}>
+                        <Text style={[styles.subText]}>{item.completionDate}</Text>
+                      </View>
+                      <View style={{ alignItems: 'center', justifyContent: 'center', flex: 3 }}>
                         <Text numberOfLines={1} style={styles.prevAssignmentTitleText}>{item.name}</Text>
                       </View>
-                      <Rating style={{ paddingRight: 10, paddingTop: 3 }} readonly={true}
-                        startingValue={item.evaluation.rating} imageSize={17} />
+                      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end' }}>
+                        <Rating readonly={true} startingValue={item.evaluation.rating} imageSize={17} />
+                      </View>
                     </View>
                     {item.evaluation.notes ?
                       <Text numberOfLines={2} style={styles.notesText}>{"Notes: " + item.evaluation.notes}</Text>
