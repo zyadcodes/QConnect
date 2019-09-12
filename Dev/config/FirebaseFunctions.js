@@ -358,7 +358,6 @@ export default class FirebaseFunctions {
         currentClass.students.forEach((student) => {
 
             let studentAttendanceHistory = student.attendanceHistory;
-            console.log(studentAttendanceHistory[date]);
             if (studentAttendanceHistory[date] === false) {
                 absentStudents.push(student.ID);
             }
