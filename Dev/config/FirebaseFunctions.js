@@ -289,7 +289,9 @@ export default class FirebaseFunctions {
         await this.updateClassObject(classID, {
             students: arrayOfStudents
         });
-        this.logEvent("COMPLETE_CURRENT_ASSIGNMENT");
+        this.analytics.logEvent("COMPLETE_CURRENT_ASSIGNMENT", {
+            improvementAreas: evaluationDetails.improvementAreas
+        });
 
         return 0;
 
@@ -314,7 +316,9 @@ export default class FirebaseFunctions {
         await this.updateClassObject(classID, {
             students: arrayOfStudents
         });
-        this.logEvent("OVERWRITE_PAST_EVALUATION");
+        this.analytics.logEvent("OVERWRITE_PAST_EVALUATION", {
+            improvementAreas: newEvaluation.improvementAreas
+        });
 
         return 0;
 

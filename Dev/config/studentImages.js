@@ -1,14 +1,14 @@
 export default {
     images: [
-        require('assets/images/student-icons/msq1.png'), 
-        require('assets/images/student-icons/msq2.png'), 
-        require('assets/images/student-icons/msq3.png'),
-        require('assets/images/student-icons/msq4.png'),
         require('assets/images/generic-icons/is-icon-17.png'), 
         require('assets/images/generic-icons/is-icon-0.png'), 
         require('assets/images/generic-icons/is-icon-15.png'), 
         require('assets/images/generic-icons/is-icon-16.png'), 
         require('assets/images/generic-icons/is-icon-5.png'), 
+        require('assets/images/student-icons/msq1.png'), 
+        require('assets/images/student-icons/msq2.png'), 
+        require('assets/images/student-icons/msq3.png'),
+        require('assets/images/student-icons/msq4.png'),
         require('assets/images/student-icons/boyc2.png'), //
         require('assets/images/student-icons/boy1.png'), 
         require('assets/images/student-icons/boy2.png'),
