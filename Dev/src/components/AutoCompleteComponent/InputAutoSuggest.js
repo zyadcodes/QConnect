@@ -31,7 +31,7 @@ class InputAutoSuggest extends Component {
       value: name,
     });
     this.props.onTextChanged(name);
-    
+
     onDataSelectedChange(existingItem);
     this.searchList;
   };
@@ -39,6 +39,9 @@ class InputAutoSuggest extends Component {
   keyExtractor = (item, index) => index+"";
 
   async searchList(text) {
+
+    this.props.onTextChanged(text);
+    
     const {
       keyPathRequestResult,
       itemFormat,
@@ -69,6 +72,7 @@ class InputAutoSuggest extends Component {
     onDataSelectedChange(suggestData.existingItem);
     this.setState({
       data: suggestData.suggest,
+
     });
   }
 
