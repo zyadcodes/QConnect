@@ -21,18 +21,27 @@ class FlowView extends Component {
 		onClick: PropTypes.func,
 		readOnly: PropTypes.bool,
 	}
+
 	static defaultProps = {
 		backgroundColors: [colors.lightGrey, colors.primaryLight],
 		textColors: [colors.darkGrey, colors.primaryDark],
 		isSelected: false,
 		readOnly: false,
 	}
+
 	constructor(props) {
 		super(props);
 
-		this.state = {
-			isSelected: this.props.isSelected,
-		};
+		if (this.props.initialSelectedValues.includes(this.props.text)) {
+			this.state = {
+				isSelected: true
+			}
+		} else {
+			this.state = {
+				isSelected: this.props.isSelected,
+			};
+		}
+
 	}
 
 	setSelected(bool) {
@@ -114,6 +123,7 @@ export default class FlowLayout extends Component {
 		this.state = {
 			modalVisible: false,
 			dataValue: this.props.dataValue,
+			initialSelectedValues: this.props.initialSelectedValues,
 			selectedState: new Array(this.props.dataValue.length).fill(false),
 			isBadgeVisible: false,
 			isNewAddition: false,
@@ -153,7 +163,7 @@ export default class FlowLayout extends Component {
 	}
 
 	render() {
-		const { dataValue } = this.state;
+		const { dataValue, initialSelectedValues } = this.state;
 		//Creates a new array of data values that exclude the ellipses & instead
 		//include an addition symbol to add new improvments
 		return (
@@ -174,10 +184,16 @@ export default class FlowLayout extends Component {
 									dataValue.map((value, position) => {
 										return (
 											<View key={position}>
-												<FlowView isBadgeVisible={true} ref={this.state.dataValue[position]} text={value} readOnly={false} onClick={() => {
-													dataValue.splice(position, 1);
-													this.setState({ dataValue })
-												}} />
+												<FlowView
+													initialSelectedValues={initialSelectedValues}
+													isBadgeVisible={true}
+													ref={this.state.dataValue[position]}
+													text={value}
+													readOnly={false}
+													onClick={() => {
+														dataValue.splice(position, 1);
+														this.setState({ dataValue })
+													}} />
 											</View>
 										);
 									})
@@ -185,9 +201,13 @@ export default class FlowLayout extends Component {
 										dataValue.map((value, position) => {
 											return (
 												<View key={position}>
-													<FlowView ref={this.state.dataValue[position]} text={value} editMode={true} readOnly={false} onClick={() => {
-
-													}} />
+													<FlowView
+														initialSelectedValues={initialSelectedValues}
+														ref={this.state.dataValue[position]}
+														text={value}
+														editMode={true}
+														readOnly={false}
+														onClick={() => { }} />
 												</View>
 											);
 										})
@@ -214,9 +234,13 @@ export default class FlowLayout extends Component {
 										}
 									</View>
 								) : (
-										<FlowView text={strings.Ellipses} backgroundColor={colors.primaryLight} onClick={() => {
-											this.setState({ isBadgeVisible: true })
-										}} />
+										<FlowView
+											text={strings.Ellipses}
+											backgroundColor={colors.primaryLight}
+											initialSelectedValues={initialSelectedValues}
+											onClick={() => {
+												this.setState({ isBadgeVisible: true })
+											}} />
 									)
 							}
 						</View>
@@ -234,33 +258,42 @@ export default class FlowLayout extends Component {
 						dataValue.map((value, position) => {
 							return (
 								<View key={position}>
-									<FlowView ref={dataValue[position]} text={value} readOnly={this.props.readOnly} onClick={() => {
+									<FlowView
+										initialSelectedValues={initialSelectedValues}
+										ref={dataValue[position]}
+										text={value}
+										readOnly={this.props.readOnly}
+										onClick={() => {
 
-										if (this.props.multiselect == false) {
-											for (var i = this.state.selectedState.length - 1; i >= 0; i--) {
-												if (i == position) {
-													continue;
-												}
-												if (this.state.selectedState[i] == true) {
-													this.state.selectedState[i] = false;
-													break;
+											if (this.props.multiselect == false) {
+												for (var i = this.state.selectedState.length - 1; i >= 0; i--) {
+													if (i == position) {
+														continue;
+													}
+													if (this.state.selectedState[i] == true) {
+														this.state.selectedState[i] = false;
+														break;
+													}
 												}
 											}
-										}
-										this.state.selectedState[position] = !this.state.selectedState[position];
+											this.state.selectedState[position] = !this.state.selectedState[position];
 
-										this.change();
-									}} />
+											this.change();
+										}} />
 								</View>
 							);
 						})}
 					{
 						//Only shows the ellipses if this is not read only
 						(!this.props.readOnly) ? (
-							<FlowView text={strings.Ellipses} backgroundColor={colors.primaryLight} onClick={() => {
-								this.openCustomImprovements();
-								this.setState({ isNewAddition: true })
-							}} />
+							<FlowView
+								initialSelectedValues={initialSelectedValues}
+								text={strings.Ellipses}
+								backgroundColor={colors.primaryLight}
+								onClick={() => {
+									this.openCustomImprovements();
+									this.setState({ isNewAddition: true })
+								}} />
 						) :
 							(
 								<View></View>
