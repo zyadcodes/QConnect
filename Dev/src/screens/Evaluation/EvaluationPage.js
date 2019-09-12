@@ -73,6 +73,7 @@ export class EvaluationPage extends QcParentScreen {
     this.props.navigation.push("TeacherStudentProfile", {
       studentID: this.state.studentID,
       currentClass,
+      userID: this.props.navigation.state.params.userID,
       classID: this.state.classID
     });
 
@@ -96,6 +97,7 @@ export class EvaluationPage extends QcParentScreen {
     this.props.navigation.push("TeacherStudentProfile", {
       studentID: this.state.studentID,
       currentClass,
+      userID: this.props.navigation.state.params.userID,
       classID: this.state.classID
     });
 
@@ -157,7 +159,7 @@ export class EvaluationPage extends QcParentScreen {
               LeftOnPress={() => this.props.navigation.goBack()}
               Title={strings.Evaluation}
               RightIconName="edit"
-              RightOnPress={() => { this.setState({ readOnly: false }) }}
+              RightOnPress={() => { this.setState({ readOnly: false, improvementAreas: this.state.improvementAreas }) }}
             /> : <TopBanner
                 LeftIconName="angle-left"
                 LeftOnPress={() => this.props.navigation.goBack()}
@@ -204,6 +206,7 @@ export class EvaluationPage extends QcParentScreen {
               </View>
               <FlowLayout ref="flow"
                 dataValue={improvementAreas}
+                initialSelectedValues={this.props.navigation.state.params.newAssignment === false ? this.props.navigation.state.params.evaluationObject.improvementAreas : []}
                 title="Improvement Areas"
                 readOnly={readOnly}
                 onSelectionChanged={(improvementAreas) => this.setState({ improvementAreas: improvementAreas })}
