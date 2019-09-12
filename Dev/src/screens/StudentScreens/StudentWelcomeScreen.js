@@ -229,7 +229,7 @@ export class StudentWelcomeScreen extends QcParentScreen {
                 highlightedImagesIndices={this.state.highlightedImagesIndices}
                 onImageSelected={this.onImageSelected.bind(this)}
                 onShowMore={() => this.setModalVisible(true)}
-                selectedImageIndex={this.state.profileImageId}
+                selectedImageIndex={this.state.profileImageID}
                 screen={this.name}
               />
             </View>

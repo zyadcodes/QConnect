@@ -470,17 +470,22 @@ export default class FirebaseFunctions {
             students: arrayOfClassStudents
         });
 
-        //Then removes the class's reference from the student's array of classes
+        //Then removes the class's reference from the student's array of classes.
+        //If it's a manual student, it deletes the whole object
         let theStudent = await this.getStudentByID(studentID);
-        let arrayOfStudentClasses = theStudent.classes;
-        let indexOfClass = arrayOfStudentClasses.findIndex((eachClass) => {
-            return eachClass === classID;
-        });
-        arrayOfClassStudents.splice(indexOfClass, 1);
-        await this.updateStudentObject(studentID, {
-            classes: arrayOfClassStudents
-        });
-        this.logEvent("TEACHER_REMOVE_STUDENT");
+        if (theStudent.isManual && theStudent.isManual === true) {
+            await this.students.doc(studentID).delete();
+        } else {
+            let arrayOfStudentClasses = theStudent.classes;
+            let indexOfClass = arrayOfStudentClasses.findIndex((eachClass) => {
+                return eachClass === classID;
+            });
+            arrayOfClassStudents.splice(indexOfClass, 1);
+            await this.updateStudentObject(studentID, {
+                classes: arrayOfClassStudents
+            });
+            this.logEvent("TEACHER_REMOVE_STUDENT");
+        }
 
         return 0;
 

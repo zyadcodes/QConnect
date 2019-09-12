@@ -65,7 +65,7 @@ class LoginScreen extends Component {
     this.setState({ isLoading: true });
     const { username, password } = this.state;
 
-    const account = await FirebaseFunctions.logIn(username, password);
+    const account = await FirebaseFunctions.logIn(username.trim(), password.trim());
     if (account === -1) {
       this.setState({ isLoading: false });
       Alert.alert(strings.Whoops, strings.IncorrectInfo);
