@@ -173,6 +173,7 @@ class StudentProfileScreen extends QcParentScreen {
                   rating: item.evaluation.rating,
                   notes: item.evaluation.notes,
                   improvementAreas: item.evaluation.improvementAreas,
+                  evaluationObject: item.evaluation,
                   evaluationID: item.ID,
                   readOnly: true,
                   newAssignment: false,
