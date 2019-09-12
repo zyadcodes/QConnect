@@ -104,7 +104,7 @@ class LeftNavPane extends QcParentScreen {
 
                         <FlatList
                             data={classes}
-                            keyExtractor={(item, index) => item.name} // fix, should be item.id (add id to classes)
+                            keyExtractor={(item, index) => item.name}
                             renderItem={({ item, index }) => (
                                 <QcDrawerItem
                                     title={item.name}
