@@ -20,7 +20,8 @@ class StudentProfileScreen extends QcParentScreen {
     currentAssignment: '',
     classStudent: '',
     isDialogVisible: false,
-    isLoading: true
+    isLoading: true,
+    hasCurrentAssignment: ''
   }
 
   //Sets the screen for firebase analytics & fetches the correct student from this class
@@ -35,7 +36,8 @@ class StudentProfileScreen extends QcParentScreen {
     this.setState({
       classStudent: student,
       currentAssignment: student.currentAssignment,
-      isLoading: false
+      isLoading: false,
+      hasCurrentAssignment: student.currentAssignment === 'None' ? false : true
     });
 
   }
@@ -49,7 +51,11 @@ class StudentProfileScreen extends QcParentScreen {
 
       const { classID, studentID } = this.state;
       //Updates the local state then pushes to firestore
-      this.setState({ isDialogVisible: false, currentAssignment: newAssignmentName });
+      this.setState({
+        isDialogVisible: false,
+        currentAssignment: newAssignmentName,
+        hasCurrentAssignment: newAssignmentName === 'None' ? false : true
+      });
       FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, newAssignmentName);
     }
 
@@ -80,9 +86,8 @@ class StudentProfileScreen extends QcParentScreen {
 
   //---------- main UI render ===============================
   render() {
-    const { classStudent, isLoading, classID, studentID } = this.state;
+    const { classStudent, isLoading, classID, studentID, hasCurrentAssignment } = this.state;
     const { currentAssignment, assignmentHistory, averageRating, name } = classStudent;
-    const hasCurrentAssignment = currentAssignment === 'None' ? false : true;
 
     //If the screen is loading, a spinner will display
     if (isLoading === true) {

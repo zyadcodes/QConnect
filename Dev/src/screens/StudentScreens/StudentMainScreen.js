@@ -2,7 +2,7 @@
 //sign up or log in
 import React from 'react';
 import QcParentScreen from "../QcParentScreen";
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView, Modal, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView, Modal, Alert, Dimensions } from 'react-native';
 import studentImages from 'config/studentImages';
 import { Rating } from 'react-native-elements';
 import colors from 'config/colors'
@@ -170,36 +170,58 @@ class StudentMainScreen extends QcParentScreen {
                                 onPress={() => this.setState({ modalVisible: true })} />
                         </View>
                         <Modal
+                            animationType="fade"
+                            style={{ alignItems: 'center', justifyContent: 'center' }}
                             transparent={true}
+                            presentationStyle="overFullScreen"
                             visible={this.state.modalVisible}
-                            onRequestClode={() => { }}>
-                            <View style={styles.modal}>
-                                {
-                                    this.state.isLoading === true ? (
-                                        <View>
-                                            <LoadingSpinner isVisible={true} />
-                                        </View>
-                                    ) : (
+                            onRequestClose={() => {
+                            }}>
+                            <View style={{ 
+                                justifyContent: 'center', 
+                                alignItems: 'center', 
+                                alignSelf: 'center',
+                                paddingTop: Dimensions.get('window').height / 3 }}>
+                                <View style={styles.modal}>
+                                    {
+                                        this.state.isLoading === true ? (
                                             <View>
-                                                <Text style={styles.confirmationMessage}>{strings.TypeInAClassCode}</Text>
-                                                <TextInput
-                                                    onChangeText={(text) => { this.setState({ classCode: text }) }}
-                                                    value={this.state.classCode} />
-                                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 5 }}>
-                                                    <QcActionButton
-                                                        text={strings.Cancel}
-                                                        onPress={() => { this.setState({ modalVisible: false }) }} />
-                                                    <QcActionButton
-                                                        text={strings.Confirm}
-                                                        onPress={() => {
-                                                            //Joins the class
-                                                            this.joinClass();
-                                                        }} />
-                                                </View>
+                                                <LoadingSpinner isVisible={true} />
                                             </View>
-                                        )
-                                }
+                                        ) : (
+                                                <View>
+                                                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                                        <Text style={styles.confirmationMessage}>{strings.TypeInAClassCode}</Text>
+                                                    </View>
+                                                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                                        <TextInput
+                                                            style={{
+                                                                height: Dimensions.get('window').height * 0.07,
+                                                                paddingLeft: 7,
+                                                                fontSize: 14,
+                                                                color: colors.darkGrey,
+                                                            }}
+                                                            placeholder={strings.TypeInAClassCode}
+                                                            onChangeText={classCode => this.setState({ classCode })}
+                                                            value={this.state.classCode}
+                                                        />
+                                                    </View>
+                                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
+                                                        <QcActionButton
+                                                            text={strings.Cancel}
+                                                            onPress={() => { this.setState({ modalVisible: false }) }} />
+                                                        <QcActionButton
+                                                            text={strings.Confirm}
+                                                            onPress={() => {
+                                                                //Joins the class
+                                                                this.joinClass();
+                                                            }} />
+                                                    </View>
+                                                </View>
 
+                                            )
+                                    }
+                                </View>
                             </View>
                         </Modal>
                     </QCView>
@@ -301,7 +323,6 @@ class StudentMainScreen extends QcParentScreen {
                                                 : <View />
                                             }
                                         </View>
-
                                     </TouchableOpacity>
                                 )}
                             />
@@ -463,7 +484,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        marginTop: 230,
+        height: Dimensions.get('window').height * 0.25,
+        width: Dimensions.get('window').width * 0.75,
         borderWidth: 1,
         borderRadius: 2,
         borderColor: colors.grey,
@@ -473,10 +495,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.8,
         shadowRadius: 3,
         elevation: 2,
-        marginLeft: 45,
-        marginRight: 45,
-        paddingRight: 5,
-        paddingLeft: 5
     },
 });
 

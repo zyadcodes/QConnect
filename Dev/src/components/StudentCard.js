@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TouchableOpacity, Text, StyleSheet, Image, View } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, Image, View, Dimensions } from 'react-native';
 import colors from 'config/colors'
 import FontLoadingComponent from './FontLoadingComponent';
 
@@ -14,7 +14,7 @@ export default class StudentCard extends FontLoadingComponent {
 
     render() {
         //The properties of the component.
-        const { studentName, profilePic, currentAssignment, background, onPress, comp } = this.props;
+        const { studentName, profilePic, currentAssignment, background, onPress, comp, compOnPress } = this.props;
         return (
             //The style of the card as a whole. Inside the card, you have the image,
             //student name, and student assignment
@@ -40,9 +40,24 @@ export default class StudentCard extends FontLoadingComponent {
                             </View>
                         )}
                 </View>
-                <View style={styles.removeStudentStyle}>
-                    {comp}
-                </View>
+                {
+                    comp ? (
+                        <View style={styles.removeStudentStyle}>
+                            <TouchableOpacity style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                height: 100,
+                                width: Dimensions.get('window').width * 0.2
+                            }}
+                                onPress={() => { compOnPress() }}>
+                                {comp}
+                            </TouchableOpacity>
+                        </View>
+                    ) : (
+                            <View style={styles.removeStudentStyle}></View>
+                        )
+                }
+
             </TouchableOpacity>
         );
     }
