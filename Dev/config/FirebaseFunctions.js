@@ -202,10 +202,17 @@ export default class FirebaseFunctions {
             return element = classID;
         });
         arrayOfClasses.splice(indexOfClass, 1);
-        await this.updateTeacherObject(teacherID, {
-            classes: arrayOfClasses,
-            currentClassID: ''
-        });
+        if (arrayOfClasses.length === 0) {
+            await this.updateTeacherObject(teacherID, {
+                classes: arrayOfClasses,
+                currentClassID: ''
+            });
+        } else {
+            await this.updateTeacherObject(teacherID, {
+                classes: arrayOfClasses,
+                currentClassID: arrayOfClasses[0]
+            });
+        }
 
         return 0;
 
