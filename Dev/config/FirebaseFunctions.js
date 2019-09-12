@@ -189,7 +189,7 @@ export default class FirebaseFunctions {
         const thisClass = await this.getClassByID(classID);
         const arrayOfTeachers = thisClass.teachers;
         const indexOfTeacher = arrayOfTeachers.findIndex((element) => {
-            return element = teacherID
+            return element === teacherID
         });
         arrayOfTeachers.splice(indexOfTeacher, 1);
         await this.updateClassObject(classID, {
@@ -199,7 +199,7 @@ export default class FirebaseFunctions {
         const thisTeacher = await this.getTeacherByID(teacherID);
         const arrayOfClasses = thisTeacher.classes;
         const indexOfClass = arrayOfClasses.findIndex((element) => {
-            return element = classID;
+            return element === classID;
         });
         arrayOfClasses.splice(indexOfClass, 1);
         if (arrayOfClasses.length === 0) {
