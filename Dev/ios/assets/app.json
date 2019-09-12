@@ -1,0 +1,34 @@
+{
+  "name": "QuranConnect",
+  "displayName": "QuranConnect",
+  "slug": "quranconnectbeta",
+  "privacy": "public",
+  "sdkVersion": "32.0.0",
+  "platforms": [
+    "ios",
+    "android"
+  ],
+  "version": "1.0.11",
+  "orientation": "portrait",
+  "icon": "./assets/icon.png",
+  "splash": {
+    "image": "./assets/splash.png",
+    "resizeMode": "contain",
+    "backgroundColor": "#ffffff"
+  },
+  "updates": {
+    "fallbackToCacheTimeout": 200
+  },
+  "assetBundlePatterns": [
+    "**/*"
+  ],
+  "ios": {
+    "supportsTablet": true,
+    "bundleIdentifier": "com.yungdevz.quranconnect"
+  },
+  "android": {
+    "package": "com.yungdevz.quranconnect",
+    "versionCode": 2 
+  },
+  "description": "QuranConnect is an app started by High School students to serve the Quran teachers, students, and parents and amplify their Quran learning and teaching experience."
+}
