@@ -39,6 +39,9 @@ class InputAutoSuggest extends Component {
   keyExtractor = (item, index) => index+"";
 
   async searchList(text) {
+
+    this.props.onTextChanged(text);
+    
     const {
       keyPathRequestResult,
       itemFormat,
