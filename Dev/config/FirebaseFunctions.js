@@ -255,6 +255,7 @@ export default class FirebaseFunctions {
             return student.ID === studentID;
         });
         arrayOfStudents[studentIndex].currentAssignment = newAssignmentName;
+        
 
         await this.updateClassObject(classID, {
             students: arrayOfStudents
@@ -395,7 +396,7 @@ export default class FirebaseFunctions {
             attendanceHistory: {},
             averageRating: 0,
             currentAssignment: 'None',
-            isReady: true,
+            isReady: false,
             profileImageID: student.profileImageID,
             name: student.name,
             totalAssignments: 0
@@ -450,7 +451,7 @@ export default class FirebaseFunctions {
             attendanceHistory: {},
             averageRating: 0,
             currentAssignment: 'None',
-            isReady: true,
+            isReady: false,
             profileImageID: student.profileImageID,
             name: student.name,
             totalAssignments: 0
