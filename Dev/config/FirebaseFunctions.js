@@ -494,9 +494,17 @@ export default class FirebaseFunctions {
                 return eachClass === classID;
             });
             arrayOfClassStudents.splice(indexOfClass, 1);
-            await this.updateStudentObject(studentID, {
-                classes: arrayOfClassStudents
-            });
+            if (arrayOfClassStudents.length > 0) {
+                await this.updateStudentObject(studentID, {
+                    classes: arrayOfClassStudents,
+                    currentClassID: arrayOfClassStudents[0]
+                });
+            } else {
+                await this.updateStudentObject(studentID, {
+                    classes: arrayOfClassStudents,
+                    currentClassID: ""
+                });
+            }
             this.logEvent("TEACHER_REMOVE_STUDENT");
         }
 
