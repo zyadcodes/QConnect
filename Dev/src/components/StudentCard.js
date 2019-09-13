@@ -19,7 +19,7 @@ export default class StudentCard extends FontLoadingComponent {
             //The style of the card as a whole. Inside the card, you have the image,
             //student name, and student assignment
             <TouchableOpacity
-                style={[styles.cardStyle, { backgroundColor: currentAssignment === 'None' ? colors.white : background }]}
+                style={[styles.cardStyle, { background }]}
                 borderColor={colors.black}
                 //The on press function is for when the teacher clicks the card, the color of it 
                 //should change depending on the behavior (i.e attendance screen)
