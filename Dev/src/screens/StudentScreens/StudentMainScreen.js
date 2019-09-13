@@ -302,6 +302,22 @@ class StudentMainScreen extends QcParentScreen {
                                 renderItem={({ item, index }) => (
                                     <TouchableOpacity onPress={() => {
                                         //To-Do: Navigates to more specific evaluation for this assignment
+                                        this.props.navigation.push("EvaluationPage", {
+                                            classID: this.state.currentClassID,
+                                            studentID: this.state.userID,
+                                            classStudent: thisClassInfo,
+                                            assignmentName: item.name,
+                                            completionDate: item.completionDate,
+                                            rating: item.evaluation.rating,
+                                            notes: item.evaluation.notes,
+                                            improvementAreas: item.evaluation.improvementAreas,
+                                            userID: this.state.userID,
+                                            evaluationObject: item.evaluation,
+                                            isStudentSide: true,
+                                            evaluationID: item.ID,
+                                            readOnly: true,
+                                            newAssignment: false,
+                                        })
                                     }}>
                                         <View style={styles.prevAssignmentCard} key={index}>
                                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
