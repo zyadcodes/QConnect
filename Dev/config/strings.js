@@ -24,6 +24,7 @@ export default {
     ConfirmPassword: 'Please Confirm Password',
     Next: 'Next',
     ErrorWithPassword: 'Error With Password',
+    ForgotPasswordNoQuestion: 'Forgot Password',
     EnterCode: 'Enter code',
     ErrorWithConfirm: 'Must Confirm Password',
     ErrorWithCode: 'PleaseEnterCode',

@@ -28,47 +28,54 @@ class ForgotPassword extends Component {
             <QCView style={[screenStyle.container, {
                 alignItems: 'center'
             }]}>
-                    <View style={{ flex: 1 }}></View>
-                    <View style={{ flex: 1 }}>
-                        <Text style={styles.header}>{strings.RecoverYourPassword}</Text>
+                <View style={{ flex: 1 }}></View>
+                <View style={{ flex: 0.5, alignSelf: 'flex-start', justifyContent: 'flex-end' }}>
+                    <View style={{ flexDirection: 'row', flex: 1, alignSelf: 'flex-end' }}>
+                        <View style={{ flex: 0.135 }}>
+
+                        </View>
+                        <View style={{ flex: 1, alignItems: 'flex-start' }}>
+                            <Text style={{
+                                fontSize: 18,
+                                color: colors.primaryDark,
+                            }}>{strings.PleaseEnterYourEmailAddress}</Text>
+                        </View>
                     </View>
-                    <View style={{ flex: 1 }}>
-                        <Text>{strings.PleaseEnterYourEmailAddress}</Text>
-                    </View>
-                    <View style={{ flex: 1 }}>
-                        <TextInput
-                            style={styles.notesStyle}
-                            returnKeyType={"done"}
-                            blurOnSubmit={true}
-                            placeholder={strings.emailPlaceHolder}
-                            placeholderColor={colors.black}
-                            value={this.state.emailText}
-                            onChangeText={(text) => { this.setState({ emailText: text }) }}
-                            autoCapitalize="none" />
-                    </View>
-                    <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-                        <QcActionButton
-                            text={strings.Submit}
-                            disabled={false}
-                            onPress={() => {
-                                if (this.state.emailText == "") {
-                                    Alert.alert(strings.EmailErrorHeader, strings.EmailError)
-                                }
-                                else {
-                                    let emailText = this.state.emailText
-                                    emailText = emailText.trim()
-                                    FirebaseFunctions.sendForgotPasswordCode(emailText);
-                                    Alert.alert(strings.EmailSent, strings.CheckEmail, [
-                                        {
-                                            text: strings.Ok,
-                                            onPress: () => { this.props.navigation.goBack() },
-                                            style: 'cancel',
-                                        }
-                                    ]);
-                                }
-                            }} />
-                    </View>
-                    <View style={{ flex: 1 }}></View>
+                </View>
+                <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+                    <TextInput
+                        style={styles.notesStyle}
+                        returnKeyType={"done"}
+                        blurOnSubmit={true}
+                        placeholder={strings.emailPlaceHolder}
+                        placeholderColor={colors.black}
+                        value={this.state.emailText}
+                        onChangeText={(text) => { this.setState({ emailText: text }) }}
+                        autoCapitalize="none" />
+                </View>
+                <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+                    <QcActionButton
+                        text={strings.Submit}
+                        disabled={false}
+                        onPress={() => {
+                            if (this.state.emailText == "") {
+                                Alert.alert(strings.EmailErrorHeader, strings.EmailError)
+                            }
+                            else {
+                                let emailText = this.state.emailText
+                                emailText = emailText.trim()
+                                FirebaseFunctions.sendForgotPasswordCode(emailText);
+                                Alert.alert(strings.EmailSent, strings.CheckEmail, [
+                                    {
+                                        text: strings.Ok,
+                                        onPress: () => { this.props.navigation.goBack() },
+                                        style: 'cancel',
+                                    }
+                                ]);
+                            }
+                        }} />
+                </View>
+                <View style={{ flex: 1 }}></View>
             </QCView>
         )
     }

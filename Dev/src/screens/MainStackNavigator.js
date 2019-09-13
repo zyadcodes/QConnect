@@ -54,7 +54,11 @@ routeConfig = {
     ForgotPassword: {
         screen: ForgotPassword,
         navigationOptions: ({ navigation }) => ({
-            header: null
+            header: <TopBanner
+                LeftIconName="angle-left"
+                LeftOnPress={() => navigation.goBack()}
+                Title={strings.ForgotPasswordNoQuestion}
+            />
         }),
     },
 
@@ -134,7 +138,7 @@ routeConfig = {
             header: null
         })
     },
-    
+
     ClassEdit: {
         screen: ClassEditScreen,
         navigationOptions: ({ navigation }) => ({
