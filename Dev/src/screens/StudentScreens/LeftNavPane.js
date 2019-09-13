@@ -100,7 +100,12 @@ class LeftNavPane extends QcParentScreen {
                         <QcDrawerItem
                             title={profileCaption}
                             image={studentImages.images[studentImageId]}
-                            onPress={() => this.props.navigation.push("StudentProfileScreen")} />
+                            onPress={() => this.props.navigation.push("Profile", {
+                                isTeacher: false,
+                                accountObject: this.state.student,
+                                classes: this.state.classes,
+                                userID: this.state.userID
+                            })} />
 
                         <FlatList
                             data={classes}
