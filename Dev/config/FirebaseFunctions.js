@@ -65,7 +65,9 @@ export default class FirebaseFunctions {
     static async sendForgotPasswordCode(email) {
 
         this.logEvent("SEND_FORGOT_PASSWORD_EMAIL");
-        await this.auth.sendPasswordResetEmail(email);
+        await firebase.auth().sendPasswordResetEmail(email);
+
+        return 0;
 
     }
 
@@ -253,6 +255,7 @@ export default class FirebaseFunctions {
             return student.ID === studentID;
         });
         arrayOfStudents[studentIndex].currentAssignment = newAssignmentName;
+        arrayOfStudents[studentIndex].isReady = false;
 
         await this.updateClassObject(classID, {
             students: arrayOfStudents
@@ -393,7 +396,7 @@ export default class FirebaseFunctions {
             attendanceHistory: {},
             averageRating: 0,
             currentAssignment: 'None',
-            isReady: true,
+            isReady: false,
             profileImageID: student.profileImageID,
             name: student.name,
             totalAssignments: 0
@@ -448,7 +451,7 @@ export default class FirebaseFunctions {
             attendanceHistory: {},
             averageRating: 0,
             currentAssignment: 'None',
-            isReady: true,
+            isReady: false,
             profileImageID: student.profileImageID,
             name: student.name,
             totalAssignments: 0
