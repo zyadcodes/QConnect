@@ -47,6 +47,7 @@ export class ClassMainScreen extends QcParentScreen {
   }
 
   render() {
+
     const { isLoading, teacher, userID, currentClass, currentClassID } = this.state;
     if (isLoading === true) {
       return (
