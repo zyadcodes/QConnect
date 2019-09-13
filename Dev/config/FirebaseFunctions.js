@@ -65,7 +65,9 @@ export default class FirebaseFunctions {
     static async sendForgotPasswordCode(email) {
 
         this.logEvent("SEND_FORGOT_PASSWORD_EMAIL");
-        await this.auth.sendPasswordResetEmail(email);
+        await firebase.auth().sendPasswordResetEmail(email);
+
+        return 0;
 
     }
 
@@ -253,6 +255,7 @@ export default class FirebaseFunctions {
             return student.ID === studentID;
         });
         arrayOfStudents[studentIndex].currentAssignment = newAssignmentName;
+        arrayOfStudents[studentIndex].isReady = false;
 
         await this.updateClassObject(classID, {
             students: arrayOfStudents
@@ -289,7 +292,9 @@ export default class FirebaseFunctions {
         await this.updateClassObject(classID, {
             students: arrayOfStudents
         });
-        this.logEvent("COMPLETE_CURRENT_ASSIGNMENT");
+        this.analytics.logEvent("COMPLETE_CURRENT_ASSIGNMENT", {
+            improvementAreas: evaluationDetails.improvementAreas
+        });
 
         return 0;
 
@@ -314,7 +319,9 @@ export default class FirebaseFunctions {
         await this.updateClassObject(classID, {
             students: arrayOfStudents
         });
-        this.logEvent("OVERWRITE_PAST_EVALUATION");
+        this.analytics.logEvent("OVERWRITE_PAST_EVALUATION", {
+            improvementAreas: newEvaluation.improvementAreas
+        });
 
         return 0;
 
@@ -389,7 +396,7 @@ export default class FirebaseFunctions {
             attendanceHistory: {},
             averageRating: 0,
             currentAssignment: 'None',
-            isReady: true,
+            isReady: false,
             profileImageID: student.profileImageID,
             name: student.name,
             totalAssignments: 0
@@ -487,9 +494,17 @@ export default class FirebaseFunctions {
                 return eachClass === classID;
             });
             arrayOfClassStudents.splice(indexOfClass, 1);
-            await this.updateStudentObject(studentID, {
-                classes: arrayOfClassStudents
-            });
+            if (arrayOfClassStudents.length > 0) {
+                await this.updateStudentObject(studentID, {
+                    classes: arrayOfClassStudents,
+                    currentClassID: arrayOfClassStudents[0]
+                });
+            } else {
+                await this.updateStudentObject(studentID, {
+                    classes: arrayOfClassStudents,
+                    currentClassID: ""
+                });
+            }
             this.logEvent("TEACHER_REMOVE_STUDENT");
         }
 

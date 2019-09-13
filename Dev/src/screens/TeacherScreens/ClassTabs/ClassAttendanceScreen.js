@@ -26,11 +26,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
         userID: '',
         teacher: '',
         absentStudents: [],
-        selectedDate: new Date().toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-        }),
+        selectedDate: new Date().toLocaleDateString("en-US"),
         classes: '',
         isOpen: false
     }
@@ -187,14 +183,10 @@ export class ClassAttendanceScreen extends QcParentScreen {
                                 date={this.state.selectedDate}
                                 confirmBtnText={strings.Confirm}
                                 cancelBtnText={strings.Cancel}
-                                format="MM/DD/YYYY"
+                                format="MM/DD/YY"
                                 duration={300}
                                 style={{ paddingLeft: 15 }}
-                                maxDate={new Date().toLocaleDateString("en-US", {
-                                    year: "numeric",
-                                    month: "2-digit",
-                                    day: "2-digit",
-                                })}
+                                maxDate={new Date().toLocaleDateString("en-US")}
                                 customStyles={{ dateInput: { borderColor: colors.lightGrey } }}
                                 onDateChange={async (date) => {
                                     this.setState({
