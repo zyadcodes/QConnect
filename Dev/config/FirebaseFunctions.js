@@ -65,7 +65,9 @@ export default class FirebaseFunctions {
     static async sendForgotPasswordCode(email) {
 
         this.logEvent("SEND_FORGOT_PASSWORD_EMAIL");
-        await this.auth.sendPasswordResetEmail(email);
+        await firebase.auth().sendPasswordResetEmail(email);
+
+        return 0;
 
     }
 
