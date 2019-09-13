@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
 		borderColor: colors.grey,
 		borderWidth: 1 / PixelRatio.get(),
 		borderRadius: 5,
-		height: 35,
+		height: Dimensions.get('window').height * 0.065,
 		justifyContent: 'center',
 		alignItems: 'center',
 		marginRight: 10,
