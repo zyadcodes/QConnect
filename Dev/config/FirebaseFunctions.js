@@ -161,6 +161,37 @@ export default class FirebaseFunctions {
 
     }
 
+    //This function will update the student info in both the students collection and the class object of 
+    //the student inside the classes collection. This method will take in the ID of the student, as well
+    //as the information to update
+    static async updateStudentProfileInfo(userID, classes, name, phoneNumber, profileImageID) {
+
+        await this.updateStudentObject(userID, {
+            name,
+            phoneNumber,
+            profileImageID
+        });
+
+        //Rewrites all of the versions of this student in all of the classes they are a part of with their
+        //new name and profile picture
+        classes.forEach(async (eachClass) => {
+
+            let currentClass = await this.getClassByID(eachClass.ID);
+            let arrayOfStudents = currentClass.students;
+            let studentIndex = arrayOfStudents.findIndex((student) => {
+                return student.ID === userID;
+            });
+            arrayOfStudents[studentIndex].name = name;
+            arrayOfStudents[studentIndex].profileImageID = profileImageID;
+            await this.updateClassObject(eachClass.ID, {
+                students: arrayOfStudents
+            });
+        });
+
+        return 0;
+
+    }
+
     //This function will take in a new class object, and a teacher object and create a new class
     //that belongs to that teacher in the firestore database. It will do this by creating a new document
     //in the "classes" collection, then linking that class to a certain teacher by relating them through

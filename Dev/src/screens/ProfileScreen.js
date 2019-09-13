@@ -12,30 +12,36 @@ import strings from 'config/strings';
 import QcParentScreen from 'screens/QcParentScreen';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import SideMenu from 'react-native-side-menu';
-import LeftNavPane from '../LeftNavPane';
+import TeacherLeftNavPane from '../screens/TeacherScreens/LeftNavPane';
+import StudentLeftNavPane from '../screens/StudentScreens/LeftNavPane';
 import QCView from 'components/QCView';
 
 //To-Do: All info in this class is static, still needs to be hooked up to data base in order
 //to function dynamically
-export class TeacherProfileScreen extends QcParentScreen {
+export class ProfileScreen extends QcParentScreen {
 
     //Sets the current screen for firebase analytics
     componentDidMount() {
 
-        FirebaseFunctions.setCurrentScreen("Teacher Profile Screen", "TeacherProfileScreen");
+        if (this.props.navigation.state.params.isTeacher === true) {
+            FirebaseFunctions.setCurrentScreen("Teacher Profile Screen", "ProfileScreen");
+        } else {
+            FirebaseFunctions.setCurrentScreen("Student Profile Screen", "ProfileScreen");
+        }
 
 
     }
 
     state = {
 
-        teacher: this.props.navigation.state.params.teacher,
+        accountObject: this.props.navigation.state.params.accountObject,
         userID: this.props.navigation.state.params.userID,
-        name: this.props.navigation.state.params.teacher.name,
-        phoneNumber: this.props.navigation.state.params.teacher.phoneNumber,
-        emailAddress: this.props.navigation.state.params.teacher.emailAddress,
-        profileImageID: this.props.navigation.state.params.teacher.profileImageID,
+        name: this.props.navigation.state.params.accountObject.name,
+        phoneNumber: this.props.navigation.state.params.accountObject.phoneNumber,
+        emailAddress: this.props.navigation.state.params.accountObject.emailAddress,
+        profileImageID: this.props.navigation.state.params.accountObject.profileImageID,
         classes: this.props.navigation.state.params.classes,
+        isTeacher: this.props.navigation.state.params.isTeacher,
         isPhoneValid: true,
         isOpen: false,
         modalVisible: false
@@ -67,16 +73,26 @@ export class TeacherProfileScreen extends QcParentScreen {
         } else if (!this.state.isPhoneValid) {
             Alert.alert(strings.Whoops, strings.InvalidPhoneNumber);
         } else {
-            await FirebaseFunctions.updateTeacherObject(userID, {
-                name,
-                phoneNumber,
-                profileImageID
-            });
-            this.refs.toast.show(strings.YourProfileHasBeenSaved, DURATION.LENGTH_SHORT);
-            //Just goes to the first class
-            this.props.navigation.push('TeacherCurrentClass', {
-                userID: userID
-            });
+
+            if (this.state.isTeacher === true) {
+                await FirebaseFunctions.updateTeacherObject(userID, {
+                    name,
+                    phoneNumber,
+                    profileImageID
+                });
+                this.refs.toast.show(strings.YourProfileHasBeenSaved, DURATION.LENGTH_SHORT);
+                //Just goes to the first class
+                this.props.navigation.push('TeacherCurrentClass', {
+                    userID: userID
+                });
+            } else {
+                await FirebaseFunctions.updateStudentProfileInfo(userID, this.state.classes, name, phoneNumber, profileImageID);
+                this.refs.toast.show(strings.YourProfileHasBeenSaved, DURATION.LENGTH_SHORT);
+                //Just goes to the first class
+                this.props.navigation.push('StudentCurrentClass', {
+                    userID: userID
+                });
+            }
         }
     }
 
@@ -102,12 +118,23 @@ export class TeacherProfileScreen extends QcParentScreen {
 
         const { userID, emailAddress, name, phoneNumber, profileImageID } = this.state;
         return (
-            <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
-                teacher={this.state.teacher}
-                userID={userID}
-                classes={this.state.classes}
-                edgeHitWidth={0}
-                navigation={this.props.navigation} />}>
+            <SideMenu isOpen={this.state.isOpen} menu={
+                this.state.isTeacher === true ? (
+                    <TeacherLeftNavPane
+                        teacher={this.state.accountObject}
+                        userID={userID}
+                        classes={this.state.classes}
+                        edgeHitWidth={0}
+                        navigation={this.props.navigation} />
+                ) : (
+                        <StudentLeftNavPane
+                            student={this.state.accountObject}
+                            userID={userID}
+                            classes={this.state.classes}
+                            edgeHitWidth={0}
+                            navigation={this.props.navigation} />
+                    )
+            }>
                 <QCView style={{
                     flexDirection: 'column',
                     backgroundColor: colors.lightGrey,
@@ -149,10 +176,17 @@ export class TeacherProfileScreen extends QcParentScreen {
                                 <QcActionButton
                                     text={strings.Cancel}
                                     onPress={() => {
-                                        //Just goes back without saving anything
-                                        this.props.navigation.push('TeacherCurrentClass', {
-                                            userID: this.state.userID
-                                        });
+                                        if (this.state.isTeacher === true) {
+                                            //Just goes back without saving anything
+                                            this.props.navigation.push('TeacherCurrentClass', {
+                                                userID: this.state.userID
+                                            });
+                                        } else {
+                                            this.props.navigation.push('StudentCurrentClass', {
+                                                userID: this.state.userID
+                                            })
+                                        }
+
                                     }}
                                 />
                                 <QcActionButton
@@ -167,7 +201,7 @@ export class TeacherProfileScreen extends QcParentScreen {
                                 await FirebaseFunctions.logOut();
                                 this.props.navigation.push("FirstScreenLoader");
                             }}>
-                                    <Text style={styles.textStyle}>{strings.LogOut}</Text>
+                                <Text style={styles.textStyle}>{strings.LogOut}</Text>
                             </TouchableOpacity>
                         </View>
                     </ScrollView>
@@ -256,5 +290,5 @@ const styles = StyleSheet.create({
     }
 });
 
-export default TeacherProfileScreen;
+export default ProfileScreen;
 
