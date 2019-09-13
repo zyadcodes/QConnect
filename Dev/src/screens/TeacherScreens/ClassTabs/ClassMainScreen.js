@@ -203,7 +203,6 @@ export class ClassMainScreen extends QcParentScreen {
                 <StudentCard
                   key={item.id}
                   studentName={item.name}
-                  background={colors.white}
                   profilePic={studentImages.images[item.profileImageID]}
                   currentAssignment={item.currentAssignment}
                   onPress={() =>
@@ -214,7 +213,7 @@ export class ClassMainScreen extends QcParentScreen {
                       classID: currentClassID
                     })
                   }
-                  background={item.isReady === true ? colors.green : colors.red}
+                  background={item.currentAssignment === 'None' ? colors.white : (item.isReady === true ? colors.green : colors.red)}
                 />
               )}
             />
