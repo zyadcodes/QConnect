@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Image, TouchableWithoutFeedback, Keyboard, Alert, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, Text, Alert, ScrollView, Dimensions } from 'react-native';
 import Toast, { DURATION } from 'react-native-easy-toast'
 import QcActionButton from 'components/QcActionButton';
 import TouchableText from 'components/TouchableText'
@@ -14,7 +14,6 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import SideMenu from 'react-native-side-menu';
 import LeftNavPane from '../LeftNavPane';
 import QCView from 'components/QCView';
-import screenStyle from 'config/screenStyle';
 
 //To-Do: All info in this class is static, still needs to be hooked up to data base in order
 //to function dynamically
@@ -163,6 +162,14 @@ export class TeacherProfileScreen extends QcParentScreen {
                             </View>
                             <Toast ref="toast" />
                         </View>
+                        <View style={styles.buttonsContainer}>
+                            <TouchableOpacity style={styles.cardStyle} onPress={async () => {
+                                await FirebaseFunctions.logOut();
+                                this.props.navigation.push("FirstScreenLoader");
+                            }}>
+                                    <Text style={styles.textStyle}>{strings.LogOut}</Text>
+                            </TouchableOpacity>
+                        </View>
                     </ScrollView>
                 </QCView>
             </SideMenu >
@@ -186,6 +193,11 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         backgroundColor: colors.white,
     },
+    textStyle: {
+        fontFamily: 'Montserrat-Regular',
+        fontSize: 20,
+        color: colors.black,
+    },
     profilePic: {
         width: 130,
         height: 130,
@@ -193,6 +205,16 @@ const styles = StyleSheet.create({
     },
     editInfo: {
         flexDirection: 'column',
+        backgroundColor: colors.white
+    },
+    cardStyle: {
+        flexDirection: 'row',
+        marginRight: 7,
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        justifyContent: 'space-between',
+        fontFamily: 'Montserrat-Regular',
         backgroundColor: colors.white
     },
     infoRow: {
