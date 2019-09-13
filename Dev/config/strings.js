@@ -76,6 +76,7 @@ export default {
     GetStarted: 'Get Started',
     PracticePerfect: "Practice Makes Perfect",
     GreatJob: "Great Job",
+    CurrentlyNoAssignment: 'You currently don\'t have an assignment',
     CurrentAssignment: 'Current Assignment',
     AddAssignment: 'Add Assignment',
     Grade: 'Grade',

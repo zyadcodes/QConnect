@@ -278,6 +278,8 @@ class StudentMainScreen extends QcParentScreen {
                             if (thisClassInfo.currentAssignment !== "None") {
                                 FirebaseFunctions.updateStudentAssignmentStatus(currentClassID, userID);
                                 this.setState({ isReady: !isReady });
+                            } else {
+                                Alert.alert(strings.Whoops, strings.CurrentlyNoAssignment);
                             }
                         }}>
                             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
