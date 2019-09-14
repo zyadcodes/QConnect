@@ -154,7 +154,7 @@ export class EvaluationPage extends QcParentScreen {
             LeftOnPress={() => this.props.navigation.goBack()}
             Title={strings.Evaluation}
           /> :
-            readOnly === true ? <TopBanner
+            readOnly === true && !this.props.navigation.state.params.isStudentSide ? <TopBanner
               LeftIconName="angle-left"
               LeftOnPress={() => this.props.navigation.goBack()}
               Title={strings.Evaluation}

@@ -11,7 +11,7 @@ import ForgotPassword from './AuthenticationScreens/ForgotPassword';
 import StudentWelcomeScren from './StudentScreens/StudentWelcomeScreen';
 import allSettingsScreen from './SettingsScreen/allSettingsScreen';
 import creditsScreen from './SettingsScreen/creditsScreen';
-import TeacherProfileScreen from './TeacherScreens/TeacherProfile/TeacherProfileScreen';
+import ProfileScreen from './ProfileScreen';
 import StudentMainScreen from './StudentScreens/StudentMainScreen';
 import ClassTabsNavigator from './TeacherScreens/ClassTabs/ClassTabsNavigator';
 import StudentProfileScreen from './TeacherScreens/ClassTabs/StudentProfileScreen';
@@ -54,7 +54,11 @@ routeConfig = {
     ForgotPassword: {
         screen: ForgotPassword,
         navigationOptions: ({ navigation }) => ({
-            header: null
+            header: <TopBanner
+                LeftIconName="angle-left"
+                LeftOnPress={() => navigation.goBack()}
+                Title={strings.ForgotPasswordNoQuestion}
+            />
         }),
     },
 
@@ -99,8 +103,8 @@ routeConfig = {
         }),
     },
 
-    TeacherProfile: {
-        screen: TeacherProfileScreen,
+    Profile: {
+        screen: ProfileScreen,
         navigationOptions: ({ navigation }) => ({
             header: null
         })
@@ -134,7 +138,7 @@ routeConfig = {
             header: null
         })
     },
-    
+
     ClassEdit: {
         screen: ClassEditScreen,
         navigationOptions: ({ navigation }) => ({

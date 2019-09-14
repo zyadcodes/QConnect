@@ -85,10 +85,11 @@ class LeftNavPane extends QcParentScreen {
               image={teacherImages.images[teacherImageId]}
               onPress={() => {
                 this.triggerDeleteClass();
-                this.props.navigation.push("TeacherProfile", {
-                  teacher: this.state.teacher,
+                this.props.navigation.push("Profile", {
+                  accountObject: this.state.teacher,
                   userID: this.state.userID,
-                  classes: this.state.classes
+                  classes: this.state.classes,
+                  isTeacher: true
                 })
               }}
             />

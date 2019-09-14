@@ -125,7 +125,6 @@ export class ClassEditScreen extends QcParentScreen {
 
   render() {
     const { classID, students } = this.state;
-    console.log(this.state.profileImageID)
     return (
       <QCView style={{
         flexDirection: 'column',
@@ -133,7 +132,7 @@ export class ClassEditScreen extends QcParentScreen {
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height
       }}>
-        <ScrollView style={styles.container}>
+        <ScrollView nestedScrollEnabled={true} style={styles.container}>
           <ImageSelectionModal
             visible={this.state.modalVisible}
             images={studentImages.images}
@@ -214,51 +213,49 @@ export class ClassEditScreen extends QcParentScreen {
           <View style={{ flex: 0.5 }}>
             <LoadingSpinner isVisible={this.state.isLoading} />
           </View>
-          <View style={styles.flatList}>
-            <FlatList
-              data={students}
-              keyExtractor={(item, index) => item.ID}
-              extraData={this.state}
-              renderItem={({ item, index }) => (
-                <StudentCard
-                  key={index}
-                  studentName={item.name}
-                  profilePic={studentImages.images[item.profileImageID]}
-                  background={colors.white}
-                  onPress={() => { }}
-                  compOnPress={() => {
-                    Alert.alert(
-                      strings.RemoveStudent,
-                      strings.AreYouSureYouWantToRemoveStudent,
-                      [
-                        {
-                          text: strings.Remove, onPress: () => {
+          <FlatList
+            data={students}
+            keyExtractor={(item, index) => item.ID}
+            extraData={this.state}
+            renderItem={({ item, index }) => (
+              <StudentCard
+                key={index}
+                studentName={item.name}
+                profilePic={studentImages.images[item.profileImageID]}
+                background={colors.white}
+                onPress={() => { }}
+                compOnPress={() => {
+                  Alert.alert(
+                    strings.RemoveStudent,
+                    strings.AreYouSureYouWantToRemoveStudent,
+                    [
+                      {
+                        text: strings.Remove, onPress: () => {
 
-                            //Removes the student from the database and updates the local state
-                            FirebaseFunctions.removeStudent(classID, item.ID);
-                            let arrayOfClassStudents = students;
-                            let indexOfStudent = arrayOfClassStudents.findIndex((student) => {
-                              return student.ID === item.ID;
-                            });
-                            arrayOfClassStudents.splice(indexOfStudent, 1);
-                            this.setState({ students: arrayOfClassStudents });
-                          }
-                        },
+                          //Removes the student from the database and updates the local state
+                          FirebaseFunctions.removeStudent(classID, item.ID);
+                          let arrayOfClassStudents = students;
+                          let indexOfStudent = arrayOfClassStudents.findIndex((student) => {
+                            return student.ID === item.ID;
+                          });
+                          arrayOfClassStudents.splice(indexOfStudent, 1);
+                          this.setState({ students: arrayOfClassStudents });
+                        }
+                      },
 
-                        { text: strings.Cancel, style: 'cancel' },
-                      ]
-                    );
+                      { text: strings.Cancel, style: 'cancel' },
+                    ]
+                  );
 
-                  }}
-                  comp={
-                    <Icon
-                      name='user-times'
-                      size={PixelRatio.get() * 9}
-                      type='font-awesome'
-                      color={colors.primaryLight} />
-                  } />
-              )} />
-          </View>
+                }}
+                comp={
+                  <Icon
+                    name='user-times'
+                    size={PixelRatio.get() * 9}
+                    type='font-awesome'
+                    color={colors.primaryLight} />
+                } />
+            )} />
         </ScrollView>
       </QCView>
     );
@@ -270,7 +267,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
     backgroundColor: colors.lightGrey,
-    flex: 1
+    flex: 1,
   },
   flatList: {
     flex: 1

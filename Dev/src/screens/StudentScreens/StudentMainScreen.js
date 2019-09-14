@@ -119,7 +119,6 @@ class StudentMainScreen extends QcParentScreen {
 
     //Renders the screen
     render() {
-
         const { userID, isLoading, student, currentClassID, thisClassInfo, isReady, currentClass } = this.state;
 
         if (isLoading === true) {
@@ -151,7 +150,7 @@ class StudentMainScreen extends QcParentScreen {
                                 source={require('assets/emptyStateIdeas/ghostGif.gif')}
                                 style={{
                                     width: 300,
-                                    height: 150,
+                                    height: Dimensions.get('window').height * 0.22,
                                     resizeMode: 'contain',
                                 }} />
 
@@ -250,7 +249,7 @@ class StudentMainScreen extends QcParentScreen {
                                 </View>
                                 <View style={styles.profileInfoTopRight}>
                                     <Text numberOfLines={1} style={styles.bigText}>{student.name.toUpperCase()}</Text>
-                                    <View style={{ flexDirection: 'row', height: 25 }}>
+                                    <View style={{ flexDirection: 'row', height: Dimensions.get('window').height * 0.04 }}>
                                         <Rating readonly={true} startingValue={thisClassInfo.averageRating} imageSize={25} />
                                         <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
                                             <Text style={styles.ratingText}>{thisClassInfo.averageRating === 0 ? "" : parseFloat(thisClassInfo.averageRating).toFixed(1)}</Text>
@@ -265,7 +264,7 @@ class StudentMainScreen extends QcParentScreen {
                                         style={styles.profilePic}
                                         source={studentImages.images[student.profileImageID]} />
                                 </View>
-                                <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'column', height: 59 }}>
+                                <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'column', height: Dimensions.get('window').height * 0.09 }}>
                                     <Text numberOfLines={1} style={styles.assignmentTextLarge}>{thisClassInfo.currentAssignment.toUpperCase()}</Text>
                                     <Text style={styles.assignmentTextLarge}>{strings.TotalAssignments + " " + thisClassInfo.totalAssignments + "  "}</Text>
                                 </View>
@@ -296,7 +295,6 @@ class StudentMainScreen extends QcParentScreen {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.bottomView}>
-                        <View style={{ flex: 0.1 }}></View>
                         <ScrollView style={styles.prevAssignments}>
                             <FlatList
                                 data={thisClassInfo.assignmentHistory}
@@ -304,6 +302,22 @@ class StudentMainScreen extends QcParentScreen {
                                 renderItem={({ item, index }) => (
                                     <TouchableOpacity onPress={() => {
                                         //To-Do: Navigates to more specific evaluation for this assignment
+                                        this.props.navigation.push("EvaluationPage", {
+                                            classID: this.state.currentClassID,
+                                            studentID: this.state.userID,
+                                            classStudent: thisClassInfo,
+                                            assignmentName: item.name,
+                                            completionDate: item.completionDate,
+                                            rating: item.evaluation.rating,
+                                            notes: item.evaluation.notes,
+                                            improvementAreas: item.evaluation.improvementAreas,
+                                            userID: this.state.userID,
+                                            evaluationObject: item.evaluation,
+                                            isStudentSide: true,
+                                            evaluationID: item.ID,
+                                            readOnly: true,
+                                            newAssignment: false,
+                                        })
                                     }}>
                                         <View style={styles.prevAssignmentCard} key={index}>
                                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -323,7 +337,7 @@ class StudentMainScreen extends QcParentScreen {
                                             }
                                             {item.evaluation.improvementAreas && item.evaluation.improvementAreas.length > 0 ?
                                                 <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                                                    <Text style={{ height: 20, marginTop: 5 }}>{strings.ImprovementAreas}</Text>
+                                                    <Text style={{ height: Dimensions.get('window').height * 0.03, marginTop: 5 }}>{strings.ImprovementAreas}</Text>
                                                     {item.evaluation.improvementAreas.map((tag) => { return (<Text key={tag} style={styles.corner}>{tag}</Text>) })}
                                                 </View>
                                                 : <View />
@@ -348,7 +362,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     topView: {
-        flex: 2,
+        flex: 2.3,
         flexDirection: 'column',
         backgroundColor: colors.white
     },
@@ -375,12 +389,13 @@ const styles = StyleSheet.create({
     profileInfoBottom: {
         flexDirection: 'row',
         paddingHorizontal: 10,
+        height: Dimensions.get('window').height * 0.11,
         borderBottomColor: colors.grey,
         borderBottomWidth: 1
     },
     profilePic: {
         width: 100,
-        height: 100,
+        height: Dimensions.get('window').height * 0.15,
         borderRadius: 50,
         paddingBottom: 10
     },
@@ -404,7 +419,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         borderBottomColor: colors.lightGrey,
         borderBottomWidth: 1,
-        height: 90,
+        height: Dimensions.get('window').height * 0.13,
         padding: 5,
     },
     profileInfo: {
@@ -426,7 +441,7 @@ const styles = StyleSheet.create({
         borderColor: '#D0D0D0',
         borderWidth: 1,
         borderRadius: 3,
-        height: 20,
+        height: Dimensions.get('window').height * 0.03,
         justifyContent: 'center',
         alignItems: 'center',
         paddingLeft: 5,
@@ -497,7 +512,7 @@ const styles = StyleSheet.create({
         borderColor: colors.grey,
         borderBottomWidth: 1,
         shadowColor: colors.darkGrey,
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: { width: 0, height: Dimensions.get('window').height * 0.003 },
         shadowOpacity: 0.8,
         shadowRadius: 3,
         elevation: 2,
