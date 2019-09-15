@@ -32,15 +32,10 @@ class FlowView extends Component {
 	constructor(props) {
 		super(props);
 
-		if (this.props.initialSelectedValues.includes(this.props.text)) {
-			this.state = {
-				isSelected: true
-			}
-		} else {
-			this.state = {
-				isSelected: this.props.isSelected,
-			};
-		}
+		this.state = {
+			isSelected: this.props.isSelected,
+		};
+
 
 	}
 
@@ -123,15 +118,21 @@ export default class FlowLayout extends Component {
 		this.state = {
 			modalVisible: false,
 			dataValue: this.props.dataValue,
-			initialSelectedValues: this.props.initialSelectedValues,
-			selectedState: new Array(this.props.dataValue.length).fill(false),
+			selectedState: (this.props.initialSelectedValues.length === 0 ? (
+				new Array(this.props.dataValue.length).fill(false)
+			) : (
+				new Array(this.props.initialSelectedValues.length).fill(true)
+			)),
 			isBadgeVisible: false,
 			isNewAddition: false,
 			newImprovementText: ""
-
 		};
-
 	}
+
+	componentDidMount() {
+		this.change();
+	}
+
 	change() {
 		for (var i = 0; i < this.state.selectedState.length; i++) {
 			let item = this.refs[this.state.dataValue[i]];
@@ -163,7 +164,7 @@ export default class FlowLayout extends Component {
 	}
 
 	render() {
-		const { dataValue, initialSelectedValues } = this.state;
+		const { dataValue } = this.state;
 		//Creates a new array of data values that exclude the ellipses & instead
 		//include an addition symbol to add new improvments
 		return (
@@ -185,7 +186,6 @@ export default class FlowLayout extends Component {
 										return (
 											<View key={position}>
 												<FlowView
-													initialSelectedValues={initialSelectedValues}
 													isBadgeVisible={true}
 													ref={this.state.dataValue[position]}
 													text={value}
@@ -202,7 +202,6 @@ export default class FlowLayout extends Component {
 											return (
 												<View key={position}>
 													<FlowView
-														initialSelectedValues={initialSelectedValues}
 														ref={this.state.dataValue[position]}
 														text={value}
 														editMode={true}
@@ -237,7 +236,6 @@ export default class FlowLayout extends Component {
 										<FlowView
 											text={strings.Ellipses}
 											backgroundColor={colors.primaryLight}
-											initialSelectedValues={initialSelectedValues}
 											onClick={() => {
 												this.setState({ isBadgeVisible: true })
 											}} />
@@ -259,7 +257,6 @@ export default class FlowLayout extends Component {
 							return (
 								<View key={position}>
 									<FlowView
-										initialSelectedValues={initialSelectedValues}
 										ref={dataValue[position]}
 										text={value}
 										readOnly={this.props.readOnly}
@@ -287,7 +284,6 @@ export default class FlowLayout extends Component {
 						//Only shows the ellipses if this is not read only
 						(!this.props.readOnly) ? (
 							<FlowView
-								initialSelectedValues={initialSelectedValues}
 								text={strings.Ellipses}
 								backgroundColor={colors.primaryLight}
 								onClick={() => {
@@ -332,7 +328,7 @@ const styles = StyleSheet.create({
 		borderColor: colors.grey,
 		borderWidth: 1 / PixelRatio.get(),
 		borderRadius: 5,
-		height: 35,
+		height: Dimensions.get('window').height * 0.065,
 		justifyContent: 'center',
 		alignItems: 'center',
 		marginRight: 10,
