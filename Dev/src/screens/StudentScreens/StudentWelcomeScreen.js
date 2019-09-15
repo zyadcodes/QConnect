@@ -77,7 +77,7 @@ export class StudentWelcomeScreen extends QcParentScreen {
     }
 
     this.setState({
-      profileImageId: index,
+      profileImageID: index,
       highlightedImagesIndices: candidateImages
     });
 
