@@ -65,23 +65,27 @@ class LoginScreen extends Component {
     this.setState({ isLoading: true });
     const { username, password } = this.state;
 
-    const account = await FirebaseFunctions.logIn(username.trim(), password.trim());
-    if (account === -1) {
-      this.setState({ isLoading: false });
-      Alert.alert(strings.Whoops, strings.IncorrectInfo);
+    if (username.trim() === "" || (!password.replace(/\s/g, '').length)) {
+      Alert.alert(string.Whoops, strings.PleaseMakeSureAllFieldsAreFilledOut);
     } else {
-      const userID = account.uid;
-      if (this.state.isTeacher === true) {
-        FirebaseFunctions.logEvent("TEACHER_LOG_IN");
-        this.props.navigation.push("TeacherCurrentClass", {
-          userID,
-        })
+      const account = await FirebaseFunctions.logIn(username.trim(), password.trim());
+      if (account === -1) {
+        this.setState({ isLoading: false });
+        Alert.alert(strings.Whoops, strings.IncorrectInfo);
       } else {
-        FirebaseFunctions.logEvent("STUDENT_LOG_IN");
-        this.props.navigation.push("StudentCurrentClass", {
-          userID,
-        });
-      }
+        const userID = account.uid;
+        if (this.state.isTeacher === true) {
+          FirebaseFunctions.logEvent("TEACHER_LOG_IN");
+          this.props.navigation.push("TeacherCurrentClass", {
+            userID,
+          })
+        } else {
+          FirebaseFunctions.logEvent("STUDENT_LOG_IN");
+          this.props.navigation.push("StudentCurrentClass", {
+            userID,
+          });
+        }
+      }Ï
     }
   }
 
