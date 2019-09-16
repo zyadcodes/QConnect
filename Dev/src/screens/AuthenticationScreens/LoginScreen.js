@@ -65,7 +65,7 @@ class LoginScreen extends Component {
     this.setState({ isLoading: true });
     const { username, password } = this.state;
 
-    if (username.trim() === "" || password.trim() === "") {
+    if (username.trim() === "" || (!password.replace(/\s/g, '').length)) {
       Alert.alert(string.Whoops, strings.PleaseMakeSureAllFieldsAreFilledOut);
     } else {
       const account = await FirebaseFunctions.logIn(username.trim(), password.trim());
