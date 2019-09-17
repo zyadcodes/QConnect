@@ -85,7 +85,7 @@ class LoginScreen extends Component {
             userID,
           });
         }
-      }Ï
+      }
     }
   }
 
