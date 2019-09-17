@@ -412,7 +412,7 @@ const styles = StyleSheet.create({
     },
     ratingDescText: {
         fontSize: 18,
-        fontFamily: 'light',
+        fontFamily: 'Montserrat-Light',
         color: colors.primaryDark
     },
     prevAssignmentCard: {
@@ -476,7 +476,7 @@ const styles = StyleSheet.create({
     },
     ratingDescText: {
         fontSize: 18,
-        fontFamily: 'light',
+        fontFamily: 'Montserrat-Light',
         color: colors.primaryDark
     },
     assignmentTextSmall: {
