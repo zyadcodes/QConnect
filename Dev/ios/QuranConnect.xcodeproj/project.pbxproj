@@ -23,10 +23,15 @@
 		016EA1842328BB8400CD20E2 /* Icon-App-60x60@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1752328BB8400CD20E2 /* Icon-App-60x60@3x.png */; };
 		016EA1852328BB8400CD20E2 /* Icon-App-76x76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1762328BB8400CD20E2 /* Icon-App-76x76@2x.png */; };
 		016EA1862328BB8400CD20E2 /* Icon-App-29x29@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1772328BB8400CD20E2 /* Icon-App-29x29@2x.png */; };
-		016EA18A2328BB9800CD20E2 /* iTunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1872328BB9600CD20E2 /* iTunesArtwork@2x.png */; };
+		016EA18A2328BB9800CD20E2 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		016EA18B2328BB9800CD20E2 /* iTunesArtwork@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1882328BB9700CD20E2 /* iTunesArtwork@1x.png */; };
 		016EA18C2328BB9800CD20E2 /* iTunesArtwork@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1892328BB9700CD20E2 /* iTunesArtwork@3x.png */; };
 		017E518523234B7600B71C11 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 017E518423234B7600B71C11 /* GoogleService-Info.plist */; };
+		0188157D23348C52006806B3 /* ../assets/fonts/MADDINA.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188157C23348C52006806B3 /* ../assets/fonts/MADDINA.ttf */; };
+		0188158423349101006806B3 /* MADDINA.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188158323349101006806B3 /* MADDINA.ttf */; };
+		0188158B2334966A006806B3 /* me_quran.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188158823349669006806B3 /* me_quran.ttf */; };
+		0188158C2334966A006806B3 /* Scheherazade-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188158923349669006806B3 /* Scheherazade-Bold.ttf */; };
+		0188158D2334966A006806B3 /* Scheherazade-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188158A23349669006806B3 /* Scheherazade-Regular.ttf */; };
 		05A50DDD02074F07BE689CD2 /* is-icon-12.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB615236590451195990F95 /* is-icon-12.png */; };
 		05E9633F17454B3D983D7B89 /* boy11.png in Resources */ = {isa = PBXBuildFile; fileRef = 93AC74C0EF0D4E9A90B7F523 /* boy11.png */; };
 		0668C2EC39AF450D81C0049A /* is-icon-5.png in Resources */ = {isa = PBXBuildFile; fileRef = 64E7AC68B7CB40A4A3E6DBDC /* is-icon-5.png */; };
@@ -197,6 +202,11 @@
 		016EA1882328BB9700CD20E2 /* iTunesArtwork@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@1x.png"; sourceTree = "<group>"; };
 		016EA1892328BB9700CD20E2 /* iTunesArtwork@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@3x.png"; sourceTree = "<group>"; };
 		017E518423234B7600B71C11 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "QuranConnect/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		0188157C23348C52006806B3 /* ../assets/fonts/MADDINA.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ../assets/fonts/MADDINA.ttf; sourceTree = "<group>"; };
+		0188158323349101006806B3 /* MADDINA.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MADDINA.ttf; path = ../assets/fonts/MADDINA.ttf; sourceTree = "<group>"; };
+		0188158823349669006806B3 /* me_quran.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = me_quran.ttf; path = ../assets/fonts/me_quran.ttf; sourceTree = "<group>"; };
+		0188158923349669006806B3 /* Scheherazade-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Scheherazade-Bold.ttf"; path = "../assets/fonts/Scheherazade-Bold.ttf"; sourceTree = "<group>"; };
+		0188158A23349669006806B3 /* Scheherazade-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Scheherazade-Regular.ttf"; path = "../assets/fonts/Scheherazade-Regular.ttf"; sourceTree = "<group>"; };
 		035EA2B8889C44CFA697AAE7 /* Ubuntu-Light-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Ubuntu-Light-Italic.ttf"; path = "../assets/fonts/Ubuntu-Light-Italic.ttf"; sourceTree = "<group>"; };
 		0771723325E04C1286FFE230 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		0B1E0D87EEAD4898828F4FA1 /* female1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female1.png; path = "../assets/images/teacher-icons/female1.png"; sourceTree = "<group>"; };
@@ -485,7 +495,6 @@
 			isa = PBXGroup;
 			children = (
 				016EA1882328BB9700CD20E2 /* iTunesArtwork@1x.png */,
-				016EA1872328BB9600CD20E2 /* iTunesArtwork@2x.png */,
 				016EA1892328BB9700CD20E2 /* iTunesArtwork@3x.png */,
 				016EA1742328BB8400CD20E2 /* Icon-App-20x20@1x.png */,
 				016EA1722328BB8400CD20E2 /* Icon-App-20x20@2x.png */,
@@ -496,6 +505,7 @@
 				016EA16C2328BB8300CD20E2 /* Icon-App-29x29@3x.png */,
 				016EA16A2328BB8300CD20E2 /* Icon-App-40x40@1x.png */,
 				016EA16D2328BB8300CD20E2 /* Icon-App-40x40@3x.png */,
+				0188157C23348C52006806B3 /* ../assets/fonts/MADDINA.ttf */,
 				016EA1702328BB8400CD20E2 /* Icon-App-60x60@2x.png */,
 				016EA1752328BB8400CD20E2 /* Icon-App-60x60@3x.png */,
 				016EA1712328BB8400CD20E2 /* Icon-App-76x76@1x.png */,
@@ -520,6 +530,10 @@
 				9339ED677D6145279E70CCCF /* Zocial.ttf */,
 				7206B33C97284A0AB970F0BB /* Georgia.ttf */,
 				8372A57C53E34567AB9897EA /* Montserrat-Bold.ttf */,
+				0188158323349101006806B3 /* MADDINA.ttf */,
+				0188158823349669006806B3 /* me_quran.ttf */,
+				0188158923349669006806B3 /* Scheherazade-Bold.ttf */,
+				0188158A23349669006806B3 /* Scheherazade-Regular.ttf */,
 				8FA39C1F4C654113A8C7E75D /* Montserrat-Light.ttf */,
 				ADCCA1D1DBBC4D91835C59B0 /* Montserrat-Regular.ttf */,
 				BE7FC2C219C14935A3F3C834 /* Ubuntu-Bold.ttf */,
@@ -708,7 +722,7 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = B65Y7865Z9;
+						DevelopmentTeam = PHH78H2W53;
 						ProvisioningStyle = Manual;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
@@ -795,6 +809,8 @@
 				10CD2E2C3BB6433EA2768DEF /* Ubuntu-Light.ttf in Resources */,
 				6ECDD8F05D4B442598001582 /* is-icon-0.png in Resources */,
 				F62394FF9E1B48ACAB12523E /* is-icon-1.png in Resources */,
+				0188158C2334966A006806B3 /* Scheherazade-Bold.ttf in Resources */,
+				0188158B2334966A006806B3 /* me_quran.ttf in Resources */,
 				537EDF0E5AA440C691E7C508 /* is-icon-10.png in Resources */,
 				9BDCC44771A74567A251D860 /* is-icon-11.png in Resources */,
 				05A50DDD02074F07BE689CD2 /* is-icon-12.png in Resources */,
@@ -812,6 +828,8 @@
 				FDBCAF6B880442CF90CE4E37 /* is-icon-7.png in Resources */,
 				DB3C8CC34F5D48FF8D0B28DC /* is-icon-8.png in Resources */,
 				134C6DF41BF74CB595EDFC09 /* is-icon-9.png in Resources */,
+				0188158423349101006806B3 /* MADDINA.ttf in Resources */,
+				0188157D23348C52006806B3 /* ../assets/fonts/MADDINA.ttf in Resources */,
 				AC79FAAFE82949FE864B8316 /* read_child_bg.jpg in Resources */,
 				362B6B1D5B5947A98D6D51BC /* read_child_bg.orig.jpg in Resources */,
 				CD4C3A352ABA488D9A2DFD37 /* salam.jpg in Resources */,
@@ -847,7 +865,7 @@
 				7B96A35E3F254841A90DD965 /* girl16.png in Resources */,
 				9EF5E08EE0A74474BE02426B /* girl2.png in Resources */,
 				488A4EBE8C7247BA8A23928F /* girl3.png in Resources */,
-				016EA18A2328BB9800CD20E2 /* iTunesArtwork@2x.png in Resources */,
+				016EA18A2328BB9800CD20E2 /* (null) in Resources */,
 				016EA1862328BB8400CD20E2 /* Icon-App-29x29@2x.png in Resources */,
 				016EA18C2328BB9800CD20E2 /* iTunesArtwork@3x.png in Resources */,
 				6749EB7078064E4D9E977415 /* girl4.png in Resources */,
@@ -887,6 +905,7 @@
 				C8B448CBE2AD48DA853BA21C /* male13.png in Resources */,
 				7C2180FEA86A4313849DCABE /* male2.png in Resources */,
 				D8A247CCC8DA44A3A6CB3A1C /* male3.png in Resources */,
+				0188158D2334966A006806B3 /* Scheherazade-Regular.ttf in Resources */,
 				65278970BD90463BBCC0ADC4 /* male4.png in Resources */,
 				B94343C70A734D398A4479C5 /* male5.png in Resources */,
 				C7998CC59C324121A9C3385F /* male6.png in Resources */,

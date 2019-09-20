@@ -16,6 +16,7 @@ import StudentMainScreen from './StudentScreens/StudentMainScreen';
 import ClassTabsNavigator from './TeacherScreens/ClassTabs/ClassTabsNavigator';
 import StudentProfileScreen from './TeacherScreens/ClassTabs/StudentProfileScreen';
 import ClassEditScreen from './TeacherScreens/ClassTabs/ClassEditScreen';
+import MushafScreen from './MushafScreen/MushafScreen'
 import EvaluationPage from './Evaluation/EvaluationPage';
 import strings from 'config/strings';
 import TopBanner from 'components/TopBanner';
@@ -98,6 +99,19 @@ routeConfig = {
                     LeftIconName="angle-left"
                     LeftOnPress={() => navigation.goBack()}
                     Title={strings.Credits}
+                />
+            )
+        }),
+    },
+
+    MushafScreen: {
+        screen: MushafScreen,
+        navigationOptions: ({ navigation }) => ({
+            header: (
+                <TopBanner
+                    LeftIconName="angle-left"
+                    LeftOnPress={() => navigation.goBack()}
+                    Title={"الْفَاتِحَة"}
                 />
             )
         }),

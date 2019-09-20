@@ -94,6 +94,13 @@ class LeftNavPane extends QcParentScreen {
               }}
             />
 
+            <QcDrawerItem
+              title={strings.Mushaf}
+              image={classImages.images[8]}
+              onPress={() => {
+                this.props.navigation.push("MushafScreen")
+              }} />
+
             <FlatList
               data={classes}
               extraData={this.state.deleteOrStopDeleteText}

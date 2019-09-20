@@ -136,7 +136,7 @@ export default {
     AddStudents: 'Add Students',
     JoinMyClass: 'Join my class on QuranConnect. Here is the class code: ',
     AddYourStudents: 'Add Your Students',
-    Or: 'Or',
+    Or: '────────       Or      ────    ────',
     AddStudentsManually: 'Manually Add Your Students',
 
     //--------------------- Class Header Navigator ---------------------
@@ -178,7 +178,8 @@ export default {
     Credits: 'Photo Credit',
     PrivacyPolicy: 'Privacy Policy',
     LogOut: 'Log Out',
-
+    Mushaf: 'Mushaf',
+    
     //--------------------------- Credits -------------------------------------------
     FirstScreenImageCredits: 'First screen background photo by © Hany Khalaf Photography',
     AvatarCredits: 'Computer vector created by brgfx - www.freepik.com',
