@@ -241,7 +241,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
               />
             </View>
             <View style={styles.filler} />
-            <Toast ref="toast" />
+            <Toast position={'center'} ref="toast" />
           </View>
         </ScrollView>
       </QCView>

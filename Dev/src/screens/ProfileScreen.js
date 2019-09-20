@@ -194,7 +194,7 @@ export class ProfileScreen extends QcParentScreen {
                                     onPress={() => this.saveProfileInfo()}
                                 />
                             </View>
-                            <Toast ref="toast" />
+                            <Toast position={'center'} ref="toast" />
                         </View>
                         <View style={styles.buttonsContainer}>
                             <TouchableOpacity style={styles.cardStyle} onPress={async () => {

@@ -113,7 +113,7 @@ export class StudentWelcomeScreen extends QcParentScreen {
 
   };
 
-  
+
   //Creates new account, or launches confirmation dialog if account was created but not confirmed yet.
   async onCreateOrConfirmAccount() {
     //validate entries first
@@ -241,7 +241,7 @@ export class StudentWelcomeScreen extends QcParentScreen {
               />
             </View>
             <View style={styles.filler} />
-            <Toast ref="toast" />
+            <Toast position={'center'} ref="toast" />
           </View>
         </ScrollView>
       </QCView>

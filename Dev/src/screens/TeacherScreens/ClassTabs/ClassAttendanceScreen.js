@@ -220,7 +220,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
                                 />
                             );
                         })}
-                        <Toast ref="toast" />
+                        <Toast position={'center'} ref="toast" />
                     </ScrollView>
                 </QCView>
             </SideMenu >
