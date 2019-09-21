@@ -4,10 +4,10 @@ import colors from 'config/colors';
 import EndOfAyah from './EndOfAyah';
 
 //Creates the higher order component
-const Ayah = ({ text, number }) => {
+const Ayah = ({ text, number, id }) => {
     
     return (
-        <Text style={styles.ayahText}>
+        <Text style={styles.ayahText} >
             {text}
             <EndOfAyah ayahNumber={number}/> 
         </Text>
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     ayahText: {
         textAlign: 'right', 
         fontFamily: 'me_quran', 
-        fontSize: 30, 
+        fontSize: 20, 
         color: colors.darkGrey
     }
 })

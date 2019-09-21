@@ -108,10 +108,11 @@ routeConfig = {
         screen: MushafScreen,
         navigationOptions: ({ navigation }) => ({
             header: (
+                
                 <TopBanner
                     LeftIconName="angle-left"
                     LeftOnPress={() => navigation.goBack()}
-                    Title={"الْفَاتِحَة"}
+                    Title={"سورة النساء"}
                 />
             )
         }),

@@ -24,14 +24,14 @@ const styles = StyleSheet.create({
         fontFamily: 'me_quran', 
         alignItems: 'center', 
         alignSelf: 'center', 
-        fontSize: 20, color: colors.darkGrey
+        fontSize: 14, color: colors.darkGrey
     },
     ayahSeparator: {
         textAlign: 'right', 
         fontFamily: 'me_quran', 
         alignItems: 'center', 
         alignSelf: 'center', 
-        fontSize: 30, 
+        fontSize: 20, 
         color: colors.darkGrey, 
         marginBottom: 10
     }
