@@ -16,6 +16,7 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import fontStyles from "../../../config/fontStyles";
 
 class LeftNavPane extends QcParentScreen {
 
@@ -146,7 +147,7 @@ class LeftNavPane extends QcParentScreen {
                                         </View>
                                     ) : (
                                             <View>
-                                                <Text style={styles.confirmationMessage}>{strings.TypeInAClassCode}</Text>
+                                                <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.TypeInAClassCode}</Text>
                                                 <Input
                                                     type='authCode'
                                                     keyboardType='numeric'

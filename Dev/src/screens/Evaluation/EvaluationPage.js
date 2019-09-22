@@ -12,6 +12,7 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import fontStyles from '../../../config/fontStyles';
 
 
 export class EvaluationPage extends QcParentScreen {
@@ -169,12 +170,12 @@ export class EvaluationPage extends QcParentScreen {
             <View style={styles.section}>
               <Image source={studentImages.images[profileImageID]}
                 style={styles.profilePic} />
-              <Text style={styles.titleText}>{classStudent.name}</Text>
-              <Text style={styles.subTitleText}>{assignmentName}</Text>
+              <Text style={fontStyles.bigTextStyleDarkGrey}>{classStudent.name}</Text>
+              <Text style={fontStyles.mainTextStylePrimaryDark}>{assignmentName}</Text>
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.mainQuestionText}>{headerTitle}</Text>
+              <Text style={fontStyles.mainTextStyleDarkGrey}>{headerTitle}</Text>
               <View style={{ paddingVertical: 15 }}>
                 <AirbnbRating
                   defaultRating={rating}
@@ -202,7 +203,7 @@ export class EvaluationPage extends QcParentScreen {
                 value={notes}
               />
               <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                <Text style={[{ flex: 1 }, styles.subCategoryText]}>{strings.ImprovementAreas}</Text>
+                <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.ImprovementAreas}</Text>
               </View>
               <FlowLayout ref="flow"
                 dataValue={improvementAreas}
@@ -265,19 +266,6 @@ const styles = StyleSheet.create({
     borderColor: colors.white,
     borderWidth: 3
   },
-  titleText: {
-    color: colors.darkGrey,
-    fontSize: 20
-  },
-  subTitleText: {
-    color: colors.primaryDark,
-    fontSize: 18
-  },
-  mainQuestionText: {
-    color: colors.darkGrey,
-    fontSize: 16,
-    marginBottom: 10
-  },
   box: {
     borderWidth: 1,
     borderColor: colors.lightGrey,
@@ -294,11 +282,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.18,
     shadowRadius: 1.00,
     elevation: 1,
-  },
-  subCategoryText: {
-    color: colors.darkGrey,
-    fontSize: 16,
-    paddingVertical: 4
   },
   buttonsContainer: {
     alignItems: 'center',

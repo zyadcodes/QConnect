@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import colors from 'config/colors'
 import strings from '../../config/strings';
 import PhoneInput from 'react-native-phone-input'
+import fontStyles from '../../config/fontStyles';
 
 //--------------------------------------------------------------------------
 // Teacher info entries (Name, Phone number, and Email address). 
@@ -13,10 +14,10 @@ export default TeacherInfoEntries = (props) => {
     return (
         <View style={styles.container}>
             <View style={styles.infoRow}>
-                <Text style={styles.subtitle}>Information</Text>
+                <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.Information}</Text>
             </View>
             <View style={styles.infoRow}>
-                <Text style={styles.infoTitle}>{strings.namePlaceHolder}</Text>
+                <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.namePlaceHolder}</Text>
                 <View style={{ flex: 1 }}>
                     <TextInput
                         style={styles.infoTextInput}
@@ -26,7 +27,7 @@ export default TeacherInfoEntries = (props) => {
                 </View>
             </View>
             <View style={styles.infoRow}>
-                <Text style={styles.infoTitle}>{strings.phoneNumberPlaceHolder}</Text>
+                <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.phoneNumberPlaceHolder}</Text>
                 <View style={{ flex: 1 }}>
                     <PhoneInput
                         ref={ref => {
@@ -40,7 +41,7 @@ export default TeacherInfoEntries = (props) => {
             {
                 !props.noEmailField ? (
                     <View style={styles.infoRow}>
-                        <Text style={styles.infoTitle}>{strings.emailPlaceHolder}</Text>
+                        <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.emailPlaceHolder}</Text>
                         <View style={{ flex: 1 }}>
                             <TextInput
                                 style={styles.infoTextInput}
@@ -59,7 +60,7 @@ export default TeacherInfoEntries = (props) => {
             }
             {props.showPasswordField &&
                 <View style={styles.infoRow}>
-                    <Text style={styles.infoTitle}>{strings.password}</Text>
+                    <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.password}</Text>
                     <View style={{ flex: 1 }}>
                         <TextInput
                             style={styles.infoTextInput}
@@ -113,12 +114,5 @@ const styles = StyleSheet.create({
         color: colors.darkGrey,
         flex: 1,
         alignSelf: 'stretch',
-    },
-    infoTitle: {
-        paddingLeft: 20,
-        paddingVertical: 10,
-        fontSize: 14,
-        color: colors.darkGrey,
-        width: 130
     },
 })

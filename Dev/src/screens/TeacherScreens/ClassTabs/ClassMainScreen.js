@@ -13,6 +13,7 @@ import LeftNavPane from '../LeftNavPane';
 import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import fontStyles from "../../../../config/fontStyles";
 
 export class ClassMainScreen extends QcParentScreen {
 
@@ -82,15 +83,7 @@ export class ClassMainScreen extends QcParentScreen {
                   resizeMode: 'contain',
                 }}
               />
-              <Text
-                style={{
-                  fontSize: 30,
-                  color: colors.primaryDark,
-                  flexDirection: "row",
-                }}
-              >
-                {strings.NoClass}
-              </Text>
+              <Text style={fontStyles.hugeTextStylePrimaryDark}>{strings.NoClass}</Text>
               <QcActionButton
                 text={strings.AddClassButton}
                 onPress={() => {
@@ -150,16 +143,7 @@ export class ClassMainScreen extends QcParentScreen {
                 }}
               />
 
-              <Text
-                style={{
-                  fontSize: 30,
-                  color: colors.primaryDark,
-                  flexDirection: "row",
-                }}
-              >
-                {strings.EmptyClass}
-              </Text>
-
+              <Text style={fontStyles.hugeTextStylePrimaryDark}>{strings.EmptyClass}</Text>
               <QcActionButton
                 text={strings.AddStudentButton}
                 onPress={() => this.props.navigation.push("ClassEdit", {

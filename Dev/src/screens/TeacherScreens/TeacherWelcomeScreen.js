@@ -14,6 +14,7 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import { Input, Icon } from 'react-native-elements';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import fontStyles from "../../../config/fontStyles";
 
 const initialState = {
   authCode: '',
@@ -191,7 +192,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
               screen={this.name}
             />
             <View style={styles.picContainer}>
-              <View style={{ flex: 1 }}><Text> </Text></View>
+              <View style={{ flex: 1 }}></View>
               <View style={{ flex: 1, alignSelf: 'flex-start', flexDirection: 'row' }}>
                 <View style={{ flex: 0.1 }}><Text>   </Text></View>
                 <TouchableOpacity style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
@@ -208,7 +209,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
                     style={styles.welcomeImage}
                     source={require("assets/images/salam.png")}
                   />
-                  <Text style={styles.quote}>{strings.TeacherWelcomeMessage}</Text>
+                  <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.TeacherWelcomeMessage}</Text>
                 </FadeInView>
               </View>
             </View>
@@ -263,13 +264,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 10,
     backgroundColor: colors.white
-  },
-  quote: {
-    fontSize: 16,
-    paddingLeft: 20,
-    fontStyle: "italic",
-    paddingBottom: 10,
-    color: colors.darkGrey
   },
   welcomeImage: {
     marginTop: 15,

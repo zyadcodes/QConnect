@@ -17,6 +17,7 @@ import { Input } from 'react-native-elements';
 import { TextInput } from 'react-native-gesture-handler';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import fontStyles from '../../../config/fontStyles';
 
 class StudentMainScreen extends QcParentScreen {
 
@@ -154,13 +155,7 @@ class StudentMainScreen extends QcParentScreen {
                                     resizeMode: 'contain',
                                 }} />
 
-                            <Text
-                                style={{
-                                    fontSize: 25,
-                                    color: colors.primaryDark,
-                                    flexDirection: "row",
-                                    alignSelf: 'center'
-                                }} >
+                            <Text style={[fontStyles.bigTextStyleDarkGrey, { alignSelf: 'center' }]}>
                                 {strings.HaventJoinedClassYet}
                             </Text>
 
@@ -191,7 +186,7 @@ class StudentMainScreen extends QcParentScreen {
                                         ) : (
                                                 <View>
                                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                                        <Text style={styles.confirmationMessage}>{strings.TypeInAClassCode}</Text>
+                                                        <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.TypeInAClassCode}</Text>
                                                     </View>
                                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                                         <TextInput
@@ -248,14 +243,14 @@ class StudentMainScreen extends QcParentScreen {
                                 <View style={{ width: 100 }}>
                                 </View>
                                 <View style={styles.profileInfoTopRight}>
-                                    <Text numberOfLines={1} style={styles.bigText}>{student.name.toUpperCase()}</Text>
+                                    <Text numberOfLines={1} style={fontStyles.mainTextStyleBlack}>{student.name.toUpperCase()}</Text>
                                     <View style={{ flexDirection: 'row', height: Dimensions.get('window').height * 0.04 }}>
                                         <Rating readonly={true} startingValue={thisClassInfo.averageRating} imageSize={25} />
                                         <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-                                            <Text style={styles.ratingText}>{thisClassInfo.averageRating === 0 ? "" : parseFloat(thisClassInfo.averageRating).toFixed(1)}</Text>
+                                            <Text style={fontStyles.bigTextStyleDarkGrey}>{thisClassInfo.averageRating === 0 ? "" : parseFloat(thisClassInfo.averageRating).toFixed(1)}</Text>
                                         </View>
                                     </View>
-                                    <Text style={styles.ratingDescText}>{this.getRatingCaption()}</Text>
+                                    <Text style={fontStyles.mainTextStylePrimaryDark}>{this.getRatingCaption()}</Text>
                                 </View>
                             </View>
                             <View style={styles.profileInfoBottom}>
@@ -265,8 +260,8 @@ class StudentMainScreen extends QcParentScreen {
                                         source={studentImages.images[student.profileImageID]} />
                                 </View>
                                 <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'column', height: Dimensions.get('window').height * 0.09 }}>
-                                    <Text numberOfLines={1} style={styles.assignmentTextLarge}>{thisClassInfo.currentAssignment.toUpperCase()}</Text>
-                                    <Text style={styles.assignmentTextLarge}>{strings.TotalAssignments + " " + thisClassInfo.totalAssignments + "  "}</Text>
+                                    <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{thisClassInfo.currentAssignment.toUpperCase()}</Text>
+                                    <Text style={fontStyles.bigTextStyleDarkGrey}>{strings.TotalAssignments + " " + thisClassInfo.totalAssignments + "  "}</Text>
                                 </View>
                             </View>
                         </View>
@@ -282,15 +277,15 @@ class StudentMainScreen extends QcParentScreen {
                             }
                         }}>
                             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text>{" "}</Text>
-                                <Text>{" "}</Text>
-                                <Text style={styles.studentNameStyle}>{strings.CurrentAssignment}</Text>
-                                <Text>{" "}</Text>
-                                <Text style={[styles.studentNameStyle, { fontSize: 20 }]}>{thisClassInfo.currentAssignment}</Text>
+                                <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
+                                <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
+                                <Text style={fontStyles.mainTextStyleBlack}>{strings.CurrentAssignment}</Text>
+                                <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
+                                <Text style={fontStyles.bigTextStyleBlack}>{thisClassInfo.currentAssignment}</Text>
                             </View>
                             <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
-                                <Text>{"  "}</Text>
-                                <Text style={styles.ratingDescText}>{isReady ? strings.Ready : strings.NotReady}</Text>
+                                <Text style={fontStyles.bigTextStyleBlack}>{"  "}</Text>
+                                <Text style={fontStyles.mainTextStylePrimaryDark}>{isReady ? strings.Ready : strings.NotReady}</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -322,22 +317,22 @@ class StudentMainScreen extends QcParentScreen {
                                         <View style={styles.prevAssignmentCard} key={index}>
                                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-start' }}>
-                                                    <Text style={[styles.subText]}>{item.completionDate}</Text>
+                                                    <Text style={fontStyles.mainTextStylePrimaryDark}>{item.completionDate}</Text>
                                                 </View>
                                                 <View style={{ alignItems: 'center', justifyContent: 'center', flex: 3 }}>
-                                                    <Text numberOfLines={1} style={styles.prevAssignmentTitleText}>{item.name}</Text>
+                                                    <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{item.name}</Text>
                                                 </View>
                                                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end' }}>
                                                     <Rating readonly={true} startingValue={item.evaluation.rating} imageSize={17} />
                                                 </View>
                                             </View>
                                             {item.evaluation.notes ?
-                                                <Text numberOfLines={2} style={styles.notesText}>{"Notes: " + item.evaluation.notes}</Text>
+                                                <Text numberOfLines={2} style={fontStyles.smallTextStyleBlack}>{"Notes: " + item.evaluation.notes}</Text>
                                                 : <View />
                                             }
                                             {item.evaluation.improvementAreas && item.evaluation.improvementAreas.length > 0 ?
-                                                <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                                                    <Text style={{ height: Dimensions.get('window').height * 0.03, marginTop: 5 }}>{strings.ImprovementAreas}</Text>
+                                                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', height: Dimensions.get('window').height * 0.03, }}>
+                                                    <Text style={fontStyles.smallTextStyleBlack}>{strings.ImprovementAreas}</Text>
                                                     {item.evaluation.improvementAreas.map((tag) => { return (<Text key={tag} style={styles.corner}>{tag}</Text>) })}
                                                 </View>
                                                 : <View />
@@ -410,11 +405,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: colors.black,
     },
-    ratingDescText: {
-        fontSize: 18,
-        fontFamily: 'light',
-        color: colors.primaryDark
-    },
     prevAssignmentCard: {
         flexDirection: 'column',
         borderBottomColor: colors.lightGrey,
@@ -441,7 +431,6 @@ const styles = StyleSheet.create({
         borderColor: '#D0D0D0',
         borderWidth: 1,
         borderRadius: 3,
-        height: Dimensions.get('window').height * 0.03,
         justifyContent: 'center',
         alignItems: 'center',
         paddingLeft: 5,
@@ -453,12 +442,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: colors.white,
         flex: 1
-    },
-    prevAssignmentTitleText: {
-        fontFamily: 'Montserrat-Regular',
-        fontSize: 19,
-        flex: 1,
-        paddingLeft: 2
     },
     profileInfo: {
         flexDirection: 'column',
@@ -474,31 +457,11 @@ const styles = StyleSheet.create({
         fontFamily: 'Montserrat-Regular',
         color: colors.primaryDark
     },
-    ratingDescText: {
-        fontSize: 18,
-        fontFamily: 'light',
-        color: colors.primaryDark
-    },
     assignmentTextSmall: {
         fontSize: 14,
         fontFamily: 'Montserrat-Regular',
         color: colors.black,
         paddingTop: 2
-    },
-    assignmentTextLarge: {
-        fontSize: 20,
-        fontFamily: 'Montserrat-Regular',
-        color: colors.darkGrey,
-        paddingLeft: 10,
-        paddingRight: 2,
-        paddingTop: 5,
-        textAlign: 'left'
-    },
-    ratingText: {
-        fontSize: 24,
-        fontFamily: 'Montserrat-Regular',
-        color: colors.darkGrey,
-        marginLeft: 10,
     },
     modal: {
         backgroundColor: colors.white,

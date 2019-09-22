@@ -12,6 +12,7 @@ import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
 import TopBanner from 'components/TopBanner';
 import screenStyle from 'config/screenStyle';
+import fontStyles from '../../../config/fontStyles';
 
 
 export default class AllSettingsScreen extends QcParentScreen {
@@ -40,7 +41,7 @@ export default class AllSettingsScreen extends QcParentScreen {
                     <TouchableOpacity style={[styles.cardStyle, { marginTop: 25 }]} onPress={() => {
                         this.props.navigation.push("CreditsScreen");
                     }}>
-                        <Text style={styles.textStyle}>{strings.Credits}</Text>
+                        <Text style={fontStyles.bigTextStyleBlack}>{strings.Credits}</Text>
                         <Icon
                             name='angle-right'
                             type='font-awesome'
@@ -51,7 +52,7 @@ export default class AllSettingsScreen extends QcParentScreen {
                     <TouchableOpacity style={styles.cardStyle} onPress={() => {
                         Linking.openURL('https://app.termly.io/document/privacy-policy/d3e756e4-a763-4095-9ec1-3965b609d015')
                     }}>
-                        <Text style={styles.textStyle}>{strings.PrivacyPolicy}</Text>
+                        <Text style={fontStyles.bigTextStyleBlack}>{strings.PrivacyPolicy}</Text>
                         <Icon
                             name='angle-right'
                             type='font-awesome'
@@ -63,7 +64,7 @@ export default class AllSettingsScreen extends QcParentScreen {
                         await FirebaseFunctions.logOut();
                         this.props.navigation.push("FirstScreenLoader");
                     }}>
-                        <Text style={styles.textStyle}>{strings.LogOut}</Text>
+                        <Text style={fontStyles.bigTextStyleBlack}>{strings.LogOut}</Text>
                         <Icon
                             name='angle-right'
                             type='font-awesome'
@@ -113,11 +114,5 @@ const styles = StyleSheet.create({
         marginTop: 30,
         fontFamily: 'Montserrat-Regular',
         backgroundColor: colors.white
-    },
-    textStyle: {
-        fontFamily: 'Montserrat-Regular',
-        fontSize: 20,
-        color: colors.black,
-        marginLeft: 20
     },
 })

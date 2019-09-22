@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import colors from 'config/colors'
+import fontStyles from '../../config/fontStyles';
 
 class TopBanner extends FontLoadingComponent {
     render() {
@@ -24,13 +25,13 @@ class TopBanner extends FontLoadingComponent {
                                     name={LeftIconName}
                                     type="font-awesome"
                                 />
-                                <Text style={styles.leftText}
+                                <Text style={fontStyles.mainTextStyleBlack}
                                     onPress={LeftOnPress ? () => { LeftOnPress() } : () => {}}>{LeftTextName}</Text>
                             </TouchableOpacity>
                         </View>
 
                         <View style={styles.topMiddleView}>
-                            <Text style={styles.titleStyle}>{Title}</Text>
+                            <Text style={fontStyles.bigTextStylePrimaryDark}>{Title}</Text>
                         </View>
 
                         <View style={styles.topRightView} >
@@ -39,7 +40,7 @@ class TopBanner extends FontLoadingComponent {
                                     name={RightIconName}
                                     type="font-awesome"
                                 />
-                                <Text style={styles.rightText}
+                                <Text style={fontStyles.mainTextStyleBlack}
                                     onPress={RightOnPress ? () => { RightOnPress() } : () => {}}>{RightTextName}</Text>
                             </TouchableOpacity>
                         </View>
@@ -88,16 +89,5 @@ const styles = StyleSheet.create({
         flex: 1.5,
         justifyContent: 'center'
     },
-    titleStyle: {
-        fontSize: 22,
-        color: colors.primaryDark,
-        fontFamily: 'Montserrat-Regular',
-    },
-    leftText: {
-        fontSize: 15,
-    },
-    rightText: {
-        fontSize: 15,
-    }
 });
 export default TopBanner;

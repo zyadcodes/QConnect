@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Dimensions from 'Dimensions';
 import { StyleSheet, TouchableOpacity, Text, Animated, Easing, ActivityIndicator, View } from 'react-native';
 import colors from 'config/colors';
+import fontStyles from '../../config/fontStyles';
 
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
@@ -86,7 +87,7 @@ export default class ButtonSubmit extends Component {
             {this.state.isLoading ? (
               <ActivityIndicator size="small" color={colors.white} />
             ) : (
-                <Text style={styles.text}>{this.props.text}</Text>
+                <Text style={fontStyles.mainTextStylePrimaryDark}>{this.props.text}</Text>
               )}
           </TouchableOpacity>
           <Animated.View
@@ -125,10 +126,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     zIndex: 9,
     backgroundColor: colors.primaryLight,
-  },
-  text: {
-    color: 'white',
-    color: colors.primaryDark
   },
   image: {
     width: 24,

@@ -5,6 +5,7 @@ import strings from 'config/strings';
 import colors from 'config/colors';
 import surahNames from 'config/surahNames';
 import InputAutoSuggest from 'components/AutoCompleteComponent/InputAutoSuggest'
+import fontStyles from '../../config/fontStyles';
 
 export default class AssignmentEntryComponent extends React.Component {
 
@@ -12,8 +13,8 @@ export default class AssignmentEntryComponent extends React.Component {
         input: ""
     }
 
-    onTextChange(text){
-        this.setState({input: text});
+    onTextChange(text) {
+        this.setState({ input: text });
     }
 
     render() {
@@ -27,26 +28,26 @@ export default class AssignmentEntryComponent extends React.Component {
                 }}>
                 <View style={{ marginVertical: 50, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingBottom: 20 }}>
                     <View style={styles.modal}>
-                        <Text style={styles.modalTitle}>Enter Assignment</Text>
+                        <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.EnterAssignment}</Text>
 
                         <InputAutoSuggest
                             staticData={surahNames}
                             onTextChanged={this.onTextChange.bind(this)}
                         />
-                        
-                        <View style = {{
+
+                        <View style={{
                             flexDirection: "row-reverse"
                         }}>
-                        <QcActionButton
-                            text={strings.Submit}
-                            screen={this.props.screen}
-                            onPress={() => {
-                                this.props.onSubmit(this.state.input)
-                            }} />
                             <QcActionButton
-                            text = {strings.Cancel}
-                            onPress = {() => this.props.onCancel()}/>
-                            </View>
+                                text={strings.Submit}
+                                screen={this.props.screen}
+                                onPress={() => {
+                                    this.props.onSubmit(this.state.input)
+                                }} />
+                            <QcActionButton
+                                text={strings.Cancel}
+                                onPress={() => this.props.onCancel()} />
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -75,10 +76,4 @@ const styles = StyleSheet.create({
         paddingRight: 5,
         paddingLeft: 5
     },
-    modalTitle: {
-        fontSize: 16,
-        marginVertical: 10,
-        fontFamily: 'Montserrat-Regular',
-        color: colors.darkGrey
-    }
 });

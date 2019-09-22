@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { TouchableOpacity, Text, StyleSheet, Image, View, Dimensions } from 'react-native';
 import colors from 'config/colors'
 import FontLoadingComponent from './FontLoadingComponent';
+import fontStyles from '../../config/fontStyles';
 
 /*Class represents the student card that will show up in the list of students
 *from the teachers view.
@@ -31,12 +32,12 @@ export default class StudentCard extends FontLoadingComponent {
                     style={styles.infoStyle}>
                     {currentAssignment ? (
                         <View>
-                            <Text numberOfLines={1} style={styles.studentNameStyle}>{studentName}</Text>
-                            <Text numberOfLines={1} style={styles.assignmentStyle}>{currentAssignment}</Text>
+                            <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{studentName}</Text>
+                            <Text numberOfLines={1} style={fontStyles.smallTextStyleDarkGrey}>{currentAssignment}</Text>
                         </View>
                     ) : (
                             <View>
-                                <Text numberOfLines={1} style={styles.studentNameStyle}>{studentName}</Text>
+                                <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{studentName}</Text>
                             </View>
                         )}
                 </View>
@@ -104,16 +105,4 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         marginLeft: 20
     },
-    studentNameStyle: {
-        fontFamily: 'Montserrat-Regular',
-        fontSize: 20,
-        color: colors.black,
-        marginLeft: 20
-    },
-    assignmentStyle: {
-        fontFamily: 'Montserrat-Regular',
-        fontSize: 16,
-        color: colors.darkGrey,
-        marginLeft: 20
-    }
 });

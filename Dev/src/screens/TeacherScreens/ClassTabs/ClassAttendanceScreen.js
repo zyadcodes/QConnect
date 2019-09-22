@@ -15,6 +15,7 @@ import TopBanner from 'components/TopBanner';
 import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import fontStyles from '../../../../config/fontStyles';
 
 export class ClassAttendanceScreen extends QcParentScreen {
 
@@ -130,26 +131,18 @@ export class ClassAttendanceScreen extends QcParentScreen {
                                 }}
                             />
 
-                            <Text
-                                style={{
-                                    fontSize: 30,
-                                    color: colors.primaryDark,
-                                    flexDirection: "row",
-                                }}
-                            >
-                                {strings.EmptyClass}
-                            </Text>
+                            <Text style={fontStyles.hugeTextStylePrimaryDark}>{strings.EmptyClass} </Text>
 
-                            <QcActionButton
-                                text={strings.AddStudentButton}
-                                onPress={() => this.props.navigation.push("ClassEdit", {
-                                    classID: this.state.currentClassID,
-                                    currentClass: this.state.currentClass,
-                                    userID: this.state.userID
-                                })} />
+                        <QcActionButton
+                            text={strings.AddStudentButton}
+                            onPress={() => this.props.navigation.push("ClassEdit", {
+                                classID: this.state.currentClassID,
+                                currentClass: this.state.currentClass,
+                                userID: this.state.userID
+                            })} />
                         </View>
                     </QCView>
-                </SideMenu>
+                </SideMenu >
             )
         }
 

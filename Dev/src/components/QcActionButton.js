@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import colors from 'config/colors'
 import FontLoadingComponent from 'components/FontLoadingComponent'
+import fontStyles from '../../config/fontStyles';
 
 class QcActionButton extends FontLoadingComponent {
 
@@ -16,14 +17,8 @@ class QcActionButton extends FontLoadingComponent {
     const { text, disabled } = this.props;
     return (
       <TouchableOpacity disabled={disabled ? disabled : false} style={styles.buttonStyle}
-        onPress={() => this.onButtonPress()}
-      >
-        {this.state.fontLoaded ? (
-          <Text style={styles.textStyle}>{text}</Text>
-        ) : (
-            <Text style={styles.textStyleNoFont}>{text}</Text>
-          )
-        }
+        onPress={() => this.onButtonPress()}>
+        <Text style={fontStyles.mainTextStylePrimaryDark}>{text}</Text>
       </TouchableOpacity>
     );
   }
@@ -52,13 +47,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: 'center',
 
-  },
-  textStyle: {
-    color: colors.primaryDark,
-    fontFamily: 'Montserrat-Regular',
-  },
-  textStyleNoFont: {
-    color: colors.primaryDark,
   },
 });
 

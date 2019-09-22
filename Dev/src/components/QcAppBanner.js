@@ -1,21 +1,21 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import colors from 'config/colors';
+import { View, Text } from 'react-native';
 import FontLoadingComponent from './FontLoadingComponent';
 import LoadingSpinner from '../components/LoadingSpinner';
 import strings from '../../config/strings';
+import fontStyles from '../../config/fontStyles';
 
 class QcAppBanner extends FontLoadingComponent {
     render() {
         return (
             <View ID="AppBanner">
                 {this.state.fontLoaded ? (
-                    <View style={styles.loginTitle}>
+                    <View style={{ alignItems: 'center' }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.titleText}>{strings.AppTitle}</Text>
+                            <Text style={fontStyles.hugeTextStylePrimaryDark}>{strings.AppTitle}</Text>
                         </View>
                         <View>
-                            <Text style={styles.subtitleText}>{strings.AppSubTitle}</Text>
+                            <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.AppSubTitle}</Text>
                         </View>
                     </View>
                 ) : (
@@ -28,25 +28,6 @@ class QcAppBanner extends FontLoadingComponent {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    titleText: {
-        color: colors.primaryDark,
-        fontSize: 30,
-        fontFamily: 'Montserrat-Regular',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center',
-    },
-    subtitleText: {
-        color: colors.darkGrey,
-        fontSize: 12,
-        fontFamily: 'Montserrat-Regular',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center',
-    }
-});
 
 export default QcAppBanner;
 
