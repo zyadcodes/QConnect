@@ -48,7 +48,8 @@ export class ClassMainScreen extends QcParentScreen {
   }
 
   render() {
-
+    console.log("Width" + Dimensions.get('window').width);
+    console.log("Height" + Dimensions.get('window').height);
     const { isLoading, teacher, userID, currentClass, currentClassID } = this.state;
     if (isLoading === true) {
       return (
