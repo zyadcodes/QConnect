@@ -1,7 +1,7 @@
 //This will be the actual drawer items that will display from the student side when the click on
 //the hamburger icon
 import React from "react";
-import { View, FlatList, ScrollView, StyleSheet, Modal, Text, Alert } from "react-native";
+import { View, FlatList, ScrollView, StyleSheet, Modal, Text, Alert, Dimensions, TextInput } from "react-native";
 import colors from "config/colors";
 import classImages from "config/classImages";
 import { SafeAreaView } from "react-navigation";

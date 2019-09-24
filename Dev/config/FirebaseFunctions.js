@@ -485,6 +485,7 @@ export default class FirebaseFunctions {
             isReady: true,
             profileImageID: student.profileImageID,
             name: student.name,
+            isManual: true,
             totalAssignments: 0
         }
 
