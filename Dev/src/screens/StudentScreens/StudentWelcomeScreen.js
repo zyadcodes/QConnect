@@ -195,14 +195,14 @@ export class StudentWelcomeScreen extends QcParentScreen {
               <View style={{ flex: 1 }}></View>
               <View style={{ flex: 1, alignSelf: 'flex-start', flexDirection: 'row' }}>
                 <View style={{ flex: 0.1 }}></View>
-                <TouchableOpacity style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
+                <TouchableOpacity style={{ flex: 2, paddingTop: Dimensions.get('window').height * 0.025, justifyContent: 'flex-start', alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
                   <Icon
                     name={'angle-left'}
                     type="font-awesome" />
                 </TouchableOpacity>
                 <View style={{ flex: 3 }}></View>
               </View>
-              <View style={{ flex: 1 }}>
+              <View style={{ flex: 1, paddingLeft: Dimensions.get('window').width * 0.05, paddingRight: Dimensions.get('window').width * 0.05 }}>
                 <FadeInView
                   style={{ alignItems: 'center', justifyContent: 'center' }}>
                   <Image
