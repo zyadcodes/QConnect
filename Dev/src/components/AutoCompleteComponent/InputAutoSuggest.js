@@ -17,7 +17,7 @@ class InputAutoSuggest extends Component {
     const { staticData, itemFormat } = this.props;
     
     const data = suggest.searchForRelevant('', staticData || [], itemFormat);
-    this.state = { data: data.suggest, value: '' };
+    this.state = { data: data.suggest, value: this.props.initialInput };
 
     this.searchList = this.searchList.bind(this);
     this.renderItem = this.renderItem.bind(this);

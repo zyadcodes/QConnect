@@ -10,7 +10,7 @@ import fontStyles from '../../config/fontStyles';
 export default class AssignmentEntryComponent extends React.Component {
 
     state = {
-        input: ""
+        input: this.props.initialInput
     }
 
     onTextChange(text) {
@@ -33,6 +33,7 @@ export default class AssignmentEntryComponent extends React.Component {
                         <InputAutoSuggest
                             staticData={surahNames}
                             onTextChanged={this.onTextChange.bind(this)}
+                            initialInput={this.state.input}
                         />
 
                         <View style={{
