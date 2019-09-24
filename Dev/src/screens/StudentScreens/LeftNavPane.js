@@ -44,21 +44,25 @@ class LeftNavPane extends QcParentScreen {
         this.setState({ isLoading: true });
         const { userID, classCode, student } = this.state;
 
-        const didJoinClass = await FirebaseFunctions.joinClass(student, classCode);
-        if (didJoinClass === -1) {
-            Alert.alert(strings.Whoops, strings.IncorrectClassCode);
-            this.setState({ isLoading: false, modalVisible: false });
+        if (student.classes.includes(classCode)) {
+            Alert.alert(strings.Whoops, strings.ClassAlreadyJoined);
+            this.setState({ isLoading: false });
         } else {
-            //Refetches the student object to reflect the updated database
-            this.setState({
-                isLoading: false,
-                modalVisible: false
-            })
-            this.props.navigation.push("StudentCurrentClass", {
-                userID,
-            });
+            const didJoinClass = await FirebaseFunctions.joinClass(student, classCode);
+            if (didJoinClass === -1) {
+                Alert.alert(strings.Whoops, strings.IncorrectClassCode);
+                this.setState({ isLoading: false, modalVisible: false });
+            } else {
+                //Refetches the student object to reflect the updated database
+                this.setState({
+                    isLoading: false,
+                    modalVisible: false
+                })
+                this.props.navigation.push("StudentCurrentClass", {
+                    userID,
+                });
+            }
         }
-
     }
 
     async openClass(id) {

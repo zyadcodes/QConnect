@@ -9,6 +9,7 @@ export default {
     TotalAssignments: 'Total Assignments',
     Ready: 'Ready',
     NotReady: 'Not Ready',
+    ClassAlreadyJoined: 'You\'re already in this class',
 
     //--------------------- Forgot Password Screen-------------------
     emailPlaceHolder: "Email",
