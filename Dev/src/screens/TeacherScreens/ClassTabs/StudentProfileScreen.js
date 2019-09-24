@@ -106,7 +106,7 @@ class StudentProfileScreen extends QcParentScreen {
           visible={this.state.isDialogVisible}
           onSubmit={(inputText) =>
             this.editAssignment(inputText)}
-          assignment={currentAssignment}  
+          assignment={currentAssignment}
           onCancel={() => this.setDialogueVisible(false)}
         />
         <View style={styles.studentInfoContainer}>
@@ -153,7 +153,9 @@ class StudentProfileScreen extends QcParentScreen {
                       newAssignment: true,
                       readOnly: false,
                     })} >
-                    <Text style={fontStyles.mainTextStylePrimaryDark}>{strings.Grade}</Text>
+                    <View style={{ paddingLeft: Dimensions.get('window').width * 0.02 }}>
+                      <Text style={fontStyles.mainTextStylePrimaryDark}>{strings.Grade}</Text>
+                    </View>
                   </TouchableHighlight> : <View />}
                 </View>
               </View>

@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
   cardStyle: {
     marginTop: Dimensions.get('window').height * 0.00558,
     marginBottom: Dimensions.get('window').height * 0.00558,
+    width: Dimensions.get('window').width * 0.67,
     borderBottomWidth: 1,
     borderBottomColor: colors.lightGrey,
   },

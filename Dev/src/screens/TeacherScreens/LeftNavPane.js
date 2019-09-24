@@ -77,7 +77,9 @@ class LeftNavPane extends QcParentScreen {
                 justifyContent: "center"
               }}
             >
-              <QcAppBanner />
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={fontStyles.hugeTextStylePrimaryDark}>{strings.AppTitle}</Text>
+              </View>
             </View>
 
             <QcDrawerItem

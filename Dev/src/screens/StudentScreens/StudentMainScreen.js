@@ -137,7 +137,9 @@ class StudentMainScreen extends QcParentScreen {
 
         if (this.state.noCurrentClass) {
             return (
-                <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
+                <SideMenu 
+                openMenuOffset={Dimensions.get('window').width *  0.7}
+                isOpen={this.state.isOpen} menu={<LeftNavPane
                     student={student}
                     userID={userID}
                     classes={this.state.classes}
@@ -230,7 +232,8 @@ class StudentMainScreen extends QcParentScreen {
         }
 
         return (
-            <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
+            <SideMenu 
+            isOpen={this.state.isOpen} menu={<LeftNavPane
                 student={student}
                 userID={userID}
                 classes={this.state.classes}
@@ -245,8 +248,9 @@ class StudentMainScreen extends QcParentScreen {
                     <View style={styles.topView}>
                         <View style={styles.profileInfo}>
                             <View style={styles.profileInfoTop}>
-                                <View style={{ width: 100 }}>
-                                </View>
+                                <Image
+                                    style={styles.profilePic}
+                                    source={studentImages.images[student.profileImageID]} />
                                 <View style={styles.profileInfoTopRight}>
                                     <Text numberOfLines={1} style={fontStyles.mainTextStyleBlack}>{student.name.toUpperCase()}</Text>
                                     <View style={{ flexDirection: 'row', height: Dimensions.get('window').height * 0.04 }}>
@@ -259,14 +263,13 @@ class StudentMainScreen extends QcParentScreen {
                                 </View>
                             </View>
                             <View style={styles.profileInfoBottom}>
-                                <View style={styles.profileInfoTopLeft}>
-                                    <Image
-                                        style={styles.profilePic}
-                                        source={studentImages.images[student.profileImageID]} />
-                                </View>
                                 <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'column', height: Dimensions.get('window').height * 0.09 }}>
-                                    <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{thisClassInfo.currentAssignment.toUpperCase()}</Text>
-                                    <Text style={fontStyles.bigTextStyleDarkGrey}>{strings.TotalAssignments + " " + thisClassInfo.totalAssignments + "  "}</Text>
+                                    <View style={{ paddingTop: Dimensions.get('window').height * 0.005, paddingLeft: Dimensions.get('window').width * 0.3 }}>
+                                        <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{thisClassInfo.currentAssignment.toUpperCase()}</Text>
+                                    </View>
+                                    <View style={{ alignSelf: 'flex-end' }}>
+                                        <Text style={fontStyles.bigTextStyleDarkGrey}>{strings.TotalAssignments + " " + thisClassInfo.totalAssignments + "  "}</Text>
+                                    </View>
                                 </View>
                             </View>
                         </View>
@@ -370,20 +373,20 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingTop: 10,
         flexDirection: 'row',
+        height: Dimensions.get('window').height * 0.125,
         borderBottomColor: colors.lightGrey,
         borderBottomWidth: 1,
     },
     profileInfoTopLeft: {
         flexDirection: 'column',
         marginLeft: 3,
-        marginTop: -66,
         alignItems: 'center',
         width: 100
     },
     profileInfoTopRight: {
         flexDirection: 'column',
         alignItems: 'flex-start',
-        paddingLeft: 10,
+        paddingLeft: Dimensions.get('window').width * 0.075,
         paddingBottom: 5,
     },
     profileInfoBottom: {
@@ -394,10 +397,9 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1
     },
     profilePic: {
-        width: 100,
-        height: Dimensions.get('window').height * 0.15,
+        width: Dimensions.get('window').height * 0.1,
+        height: Dimensions.get('window').height * 0.1,
         borderRadius: 50,
-        paddingBottom: 10
     },
     middleView: {
         flex: 1,
@@ -420,7 +422,7 @@ const styles = StyleSheet.create({
     profileInfo: {
         flexDirection: 'column',
         backgroundColor: colors.white,
-        marginBottom: 10
+        marginBottom: 10,
     },
     notesText: {
         fontSize: 14,

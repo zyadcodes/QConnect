@@ -71,19 +71,22 @@ const styles = StyleSheet.create({
     },
     topLeftView: {
         flex: 1.5,
-        paddingTop: Dimensions.get('window').height * 0.045
+        paddingTop: Dimensions.get('window').height * 0.035,
+        paddingBottom: Dimensions.get('window').height * 0.01
     },
     topMiddleView: {
         justifyContent: 'center',
         alignSelf: 'center',
         alignItems: 'center',
         flex: 10,
-        paddingTop: Dimensions.get('window').height * 0.045
+        paddingTop: Dimensions.get('window').height * 0.035,
+        paddingBottom: Dimensions.get('window').height * 0.01
     },
     topRightView: {
         flex: 1.5,
         justifyContent: 'center',
-        paddingTop: Dimensions.get('window').height * 0.045
+        paddingTop: Dimensions.get('window').height * 0.035,
+        paddingBottom: Dimensions.get('window').height * 0.01
     },
 });
 export default TopBanner;
