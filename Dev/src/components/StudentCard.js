@@ -15,7 +15,7 @@ export default class StudentCard extends FontLoadingComponent {
 
     render() {
         //The properties of the component.
-        const { studentName, profilePic, currentAssignment, background, onPress, comp, compOnPress } = this.props;
+        const { studentName, profilePic, currentAssignment, background, onPress, comp, compOnPress, status } = this.props;
         return (
             //The style of the card as a whole. Inside the card, you have the image,
             //student name, and student assignment
@@ -31,9 +31,16 @@ export default class StudentCard extends FontLoadingComponent {
                 <View
                     style={styles.infoStyle}>
                     {currentAssignment ? (
-                        <View>
-                            <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{studentName}</Text>
-                            <Text numberOfLines={1} style={fontStyles.smallTextStyleDarkGrey}>{currentAssignment}</Text>
+                        <View style={{ marginLeft: Dimensions.get('window').width * 0.05 }}>
+                            <View style={{ marginBottom: Dimensions.get('window').height * 0.005 }}>
+                                <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{studentName}</Text>
+                            </View>
+                            <View style={{ marginBottom: Dimensions.get('window').height * 0.005 }}>
+                                <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{currentAssignment}</Text>
+                            </View>
+                            <View style={{ marginBottom: Dimensions.get('window').height * 0.005 }}>
+                                <Text style={fontStyles.mainTextStyleDarkGrey}>{status}</Text>
+                            </View>
                         </View>
                     ) : (
                             <View>
@@ -80,17 +87,17 @@ StudentCard.propTypes = {
 const styles = StyleSheet.create({
     cardStyle: {
         flexDirection: 'row',
-        marginRight: 7,
-        height: 100,
+        marginRight: Dimensions.get('window').width * 0.017,
+        height: Dimensions.get('window').height * 0.112,
         alignItems: 'center',
-        marginLeft: 7,
-        marginTop: 10,
+        marginLeft: Dimensions.get('window').width * 0.017,
+        marginTop: Dimensions.get('window').height * 0.01,
         fontFamily: 'Montserrat-Regular',
     },
     removeStudentStyle: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginRight: 20,
+        marginRight: Dimensions.get('window').width * 0.05,
         flex: 1
     },
     infoStyle: {
@@ -100,9 +107,9 @@ const styles = StyleSheet.create({
         flex: 4
     },
     profilePicStyle: {
-        width: 60,
-        height: 60,
+        width: Dimensions.get('window').width * 0.15,
+        height: Dimensions.get('window').width * 0.15,
         borderRadius: 30,
-        marginLeft: 20
+        marginLeft: Dimensions.get('window').width * 0.05
     },
 });

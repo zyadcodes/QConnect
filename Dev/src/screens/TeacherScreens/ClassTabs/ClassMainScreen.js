@@ -198,6 +198,7 @@ export class ClassMainScreen extends QcParentScreen {
                       classID: currentClassID
                     })
                   }
+                  status={(item.isManual === true || item.currentAssignment === "None" ? null : (item.isReady === true ? strings.Ready : strings.NotReady))}
                   background={(item.currentAssignment === 'None' || item.isManual === true) ? colors.white : (item.isReady === true ? colors.green : colors.red)}
                 />
               )}
