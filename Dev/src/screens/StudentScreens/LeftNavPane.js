@@ -90,8 +90,7 @@ class LeftNavPane extends QcParentScreen {
         return (
             <QCView style={[screenStyle.container, { alignItems: 'flex-start' }]}>
                 <ScrollView>
-                    <SafeAreaView
-                        forceInset={{ top: "always", horizontal: "never" }}>
+                    <SafeAreaView forceInset={{ top: "always", horizontal: "never" }}>
                         <View
                             style={{
                                 padding: 10,
