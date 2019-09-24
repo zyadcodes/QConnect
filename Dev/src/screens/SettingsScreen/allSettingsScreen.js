@@ -12,7 +12,7 @@ import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
 import TopBanner from 'components/TopBanner';
 import screenStyle from 'config/screenStyle';
-import fontStyles from '../../../config/fontStyles';
+import fontStyles from 'config/fontStyles';
 
 
 export default class AllSettingsScreen extends QcParentScreen {

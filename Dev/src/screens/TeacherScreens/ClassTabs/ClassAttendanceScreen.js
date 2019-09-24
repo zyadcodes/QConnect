@@ -15,7 +15,7 @@ import TopBanner from 'components/TopBanner';
 import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
-import fontStyles from '../../../../config/fontStyles';
+import fontStyles from 'config/fontStyles';
 
 export class ClassAttendanceScreen extends QcParentScreen {
 

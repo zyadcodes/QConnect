@@ -3,7 +3,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import fontStyles from '../../../config/fontStyles';
+import fontStyles from 'config/fontStyles';
 
 class SuggestionListItem extends PureComponent {
   onPress = () => {

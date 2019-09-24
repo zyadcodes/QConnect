@@ -17,7 +17,7 @@ import { Input } from 'react-native-elements';
 import { TextInput } from 'react-native-gesture-handler';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
-import fontStyles from '../../../config/fontStyles';
+import fontStyles from 'config/fontStyles';
 
 class StudentMainScreen extends QcParentScreen {
 

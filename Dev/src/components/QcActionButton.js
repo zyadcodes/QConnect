@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import colors from 'config/colors'
 import FontLoadingComponent from 'components/FontLoadingComponent'
-import fontStyles from '../../config/fontStyles';
+import fontStyles from 'config/fontStyles';
 
 class QcActionButton extends FontLoadingComponent {
 

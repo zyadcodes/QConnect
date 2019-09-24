@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
 import { Icon } from 'react-native-elements';
 import colors from 'config/colors'
-import fontStyles from '../../config/fontStyles';
+import fontStyles from 'config/fontStyles';
 
 class TopBanner extends FontLoadingComponent {
     render() {

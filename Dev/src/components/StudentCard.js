@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { TouchableOpacity, Text, StyleSheet, Image, View, Dimensions } from 'react-native';
 import colors from 'config/colors'
 import FontLoadingComponent from './FontLoadingComponent';
-import fontStyles from '../../config/fontStyles';
+import fontStyles from 'config/fontStyles';
 
 /*Class represents the student card that will show up in the list of students
 *from the teachers view.

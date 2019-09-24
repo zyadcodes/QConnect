@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import colors from 'config/colors'
 import strings from '../../config/strings';
 import PhoneInput from 'react-native-phone-input'
-import fontStyles from '../../config/fontStyles';
+import fontStyles from 'config/fontStyles';
 
 //--------------------------------------------------------------------------
 // Teacher info entries (Name, Phone number, and Email address). 

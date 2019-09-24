@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import FontLoadingComponent from './FontLoadingComponent';
 import LoadingSpinner from '../components/LoadingSpinner';
 import strings from '../../config/strings';
-import fontStyles from '../../config/fontStyles';
+import fontStyles from 'config/fontStyles';
 
 class QcAppBanner extends FontLoadingComponent {
     render() {

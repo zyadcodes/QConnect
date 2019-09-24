@@ -7,7 +7,7 @@ import QcActionButton from 'components/QcActionButton';
 import { Alert } from 'react-native';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import screenStyle from 'config/screenStyle';
-import fontStyles from '../../../config/fontStyles';
+import fontStyles from 'config/fontStyles';
 
 class ForgotPassword extends Component {
 

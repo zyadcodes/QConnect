@@ -10,7 +10,7 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
-import fontStyles from '../../../../config/fontStyles';
+import fontStyles from 'config/fontStyles';
 
 class StudentProfileScreen extends QcParentScreen {
 

@@ -14,7 +14,7 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import { Input, Icon } from 'react-native-elements';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
-import fontStyles from "../../../config/fontStyles";
+import fontStyles from "config/fontStyles";
 
 const initialState = {
   authCode: '',

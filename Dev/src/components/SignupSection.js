@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Dimensions from 'Dimensions';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import colors from 'config/colors';
-import fontStyles from '../../config/fontStyles';
+import fontStyles from 'config/fontStyles';
 import strings from '../../config/strings';
 
 export default class SignupSection extends Component {

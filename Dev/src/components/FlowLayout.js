@@ -8,7 +8,7 @@ import colors from 'config/colors';
 import strings from 'config/strings';
 import QcActionButton from './QcActionButton';
 import { Badge } from 'react-native-elements';
-import fontStyles from '../../config/fontStyles';
+import fontStyles from 'config/fontStyles';
 
 var { width } = Dimensions.get('window');
 

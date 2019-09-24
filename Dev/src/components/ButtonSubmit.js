@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Dimensions from 'Dimensions';
 import { StyleSheet, TouchableOpacity, Text, Animated, Easing, ActivityIndicator, View } from 'react-native';
 import colors from 'config/colors';
-import fontStyles from '../../config/fontStyles';
+import fontStyles from 'config/fontStyles';
 
 
 const DEVICE_WIDTH = Dimensions.get('window').width;

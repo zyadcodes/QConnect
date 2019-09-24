@@ -12,7 +12,7 @@ import QcParentScreen from "screens/QcParentScreen";
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
-import fontStyles from "../../../../config/fontStyles";
+import fontStyles from "config/fontStyles";
 
 export class ClassEditScreen extends QcParentScreen {
 

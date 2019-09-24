@@ -5,7 +5,7 @@ import strings from 'config/strings';
 import colors from 'config/colors';
 import surahNames from 'config/surahNames';
 import InputAutoSuggest from 'components/AutoCompleteComponent/InputAutoSuggest'
-import fontStyles from '../../config/fontStyles';
+import fontStyles from 'config/fontStyles';
 
 export default class AssignmentEntryComponent extends React.Component {
 
