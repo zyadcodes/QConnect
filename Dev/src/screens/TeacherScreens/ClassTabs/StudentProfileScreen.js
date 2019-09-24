@@ -106,7 +106,7 @@ class StudentProfileScreen extends QcParentScreen {
           visible={this.state.isDialogVisible}
           onSubmit={(inputText) =>
             this.editAssignment(inputText)}
-          initialInput={currentAssignment}  
+          assignment={currentAssignment}  
           onCancel={() => this.setDialogueVisible(false)}
         />
         <View style={styles.studentInfoContainer}>
