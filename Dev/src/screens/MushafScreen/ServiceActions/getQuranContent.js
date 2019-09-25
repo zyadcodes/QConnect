@@ -20,7 +20,7 @@ function getPageByLines(pageJson){
                 line: lineData.detail.line,
                 surah: lineData.detail.sura,
                 ayah: lineData.detail.aya,
-                text: lineData.word.map((word) => {return {char_type: word.char_type, text: word.text, aya: word.aya, sura: word.sura}})
+                text: lineData.word.map((word) => {return {id: word.id, char_type: word.char_type, text: word.text, aya: word.aya, sura: word.sura}})
             }
         );
     });
@@ -29,7 +29,7 @@ function getPageByLines(pageJson){
 export async function getPageTextWbW (pageNumber) {
     try {
         let response = await fetch(
-            'https://salamquran.com/en/api/v6/page/wbw?index=500'
+            'https://salamquran.com/en/api/v6/page/wbw?index=200'
         );
         let responseJson = await response.json();
         pageText = getPageByLines(responseJson.result);

@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     ayahText: {
         textAlign: 'right', 
         fontFamily: 'me_quran', 
-        fontSize: 16, 
+        fontSize: 14, 
         color: colors.darkGrey
     }
 })

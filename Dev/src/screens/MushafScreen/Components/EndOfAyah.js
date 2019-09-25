@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         fontFamily: 'me_quran', 
         alignItems: 'center', 
         alignSelf: 'center', 
-        fontSize: 12, 
+        fontSize: 10, 
         color: colors.darkGrey
     },
     ayahSeparator: {
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
         fontFamily: 'me_quran', 
         alignItems: 'center', 
         alignSelf: 'center', 
-        fontSize: 16, 
+        fontSize: 14, 
         color: colors.darkGrey, 
     }
 })

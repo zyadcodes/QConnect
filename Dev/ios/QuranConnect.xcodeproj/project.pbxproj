@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* QuranConnectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* QuranConnectTests.m */; };
 		012BCE3CBEAA4A4FBB0D99F8 /* girl12.png in Resources */ = {isa = PBXBuildFile; fileRef = F73D7C4B100641C491C10838 /* girl12.png */; };
@@ -36,6 +37,7 @@
 		05E9633F17454B3D983D7B89 /* boy11.png in Resources */ = {isa = PBXBuildFile; fileRef = 93AC74C0EF0D4E9A90B7F523 /* boy11.png */; };
 		0668C2EC39AF450D81C0049A /* is-icon-5.png in Resources */ = {isa = PBXBuildFile; fileRef = 64E7AC68B7CB40A4A3E6DBDC /* is-icon-5.png */; };
 		10CD2E2C3BB6433EA2768DEF /* Ubuntu-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 44AB6C8AF4504A8E9A540F4C /* Ubuntu-Light.ttf */; };
+		1189A5D5E93E4293BD8C6F77 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0ED43469D6CF408B82CC4819 /* Zocial.ttf */; };
 		134C6DF41BF74CB595EDFC09 /* is-icon-9.png in Resources */ = {isa = PBXBuildFile; fileRef = DB79D985B58B4F11A46360A7 /* is-icon-9.png */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
@@ -43,16 +45,14 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		17E13244FB0742B6B5B81BBD /* boyc5.png in Resources */ = {isa = PBXBuildFile; fileRef = 824F338C13674C0689A761FE /* boyc5.png */; };
 		194141D3DDDFCFD8871CE4D5 /* Pods_QuranConnect_tvOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CF146145856CF286711D909 /* Pods_QuranConnect_tvOSTests.framework */; };
-		1D3A858F701C436897741585 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B5C50EA7980547D492828CE9 /* Fontisto.ttf */; };
 		1DA45640C6D34F47B26BC39F /* msq2.png in Resources */ = {isa = PBXBuildFile; fileRef = 64183B86C7CA4DDA99667689 /* msq2.png */; };
 		1F2432636015425786437B7C /* Ubuntu-Light-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 035EA2B8889C44CFA697AAE7 /* Ubuntu-Light-Italic.ttf */; };
 		21067B2CE00B491DBE74B9B3 /* msq4.png in Resources */ = {isa = PBXBuildFile; fileRef = AF07BAEB0A284F4FAB1D6BAE /* msq4.png */; };
 		21F8BF9FEC174D7A9ED83F8E /* boy10.png in Resources */ = {isa = PBXBuildFile; fileRef = 71B9D76928984125847D1E19 /* boy10.png */; };
 		21FF939CC868416388E4FD41 /* girl15.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B631E272C6C4E7897A16D34 /* girl15.png */; };
 		22448E559C544CD99F0A2551 /* male9.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B25A0D993B74144B3841DF8 /* male9.png */; };
-		24A1AFD1E7634E21A591B858 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 89E33C7949004026881F1154 /* FontAwesome.ttf */; };
 		25FC4511FC244E0292F09713 /* Ubuntu-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BE7FC2C219C14935A3F3C834 /* Ubuntu-Bold.ttf */; };
-		2C5FFAF3EE764EBEACEF1E83 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1C145925C77E4286BFA6A1F9 /* Entypo.ttf */; };
+		2BC479B3676248EC9E8B155D /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 863E636BDEA14657A889EEAC /* Foundation.ttf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -60,33 +60,36 @@
 		2DE3A05D020141CF9ABD1860 /* girl7.png in Resources */ = {isa = PBXBuildFile; fileRef = 68A2177D79E341ADA26B38F6 /* girl7.png */; };
 		33DFF6BB906246A5B30E7B0D /* boyc2.png in Resources */ = {isa = PBXBuildFile; fileRef = A4FF231B9E7A44F08F09810A /* boyc2.png */; };
 		362B6B1D5B5947A98D6D51BC /* read_child_bg.orig.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 747BC5DF8EC94BE0AD0880A1 /* read_child_bg.orig.jpg */; };
-		373307F9F6A34ACA84A692B2 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6C006BA7B97E4569B85B45E8 /* FontAwesome5_Regular.ttf */; };
 		3A314C42287740A6BCA384F0 /* boy12.png in Resources */ = {isa = PBXBuildFile; fileRef = EBA6BA179F904181AE316D34 /* boy12.png */; };
+		3ACC391F6D724C6E8DB8F6E8 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5EC995B0B7E44683959E6A92 /* SimpleLineIcons.ttf */; };
 		3C0D2A2488CB46D48269CA54 /* girlc3.png in Resources */ = {isa = PBXBuildFile; fileRef = E2F4578471F246539C19A7E8 /* girlc3.png */; };
 		3C533147E5284A548784CFBE /* is-icon-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C2E014696D400C82F13F7C /* is-icon-16.png */; };
 		3EBBC0CB05B62EEACEA0CDCC /* libPods-QuranConnect.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EC4C5FB53EC037CCDD583CBB /* libPods-QuranConnect.a */; };
-		3FB03919AB8B44DCAA52ABF4 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4C3380FEFA0469FB01897AE /* Ionicons.ttf */; };
+		42BCECCD66434C668F9DD56D /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84D6F276973D431EA3C3FA42 /* FontAwesome5_Solid.ttf */; };
+		430DCF26DDB24D4B8FE55511 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 56D4D57F6FFC47A0A25E5FCB /* FontAwesome5_Regular.ttf */; };
 		44A1E97FF8014061BA8F00E8 /* salam.orig.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C671E8BE3F1E49A090715D1F /* salam.orig.jpg */; };
 		488A4EBE8C7247BA8A23928F /* girl3.png in Resources */ = {isa = PBXBuildFile; fileRef = 0BAD306C0B2441F2B4D27E96 /* girl3.png */; };
 		4D0C48EE4CC54497A8A6BD5A /* male8.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ED4287E865E4620A3418F99 /* male8.png */; };
 		4FFC16E1C04040C6A618AE98 /* female7.png in Resources */ = {isa = PBXBuildFile; fileRef = D7DB78FFAD284339B2AB45C8 /* female7.png */; };
+		504839F349794D638D626802 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38DAE676030240FFB335D6DA /* Fontisto.ttf */; };
 		537EDF0E5AA440C691E7C508 /* is-icon-10.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BA9FFB3528A4D29BD2843D6 /* is-icon-10.png */; };
 		5387F950342C4F319553E90A /* is-icon-14.png in Resources */ = {isa = PBXBuildFile; fileRef = 96B6DA18127E4DE7B6707B39 /* is-icon-14.png */; };
 		552DEA3A19AF46A3A3911237 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ADCCA1D1DBBC4D91835C59B0 /* Montserrat-Regular.ttf */; };
 		5699FB7B403C44C1B733EE6C /* female11.png in Resources */ = {isa = PBXBuildFile; fileRef = F2412B9D9BB84F28AB634992 /* female11.png */; };
 		5816F485CED4477D89F3138A /* female8.png in Resources */ = {isa = PBXBuildFile; fileRef = 39A0FD9CBFD84EE4B21240CB /* female8.png */; };
 		583D8492E6D84DDE8A3EA352 /* msq3.png in Resources */ = {isa = PBXBuildFile; fileRef = F8BD606B24274BE09879B35D /* msq3.png */; };
+		59AC895C0FB94A63834FF35F /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D2D690D8052441599EFF585D /* FontAwesome5_Brands.ttf */; };
 		5EDA1CE73346420FBB3C8C48 /* boy1.png in Resources */ = {isa = PBXBuildFile; fileRef = F6A0958A420148DBBC80DA76 /* boy1.png */; };
 		60289201E7CC47209B659F19 /* male7.png in Resources */ = {isa = PBXBuildFile; fileRef = 5211C2920AF741BCB20DCB0E /* male7.png */; };
 		6089026E992442C0B767F143 /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 4B5A67A8A5E848F2A184E1A5 /* splash.png */; };
 		63328216394B4D949F4A485D /* male12.png in Resources */ = {isa = PBXBuildFile; fileRef = F45E5CFC71874B9ABB67E816 /* male12.png */; };
-		6351A045649044F69C987B13 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E741998504C24BBD87E508CA /* Foundation.ttf */; };
 		636F1FDAD1A244C99C0A6CEC /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8372A57C53E34567AB9897EA /* Montserrat-Bold.ttf */; };
 		65278970BD90463BBCC0ADC4 /* male4.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B41045AE8E74BDC99CD5537 /* male4.png */; };
 		6749EB7078064E4D9E977415 /* girl4.png in Resources */ = {isa = PBXBuildFile; fileRef = F9929FDA18D241EE85E19994 /* girl4.png */; };
 		6753C913BBB641E3B0B28CC9 /* girl13.png in Resources */ = {isa = PBXBuildFile; fileRef = A5BEE9EFE2E24C7F8DC08ABA /* girl13.png */; };
 		6DD17ABAAB8145A89D8CFA8E /* is-icon-6.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BC1FC098D4042F8A9AB10D2 /* is-icon-6.png */; };
 		6ECDD8F05D4B442598001582 /* is-icon-0.png in Resources */ = {isa = PBXBuildFile; fileRef = AFBE13EEBAB6481F8302865D /* is-icon-0.png */; };
+		701D09DE458B434A8BAAC668 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 397EA8C9836742E19164693A /* Entypo.ttf */; };
 		7341DB7B89A2473BB687E3EF /* is-icon-17.png in Resources */ = {isa = PBXBuildFile; fileRef = 44465A7DA87F40EEAE98935D /* is-icon-17.png */; };
 		75845E76589A4ED786E0451A /* girl10.png in Resources */ = {isa = PBXBuildFile; fileRef = CC7F6748991F49BA949DE591 /* girl10.png */; };
 		75B2545005BB43A38145CF70 /* female4.png in Resources */ = {isa = PBXBuildFile; fileRef = 56AE46E9F32C402DB7FA4CBB /* female4.png */; };
@@ -94,13 +97,12 @@
 		775BD7BB58EC4459A56EC853 /* female10.png in Resources */ = {isa = PBXBuildFile; fileRef = 11E233642F56417886364E55 /* female10.png */; };
 		77E0951F447148E0A741DFDB /* boy9.png in Resources */ = {isa = PBXBuildFile; fileRef = B849C636B68E4E5CBF286982 /* boy9.png */; };
 		77F9433D4A524DDF90143055 /* Montserrat-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8FA39C1F4C654113A8C7E75D /* Montserrat-Light.ttf */; };
-		7AD1C0290C6F47D48B5D9EDB /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 421F6FBA594149F59B5630F5 /* FontAwesome5_Solid.ttf */; };
+		79CF2BE4DB3A4AA9A0C184AD /* quran-page-frame.png in Resources */ = {isa = PBXBuildFile; fileRef = A7BAEF273DAE4552AEB518D0 /* quran-page-frame.png */; };
 		7B96A35E3F254841A90DD965 /* girl16.png in Resources */ = {isa = PBXBuildFile; fileRef = 966AD5E67D1D465C80EEF831 /* girl16.png */; };
 		7C2180FEA86A4313849DCABE /* male2.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B63694406A54FED934DB66E /* male2.png */; };
 		7CFBEFD25A0F44DAA327E33B /* female1.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B1E0D87EEAD4898828F4FA1 /* female1.png */; };
-		7EB14B59E6F44A66ACC4824B /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9339ED677D6145279E70CCCF /* Zocial.ttf */; };
 		84D01CE2390644D18ACD66FE /* female2.png in Resources */ = {isa = PBXBuildFile; fileRef = 471A2E390A1C4832BB6AF8F0 /* female2.png */; };
-		944B37439412487DBBC4243D /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 926EB4ED763E426796B9AEF8 /* MaterialIcons.ttf */; };
+		90BFDF4D673A4F5E8B2798CF /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97AB3C1ABC8349CA8DEE81A9 /* MaterialCommunityIcons.ttf */; };
 		9B27459C2305082D001A8F1F /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B27459B2305082D001A8F1F /* libRNFirebase.a */; };
 		9B27459E2305082D001A8F1F /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B27459D2305082D001A8F1F /* libRNGestureHandler.a */; };
 		9B2745A02305082D001A8F1F /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B27459F2305082D001A8F1F /* libRNVectorIcons.a */; };
@@ -109,10 +111,8 @@
 		9B2745A72305087A001A8F1F /* libFirebaseFirestore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B2745A62305087A001A8F1F /* libFirebaseFirestore.a */; };
 		9B2745A9230508B8001A8F1F /* libFirebaseInstanceID.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B2745A8230508B7001A8F1F /* libFirebaseInstanceID.a */; };
 		9BDCC44771A74567A251D860 /* is-icon-11.png in Resources */ = {isa = PBXBuildFile; fileRef = 175EB5EF7BA1482D99B601E9 /* is-icon-11.png */; };
-		9C04E950D8DB46B1957B8685 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 361E5738EC854C88BA54388A /* AntDesign.ttf */; };
 		9EF5E08EE0A74474BE02426B /* girl2.png in Resources */ = {isa = PBXBuildFile; fileRef = E1A91F06C5F343CC97992388 /* girl2.png */; };
 		A002C81CA9F148E4AE726F65 /* girl5.png in Resources */ = {isa = PBXBuildFile; fileRef = F520220A3BB948CB8CBB0D98 /* girl5.png */; };
-		A1F9761530F74189AA8ABB6B /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 90F767FE38364E39A097FEC0 /* Octicons.ttf */; };
 		A318DD1EB18E49A8B4263F2C /* boy6.png in Resources */ = {isa = PBXBuildFile; fileRef = 914A291396DA4F02AEEA4566 /* boy6.png */; };
 		AB44C133114F4E4CB81246C9 /* female12.png in Resources */ = {isa = PBXBuildFile; fileRef = 857737C83C474DFFAF8808AC /* female12.png */; };
 		AC79FAAFE82949FE864B8316 /* read_child_bg.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0CC5147CC11442E2AC9D44B2 /* read_child_bg.jpg */; };
@@ -122,17 +122,18 @@
 		B2BE028463374224AAF7C8AF /* salam.png in Resources */ = {isa = PBXBuildFile; fileRef = 397C08836A564CA0973F0C05 /* salam.png */; };
 		B3A0BB2E61C94F28B84B6C5F /* salam.orig.png in Resources */ = {isa = PBXBuildFile; fileRef = DDF4A35D790F4347BE692A61 /* salam.orig.png */; };
 		B5374F7D98A708B8FCF8C121 /* libPods-QuranConnectTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A70A2DA6F92D1E7852986A39 /* libPods-QuranConnectTests.a */; };
+		B54C3A38C6F14E88BFE6D661 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FF80DE1BF7E84B37AB60489D /* Feather.ttf */; };
 		B94343C70A734D398A4479C5 /* male5.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A13C17377C04E798A50EFEB /* male5.png */; };
-		BC14A40F8A77469994EA882E /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5C26DE51603E4DC7BDD4446D /* MaterialCommunityIcons.ttf */; };
+		BEC7F418B17D4CC98DAB0CC3 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B68167CAD2BD474FB2CB543B /* FontAwesome.ttf */; };
 		C30A9810DA214EB899970AEC /* is-icon-3.png in Resources */ = {isa = PBXBuildFile; fileRef = FA9C40B336B14B058DEECA8F /* is-icon-3.png */; };
 		C3E2B1B45F414111A92AF6C3 /* female6.png in Resources */ = {isa = PBXBuildFile; fileRef = A4C2A518DE3E4150B76EEDA0 /* female6.png */; };
 		C54088BCFFF7862D913FAFF1 /* Pods_QuranConnect_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7901F3116F1D6EEEF4D11C69 /* Pods_QuranConnect_tvOS.framework */; };
+		C585A14E226E41BAB82A437C /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5C710FF904154EABB749C2A6 /* AntDesign.ttf */; };
 		C7998CC59C324121A9C3385F /* male6.png in Resources */ = {isa = PBXBuildFile; fileRef = 5934A3A5F0084A3486F3A14B /* male6.png */; };
 		C87FF09FF14E4B4683226BD5 /* boy8.png in Resources */ = {isa = PBXBuildFile; fileRef = BE7849EE38EF482596F22A67 /* boy8.png */; };
 		C8B448CBE2AD48DA853BA21C /* male13.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AA28E8080B648AC9BC00AA9 /* male13.png */; };
 		C980950CC8824586A277CF54 /* girl1.png in Resources */ = {isa = PBXBuildFile; fileRef = ADB3AFB655F04828B1463E25 /* girl1.png */; };
 		CD4C3A352ABA488D9A2DFD37 /* salam.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3F9B3D0E86D84F43B2EDB344 /* salam.jpg */; };
-		CDC1877D453A430DB70DFD1D /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 772D5C4DDD824074BED8AB3C /* Feather.ttf */; };
 		CE214CEB760F4F48B40AEC21 /* girl8.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D31043CBB3543B1A24F2004 /* girl8.png */; };
 		D3A189976684487A94CA8C32 /* girl9.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E3C7B0DB8F04C989295C943 /* girl9.png */; };
 		D5126DA36BE24B208D7E6C1A /* boy2.png in Resources */ = {isa = PBXBuildFile; fileRef = 420353A5D8EE42AC99BAF591 /* boy2.png */; };
@@ -141,24 +142,25 @@
 		D87ED31A6B244399BD1A59A9 /* female3.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B2B4B659EF541BDA006F6B9 /* female3.png */; };
 		D89685249C9E4D44AFC6E67A /* is-icon-13.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EF806E02FCB4A9BB0AF22C1 /* is-icon-13.png */; };
 		D8A247CCC8DA44A3A6CB3A1C /* male3.png in Resources */ = {isa = PBXBuildFile; fileRef = 1634146135B1494F8DE802CF /* male3.png */; };
+		D912528411524B258687669B /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3E960951390E4C149A0E7883 /* MaterialIcons.ttf */; };
 		DB3C8CC34F5D48FF8D0B28DC /* is-icon-8.png in Resources */ = {isa = PBXBuildFile; fileRef = A4C4D291D14846FBBF5DCA12 /* is-icon-8.png */; };
 		DF0A0B9C383F4D54B27B9BB0 /* is-icon-15.png in Resources */ = {isa = PBXBuildFile; fileRef = C4E43A04E52E4B669F7D0A2C /* is-icon-15.png */; };
+		E09979C59ACA4DE680538517 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5616D877FA8142A7B9EC6B06 /* Ionicons.ttf */; };
 		E0CFDE6632EB4911AA2AA536 /* boy5.png in Resources */ = {isa = PBXBuildFile; fileRef = 56DF3F15E33F4E05A7907C2B /* boy5.png */; };
 		E2548107431F43B3925E134D /* female5.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C646CB866CB449DA014656C /* female5.png */; };
 		E2797416DA03479C9E96ED39 /* is-icon-4.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B779A80973943D394EDB757 /* is-icon-4.png */; };
 		E4764F7BE5FA40C6A57B5A9F /* male11.png in Resources */ = {isa = PBXBuildFile; fileRef = 6182C1F072264AC4A2BE92D8 /* male11.png */; };
 		EAA6CE929ED44048822C6F71 /* girl14.png in Resources */ = {isa = PBXBuildFile; fileRef = F936FB71A0F24BB3B9B49663 /* girl14.png */; };
 		EC51F5A7EDC74BA9BACE2B23 /* male10.png in Resources */ = {isa = PBXBuildFile; fileRef = B461B02942FB47F4BD472556 /* male10.png */; };
-		EC8A0DCC37514851B9E94A09 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0771723325E04C1286FFE230 /* EvilIcons.ttf */; };
-		EC98D9122FDD4B82BB3A08D9 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABF1931B75064E8DB72AA80C /* SimpleLineIcons.ttf */; };
 		EEF37A7F15E54CB3A311055F /* Georgia.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7206B33C97284A0AB970F0BB /* Georgia.ttf */; };
 		F202D4C0171440FCB284E684 /* male1.png in Resources */ = {isa = PBXBuildFile; fileRef = F49947BAD0B54305963CDBDF /* male1.png */; };
 		F477267AA3E04C99A246512D /* girl11.png in Resources */ = {isa = PBXBuildFile; fileRef = 203816654693425B91800AEC /* girl11.png */; };
 		F62394FF9E1B48ACAB12523E /* is-icon-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 11707C11C7464EED86D40CF6 /* is-icon-1.png */; };
+		F6759B24F7E743038956752A /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 70D92CC02C0645ABB4BBF098 /* EvilIcons.ttf */; };
+		F846E9765B5840F5A21F20FF /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8838D4BB5C73461AB44D2349 /* Octicons.ttf */; };
 		F96B7A0DD7CA4DF9BB7BE590 /* girl6.png in Resources */ = {isa = PBXBuildFile; fileRef = D71F5E351ABC4CA585BB6D49 /* girl6.png */; };
 		FC65562ADC5844F094ACAAFA /* msq1.png in Resources */ = {isa = PBXBuildFile; fileRef = 909BBB6F7275477AA5735F2B /* msq1.png */; };
 		FDBCAF6B880442CF90CE4E37 /* is-icon-7.png in Resources */ = {isa = PBXBuildFile; fileRef = F4312D6600294E3B8CEA6855 /* is-icon-7.png */; };
-		FF13B49C7C064E9C8481634C /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EFC17D737C8A4860B030EC5D /* FontAwesome5_Brands.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -168,6 +170,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = QuranConnect;
+		};
+		015B1DC7233BF8590041460F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 015B1DC3233BF8590041460F /* RNSound.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 19825A1E1BD4A89800EE0337;
+			remoteInfo = RNSound;
 		};
 		2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -183,6 +192,7 @@
 		00E356EE1AD99517003FC87E /* QuranConnectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuranConnectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* QuranConnectTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QuranConnectTests.m; sourceTree = "<group>"; };
+		015B1DC3233BF8590041460F /* RNSound.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNSound.xcodeproj; path = "../node_modules/react-native-sound/RNSound.xcodeproj"; sourceTree = "<group>"; };
 		0169D8B1D86CB70745BD8A63 /* Pods-QuranConnect-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect-tvOS.release.xcconfig"; path = "Target Support Files/Pods-QuranConnect-tvOS/Pods-QuranConnect-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		016EA1692328BB8300CD20E2 /* ItunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ItunesArtwork@2x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/ItunesArtwork@2x.png"; sourceTree = "<group>"; };
 		016EA16A2328BB8300CD20E2 /* Icon-App-40x40@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-App-40x40@1x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/Icon-App-40x40@1x.png"; sourceTree = "<group>"; };
@@ -208,10 +218,10 @@
 		0188158923349669006806B3 /* Scheherazade-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Scheherazade-Bold.ttf"; path = "../assets/fonts/Scheherazade-Bold.ttf"; sourceTree = "<group>"; };
 		0188158A23349669006806B3 /* Scheherazade-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Scheherazade-Regular.ttf"; path = "../assets/fonts/Scheherazade-Regular.ttf"; sourceTree = "<group>"; };
 		035EA2B8889C44CFA697AAE7 /* Ubuntu-Light-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Ubuntu-Light-Italic.ttf"; path = "../assets/fonts/Ubuntu-Light-Italic.ttf"; sourceTree = "<group>"; };
-		0771723325E04C1286FFE230 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		0B1E0D87EEAD4898828F4FA1 /* female1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female1.png; path = "../assets/images/teacher-icons/female1.png"; sourceTree = "<group>"; };
 		0BAD306C0B2441F2B4D27E96 /* girl3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl3.png; path = "../assets/images/student-icons/girl3.png"; sourceTree = "<group>"; };
 		0CC5147CC11442E2AC9D44B2 /* read_child_bg.jpg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = read_child_bg.jpg; path = ../assets/images/read_child_bg.jpg; sourceTree = "<group>"; };
+		0ED43469D6CF408B82CC4819 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		108AEA68A94B1E4E77D89537 /* Pods-QuranConnect-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-QuranConnect-tvOS/Pods-QuranConnect-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		11707C11C7464EED86D40CF6 /* is-icon-1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-1.png"; path = "../assets/images/generic-icons/is-icon-1.png"; sourceTree = "<group>"; };
 		11E233642F56417886364E55 /* female10.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female10.png; path = "../assets/images/teacher-icons/female10.png"; sourceTree = "<group>"; };
@@ -225,7 +235,6 @@
 		1634146135B1494F8DE802CF /* male3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male3.png; path = "../assets/images/teacher-icons/male3.png"; sourceTree = "<group>"; };
 		175EB5EF7BA1482D99B601E9 /* is-icon-11.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-11.png"; path = "../assets/images/generic-icons/is-icon-11.png"; sourceTree = "<group>"; };
 		1A13C17377C04E798A50EFEB /* male5.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male5.png; path = "../assets/images/teacher-icons/male5.png"; sourceTree = "<group>"; };
-		1C145925C77E4286BFA6A1F9 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		203816654693425B91800AEC /* girl11.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl11.png; path = "../assets/images/student-icons/girl11.png"; sourceTree = "<group>"; };
 		2529BA491F5E41168F6C457F /* boy3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boy3.png; path = "../assets/images/student-icons/boy3.png"; sourceTree = "<group>"; };
 		2B2B4B659EF541BDA006F6B9 /* female3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female3.png; path = "../assets/images/teacher-icons/female3.png"; sourceTree = "<group>"; };
@@ -234,14 +243,15 @@
 		2D02E4901E0B4A5D006451C7 /* QuranConnect-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "QuranConnect-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E3C7B0DB8F04C989295C943 /* girl9.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl9.png; path = "../assets/images/student-icons/girl9.png"; sourceTree = "<group>"; };
 		2EF806E02FCB4A9BB0AF22C1 /* is-icon-13.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-13.png"; path = "../assets/images/generic-icons/is-icon-13.png"; sourceTree = "<group>"; };
-		361E5738EC854C88BA54388A /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
+		38DAE676030240FFB335D6DA /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		397C08836A564CA0973F0C05 /* salam.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = salam.png; path = ../assets/images/salam.png; sourceTree = "<group>"; };
+		397EA8C9836742E19164693A /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		39A0FD9CBFD84EE4B21240CB /* female8.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female8.png; path = "../assets/images/teacher-icons/female8.png"; sourceTree = "<group>"; };
 		3AA28E8080B648AC9BC00AA9 /* male13.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male13.png; path = "../assets/images/teacher-icons/male13.png"; sourceTree = "<group>"; };
 		3B0A3EA08C80DD9D58DFC6E1 /* Pods-QuranConnect-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-QuranConnect-tvOSTests/Pods-QuranConnect-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		3E960951390E4C149A0E7883 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		3F9B3D0E86D84F43B2EDB344 /* salam.jpg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = salam.jpg; path = ../assets/images/salam.jpg; sourceTree = "<group>"; };
 		420353A5D8EE42AC99BAF591 /* boy2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boy2.png; path = "../assets/images/student-icons/boy2.png"; sourceTree = "<group>"; };
-		421F6FBA594149F59B5630F5 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		44465A7DA87F40EEAE98935D /* is-icon-17.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-17.png"; path = "../assets/images/generic-icons/is-icon-17.png"; sourceTree = "<group>"; };
 		44AB6C8AF4504A8E9A540F4C /* Ubuntu-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Ubuntu-Light.ttf"; path = "../assets/fonts/Ubuntu-Light.ttf"; sourceTree = "<group>"; };
 		471A2E390A1C4832BB6AF8F0 /* female2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female2.png; path = "../assets/images/teacher-icons/female2.png"; sourceTree = "<group>"; };
@@ -250,45 +260,47 @@
 		4BC1FC098D4042F8A9AB10D2 /* is-icon-6.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-6.png"; path = "../assets/images/generic-icons/is-icon-6.png"; sourceTree = "<group>"; };
 		5211C2920AF741BCB20DCB0E /* male7.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male7.png; path = "../assets/images/teacher-icons/male7.png"; sourceTree = "<group>"; };
 		522B53FAC4794804AFA143F1 /* boy4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boy4.png; path = "../assets/images/student-icons/boy4.png"; sourceTree = "<group>"; };
+		5616D877FA8142A7B9EC6B06 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		56AE46E9F32C402DB7FA4CBB /* female4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female4.png; path = "../assets/images/teacher-icons/female4.png"; sourceTree = "<group>"; };
+		56D4D57F6FFC47A0A25E5FCB /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		56DF3F15E33F4E05A7907C2B /* boy5.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boy5.png; path = "../assets/images/student-icons/boy5.png"; sourceTree = "<group>"; };
 		5934A3A5F0084A3486F3A14B /* male6.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male6.png; path = "../assets/images/teacher-icons/male6.png"; sourceTree = "<group>"; };
-		5C26DE51603E4DC7BDD4446D /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		5C710FF904154EABB749C2A6 /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
+		5EC995B0B7E44683959E6A92 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		6182C1F072264AC4A2BE92D8 /* male11.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male11.png; path = "../assets/images/teacher-icons/male11.png"; sourceTree = "<group>"; };
 		64183B86C7CA4DDA99667689 /* msq2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = msq2.png; path = "../assets/images/student-icons/msq2.png"; sourceTree = "<group>"; };
 		64E7AC68B7CB40A4A3E6DBDC /* is-icon-5.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-5.png"; path = "../assets/images/generic-icons/is-icon-5.png"; sourceTree = "<group>"; };
 		68A2177D79E341ADA26B38F6 /* girl7.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl7.png; path = "../assets/images/student-icons/girl7.png"; sourceTree = "<group>"; };
 		6B631E272C6C4E7897A16D34 /* girl15.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl15.png; path = "../assets/images/student-icons/girl15.png"; sourceTree = "<group>"; };
 		6B779A80973943D394EDB757 /* is-icon-4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-4.png"; path = "../assets/images/generic-icons/is-icon-4.png"; sourceTree = "<group>"; };
-		6C006BA7B97E4569B85B45E8 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		6C00C8BBEC4A4B9F894A2C81 /* is-icon-2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-2.png"; path = "../assets/images/generic-icons/is-icon-2.png"; sourceTree = "<group>"; };
 		6C646CB866CB449DA014656C /* female5.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female5.png; path = "../assets/images/teacher-icons/female5.png"; sourceTree = "<group>"; };
+		70D92CC02C0645ABB4BBF098 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		71B9D76928984125847D1E19 /* boy10.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boy10.png; path = "../assets/images/student-icons/boy10.png"; sourceTree = "<group>"; };
 		7206B33C97284A0AB970F0BB /* Georgia.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Georgia.ttf; path = ../assets/fonts/Georgia.ttf; sourceTree = "<group>"; };
 		747BC5DF8EC94BE0AD0880A1 /* read_child_bg.orig.jpg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = read_child_bg.orig.jpg; path = ../assets/images/read_child_bg.orig.jpg; sourceTree = "<group>"; };
-		772D5C4DDD824074BED8AB3C /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		7901F3116F1D6EEEF4D11C69 /* Pods_QuranConnect_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QuranConnect_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B63694406A54FED934DB66E /* male2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male2.png; path = "../assets/images/teacher-icons/male2.png"; sourceTree = "<group>"; };
 		7D31043CBB3543B1A24F2004 /* girl8.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl8.png; path = "../assets/images/student-icons/girl8.png"; sourceTree = "<group>"; };
 		824F338C13674C0689A761FE /* boyc5.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boyc5.png; path = "../assets/images/student-icons/boyc5.png"; sourceTree = "<group>"; };
 		8372A57C53E34567AB9897EA /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Bold.ttf"; path = "../assets/fonts/Montserrat-Bold.ttf"; sourceTree = "<group>"; };
 		840B1DD2776E4887998DC860 /* boyc4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boyc4.png; path = "../assets/images/student-icons/boyc4.png"; sourceTree = "<group>"; };
+		84D6F276973D431EA3C3FA42 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		857737C83C474DFFAF8808AC /* female12.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female12.png; path = "../assets/images/teacher-icons/female12.png"; sourceTree = "<group>"; };
+		863E636BDEA14657A889EEAC /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		877427CB575A4CAD96E39E65 /* boy7.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boy7.png; path = "../assets/images/student-icons/boy7.png"; sourceTree = "<group>"; };
-		89E33C7949004026881F1154 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
+		8838D4BB5C73461AB44D2349 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		8B00778C64086B4F31FD9346 /* Pods-QuranConnect.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect.release.xcconfig"; path = "Target Support Files/Pods-QuranConnect/Pods-QuranConnect.release.xcconfig"; sourceTree = "<group>"; };
 		8B41045AE8E74BDC99CD5537 /* male4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male4.png; path = "../assets/images/teacher-icons/male4.png"; sourceTree = "<group>"; };
 		8BA9FFB3528A4D29BD2843D6 /* is-icon-10.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-10.png"; path = "../assets/images/generic-icons/is-icon-10.png"; sourceTree = "<group>"; };
 		8ED4287E865E4620A3418F99 /* male8.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male8.png; path = "../assets/images/teacher-icons/male8.png"; sourceTree = "<group>"; };
 		8FA39C1F4C654113A8C7E75D /* Montserrat-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Light.ttf"; path = "../assets/fonts/Montserrat-Light.ttf"; sourceTree = "<group>"; };
 		909BBB6F7275477AA5735F2B /* msq1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = msq1.png; path = "../assets/images/student-icons/msq1.png"; sourceTree = "<group>"; };
-		90F767FE38364E39A097FEC0 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		914A291396DA4F02AEEA4566 /* boy6.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boy6.png; path = "../assets/images/student-icons/boy6.png"; sourceTree = "<group>"; };
-		926EB4ED763E426796B9AEF8 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
-		9339ED677D6145279E70CCCF /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		93AC74C0EF0D4E9A90B7F523 /* boy11.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boy11.png; path = "../assets/images/student-icons/boy11.png"; sourceTree = "<group>"; };
 		966AD5E67D1D465C80EEF831 /* girl16.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl16.png; path = "../assets/images/student-icons/girl16.png"; sourceTree = "<group>"; };
 		96B6DA18127E4DE7B6707B39 /* is-icon-14.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-14.png"; path = "../assets/images/generic-icons/is-icon-14.png"; sourceTree = "<group>"; };
+		97AB3C1ABC8349CA8DEE81A9 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		99C2E014696D400C82F13F7C /* is-icon-16.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-16.png"; path = "../assets/images/generic-icons/is-icon-16.png"; sourceTree = "<group>"; };
 		9B25A0D993B74144B3841DF8 /* male9.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male9.png; path = "../assets/images/teacher-icons/male9.png"; sourceTree = "<group>"; };
 		9B27459B2305082D001A8F1F /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNFirebase.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -300,19 +312,18 @@
 		9B2745A8230508B7001A8F1F /* libFirebaseInstanceID.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFirebaseInstanceID.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0CA38EBE6F0F8C88C97627D /* Pods-QuranConnectTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnectTests.debug.xcconfig"; path = "Target Support Files/Pods-QuranConnectTests/Pods-QuranConnectTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A4C2A518DE3E4150B76EEDA0 /* female6.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female6.png; path = "../assets/images/teacher-icons/female6.png"; sourceTree = "<group>"; };
-		A4C3380FEFA0469FB01897AE /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		A4C4D291D14846FBBF5DCA12 /* is-icon-8.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-8.png"; path = "../assets/images/generic-icons/is-icon-8.png"; sourceTree = "<group>"; };
 		A4FF231B9E7A44F08F09810A /* boyc2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boyc2.png; path = "../assets/images/student-icons/boyc2.png"; sourceTree = "<group>"; };
 		A5BEE9EFE2E24C7F8DC08ABA /* girl13.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl13.png; path = "../assets/images/student-icons/girl13.png"; sourceTree = "<group>"; };
 		A70A2DA6F92D1E7852986A39 /* libPods-QuranConnectTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-QuranConnectTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		ABF1931B75064E8DB72AA80C /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
+		A7BAEF273DAE4552AEB518D0 /* quran-page-frame.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "quran-page-frame.png"; path = "../assets/images/quran-page-frame.png"; sourceTree = "<group>"; };
 		ADB3AFB655F04828B1463E25 /* girl1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl1.png; path = "../assets/images/student-icons/girl1.png"; sourceTree = "<group>"; };
 		ADCCA1D1DBBC4D91835C59B0 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Regular.ttf"; path = "../assets/fonts/Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		AF07BAEB0A284F4FAB1D6BAE /* msq4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = msq4.png; path = "../assets/images/student-icons/msq4.png"; sourceTree = "<group>"; };
 		AFBE13EEBAB6481F8302865D /* is-icon-0.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-0.png"; path = "../assets/images/generic-icons/is-icon-0.png"; sourceTree = "<group>"; };
 		B1A2A0812B6BA8DE8FF406EB /* Pods-QuranConnect.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect.debug.xcconfig"; path = "Target Support Files/Pods-QuranConnect/Pods-QuranConnect.debug.xcconfig"; sourceTree = "<group>"; };
 		B461B02942FB47F4BD472556 /* male10.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male10.png; path = "../assets/images/teacher-icons/male10.png"; sourceTree = "<group>"; };
-		B5C50EA7980547D492828CE9 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
+		B68167CAD2BD474FB2CB543B /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		B849C636B68E4E5CBF286982 /* boy9.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boy9.png; path = "../assets/images/student-icons/boy9.png"; sourceTree = "<group>"; };
 		BB1F5508B58D76148F73327F /* Pods-QuranConnectTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnectTests.release.xcconfig"; path = "Target Support Files/Pods-QuranConnectTests/Pods-QuranConnectTests.release.xcconfig"; sourceTree = "<group>"; };
 		BD57258476B44553B040999F /* female9.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female9.png; path = "../assets/images/teacher-icons/female9.png"; sourceTree = "<group>"; };
@@ -321,19 +332,18 @@
 		C4E43A04E52E4B669F7D0A2C /* is-icon-15.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-15.png"; path = "../assets/images/generic-icons/is-icon-15.png"; sourceTree = "<group>"; };
 		C671E8BE3F1E49A090715D1F /* salam.orig.jpg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = salam.orig.jpg; path = ../assets/images/salam.orig.jpg; sourceTree = "<group>"; };
 		CC7F6748991F49BA949DE591 /* girl10.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl10.png; path = "../assets/images/student-icons/girl10.png"; sourceTree = "<group>"; };
+		D2D690D8052441599EFF585D /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		D71F5E351ABC4CA585BB6D49 /* girl6.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl6.png; path = "../assets/images/student-icons/girl6.png"; sourceTree = "<group>"; };
 		D7DB78FFAD284339B2AB45C8 /* female7.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female7.png; path = "../assets/images/teacher-icons/female7.png"; sourceTree = "<group>"; };
 		DB79D985B58B4F11A46360A7 /* is-icon-9.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-9.png"; path = "../assets/images/generic-icons/is-icon-9.png"; sourceTree = "<group>"; };
 		DDF4A35D790F4347BE692A61 /* salam.orig.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = salam.orig.png; path = ../assets/images/salam.orig.png; sourceTree = "<group>"; };
 		E1A91F06C5F343CC97992388 /* girl2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl2.png; path = "../assets/images/student-icons/girl2.png"; sourceTree = "<group>"; };
 		E2F4578471F246539C19A7E8 /* girlc3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girlc3.png; path = "../assets/images/student-icons/girlc3.png"; sourceTree = "<group>"; };
-		E741998504C24BBD87E508CA /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		EBA6BA179F904181AE316D34 /* boy12.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boy12.png; path = "../assets/images/student-icons/boy12.png"; sourceTree = "<group>"; };
 		EBB615236590451195990F95 /* is-icon-12.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-12.png"; path = "../assets/images/generic-icons/is-icon-12.png"; sourceTree = "<group>"; };
 		EC4C5FB53EC037CCDD583CBB /* libPods-QuranConnect.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-QuranConnect.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		EFC17D737C8A4860B030EC5D /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		F2412B9D9BB84F28AB634992 /* female11.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female11.png; path = "../assets/images/teacher-icons/female11.png"; sourceTree = "<group>"; };
 		F4312D6600294E3B8CEA6855 /* is-icon-7.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-7.png"; path = "../assets/images/generic-icons/is-icon-7.png"; sourceTree = "<group>"; };
 		F45E5CFC71874B9ABB67E816 /* male12.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male12.png; path = "../assets/images/teacher-icons/male12.png"; sourceTree = "<group>"; };
@@ -345,6 +355,7 @@
 		F936FB71A0F24BB3B9B49663 /* girl14.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl14.png; path = "../assets/images/student-icons/girl14.png"; sourceTree = "<group>"; };
 		F9929FDA18D241EE85E19994 /* girl4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl4.png; path = "../assets/images/student-icons/girl4.png"; sourceTree = "<group>"; };
 		FA9C40B336B14B058DEECA8F /* is-icon-3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-3.png"; path = "../assets/images/generic-icons/is-icon-3.png"; sourceTree = "<group>"; };
+		FF80DE1BF7E84B37AB60489D /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -407,6 +418,14 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		015B1DC4233BF8590041460F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				015B1DC8233BF8590041460F /* libRNSound.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		13B07FAE1A68108700A75B9A /* QuranConnect */ = {
 			isa = PBXGroup;
 			children = (
@@ -459,6 +478,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				015B1DC3233BF8590041460F /* RNSound.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -512,22 +532,6 @@
 				016EA1762328BB8400CD20E2 /* Icon-App-76x76@2x.png */,
 				016EA16E2328BB8300CD20E2 /* Icon-App-83.5x83.5@2x.png */,
 				016EA1692328BB8300CD20E2 /* ItunesArtwork@2x.png */,
-				361E5738EC854C88BA54388A /* AntDesign.ttf */,
-				1C145925C77E4286BFA6A1F9 /* Entypo.ttf */,
-				0771723325E04C1286FFE230 /* EvilIcons.ttf */,
-				772D5C4DDD824074BED8AB3C /* Feather.ttf */,
-				89E33C7949004026881F1154 /* FontAwesome.ttf */,
-				EFC17D737C8A4860B030EC5D /* FontAwesome5_Brands.ttf */,
-				6C006BA7B97E4569B85B45E8 /* FontAwesome5_Regular.ttf */,
-				421F6FBA594149F59B5630F5 /* FontAwesome5_Solid.ttf */,
-				B5C50EA7980547D492828CE9 /* Fontisto.ttf */,
-				E741998504C24BBD87E508CA /* Foundation.ttf */,
-				A4C3380FEFA0469FB01897AE /* Ionicons.ttf */,
-				5C26DE51603E4DC7BDD4446D /* MaterialCommunityIcons.ttf */,
-				926EB4ED763E426796B9AEF8 /* MaterialIcons.ttf */,
-				90F767FE38364E39A097FEC0 /* Octicons.ttf */,
-				ABF1931B75064E8DB72AA80C /* SimpleLineIcons.ttf */,
-				9339ED677D6145279E70CCCF /* Zocial.ttf */,
 				7206B33C97284A0AB970F0BB /* Georgia.ttf */,
 				8372A57C53E34567AB9897EA /* Montserrat-Bold.ttf */,
 				0188158323349101006806B3 /* MADDINA.ttf */,
@@ -625,6 +629,23 @@
 				5211C2920AF741BCB20DCB0E /* male7.png */,
 				8ED4287E865E4620A3418F99 /* male8.png */,
 				9B25A0D993B74144B3841DF8 /* male9.png */,
+				A7BAEF273DAE4552AEB518D0 /* quran-page-frame.png */,
+				5C710FF904154EABB749C2A6 /* AntDesign.ttf */,
+				397EA8C9836742E19164693A /* Entypo.ttf */,
+				70D92CC02C0645ABB4BBF098 /* EvilIcons.ttf */,
+				FF80DE1BF7E84B37AB60489D /* Feather.ttf */,
+				B68167CAD2BD474FB2CB543B /* FontAwesome.ttf */,
+				D2D690D8052441599EFF585D /* FontAwesome5_Brands.ttf */,
+				56D4D57F6FFC47A0A25E5FCB /* FontAwesome5_Regular.ttf */,
+				84D6F276973D431EA3C3FA42 /* FontAwesome5_Solid.ttf */,
+				38DAE676030240FFB335D6DA /* Fontisto.ttf */,
+				863E636BDEA14657A889EEAC /* Foundation.ttf */,
+				5616D877FA8142A7B9EC6B06 /* Ionicons.ttf */,
+				97AB3C1ABC8349CA8DEE81A9 /* MaterialCommunityIcons.ttf */,
+				3E960951390E4C149A0E7883 /* MaterialIcons.ttf */,
+				8838D4BB5C73461AB44D2349 /* Octicons.ttf */,
+				5EC995B0B7E44683959E6A92 /* SimpleLineIcons.ttf */,
+				0ED43469D6CF408B82CC4819 /* Zocial.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -755,6 +776,12 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 015B1DC4233BF8590041460F /* Products */;
+					ProjectRef = 015B1DC3233BF8590041460F /* RNSound.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* QuranConnect */,
@@ -764,6 +791,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		015B1DC8233BF8590041460F /* libRNSound.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNSound.a;
+			remoteRef = 015B1DC7233BF8590041460F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		00E356EC1AD99517003FC87E /* Resources */ = {
@@ -779,26 +816,10 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				9C04E950D8DB46B1957B8685 /* AntDesign.ttf in Resources */,
-				2C5FFAF3EE764EBEACEF1E83 /* Entypo.ttf in Resources */,
-				EC8A0DCC37514851B9E94A09 /* EvilIcons.ttf in Resources */,
-				CDC1877D453A430DB70DFD1D /* Feather.ttf in Resources */,
-				24A1AFD1E7634E21A591B858 /* FontAwesome.ttf in Resources */,
-				FF13B49C7C064E9C8481634C /* FontAwesome5_Brands.ttf in Resources */,
-				373307F9F6A34ACA84A692B2 /* FontAwesome5_Regular.ttf in Resources */,
-				7AD1C0290C6F47D48B5D9EDB /* FontAwesome5_Solid.ttf in Resources */,
-				1D3A858F701C436897741585 /* Fontisto.ttf in Resources */,
 				017E518523234B7600B71C11 /* GoogleService-Info.plist in Resources */,
-				6351A045649044F69C987B13 /* Foundation.ttf in Resources */,
-				3FB03919AB8B44DCAA52ABF4 /* Ionicons.ttf in Resources */,
-				BC14A40F8A77469994EA882E /* MaterialCommunityIcons.ttf in Resources */,
 				016EA17C2328BB8400CD20E2 /* Icon-App-40x40@3x.png in Resources */,
 				016EA17E2328BB8400CD20E2 /* Icon-App-20x20@3x.png in Resources */,
 				016EA1792328BB8400CD20E2 /* Icon-App-40x40@1x.png in Resources */,
-				944B37439412487DBBC4243D /* MaterialIcons.ttf in Resources */,
-				A1F9761530F74189AA8ABB6B /* Octicons.ttf in Resources */,
-				EC98D9122FDD4B82BB3A08D9 /* SimpleLineIcons.ttf in Resources */,
-				7EB14B59E6F44A66ACC4824B /* Zocial.ttf in Resources */,
 				016EA18B2328BB9800CD20E2 /* iTunesArtwork@1x.png in Resources */,
 				EEF37A7F15E54CB3A311055F /* Georgia.ttf in Resources */,
 				636F1FDAD1A244C99C0A6CEC /* Montserrat-Bold.ttf in Resources */,
@@ -912,6 +933,23 @@
 				60289201E7CC47209B659F19 /* male7.png in Resources */,
 				4D0C48EE4CC54497A8A6BD5A /* male8.png in Resources */,
 				22448E559C544CD99F0A2551 /* male9.png in Resources */,
+				79CF2BE4DB3A4AA9A0C184AD /* quran-page-frame.png in Resources */,
+				C585A14E226E41BAB82A437C /* AntDesign.ttf in Resources */,
+				701D09DE458B434A8BAAC668 /* Entypo.ttf in Resources */,
+				F6759B24F7E743038956752A /* EvilIcons.ttf in Resources */,
+				B54C3A38C6F14E88BFE6D661 /* Feather.ttf in Resources */,
+				BEC7F418B17D4CC98DAB0CC3 /* FontAwesome.ttf in Resources */,
+				59AC895C0FB94A63834FF35F /* FontAwesome5_Brands.ttf in Resources */,
+				430DCF26DDB24D4B8FE55511 /* FontAwesome5_Regular.ttf in Resources */,
+				42BCECCD66434C668F9DD56D /* FontAwesome5_Solid.ttf in Resources */,
+				504839F349794D638D626802 /* Fontisto.ttf in Resources */,
+				2BC479B3676248EC9E8B155D /* Foundation.ttf in Resources */,
+				E09979C59ACA4DE680538517 /* Ionicons.ttf in Resources */,
+				90BFDF4D673A4F5E8B2798CF /* MaterialCommunityIcons.ttf in Resources */,
+				D912528411524B258687669B /* MaterialIcons.ttf in Resources */,
+				F846E9765B5840F5A21F20FF /* Octicons.ttf in Resources */,
+				3ACC391F6D724C6E8DB8F6E8 /* SimpleLineIcons.ttf in Resources */,
+				1189A5D5E93E4293BD8C6F77 /* Zocial.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

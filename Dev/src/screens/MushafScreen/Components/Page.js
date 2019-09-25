@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, } from 'react-native';
+import { View, ImageBackground, StyleSheet, } from 'react-native';
 import colors from 'config/colors';
 import Ayah from './Ayah';
 import LoadingSpinner from 'components/LoadingSpinner';
@@ -59,27 +59,32 @@ class Page extends React.Component {
 
         else {
             return (
-                <View style={{ margin: 5, backgroundColor: colors.white }}>
-                    {
-                        lines !== undefined &&
-                        lines.map((line) => {
-                            return (
-                                <View style={{ flexDirection: 'row-reverse', backgroundColor: colors.white, justifyContent: 'space-between' }}>
-                                    {
-                                        line.text.map((word) => {
-                                            if (word.char_type === "word") {
-                                                return (<Word text={word.text} />)
+                <View style={{backgroundColor: colors.white}}>
+                <ImageBackground source={require('assets/images/quran-page-frame.png')} style={{ width: '100%' }} resizeMethod='scale'>
+                    <View style={{ marginVertical: 30, marginHorizontal: 30, backgroundColor: colors.white }}>
+                        {
+                            lines !== undefined &&
+                            lines.map((line) => {
+                                return (
+                                    <View key={line.line} style={{ flexDirection: 'row-reverse', backgroundColor: 'transparent', justifyContent: 'space-between' }}>
+                                        {
+                                            line.text.map((word) => {
+                                                if (word.char_type === "word") {
+                                                    return (<Word key={word.id} text={word.text} />)
+                                                }
+                                                else if (word.char_type === "end") {
+                                                    return (<EndOfAyah key={word.id} ayahNumber={word.aya} />)
+                                                }
                                             }
-                                            else if (word.char_type === "end") {
-                                                return (<EndOfAyah ayahNumber={word.aya} />)
-                                            }
+                                            )
                                         }
-                                        )
-                                    }
-                                </View>
-                            )
-                        })}
+                                    </View>
+                                )
+                            })}
+                    </View>
+                </ImageBackground>
                 </View>
+
             )
         }
     }
