@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, View, StyleSheet, FlatList, Dimensions, Text, Alert, Share, TextInput, PixelRatio } from "react-native";
+import { ScrollView, View, StyleSheet, FlatList, Dimensions, Text, Alert, Share, TextInput, PixelRatio, Platform } from "react-native";
 import StudentCard from "components/StudentCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages";
@@ -166,7 +166,13 @@ export class ClassEditScreen extends QcParentScreen {
                   size={20}
                   onPress={() => {
                     FirebaseFunctions.logEvent("TEACHER_SHARE_CLASS_CODE");
-                    Share.share({ message: strings.JoinMyClass + classID })
+                    Share.share(
+                      {
+                        message: strings.JoinMyClass + classID + (
+                          '\niOS: ' + 'https://apps.apple.com/us/app/quran-connect/id1459057386' +
+                          '\nAndroid: ' + 'https://play.google.com/store/apps/details?id=com.yungdevz.quranconnect')
+                      }
+                    )
                   }} />
               </View>
               <View style={{ flex: 1 }}></View>

@@ -139,7 +139,7 @@ export default {
     EnterYourStudentsName: 'Enter your student\'s name',
     Whoops: 'Whoops',
     AddStudents: 'Add Students',
-    JoinMyClass: 'Join my class on QuranConnect. Here is the class code: ',
+    JoinMyClass: 'Join my class on Quran Connect. Here is the class code: \n',
     AddYourStudents: 'Add Your Students',
     Or: 'Or',
     AddStudentsManually: 'Manually Add Your Students',
