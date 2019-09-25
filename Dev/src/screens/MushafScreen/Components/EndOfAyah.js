@@ -9,11 +9,11 @@ const EndOfAyah = ({ ayahNumber }) => {
     
     return (
         <Text style={styles.ayahSeparator}>
-            {rightBracket}
+            {leftBracket}
             <Text style={styles.ayahNumber}>
                 {ayahNumber}
             </Text>
-            {leftBracket}
+            {rightBracket}
         </Text>
     )
 }
@@ -24,16 +24,16 @@ const styles = StyleSheet.create({
         fontFamily: 'me_quran', 
         alignItems: 'center', 
         alignSelf: 'center', 
-        fontSize: 14, color: colors.darkGrey
+        fontSize: 12, 
+        color: colors.darkGrey
     },
     ayahSeparator: {
         textAlign: 'right', 
         fontFamily: 'me_quran', 
         alignItems: 'center', 
         alignSelf: 'center', 
-        fontSize: 20, 
+        fontSize: 16, 
         color: colors.darkGrey, 
-        marginBottom: 10
     }
 })
 
