@@ -3,26 +3,50 @@ import { View, Text, StyleSheet, } from 'react-native';
 import colors from 'config/colors';
 import Ayah from './Ayah';
 import LoadingSpinner from 'components/LoadingSpinner';
-import {getPageText} from '../ServiceActions/getQuranContent'
+import {getPageTextWbW, getPageText} from '../ServiceActions/getQuranContent'
 
 //Creates the higher order component
 class Page extends React.Component {
 
     state = {
         isLoading: true,
-        ayats: []
+        lines: []
     }
 
     async componentDidMount() {
-        const ayats =  await getPageText(20)
+        const lines =  await getPageTextWbW(300)
         this.setState({
             isLoading: false,
-            ayats
+            lines
         });
     }
 
+    getLineAyahText(wordsList) {
+        //if(wordsList[0].line === 2) {}
+        lineText = "";
+        const rightBracket = '  \uFD3F';
+        const leftBracket = '\uFD3E';
+        
+        let lineAyahText = wordsList.reduce(
+            (aya, word) =>  { 
+                if(word.char_type === "end"){
+                    return "".concat(aya, " ", rightBracket, word.aya, leftBracket)
+                }
+                else if(word.char_type === "word") {
+                    return "".concat(aya, " ", word.text)
+                }
+                else {
+                    return aya;
+                }  
+            },
+            "" //initialize line text with empty string
+        )
+    
+        return lineAyahText;
+    }
+
     render() {
-        const { isLoading, ayats } = this.state;
+        const { isLoading, lines } = this.state;
         if (isLoading === true) {
             return (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -34,19 +58,17 @@ class Page extends React.Component {
         else {
             return (
                 <View style={{ margin: 5, backgroundColor: colors.white }}>
-                    <Text style={styles.ayahText}>
                         {
-                            ayats !== undefined &&
-                            ayats.map((aya) => {
+                            lines !== undefined &&
+                            lines.map((line) => {
                                 return (
                                     <Ayah
-                                        key={aya.index}
-                                        text={aya.text}
-                                        number={aya.aya}
+                                        key={line.line}
+                                        text={this.getLineAyahText(line.text)}
+                                        number={line.ayah}
                                     />
                                 )
                             })}
-                    </Text>
                 </View>
             )
         }

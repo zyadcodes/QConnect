@@ -7,9 +7,8 @@ import EndOfAyah from './EndOfAyah';
 const Ayah = ({ text, number, id }) => {
     
     return (
-        <Text style={styles.ayahText} >
+        <Text numberOfLines={1} style={styles.ayahText} >
             {text}
-            <EndOfAyah ayahNumber={number}/> 
         </Text>
     )
 }
@@ -18,7 +17,7 @@ const styles = StyleSheet.create({
     ayahText: {
         textAlign: 'right', 
         fontFamily: 'me_quran', 
-        fontSize: 20, 
+        fontSize: 16, 
         color: colors.darkGrey
     }
 })
