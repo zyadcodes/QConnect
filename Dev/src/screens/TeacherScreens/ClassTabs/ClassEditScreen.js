@@ -12,6 +12,7 @@ import QcParentScreen from "screens/QcParentScreen";
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
+import fontStyles from "config/fontStyles";
 
 export class ClassEditScreen extends QcParentScreen {
 
@@ -142,7 +143,7 @@ export class ClassEditScreen extends QcParentScreen {
           />
           <View style={styles.shareCodeContainer}>
             <View style={{ flex: 0.8, justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ fontSize: 20 }}>{strings.AddYourStudents}</Text>
+              <Text style={fontStyles.bigTextStyleBlack}>{strings.AddYourStudents}</Text>
             </View>
             <View style={{
               flexDirection: 'row',
@@ -152,8 +153,8 @@ export class ClassEditScreen extends QcParentScreen {
             }}>
               <View style={{ flex: 0.6 }}></View>
               <View style={{ flexDirection: 'column', flex: 6, justifyContent: 'center' }}>
-                <Text style={{ fontSize: 18 }}>{strings.YourClassCode}</Text>
-                <Text style={{ fontSize: 16, color: colors.primaryDark }}>{classID}</Text>
+                <Text style={fontStyles.mainTextStyleBlack}>{strings.YourClassCode}</Text>
+                <Text style={fontStyles.smallTextStylePrimaryDark}>{classID}</Text>
               </View>
               <View style={{ flex: 1 }}></View>
               <View style={{ flex: 1, justifyContent: 'center' }}>
@@ -171,13 +172,13 @@ export class ClassEditScreen extends QcParentScreen {
               <View style={{ flex: 1 }}></View>
             </View>
             <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ fontSize: 20 }}>{strings.Or}</Text>
+              <Text style={fontStyles.bigTextStyleBlack}>{strings.Or}</Text>
             </View>
             <View style={{ flex: 0.8, justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ fontSize: 20 }}>{strings.AddStudentsManually}</Text>
+              <Text style={fontStyles.bigTextStyleBlack}>{strings.AddStudentsManually}</Text>
             </View>
             <View style={{ flex: 0.5, alignSelf: 'flex-start' }}>
-              <Text style={{ fontSize: 18 }}>  {strings.EnterYourStudentsName}</Text>
+              <Text style={fontStyles.mainTextStyleBlack}>{strings.EnterYourStudentsName}</Text>
             </View>
             <View style={{ flex: 0.7, alignSelf: 'flex-start' }}>
               <TextInput

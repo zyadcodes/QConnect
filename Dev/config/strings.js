@@ -9,6 +9,7 @@ export default {
     TotalAssignments: 'Total Assignments',
     Ready: 'Ready',
     NotReady: 'Not Ready',
+    ClassAlreadyJoined: 'We know it\'s exciting to be in this class. But you can only join it once.',
 
     //--------------------- Forgot Password Screen-------------------
     emailPlaceHolder: "Email",
@@ -47,14 +48,16 @@ export default {
     IAmAStudent: 'I am a student',
     Login: "LOGIN",
     IncorrectInfo: 'Incorrect username or password',
+    CreateAccount: 'Create Account',
+    ForgotPasswordQuestion: 'Forgot Password?',
 
     //--------------------- Teacher Welcome Screen ---------------------
     YourProfileHasBeenSaved: 'Your profile has been saved',
     Cancel: 'Cancel',
     TeacherWelcomeMessage: 'Quran teachers are very dear to our hearts. It is our great honor and pleasure to serve your dedication to the holy book.',
     Save: 'Save',
-    CreateAccount: 'CREATE ACCOUNT',
     AuthorizationCode: "Authorization Code",
+    Information: 'Information',
     Confirm: "Confirm",
     ConfirmAccount: "Confirm Account",
     ErrorSigningUp: "Error signing up",
@@ -74,6 +77,7 @@ export default {
     EditAssignment: 'Edit Assignment',
     EnterAssignmentHere: 'Enter assignment here...',
     OutStanding: 'Outstanding!',
+    EnterAssignment: 'Enter Assignment',
     GetStarted: 'Get Started',
     PracticePerfect: "Practice Makes Perfect",
     GreatJob: "Great Job",
@@ -85,6 +89,7 @@ export default {
     ImprovementAreas: 'Things to work on: ',
     NoClass: "Uh Oh! No Classes",
     addClassButton: "Click Here to Add A Class",
+    NotesColon: 'Notes: ',
 
     //--------------------- Join Class Screen ---------------------
     JoinClass: 'Join Class',

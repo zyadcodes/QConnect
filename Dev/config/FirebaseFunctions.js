@@ -319,6 +319,7 @@ export default class FirebaseFunctions {
         });
         avgGrade /= arrayOfStudents[studentIndex].totalAssignments;
         arrayOfStudents[studentIndex].averageRating = avgGrade;
+        arrayOfStudents[studentIndex].isReady = true;
 
         await this.updateClassObject(classID, {
             students: arrayOfStudents
@@ -485,6 +486,7 @@ export default class FirebaseFunctions {
             isReady: true,
             profileImageID: student.profileImageID,
             name: student.name,
+            isManual: true,
             totalAssignments: 0
         }
 

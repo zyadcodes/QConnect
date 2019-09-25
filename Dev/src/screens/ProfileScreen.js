@@ -15,6 +15,7 @@ import SideMenu from 'react-native-side-menu';
 import TeacherLeftNavPane from '../screens/TeacherScreens/LeftNavPane';
 import StudentLeftNavPane from '../screens/StudentScreens/LeftNavPane';
 import QCView from 'components/QCView';
+import fontStyles from 'config/fontStyles';
 
 //To-Do: All info in this class is static, still needs to be hooked up to data base in order
 //to function dynamically
@@ -201,7 +202,7 @@ export class ProfileScreen extends QcParentScreen {
                                 await FirebaseFunctions.logOut();
                                 this.props.navigation.push("FirstScreenLoader");
                             }}>
-                                <Text style={styles.textStyle}>{strings.LogOut}</Text>
+                                <Text style={fontStyles.bigTextStyleBlack}>{strings.LogOut}</Text>
                             </TouchableOpacity>
                         </View>
                     </ScrollView>

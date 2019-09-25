@@ -7,6 +7,7 @@ import QcParentScreen from "screens/QcParentScreen";
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import fontStyles from 'config/fontStyles';
 
 export default class CreditsScreen extends QcParentScreen {
 
@@ -21,8 +22,8 @@ export default class CreditsScreen extends QcParentScreen {
         return (
             <QCView style={screenStyle.container}>
                 <ScrollView style={styles.creditsContainer} contentContainerStyle={{}}>
-                    <Text style={{ marginTop: 10, }}>{strings.FirstScreenImageCredits}</Text>
-                    <Text style={{ marginTop: 10, color: 'blue' }} onPress={() => {
+                    <Text style={fontStyles.mainTextStyleBlack}>{strings.FirstScreenImageCredits}</Text>
+                    <Text style={fontStyles.mainTextStylePrimaryDark} onPress={() => {
                         Linking.openURL('https://www.freepik.com/free-photos-vectors/computer')
                     }} >{strings.AvatarCredits}</Text>
                 </ScrollView>

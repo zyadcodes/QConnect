@@ -13,6 +13,7 @@ import LeftNavPane from '../LeftNavPane';
 import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import fontStyles from "config/fontStyles";
 
 export class ClassMainScreen extends QcParentScreen {
 
@@ -47,7 +48,8 @@ export class ClassMainScreen extends QcParentScreen {
   }
 
   render() {
-
+    console.log("Width" + Dimensions.get('window').width);
+    console.log("Height" + Dimensions.get('window').height);
     const { isLoading, teacher, userID, currentClass, currentClassID } = this.state;
     if (isLoading === true) {
       return (
@@ -82,15 +84,7 @@ export class ClassMainScreen extends QcParentScreen {
                   resizeMode: 'contain',
                 }}
               />
-              <Text
-                style={{
-                  fontSize: 30,
-                  color: colors.primaryDark,
-                  flexDirection: "row",
-                }}
-              >
-                {strings.NoClass}
-              </Text>
+              <Text style={fontStyles.hugeTextStylePrimaryDark}>{strings.NoClass}</Text>
               <QcActionButton
                 text={strings.AddClassButton}
                 onPress={() => {
@@ -150,16 +144,7 @@ export class ClassMainScreen extends QcParentScreen {
                 }}
               />
 
-              <Text
-                style={{
-                  fontSize: 30,
-                  color: colors.primaryDark,
-                  flexDirection: "row",
-                }}
-              >
-                {strings.EmptyClass}
-              </Text>
-
+              <Text style={fontStyles.hugeTextStylePrimaryDark}>{strings.EmptyClass}</Text>
               <QcActionButton
                 text={strings.AddStudentButton}
                 onPress={() => this.props.navigation.push("ClassEdit", {
@@ -214,7 +199,8 @@ export class ClassMainScreen extends QcParentScreen {
                       classID: currentClassID
                     })
                   }
-                  background={item.currentAssignment === 'None' ? colors.white : (item.isReady === true ? colors.green : colors.red)}
+                  status={(item.isManual === true || item.currentAssignment === "None" ? null : (item.isReady === true ? strings.Ready : strings.NotReady))}
+                  background={(item.currentAssignment === 'None' || item.isManual === true) ? colors.white : (item.isReady === true ? colors.green : colors.red)}
                 />
               )}
             />
