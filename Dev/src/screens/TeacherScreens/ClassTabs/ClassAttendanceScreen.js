@@ -15,6 +15,7 @@ import TopBanner from 'components/TopBanner';
 import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import { screenHeight, screenWidth } from 'config/dimensions';
 import fontStyles from 'config/fontStyles';
 
 export class ClassAttendanceScreen extends QcParentScreen {
@@ -108,7 +109,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
                     edgeHitWidth={0}
                     navigation={this.props.navigation} />}>
                     <QCView style={screenStyle.container}>
-                        <View style={{ flex: 1, width: Dimensions.get('window').width }}>
+                        <View style={{ flex: 1, width: screenWidth }}>
                             <TopBanner
                                 LeftIconName="navicon"
                                 LeftOnPress={() => this.setState({ isOpen: true })}
@@ -158,7 +159,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
                 navigation={this.props.navigation} />}>
                 <QCView style={screenStyle.container}>
                     <ScrollView>
-                        <View style={{ flex: 1, width: Dimensions.get('window').width }}>
+                        <View style={{ flex: 1, width: screenWidth }}>
                             <TopBanner
                                 LeftIconName="navicon"
                                 LeftOnPress={() => this.setState({ isOpen: true })}

@@ -11,6 +11,7 @@ import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 class StudentProfileScreen extends QcParentScreen {
 
@@ -153,7 +154,7 @@ class StudentProfileScreen extends QcParentScreen {
                       newAssignment: true,
                       readOnly: false,
                     })} >
-                    <View style={{ paddingLeft: Dimensions.get('window').width * 0.02 }}>
+                    <View style={{ paddingLeft: screenWidth * 0.02 }}>
                       <Text style={fontStyles.mainTextStylePrimaryDark}>{strings.Grade}</Text>
                     </View>
                   </TouchableHighlight> : <View />}
@@ -201,7 +202,7 @@ class StudentProfileScreen extends QcParentScreen {
                       : <View />
                     }
                     {item.evaluation.improvementAreas && item.evaluation.improvementAreas.length > 0 ?
-                      <View style={{ flexDirection: 'row', justifyContent: 'flex-start', height: Dimensions.get('window').height * 0.03 }}>
+                      <View style={{ flexDirection: 'row', justifyContent: 'flex-start', height: screenHeight * 0.03 }}>
                         <Text style={fontStyles.smallTextStyleBlack}>{strings.ImprovementAreas}</Text>
                         {item.evaluation.improvementAreas.map((tag) => { return (<Text key={tag} style={styles.corner}>{tag}</Text>) })}
                       </View>

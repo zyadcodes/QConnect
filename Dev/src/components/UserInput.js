@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Dimensions from 'Dimensions';
 import { StyleSheet, View, TextInput, Image } from 'react-native';
 import colors from 'config/colors';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 
 export default class UserInput extends Component {
@@ -35,13 +36,11 @@ UserInput.propTypes = {
   returnKeyType: PropTypes.string,
 };
 
-const DEVICE_WIDTH = Dimensions.get('window').width;
-const DEVICE_HEIGHT = Dimensions.get('window').height;
 //'rgba(255, 255, 255, 0.4)'
 const styles = StyleSheet.create({
   input: {
     backgroundColor: colors.lightGrey,
-    width: DEVICE_WIDTH - 40,
+    width: screenWidth - 40,
     height: 40,
     marginHorizontal: 20,
     paddingLeft: 45,

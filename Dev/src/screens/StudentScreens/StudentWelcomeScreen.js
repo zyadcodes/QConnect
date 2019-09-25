@@ -14,6 +14,7 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import { Icon } from 'react-native-elements';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import { screenHeight, screenWidth } from 'config/dimensions';
 import firebase from 'react-native-firebase';
 
 
@@ -195,14 +196,14 @@ export class StudentWelcomeScreen extends QcParentScreen {
               <View style={{ flex: 1 }}></View>
               <View style={{ flex: 1, alignSelf: 'flex-start', flexDirection: 'row' }}>
                 <View style={{ flex: 0.1 }}></View>
-                <TouchableOpacity style={{ flex: 2, paddingTop: Dimensions.get('window').height * 0.025, justifyContent: 'flex-start', alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
+                <TouchableOpacity style={{ flex: 2, paddingTop: screenHeight * 0.025, justifyContent: 'flex-start', alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
                   <Icon
                     name={'angle-left'}
                     type="font-awesome" />
                 </TouchableOpacity>
                 <View style={{ flex: 3 }}></View>
               </View>
-              <View style={{ flex: 1, paddingLeft: Dimensions.get('window').width * 0.05, paddingRight: Dimensions.get('window').width * 0.05 }}>
+              <View style={{ flex: 1, paddingLeft: screenWidth * 0.05, paddingRight: screenWidth * 0.05 }}>
                 <FadeInView
                   style={{ alignItems: 'center', justifyContent: 'center' }}>
                   <Image
@@ -263,7 +264,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 10,
     backgroundColor: colors.white,
-    width: Dimensions.get('window').width,
+    width: screenWidth,
     flexDirection: 'column'
   },
   quote: {
@@ -282,14 +283,14 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     backgroundColor: colors.white,
     color: colors.darkGrey,
-    width: Dimensions.get('window').width
+    width: screenWidth
   },
   buttonsContainer: {
     flexDirection: "column",
     marginTop: 10,
     backgroundColor: colors.white,
     justifyContent: "center",
-    width: Dimensions.get('window').width
+    width: screenWidths
   },
   filler: {
     flexDirection: "column",

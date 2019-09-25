@@ -1,7 +1,8 @@
 import React from 'react'
-import { Image, TouchableHighlight, Dimensions } from 'react-native'
+import { Image, TouchableHighlight } from 'react-native'
 import PropTypes from 'prop-types'
 import colors from 'config/colors';
+import { screenWidth } from 'config/dimensions';
 
 //--------------------------------------------------------------------------
 // A Touchable round image . Default size depends on whether the image is "selected"
@@ -11,11 +12,7 @@ import colors from 'config/colors';
 export default TouchableAvatar = (props) => {
   const { image, onPress, index, selected } = props;
   const backColor = props.backgroundColor ? props.backgroundColor : (selected ? colors.primaryLight : colors.white);
-  var {
-    width,
-    height
-  } = Dimensions.get('window');
-  let imgDiameter = width / 7;
+  let imgDiameter = screenWidth / 7;
   const length = props.length ? props.length : (selected ? imgDiameter + 10 : imgDiameter);
 
 

@@ -11,6 +11,7 @@ import studentImages from "config/studentImages";
 import strings from 'config/strings';
 import QcParentScreen from "screens/QcParentScreen";
 import { Input } from 'react-native-elements';
+import { screenHeight, screenWidth } from 'config/dimensions';
 import QcActionButton from 'components/QcActionButton';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
@@ -151,7 +152,7 @@ class LeftNavPane extends QcParentScreen {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 alignSelf: 'center',
-                                paddingTop: Dimensions.get('window').height / 3
+                                paddingTop: screenHeight / 3
                             }}>
                                 <View style={styles.modal}>
                                     {
@@ -167,7 +168,7 @@ class LeftNavPane extends QcParentScreen {
                                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                                         <TextInput
                                                             style={{
-                                                                height: Dimensions.get('window').height * 0.07,
+                                                                height: screenHeight * 0.07,
                                                                 paddingLeft: 7,
                                                                 fontSize: 14,
                                                                 color: colors.darkGrey,
@@ -217,14 +218,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        height: Dimensions.get('window').height * 0.25,
-        width: Dimensions.get('window').width * 0.75,
+        height: screenHeight * 0.25,
+        width: screenWidth * 0.75,
         borderWidth: 1,
         borderRadius: 2,
         borderColor: colors.grey,
         borderBottomWidth: 1,
         shadowColor: colors.darkGrey,
-        shadowOffset: { width: 0, height: Dimensions.get('window').height * 0.003 },
+        shadowOffset: { width: 0, height: screenHeight * 0.003 },
         shadowOpacity: 0.8,
         shadowRadius: 3,
         elevation: 2,

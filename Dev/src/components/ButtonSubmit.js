@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import Dimensions from 'Dimensions';
 import { StyleSheet, TouchableOpacity, Text, Animated, Easing, ActivityIndicator, View } from 'react-native';
 import colors from 'config/colors';
 import fontStyles from 'config/fontStyles';
+import { screenWidth } from 'config/dimensions';
 
-
-const DEVICE_WIDTH = Dimensions.get('window').width;
 const MARGIN = 40;
 
 export default class ButtonSubmit extends Component {
@@ -70,7 +68,7 @@ export default class ButtonSubmit extends Component {
   render() {
     const changeWidth = this.buttonAnimated.interpolate({
       inputRange: [0, 1],
-      outputRange: [DEVICE_WIDTH - MARGIN, MARGIN],
+      outputRange: [screenWidth - MARGIN, MARGIN],
     });
     const changeScale = this.growAnimated.interpolate({
       inputRange: [0, 1],

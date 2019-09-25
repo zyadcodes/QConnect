@@ -10,9 +10,8 @@ import colors from "config/colors";
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
-const SCREEN_WIDTH = Dimensions.get("window").width;
-const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const BG_IMAGE = require("assets/images/read_child_bg.jpg");
 
@@ -151,8 +150,8 @@ const styles = StyleSheet.create({
     flex: 5,
     top: 0,
     left: 0,
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
+    width: screenWidth,
+    height: screenHeight,
     justifyContent: "center",
     alignItems: "center"
   },

@@ -1,7 +1,8 @@
 import React from 'react'
-import { View, Text, TextInput, StyleSheet, Dimensions } from 'react-native'
+import { View, Text, TextInput, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
-import colors from 'config/colors'
+import colors from 'config/colors';
+import { screenHeight, screenWidth } from 'config/dimensions';
 import strings from '../../config/strings';
 import PhoneInput from 'react-native-phone-input'
 import fontStyles from 'config/fontStyles';
@@ -17,7 +18,7 @@ export default TeacherInfoEntries = (props) => {
                 <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.Information}</Text>
             </View>
             <View style={styles.infoRow}>
-                <View style={{ paddingRight: Dimensions.get('window').width * 0.015 }}>
+                <View style={{ paddingRight: screenWidth * 0.015 }}>
                     <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.namePlaceHolder}</Text>
                 </View>
                 <TextInput
@@ -27,7 +28,7 @@ export default TeacherInfoEntries = (props) => {
                     value={props.name} />
             </View>
             <View style={styles.infoRow}>
-                <View style={{ paddingRight: Dimensions.get('window').width * 0.015 }}>
+                <View style={{ paddingRight: screenWidth * 0.015 }}>
                     <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.phoneNumberPlaceHolder}</Text>
                 </View>
                 <PhoneInput
@@ -41,7 +42,7 @@ export default TeacherInfoEntries = (props) => {
             {
                 !props.noEmailField ? (
                     <View style={styles.infoRow}>
-                        <View style={{ paddingRight: Dimensions.get('window').width * 0.015 }}>
+                        <View style={{ paddingRight: screenWidth * 0.015 }}>
                             <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.emailPlaceHolder}</Text>
                         </View>
                         <TextInput
@@ -60,7 +61,7 @@ export default TeacherInfoEntries = (props) => {
             }
             {props.showPasswordField &&
                 <View style={styles.infoRow}>
-                    <View style={{ paddingRight: Dimensions.get('window').width * 0.015 }}>
+                    <View style={{ paddingRight: screenWidth * 0.015 }}>
                         <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.password}</Text>
                     </View>
                     <TextInput
@@ -98,8 +99,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingLeft: Dimensions.get('window').width * 0.025,
-        height: Dimensions.get('window').height * 0.05,
+        paddingLeft: screenWidth * 0.025,
+        height: screenHeight * 0.05,
         borderBottomColor: colors.grey,
         borderBottomWidth: 0.25
     },

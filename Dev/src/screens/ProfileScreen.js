@@ -16,6 +16,7 @@ import TeacherLeftNavPane from '../screens/TeacherScreens/LeftNavPane';
 import StudentLeftNavPane from '../screens/StudentScreens/LeftNavPane';
 import QCView from 'components/QCView';
 import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 //To-Do: All info in this class is static, still needs to be hooked up to data base in order
 //to function dynamically
@@ -139,8 +140,8 @@ export class ProfileScreen extends QcParentScreen {
                 <QCView style={{
                     flexDirection: 'column',
                     backgroundColor: colors.lightGrey,
-                    width: Dimensions.get('window').width,
-                    height: Dimensions.get('window').height
+                    width: screenWidth,
+                    height: screenHeight
                 }}>
                     <ScrollView style={styles.container}>
                         <TopBanner
