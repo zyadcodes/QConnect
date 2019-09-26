@@ -8,8 +8,9 @@ export default {
     //--------------------- Student Main Screen ---------------------
     TotalAssignments: 'Total Assignments',
     Ready: 'Ready',
-    NotReady: 'Not Ready',
+    WorkingOnIt: 'Working on it',
     ClassAlreadyJoined: 'We know it\'s exciting to be in this class. But you can only join it once.',
+    NeedHelp: "Need help",
 
     //--------------------- Forgot Password Screen-------------------
     emailPlaceHolder: "Email",
