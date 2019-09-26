@@ -2,7 +2,7 @@
 export default {
 
     //---------------------  App info ---------------------------
-    AppTitle: 'QuranConnect',
+    AppTitle: 'Quran Connect',
     AppSubTitle: 'Serving your passion for the Quran',
 
     //--------------------- Student Main Screen ---------------------
@@ -14,9 +14,6 @@ export default {
     //--------------------- Forgot Password Screen-------------------
     emailPlaceHolder: "Email",
     Submit: 'Submit',
-    AskForEmail: 'Please Enter Email Here',
-    EnterCode: 'Code',
-    EmailError: 'Please Enter Email',
     PleaseEnterYourEmailAddress: 'Please enter your email address',
     EmailErrorHeader: "Error with Email",
     NewPasswordPlaceholder: 'New Password',
@@ -139,7 +136,7 @@ export default {
     EnterYourStudentsName: 'Enter your student\'s name',
     Whoops: 'Whoops',
     AddStudents: 'Add Students',
-    JoinMyClass: 'Join my class on QuranConnect. Here is the class code: ',
+    JoinMyClass: 'Join my class on Quran Connect. Here is the class code: \n',
     AddYourStudents: 'Add Your Students',
     Or: 'Or',
     AddStudentsManually: 'Manually Add Your Students',

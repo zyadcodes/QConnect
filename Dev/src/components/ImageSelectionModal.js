@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 import ImageSelectionGrid from 'components/ImageSelectionGrid'
 import TouchableText from 'components/TouchableText'
 import colors from 'config/colors'
+import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 //-------------------------------------------------------------
 // A Modal dialog that renders passed in data over ImageSelectionGrid
@@ -35,7 +37,7 @@ export default class ImageSelectionModal extends Component {
                         />
                         <TouchableText
                             text={this.props.cancelText}
-                            style={{ fontSize: 14, marginTop: 10, marginBottom: 20 }}
+                            style={[fontStyles.smallTextStyleBlack, { marginTop: screenHeight * 0.015, marginBottom: screenHeight * 0.03 }]}
                             onPress={() => {
                                 this.props.setModalVisible(false);
                             }} />
@@ -61,19 +63,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        marginTop: 30,
+        marginTop: 0.044 * screenHeight,
         borderWidth: 1,
         borderRadius: 2,
         borderColor: colors.grey,
         borderBottomWidth: 1,
         shadowColor: colors.darkGrey,
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: { width: 0, height: 0.002 * screenHeight },
         shadowOpacity: 0.8,
         shadowRadius: 3,
-        elevation: 2,
-        marginLeft: 5,
-        marginRight: 5,
-        paddingRight: 15,
-        paddingLeft: 15
+        elevation: 0.003 * screenHeight,
+        marginHorizontal: screenWidth * 0.012,
+        paddingHorizontal: 0.036 * screenWidth
     },
 })

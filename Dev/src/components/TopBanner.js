@@ -3,10 +3,11 @@
 import FontLoadingComponent from './FontLoadingComponent';
 import React from 'React';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import colors from 'config/colors'
 import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 class TopBanner extends FontLoadingComponent {
     render() {
@@ -18,7 +19,7 @@ class TopBanner extends FontLoadingComponent {
             <View style={styles.entireTopView}>
                 <View style={{ flex: 0.5 }} />
                 <View style={styles.topLeftView}  >
-                    <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: 100, justifyContent: 'flex-start', alignItems: 'center' }} onPress={LeftOnPress ? () => { LeftOnPress() } : () => { }} >
+                    <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: screenHeight * 0.15, justifyContent: 'flex-start', alignItems: 'center' }} onPress={LeftOnPress ? () => { LeftOnPress() } : () => { }} >
                         <Icon
                             name={LeftIconName}
                             type="font-awesome"
@@ -33,7 +34,7 @@ class TopBanner extends FontLoadingComponent {
                 </View>
 
                 <View style={styles.topRightView} >
-                    <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: 100, justifyContent: 'flex-end', alignItems: 'center' }} onPress={RightOnPress ? () => { RightOnPress() } : () => { }}>
+                    <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: screenHeight * 0.15, justifyContent: 'flex-end', alignItems: 'center' }} onPress={RightOnPress ? () => { RightOnPress() } : () => { }}>
                         <Icon
                             name={RightIconName}
                             type="font-awesome"
@@ -61,7 +62,7 @@ TopBanner.propTypes = {
 
 const styles = StyleSheet.create({
     entireTopView: {
-        height: Dimensions.get('window').height * 0.115,
+        height: screenHeight * 0.115,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -71,22 +72,22 @@ const styles = StyleSheet.create({
     },
     topLeftView: {
         flex: 1.5,
-        paddingTop: Dimensions.get('window').height * 0.035,
-        paddingBottom: Dimensions.get('window').height * 0.01
+        paddingTop: screenHeight * 0.035,
+        paddingBottom: screenHeight * 0.01
     },
     topMiddleView: {
         justifyContent: 'center',
         alignSelf: 'center',
         alignItems: 'center',
         flex: 10,
-        paddingTop: Dimensions.get('window').height * 0.035,
-        paddingBottom: Dimensions.get('window').height * 0.01
+        paddingTop: screenHeight * 0.035,
+        paddingBottom: screenHeight * 0.01
     },
     topRightView: {
         flex: 1.5,
         justifyContent: 'center',
-        paddingTop: Dimensions.get('window').height * 0.035,
-        paddingBottom: Dimensions.get('window').height * 0.01
+        paddingTop: screenHeight * 0.035,
+        paddingBottom: screenHeight * 0.01
     },
 });
 export default TopBanner;

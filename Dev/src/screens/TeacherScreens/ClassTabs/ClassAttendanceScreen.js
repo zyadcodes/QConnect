@@ -15,6 +15,7 @@ import TopBanner from 'components/TopBanner';
 import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import { screenHeight, screenWidth } from 'config/dimensions';
 import fontStyles from 'config/fontStyles';
 
 export class ClassAttendanceScreen extends QcParentScreen {
@@ -108,7 +109,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
                     edgeHitWidth={0}
                     navigation={this.props.navigation} />}>
                     <QCView style={screenStyle.container}>
-                        <View style={{ flex: 1, width: Dimensions.get('window').width }}>
+                        <View style={{ flex: 1, width: screenWidth }}>
                             <TopBanner
                                 LeftIconName="navicon"
                                 LeftOnPress={() => this.setState({ isOpen: true })}
@@ -125,21 +126,21 @@ export class ClassAttendanceScreen extends QcParentScreen {
                             <Image
                                 source={require('assets/emptyStateIdeas/ghostGif.gif')}
                                 style={{
-                                    width: 300,
-                                    height: 150,
+                                    width: 0.73 * screenWidth,
+                                    height: 0.22 * screenHeight,
                                     resizeMode: 'contain',
                                 }}
                             />
 
                             <Text style={fontStyles.hugeTextStylePrimaryDark}>{strings.EmptyClass} </Text>
 
-                        <QcActionButton
-                            text={strings.AddStudentButton}
-                            onPress={() => this.props.navigation.push("ClassEdit", {
-                                classID: this.state.currentClassID,
-                                currentClass: this.state.currentClass,
-                                userID: this.state.userID
-                            })} />
+                            <QcActionButton
+                                text={strings.AddStudentButton}
+                                onPress={() => this.props.navigation.push("ClassEdit", {
+                                    classID: this.state.currentClassID,
+                                    currentClass: this.state.currentClass,
+                                    userID: this.state.userID
+                                })} />
                         </View>
                     </QCView>
                 </SideMenu >
@@ -158,7 +159,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
                 navigation={this.props.navigation} />}>
                 <QCView style={screenStyle.container}>
                     <ScrollView>
-                        <View style={{ flex: 1, width: Dimensions.get('window').width }}>
+                        <View style={{ flex: 1, width: screenWidth }}>
                             <TopBanner
                                 LeftIconName="navicon"
                                 LeftOnPress={() => this.setState({ isOpen: true })}
@@ -178,7 +179,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
                                 cancelBtnText={strings.Cancel}
                                 format="MM/DD/YY"
                                 duration={300}
-                                style={{ paddingLeft: 15 }}
+                                style={{ paddingLeft: 0.036 * screenWidth }}
                                 maxDate={new Date().toLocaleDateString("en-US")}
                                 customStyles={{ dateInput: { borderColor: colors.lightGrey } }}
                                 onDateChange={async (date) => {
@@ -196,7 +197,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
                             <QcActionButton
                                 text={strings.SaveAttendance}
                                 onPress={() => this.saveAttendance()}
-                                style={{ paddingRight: 30 }}
+                                style={{ paddingRight: 0.073 * screenWidth }}
                                 screen={this.name}
                             />
                         </View>
@@ -230,8 +231,7 @@ const styles = StyleSheet.create({
     },
     saveAttendance: {
         flexDirection: 'row',
-        paddingTop: 20,
-        paddingBottom: 20,
+        paddingVertical: 0.03 * screenHeight,
         alignItems: 'center',
         justifyContent: 'space-between',
         backgroundColor: colors.lightGrey,

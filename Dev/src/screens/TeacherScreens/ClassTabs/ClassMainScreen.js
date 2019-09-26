@@ -14,6 +14,7 @@ import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from "config/fontStyles";
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 export class ClassMainScreen extends QcParentScreen {
 
@@ -48,8 +49,6 @@ export class ClassMainScreen extends QcParentScreen {
   }
 
   render() {
-    console.log("Width" + Dimensions.get('window').width);
-    console.log("Height" + Dimensions.get('window').height);
     const { isLoading, teacher, userID, currentClass, currentClassID } = this.state;
     if (isLoading === true) {
       return (
@@ -68,7 +67,7 @@ export class ClassMainScreen extends QcParentScreen {
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
           <QCView style={screenStyle.container}>
-            <View style={{ flex: 1, width: Dimensions.get('window').width }}>
+            <View style={{ flex: 1, width: screenWidth }}>
               <TopBanner
                 LeftIconName="navicon"
                 LeftOnPress={() => this.setState({ isOpen: true })}
@@ -79,8 +78,8 @@ export class ClassMainScreen extends QcParentScreen {
               <Image
                 source={require('assets/emptyStateIdeas/ghostGif.gif')}
                 style={{
-                  width: 300,
-                  height: 150,
+                  width: 0.73 * screenWidth,
+                  height: 0.22 * screenHeight,
                   resizeMode: 'contain',
                 }}
               />
@@ -121,7 +120,7 @@ export class ClassMainScreen extends QcParentScreen {
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
           <QCView style={screenStyle.container}>
-            <View style={{ flex: 1, width: Dimensions.get('window').width }}>
+            <View style={{ flex: 1, width: screenWidth }}>
               <TopBanner
                 LeftIconName="navicon"
                 LeftOnPress={() => this.setState({ isOpen: true })}
@@ -138,8 +137,8 @@ export class ClassMainScreen extends QcParentScreen {
               <Image
                 source={require('assets/emptyStateIdeas/ghostGif.gif')}
                 style={{
-                  width: 300,
-                  height: 150,
+                  width: 0.73 * screenWidth,
+                  height: 0.22 * screenHeight,
                   resizeMode: 'contain',
                 }}
               />
@@ -219,10 +218,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightGrey,
     flex: 3,
   },
-  classTitle: {
-    color: colors.primaryDark,
-    fontSize: 25
-  }
 });
 
 export default ClassMainScreen;

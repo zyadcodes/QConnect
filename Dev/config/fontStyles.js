@@ -8,83 +8,87 @@ const fontFamily = (Platform.OS === "ios" ? "Arial" : "sans-serif-medium");
 
 //Sets the base font that'll be used throughout the app based on the size of the screen
 //Sets the font size
-let baseFontSize = 16;
+let bodyFont = 16;
 const pixelRatio = PixelRatio.get();
 if (pixelRatio < 3) {
-    baseFontSize = 14;
+    bodyFont = 14;
 }
+
+const bodyFontSmaller = bodyFont * 0.875;
+const bodyFontBigger = bodyFont * 1.25;
+const titleFont = bodyFont * 1.875;
 
 export default StyleSheet.create({
 
     smallTextStyleBlack: {
         fontFamily,
-        fontSize: baseFontSize * 0.75,
+        fontSize: bodyFontSmaller,
         color: colors.black
     },
 
     smallTextStyleDarkGrey: {
         fontFamily,
-        fontSize: baseFontSize * 0.75,
+        fontSize: bodyFontSmaller,
         color: colors.darkGrey
     },
 
     smallTextStylePrimaryDark: {
         fontFamily,
-        fontSize: baseFontSize * 0.75,
+        fontSize: bodyFontSmaller,
         color: colors.primaryDark
     },
 
     mainTextStylePrimaryDark: {
         fontFamily,
-        fontSize: baseFontSize,
+        fontSize: bodyFont,
         color: colors.primaryDark
     },
 
     mainTextStylePrimaryLight: {
         fontFamily,
-        fontSize: baseFontSize,
+        fontSize: bodyFont,
         color: colors.primaryLight
     },
 
     mainTextStyleDarkGrey: {
         fontFamily,
-        fontSize: baseFontSize,
+        fontSize: bodyFont,
         color: colors.darkGrey
     },
 
     mainTextStyleBlack: {
         fontFamily,
-        fontSize: baseFontSize,
+        fontSize: bodyFont,
         color: colors.black
     },
 
     mainTextStyleGrey: {
         fontFamily,
-        fontSize: baseFontSize,
+        fontSize: bodyFont,
         color: colors.grey
     },
 
     bigTextStyleBlack: {
         fontFamily,
-        fontSize: baseFontSize * 1.25,
+        fontSize: bodyFontBigger,
         color: colors.black
     },
 
     bigTextStyleDarkGrey: {
         fontFamily,
-        fontSize: baseFontSize * 1.25,
+        fontSize: bodyFontBigger,
         color: colors.darkGrey
     },
 
     bigTextStylePrimaryDark: {
         fontFamily,
-        fontSize: baseFontSize * 1.25,
+        fontSize: bodyFontBigger,
         color: colors.black
     },
 
     hugeTextStylePrimaryDark: {
         fontFamily,
-        fontSize: baseFontSize * 1.875,
+        fontSize: titleFont,
         color: colors.primaryDark
     }
 

@@ -18,6 +18,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 class StudentMainScreen extends QcParentScreen {
 
@@ -137,14 +138,14 @@ class StudentMainScreen extends QcParentScreen {
 
         if (this.state.noCurrentClass) {
             return (
-                <SideMenu 
-                openMenuOffset={Dimensions.get('window').width *  0.7}
-                isOpen={this.state.isOpen} menu={<LeftNavPane
-                    student={student}
-                    userID={userID}
-                    classes={this.state.classes}
-                    edgeHitWidth={0}
-                    navigation={this.props.navigation} />}>
+                <SideMenu
+                    openMenuOffset={screenWidth * 0.7}
+                    isOpen={this.state.isOpen} menu={<LeftNavPane
+                        student={student}
+                        userID={userID}
+                        classes={this.state.classes}
+                        edgeHitWidth={0}
+                        navigation={this.props.navigation} />}>
                     <QCView style={screenStyle.container}>
                         <View style={{ flex: 1 }}>
                             <TopBanner
@@ -157,8 +158,8 @@ class StudentMainScreen extends QcParentScreen {
                             <Image
                                 source={require('assets/emptyStateIdeas/ghostGif.gif')}
                                 style={{
-                                    width: 300,
-                                    height: Dimensions.get('window').height * 0.22,
+                                    width: screenWidth * 0.73,
+                                    height: screenHeight * 0.22,
                                     resizeMode: 'contain',
                                 }} />
 
@@ -182,7 +183,7 @@ class StudentMainScreen extends QcParentScreen {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 alignSelf: 'center',
-                                paddingTop: Dimensions.get('window').height / 3
+                                paddingTop: screenHeight / 3
                             }}>
                                 <View style={styles.modal}>
                                     {
@@ -197,12 +198,10 @@ class StudentMainScreen extends QcParentScreen {
                                                     </View>
                                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                                         <TextInput
-                                                            style={{
-                                                                height: Dimensions.get('window').height * 0.07,
-                                                                paddingLeft: 7,
-                                                                fontSize: 14,
-                                                                color: colors.darkGrey,
-                                                            }}
+                                                            style={[{
+                                                                height: screenHeight * 0.07,
+                                                                paddingLeft: 0.017 * screenWidth,
+                                                            }, fontStyles.mainTextStyleDarkGrey]}
                                                             placeholder={strings.TypeInAClassCode}
                                                             onChangeText={classCode => this.setState({ classCode })}
                                                             value={this.state.classCode}
@@ -232,13 +231,13 @@ class StudentMainScreen extends QcParentScreen {
         }
 
         return (
-            <SideMenu 
-            isOpen={this.state.isOpen} menu={<LeftNavPane
-                student={student}
-                userID={userID}
-                classes={this.state.classes}
-                edgeHitWidth={0}
-                navigation={this.props.navigation} />}>
+            <SideMenu
+                isOpen={this.state.isOpen} menu={<LeftNavPane
+                    student={student}
+                    userID={userID}
+                    classes={this.state.classes}
+                    edgeHitWidth={0}
+                    navigation={this.props.navigation} />}>
                 <QCView style={screenStyle.container}>
                     <TopBanner
                         LeftIconName="navicon"
@@ -253,7 +252,7 @@ class StudentMainScreen extends QcParentScreen {
                                     source={studentImages.images[student.profileImageID]} />
                                 <View style={styles.profileInfoTopRight}>
                                     <Text numberOfLines={1} style={fontStyles.mainTextStyleBlack}>{student.name.toUpperCase()}</Text>
-                                    <View style={{ flexDirection: 'row', height: Dimensions.get('window').height * 0.04 }}>
+                                    <View style={{ flexDirection: 'row', height: screenHeight * 0.04 }}>
                                         <Rating readonly={true} startingValue={thisClassInfo.averageRating} imageSize={25} />
                                         <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
                                             <Text style={fontStyles.bigTextStyleDarkGrey}>{thisClassInfo.averageRating === 0 ? "" : parseFloat(thisClassInfo.averageRating).toFixed(1)}</Text>
@@ -263,8 +262,8 @@ class StudentMainScreen extends QcParentScreen {
                                 </View>
                             </View>
                             <View style={styles.profileInfoBottom}>
-                                <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'column', height: Dimensions.get('window').height * 0.09 }}>
-                                    <View style={{ paddingTop: Dimensions.get('window').height * 0.005, paddingLeft: Dimensions.get('window').width * 0.3 }}>
+                                <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'column', height: screenHeight * 0.09 }}>
+                                    <View style={{ paddingTop: screenHeight * 0.005, alignSelf: 'center' }}>
                                         <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{thisClassInfo.currentAssignment.toUpperCase()}</Text>
                                     </View>
                                     <View style={{ alignSelf: 'flex-end' }}>
@@ -339,7 +338,7 @@ class StudentMainScreen extends QcParentScreen {
                                                 : <View />
                                             }
                                             {item.evaluation.improvementAreas && item.evaluation.improvementAreas.length > 0 ?
-                                                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', height: Dimensions.get('window').height * 0.03, }}>
+                                                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', height: screenHeight * 0.03, }}>
                                                     <Text style={fontStyles.smallTextStyleBlack}>{strings.ImprovementAreas}</Text>
                                                     {item.evaluation.improvementAreas.map((tag) => { return (<Text key={tag} style={styles.corner}>{tag}</Text>) })}
                                                 </View>
@@ -359,47 +358,36 @@ class StudentMainScreen extends QcParentScreen {
 
 //Styles for the entire container along with the top banner
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: "column",
-        backgroundColor: colors.lightGrey,
-        flex: 1
-    },
     topView: {
         flex: 2.3,
         flexDirection: 'column',
         backgroundColor: colors.white
     },
     profileInfoTop: {
-        paddingHorizontal: 10,
-        paddingTop: 10,
+        paddingHorizontal: screenWidth * 0.024,
+        paddingTop: screenHeight * 0.015,
         flexDirection: 'row',
-        height: Dimensions.get('window').height * 0.125,
+        height: screenHeight * 0.125,
         borderBottomColor: colors.lightGrey,
         borderBottomWidth: 1,
-    },
-    profileInfoTopLeft: {
-        flexDirection: 'column',
-        marginLeft: 3,
-        alignItems: 'center',
-        width: 100
     },
     profileInfoTopRight: {
         flexDirection: 'column',
         alignItems: 'flex-start',
-        paddingLeft: Dimensions.get('window').width * 0.075,
-        paddingBottom: 5,
+        paddingLeft: screenWidth * 0.075,
+        paddingBottom: screenHeight * 0.007,
     },
     profileInfoBottom: {
         flexDirection: 'row',
-        paddingHorizontal: 10,
-        height: Dimensions.get('window').height * 0.11,
+        paddingHorizontal: screenWidth * 0.024,
+        height: screenHeight * 0.11,
         borderBottomColor: colors.grey,
         borderBottomWidth: 1
     },
     profilePic: {
-        width: Dimensions.get('window').height * 0.1,
-        height: Dimensions.get('window').height * 0.1,
-        borderRadius: 50,
+        width: screenHeight * 0.1,
+        height: screenHeight * 0.1,
+        borderRadius: screenHeight * 0.1 / 2,
     },
     middleView: {
         flex: 1,
@@ -407,32 +395,18 @@ const styles = StyleSheet.create({
     bottomView: {
         flex: 3
     },
-    studentNameStyle: {
-        fontFamily: 'Montserrat-Regular',
-        fontSize: 18,
-        color: colors.black,
-    },
     prevAssignmentCard: {
         flexDirection: 'column',
         borderBottomColor: colors.lightGrey,
         borderBottomWidth: 1,
-        height: Dimensions.get('window').height * 0.13,
-        padding: 5,
+        height: screenHeight * 0.13,
+        paddingHorizontal: screenWidth * 0.012,
+        paddingVertical: screenHeight * 0.007
     },
     profileInfo: {
         flexDirection: 'column',
         backgroundColor: colors.white,
-        marginBottom: 10,
-    },
-    notesText: {
-        fontSize: 14,
-        fontFamily: 'Montserrat-Regular',
-        color: colors.black
-    },
-    subText: {
-        fontSize: 16,
-        fontFamily: 'Montserrat-Regular',
-        color: colors.primaryDark
+        marginBottom: screenHeight * 0.015,
     },
     corner: {
         borderColor: '#D0D0D0',
@@ -440,52 +414,30 @@ const styles = StyleSheet.create({
         borderRadius: 3,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingLeft: 5,
-        paddingRight: 5,
-        marginRight: 5,
-        marginTop: 5,
+        paddingHorizontal: screenWidth * 0.012,
+        marginRight: screenWidth * 0.015,
+        marginTop: screenHeight * 0.007,
     },
     prevAssignments: {
         flexDirection: 'column',
         backgroundColor: colors.white,
         flex: 1
     },
-    profileInfo: {
-        flexDirection: 'column',
-        backgroundColor: colors.white,
-        marginBottom: 10
-    },
-    bigText: {
-        fontSize: 24,
-        fontFamily: 'Montserrat-Regular',
-    },
-    subText: {
-        fontSize: 16,
-        fontFamily: 'Montserrat-Regular',
-        color: colors.primaryDark
-    },
-    assignmentTextSmall: {
-        fontSize: 14,
-        fontFamily: 'Montserrat-Regular',
-        color: colors.black,
-        paddingTop: 2
-    },
     modal: {
         backgroundColor: colors.white,
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        height: Dimensions.get('window').height * 0.25,
-        width: Dimensions.get('window').width * 0.75,
-        borderWidth: 1,
-        borderRadius: 2,
+        height: screenHeight * 0.25,
+        width: screenWidth * 0.75,
+        borderWidth: screenHeight * 0.003,
+        borderRadius: screenHeight * 0.003,
         borderColor: colors.grey,
-        borderBottomWidth: 1,
         shadowColor: colors.darkGrey,
-        shadowOffset: { width: 0, height: Dimensions.get('window').height * 0.003 },
+        shadowOffset: { width: 0, height: screenHeight * 0.003 },
         shadowOpacity: 0.8,
-        shadowRadius: 3,
-        elevation: 2,
+        shadowRadius: screenHeight * 0.0045,
+        elevation: screenHeight * 0.003,
     },
 });
 

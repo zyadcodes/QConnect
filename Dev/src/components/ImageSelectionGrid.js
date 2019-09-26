@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { ScrollView, FlatList, Image, StyleSheet, TouchableHighlight, View } from 'react-native'
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
+import { screenWidth, screenHeight } from 'config/dimensions';
 
 
 //--------------------------------------------------------------
@@ -23,7 +24,7 @@ export default class ImageSelectionGrid extends Component {
                             <TouchableHighlight onPress={() => onImageSelected(index)}>
                                 <Image
                                     key={index}
-                                    borderRadius={30}
+                                    borderRadius={0.044 * screenHeight}
                                     source={item}
                                     style={styles.imageStyle}
                                     resizeMode="contain"
@@ -43,12 +44,13 @@ ImageSelectionGrid.propTypes = {
 
 const styles = StyleSheet.create({
     imageStyle: {
-        height: 60,
-        width: 60,
-        marginLeft: 15,
-        marginTop: 15,
-        padding: 15,
-        borderRadius: 30,
+        height: 0.088 * screenHeight,
+        width: 0.088 * screenHeight,
+        marginLeft: screenWidth * 0.036,
+        marginTop: 0.022 * screenHeight,
+        paddingHorizontal: 0.022 * screenWidth,
+        paddingVertical: screenHeight * 0.022,
+        borderRadius: 0.044 * screenHeight,
     },
 }
 );
