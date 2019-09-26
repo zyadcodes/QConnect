@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { View, ImageBackground, Dimensions, StyleSheet, Alert } from 'react-native';
+import { View, ImageBackground, StyleSheet, Alert } from 'react-native';
 import Form from 'components/Form';
 import ButtonSubmit from 'components/ButtonSubmit';
 import SignupSection from 'components/SignupSection';
 import QcAppBanner from 'components/QcAppBanner';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import strings from "config/strings";
-import colors from "config/colors";
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
@@ -155,26 +154,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
-  modal: {
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    marginTop: 230,
-    borderWidth: 1,
-    borderRadius: 2,
-    borderColor: colors.grey,
-    borderBottomWidth: 1,
-    shadowColor: colors.darkGrey,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 3,
-    elevation: 2,
-    marginLeft: 45,
-    marginRight: 45,
-    paddingRight: 5,
-    paddingLeft: 5
-  }
 });
 
 

@@ -1,11 +1,10 @@
 //This will be the actual drawer items that will display from the student side when the click on
 //the hamburger icon
 import React from "react";
-import { View, FlatList, ScrollView, StyleSheet, Modal, Text, Alert, Dimensions, TextInput } from "react-native";
+import { View, FlatList, ScrollView, StyleSheet, Modal, Text, Alert, TextInput } from "react-native";
 import colors from "config/colors";
 import classImages from "config/classImages";
 import { SafeAreaView } from "react-navigation";
-import QcAppBanner from "components/QcAppBanner";
 import QcDrawerItem from "components/QcDrawerItem";
 import studentImages from "config/studentImages";
 import strings from 'config/strings';
@@ -94,7 +93,10 @@ class LeftNavPane extends QcParentScreen {
                     <SafeAreaView forceInset={{ top: "always", horizontal: "never" }}>
                         <View
                             style={{
-                                padding: 10,
+                                paddingTop: 0.015 * screenHeight,
+                                paddingBottom: 0.015 * screenHeight,
+                                paddingLeft: screenWidth * 0.025,
+                                paddingRight: screenWidth * 0.025,
                                 alignContent: "center",
                                 alignItems: "center",
                                 justifyContent: "center"
@@ -167,12 +169,10 @@ class LeftNavPane extends QcParentScreen {
                                                     </View>
                                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                                         <TextInput
-                                                            style={{
+                                                            style={[{
                                                                 height: screenHeight * 0.07,
-                                                                paddingLeft: 7,
-                                                                fontSize: 14,
-                                                                color: colors.darkGrey,
-                                                            }}
+                                                                paddingLeft: 0.017 * screenWidth,
+                                                            }, fontStyles.mainTextStyleDarkGrey]}
                                                             placeholder={strings.TypeInAClassCode}
                                                             onChangeText={classCode => this.setState({ classCode })}
                                                             value={this.state.classCode}
@@ -204,15 +204,6 @@ class LeftNavPane extends QcParentScreen {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    confirmationMessage: {
-        fontSize: 16,
-        marginVertical: 10,
-        fontFamily: 'Montserrat-Regular',
-        color: colors.darkGrey
-    },
     modal: {
         backgroundColor: colors.white,
         alignItems: 'center',
@@ -220,15 +211,14 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         height: screenHeight * 0.25,
         width: screenWidth * 0.75,
-        borderWidth: 1,
-        borderRadius: 2,
+        borderWidth: screenHeight * 0.003,
+        borderRadius: screenHeight * 0.003,
         borderColor: colors.grey,
-        borderBottomWidth: 1,
         shadowColor: colors.darkGrey,
         shadowOffset: { width: 0, height: screenHeight * 0.003 },
         shadowOpacity: 0.8,
-        shadowRadius: 3,
-        elevation: 2,
+        shadowRadius: screenHeight * 0.0045,
+        elevation: screenHeight * 0.003,
     },
 });
 

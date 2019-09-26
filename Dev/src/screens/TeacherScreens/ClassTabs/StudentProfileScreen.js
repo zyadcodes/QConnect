@@ -115,12 +115,12 @@ class StudentProfileScreen extends QcParentScreen {
           <View style={styles.profileInfo}>
 
             <View style={styles.profileInfoTop}>
-              <View style={{ width: 100 }}>
+              <View style={{ width: screenWidth * 0.24 }}>
 
               </View>
               <View style={styles.profileInfoTopRight}>
                 <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{name.toUpperCase()}</Text>
-                <View style={{ flexDirection: 'row', height: 25 }}>
+                <View style={{ flexDirection: 'row', height: 0.037 * screenHeight }}>
                   <Rating readonly={true} startingValue={averageRating} imageSize={25} />
                   <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
                     <Text style={fontStyles.bigTextStyleDarkGrey}>{averageRating === 0 ? "" : parseFloat(averageRating).toFixed(1)}</Text>
@@ -136,7 +136,7 @@ class StudentProfileScreen extends QcParentScreen {
                   style={styles.profilePic}
                   source={studentImages.images[classStudent.profileImageID]} />
               </View>
-              <View style={{ flex: 1, flexDirection: 'column', height: 59 }}>
+              <View style={{ flex: 1, flexDirection: 'column', height: 0.086 * screenHeight, paddingLeft: screenWidth * 0.05 }}>
                 <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{this.state.currentAssignment.toUpperCase()}</Text>
                 <View style={{ flexDirection: 'row' }}>
                   <TouchableHighlight
@@ -221,31 +221,8 @@ class StudentProfileScreen extends QcParentScreen {
 
 //styles for the entire page
 const styles = StyleSheet.create({
-  ratingDescText: {
-    fontSize: 18,
-    fontFamily: 'light',
-    color: colors.primaryDark
-  },
-  assignmentTextSmall: {
-    fontSize: 14,
-    fontFamily: 'Montserrat-Regular',
-    color: colors.black,
-    paddingTop: 2
-  },
-  ratingText: {
-    fontSize: 24,
-    fontFamily: 'Montserrat-Regular',
-    color: colors.darkGrey,
-    marginLeft: 10,
-  },
-  container: {
-    flexDirection: "column",
-    backgroundColor: colors.lightGrey,
-    flex: 1
-  },
   studentInfoContainer: {
-    marginTop: 10,
-    marginBottom: 10,
+    marginVertical: 0.015 * screenHeight,
     backgroundColor: colors.white,
     flex: 1,
     borderColor: colors.lightGrey,
@@ -255,73 +232,62 @@ const styles = StyleSheet.create({
   profileInfo: {
     flexDirection: 'column',
     backgroundColor: colors.white,
-    marginBottom: 10
-  },
-  nonButtons: {
-    flexDirection: 'column'
+    marginBottom: 0.015 * screenHeight
   },
   corner: {
     borderColor: '#D0D0D0',
     borderWidth: 1,
-    borderRadius: 3,
+    borderRadius: screenHeight * 0.004,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingLeft: 5,
-    paddingRight: 5,
-    marginRight: 5,
-    marginTop: 5,
+    paddingHorizontal: screenWidth * 0.012,
+    marginRight: screenHeight * 0.012,
+    marginTop: screenHeight * 0.004,
   },
   profileInfoTop: {
-    paddingHorizontal: 10,
-    paddingTop: 10,
+    paddingHorizontal: screenWidth * 0.024,
+    paddingTop: screenHeight * 0.015,
     flexDirection: 'row',
     borderBottomColor: colors.lightGrey,
     borderBottomWidth: 1,
   },
   profileInfoTopLeft: {
     flexDirection: 'column',
-    marginLeft: 3,
-    marginTop: -66,
+    marginLeft: 0.007 * screenWidth,
+    marginTop: -0.097 * screenHeight,
     alignItems: 'center',
-    width: 100
+    width: 0.24 * screenWidth
   },
   profileInfoTopRight: {
     flexDirection: 'column',
     alignItems: 'flex-start',
-    paddingLeft: 10,
-    paddingBottom: 5,
+    paddingLeft: screenWidth * 0.05,
+    paddingBottom: 0.007 * screenHeight,
   },
   profileInfoBottom: {
     flexDirection: 'row',
-    paddingHorizontal: 10,
+    paddingHorizontal: 0.024 * screenWidth,
     borderBottomColor: colors.grey,
     borderBottomWidth: 1
   },
   profilePic: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    paddingBottom: 10
-  },
-  buttons: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: 0.15 * screenHeight,
+    height: 0.15 * screenHeight,
+    borderRadius: 0.075 * screenHeight,
+    paddingBottom: 0.015 * screenHeight
   },
   prevAssignments: {
     flexDirection: 'column',
     backgroundColor: colors.white,
-    marginLeft: 7,
-    marginRight: 7,
-
-
+    marginHorizontal: 0.017 * screenWidth
   },
   prevAssignmentCard: {
     flexDirection: 'column',
     borderBottomColor: colors.lightGrey,
     borderBottomWidth: 1,
-    height: 90,
-    padding: 5,
+    height: 0.13 * screenHeight,
+    paddingHorizontal: screenWidth * 0.012,
+    paddingVertical: screenHeight * 0.007
   },
 });
 

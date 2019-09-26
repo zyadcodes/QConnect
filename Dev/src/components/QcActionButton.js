@@ -4,6 +4,7 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import colors from 'config/colors'
 import FontLoadingComponent from 'components/FontLoadingComponent'
 import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 class QcActionButton extends FontLoadingComponent {
 
@@ -33,15 +34,11 @@ QcActionButton.propTypes = {
 
 const styles = StyleSheet.create({
   buttonStyle: {
-    marginRight: 10,
-    marginLeft: 10,
-    marginTop: 10,
-    marginBottom: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingRight: 25,
-    paddingLeft: 25,
-    borderRadius: 25,
+    marginHorizontal: 0.025 * screenWidth,
+    marginVertical: 0.015 * screenHeight,
+    paddingVertical: 0.015 * screenHeight,
+    paddingHorizontal: 0.06 * screenWidth,
+    borderRadius: 0.06 * screenWidth,
     backgroundColor: colors.primaryLight,
     justifyContent: 'center',
     alignItems: 'center',

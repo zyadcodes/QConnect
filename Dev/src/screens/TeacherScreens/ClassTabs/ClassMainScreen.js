@@ -78,8 +78,8 @@ export class ClassMainScreen extends QcParentScreen {
               <Image
                 source={require('assets/emptyStateIdeas/ghostGif.gif')}
                 style={{
-                  width: 300,
-                  height: 150,
+                  width: 0.73 * screenWidth,
+                  height: 0.22 * screenHeight,
                   resizeMode: 'contain',
                 }}
               />
@@ -137,8 +137,8 @@ export class ClassMainScreen extends QcParentScreen {
               <Image
                 source={require('assets/emptyStateIdeas/ghostGif.gif')}
                 style={{
-                  width: 300,
-                  height: 150,
+                  width: 0.73 * screenWidth,
+                  height: 0.22 * screenHeight,
                   resizeMode: 'contain',
                 }}
               />
@@ -218,10 +218,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightGrey,
     flex: 3,
   },
-  classTitle: {
-    color: colors.primaryDark,
-    fontSize: 25
-  }
 });
 
 export default ClassMainScreen;

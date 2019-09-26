@@ -222,73 +222,35 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     picContainer: {
-        paddingTop: 25,
+        paddingTop: screenHeight * 0.04,
         alignItems: 'center',
-        paddingBottom: 20,
-        marginTop: 10,
-        marginBottom: 10,
+        paddingBottom: screenHeight * 0.03,
+        marginTop: screenHeight * 0.015,
+        marginBottom: screenHeight * 0.015,
         backgroundColor: colors.white,
     },
-    textStyle: {
-        fontFamily: 'Montserrat-Regular',
-        fontSize: 20,
-        color: colors.black,
-    },
     profilePic: {
-        width: 130,
-        height: 130,
-        borderRadius: 65
-    },
-    editInfo: {
-        flexDirection: 'column',
-        backgroundColor: colors.white
+        width: screenWidth * 0.32,
+        height: screenHeight * 0.19,
+        borderRadius: screenHeight * 0.1
     },
     cardStyle: {
         flexDirection: 'row',
-        marginRight: 7,
-        height: 50,
+        marginRight: screenWidth * 0.017,
+        height: screenHeight * 0.07,
         alignItems: 'center',
         justifyContent: 'center',
         justifyContent: 'space-between',
         fontFamily: 'Montserrat-Regular',
         backgroundColor: colors.white
     },
-    infoRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingTop: 20,
-        paddingBottom: 20,
-        borderBottomColor: colors.black,
-        borderBottomWidth: 0.25
-    },
-    //Next one is the same as previous but since it's like a fencepost algorithm, it has no border
-    infoRowLast: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingTop: 20,
-        paddingBottom: 20,
-    },
-    infoTextInput: {
-        paddingRight: 20,
-        fontSize: 16
-    },
-    infoTitle: {
-        paddingLeft: 20,
-        fontSize: 16
-    },
     buttonsContainer: {
-        paddingVertical: 10,
+        paddingVertical: screenHeight * 0.015,
         alignItems: 'center',
         justifyContent: 'space-evenly',
         flexDirection: 'row',
-        marginTop: 10,
+        marginTop: screenHeight * 0.015,
         backgroundColor: colors.white,
-    },
-    filler: {
-        flexDirection: 'column',
-        flex: 1
     }
 });
 

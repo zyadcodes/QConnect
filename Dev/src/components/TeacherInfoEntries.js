@@ -22,7 +22,7 @@ export default TeacherInfoEntries = (props) => {
                     <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.namePlaceHolder}</Text>
                 </View>
                 <TextInput
-                    style={styles.infoTextInput}
+                    style={[fontStyles.smallTextStyleDarkGrey, { flex: 1, paddingLeft: 0.049 * screenWidth, alignSelf: 'stretch' }]}
                     textContentType='name'
                     onChangeText={props.onNameChanged}
                     value={props.name} />
@@ -46,7 +46,7 @@ export default TeacherInfoEntries = (props) => {
                             <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.emailPlaceHolder}</Text>
                         </View>
                         <TextInput
-                            style={styles.infoTextInput}
+                            style={[fontStyles.smallTextStyleDarkGrey, { flex: 1, paddingLeft: 0.049 * screenWidth, alignSelf: 'stretch' }]}
                             keyboardType='email-address'
                             autoCapitalize='none'
                             textContentType='emailAddress'
@@ -65,7 +65,7 @@ export default TeacherInfoEntries = (props) => {
                         <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.password}</Text>
                     </View>
                     <TextInput
-                        style={styles.infoTextInput}
+                        style={[fontStyles.smallTextStyleDarkGrey, { flex: 1, paddingLeft: 0.049 * screenWidth, alignSelf: 'stretch' }]}
                         textContentType='password'
                         autoCompleteType='password'
                         onChangeText={props.onPasswordChanged}
@@ -100,15 +100,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingLeft: screenWidth * 0.025,
-        height: screenHeight * 0.05,
+        height: screenHeight * 0.06,
         borderBottomColor: colors.grey,
         borderBottomWidth: 0.25
-    },
-    infoTextInput: {
-        paddingLeft: 20,
-        fontSize: 14,
-        color: colors.darkGrey,
-        flex: 1,
-        alignSelf: 'stretch',
     },
 })

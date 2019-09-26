@@ -7,6 +7,8 @@ import React, { Component } from 'react';
 import * as _ from 'lodash';
 import SuggestionListItem from './SuggestionListItem';
 import suggest from './services/suggest';
+import { screenWidth, screenHeight } from 'config/dimensions';
+import fontStyles from 'config/fontStyles';
 
 
 let style;
@@ -96,7 +98,7 @@ class InputAutoSuggest extends Component {
     return (
       <View style={style.container}>
         <TextInput
-          style={[style.input, inputStyle]}
+          style={[inputStyle]}
           value={value}
           clearButtonMode="while-editing"
           onChangeText={this.searchList}
@@ -151,15 +153,11 @@ style = StyleSheet.create({
   container: {
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    width: 300,
-    height: 200
-  },
-  input: {
-    fontSize: 22,
-    borderBottomWidth: 1,
+    width: screenWidth * 0.73,
+    height: screenHeight * 0.29
   },
   flatList: {},
-  itemTextStyle: { fontSize: 30 },
+  itemTextStyle: fontStyles.bigTextStylePrimaryDark,
 });
 
 export default InputAutoSuggest;

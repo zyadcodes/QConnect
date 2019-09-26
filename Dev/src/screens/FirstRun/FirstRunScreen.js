@@ -62,9 +62,6 @@ class FirstRunScreen extends QcParentScreen {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   spacer: {
     flex: 3
   },

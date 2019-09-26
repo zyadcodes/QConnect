@@ -252,31 +252,18 @@ export class StudentWelcomeScreen extends QcParentScreen {
 
 //-----------------   Styles for the student profile class-----------------------------------
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: "column",
-    backgroundColor: colors.lightGrey,
-    flex: 1,
-    justifyContent: "flex-end"
-  },
   picContainer: {
-    paddingTop: 10,
+    paddingTop: screenHeight * 0.015,
     alignItems: "center",
-    marginTop: 15,
-    marginBottom: 10,
+    marginTop: screenHeight * 0.022,
+    marginBottom: screenHeight * 0.015,
     backgroundColor: colors.white,
     width: screenWidth,
     flexDirection: 'column'
   },
-  quote: {
-    fontSize: 16,
-    paddingLeft: 20,
-    fontStyle: "italic",
-    paddingBottom: 10,
-    color: colors.darkGrey
-  },
   welcomeImage: {
-    marginTop: 15,
-    width: 180,
+    marginTop: screenHeight * 0.022,
+    width: screenWidth * 0.44,
     resizeMode: "contain"
   },
   editInfo: {
@@ -287,41 +274,15 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: "column",
-    marginTop: 10,
+    marginTop: screenHeight * 0.015,
     backgroundColor: colors.white,
     justifyContent: "center",
-    width: screenWidths
+    width: screenWidth
   },
   filler: {
     flexDirection: "column",
     flex: 1
   },
-  modal: {
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    marginTop: 230,
-    borderWidth: 1,
-    borderRadius: 2,
-    borderColor: colors.grey,
-    borderBottomWidth: 1,
-    shadowColor: colors.darkGrey,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 3,
-    elevation: 2,
-    marginLeft: 45,
-    marginRight: 45,
-    paddingRight: 5,
-    paddingLeft: 5
-  },
-  confirmationMessage: {
-    fontSize: 16,
-    marginVertical: 10,
-    fontFamily: 'Montserrat-Regular',
-    color: colors.darkGrey
-  }
 });
 
 

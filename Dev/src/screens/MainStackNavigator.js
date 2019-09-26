@@ -6,7 +6,7 @@ import FirstScreenLoader from './FirstScreenLoader/FirstScreenLoader';
 import LoginScreen from './AuthenticationScreens/LoginScreen';
 import FirstRunScreen from './FirstRun/FirstRunScreen';
 import TeacherWelcomeScreen from './TeacherScreens/TeacherWelcomeScreen';
-import AddClassScreen from './TeacherScreens/AddClass/AddClassScreen';
+import AddClassScreen from './TeacherScreens/AddClassScreen';
 import ForgotPassword from './AuthenticationScreens/ForgotPassword';
 import StudentWelcomeScren from './StudentScreens/StudentWelcomeScreen';
 import allSettingsScreen from './SettingsScreen/allSettingsScreen';

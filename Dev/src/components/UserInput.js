@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Dimensions from 'Dimensions';
 import { StyleSheet, View, TextInput, Image } from 'react-native';
 import colors from 'config/colors';
 import { screenHeight, screenWidth } from 'config/dimensions';
@@ -40,11 +39,11 @@ UserInput.propTypes = {
 const styles = StyleSheet.create({
   input: {
     backgroundColor: colors.lightGrey,
-    width: screenWidth - 40,
-    height: 40,
-    marginHorizontal: 20,
-    paddingLeft: 45,
-    borderRadius: 20,
+    width: screenWidth * 0.9,
+    height: screenHeight * 0.06,
+    marginHorizontal: screenWidth * 0.06,
+    paddingLeft: screenWidth * 0.11,
+    borderRadius: screenWidth * 0.06,
     color: colors.darkGrey,
   },
   inputWrapper: {
@@ -53,9 +52,9 @@ const styles = StyleSheet.create({
   inlineImg: {
     position: 'absolute',
     zIndex: 99,
-    width: 22,
-    height: 22,
-    left: 35,
-    top: 9
+    width: 0.05 * screenHeight,
+    height: 0.05 * screenHeight,
+    left: 0.075 * screenWidth,
+    top: 0.005 * screenHeight
   },
 });

@@ -55,7 +55,7 @@ export default class StudentCard extends FontLoadingComponent {
                             <TouchableOpacity style={{
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                height: 100,
+                                height: screenHeight * 0.2,
                                 width: screenWidth * 0.2
                             }}
                                 onPress={() => { compOnPress() }}>
@@ -89,10 +89,10 @@ const styles = StyleSheet.create({
     cardStyle: {
         flexDirection: 'row',
         marginRight: screenWidth * 0.017,
-        height: screenHeight * 0.112,
+        height: screenHeight * 0.15,
         alignItems: 'center',
         marginLeft: screenWidth * 0.017,
-        marginTop: screenHeight * 0.01,
+        marginTop: screenHeight * 0.025,
         fontFamily: 'Montserrat-Regular',
     },
     removeStudentStyle: {
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     profilePicStyle: {
         width: screenWidth * 0.15,
         height: screenWidth * 0.15,
-        borderRadius: 30,
+        borderRadius: screenWidth * 0.075,
         marginLeft: screenWidth * 0.05
     },
 });
