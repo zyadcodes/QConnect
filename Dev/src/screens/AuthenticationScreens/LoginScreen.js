@@ -36,8 +36,6 @@ class LoginScreen extends Component {
   state = {
     username: "",
     password: "",
-    email: "",
-    phone_number: "",
     isTeacher: this.props.navigation.state.params.isTeacher,
     isLoading: false
   };
@@ -70,7 +68,11 @@ class LoginScreen extends Component {
     } else {
       const account = await FirebaseFunctions.logIn(username.trim(), password.trim());
       if (account === -1) {
-        this.setState({ isLoading: false });
+        this.setState({
+          isLoading: false,
+        });
+        this.onUserNameChange(username);
+        this.onPwChange(password)
         Alert.alert(strings.Whoops, strings.IncorrectInfo);
       } else {
         const userID = account.uid;

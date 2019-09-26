@@ -7,6 +7,7 @@ import QcActionButton from 'components/QcActionButton';
 import { Alert } from 'react-native';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import screenStyle from 'config/screenStyle';
+import fontStyles from 'config/fontStyles';
 
 class ForgotPassword extends Component {
 
@@ -35,10 +36,7 @@ class ForgotPassword extends Component {
 
                         </View>
                         <View style={{ flex: 1, alignItems: 'flex-start' }}>
-                            <Text style={{
-                                fontSize: 18,
-                                color: colors.primaryDark,
-                            }}>{strings.PleaseEnterYourEmailAddress}</Text>
+                            <Text style={fontStyles.mainTextStylePrimaryDark}>{strings.PleaseEnterYourEmailAddress}</Text>
                         </View>
                     </View>
                 </View>

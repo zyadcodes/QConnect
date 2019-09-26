@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Dimensions from 'Dimensions';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import colors from 'config/colors';
+import fontStyles from 'config/fontStyles';
+import strings from '../../config/strings';
 
 export default class SignupSection extends Component {
 
@@ -11,12 +13,12 @@ export default class SignupSection extends Component {
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => { this.props.onCreateAccount(); }}>
-          <Text style={styles.text}>Create Account</Text>
+          <Text style={fontStyles.mainTextStyleBlack}>{strings.CreateAccount}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => { this.props.onForgotPassword(); }}>
-          <Text style={styles.text}>Forgot Password?</Text>
+          <Text style={fontStyles.mainTextStyleBlack}>{strings.ForgotPasswordQuestion}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -32,10 +34,5 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flexDirection: 'row',
     justifyContent: 'space-around',
-  },
-  text: {
-    color: colors.black,
-    backgroundColor: 'transparent',
-    fontSize: 15
   },
 });

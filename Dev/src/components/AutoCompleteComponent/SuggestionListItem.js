@@ -3,6 +3,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
+import fontStyles from 'config/fontStyles';
 
 class SuggestionListItem extends PureComponent {
   onPress = () => {
@@ -17,12 +18,12 @@ class SuggestionListItem extends PureComponent {
     return (
       <TouchableOpacity onPress={this.onPress}>
         <View style={{ flex: 1, flexDirection: 'row'}}>
-          <Text style={[{ flex: 2, color: 'black', fontSize: 16 }, textStyle]}>
+          <Text style={fontStyles.mainTextStyleBlack}>
             { name }
           </Text>
           {
             tags && tags.map(tag => (
-              <Text key={tag.id} style={[{ color: 'grey', paddingRight: 5 }, tagStyle]}>
+              <Text key={tag.id} style={fontStyles.mainTextStyleGrey}>
                 { tag.item }
               </Text>
             ))

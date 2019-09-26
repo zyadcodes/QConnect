@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Image, TouchableOpacity, Alert, ScrollView, LayoutAnimation, Platform, Dimensions, Text } from "react-native";
+import { StyleSheet, View, Image, TouchableOpacity, Alert, ScrollView, LayoutAnimation, Platform, Dimensions } from "react-native";
 import QcActionButton from "components/QcActionButton";
 import Toast, { DURATION } from "react-native-easy-toast";
 import colors from "config/colors";
@@ -113,7 +113,7 @@ export class StudentWelcomeScreen extends QcParentScreen {
 
   };
 
-  
+
   //Creates new account, or launches confirmation dialog if account was created but not confirmed yet.
   async onCreateOrConfirmAccount() {
     //validate entries first
@@ -192,17 +192,17 @@ export class StudentWelcomeScreen extends QcParentScreen {
             />
 
             <View style={styles.picContainer}>
-              <View style={{ flex: 1 }}><Text> </Text></View>
+              <View style={{ flex: 1 }}></View>
               <View style={{ flex: 1, alignSelf: 'flex-start', flexDirection: 'row' }}>
-                <View style={{ flex: 0.1 }}><Text>   </Text></View>
-                <TouchableOpacity style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
+                <View style={{ flex: 0.1 }}></View>
+                <TouchableOpacity style={{ flex: 2, paddingTop: Dimensions.get('window').height * 0.025, justifyContent: 'flex-start', alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
                   <Icon
                     name={'angle-left'}
                     type="font-awesome" />
                 </TouchableOpacity>
                 <View style={{ flex: 3 }}></View>
               </View>
-              <View style={{ flex: 1 }}>
+              <View style={{ flex: 1, paddingLeft: Dimensions.get('window').width * 0.05, paddingRight: Dimensions.get('window').width * 0.05 }}>
                 <FadeInView
                   style={{ alignItems: 'center', justifyContent: 'center' }}>
                   <Image
@@ -241,7 +241,7 @@ export class StudentWelcomeScreen extends QcParentScreen {
               />
             </View>
             <View style={styles.filler} />
-            <Toast ref="toast" />
+            <Toast position={'center'} ref="toast" />
           </View>
         </ScrollView>
       </QCView>

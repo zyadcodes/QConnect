@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Image, Text, TouchableOpacity, Alert, ScrollView, LayoutAnimation, Platform } from "react-native";
+import { StyleSheet, View, Image, Text, TouchableOpacity, Alert, ScrollView, LayoutAnimation, Platform, Dimensions } from "react-native";
 import QcActionButton from "components/QcActionButton";
 import Toast, { DURATION } from "react-native-easy-toast";
 import colors from "config/colors";
@@ -14,6 +14,7 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import { Input, Icon } from 'react-native-elements';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import fontStyles from "config/fontStyles";
 
 const initialState = {
   authCode: '',
@@ -191,8 +192,8 @@ export class TeacherWelcomeScreen extends QcParentScreen {
               screen={this.name}
             />
             <View style={styles.picContainer}>
-              <View style={{ flex: 1 }}><Text> </Text></View>
-              <View style={{ flex: 1, alignSelf: 'flex-start', flexDirection: 'row' }}>
+              <View style={{ flex: 1 }}></View>
+              <View style={{ flex: 1, paddingTop: Dimensions.get('window').height * 0.025, alignSelf: 'flex-start', flexDirection: 'row' }}>
                 <View style={{ flex: 0.1 }}><Text>   </Text></View>
                 <TouchableOpacity style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
                   <Icon
@@ -201,14 +202,14 @@ export class TeacherWelcomeScreen extends QcParentScreen {
                 </TouchableOpacity>
                 <View style={{ flex: 3 }}></View>
               </View>
-              <View style={{ flex: 1 }}>
+              <View style={{ flex: 1, paddingLeft: Dimensions.get('window').width * 0.05, paddingRight: Dimensions.get('window').width * 0.05 }}>
                 <FadeInView
                   style={{ alignItems: 'center', justifyContent: 'center' }}>
                   <Image
                     style={styles.welcomeImage}
                     source={require("assets/images/salam.png")}
                   />
-                  <Text style={styles.quote}>{strings.TeacherWelcomeMessage}</Text>
+                  <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.TeacherWelcomeMessage}</Text>
                 </FadeInView>
               </View>
             </View>
@@ -241,7 +242,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
               />
             </View>
             <View style={styles.filler} />
-            <Toast ref="toast" />
+            <Toast position={'center'} ref="toast" />
           </View>
         </ScrollView>
       </QCView>
@@ -263,13 +264,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 10,
     backgroundColor: colors.white
-  },
-  quote: {
-    fontSize: 16,
-    paddingLeft: 20,
-    fontStyle: "italic",
-    paddingBottom: 10,
-    color: colors.darkGrey
   },
   welcomeImage: {
     marginTop: 15,

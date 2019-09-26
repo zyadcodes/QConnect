@@ -1,7 +1,7 @@
 //This will be the actual drawer items that will display from the student side when the click on
 //the hamburger icon
 import React from "react";
-import { View, FlatList, ScrollView, StyleSheet, Modal, Text, Alert } from "react-native";
+import { View, FlatList, ScrollView, StyleSheet, Modal, Text, Alert, Dimensions, TextInput } from "react-native";
 import colors from "config/colors";
 import classImages from "config/classImages";
 import { SafeAreaView } from "react-navigation";
@@ -16,6 +16,7 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import fontStyles from "config/fontStyles";
 
 class LeftNavPane extends QcParentScreen {
 
@@ -43,21 +44,25 @@ class LeftNavPane extends QcParentScreen {
         this.setState({ isLoading: true });
         const { userID, classCode, student } = this.state;
 
-        const didJoinClass = await FirebaseFunctions.joinClass(student, classCode);
-        if (didJoinClass === -1) {
-            Alert.alert(strings.Whoops, strings.IncorrectClassCode);
-            this.setState({ isLoading: false, modalVisible: false });
+        if (student.classes.includes(classCode)) {
+            Alert.alert(strings.Whoops, strings.ClassAlreadyJoined);
+            this.setState({ isLoading: false });
         } else {
-            //Refetches the student object to reflect the updated database
-            this.setState({
-                isLoading: false,
-                modalVisible: false
-            })
-            this.props.navigation.push("StudentCurrentClass", {
-                userID,
-            });
+            const didJoinClass = await FirebaseFunctions.joinClass(student, classCode);
+            if (didJoinClass === -1) {
+                Alert.alert(strings.Whoops, strings.IncorrectClassCode);
+                this.setState({ isLoading: false, modalVisible: false });
+            } else {
+                //Refetches the student object to reflect the updated database
+                this.setState({
+                    isLoading: false,
+                    modalVisible: false
+                })
+                this.props.navigation.push("StudentCurrentClass", {
+                    userID,
+                });
+            }
         }
-
     }
 
     async openClass(id) {
@@ -85,8 +90,7 @@ class LeftNavPane extends QcParentScreen {
         return (
             <QCView style={[screenStyle.container, { alignItems: 'flex-start' }]}>
                 <ScrollView>
-                    <SafeAreaView
-                        forceInset={{ top: "always", horizontal: "never" }}>
+                    <SafeAreaView forceInset={{ top: "always", horizontal: "never" }}>
                         <View
                             style={{
                                 padding: 10,
@@ -94,7 +98,9 @@ class LeftNavPane extends QcParentScreen {
                                 alignItems: "center",
                                 justifyContent: "center"
                             }}>
-                            <QcAppBanner />
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={fontStyles.hugeTextStylePrimaryDark}>{strings.AppTitle}</Text>
+                            </View>
                         </View>
 
                         <QcDrawerItem
@@ -133,44 +139,62 @@ class LeftNavPane extends QcParentScreen {
                                 student: this.state.student,
                                 classes: this.state.classes
                             })} />
-
                         <Modal
+                            animationType="fade"
+                            style={{ alignItems: 'center', justifyContent: 'center' }}
                             transparent={true}
+                            presentationStyle="overFullScreen"
                             visible={this.state.modalVisible}
-                            onRequestClode={() => { }}>
-                            <View style={styles.modal}>
-                                {
-                                    this.state.isLoading === true ? (
-                                        <View>
-                                            <LoadingSpinner isVisible={true} />
-                                        </View>
-                                    ) : (
+                            onRequestClose={() => {
+                            }}>
+                            <View style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                paddingTop: Dimensions.get('window').height / 3
+                            }}>
+                                <View style={styles.modal}>
+                                    {
+                                        this.state.isLoading === true ? (
                                             <View>
-                                                <Text style={styles.confirmationMessage}>{strings.TypeInAClassCode}</Text>
-                                                <Input
-                                                    type='authCode'
-                                                    keyboardType='numeric'
-                                                    onChangeText={(text) => { this.setState({ classCode: text }) }}
-                                                    value={this.state.classCode}
-                                                    keyboardType='numeric' />
-                                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 5 }}>
-                                                    <QcActionButton
-                                                        text={strings.Cancel}
-                                                        onPress={() => { this.setState({ modalVisible: false }) }} />
-                                                    <QcActionButton
-                                                        text={strings.Confirm}
-                                                        onPress={() => {
-                                                            //Joins the class
-                                                            this.joinClass();
-                                                        }} />
-                                                </View>
+                                                <LoadingSpinner isVisible={true} />
                                             </View>
-                                        )
-                                }
+                                        ) : (
+                                                <View>
+                                                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                                        <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.TypeInAClassCode}</Text>
+                                                    </View>
+                                                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                                        <TextInput
+                                                            style={{
+                                                                height: Dimensions.get('window').height * 0.07,
+                                                                paddingLeft: 7,
+                                                                fontSize: 14,
+                                                                color: colors.darkGrey,
+                                                            }}
+                                                            placeholder={strings.TypeInAClassCode}
+                                                            onChangeText={classCode => this.setState({ classCode })}
+                                                            value={this.state.classCode}
+                                                        />
+                                                    </View>
+                                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
+                                                        <QcActionButton
+                                                            text={strings.Cancel}
+                                                            onPress={() => { this.setState({ modalVisible: false }) }} />
+                                                        <QcActionButton
+                                                            text={strings.Confirm}
+                                                            onPress={() => {
+                                                                //Joins the class
+                                                                this.joinClass();
+                                                            }} />
+                                                    </View>
+                                                </View>
 
+                                            )
+                                    }
+                                </View>
                             </View>
                         </Modal>
-
                     </SafeAreaView>
                 </ScrollView>
             </QCView>
@@ -193,20 +217,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        marginTop: 230,
+        height: Dimensions.get('window').height * 0.25,
+        width: Dimensions.get('window').width * 0.75,
         borderWidth: 1,
         borderRadius: 2,
         borderColor: colors.grey,
         borderBottomWidth: 1,
         shadowColor: colors.darkGrey,
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: { width: 0, height: Dimensions.get('window').height * 0.003 },
         shadowOpacity: 0.8,
         shadowRadius: 3,
         elevation: 2,
-        marginLeft: 45,
-        marginRight: 45,
-        paddingRight: 5,
-        paddingLeft: 5
     },
 });
 

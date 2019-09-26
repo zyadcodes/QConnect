@@ -8,6 +8,7 @@ import colors from 'config/colors';
 import strings from 'config/strings';
 import QcActionButton from './QcActionButton';
 import { Badge } from 'react-native-elements';
+import fontStyles from 'config/fontStyles';
 
 var { width } = Dimensions.get('window');
 
@@ -75,7 +76,7 @@ class FlowView extends Component {
 						}
 					}}>
 					<View style={[styles.corner, { backgroundColor: this.props.backgroundColor ? this.props.backgroundColor : this._backgoundColor() }]}>
-						<Text style={[styles.text, { color: this._textColor() }]}>{this.props.text}</Text>
+						<Text style={[fontStyles.mainTextStyleBlack, { textAlign: 'center', color: this._textColor() }]}>{this.props.text}</Text>
 					</View>
 					{
 						this.props.isBadgeVisible ? (
@@ -121,8 +122,8 @@ export default class FlowLayout extends Component {
 			selectedState: (this.props.initialSelectedValues.length === 0 ? (
 				new Array(this.props.dataValue.length).fill(false)
 			) : (
-				new Array(this.props.initialSelectedValues.length).fill(true)
-			)),
+					new Array(this.props.initialSelectedValues.length).fill(true)
+				)),
 			isBadgeVisible: false,
 			isNewAddition: false,
 			newImprovementText: ""
