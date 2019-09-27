@@ -36,7 +36,7 @@ export default class StudentCard extends FontLoadingComponent {
                             <View style={{ marginBottom: screenWidth * 0.004 }}>
                                 <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{studentName}</Text>
                             </View>
-                            <View style={{ marginBottom: screenWidth * 0.004 }}>
+                            <View style={{ marginBottom: screenWidth * 0.004, alignSelf: 'flex-start' }}>
                                 <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{currentAssignment}</Text>
                             </View>
                         </View>
