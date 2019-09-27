@@ -46,6 +46,7 @@ class Page extends React.Component {
 
         return lineAyahText;
     }
+    
 
     render() {
         const { isLoading, lines } = this.state;
@@ -70,7 +71,7 @@ class Page extends React.Component {
                                         {
                                             line.text.map((word) => {
                                                 if (word.char_type === "word") {
-                                                    return (<Word key={word.id} text={word.text} />)
+                                                    return (<Word key={word.id} text={word.text} audio={word.audio} />)
                                                 }
                                                 else if (word.char_type === "end") {
                                                     return (<EndOfAyah key={word.id} ayahNumber={word.aya} />)

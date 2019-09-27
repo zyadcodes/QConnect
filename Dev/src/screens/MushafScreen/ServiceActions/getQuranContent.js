@@ -20,7 +20,7 @@ function getPageByLines(pageJson){
                 line: lineData.detail.line,
                 surah: lineData.detail.sura,
                 ayah: lineData.detail.aya,
-                text: lineData.word.map((word) => {return {id: word.id, char_type: word.char_type, text: word.text, aya: word.aya, sura: word.sura}})
+                text: lineData.word.map((word) => {return {id: word.id, char_type: word.char_type, text: word.text, aya: word.aya, sura: word.sura, audio: word.audio}})
             }
         );
     });

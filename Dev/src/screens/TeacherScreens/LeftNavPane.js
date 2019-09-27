@@ -1,6 +1,6 @@
 /* eslint-disable no-extra-semi */
 import React from "react";
-import { View, FlatList, ScrollView, StyleSheet } from "react-native";
+import { View, FlatList, ScrollView, StyleSheet, Text } from "react-native";
 import colors from "config/colors";
 import classImages from "config/classImages";
 import FirebaseFunctions from 'config/FirebaseFunctions';
@@ -13,6 +13,7 @@ import QcParentScreen from "screens/QcParentScreen";
 import QcActionButton from 'components/QcActionButton';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import fontStyles from 'config/fontStyles';
 
 class LeftNavPane extends QcParentScreen {
 
