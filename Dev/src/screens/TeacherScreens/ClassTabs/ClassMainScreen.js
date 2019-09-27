@@ -186,7 +186,7 @@ export class ClassMainScreen extends QcParentScreen {
             {
               studentsNeedHelp.length > 0 ? (
                 <View style={{ paddingTop: screenHeight * 0.025 }}>
-                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.bigTextStyleDarkRed]}>{strings.NeedHelp}</Text>
+                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkRed]}>{strings.NeedHelp}</Text>
                 </View>
               ) : (
                   <View></View>
@@ -198,7 +198,7 @@ export class ClassMainScreen extends QcParentScreen {
               renderItem={({ item }) => (
                 <StudentCard
                   key={item.id}
-                  studentName={item.name}
+                  studentName={item.name.toUpperCase()}
                   profilePic={studentImages.images[item.profileImageID]}
                   currentAssignment={item.currentAssignment}
                   onPress={() =>
@@ -215,7 +215,7 @@ export class ClassMainScreen extends QcParentScreen {
             {
               studentsReady.length > 0 ? (
                 <View style={{ paddingTop: screenHeight * 0.025 }}>
-                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.bigTextStyleGreen]}>{strings.Ready}</Text>
+                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleGreen]}>{strings.Ready}</Text>
                 </View>
               ) : (
                   <View></View>
@@ -227,7 +227,7 @@ export class ClassMainScreen extends QcParentScreen {
               renderItem={({ item }) => (
                 <StudentCard
                   key={item.id}
-                  studentName={item.name}
+                  studentName={item.name.toUpperCase()}
                   profilePic={studentImages.images[item.profileImageID]}
                   currentAssignment={item.currentAssignment}
                   onPress={() =>
@@ -244,7 +244,7 @@ export class ClassMainScreen extends QcParentScreen {
             {
               studentsWorkingOnIt.length > 0 ? (
                 <View style={{ paddingTop: screenHeight * 0.025 }}>
-                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.bigTextStyleBlack]}>{strings.WorkingOnIt}</Text>
+                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStylePrimaryDark]}>{strings.WorkingOnIt}</Text>
                 </View>
               ) : (
                   <View></View>
@@ -256,7 +256,7 @@ export class ClassMainScreen extends QcParentScreen {
               renderItem={({ item }) => (
                 <StudentCard
                   key={item.id}
-                  studentName={item.name}
+                  studentName={item.name.toUpperCase()}
                   profilePic={studentImages.images[item.profileImageID]}
                   currentAssignment={item.currentAssignment}
                   onPress={() =>

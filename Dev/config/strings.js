@@ -7,10 +7,10 @@ export default {
 
     //--------------------- Student Main Screen ---------------------
     TotalAssignments: 'Total Assignments',
-    Ready: 'Ready',
-    WorkingOnIt: 'Working on it',
+    Ready: 'READY',
+    WorkingOnIt: 'WORKING ON IT',
     ClassAlreadyJoined: 'We know it\'s exciting to be in this class. But you can only join it once.',
-    NeedHelp: "Need help",
+    NeedHelp: "NEED HELP",
 
     //--------------------- Forgot Password Screen-------------------
     emailPlaceHolder: "Email",

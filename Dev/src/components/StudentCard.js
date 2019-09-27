@@ -37,7 +37,7 @@ export default class StudentCard extends FontLoadingComponent {
                                 <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{studentName}</Text>
                             </View>
                             <View style={{ marginBottom: screenWidth * 0.004 }}>
-                                <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{currentAssignment}</Text>
+                                <Text numberOfLines={1} style={fontStyles.mainTextStyleDarkGrey}>{currentAssignment}</Text>
                             </View>
                         </View>
                     ) : (
