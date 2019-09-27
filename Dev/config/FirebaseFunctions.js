@@ -254,7 +254,7 @@ export default class FirebaseFunctions {
     //This function will update the assignment status of a particular student within a class. It will
     //simply reverse whatever the property is at the moment (true --> false & vice verca). This property
     //is located within a student object that is within a class object
-    static async updateStudentAssignmentStatus(classID, studentID) {
+    static async updateStudentAssignmentStatus(classID, studentID, status) {
 
         let currentClass = await this.getClassByID(classID);
 
@@ -263,7 +263,7 @@ export default class FirebaseFunctions {
             return student.ID === studentID;
         });
 
-        arrayOfStudents[studentIndex].isReady = !(arrayOfStudents[studentIndex].isReady);
+        arrayOfStudents[studentIndex].isReadyEnum = status;
 
         await this.updateClassObject(classID, {
             students: arrayOfStudents
@@ -319,7 +319,7 @@ export default class FirebaseFunctions {
         });
         avgGrade /= arrayOfStudents[studentIndex].totalAssignments;
         arrayOfStudents[studentIndex].averageRating = avgGrade;
-        arrayOfStudents[studentIndex].isReady = true;
+        arrayOfStudents[studentIndex].isReadyEnum = "WORKING_ON_IT";
 
         await this.updateClassObject(classID, {
             students: arrayOfStudents
@@ -428,7 +428,7 @@ export default class FirebaseFunctions {
             attendanceHistory: {},
             averageRating: 0,
             currentAssignment: 'None',
-            isReady: false,
+            isReadyEnum: "WORKING_ON_IT",
             profileImageID: student.profileImageID,
             name: student.name,
             totalAssignments: 0
@@ -483,7 +483,7 @@ export default class FirebaseFunctions {
             attendanceHistory: {},
             averageRating: 0,
             currentAssignment: 'None',
-            isReady: true,
+            isReady: "WORKING_ON_IT",
             profileImageID: student.profileImageID,
             name: student.name,
             isManual: true,

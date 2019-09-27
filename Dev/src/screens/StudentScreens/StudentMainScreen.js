@@ -2,7 +2,7 @@
 //sign up or log in
 import React from 'react';
 import QcParentScreen from "../QcParentScreen";
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView, Modal, Alert, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView, Modal, Alert, Picker } from 'react-native';
 import studentImages from 'config/studentImages';
 import { Rating } from 'react-native-elements';
 import colors from 'config/colors'
@@ -18,6 +18,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
+import { CustomPicker } from 'react-native-custom-picker';
 import { screenHeight, screenWidth } from 'config/dimensions';
 
 class StudentMainScreen extends QcParentScreen {
@@ -29,7 +30,7 @@ class StudentMainScreen extends QcParentScreen {
         currentClass: '',
         currentClassID: '',
         thisClassInfo: '',
-        isReady: '',
+        isReadyEnum: '',
         modalVisible: false,
         classCode: '',
         classes: ''
@@ -90,7 +91,7 @@ class StudentMainScreen extends QcParentScreen {
             const thisClassInfo = currentClass.students.find((student) => {
                 return student.ID === userID;
             });
-            const { isReady } = thisClassInfo;
+            const { isReadyEnum } = thisClassInfo;
             const classes = await FirebaseFunctions.getClassesByIDs(student.classes);
             this.setState({
                 student,
@@ -98,7 +99,7 @@ class StudentMainScreen extends QcParentScreen {
                 currentClass,
                 currentClassID,
                 thisClassInfo,
-                isReady,
+                isReadyEnum,
                 isLoading: false,
                 isOpen: false,
                 classes
@@ -126,7 +127,7 @@ class StudentMainScreen extends QcParentScreen {
 
     //Renders the screen
     render() {
-        const { userID, isLoading, student, currentClassID, thisClassInfo, isReady, currentClass } = this.state;
+        const { userID, isLoading, student, currentClassID, thisClassInfo, isReadyEnum, currentClass } = this.state;
 
         if (isLoading === true) {
             return (
@@ -273,28 +274,61 @@ class StudentMainScreen extends QcParentScreen {
                             </View>
                         </View>
                     </View>
-                    <View style={[styles.middleView, { backgroundColor: (isReady === true ? colors.green : colors.red) }]}>
-                        <TouchableOpacity style={{ flex: 1 }} onPress={() => {
-                            //To-Do: Updates the state of the assignment & communicates it with the teacher
-                            if (thisClassInfo.currentAssignment !== "None") {
-                                FirebaseFunctions.updateStudentAssignmentStatus(currentClassID, userID);
-                                this.setState({ isReady: !isReady });
-                            } else {
-                                Alert.alert(strings.Whoops, strings.CurrentlyNoAssignment);
+                    <View style={{ backgroundColor: (isReadyEnum === "WORKING_ON_IT" ? colors.white : (isReadyEnum === "READY" ? colors.green : colors.red)) }}>
+                        <CustomPicker
+                            options={
+                                [
+                                    {
+                                        label: strings.WorkingOnIt,
+                                        value: "WORKING_ON_IT",
+                                        color: colors.white
+                                    },
+                                    {
+                                        label: strings.Ready,
+                                        value: "READY",
+                                        color: colors.green
+                                    },
+                                    {
+                                        label: strings.NeedHelp,
+                                        value: "NEED_HELP",
+                                        color: colors.red
+                                    }
+                                ]
                             }
-                        }}>
-                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
-                                <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
-                                <Text style={fontStyles.mainTextStyleBlack}>{strings.CurrentAssignment}</Text>
-                                <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
-                                <Text style={fontStyles.bigTextStyleBlack}>{thisClassInfo.currentAssignment}</Text>
-                            </View>
-                            <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
-                                <Text style={fontStyles.bigTextStyleBlack}>{"  "}</Text>
-                                <Text style={fontStyles.mainTextStylePrimaryDark}>{isReady ? strings.Ready : strings.NotReady}</Text>
-                            </View>
-                        </TouchableOpacity>
+                            onValueChange={value => {
+                                this.setState({ isReadyEnum: value.value });
+                                FirebaseFunctions.updateStudentAssignmentStatus(currentClassID, userID, value.value);
+                            }}
+                            getLabel={item => item.label}
+                            optionTemplate={(settings) => {
+                                const { item, getLabel } = settings;
+                                return (
+                                    <View style={styles.optionContainer}>
+                                        <View style={styles.innerContainer}>
+                                            <View style={[styles.box, { backgroundColor: item.color }]} />
+                                            <Text style={fontStyles.bigTextStyleBlack}>{getLabel(item)}</Text>
+                                        </View>
+                                    </View>
+                                )
+                            }}
+                            fieldTemplate={(settings) => {
+                                return (
+                                    <View style={styles.middleView}>
+                                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                            <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
+                                            <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
+                                            <Text style={fontStyles.mainTextStyleBlack}>{strings.CurrentAssignment}</Text>
+                                            <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
+                                            <Text style={fontStyles.bigTextStyleBlack}>{thisClassInfo.currentAssignment}</Text>
+                                        </View>
+                                        <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
+                                            <Text style={fontStyles.bigTextStyleBlack}>{"  "}</Text>
+                                            <Text style={fontStyles.mainTextStylePrimaryDark}>{isReadyEnum === "READY" ? strings.Ready : (isReadyEnum === "WORKING_ON_IT" ? strings.WorkingOnIt : strings.NeedHelp)}</Text>
+                                        </View>
+                                    </View>
+                                )
+                            }}
+                        />
                     </View>
                     <View style={styles.bottomView}>
                         <ScrollView style={styles.prevAssignments}>
@@ -377,6 +411,22 @@ const styles = StyleSheet.create({
         paddingLeft: screenWidth * 0.075,
         paddingBottom: screenHeight * 0.007,
     },
+    innerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: colors.grey,
+    },
+    optionContainer: {
+        backgroundColor: colors.grey,
+        height: screenHeight * 0.08,
+        justifyContent: 'center',
+        paddingLeft: screenWidth * 0.25,
+    },
+    box: {
+        width: screenWidth * 0.049,
+        height: screenHeight * 0.03,
+        marginRight: screenWidth * 0.024
+    },
     profileInfoBottom: {
         flexDirection: 'row',
         paddingHorizontal: screenWidth * 0.024,
@@ -390,7 +440,9 @@ const styles = StyleSheet.create({
         borderRadius: screenHeight * 0.1 / 2,
     },
     middleView: {
-        flex: 1,
+        height: screenHeight * 0.15,
+        borderWidth: 0.5,
+        borderColor: colors.grey
     },
     bottomView: {
         flex: 3

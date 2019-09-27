@@ -159,7 +159,9 @@ export class ClassMainScreen extends QcParentScreen {
 
 
     else {
-
+      const studentsNeedHelp = currentClass.students.filter((student) => student.isReadyEnum === "NEED_HELP");
+      const studentsReady = currentClass.students.filter((student) => student.isReadyEnum === "READY");
+      const studentsWorkingOnIt = currentClass.students.filter((student) => student.isReadyEnum === "WORKING_ON_IT");
       return (
         <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
           teacher={teacher}
@@ -181,8 +183,17 @@ export class ClassMainScreen extends QcParentScreen {
                 })}
               />
             </View>
+            {
+              studentsNeedHelp.length > 0 ? (
+                <View style={{ paddingTop: screenHeight * 0.025 }}>
+                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.bigTextStyleDarkRed]}>{strings.NeedHelp}</Text>
+                </View>
+              ) : (
+                  <View></View>
+                )
+            }
             <FlatList
-              data={currentClass.students}
+              data={studentsNeedHelp}
               keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
               renderItem={({ item }) => (
                 <StudentCard
@@ -198,11 +209,67 @@ export class ClassMainScreen extends QcParentScreen {
                       classID: currentClassID
                     })
                   }
-                  status={(item.isManual === true || item.currentAssignment === "None" ? null : (item.isReady === true ? strings.Ready : strings.NotReady))}
-                  background={(item.currentAssignment === 'None' || item.isManual === true) ? colors.white : (item.isReady === true ? colors.green : colors.red)}
+                  background={colors.red}
                 />
-              )}
-            />
+              )} />
+            {
+              studentsReady.length > 0 ? (
+                <View style={{ paddingTop: screenHeight * 0.025 }}>
+                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.bigTextStyleGreen]}>{strings.Ready}</Text>
+                </View>
+              ) : (
+                  <View></View>
+                )
+            }
+            <FlatList
+              data={studentsReady}
+              keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
+              renderItem={({ item }) => (
+                <StudentCard
+                  key={item.id}
+                  studentName={item.name}
+                  profilePic={studentImages.images[item.profileImageID]}
+                  currentAssignment={item.currentAssignment}
+                  onPress={() =>
+                    this.props.navigation.push("TeacherStudentProfile", {
+                      userID: userID,
+                      studentID: item.ID,
+                      currentClass: currentClass,
+                      classID: currentClassID
+                    })
+                  }
+                  background={colors.green}
+                />
+              )} />
+            {
+              studentsWorkingOnIt.length > 0 ? (
+                <View style={{ paddingTop: screenHeight * 0.025 }}>
+                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.bigTextStyleBlack]}>{strings.WorkingOnIt}</Text>
+                </View>
+              ) : (
+                  <View></View>
+                )
+            }
+            <FlatList
+              data={studentsWorkingOnIt}
+              keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
+              renderItem={({ item }) => (
+                <StudentCard
+                  key={item.id}
+                  studentName={item.name}
+                  profilePic={studentImages.images[item.profileImageID]}
+                  currentAssignment={item.currentAssignment}
+                  onPress={() =>
+                    this.props.navigation.push("TeacherStudentProfile", {
+                      userID: userID,
+                      studentID: item.ID,
+                      currentClass: currentClass,
+                      classID: currentClassID
+                    })
+                  }
+                  background={colors.white}
+                />
+              )} />
           </ScrollView>
         </SideMenu>
       );

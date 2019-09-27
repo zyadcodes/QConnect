@@ -74,6 +74,18 @@ export default StyleSheet.create({
         color: colors.black
     },
 
+    bigTextStyleGreen: {
+        fontFamily,
+        fontSize: bodyFontBigger,
+        color: colors.green
+    },
+
+    bigTextStyleDarkRed: {
+        fontFamily,
+        fontSize: bodyFontBigger,
+        color: colors.darkRed
+    },
+
     bigTextStyleDarkGrey: {
         fontFamily,
         fontSize: bodyFontBigger,
