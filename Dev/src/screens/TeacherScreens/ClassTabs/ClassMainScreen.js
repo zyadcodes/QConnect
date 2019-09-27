@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, StyleSheet, FlatList, View, Text, Image, Dimensions } from "react-native";
+import { ScrollView, StyleSheet, FlatList, View, Text, Image, PixelRatio, Alert } from "react-native";
 import StudentCard from "components/StudentCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages"
@@ -14,6 +14,7 @@ import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from "config/fontStyles";
+import { Icon } from 'react-native-elements';
 import { screenHeight, screenWidth } from 'config/dimensions';
 
 export class ClassMainScreen extends QcParentScreen {
@@ -25,7 +26,8 @@ export class ClassMainScreen extends QcParentScreen {
     currentClass: '',
     currentClassID: '',
     isOpen: false,
-    classes: ''
+    classes: '',
+    isEditing: false
   }
 
   async componentDidMount() {
@@ -45,6 +47,31 @@ export class ClassMainScreen extends QcParentScreen {
       currentClassID,
       classes
     });
+
+  }
+
+  removeStudent(studentID) {
+    Alert.alert(
+      strings.RemoveStudent,
+      strings.AreYouSureYouWantToRemoveStudent,
+      [
+        {
+          text: strings.Remove, onPress: () => {
+
+            //Removes the student from the database and updates the local state
+            let { currentClass, currentClassID } = this.state;
+            FirebaseFunctions.removeStudent(currentClassID, studentID);
+            let arrayOfClassStudents = currentClass.students;
+            let indexOfStudent = arrayOfClassStudents.findIndex((student) => {
+              return student.ID === studentID;
+            });
+            arrayOfClassStudents.splice(indexOfStudent, 1);
+            this.setState({ currentClass });
+          }
+        },
+        { text: strings.Cancel, style: 'cancel' },
+      ]
+    );
 
   }
 
@@ -125,12 +152,6 @@ export class ClassMainScreen extends QcParentScreen {
                 LeftIconName="navicon"
                 LeftOnPress={() => this.setState({ isOpen: true })}
                 Title={this.state.currentClass.name}
-                RightIconName="edit"
-                RightOnPress={() => this.props.navigation.push('ClassEdit', {
-                  classID: currentClassID,
-                  currentClass,
-                  userID: this.state.userID
-                })}
               />
             </View>
             <View style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'center' }}>
@@ -162,6 +183,7 @@ export class ClassMainScreen extends QcParentScreen {
       const studentsNeedHelp = currentClass.students.filter((student) => student.isReadyEnum === "NEED_HELP");
       const studentsReady = currentClass.students.filter((student) => student.isReadyEnum === "READY");
       const studentsWorkingOnIt = currentClass.students.filter((student) => student.isReadyEnum === "WORKING_ON_IT");
+      const { isEditing } = this.state;
       return (
         <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
           teacher={teacher}
@@ -175,17 +197,30 @@ export class ClassMainScreen extends QcParentScreen {
                 LeftIconName="navicon"
                 LeftOnPress={() => this.setState({ isOpen: true })}
                 Title={this.state.currentClass.name}
-                RightIconName="edit"
-                RightOnPress={() => this.props.navigation.push('ClassEdit', {
-                  classID: currentClassID,
-                  currentClass,
-                  userID: this.state.userID
-                })}
+                RightIconName={this.state.isEditing === false ? "edit" : null}
+                RightTextName={this.state.isEditing === true ? strings.Done : null}
+                RightOnPress={() => {
+                  const { isEditing } = this.state;
+                  this.setState({ isEditing: !isEditing })
+                }}
               />
             </View>
             {
+              isEditing === true ? (
+                <View style={styles.AddStudentButton}>
+                  <QcActionButton
+                    text={"+"}
+                    onPress={() => {
+                      //Goes to add students screen
+                    }} />
+                </View>
+              ) : (
+                <View style={styles.AddStudentButton}></View>
+              )
+            }
+            {
               studentsNeedHelp.length > 0 ? (
-                <View style={{ paddingTop: screenHeight * 0.025 }}>
+                <View>
                   <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.bigTextStyleDarkRed]}>{strings.NeedHelp}</Text>
                 </View>
               ) : (
@@ -197,7 +232,7 @@ export class ClassMainScreen extends QcParentScreen {
               keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
               renderItem={({ item }) => (
                 <StudentCard
-                  key={item.id}
+                  key={item.ID}
                   studentName={item.name}
                   profilePic={studentImages.images[item.profileImageID]}
                   currentAssignment={item.currentAssignment}
@@ -210,8 +245,14 @@ export class ClassMainScreen extends QcParentScreen {
                     })
                   }
                   background={colors.red}
-                />
-              )} />
+                  comp={isEditing === true ? (
+                    <Icon
+                      name='user-times'
+                      size={PixelRatio.get() * 9}
+                      type='font-awesome'
+                      color={colors.primaryDark} />) : (null)}
+                  compOnPress={() => { this.removeStudent(item.ID) }} />)}
+            />
             {
               studentsReady.length > 0 ? (
                 <View style={{ paddingTop: screenHeight * 0.025 }}>
@@ -239,7 +280,13 @@ export class ClassMainScreen extends QcParentScreen {
                     })
                   }
                   background={colors.green}
-                />
+                  comp={isEditing === true ? (
+                    <Icon
+                      name='user-times'
+                      size={PixelRatio.get() * 9}
+                      type='font-awesome'
+                      color={colors.primaryDark} />) : (null)}
+                  compOnPress={() => { this.removeStudent(item.ID) }} />
               )} />
             {
               studentsWorkingOnIt.length > 0 ? (
@@ -268,7 +315,13 @@ export class ClassMainScreen extends QcParentScreen {
                     })
                   }
                   background={colors.white}
-                />
+                  comp={isEditing === true ? (
+                    <Icon
+                      name='user-times'
+                      size={PixelRatio.get() * 9}
+                      type='font-awesome'
+                      color={colors.primaryDark} />) : (null)}
+                  compOnPress={() => { this.removeStudent(item.ID) }} />
               )} />
           </ScrollView>
         </SideMenu>
@@ -285,6 +338,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightGrey,
     flex: 3,
   },
+  AddStudentButton: {
+    height: screenHeight * 0.06,
+    alignItems: 'flex-end',
+    paddingRight: screenWidth * 0.025
+  }
 });
 
 export default ClassMainScreen;
