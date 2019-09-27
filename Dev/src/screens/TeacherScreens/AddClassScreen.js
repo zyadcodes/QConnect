@@ -9,10 +9,9 @@ import LoadingSpinner from 'components/LoadingSpinner';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import strings from 'config/strings';
 import TopBanner from 'components/TopBanner';
-import LeftNavPane from '../LeftNavPane';
-import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 export class AddClassScreen extends QcParentScreen {
 
@@ -116,86 +115,73 @@ export class AddClassScreen extends QcParentScreen {
       )
     }
     return (
-      <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
-        teacher={this.state.teacher}
-        userID={this.state.userID}
-        classes={this.state.classes}
-        edgeHitWidth={0}
-        navigation={this.props.navigation} />}>
-        <QCView style={screenStyle.container}>
-          <View style={{ flex: 1 }}>
-            <TopBanner
-              LeftIconName="navicon"
-              LeftOnPress={() => this.setState({ isOpen: true })}
-              Title={strings.AddNewClass} />
+      <QCView style={screenStyle.container}>
+        <View style={{ flex: 1 }}>
+          <TopBanner
+            LeftIconName="angle-left"
+            LeftOnPress={() => this.props.navigation.push("TeacherCurrentClass", {
+              userID: this.state.userID
+            })}
+            Title={strings.AddNewClass} />
 
-            <ImageSelectionModal
-              visible={this.state.modalVisible}
-              images={classImages.images}
-              cancelText={strings.Cancel}
-              setModalVisible={this.setModalVisible.bind(this)}
-              onImageSelected={this.onImageSelected.bind(this)}
+          <ImageSelectionModal
+            visible={this.state.modalVisible}
+            images={classImages.images}
+            cancelText={strings.Cancel}
+            setModalVisible={this.setModalVisible.bind(this)}
+            onImageSelected={this.onImageSelected.bind(this)}
+            screen={this.name}
+          />
+
+          <View style={styles.picContainer}>
+            <Image
+              style={styles.profilePic}
+              source={classImages.images[this.state.classImageId]}
+              ResizeMode="contain" />
+            <TouchableText
+              text={strings.EditClassImage}
+              onPress={() => this.setModalVisible(true)} />
+          </View>
+
+          <View style={styles.bottomContainer}>
+            <TextInput
+              style={styles.textInputStyle}
+              placeholder={strings.WriteClassNameHere}
+              onChangeText={classInput =>
+                this.setState({
+                  className: classInput
+                })
+              } />
+
+            <QcActionButton
+              text={strings.AddClass}
+              onPress={() => {
+                this.addNewClass();
+              }}
               screen={this.name}
             />
-
-            <View style={styles.picContainer}>
-              <Image
-                style={styles.profilePic}
-                source={classImages.images[this.state.classImageId]}
-                ResizeMode="contain" />
-              <TouchableText
-                text={strings.EditClassImage}
-                onPress={() => this.setModalVisible(true)} />
-            </View>
-
-            <View style={styles.bottomContainer}>
-              <TextInput
-                style={styles.textInputStyle}
-                placeholder={strings.WriteClassNameHere}
-                onChangeText={classInput =>
-                  this.setState({
-                    className: classInput
-                  })
-                }
-              />
-
-              <QcActionButton
-                text={strings.AddClass}
-                onPress={() => {
-                  this.addNewClass();
-                }}
-                screen={this.name}
-              />
-            </View>
           </View>
-        </QCView>
-      </SideMenu>
+        </View>
+      </QCView>
     );
   }
 }
 
 //Styles for the Teacher profile class
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    backgroundColor: colors.lightGrey,
-    flex: 1,
-  },
   picContainer: {
-    paddingTop: 25,
+    paddingVertical: screenHeight * 0.033,
     alignItems: 'center',
-    paddingBottom: 20,
-    marginTop: 10,
-    marginBottom: 10,
+    marginVertical: screenHeight * 0.015,
     backgroundColor: colors.white,
   },
   profilePic: {
-    width: 130,
-    height: 130,
-    borderRadius: 65,
+    width: screenHeight * 0.19,
+    height: screenHeight * 0.19,
+    borderRadius: screenHeight * 0.19 / 2,
   },
   bottomContainer: {
-    paddingTop: 15,
+    paddingTop: screenHeight * 0.022,
     flex: 1,
     backgroundColor: colors.white,
     alignItems: "center",
@@ -204,14 +190,12 @@ const styles = StyleSheet.create({
   textInputStyle: {
     backgroundColor: colors.lightGrey,
     borderColor: colors.darkGrey,
-    width: 250,
-    height: 40,
+    width: screenWidth * 0.61,
+    height: screenHeight * 0.056,
     textAlign: "center",
     alignItems: "center",
     justifyContent: "center"
   }
-
-}
-);
+});
 
 export default AddClassScreen;

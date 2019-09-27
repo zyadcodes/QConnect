@@ -2,8 +2,9 @@ import React from 'react'
 import { ListItem } from 'react-native-elements'
 import PropTypes from 'prop-types';
 import colors from "config/colors";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import FontLoadingComponent from './FontLoadingComponent';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 // a card that displays one menu item in the left navigation menu (hamburger menu)
 // params: 
@@ -15,7 +16,7 @@ class QcDrawerItem extends FontLoadingComponent {
     return (
       <ListItem
         backgroundColor={colors.white}
-        containerStyle={[styles.cardStyle,{backgroundColor:containerBg}]}
+        containerStyle={[styles.cardStyle, { backgroundColor: containerBg }]}
         title={title}
         fontFamily='regular'
         leftAvatar={image ? {
@@ -42,13 +43,15 @@ QcDrawerItem.propTypes = {
   onPress: PropTypes.func.isRequired,
   image: PropTypes.number,
   icon: PropTypes.string,
-  backColor:PropTypes.string
+  backColor: PropTypes.string
 }
 
 //Styles that control the look of the card, and everything within it
 const styles = StyleSheet.create({
   cardStyle: {
-    margin: 5,
+    marginTop: screenHeight * 0.00558,
+    marginBottom: screenHeight * 0.00558,
+    width: screenWidth * 0.67,
     borderBottomWidth: 1,
     borderBottomColor: colors.lightGrey,
   },

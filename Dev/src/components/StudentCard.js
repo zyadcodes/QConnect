@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { TouchableOpacity, Text, StyleSheet, Image, View, Dimensions } from 'react-native';
 import colors from 'config/colors'
 import FontLoadingComponent from './FontLoadingComponent';
+import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 /*Class represents the student card that will show up in the list of students
 *from the teachers view.
@@ -14,7 +16,7 @@ export default class StudentCard extends FontLoadingComponent {
 
     render() {
         //The properties of the component.
-        const { studentName, profilePic, currentAssignment, background, onPress, comp, compOnPress } = this.props;
+        const { studentName, profilePic, currentAssignment, background, onPress, comp, compOnPress, status } = this.props;
         return (
             //The style of the card as a whole. Inside the card, you have the image,
             //student name, and student assignment
@@ -30,13 +32,17 @@ export default class StudentCard extends FontLoadingComponent {
                 <View
                     style={styles.infoStyle}>
                     {currentAssignment ? (
-                        <View>
-                            <Text numberOfLines={1} style={styles.studentNameStyle}>{studentName}</Text>
-                            <Text numberOfLines={1} style={styles.assignmentStyle}>{currentAssignment}</Text>
+                        <View style={{ marginLeft: screenWidth * 0.05 }}>
+                            <View style={{ marginBottom: screenWidth * 0.004 }}>
+                                <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{studentName}</Text>
+                            </View>
+                            <View style={{ marginBottom: screenWidth * 0.004 }}>
+                                <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{currentAssignment}</Text>
+                            </View>
                         </View>
                     ) : (
-                            <View>
-                                <Text numberOfLines={1} style={styles.studentNameStyle}>{studentName}</Text>
+                            <View style={{ marginLeft: screenWidth * 0.05 }}>
+                                <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{studentName}</Text>
                             </View>
                         )}
                 </View>
@@ -46,8 +52,8 @@ export default class StudentCard extends FontLoadingComponent {
                             <TouchableOpacity style={{
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                height: 100,
-                                width: Dimensions.get('window').width * 0.2
+                                height: screenHeight * 0.2,
+                                width: screenWidth * 0.2
                             }}
                                 onPress={() => { compOnPress() }}>
                                 {comp}
@@ -79,17 +85,17 @@ StudentCard.propTypes = {
 const styles = StyleSheet.create({
     cardStyle: {
         flexDirection: 'row',
-        marginRight: 7,
-        height: 100,
+        marginRight: screenWidth * 0.017,
+        height: screenHeight * 0.15,
         alignItems: 'center',
-        marginLeft: 7,
-        marginTop: 10,
+        marginLeft: screenWidth * 0.017,
+        marginTop: screenHeight * 0.025,
         fontFamily: 'Montserrat-Regular',
     },
     removeStudentStyle: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginRight: 20,
+        marginRight: screenWidth * 0.05,
         flex: 1
     },
     infoStyle: {
@@ -99,21 +105,9 @@ const styles = StyleSheet.create({
         flex: 4
     },
     profilePicStyle: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        marginLeft: 20
+        width: screenWidth * 0.15,
+        height: screenWidth * 0.15,
+        borderRadius: screenWidth * 0.075,
+        marginLeft: screenWidth * 0.05
     },
-    studentNameStyle: {
-        fontFamily: 'Montserrat-Regular',
-        fontSize: 20,
-        color: colors.black,
-        marginLeft: 20
-    },
-    assignmentStyle: {
-        fontFamily: 'Montserrat-Regular',
-        fontSize: 16,
-        color: colors.darkGrey,
-        marginLeft: 20
-    }
 });

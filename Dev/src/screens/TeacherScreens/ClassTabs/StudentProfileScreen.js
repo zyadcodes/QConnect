@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet, ScrollView, FlatList, TouchableHighlight, TouchableOpacity, Alert } from 'react-native';
+import { View, Image, Text, StyleSheet, ScrollView, FlatList, TouchableHighlight, TouchableOpacity, Alert, Dimensions } from 'react-native';
 import colors from 'config/colors';
 import { Rating } from 'react-native-elements';
 import strings from 'config/strings';
@@ -10,6 +10,8 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 class StudentProfileScreen extends QcParentScreen {
 
@@ -105,6 +107,7 @@ class StudentProfileScreen extends QcParentScreen {
           visible={this.state.isDialogVisible}
           onSubmit={(inputText) =>
             this.editAssignment(inputText)}
+          assignment={currentAssignment}
           onCancel={() => this.setDialogueVisible(false)}
         />
         <View style={styles.studentInfoContainer}>
@@ -112,18 +115,18 @@ class StudentProfileScreen extends QcParentScreen {
           <View style={styles.profileInfo}>
 
             <View style={styles.profileInfoTop}>
-              <View style={{ width: 100 }}>
+              <View style={{ width: screenWidth * 0.24 }}>
 
               </View>
               <View style={styles.profileInfoTopRight}>
-                <Text numberOfLines={1} style={styles.bigText}>{name.toUpperCase()}</Text>
-                <View style={{ flexDirection: 'row', height: 25 }}>
+                <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{name.toUpperCase()}</Text>
+                <View style={{ flexDirection: 'row', height: 0.037 * screenHeight }}>
                   <Rating readonly={true} startingValue={averageRating} imageSize={25} />
                   <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-                    <Text style={styles.ratingText}>{averageRating === 0 ? "" : parseFloat(averageRating).toFixed(1)}</Text>
+                    <Text style={fontStyles.bigTextStyleDarkGrey}>{averageRating === 0 ? "" : parseFloat(averageRating).toFixed(1)}</Text>
                   </View>
                 </View>
-                <Text style={styles.ratingDescText}>{this.getRatingCaption()}</Text>
+                <Text style={fontStyles.mainTextStylePrimaryDark}>{this.getRatingCaption()}</Text>
               </View>
             </View>
 
@@ -133,12 +136,12 @@ class StudentProfileScreen extends QcParentScreen {
                   style={styles.profilePic}
                   source={studentImages.images[classStudent.profileImageID]} />
               </View>
-              <View style={{ flex: 1, flexDirection: 'column', height: 59 }}>
-                <Text numberOfLines={1} style={styles.assignmentTextLarge}>{this.state.currentAssignment.toUpperCase()}</Text>
+              <View style={{ flex: 1, flexDirection: 'column', height: 0.086 * screenHeight, paddingLeft: screenWidth * 0.05 }}>
+                <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{this.state.currentAssignment.toUpperCase()}</Text>
                 <View style={{ flexDirection: 'row' }}>
                   <TouchableHighlight
                     onPress={() => { this.setState({ isDialogVisible: true }) }} >
-                    <Text style={styles.assignmentActionText}>{strings.EditAssignment}</Text>
+                    <Text style={fontStyles.mainTextStylePrimaryDark}>{strings.EditAssignment}</Text>
                   </TouchableHighlight>
 
                   {hasCurrentAssignment ? <TouchableHighlight onPress={() =>
@@ -151,7 +154,9 @@ class StudentProfileScreen extends QcParentScreen {
                       newAssignment: true,
                       readOnly: false,
                     })} >
-                    <Text style={styles.assignmentActionText}>{strings.Grade}</Text>
+                    <View style={{ paddingLeft: screenWidth * 0.02 }}>
+                      <Text style={fontStyles.mainTextStylePrimaryDark}>{strings.Grade}</Text>
+                    </View>
                   </TouchableHighlight> : <View />}
                 </View>
               </View>
@@ -183,22 +188,22 @@ class StudentProfileScreen extends QcParentScreen {
                   <View style={styles.prevAssignmentCard} key={index}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-start' }}>
-                        <Text style={[styles.subText]}>{item.completionDate}</Text>
+                        <Text style={fontStyles.mainTextStylePrimaryDark}>{item.completionDate}</Text>
                       </View>
                       <View style={{ alignItems: 'center', justifyContent: 'center', flex: 3 }}>
-                        <Text numberOfLines={1} style={styles.prevAssignmentTitleText}>{item.name}</Text>
+                        <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{item.name}</Text>
                       </View>
                       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end' }}>
                         <Rating readonly={true} startingValue={item.evaluation.rating} imageSize={17} />
                       </View>
                     </View>
                     {item.evaluation.notes ?
-                      <Text numberOfLines={2} style={styles.notesText}>{"Notes: " + item.evaluation.notes}</Text>
+                      <Text numberOfLines={2} style={fontStyles.smallTextStyleBlack}>{strings.NotesColon + item.evaluation.notes}</Text>
                       : <View />
                     }
                     {item.evaluation.improvementAreas && item.evaluation.improvementAreas.length > 0 ?
-                      <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                        <Text style={{ height: 20, marginTop: 5 }}>{strings.ImprovementAreas}</Text>
+                      <View style={{ flexDirection: 'row', justifyContent: 'flex-start', height: screenHeight * 0.03 }}>
+                        <Text style={fontStyles.smallTextStyleBlack}>{strings.ImprovementAreas}</Text>
                         {item.evaluation.improvementAreas.map((tag) => { return (<Text key={tag} style={styles.corner}>{tag}</Text>) })}
                       </View>
                       : <View />
@@ -216,67 +221,8 @@ class StudentProfileScreen extends QcParentScreen {
 
 //styles for the entire page
 const styles = StyleSheet.create({
-  bigText: {
-    fontSize: 24,
-    fontFamily: 'Montserrat-Regular',
-  },
-  subText: {
-    fontSize: 16,
-    fontFamily: 'Montserrat-Regular',
-    color: colors.primaryDark
-  },
-  ratingDescText: {
-    fontSize: 18,
-    fontFamily: 'Montserrat-Light',
-    color: colors.primaryDark
-  },
-  assignmentTextSmall: {
-    fontSize: 14,
-    fontFamily: 'Montserrat-Regular',
-    color: colors.black,
-    paddingTop: 2
-  },
-  assignmentTextLarge: {
-    fontSize: 20,
-    fontFamily: 'Montserrat-Regular',
-    color: colors.darkGrey,
-    paddingLeft: 10,
-    paddingRight: 2,
-    paddingTop: 5,
-    textAlign: 'left'
-  },
-  ratingText: {
-    fontSize: 24,
-    fontFamily: 'Montserrat-Regular',
-    color: colors.darkGrey,
-    marginLeft: 10,
-  },
-  notesText: {
-    fontSize: 14,
-    fontFamily: 'Montserrat-Regular',
-    color: colors.black
-  },
-  assignmentActionText: {
-    fontSize: 16,
-    fontFamily: 'Montserrat-Regular',
-    color: colors.primaryDark,
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  prevAssignmentTitleText: {
-    fontFamily: 'Montserrat-Regular',
-    fontSize: 19,
-    flex: 1,
-    paddingLeft: 2
-  },
-  container: {
-    flexDirection: "column",
-    backgroundColor: colors.lightGrey,
-    flex: 1
-  },
   studentInfoContainer: {
-    marginTop: 10,
-    marginBottom: 10,
+    marginVertical: 0.015 * screenHeight,
     backgroundColor: colors.white,
     flex: 1,
     borderColor: colors.lightGrey,
@@ -286,74 +232,62 @@ const styles = StyleSheet.create({
   profileInfo: {
     flexDirection: 'column',
     backgroundColor: colors.white,
-    marginBottom: 10
-  },
-  nonButtons: {
-    flexDirection: 'column'
+    marginBottom: 0.015 * screenHeight
   },
   corner: {
     borderColor: '#D0D0D0',
     borderWidth: 1,
-    borderRadius: 3,
-    height: 20,
+    borderRadius: screenHeight * 0.004,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingLeft: 5,
-    paddingRight: 5,
-    marginRight: 5,
-    marginTop: 5,
+    paddingHorizontal: screenWidth * 0.012,
+    marginRight: screenHeight * 0.012,
+    marginTop: screenHeight * 0.004,
   },
   profileInfoTop: {
-    paddingHorizontal: 10,
-    paddingTop: 10,
+    paddingHorizontal: screenWidth * 0.024,
+    paddingTop: screenHeight * 0.015,
     flexDirection: 'row',
     borderBottomColor: colors.lightGrey,
     borderBottomWidth: 1,
   },
   profileInfoTopLeft: {
     flexDirection: 'column',
-    marginLeft: 3,
-    marginTop: -66,
+    marginLeft: 0.007 * screenWidth,
+    marginTop: -0.097 * screenHeight,
     alignItems: 'center',
-    width: 100
+    width: 0.24 * screenWidth
   },
   profileInfoTopRight: {
     flexDirection: 'column',
     alignItems: 'flex-start',
-    paddingLeft: 10,
-    paddingBottom: 5,
+    paddingLeft: screenWidth * 0.05,
+    paddingBottom: 0.007 * screenHeight,
   },
   profileInfoBottom: {
     flexDirection: 'row',
-    paddingHorizontal: 10,
+    paddingHorizontal: 0.024 * screenWidth,
     borderBottomColor: colors.grey,
     borderBottomWidth: 1
   },
   profilePic: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    paddingBottom: 10
-  },
-  buttons: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: 0.15 * screenHeight,
+    height: 0.15 * screenHeight,
+    borderRadius: 0.075 * screenHeight,
+    paddingBottom: 0.015 * screenHeight
   },
   prevAssignments: {
     flexDirection: 'column',
     backgroundColor: colors.white,
-    marginLeft: 7,
-    marginRight: 7,
-
-
+    marginHorizontal: 0.017 * screenWidth
   },
   prevAssignmentCard: {
     flexDirection: 'column',
     borderBottomColor: colors.lightGrey,
     borderBottomWidth: 1,
-    height: 90,
-    padding: 5,
+    height: 0.13 * screenHeight,
+    paddingHorizontal: screenWidth * 0.012,
+    paddingVertical: screenHeight * 0.007
   },
 });
 

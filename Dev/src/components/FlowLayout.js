@@ -8,8 +8,8 @@ import colors from 'config/colors';
 import strings from 'config/strings';
 import QcActionButton from './QcActionButton';
 import { Badge } from 'react-native-elements';
-
-var { width } = Dimensions.get('window');
+import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 class FlowView extends Component {
 
@@ -75,13 +75,13 @@ class FlowView extends Component {
 						}
 					}}>
 					<View style={[styles.corner, { backgroundColor: this.props.backgroundColor ? this.props.backgroundColor : this._backgoundColor() }]}>
-						<Text style={[styles.text, { color: this._textColor() }]}>{this.props.text}</Text>
+						<Text style={[fontStyles.mainTextStyleBlack, { textAlign: 'center', color: this._textColor() }]}>{this.props.text}</Text>
 					</View>
 					{
 						this.props.isBadgeVisible ? (
 							<Badge
 								value={strings.MinusSign}
-								badgeStyle={{ width: 20, height: 20, borderRadius: 10, backgroundColor: colors.red }}
+								badgeStyle={{ width: 0.03 * screenHeight, height: 0.03 * screenHeight, borderRadius: 0.015 * screenHeight, backgroundColor: colors.red }}
 								textStyle={styles.minusText}
 								containerStyle={{ position: 'absolute', top: 2, right: 2 }}
 							/>
@@ -121,8 +121,8 @@ export default class FlowLayout extends Component {
 			selectedState: (this.props.initialSelectedValues.length === 0 ? (
 				new Array(this.props.dataValue.length).fill(false)
 			) : (
-				new Array(this.props.initialSelectedValues.length).fill(true)
-			)),
+					new Array(this.props.initialSelectedValues.length).fill(true)
+				)),
 			isBadgeVisible: false,
 			isNewAddition: false,
 			newImprovementText: ""
@@ -305,20 +305,19 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.white,
 		alignItems: 'center',
 		justifyContent: 'center',
-		height: Dimensions.get('window').height - 200,
+		height: screenHeight * 0.707,
 		flexDirection: 'column',
-		marginTop: 100,
+		marginTop: screenHeight * 0.15,
 		borderWidth: 1,
 		borderRadius: 2,
 		borderColor: colors.grey,
 		borderBottomWidth: 1,
 		shadowColor: colors.darkGrey,
-		shadowOffset: { width: 0, height: 2 },
+		shadowOffset: { width: 0, height: 0.003 * screenHeight },
 		shadowOpacity: 0.8,
 		shadowRadius: 3,
-		elevation: 2,
-		marginLeft: 20,
-		marginRight: 20,
+		elevation: 0.003 * screenHeight,
+		marginHorizontal: screenWidth * 0.05
 	},
 	textInputStyle: {
 		backgroundColor: colors.lightGrey,
@@ -328,37 +327,28 @@ const styles = StyleSheet.create({
 		borderColor: colors.grey,
 		borderWidth: 1 / PixelRatio.get(),
 		borderRadius: 5,
-		height: Dimensions.get('window').height * 0.065,
+		height: screenHeight * 0.065,
 		justifyContent: 'center',
 		alignItems: 'center',
-		marginRight: 10,
-		marginTop: 10,
+		marginRight: 0.024 * screenWidth,
+		marginTop: 0.015 * screenHeight,
 	},
 	corner: {
 		borderColor: colors.grey,
 		borderWidth: 1 / PixelRatio.get(),
 		borderRadius: 5,
-		height: Dimensions.get('window').height * 0.065,
+		height: screenHeight * 0.065,
 		justifyContent: 'center',
 		alignItems: 'center',
-		paddingLeft: 10,
-		paddingRight: 10,
-		marginRight: 10,
-		marginTop: 10,
-	},
-	text: {
-		fontSize: 16,
-		textAlign: 'center',
-	},
-	minusText: {
-		fontSize: 10,
-		color: colors.white
+		paddingHorizontal: 0.024 * screenWidth,
+		marginRight: 0.024 * screenWidth,
+		marginTop: 0.015 * screenHeight,
 	},
 	container: {
 		flexDirection: 'row',
 		flexWrap: 'wrap',
-		marginHorizontal: 15,
-		width: width - 40,
+		marginHorizontal: 0.036 * screenWidth,
+		width: screenWidth * 0.9,
 	},
 
 });

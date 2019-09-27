@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import colors from 'config/colors'
+import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 class TopBanner extends FontLoadingComponent {
     render() {
@@ -14,42 +16,36 @@ class TopBanner extends FontLoadingComponent {
             RightIconName, RightTextName, RightOnPress } = this.props;
 
         return (
-            <View>
-                {this.state.fontLoaded ? (
-                    <View style={styles.entireTopView}>
-                        <View style={{flex: 0.5}}/>
-                        <View style={styles.topLeftView}  >
-                            <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: 100, justifyContent: 'flex-start', alignItems: 'center' }} onPress={LeftOnPress ? () => { LeftOnPress() } : () => {}} >
-                                <Icon
-                                    name={LeftIconName}
-                                    type="font-awesome"
-                                />
-                                <Text style={styles.leftText}
-                                    onPress={LeftOnPress ? () => { LeftOnPress() } : () => {}}>{LeftTextName}</Text>
-                            </TouchableOpacity>
-                        </View>
+            <View style={styles.entireTopView}>
+                <View style={{ flex: 0.5 }} />
+                <View style={styles.topLeftView}  >
+                    <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: screenHeight * 0.15, justifyContent: 'flex-start', alignItems: 'center' }} onPress={LeftOnPress ? () => { LeftOnPress() } : () => { }} >
+                        <Icon
+                            name={LeftIconName}
+                            type="font-awesome"
+                        />
+                        <Text style={fontStyles.mainTextStyleBlack}
+                            onPress={LeftOnPress ? () => { LeftOnPress() } : () => { }}>{LeftTextName}</Text>
+                    </TouchableOpacity>
+                </View>
 
-                        <View style={styles.topMiddleView}>
-                            <Text style={styles.titleStyle}>{Title}</Text>
-                        </View>
+                <View style={styles.topMiddleView}>
+                    <Text style={fontStyles.bigTextStylePrimaryDark}>{Title}</Text>
+                </View>
 
-                        <View style={styles.topRightView} >
-                            <TouchableOpacity style={{ flex: 1, flexDirection: 'row',  height: 100, justifyContent: 'flex-end', alignItems: 'center' }} onPress={RightOnPress ? () => { RightOnPress() } : () => {}}>
-                                <Icon
-                                    name={RightIconName}
-                                    type="font-awesome"
-                                />
-                                <Text style={styles.rightText}
-                                    onPress={RightOnPress ? () => { RightOnPress() } : () => {}}>{RightTextName}</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{flex: 0.5}}/>
-                    </View>
-                ) : (
-                        <View></View>
-                    )}
+                <View style={styles.topRightView} >
+                    <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: screenHeight * 0.15, justifyContent: 'flex-end', alignItems: 'center' }} onPress={RightOnPress ? () => { RightOnPress() } : () => { }}>
+                        <Icon
+                            name={RightIconName}
+                            type="font-awesome"
+                        />
+                        <Text style={fontStyles.mainTextStyleBlack}
+                            onPress={RightOnPress ? () => { RightOnPress() } : () => { }}>{RightTextName}</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={{ flex: 0.5 }} />
             </View>
-        );
+        )
     }
 }
 
@@ -66,38 +62,32 @@ TopBanner.propTypes = {
 
 const styles = StyleSheet.create({
     entireTopView: {
-        height: 83.5,
+        height: screenHeight * 0.115,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'stretch',
+        alignItems: 'center',
         backgroundColor: colors.white,
         borderBottomWidth: 0.25,
         borderBottomColor: colors.black,
     },
     topLeftView: {
-        flex: 1.5
+        flex: 1.5,
+        paddingTop: screenHeight * 0.035,
+        paddingBottom: screenHeight * 0.01
     },
     topMiddleView: {
-        height: 100,
         justifyContent: 'center',
         alignSelf: 'center',
         alignItems: 'center',
-        flex: 10
+        flex: 10,
+        paddingTop: screenHeight * 0.035,
+        paddingBottom: screenHeight * 0.01
     },
     topRightView: {
         flex: 1.5,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        paddingTop: screenHeight * 0.035,
+        paddingBottom: screenHeight * 0.01
     },
-    titleStyle: {
-        fontSize: 22,
-        color: colors.primaryDark,
-        fontFamily: 'Montserrat-Regular',
-    },
-    leftText: {
-        fontSize: 15,
-    },
-    rightText: {
-        fontSize: 15,
-    }
 });
 export default TopBanner;

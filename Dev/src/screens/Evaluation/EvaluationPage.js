@@ -12,6 +12,8 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import fontStyles from 'config/fontStyles';
+import { screenWidth, screenHeight } from 'config/dimensions';
 
 
 export class EvaluationPage extends QcParentScreen {
@@ -169,12 +171,12 @@ export class EvaluationPage extends QcParentScreen {
             <View style={styles.section}>
               <Image source={studentImages.images[profileImageID]}
                 style={styles.profilePic} />
-              <Text style={styles.titleText}>{classStudent.name}</Text>
-              <Text style={styles.subTitleText}>{assignmentName}</Text>
+              <Text style={fontStyles.bigTextStyleDarkGrey}>{classStudent.name}</Text>
+              <Text style={fontStyles.mainTextStylePrimaryDark}>{assignmentName}</Text>
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.mainQuestionText}>{headerTitle}</Text>
+              <Text style={fontStyles.mainTextStyleDarkGrey}>{headerTitle}</Text>
               <View style={{ paddingVertical: 15 }}>
                 <AirbnbRating
                   defaultRating={rating}
@@ -190,7 +192,7 @@ export class EvaluationPage extends QcParentScreen {
               <TextInput
                 style={styles.notesStyle}
                 multiline={true}
-                height={100}
+                height={screenHeight * 0.15}
                 onChangeText={(teacherNotes) => this.setState({
                   notes: teacherNotes
                 })}
@@ -202,7 +204,7 @@ export class EvaluationPage extends QcParentScreen {
                 value={notes}
               />
               <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                <Text style={[{ flex: 1 }, styles.subCategoryText]}>{strings.ImprovementAreas}</Text>
+                <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.ImprovementAreas}</Text>
               </View>
               <FlowLayout ref="flow"
                 dataValue={improvementAreas}
@@ -233,72 +235,34 @@ export class EvaluationPage extends QcParentScreen {
 
 //--------------- Styles used on this screen -------------------
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    backgroundColor: colors.lightGrey,
-    flex: 1,
-    justifyContent: "flex-end"
-  },
   evaluationContainer: {
     flexDirection: 'column',
-    paddingTop: 25,
-    paddingBottom: 25,
+    paddingTop: screenHeight * 0.048,
+    paddingBottom: screenHeight * 0.037,
     alignItems: 'center',
-    marginTop: 30,
-    marginBottom: 10,
-    marginHorizontal: 10,
+    marginTop: screenHeight * 0.044,
+    marginBottom: screenHeight * 0.015,
+    marginHorizontal: screenWidth * 0.024,
     backgroundColor: colors.white,
     borderColor: colors.lightGrey,
-    borderWidth: 1,
+    borderWidth: screenWidth * 0.0025,
   },
   section: {
     alignItems: "center",
     alignSelf: 'stretch',
-    padding: 10
+    paddingTop: screenHeight * 0.015,
+    paddingBottom: screenHeight * 0.015,
+    paddingLeft: screenWidth * 0.024,
+    paddingRight: screenWidth * 0.024
   },
   profilePic: {
-    width: 65,
-    height: 65,
-    borderRadius: 35,
-    marginTop: -65,
-    marginLeft: 10,
+    width: screenHeight * 0.1,
+    height: screenHeight * 0.1,
+    borderRadius: screenHeight * 0.05,
+    marginTop: screenHeight * -0.1,
+    marginLeft: screenWidth * 0.024,
     borderColor: colors.white,
-    borderWidth: 3
-  },
-  titleText: {
-    color: colors.darkGrey,
-    fontSize: 20
-  },
-  subTitleText: {
-    color: colors.primaryDark,
-    fontSize: 18
-  },
-  mainQuestionText: {
-    color: colors.darkGrey,
-    fontSize: 16,
-    marginBottom: 10
-  },
-  box: {
-    borderWidth: 1,
-    borderColor: colors.lightGrey,
-    alignItems: "center",
-    alignSelf: 'stretch',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    marginHorizontal: 10,
-    marginVertical: 5,
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.18,
-    shadowRadius: 1.00,
-    elevation: 1,
-  },
-  subCategoryText: {
-    color: colors.darkGrey,
-    fontSize: 16,
-    paddingVertical: 4
+    borderWidth: screenWidth * 0.007
   },
   buttonsContainer: {
     alignItems: 'center',
@@ -309,7 +273,10 @@ const styles = StyleSheet.create({
   notesStyle: {
     backgroundColor: colors.lightGrey,
     alignSelf: 'stretch',
-    margin: 5,
+    marginTop: screenHeight * 0.007,
+    marginBottom: screenHeight * 0.007,
+    marginLeft: screenWidth * 0.012,
+    marginRight: screenWidth * 0.012,
     textAlignVertical: 'top'
   },
   filler: {

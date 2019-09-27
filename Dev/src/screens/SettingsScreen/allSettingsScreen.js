@@ -1,6 +1,6 @@
 //Screen which will provide all of the possible settings for the user to click on
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Linking, Dimensions } from 'react-native';
 import colors from 'config/colors';
 import { Icon } from 'react-native-elements';
 import strings from 'config/strings';
@@ -12,6 +12,8 @@ import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
 import TopBanner from 'components/TopBanner';
 import screenStyle from 'config/screenStyle';
+import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 
 export default class AllSettingsScreen extends QcParentScreen {
@@ -23,6 +25,7 @@ export default class AllSettingsScreen extends QcParentScreen {
 
     //Sets the screen for firebase analytics
     componentDidMount() {
+
 
         FirebaseFunctions.setCurrentScreen("All Settings Screen", "AllSettingsScreen");
 
@@ -37,37 +40,43 @@ export default class AllSettingsScreen extends QcParentScreen {
                         LeftIconName="navicon"
                         LeftOnPress={() => this.setState({ isOpen: true })}
                         Title={strings.Settings} />
-                    <TouchableOpacity style={[styles.cardStyle, { marginTop: 25 }]} onPress={() => {
+                    <TouchableOpacity style={[styles.cardStyle, { marginTop: screenHeight * 0.03 }]} onPress={() => {
                         this.props.navigation.push("CreditsScreen");
                     }}>
-                        <Text style={styles.textStyle}>{strings.Credits}</Text>
+                        <View style={{ marginLeft: screenWidth * 0.017, }}>
+                            <Text style={fontStyles.bigTextStyleBlack}>{strings.Credits}</Text>
+                        </View>
                         <Icon
                             name='angle-right'
                             type='font-awesome'
-                            iconStyle={{ marginRight: 20 }}
+                            iconStyle={{ marginRight: screenWidth * 0.05 }}
                             color={colors.primaryDark} />
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.cardStyle} onPress={() => {
                         Linking.openURL('https://app.termly.io/document/privacy-policy/d3e756e4-a763-4095-9ec1-3965b609d015')
                     }}>
-                        <Text style={styles.textStyle}>{strings.PrivacyPolicy}</Text>
+                        <View style={{ marginLeft: screenWidth * 0.017 }}>
+                            <Text style={fontStyles.bigTextStyleBlack}>{strings.PrivacyPolicy}</Text>
+                        </View>
                         <Icon
                             name='angle-right'
                             type='font-awesome'
-                            iconStyle={{ marginRight: 20 }}
+                            iconStyle={{ marginRight: screenWidth * 0.05 }}
                             color={colors.primaryDark} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={[styles.cardStyle, { marginTop: 25 }]} onPress={async () => {
+                    <TouchableOpacity style={[styles.cardStyle, { marginTop: screenHeight * 0.03 }]} onPress={async () => {
                         await FirebaseFunctions.logOut();
                         this.props.navigation.push("FirstScreenLoader");
                     }}>
-                        <Text style={styles.textStyle}>{strings.LogOut}</Text>
+                        <View style={{ marginLeft: screenWidth * 0.017 }}>
+                            <Text style={fontStyles.bigTextStyleBlack}>{strings.LogOut}</Text>
+                        </View>
                         <Icon
                             name='angle-right'
                             type='font-awesome'
-                            iconStyle={{ marginRight: 20 }}
+                            iconStyle={{ marginRight: screenWidth * 0.05 }}
                             color={colors.primaryDark} />
                     </TouchableOpacity>
                 </View>
@@ -105,19 +114,11 @@ const styles = StyleSheet.create({
     },
     cardStyle: {
         flexDirection: 'row',
-        marginRight: 7,
-        height: 50,
+        height: screenHeight * 0.055,
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginLeft: 7,
-        marginTop: 30,
+        marginTop: screenHeight * 0.033,
         fontFamily: 'Montserrat-Regular',
         backgroundColor: colors.white
-    },
-    textStyle: {
-        fontFamily: 'Montserrat-Regular',
-        fontSize: 20,
-        color: colors.black,
-        marginLeft: 20
     },
 })

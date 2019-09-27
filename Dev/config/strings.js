@@ -2,20 +2,19 @@
 export default {
 
     //---------------------  App info ---------------------------
-    AppTitle: 'QuranConnect',
+    AppTitle: 'Quran Connect',
     AppSubTitle: 'Serving your passion for the Quran',
 
     //--------------------- Student Main Screen ---------------------
     TotalAssignments: 'Total Assignments',
     Ready: 'Ready',
-    NotReady: 'Not Ready',
+    WorkingOnIt: 'Working on it',
+    ClassAlreadyJoined: 'We know it\'s exciting to be in this class. But you can only join it once.',
+    NeedHelp: "Need help",
 
     //--------------------- Forgot Password Screen-------------------
     emailPlaceHolder: "Email",
     Submit: 'Submit',
-    AskForEmail: 'Please Enter Email Here',
-    EnterCode: 'Code',
-    EmailError: 'Please Enter Email',
     PleaseEnterYourEmailAddress: 'Please enter your email address',
     EmailErrorHeader: "Error with Email",
     NewPasswordPlaceholder: 'New Password',
@@ -47,14 +46,16 @@ export default {
     IAmAStudent: 'I am a student',
     Login: "LOGIN",
     IncorrectInfo: 'Incorrect username or password',
+    CreateAccount: 'Create Account',
+    ForgotPasswordQuestion: 'Forgot Password?',
 
     //--------------------- Teacher Welcome Screen ---------------------
     YourProfileHasBeenSaved: 'Your profile has been saved',
     Cancel: 'Cancel',
     TeacherWelcomeMessage: 'Quran teachers are very dear to our hearts. It is our great honor and pleasure to serve your dedication to the holy book.',
     Save: 'Save',
-    CreateAccount: 'CREATE ACCOUNT',
     AuthorizationCode: "Authorization Code",
+    Information: 'Information',
     Confirm: "Confirm",
     ConfirmAccount: "Confirm Account",
     ErrorSigningUp: "Error signing up",
@@ -74,6 +75,7 @@ export default {
     EditAssignment: 'Edit Assignment',
     EnterAssignmentHere: 'Enter assignment here...',
     OutStanding: 'Outstanding!',
+    EnterAssignment: 'Enter Assignment',
     GetStarted: 'Get Started',
     PracticePerfect: "Practice Makes Perfect",
     GreatJob: "Great Job",
@@ -85,6 +87,7 @@ export default {
     ImprovementAreas: 'Things to work on: ',
     NoClass: "Uh Oh! No Classes",
     addClassButton: "Click Here to Add A Class",
+    NotesColon: 'Notes: ',
 
     //--------------------- Join Class Screen ---------------------
     JoinClass: 'Join Class',
@@ -134,7 +137,7 @@ export default {
     EnterYourStudentsName: 'Enter your student\'s name',
     Whoops: 'Whoops',
     AddStudents: 'Add Students',
-    JoinMyClass: 'Join my class on QuranConnect. Here is the class code: ',
+    JoinMyClass: 'Join my class on Quran Connect. Here is the class code: \n',
     AddYourStudents: 'Add Your Students',
     Or: 'Or',
     AddStudentsManually: 'Manually Add Your Students',

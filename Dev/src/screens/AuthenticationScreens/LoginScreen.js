@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
-import { View, ImageBackground, Dimensions, StyleSheet, Alert } from 'react-native';
+import { View, ImageBackground, StyleSheet, Alert } from 'react-native';
 import Form from 'components/Form';
 import ButtonSubmit from 'components/ButtonSubmit';
 import SignupSection from 'components/SignupSection';
 import QcAppBanner from 'components/QcAppBanner';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import strings from "config/strings";
-import colors from "config/colors";
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
-const SCREEN_WIDTH = Dimensions.get("window").width;
-const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const BG_IMAGE = require("assets/images/read_child_bg.jpg");
 
@@ -36,8 +34,6 @@ class LoginScreen extends Component {
   state = {
     username: "",
     password: "",
-    email: "",
-    phone_number: "",
     isTeacher: this.props.navigation.state.params.isTeacher,
     isLoading: false
   };
@@ -70,7 +66,11 @@ class LoginScreen extends Component {
     } else {
       const account = await FirebaseFunctions.logIn(username.trim(), password.trim());
       if (account === -1) {
-        this.setState({ isLoading: false });
+        this.setState({
+          isLoading: false,
+        });
+        this.onUserNameChange(username);
+        this.onPwChange(password)
         Alert.alert(strings.Whoops, strings.IncorrectInfo);
       } else {
         const userID = account.uid;
@@ -149,31 +149,11 @@ const styles = StyleSheet.create({
     flex: 5,
     top: 0,
     left: 0,
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
+    width: screenWidth,
+    height: screenHeight,
     justifyContent: "center",
     alignItems: "center"
   },
-  modal: {
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    marginTop: 230,
-    borderWidth: 1,
-    borderRadius: 2,
-    borderColor: colors.grey,
-    borderBottomWidth: 1,
-    shadowColor: colors.darkGrey,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 3,
-    elevation: 2,
-    marginLeft: 45,
-    marginRight: 45,
-    paddingRight: 5,
-    paddingLeft: 5
-  }
 });
 
 
