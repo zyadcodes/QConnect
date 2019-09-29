@@ -114,12 +114,6 @@ export class ClassAttendanceScreen extends QcParentScreen {
                                 LeftIconName="navicon"
                                 LeftOnPress={() => this.setState({ isOpen: true })}
                                 Title={this.state.currentClass.name}
-                                RightIconName="edit"
-                                RightOnPress={() => this.props.navigation.push('ClassEdit', {
-                                    classID: this.state.currentClassID,
-                                    currentClass: this.state.currentClass,
-                                    userID: this.state.userID
-                                })}
                             />
                         </View>
                         <View style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'center' }}>
@@ -136,10 +130,10 @@ export class ClassAttendanceScreen extends QcParentScreen {
 
                             <QcActionButton
                                 text={strings.AddStudentButton}
-                                onPress={() => this.props.navigation.push("ClassEdit", {
-                                    classID: this.state.currentClassID,
-                                    currentClass: this.state.currentClass,
-                                    userID: this.state.userID
+                                onPress={() => this.props.navigation.push("ShareClassCode", {
+                                    currentClassID: this.state.currentClassID,
+                                    userID: this.state.userID,
+                                    currentClass: this.state.currentClass
                                 })} />
                         </View>
                     </QCView>
@@ -164,12 +158,6 @@ export class ClassAttendanceScreen extends QcParentScreen {
                                 LeftIconName="navicon"
                                 LeftOnPress={() => this.setState({ isOpen: true })}
                                 Title={this.state.currentClass.name}
-                                RightIconName="edit"
-                                RightOnPress={() => this.props.navigation.push('ClassEdit', {
-                                    classID: this.state.currentClassID,
-                                    currentClass: this.state.currentClass,
-                                    userID: this.state.userID
-                                })}
                             />
                         </View>
                         <View style={styles.saveAttendance}>

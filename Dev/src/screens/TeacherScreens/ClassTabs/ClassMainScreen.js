@@ -146,10 +146,10 @@ export class ClassMainScreen extends QcParentScreen {
               <Text style={fontStyles.hugeTextStylePrimaryDark}>{strings.EmptyClass}</Text>
               <QcActionButton
                 text={strings.AddStudentButton}
-                onPress={() => this.props.navigation.push("ClassEdit", {
-                  classID: this.state.currentClassID,
-                  currentClass,
-                  userID: this.state.userID
+                onPress={() => this.props.navigation.push("ShareClassCode", {
+                  currentClassID: this.state.currentClassID,
+                  userID: this.state.userID,
+                  currentClass: this.state.currentClass
                 })} />
             </View>
           </QCView>
@@ -162,6 +162,7 @@ export class ClassMainScreen extends QcParentScreen {
       const studentsNeedHelp = currentClass.students.filter((student) => student.isReadyEnum === "NEED_HELP");
       const studentsReady = currentClass.students.filter((student) => student.isReadyEnum === "READY");
       const studentsWorkingOnIt = currentClass.students.filter((student) => student.isReadyEnum === "WORKING_ON_IT");
+      const { isEditing, currentClassID, userID } = this.state;
       return (
         <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
           teacher={teacher}
@@ -183,6 +184,24 @@ export class ClassMainScreen extends QcParentScreen {
                 })}
               />
             </View>
+            {
+              isEditing === true ? (
+                <View style={styles.AddStudentButton}>
+                  <QcActionButton
+                    text={"+"}
+                    onPress={() => {
+                      //Goes to add students screen
+                      this.props.navigation.push("ShareClassCode", {
+                        currentClassID,
+                        userID,
+                        currentClass: this.state.currentClass
+                      });
+                    }} />
+                </View>
+              ) : (
+                  <View style={styles.AddStudentButton}></View>
+                )
+            }
             {
               studentsNeedHelp.length > 0 ? (
                 <View style={{ paddingTop: screenHeight * 0.025 }}>
@@ -285,6 +304,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightGrey,
     flex: 3,
   },
+  AddStudentButton: {
+    height: screenHeight * 0.08,
+    alignItems: 'flex-end',
+    paddingRight: screenWidth * 0.025
+  }
 });
 
 export default ClassMainScreen;

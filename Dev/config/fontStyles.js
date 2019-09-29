@@ -107,14 +107,28 @@ export default StyleSheet.create({
     bigTextStylePrimaryDark: {
         fontFamily,
         fontSize: bodyFontBigger,
-        color: colors.black
+        color: colors.primaryDark
     },
 
     hugeTextStylePrimaryDark: {
         fontFamily,
         fontSize: titleFont,
         color: colors.primaryDark
-    }
+    },
+
+    hugeTextStylePrimaryLight: {
+        fontFamily,
+        fontSize: titleFont,
+        color: colors.primaryLight
+    },
+
+    hugeTextStyleBlack: {
+        fontFamily,
+        fontSize: titleFont,
+        color: colors.black
+    },
+
+    
 
 });
 
