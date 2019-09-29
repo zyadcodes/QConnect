@@ -286,7 +286,7 @@ export default class FirebaseFunctions {
             return student.ID === studentID;
         });
         arrayOfStudents[studentIndex].currentAssignment = newAssignmentName;
-        arrayOfStudents[studentIndex].isReady = false;
+        arrayOfStudents[studentIndex].isReadyEnum = "WORKING_ON_IT";
 
         await this.updateClassObject(classID, {
             students: arrayOfStudents
@@ -483,7 +483,7 @@ export default class FirebaseFunctions {
             attendanceHistory: {},
             averageRating: 0,
             currentAssignment: 'None',
-            isReady: "WORKING_ON_IT",
+            isReadyEnum: "WORKING_ON_IT",
             profileImageID: student.profileImageID,
             name: student.name,
             isManual: true,
