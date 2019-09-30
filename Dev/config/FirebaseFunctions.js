@@ -358,6 +358,12 @@ export default class FirebaseFunctions {
             improvementAreas: evaluationDetails.improvementAreas
         });
 
+        //Notifies that student that their assignment has been graded
+        this.functions.httpsCallable('sendNotification', {
+            topic: studentID,
+            title: strings.AssignmentGraded,
+            body: strings.YourAssignmentHasBeenGraded
+        })
         return 0;
 
     }

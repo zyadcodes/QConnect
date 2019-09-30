@@ -13,6 +13,8 @@ export default {
     HasJoinedYourClass: ' has joined your class',
     AssignmentUpdate: 'Assignment Update',
     YourTeacherHasUpdatedYourCurrentAssignment: 'Your teacher has updated your current assignment',
+    AssignmentGraded: "Assignment Graded",
+    YourAssignmentHasBeenGraded: 'Your assignment has been graded',
 
     //--------------------- Student Main Screen ---------------------
     TotalAssignments: 'Total Assignments',
