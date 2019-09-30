@@ -67,7 +67,7 @@ export default class AllSettingsScreen extends QcParentScreen {
                     </TouchableOpacity>
 
                     <TouchableOpacity style={[styles.cardStyle, { marginTop: screenHeight * 0.03 }]} onPress={async () => {
-                        await FirebaseFunctions.logOut();
+                        await FirebaseFunctions.logOut(this.props.navigation.state.params.userID);
                         this.props.navigation.push("FirstScreenLoader");
                     }}>
                         <View style={{ marginLeft: screenWidth * 0.017 }}>
