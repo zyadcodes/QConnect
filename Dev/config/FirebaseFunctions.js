@@ -1,6 +1,7 @@
 //This class will contain all the functions that interact with the react native firebase
 //library
 import firebase from 'react-native-firebase';
+import strings from './strings';
 
 export default class FirebaseFunctions {
 
@@ -276,6 +277,21 @@ export default class FirebaseFunctions {
             students: arrayOfStudents
         });
         this.logEvent("UPDATE_ASSIGNMENT_STATUS");
+
+
+        //Sends a notification to each of the teachers that are teacher this class,
+        //letting them know of the updated assignment status
+        const message = status === "WORKING_ON_IT" ? strings.WorkingOnIt : (
+            status === "NEED_HELP" ? strings.NeedsHelp : strings.Ready
+        )
+        currentClass.teachers.forEach(async (teacherID) => {
+            this.functions.httpsCallable('sendNotification', {
+                topic: teacherID,
+                title: strings.StudentUpdate,
+                body: arrayOfStudents[studentIndex].name + strings.HasChangedAssignmentStatusTo + message
+            })
+        });
+
         return 0;
 
     }
@@ -299,6 +315,13 @@ export default class FirebaseFunctions {
             students: arrayOfStudents
         });
         this.logEvent("UPDATE_CURRENT_ASSIGNMENT");
+
+        //Notifies that student that their assignment has been updated
+        this.functions.httpsCallable('sendNotification', {
+            topic: studentID,
+            title: strings.AssignmentUpdate,
+            body: strings.YourTeacherHasUpdatedYourCurrentAssignment
+        })
         return 0;
 
     }
@@ -451,6 +474,14 @@ export default class FirebaseFunctions {
         });
         this.logEvent("JOIN_CLASS");
 
+        //Sends a notification to the teachers of that class saying that a student has joined the class
+        classToJoin.teachers.forEach((teacherID) => {
+            this.functions.httpsCallable('sendNotification', {
+                topic: teacherID,
+                title: strings.NewStudent,
+                body: student.name + strings.HasJoinedYourClass
+            })
+        })
         return studentObject;
 
     }

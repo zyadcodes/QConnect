@@ -5,6 +5,15 @@ export default {
     AppTitle: 'Quran Connect',
     AppSubTitle: 'Serving your passion for the Quran',
 
+    //--------------------- Notifications ---------------------
+    NeedsHelp: 'Needs help',
+    StudentUpdate: 'Student Update',
+    HasChangedAssignmentStatusTo: ' has changed their assignment status to ',
+    NewStudent: 'New Student',
+    HasJoinedYourClass: ' has joined your class',
+    AssignmentUpdate: 'Assignment Update',
+    YourTeacherHasUpdatedYourCurrentAssignment: 'Your teacher has updated your current assignment',
+
     //--------------------- Student Main Screen ---------------------
     TotalAssignments: 'Total Assignments',
     Ready: 'Ready',
