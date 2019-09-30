@@ -199,7 +199,7 @@ export class ClassMainScreen extends QcParentScreen {
                     }} />
                 </View>
               ) : (
-                  <View style={styles.AddStudentButton}></View>
+                  <View></View>
                 )
             }
             {

@@ -271,8 +271,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1
   },
   profilePic: {
-    width: 0.15 * screenHeight,
-    height: 0.15 * screenHeight,
+    width: 0.10 * screenHeight,
+    height: 0.10 * screenHeight,
     borderRadius: 0.075 * screenHeight,
     paddingBottom: 0.015 * screenHeight
   },
