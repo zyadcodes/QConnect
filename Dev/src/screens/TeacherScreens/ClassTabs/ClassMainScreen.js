@@ -172,16 +172,16 @@ export class ClassMainScreen extends QcParentScreen {
           navigation={this.props.navigation} />}>
           <ScrollView style={styles.container}>
             <View>
-              <TopBanner
+            <TopBanner
                 LeftIconName="navicon"
                 LeftOnPress={() => this.setState({ isOpen: true })}
                 Title={this.state.currentClass.name}
-                RightIconName="edit"
-                RightOnPress={() => this.props.navigation.push('ClassEdit', {
-                  classID: currentClassID,
-                  currentClass,
-                  userID: this.state.userID
-                })}
+                RightIconName={this.state.isEditing === false ? "edit" : null}
+                RightTextName={this.state.isEditing === true ? strings.Done : null}
+                RightOnPress={() => {
+                  const { isEditing } = this.state;
+                  this.setState({ isEditing: !isEditing })
+                }}
               />
             </View>
             {
