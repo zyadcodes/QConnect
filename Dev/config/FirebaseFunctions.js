@@ -10,6 +10,8 @@ export default class FirebaseFunctions {
     static teachers = this.database.collection('teachers');
     static students = this.database.collection('students');
     static classes = this.database.collection('classes');
+    static functions = firebase.functions();
+    static fcm = firebase.messaging();
     static auth = firebase.auth();
     static analytics = firebase.analytics();
 
@@ -23,9 +25,10 @@ export default class FirebaseFunctions {
     static async signUp(email, password, isTeacher, accountObject) {
 
         let account = await this.auth.createUserWithEmailAndPassword(email, password);
-
         //Creates the firestore object with an ID that matches this one
         let ID = account.user.uid;
+        //Suscribes to the topic so that any  notifications sent to this user are recieved to the phone
+        this.fcm.subscribeToTopic(ID);
         accountObject.ID = ID;
         if (isTeacher === true) {
 
@@ -54,6 +57,8 @@ export default class FirebaseFunctions {
 
         try {
             let account = await this.auth.signInWithEmailAndPassword(email, password);
+            //Subscribes to the notification topic associated with this user
+            this.fcm.subscribeToTopic(account.user.uid);
             return account.user;
         } catch (err) {
             return -1;
@@ -72,8 +77,10 @@ export default class FirebaseFunctions {
     }
 
     //This functions will log out whatever user is currently signed into the device
-    static async logOut() {
+    static async logOut(userID) {
 
+        //Unsubscribes the user from the topic so they no longer recieve notification
+        this.fcm.unsubscribeFromTopic(userID);
         this.logEvent("LOG_OUT");
         await this.auth.signOut();
 
