@@ -1,5 +1,6 @@
 import React from "react";
-import { ScrollView, StyleSheet, FlatList, View, Text, Image, Dimensions } from "react-native";
+import { ScrollView, StyleSheet, FlatList, View, Text, Image, PixelRatio, Alert } from "react-native";
+import { Icon } from 'react-native-elements';
 import StudentCard from "components/StudentCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages"
@@ -25,7 +26,8 @@ export class ClassMainScreen extends QcParentScreen {
     currentClass: '',
     currentClassID: '',
     isOpen: false,
-    classes: ''
+    classes: '',
+    isEditing: false
   }
 
   async componentDidMount() {
@@ -45,6 +47,31 @@ export class ClassMainScreen extends QcParentScreen {
       currentClassID,
       classes
     });
+
+  }
+
+  removeStudent(studentID) {
+    Alert.alert(
+      strings.RemoveStudent,
+      strings.AreYouSureYouWantToRemoveStudent,
+      [
+        {
+          text: strings.Remove, onPress: () => {
+
+            //Removes the student from the database and updates the local state
+            let { currentClass, currentClassID } = this.state;
+            FirebaseFunctions.removeStudent(currentClassID, studentID);
+            let arrayOfClassStudents = currentClass.students;
+            let indexOfStudent = arrayOfClassStudents.findIndex((student) => {
+              return student.ID === studentID;
+            });
+            arrayOfClassStudents.splice(indexOfStudent, 1);
+            this.setState({ currentClass });
+          }
+        },
+        { text: strings.Cancel, style: 'cancel' },
+      ]
+    );
 
   }
 
@@ -180,15 +207,17 @@ export class ClassMainScreen extends QcParentScreen {
                 RightTextName={this.state.isEditing === true ? strings.Done : null}
                 RightOnPress={() => {
                   const { isEditing } = this.state;
-                  this.setState({ isEditing: !isEditing })
+                  //node/todo: setting isOpen is a hack to workaround what seems to be a bug in the SideMenu component
+                  // where flipping isEditing bit seems to flip isOpen as well when isOpen was true earlier
+                  this.setState({ isEditing: !isEditing, isOpen: false })
                 }}
               />
             </View>
             {
               isEditing === true ? (
                 <View style={styles.AddStudentButton}>
-                  <QcActionButton
-                    text={"+"}
+                  <TouchableText
+                    text={strings.AddStudents}
                     onPress={() => {
                       //Goes to add students screen
                       this.props.navigation.push("ShareClassCode", {
@@ -196,7 +225,9 @@ export class ClassMainScreen extends QcParentScreen {
                         userID,
                         currentClass: this.state.currentClass
                       });
-                    }} />
+                    }}
+                    style={{...fontStyles.bigTextStylePrimaryDark, paddingTop: 10}}
+                   />
                 </View>
               ) : (
                   <View></View>
@@ -204,7 +235,14 @@ export class ClassMainScreen extends QcParentScreen {
             }
             {
               studentsNeedHelp.length > 0 ? (
-                <View style={{ paddingTop: screenHeight * 0.025 }}>
+                <View style={{  alignItems: 'center', marginLeft: screenWidth * 0.017 , flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
+                  <Icon
+                    name='issue-opened'
+                    type='octicon'
+                    color={colors.darkRed}
+                    onPress={() => {
+                      onShowMore();
+                      }} />
                   <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkRed]}>{strings.NeedHelp}</Text>
                 </View>
               ) : (
@@ -216,7 +254,7 @@ export class ClassMainScreen extends QcParentScreen {
               keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
               renderItem={({ item }) => (
                 <StudentCard
-                  key={item.id}
+                  key={item.ID}
                   studentName={item.name.toUpperCase()}
                   profilePic={studentImages.images[item.profileImageID]}
                   currentAssignment={item.currentAssignment}
@@ -229,12 +267,26 @@ export class ClassMainScreen extends QcParentScreen {
                     })
                   }
                   background={colors.red}
-                />
-              )} />
+                  comp={isEditing === true ? (
+                    <Icon
+                      name='user-times'
+                      size={PixelRatio.get() * 9}
+                      type='font-awesome'
+                      color={colors.primaryDark} />) : (null)}
+                  compOnPress={() => { this.removeStudent(item.ID) }} />)}
+            />
             {
               studentsReady.length > 0 ? (
-                <View style={{ paddingTop: screenHeight * 0.025 }}>
-                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleGreen]}>{strings.Ready}</Text>
+                <View style={{  alignItems: 'center', marginLeft: screenWidth * 0.017 , flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
+                  <Icon
+                    name='check-circle-outline'
+                    type='material-community'
+                    color={colors.darkGreen}
+                    onPress={() => {
+                      onShowMore();
+                    }} />
+                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleGreen]}>
+                    {strings.Ready}</Text>
                 </View>
               ) : (
                   <View></View>
@@ -258,11 +310,24 @@ export class ClassMainScreen extends QcParentScreen {
                     })
                   }
                   background={colors.green}
-                />
+                  comp={isEditing === true ? (
+                    <Icon
+                      name='user-times'
+                      size={PixelRatio.get() * 9}
+                      type='font-awesome'
+                      color={colors.primaryDark} />) : (null)}
+                  compOnPress={() => { this.removeStudent(item.ID) }} />
               )} />
             {
               studentsWorkingOnIt.length > 0 ? (
-                <View style={{ paddingTop: screenHeight * 0.025 }}>
+                <View style={{  alignItems: 'center', marginLeft: screenWidth * 0.017 , flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
+                  <Icon
+                    name='update'
+                    type='material-community'
+                    color={colors.primaryDark}
+                    onPress={() => {
+                      onShowMore();
+                    }} />
                   <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStylePrimaryDark]}>{strings.WorkingOnIt}</Text>
                 </View>
               ) : (
@@ -287,7 +352,13 @@ export class ClassMainScreen extends QcParentScreen {
                     })
                   }
                   background={colors.white}
-                />
+                  comp={isEditing === true ? (
+                    <Icon
+                      name='user-times'
+                      size={PixelRatio.get() * 9}
+                      type='font-awesome'
+                      color={colors.primaryDark} />) : (null)}
+                  compOnPress={() => { this.removeStudent(item.ID) }} />
               )} />
           </ScrollView>
         </SideMenu>
@@ -305,7 +376,7 @@ const styles = StyleSheet.create({
     flex: 3,
   },
   AddStudentButton: {
-    height: screenHeight * 0.08,
+    height: screenHeight * 0.04,
     alignItems: 'flex-end',
     paddingRight: screenWidth * 0.025
   }

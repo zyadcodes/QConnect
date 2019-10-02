@@ -10,9 +10,6 @@ const fontFamily = 'Montserrat-Regular'; //(Platform.OS === "ios" ? "Arial" : "s
 //Sets the font size
 let bodyFont = 14;
 const pixelRatio = PixelRatio.get();
-if (pixelRatio < 3) {
-    bodyFont = 12;
-}
 
 const bodyFontSmaller = bodyFont * 0.875;
 const bodyFontBigger = bodyFont * 1.25;
@@ -23,7 +20,7 @@ export default StyleSheet.create({
     smallTextStyleBlack: {
         fontFamily,
         fontSize: bodyFontSmaller,
-        color: colors.black
+        color: colors.darkGrey
     },
 
     smallTextStyleDarkGrey: {
@@ -59,7 +56,7 @@ export default StyleSheet.create({
     mainTextStyleBlack: {
         fontFamily,
         fontSize: bodyFont,
-        color: colors.black
+        color: colors.darkGrey
     },
 
     mainTextStyleGrey: {
@@ -83,7 +80,7 @@ export default StyleSheet.create({
     bigTextStyleBlack: {
         fontFamily,
         fontSize: bodyFontBigger,
-        color: colors.black
+        color: colors.darkGrey
     },
 
     bigTextStyleGreen: {
@@ -102,6 +99,12 @@ export default StyleSheet.create({
         fontFamily,
         fontSize: bodyFontBigger,
         color: colors.darkGrey
+    },
+
+    bigTextStyleDarkestGrey: {
+        fontFamily,
+        fontSize: bodyFontBigger,
+        color: colors.darkestGrey
     },
 
     bigTextStylePrimaryDark: {
