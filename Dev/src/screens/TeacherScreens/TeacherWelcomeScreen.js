@@ -15,6 +15,7 @@ import { Input, Icon } from 'react-native-elements';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from "config/fontStyles";
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 const initialState = {
   authCode: '',
@@ -193,7 +194,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
             />
             <View style={styles.picContainer}>
               <View style={{ flex: 1 }}></View>
-              <View style={{ flex: 1, paddingTop: Dimensions.get('window').height * 0.025, alignSelf: 'flex-start', flexDirection: 'row' }}>
+              <View style={{ flex: 1, paddingTop: screenHeight * 0.025, alignSelf: 'flex-start', flexDirection: 'row' }}>
                 <View style={{ flex: 0.1 }}><Text>   </Text></View>
                 <TouchableOpacity style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
                   <Icon
@@ -202,7 +203,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
                 </TouchableOpacity>
                 <View style={{ flex: 3 }}></View>
               </View>
-              <View style={{ flex: 1, paddingLeft: Dimensions.get('window').width * 0.05, paddingRight: Dimensions.get('window').width * 0.05 }}>
+              <View style={{ flex: 1, paddingLeft: screenWidth * 0.05, paddingRight: screenWidth * 0.05 }}>
                 <FadeInView
                   style={{ alignItems: 'center', justifyContent: 'center' }}>
                   <Image
@@ -252,22 +253,16 @@ export class TeacherWelcomeScreen extends QcParentScreen {
 
 //-----------------   Styles for the Teacher profile class-----------------------------------
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: "column",
-    backgroundColor: colors.lightGrey,
-    flex: 1,
-    justifyContent: "flex-end"
-  },
   picContainer: {
-    paddingTop: 10,
+    paddingTop: 0.015 * screenHeight,
     alignItems: "center",
-    marginTop: 15,
-    marginBottom: 10,
+    marginTop: 0.022 * screenHeight,
+    marginBottom: 0.015 * screenHeight,
     backgroundColor: colors.white
   },
   welcomeImage: {
-    marginTop: 15,
-    width: 180,
+    marginTop: 0.022 * screenHeight,
+    width: screenWidth * 0.44,
     resizeMode: "contain"
   },
   editInfo: {
@@ -277,7 +272,7 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: "column",
-    marginTop: 10,
+    marginTop: 0.015 * screenHeight,
     backgroundColor: colors.white,
     justifyContent: "center"
   },
@@ -285,32 +280,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     flex: 1
   },
-  modal: {
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    marginTop: 230,
-    borderWidth: 1,
-    borderRadius: 2,
-    borderColor: colors.grey,
-    borderBottomWidth: 1,
-    shadowColor: colors.darkGrey,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 3,
-    elevation: 2,
-    marginLeft: 45,
-    marginRight: 45,
-    paddingRight: 5,
-    paddingLeft: 5
-  },
-  confirmationMessage: {
-    fontSize: 16,
-    marginVertical: 10,
-    fontFamily: 'Montserrat-Regular',
-    color: colors.darkGrey
-  }
 });
 
 export default TeacherWelcomeScreen;

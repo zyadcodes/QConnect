@@ -11,6 +11,7 @@ import strings from 'config/strings';
 import TopBanner from 'components/TopBanner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 export class AddClassScreen extends QcParentScreen {
 
@@ -97,10 +98,10 @@ export class AddClassScreen extends QcParentScreen {
     const newClass = await FirebaseFunctions.getClassByID(newClassID);
 
     //Navigates to the class
-    this.props.navigation.push("ClassEdit", {
-      classID: newClassID,
-      currentClass: newClass,
-      userID: this.state.userID
+    this.props.navigation.push("ShareClassCode", {
+      currentClassID: newClassID,
+      userID: this.state.userID,
+      currentClass: newClass
     });
   }
 
@@ -150,8 +151,7 @@ export class AddClassScreen extends QcParentScreen {
                 this.setState({
                   className: classInput
                 })
-              }
-            />
+              } />
 
             <QcActionButton
               text={strings.AddClass}
@@ -169,26 +169,19 @@ export class AddClassScreen extends QcParentScreen {
 
 //Styles for the Teacher profile class
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    backgroundColor: colors.lightGrey,
-    flex: 1,
-  },
   picContainer: {
-    paddingTop: 25,
+    paddingVertical: screenHeight * 0.033,
     alignItems: 'center',
-    paddingBottom: 20,
-    marginTop: 10,
-    marginBottom: 10,
+    marginVertical: screenHeight * 0.015,
     backgroundColor: colors.white,
   },
   profilePic: {
-    width: 130,
-    height: 130,
-    borderRadius: 65,
+    width: screenHeight * 0.19,
+    height: screenHeight * 0.19,
+    borderRadius: screenHeight * 0.19 / 2,
   },
   bottomContainer: {
-    paddingTop: 15,
+    paddingTop: screenHeight * 0.022,
     flex: 1,
     backgroundColor: colors.white,
     alignItems: "center",
@@ -197,14 +190,12 @@ const styles = StyleSheet.create({
   textInputStyle: {
     backgroundColor: colors.lightGrey,
     borderColor: colors.darkGrey,
-    width: 250,
-    height: 40,
+    width: screenWidth * 0.61,
+    height: screenHeight * 0.056,
     textAlign: "center",
     alignItems: "center",
     justifyContent: "center"
   }
-
-}
-);
+});
 
 export default AddClassScreen;

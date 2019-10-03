@@ -16,6 +16,7 @@ import TeacherLeftNavPane from '../screens/TeacherScreens/LeftNavPane';
 import StudentLeftNavPane from '../screens/StudentScreens/LeftNavPane';
 import QCView from 'components/QCView';
 import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 //To-Do: All info in this class is static, still needs to be hooked up to data base in order
 //to function dynamically
@@ -139,8 +140,8 @@ export class ProfileScreen extends QcParentScreen {
                 <QCView style={{
                     flexDirection: 'column',
                     backgroundColor: colors.lightGrey,
-                    width: Dimensions.get('window').width,
-                    height: Dimensions.get('window').height
+                    width: screenWidth,
+                    height: screenHeight
                 }}>
                     <ScrollView style={styles.container}>
                         <TopBanner
@@ -199,7 +200,7 @@ export class ProfileScreen extends QcParentScreen {
                         </View>
                         <View style={styles.buttonsContainer}>
                             <TouchableOpacity style={styles.cardStyle} onPress={async () => {
-                                await FirebaseFunctions.logOut();
+                                await FirebaseFunctions.logOut(this.state.userID);
                                 this.props.navigation.push("FirstScreenLoader");
                             }}>
                                 <Text style={fontStyles.bigTextStyleBlack}>{strings.LogOut}</Text>
@@ -221,73 +222,35 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     picContainer: {
-        paddingTop: 25,
+        paddingTop: screenHeight * 0.04,
         alignItems: 'center',
-        paddingBottom: 20,
-        marginTop: 10,
-        marginBottom: 10,
+        paddingBottom: screenHeight * 0.03,
+        marginTop: screenHeight * 0.015,
+        marginBottom: screenHeight * 0.015,
         backgroundColor: colors.white,
     },
-    textStyle: {
-        fontFamily: 'Montserrat-Regular',
-        fontSize: 20,
-        color: colors.black,
-    },
     profilePic: {
-        width: 130,
-        height: 130,
-        borderRadius: 65
-    },
-    editInfo: {
-        flexDirection: 'column',
-        backgroundColor: colors.white
+        width: screenWidth * 0.32,
+        height: screenHeight * 0.19,
+        borderRadius: screenHeight * 0.1
     },
     cardStyle: {
         flexDirection: 'row',
-        marginRight: 7,
-        height: 50,
+        marginRight: screenWidth * 0.017,
+        height: screenHeight * 0.07,
         alignItems: 'center',
         justifyContent: 'center',
         justifyContent: 'space-between',
         fontFamily: 'Montserrat-Regular',
         backgroundColor: colors.white
     },
-    infoRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingTop: 20,
-        paddingBottom: 20,
-        borderBottomColor: colors.black,
-        borderBottomWidth: 0.25
-    },
-    //Next one is the same as previous but since it's like a fencepost algorithm, it has no border
-    infoRowLast: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingTop: 20,
-        paddingBottom: 20,
-    },
-    infoTextInput: {
-        paddingRight: 20,
-        fontSize: 16
-    },
-    infoTitle: {
-        paddingLeft: 20,
-        fontSize: 16
-    },
     buttonsContainer: {
-        paddingVertical: 10,
+        paddingVertical: screenHeight * 0.015,
         alignItems: 'center',
         justifyContent: 'space-evenly',
         flexDirection: 'row',
-        marginTop: 10,
+        marginTop: screenHeight * 0.015,
         backgroundColor: colors.white,
-    },
-    filler: {
-        flexDirection: 'column',
-        flex: 1
     }
 });
 

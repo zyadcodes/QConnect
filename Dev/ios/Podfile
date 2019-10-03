@@ -31,6 +31,9 @@ target 'QuranConnect' do
   pod 'GoogleIDFASupport', '~> 3.14.0'
   pod 'Firebase/Auth', '~> 6.3.0'
   pod 'Firebase/Firestore', '~> 6.3.0'
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
+  pod 'Firebase/Functions', '~> 6.3.0'
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
 
   pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
