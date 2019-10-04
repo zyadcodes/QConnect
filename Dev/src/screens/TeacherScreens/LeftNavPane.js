@@ -5,16 +5,15 @@ import colors from "config/colors";
 import classImages from "config/classImages";
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import { SafeAreaView } from "react-navigation";
+import QcAppBanner from "components/QcAppBanner";
 import QcDrawerItem from "components/QcDrawerItem";
 import teacherImages from "../../../config/teacherImages";
 import strings from '../../../config/strings';
 import QcParentScreen from "screens/QcParentScreen";
 import QcActionButton from 'components/QcActionButton';
-import fontStyles from 'config/fontStyles';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
-import { screenHeight, screenWidth } from 'config/dimensions';
 
 class LeftNavPane extends QcParentScreen {
 
@@ -73,12 +72,12 @@ class LeftNavPane extends QcParentScreen {
           >
             <View
               style={{
-                paddingVertical: 0.015 * screenHeight,
-                paddingHorizontal: 0.024 * screenWidth,
+                padding: 10,
                 alignContent: "center",
                 alignItems: "center",
                 justifyContent: "center"
-              }}>
+              }}
+            >
               <View style={{ flexDirection: 'row' }}>
                 <Text style={fontStyles.hugeTextStylePrimaryDark}>{strings.AppTitle}</Text>
               </View>
@@ -159,6 +158,11 @@ class LeftNavPane extends QcParentScreen {
   }
 }
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  }
+});
 
 export default LeftNavPane;
 

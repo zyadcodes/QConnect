@@ -3,13 +3,12 @@ import React, { Component } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import colors from 'config/colors';
 import PropTypes from 'prop-types';
-import { screenHeight } from 'config/dimensions'
 
 //The class that will render the spinner
 class LoadingSpinner extends Component {
     render() {
         return (
-            <View style={{ marginTop: screenHeight * 0.03 }}>
+            <View style={{ marginTop: 20 }}>
                 <ActivityIndicator
                     size="large"
                     color={colors.primaryDark}

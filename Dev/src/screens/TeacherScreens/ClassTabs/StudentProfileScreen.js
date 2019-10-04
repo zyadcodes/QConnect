@@ -11,7 +11,6 @@ import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
-import { screenHeight, screenWidth } from 'config/dimensions';
 
 class StudentProfileScreen extends QcParentScreen {
 
@@ -115,12 +114,12 @@ class StudentProfileScreen extends QcParentScreen {
           <View style={styles.profileInfo}>
 
             <View style={styles.profileInfoTop}>
-              <View style={{ width: screenWidth * 0.24 }}>
+              <View style={{ width: 100 }}>
 
               </View>
               <View style={styles.profileInfoTopRight}>
                 <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{name.toUpperCase()}</Text>
-                <View style={{ flexDirection: 'row', height: 0.037 * screenHeight }}>
+                <View style={{ flexDirection: 'row', height: 25 }}>
                   <Rating readonly={true} startingValue={averageRating} imageSize={25} />
                   <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
                     <Text style={fontStyles.bigTextStyleDarkGrey}>{averageRating === 0 ? "" : parseFloat(averageRating).toFixed(1)}</Text>
@@ -136,7 +135,7 @@ class StudentProfileScreen extends QcParentScreen {
                   style={styles.profilePic}
                   source={studentImages.images[classStudent.profileImageID]} />
               </View>
-              <View style={{ flex: 1, flexDirection: 'column', height: 0.086 * screenHeight, paddingLeft: screenWidth * 0.05 }}>
+              <View style={{ flex: 1, flexDirection: 'column', height: 59 }}>
                 <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{this.state.currentAssignment.toUpperCase()}</Text>
                 <View style={{ flexDirection: 'row' }}>
                   <TouchableHighlight
@@ -154,7 +153,7 @@ class StudentProfileScreen extends QcParentScreen {
                       newAssignment: true,
                       readOnly: false,
                     })} >
-                    <View style={{ paddingLeft: screenWidth * 0.02 }}>
+                    <View style={{ paddingLeft: Dimensions.get('window').width * 0.02 }}>
                       <Text style={fontStyles.mainTextStylePrimaryDark}>{strings.Grade}</Text>
                     </View>
                   </TouchableHighlight> : <View />}
@@ -202,7 +201,7 @@ class StudentProfileScreen extends QcParentScreen {
                       : <View />
                     }
                     {item.evaluation.improvementAreas && item.evaluation.improvementAreas.length > 0 ?
-                      <View style={{ flexDirection: 'row', justifyContent: 'flex-start', height: screenHeight * 0.03 }}>
+                      <View style={{ flexDirection: 'row', justifyContent: 'flex-start', height: Dimensions.get('window').height * 0.03 }}>
                         <Text style={fontStyles.smallTextStyleBlack}>{strings.ImprovementAreas}</Text>
                         {item.evaluation.improvementAreas.map((tag) => { return (<Text key={tag} style={styles.corner}>{tag}</Text>) })}
                       </View>
@@ -244,7 +243,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   studentInfoContainer: {
-    marginVertical: 0.015 * screenHeight,
+    marginTop: 10,
+    marginBottom: 10,
     backgroundColor: colors.white,
     flex: 1,
     borderColor: colors.lightGrey,
@@ -254,62 +254,73 @@ const styles = StyleSheet.create({
   profileInfo: {
     flexDirection: 'column',
     backgroundColor: colors.white,
-    marginBottom: 0.015 * screenHeight
+    marginBottom: 10
+  },
+  nonButtons: {
+    flexDirection: 'column'
   },
   corner: {
     borderColor: '#D0D0D0',
     borderWidth: 1,
-    borderRadius: screenHeight * 0.004,
+    borderRadius: 3,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: screenWidth * 0.012,
-    marginRight: screenHeight * 0.012,
-    marginTop: screenHeight * 0.004,
+    paddingLeft: 5,
+    paddingRight: 5,
+    marginRight: 5,
+    marginTop: 5,
   },
   profileInfoTop: {
-    paddingHorizontal: screenWidth * 0.024,
-    paddingTop: screenHeight * 0.015,
+    paddingHorizontal: 10,
+    paddingTop: 10,
     flexDirection: 'row',
     borderBottomColor: colors.lightGrey,
     borderBottomWidth: 1,
   },
   profileInfoTopLeft: {
     flexDirection: 'column',
-    marginLeft: 0.007 * screenWidth,
-    marginTop: -0.097 * screenHeight,
+    marginLeft: 3,
+    marginTop: -66,
     alignItems: 'center',
-    width: 0.24 * screenWidth
+    width: 100
   },
   profileInfoTopRight: {
     flexDirection: 'column',
     alignItems: 'flex-start',
-    paddingLeft: screenWidth * 0.05,
-    paddingBottom: 0.007 * screenHeight,
+    paddingLeft: 10,
+    paddingBottom: 5,
   },
   profileInfoBottom: {
     flexDirection: 'row',
-    paddingHorizontal: 0.024 * screenWidth,
+    paddingHorizontal: 10,
     borderBottomColor: colors.grey,
     borderBottomWidth: 1
   },
   profilePic: {
-    width: 0.15 * screenHeight,
-    height: 0.15 * screenHeight,
-    borderRadius: 0.075 * screenHeight,
-    paddingBottom: 0.015 * screenHeight
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    paddingBottom: 10
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   prevAssignments: {
     flexDirection: 'column',
     backgroundColor: colors.white,
-    marginHorizontal: 0.017 * screenWidth
+    marginLeft: 7,
+    marginRight: 7,
+
+
   },
   prevAssignmentCard: {
     flexDirection: 'column',
     borderBottomColor: colors.lightGrey,
     borderBottomWidth: 1,
-    height: 0.13 * screenHeight,
-    paddingHorizontal: screenWidth * 0.012,
-    paddingVertical: screenHeight * 0.007
+    height: 90,
+    padding: 5,
   },
 });
 

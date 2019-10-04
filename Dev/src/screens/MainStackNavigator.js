@@ -6,20 +6,18 @@ import FirstScreenLoader from './FirstScreenLoader/FirstScreenLoader';
 import LoginScreen from './AuthenticationScreens/LoginScreen';
 import FirstRunScreen from './FirstRun/FirstRunScreen';
 import TeacherWelcomeScreen from './TeacherScreens/TeacherWelcomeScreen';
-import AddClassScreen from './TeacherScreens/AddClassScreen';
+import AddClassScreen from './TeacherScreens/AddClass/AddClassScreen';
 import ForgotPassword from './AuthenticationScreens/ForgotPassword';
 import StudentWelcomeScren from './StudentScreens/StudentWelcomeScreen';
 import allSettingsScreen from './SettingsScreen/allSettingsScreen';
 import creditsScreen from './SettingsScreen/creditsScreen';
 import ProfileScreen from './ProfileScreen';
-import AddManualStudentsScreen from './TeacherScreens/AddStudents/AddManualStudentsScreen';
 import StudentMainScreen from './StudentScreens/StudentMainScreen';
 import ClassTabsNavigator from './TeacherScreens/ClassTabs/ClassTabsNavigator';
 import StudentProfileScreen from './TeacherScreens/ClassTabs/StudentProfileScreen';
 import ClassEditScreen from './TeacherScreens/ClassTabs/ClassEditScreen';
 import MushafScreen from './MushafScreen/MushafScreen'
 import EvaluationPage from './Evaluation/EvaluationPage';
-import ShareClassCodeScreen from './TeacherScreens/AddStudents/ShareClassCodeScreen';
 import strings from 'config/strings';
 import TopBanner from 'components/TopBanner';
 
@@ -139,11 +137,11 @@ routeConfig = {
         navigationOptions: ({ navigation }) => ({
             header: (
                 <TopBanner
-                    Title={strings.StudentProfile}
                     LeftIconName="angle-left"
                     LeftOnPress={() => navigation.push('TeacherCurrentClass', {
                         userID: navigation.state.params.userID
                     })}
+                    Title={strings.StudentProfile}
                 />
             )
         })
@@ -156,27 +154,20 @@ routeConfig = {
         })
     },
 
-    ShareClassCode: {
-        screen: ShareClassCodeScreen,
+    ClassEdit: {
+        screen: ClassEditScreen,
         navigationOptions: ({ navigation }) => ({
             header: (
                 <TopBanner
-                    Title={strings.AddStudents} />
+                    Title={strings.EditClass}
+                    RightTextName={strings.Done}
+                    RightOnPress={() => navigation.push('TeacherCurrentClass', {
+                        userID: navigation.state.params.userID
+                    })}
+                />
             )
         })
     },
-
-    AddManualStudents: {
-        screen: AddManualStudentsScreen,
-        navigationOptions: ({ navigation }) => ({
-            header: (
-                <TopBanner
-                    Title={strings.AddManualStudents}
-                    LeftIconName="angle-left"
-                    LeftOnPress={() => navigation.goBack()} />
-            )
-        })
-    }
 
 }
 

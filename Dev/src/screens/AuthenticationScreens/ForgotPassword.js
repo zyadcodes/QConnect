@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, View, TextInput } from 'react-native';
+import { Text, StyleSheet, View, TextInput, Dimensions } from 'react-native';
 import QCView from 'components/QCView';
 import strings from 'config/strings';
 import colors from 'config/colors';
@@ -8,7 +8,6 @@ import { Alert } from 'react-native';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
-import { screenHeight, screenWidth } from 'config/dimensions';
 
 class ForgotPassword extends Component {
 
@@ -43,7 +42,7 @@ class ForgotPassword extends Component {
                 </View>
                 <View style={{ flex: 1, justifyContent: 'flex-start' }}>
                     <TextInput
-                        style={styles.textInputStyle}
+                        style={styles.notesStyle}
                         returnKeyType={"done"}
                         blurOnSubmit={true}
                         placeholder={strings.emailPlaceHolder}
@@ -58,7 +57,7 @@ class ForgotPassword extends Component {
                         disabled={false}
                         onPress={() => {
                             if (this.state.emailText == "") {
-                                Alert.alert(strings.EmailErrorHeader, strings.PleaseEnterYourEmailAddress)
+                                Alert.alert(strings.EmailErrorHeader, strings.EmailError)
                             }
                             else {
                                 let emailText = this.state.emailText
@@ -80,15 +79,33 @@ class ForgotPassword extends Component {
     }
 }
 const styles = StyleSheet.create({
-    textInputStyle: {
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+        backgroundColor: colors.white,
+        alignItems: 'center'
+    },
+    spacer: {
+        flex: 3
+    },
+    notesStyle: {
         backgroundColor: colors.lightGrey,
         alignSelf: 'stretch',
         textAlignVertical: 'top',
         borderBottomColor: colors.PrimaryLight,
-        borderBottomWidth: screenHeight * 0.0015,
-        height: screenHeight * 0.06,
-        width: screenWidth * 0.75
+        borderBottomWidth: 1,
+        height: 45,
+        width: Dimensions.get('window').width * 0.75
     },
+    mainTextContainer: {
+        alignContent: 'center',
+        margin: 20,
+        fontSize: 15
+    },
+    header: {
+        fontSize: 20
+    }
+
 });
 
 

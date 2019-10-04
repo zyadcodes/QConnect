@@ -13,7 +13,6 @@ import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
-import { screenWidth, screenHeight } from 'config/dimensions';
 
 
 export class EvaluationPage extends QcParentScreen {
@@ -192,7 +191,7 @@ export class EvaluationPage extends QcParentScreen {
               <TextInput
                 style={styles.notesStyle}
                 multiline={true}
-                height={screenHeight * 0.15}
+                height={100}
                 onChangeText={(teacherNotes) => this.setState({
                   notes: teacherNotes
                 })}
@@ -235,34 +234,54 @@ export class EvaluationPage extends QcParentScreen {
 
 //--------------- Styles used on this screen -------------------
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'column',
+    backgroundColor: colors.lightGrey,
+    flex: 1,
+    justifyContent: "flex-end"
+  },
   evaluationContainer: {
     flexDirection: 'column',
-    paddingTop: screenHeight * 0.048,
-    paddingBottom: screenHeight * 0.037,
+    paddingTop: 25,
+    paddingBottom: 25,
     alignItems: 'center',
-    marginTop: screenHeight * 0.044,
-    marginBottom: screenHeight * 0.015,
-    marginHorizontal: screenWidth * 0.024,
+    marginTop: 30,
+    marginBottom: 10,
+    marginHorizontal: 10,
     backgroundColor: colors.white,
     borderColor: colors.lightGrey,
-    borderWidth: screenWidth * 0.0025,
+    borderWidth: 1,
   },
   section: {
     alignItems: "center",
     alignSelf: 'stretch',
-    paddingTop: screenHeight * 0.015,
-    paddingBottom: screenHeight * 0.015,
-    paddingLeft: screenWidth * 0.024,
-    paddingRight: screenWidth * 0.024
+    padding: 10
   },
   profilePic: {
-    width: screenHeight * 0.1,
-    height: screenHeight * 0.1,
-    borderRadius: screenHeight * 0.05,
-    marginTop: screenHeight * -0.1,
-    marginLeft: screenWidth * 0.024,
+    width: 65,
+    height: 65,
+    borderRadius: 35,
+    marginTop: -65,
+    marginLeft: 10,
     borderColor: colors.white,
-    borderWidth: screenWidth * 0.007
+    borderWidth: 3
+  },
+  box: {
+    borderWidth: 1,
+    borderColor: colors.lightGrey,
+    alignItems: "center",
+    alignSelf: 'stretch',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    marginHorizontal: 10,
+    marginVertical: 5,
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 1.00,
+    elevation: 1,
   },
   buttonsContainer: {
     alignItems: 'center',
@@ -273,10 +292,7 @@ const styles = StyleSheet.create({
   notesStyle: {
     backgroundColor: colors.lightGrey,
     alignSelf: 'stretch',
-    marginTop: screenHeight * 0.007,
-    marginBottom: screenHeight * 0.007,
-    marginLeft: screenWidth * 0.012,
-    marginRight: screenWidth * 0.012,
+    margin: 5,
     textAlignVertical: 'top'
   },
   filler: {

@@ -1,12 +1,11 @@
 import React from 'react';
-import { Modal, Text, View, StyleSheet } from 'react-native';
+import { Modal, Text, TouchableHighlight, View, StyleSheet } from 'react-native';
 import QcActionButton from 'components/QcActionButton'
 import strings from 'config/strings';
 import colors from 'config/colors';
 import surahNames from 'config/surahNames';
 import InputAutoSuggest from 'components/AutoCompleteComponent/InputAutoSuggest'
 import fontStyles from 'config/fontStyles';
-import { screenWidth, screenHeight } from 'config/dimensions';
 
 export default class AssignmentEntryComponent extends React.Component {
 
@@ -31,7 +30,7 @@ export default class AssignmentEntryComponent extends React.Component {
                 visible={this.props.visible}
                 onRequestClose={() => {
                 }}>
-                <View style={{ marginVertical: screenHeight * 0.073, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingBottom: screenHeight * 0.029 }}>
+                <View style={{ marginVertical: 50, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingBottom: 20 }}>
                     <View style={styles.modal}>
                         <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.EnterAssignment}</Text>
 
@@ -39,7 +38,6 @@ export default class AssignmentEntryComponent extends React.Component {
                             staticData={surahNames}
                             onTextChanged={this.onTextChange.bind(this)}
                             assignment={this.props.assignment}
-                            inputStyle={fontStyles.mainTextStyleDarkGrey}
                         />
 
                         <View style={{
@@ -68,17 +66,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        marginTop: screenHeight * 0.34,
+        marginTop: 230,
         borderWidth: 1,
         borderRadius: 2,
         borderColor: colors.grey,
         borderBottomWidth: 1,
         shadowColor: colors.darkGrey,
-        shadowOffset: { width: 0, height: screenHeight * 0.0029 },
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
-        shadowRadius: screenHeight * 0.004,
-        elevation: screenHeight * 0.003,
-        marginHorizontal: screenWidth * 0.11,
-        paddingHorizontal: 0.012 * screenWidth
+        shadowRadius: 3,
+        elevation: 2,
+        marginLeft: 45,
+        marginRight: 45,
+        paddingRight: 5,
+        paddingLeft: 5
     },
 });

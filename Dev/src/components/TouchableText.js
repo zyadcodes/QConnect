@@ -16,6 +16,20 @@ export default TouchableText = (props) => {
     );
 }
 
+const styles = StyleSheet.create({
+    container: {
+        color: colors.primaryDark,
+        marginBottom: 10,
+        paddingTop: 7,
+        paddingBottom: 7,
+        fontSize: 11,
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+        fontFamily: 'Montserrat-Regular',
+    }
+});
+
 TouchableText.propTypes = {
     text: PropTypes.string.isRequired,
     onPress: PropTypes.func.isRequired,

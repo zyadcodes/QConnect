@@ -6,7 +6,6 @@ import React from 'react';
 import { View, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import screenStyle from 'config/screenStyle';
-import { screenHeight } from 'config/dimensions';
 
 //Creates the higher order component
 const QCViewHOC = (Comp) => {
@@ -16,7 +15,7 @@ const QCViewHOC = (Comp) => {
                 resetScrollToCoords={{ x: 0, y: 0 }}
                 scrollEnabled={true}
                 contentContainerStyle={screenStyle.container}
-                extraScrollHeight={screenHeight * 0.007}
+                extraScrollHeight={5}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}>
                 <View>

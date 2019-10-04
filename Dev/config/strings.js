@@ -2,30 +2,21 @@
 export default {
 
     //---------------------  App info ---------------------------
-    AppTitle: 'Quran Connect',
+    AppTitle: 'QuranConnect',
     AppSubTitle: 'Serving your passion for the Quran',
-
-    //--------------------- Notifications ---------------------
-    NeedsHelp: 'Needs help',
-    StudentUpdate: 'Student Update',
-    HasChangedAssignmentStatusTo: ' has changed their assignment status to ',
-    NewStudent: 'New Student',
-    HasJoinedYourClass: ' has joined your class',
-    AssignmentUpdate: 'Assignment Update',
-    YourTeacherHasUpdatedYourCurrentAssignment: 'Your teacher has updated your current assignment',
-    AssignmentGraded: "Assignment Graded",
-    YourAssignmentHasBeenGraded: 'Your assignment has been graded',
 
     //--------------------- Student Main Screen ---------------------
     TotalAssignments: 'Total Assignments',
     Ready: 'Ready',
-    WorkingOnIt: 'Working on it',
+    NotReady: 'Not Ready',
     ClassAlreadyJoined: 'We know it\'s exciting to be in this class. But you can only join it once.',
-    NeedHelp: "Need help",
 
     //--------------------- Forgot Password Screen-------------------
     emailPlaceHolder: "Email",
     Submit: 'Submit',
+    AskForEmail: 'Please Enter Email Here',
+    EnterCode: 'Code',
+    EmailError: 'Please Enter Email',
     PleaseEnterYourEmailAddress: 'Please enter your email address',
     EmailErrorHeader: "Error with Email",
     NewPasswordPlaceholder: 'New Password',
@@ -134,7 +125,7 @@ export default {
     Confirm: 'Confirm',
     SaveAttendance: 'Save Attendance',
 
-    //--------------------- Add Students Screens ---------------------
+    //--------------------- Class Edit Screen ---------------------
     Remove: 'Remove',
     RemoveStudent: 'Remove student',
     AreYouSureYouWantToRemoveStudent: 'Are you sure you want to remove this student?',
@@ -147,13 +138,11 @@ export default {
     ThereIsAlreadyAStudentWithThatName: 'There is already a student with that name',
     EnterYourStudentsName: 'Enter your student\'s name',
     Whoops: 'Whoops',
-    JoinMyClass: 'Join my class on Quran Connect. Here is the class code: \n',
-    AddYourStudents: 'Add Your Students',
-    Or: 'Or: ',
-    AddStudentsManually: 'Add students manually',
     AddStudents: 'Add Students',
-    AddManualStudents: 'Add Manual Students',
-    ShareCode: 'Share code with students',
+    JoinMyClass: 'Join my class on QuranConnect. Here is the class code: ',
+    AddYourStudents: 'Add Your Students',
+    Or: '────────       Or      ────    ────',
+    AddStudentsManually: 'Manually Add Your Students',
 
     //--------------------- Class Header Navigator ---------------------
     StudentProfile: 'Student Profile',

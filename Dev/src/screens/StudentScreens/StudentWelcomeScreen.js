@@ -14,7 +14,6 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import { Icon } from 'react-native-elements';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
-import { screenHeight, screenWidth } from 'config/dimensions';
 import firebase from 'react-native-firebase';
 
 
@@ -196,14 +195,14 @@ export class StudentWelcomeScreen extends QcParentScreen {
               <View style={{ flex: 1 }}></View>
               <View style={{ flex: 1, alignSelf: 'flex-start', flexDirection: 'row' }}>
                 <View style={{ flex: 0.1 }}></View>
-                <TouchableOpacity style={{ flex: 2, paddingTop: screenHeight * 0.025, justifyContent: 'flex-start', alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
+                <TouchableOpacity style={{ flex: 2, paddingTop: Dimensions.get('window').height * 0.025, justifyContent: 'flex-start', alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
                   <Icon
                     name={'angle-left'}
                     type="font-awesome" />
                 </TouchableOpacity>
                 <View style={{ flex: 3 }}></View>
               </View>
-              <View style={{ flex: 1, paddingLeft: screenWidth * 0.05, paddingRight: screenWidth * 0.05 }}>
+              <View style={{ flex: 1, paddingLeft: Dimensions.get('window').width * 0.05, paddingRight: Dimensions.get('window').width * 0.05 }}>
                 <FadeInView
                   style={{ alignItems: 'center', justifyContent: 'center' }}>
                   <Image
@@ -252,37 +251,76 @@ export class StudentWelcomeScreen extends QcParentScreen {
 
 //-----------------   Styles for the student profile class-----------------------------------
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: "column",
+    backgroundColor: colors.lightGrey,
+    flex: 1,
+    justifyContent: "flex-end"
+  },
   picContainer: {
-    paddingTop: screenHeight * 0.015,
+    paddingTop: 10,
     alignItems: "center",
-    marginTop: screenHeight * 0.022,
-    marginBottom: screenHeight * 0.015,
+    marginTop: 15,
+    marginBottom: 10,
     backgroundColor: colors.white,
-    width: screenWidth,
+    width: Dimensions.get('window').width,
     flexDirection: 'column'
   },
+  quote: {
+    fontSize: 16,
+    paddingLeft: 20,
+    fontStyle: "italic",
+    paddingBottom: 10,
+    color: colors.darkGrey
+  },
   welcomeImage: {
-    marginTop: screenHeight * 0.022,
-    width: screenWidth * 0.44,
+    marginTop: 15,
+    width: 180,
     resizeMode: "contain"
   },
   editInfo: {
     flexDirection: "column",
     backgroundColor: colors.white,
     color: colors.darkGrey,
-    width: screenWidth
+    width: Dimensions.get('window').width
   },
   buttonsContainer: {
     flexDirection: "column",
-    marginTop: screenHeight * 0.015,
+    marginTop: 10,
     backgroundColor: colors.white,
     justifyContent: "center",
-    width: screenWidth
+    width: Dimensions.get('window').width
   },
   filler: {
     flexDirection: "column",
     flex: 1
   },
+  modal: {
+    backgroundColor: colors.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    marginTop: 230,
+    borderWidth: 1,
+    borderRadius: 2,
+    borderColor: colors.grey,
+    borderBottomWidth: 1,
+    shadowColor: colors.darkGrey,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 3,
+    elevation: 2,
+    marginLeft: 45,
+    marginRight: 45,
+    paddingRight: 5,
+    paddingLeft: 5
+  },
+  confirmationMessage: {
+    fontSize: 16,
+    marginVertical: 10,
+    fontFamily: 'Montserrat-Regular',
+    color: colors.darkGrey
+  }
 });
 
 

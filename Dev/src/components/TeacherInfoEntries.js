@@ -1,8 +1,7 @@
 import React from 'react'
-import { View, Text, TextInput, StyleSheet } from 'react-native'
+import { View, Text, TextInput, StyleSheet, Dimensions } from 'react-native'
 import PropTypes from 'prop-types'
-import colors from 'config/colors';
-import { screenHeight, screenWidth } from 'config/dimensions';
+import colors from 'config/colors'
 import strings from '../../config/strings';
 import PhoneInput from 'react-native-phone-input'
 import fontStyles from 'config/fontStyles';
@@ -18,17 +17,17 @@ export default TeacherInfoEntries = (props) => {
                 <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.Information}</Text>
             </View>
             <View style={styles.infoRow}>
-                <View style={{ paddingRight: screenWidth * 0.015 }}>
+                <View style={{ paddingRight: Dimensions.get('window').width * 0.015 }}>
                     <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.namePlaceHolder}</Text>
                 </View>
                 <TextInput
-                    style={[fontStyles.smallTextStyleDarkGrey, { flex: 1, paddingLeft: 0.049 * screenWidth, alignSelf: 'stretch' }]}
+                    style={styles.infoTextInput}
                     textContentType='name'
                     onChangeText={props.onNameChanged}
                     value={props.name} />
             </View>
             <View style={styles.infoRow}>
-                <View style={{ paddingRight: screenWidth * 0.015 }}>
+                <View style={{ paddingRight: Dimensions.get('window').width * 0.015 }}>
                     <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.phoneNumberPlaceHolder}</Text>
                 </View>
                 <PhoneInput
@@ -42,11 +41,11 @@ export default TeacherInfoEntries = (props) => {
             {
                 !props.noEmailField ? (
                     <View style={styles.infoRow}>
-                        <View style={{ paddingRight: screenWidth * 0.015 }}>
+                        <View style={{ paddingRight: Dimensions.get('window').width * 0.015 }}>
                             <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.emailPlaceHolder}</Text>
                         </View>
                         <TextInput
-                            style={[fontStyles.smallTextStyleDarkGrey, { flex: 1, paddingLeft: 0.049 * screenWidth, alignSelf: 'stretch' }]}
+                            style={styles.infoTextInput}
                             keyboardType='email-address'
                             autoCapitalize='none'
                             textContentType='emailAddress'
@@ -61,11 +60,11 @@ export default TeacherInfoEntries = (props) => {
             }
             {props.showPasswordField &&
                 <View style={styles.infoRow}>
-                    <View style={{ paddingRight: screenWidth * 0.015 }}>
+                    <View style={{ paddingRight: Dimensions.get('window').width * 0.015 }}>
                         <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.password}</Text>
                     </View>
                     <TextInput
-                        style={[fontStyles.smallTextStyleDarkGrey, { flex: 1, paddingLeft: 0.049 * screenWidth, alignSelf: 'stretch' }]}
+                        style={styles.infoTextInput}
                         textContentType='password'
                         autoCompleteType='password'
                         onChangeText={props.onPasswordChanged}
@@ -99,9 +98,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingLeft: screenWidth * 0.025,
-        height: screenHeight * 0.06,
+        paddingLeft: Dimensions.get('window').width * 0.025,
+        height: Dimensions.get('window').height * 0.05,
         borderBottomColor: colors.grey,
         borderBottomWidth: 0.25
+    },
+    infoTextInput: {
+        paddingLeft: 20,
+        fontSize: 14,
+        color: colors.darkGrey,
+        flex: 1,
+        alignSelf: 'stretch',
     },
 })

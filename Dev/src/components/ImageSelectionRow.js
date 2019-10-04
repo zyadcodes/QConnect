@@ -4,7 +4,6 @@ import { Icon } from 'react-native-elements';
 import TouchableAvatar from 'components/TouchableAvatar';
 import colors from 'config/colors';
 import PropTypes from 'prop-types';
-import { screenHeight, screenWidth } from 'config/dimensions';
 
 //---------------------------------------------------------
 // Renders set of passed in images in a single row, and adds 
@@ -64,7 +63,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingVertical: 0.015 * screenHeight,
-        paddingHorizontal: screenWidth * 0.012
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingLeft: 5,
+        paddingRight: 5
     },
 });

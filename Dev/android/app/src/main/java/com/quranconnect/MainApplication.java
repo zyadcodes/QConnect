@@ -14,7 +14,6 @@ import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
 import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
-import io.invertase.firebase.functions.RNFirebaseFunctionsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
@@ -36,7 +35,6 @@ public class MainApplication extends Application implements ReactApplication {
       packages.add(new RNFirebaseAuthPackage());
       packages.add(new RNFirebaseFirestorePackage());
       packages.add(new RNFirebaseAnalyticsPackage());
-      packages.add(new RNFirebaseFunctionsPackage());
       // Packages that cannot be autolinked yet can be added manually here, for example:
       // packages.add(new MyReactNativePackage());
       return packages;

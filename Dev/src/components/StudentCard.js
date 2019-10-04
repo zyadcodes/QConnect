@@ -4,7 +4,6 @@ import { TouchableOpacity, Text, StyleSheet, Image, View, Dimensions } from 'rea
 import colors from 'config/colors'
 import FontLoadingComponent from './FontLoadingComponent';
 import fontStyles from 'config/fontStyles';
-import { screenHeight, screenWidth } from 'config/dimensions';
 
 /*Class represents the student card that will show up in the list of students
 *from the teachers view.
@@ -32,16 +31,19 @@ export default class StudentCard extends FontLoadingComponent {
                 <View
                     style={styles.infoStyle}>
                     {currentAssignment ? (
-                        <View style={{ marginLeft: screenWidth * 0.05 }}>
-                            <View style={{ marginBottom: screenWidth * 0.004 }}>
+                        <View style={{ marginLeft: Dimensions.get('window').width * 0.05 }}>
+                            <View style={{ marginBottom: Dimensions.get('window').height * 0.005 }}>
                                 <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{studentName}</Text>
                             </View>
-                            <View style={{ marginBottom: screenWidth * 0.004, alignSelf: 'flex-start' }}>
+                            <View style={{ marginBottom: Dimensions.get('window').height * 0.005 }}>
                                 <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{currentAssignment}</Text>
+                            </View>
+                            <View style={{ marginBottom: Dimensions.get('window').height * 0.005 }}>
+                                <Text style={fontStyles.mainTextStyleDarkGrey}>{status}</Text>
                             </View>
                         </View>
                     ) : (
-                            <View style={{ marginLeft: screenWidth * 0.05 }}>
+                            <View>
                                 <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{studentName}</Text>
                             </View>
                         )}
@@ -52,8 +54,8 @@ export default class StudentCard extends FontLoadingComponent {
                             <TouchableOpacity style={{
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                height: screenHeight * 0.2,
-                                width: screenWidth * 0.2
+                                height: 100,
+                                width: Dimensions.get('window').width * 0.2
                             }}
                                 onPress={() => { compOnPress() }}>
                                 {comp}
@@ -85,17 +87,17 @@ StudentCard.propTypes = {
 const styles = StyleSheet.create({
     cardStyle: {
         flexDirection: 'row',
-        marginRight: screenWidth * 0.017,
-        height: screenHeight * 0.15,
+        marginRight: Dimensions.get('window').width * 0.017,
+        height: Dimensions.get('window').height * 0.112,
         alignItems: 'center',
-        marginLeft: screenWidth * 0.017,
-        marginTop: screenHeight * 0.025,
+        marginLeft: Dimensions.get('window').width * 0.017,
+        marginTop: Dimensions.get('window').height * 0.01,
         fontFamily: 'Montserrat-Regular',
     },
     removeStudentStyle: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginRight: screenWidth * 0.05,
+        marginRight: Dimensions.get('window').width * 0.05,
         flex: 1
     },
     infoStyle: {
@@ -105,9 +107,9 @@ const styles = StyleSheet.create({
         flex: 4
     },
     profilePicStyle: {
-        width: screenWidth * 0.15,
-        height: screenWidth * 0.15,
-        borderRadius: screenWidth * 0.075,
-        marginLeft: screenWidth * 0.05
+        width: Dimensions.get('window').width * 0.15,
+        height: Dimensions.get('window').width * 0.15,
+        borderRadius: 30,
+        marginLeft: Dimensions.get('window').width * 0.05
     },
 });

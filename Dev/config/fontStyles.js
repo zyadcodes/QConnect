@@ -8,115 +8,85 @@ const fontFamily = (Platform.OS === "ios" ? "Arial" : "sans-serif-medium");
 
 //Sets the base font that'll be used throughout the app based on the size of the screen
 //Sets the font size
-let bodyFont = 16;
+let baseFontSize = 16;
 const pixelRatio = PixelRatio.get();
 if (pixelRatio < 3) {
-    bodyFont = 14;
+    baseFontSize = 14;
 }
-
-const bodyFontSmaller = bodyFont * 0.875;
-const bodyFontBigger = bodyFont * 1.25;
-const titleFont = bodyFont * 1.875;
 
 export default StyleSheet.create({
 
     smallTextStyleBlack: {
         fontFamily,
-        fontSize: bodyFontSmaller,
+        fontSize: baseFontSize * 0.75,
         color: colors.black
     },
 
     smallTextStyleDarkGrey: {
         fontFamily,
-        fontSize: bodyFontSmaller,
+        fontSize: baseFontSize * 0.75,
         color: colors.darkGrey
     },
 
     smallTextStylePrimaryDark: {
         fontFamily,
-        fontSize: bodyFontSmaller,
+        fontSize: baseFontSize * 0.75,
         color: colors.primaryDark
     },
 
     mainTextStylePrimaryDark: {
         fontFamily,
-        fontSize: bodyFont,
+        fontSize: baseFontSize,
         color: colors.primaryDark
     },
 
     mainTextStylePrimaryLight: {
         fontFamily,
-        fontSize: bodyFont,
+        fontSize: baseFontSize,
         color: colors.primaryLight
     },
 
     mainTextStyleDarkGrey: {
         fontFamily,
-        fontSize: bodyFont,
+        fontSize: baseFontSize,
         color: colors.darkGrey
     },
 
     mainTextStyleBlack: {
         fontFamily,
-        fontSize: bodyFont,
+        fontSize: baseFontSize,
         color: colors.black
     },
 
     mainTextStyleGrey: {
         fontFamily,
-        fontSize: bodyFont,
+        fontSize: baseFontSize,
         color: colors.grey
     },
 
     bigTextStyleBlack: {
         fontFamily,
-        fontSize: bodyFontBigger,
+        fontSize: baseFontSize * 1.25,
         color: colors.black
-    },
-
-    bigTextStyleGreen: {
-        fontFamily,
-        fontSize: bodyFontBigger,
-        color: colors.green
-    },
-
-    bigTextStyleDarkRed: {
-        fontFamily,
-        fontSize: bodyFontBigger,
-        color: colors.darkRed
     },
 
     bigTextStyleDarkGrey: {
         fontFamily,
-        fontSize: bodyFontBigger,
+        fontSize: baseFontSize * 1.25,
         color: colors.darkGrey
     },
 
     bigTextStylePrimaryDark: {
         fontFamily,
-        fontSize: bodyFontBigger,
-        color: colors.primaryDark
+        fontSize: baseFontSize * 1.25,
+        color: colors.black
     },
 
     hugeTextStylePrimaryDark: {
         fontFamily,
-        fontSize: titleFont,
+        fontSize: baseFontSize * 1.875,
         color: colors.primaryDark
-    },
-
-    hugeTextStylePrimaryLight: {
-        fontFamily,
-        fontSize: titleFont,
-        color: colors.primaryLight
-    },
-
-    hugeTextStyleBlack: {
-        fontFamily,
-        fontSize: titleFont,
-        color: colors.black
-    },
-
-    
+    }
 
 });
 
