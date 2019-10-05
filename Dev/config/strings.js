@@ -31,6 +31,7 @@ export default {
     EmailSent: 'Email Sent',
     CheckEmail: 'If a user with this email exists, we\'ve sent a link to your email to reset your password',
     Ok: 'Ok',
+    PasswordsDontMatch: "Passwords Don't match",
 
     //--------------------- Evaluation Page ---------------------
     None: 'None',
