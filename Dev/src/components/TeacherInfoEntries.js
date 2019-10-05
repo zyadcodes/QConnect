@@ -12,11 +12,6 @@ import fontStyles from 'config/fontStyles';
 // Used from Teacher welcome flow as well as Teacher profile edit page
 //--------------------------------------------------------------------------
 export default TeacherInfoEntries = (props) => {
-    state = {
-        passwordOne: "",
-        passwordTwo: "",
-        passwordsDifferent: true,
-    }
 
     return (
         <View style={styles.container}>
