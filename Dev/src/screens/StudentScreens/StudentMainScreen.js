@@ -137,14 +137,14 @@ class StudentMainScreen extends QcParentScreen {
 
         if (this.state.noCurrentClass) {
             return (
-                <SideMenu 
-                openMenuOffset={Dimensions.get('window').width *  0.7}
-                isOpen={this.state.isOpen} menu={<LeftNavPane
-                    student={student}
-                    userID={userID}
-                    classes={this.state.classes}
-                    edgeHitWidth={0}
-                    navigation={this.props.navigation} />}>
+                <SideMenu
+                    openMenuOffset={Dimensions.get('window').width * 0.7}
+                    isOpen={this.state.isOpen} menu={<LeftNavPane
+                        student={student}
+                        userID={userID}
+                        classes={this.state.classes}
+                        edgeHitWidth={0}
+                        navigation={this.props.navigation} />}>
                     <QCView style={screenStyle.container}>
                         <View style={{ flex: 1 }}>
                             <TopBanner
@@ -232,13 +232,13 @@ class StudentMainScreen extends QcParentScreen {
         }
 
         return (
-            <SideMenu 
-            isOpen={this.state.isOpen} menu={<LeftNavPane
-                student={student}
-                userID={userID}
-                classes={this.state.classes}
-                edgeHitWidth={0}
-                navigation={this.props.navigation} />}>
+            <SideMenu
+                isOpen={this.state.isOpen} menu={<LeftNavPane
+                    student={student}
+                    userID={userID}
+                    classes={this.state.classes}
+                    edgeHitWidth={0}
+                    navigation={this.props.navigation} />}>
                 <QCView style={screenStyle.container}>
                     <TopBanner
                         LeftIconName="navicon"
@@ -283,6 +283,7 @@ class StudentMainScreen extends QcParentScreen {
                             } else {
                                 Alert.alert(strings.Whoops, strings.CurrentlyNoAssignment);
                             }
+                        }}
                             onValueChange={value => {
                                 this.setState({ isReadyEnum: value.value });
                                 FirebaseFunctions.updateStudentAssignmentStatus(currentClassID, userID, value.value);

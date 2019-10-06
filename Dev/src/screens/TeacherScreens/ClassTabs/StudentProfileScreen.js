@@ -11,6 +11,7 @@ import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 class StudentProfileScreen extends QcParentScreen {
 

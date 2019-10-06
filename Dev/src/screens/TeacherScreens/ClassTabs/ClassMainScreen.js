@@ -26,7 +26,8 @@ export class ClassMainScreen extends QcParentScreen {
     currentClass: '',
     currentClassID: '',
     isOpen: false,
-    classes: ''
+    classes: '',
+    isEditing: false
   }
 
   async componentDidMount() {
@@ -50,8 +51,6 @@ export class ClassMainScreen extends QcParentScreen {
   }
 
   render() {
-    console.log("Width" + Dimensions.get('window').width);
-    console.log("Height" + Dimensions.get('window').height);
     const { isLoading, teacher, userID, currentClass, currentClassID } = this.state;
     if (isLoading === true) {
       return (
@@ -162,6 +161,11 @@ export class ClassMainScreen extends QcParentScreen {
 
 
     else {
+
+      const studentsNeedHelp = currentClass.students.filter((student) => student.isReadyEnum === "NEED_HELP");
+      const studentsReady = currentClass.students.filter((student) => student.isReadyEnum === "READY");
+      const studentsWorkingOnIt = currentClass.students.filter((student) => student.isReadyEnum === "WORKING_ON_IT");
+      const { isEditing, currentClassID, userID } = this.state;
 
       return (
         <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane

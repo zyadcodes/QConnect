@@ -11,6 +11,7 @@ import strings from 'config/strings';
 import TopBanner from 'components/TopBanner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 export class AddClassScreen extends QcParentScreen {
 

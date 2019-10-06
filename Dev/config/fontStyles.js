@@ -11,6 +11,10 @@ const fontFamily = 'Montserrat-Regular'; //(Platform.OS === "ios" ? "Arial" : "s
 let bodyFont = 14;
 const pixelRatio = PixelRatio.get();
 
+const bodyFontSmaller = bodyFont * 0.875;
+const bodyFontBigger = bodyFont * 1.25;
+const titleFont = bodyFont * 1.875;
+
 export default StyleSheet.create({
 
     smallTextStyleBlack: {
@@ -21,31 +25,31 @@ export default StyleSheet.create({
 
     smallTextStyleDarkGrey: {
         fontFamily,
-        fontSize: baseFontSize * 0.75,
+        fontSize: bodyFont * 0.75,
         color: colors.darkGrey
     },
 
     smallTextStylePrimaryDark: {
         fontFamily,
-        fontSize: baseFontSize * 0.75,
+        fontSize: bodyFont * 0.75,
         color: colors.primaryDark
     },
 
     mainTextStylePrimaryDark: {
         fontFamily,
-        fontSize: baseFontSize,
+        fontSize: bodyFont,
         color: colors.primaryDark
     },
 
     mainTextStylePrimaryLight: {
         fontFamily,
-        fontSize: baseFontSize,
+        fontSize: bodyFont,
         color: colors.primaryLight
     },
 
     mainTextStyleDarkGrey: {
         fontFamily,
-        fontSize: baseFontSize,
+        fontSize: bodyFont,
         color: colors.darkGrey
     },
 
@@ -57,7 +61,7 @@ export default StyleSheet.create({
 
     mainTextStyleGrey: {
         fontFamily,
-        fontSize: baseFontSize,
+        fontSize: bodyFont,
         color: colors.grey
     },
 
@@ -93,7 +97,7 @@ export default StyleSheet.create({
 
     bigTextStyleDarkGrey: {
         fontFamily,
-        fontSize: baseFontSize * 1.25,
+        fontSize: bodyFont * 1.25,
         color: colors.darkGrey
     },
 
@@ -105,13 +109,13 @@ export default StyleSheet.create({
 
     bigTextStylePrimaryDark: {
         fontFamily,
-        fontSize: baseFontSize * 1.25,
+        fontSize: bodyFont * 1.25,
         color: colors.black
     },
 
     hugeTextStylePrimaryDark: {
         fontFamily,
-        fontSize: baseFontSize * 1.875,
+        fontSize: bodyFont * 1.875,
         color: colors.primaryDark
     }
 

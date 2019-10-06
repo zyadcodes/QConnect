@@ -62,6 +62,10 @@ PODS:
     - leveldb-library (~> 1.20)
     - nanopb (~> 0.3.901)
     - Protobuf (~> 3.1)
+  - FirebaseFunctions (2.5.1):
+    - FirebaseAuthInterop (~> 1.0)
+    - FirebaseCore (~> 6.0)
+    - GTMSessionFetcher/Core (~> 1.1)
   - FirebaseInstanceID (4.2.4):
     - FirebaseCore (~> 6.0)
     - GoogleUtilities/Environment (~> 6.0)
@@ -272,6 +276,7 @@ SPEC REPOS:
     - FirebaseAuthInterop
     - FirebaseCore
     - FirebaseFirestore
+    - FirebaseFunctions
     - FirebaseInstanceID
     - FirebaseMessaging
     - GoogleAppMeasurement
@@ -351,6 +356,7 @@ SPEC CHECKSUMS:
   FirebaseAuthInterop: 0ffa57668be100582bb7643d4fcb7615496c41fc
   FirebaseCore: 68f8a7f50cdae542715d4e86afa37c4067217dcb
   FirebaseFirestore: 41a035642eb017fc7206318985501626993840bd
+  FirebaseFunctions: 5af7c35d1c5e41608fecbb667eb6c4e672e318d0
   FirebaseInstanceID: 88932a31aba5a56cfd3a7541706436c71f7f4598
   FirebaseMessaging: 6bb0bdaf64c55fef7a219b7bb1e94e94a0855ced
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
@@ -388,6 +394,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   yoga: 312528f5bbbba37b4dcea5ef00e8b4033fdd9411
 
-PODFILE CHECKSUM: 12c05eefe816cb6c34489be2da92ec0253deabc0
+PODFILE CHECKSUM: 39b295aaa7c9885bf47e0246d61bb8e8d1f7822a
 
 COCOAPODS: 1.7.5

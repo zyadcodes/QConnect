@@ -4,6 +4,7 @@ import { TouchableOpacity, Text, StyleSheet, Image, View, Dimensions } from 'rea
 import colors from 'config/colors'
 import FontLoadingComponent from './FontLoadingComponent';
 import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 /*Class represents the student card that will show up in the list of students
 *from the teachers view.
