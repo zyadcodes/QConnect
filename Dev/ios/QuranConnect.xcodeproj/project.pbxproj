@@ -8,6 +8,24 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* QuranConnectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* QuranConnectTests.m */; };
 		012BCE3CBEAA4A4FBB0D99F8 /* girl12.png in Resources */ = {isa = PBXBuildFile; fileRef = F73D7C4B100641C491C10838 /* girl12.png */; };
+		016EA1782328BB8400CD20E2 /* ItunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1692328BB8300CD20E2 /* ItunesArtwork@2x.png */; };
+		016EA1792328BB8400CD20E2 /* Icon-App-40x40@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA16A2328BB8300CD20E2 /* Icon-App-40x40@1x.png */; };
+		016EA17A2328BB8400CD20E2 /* Icon-App-40x40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA16B2328BB8300CD20E2 /* Icon-App-40x40@2x.png */; };
+		016EA17B2328BB8400CD20E2 /* Icon-App-29x29@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA16C2328BB8300CD20E2 /* Icon-App-29x29@3x.png */; };
+		016EA17C2328BB8400CD20E2 /* Icon-App-40x40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA16D2328BB8300CD20E2 /* Icon-App-40x40@3x.png */; };
+		016EA17D2328BB8400CD20E2 /* Icon-App-83.5x83.5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA16E2328BB8300CD20E2 /* Icon-App-83.5x83.5@2x.png */; };
+		016EA17E2328BB8400CD20E2 /* Icon-App-20x20@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA16F2328BB8400CD20E2 /* Icon-App-20x20@3x.png */; };
+		016EA17F2328BB8400CD20E2 /* Icon-App-60x60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1702328BB8400CD20E2 /* Icon-App-60x60@2x.png */; };
+		016EA1802328BB8400CD20E2 /* Icon-App-76x76@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1712328BB8400CD20E2 /* Icon-App-76x76@1x.png */; };
+		016EA1812328BB8400CD20E2 /* Icon-App-20x20@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1722328BB8400CD20E2 /* Icon-App-20x20@2x.png */; };
+		016EA1822328BB8400CD20E2 /* Icon-App-29x29@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1732328BB8400CD20E2 /* Icon-App-29x29@1x.png */; };
+		016EA1832328BB8400CD20E2 /* Icon-App-20x20@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1742328BB8400CD20E2 /* Icon-App-20x20@1x.png */; };
+		016EA1842328BB8400CD20E2 /* Icon-App-60x60@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1752328BB8400CD20E2 /* Icon-App-60x60@3x.png */; };
+		016EA1852328BB8400CD20E2 /* Icon-App-76x76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1762328BB8400CD20E2 /* Icon-App-76x76@2x.png */; };
+		016EA1862328BB8400CD20E2 /* Icon-App-29x29@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1772328BB8400CD20E2 /* Icon-App-29x29@2x.png */; };
+		016EA18A2328BB9800CD20E2 /* (null) in Resources */ = {isa = PBXBuildFile; };
+		016EA18B2328BB9800CD20E2 /* iTunesArtwork@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1882328BB9700CD20E2 /* iTunesArtwork@1x.png */; };
+		016EA18C2328BB9800CD20E2 /* iTunesArtwork@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1892328BB9700CD20E2 /* iTunesArtwork@3x.png */; };
 		017E518523234B7600B71C11 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 017E518423234B7600B71C11 /* GoogleService-Info.plist */; };
 		05A50DDD02074F07BE689CD2 /* is-icon-12.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB615236590451195990F95 /* is-icon-12.png */; };
 		05E9633F17454B3D983D7B89 /* boy11.png in Resources */ = {isa = PBXBuildFile; fileRef = 93AC74C0EF0D4E9A90B7F523 /* boy11.png */; };
@@ -161,6 +179,23 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* QuranConnectTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QuranConnectTests.m; sourceTree = "<group>"; };
 		0169D8B1D86CB70745BD8A63 /* Pods-QuranConnect-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect-tvOS.release.xcconfig"; path = "Target Support Files/Pods-QuranConnect-tvOS/Pods-QuranConnect-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		016EA1692328BB8300CD20E2 /* ItunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ItunesArtwork@2x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/ItunesArtwork@2x.png"; sourceTree = "<group>"; };
+		016EA16A2328BB8300CD20E2 /* Icon-App-40x40@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-App-40x40@1x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/Icon-App-40x40@1x.png"; sourceTree = "<group>"; };
+		016EA16B2328BB8300CD20E2 /* Icon-App-40x40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-App-40x40@2x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/Icon-App-40x40@2x.png"; sourceTree = "<group>"; };
+		016EA16C2328BB8300CD20E2 /* Icon-App-29x29@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-App-29x29@3x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/Icon-App-29x29@3x.png"; sourceTree = "<group>"; };
+		016EA16D2328BB8300CD20E2 /* Icon-App-40x40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-App-40x40@3x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/Icon-App-40x40@3x.png"; sourceTree = "<group>"; };
+		016EA16E2328BB8300CD20E2 /* Icon-App-83.5x83.5@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-App-83.5x83.5@2x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png"; sourceTree = "<group>"; };
+		016EA16F2328BB8400CD20E2 /* Icon-App-20x20@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-App-20x20@3x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/Icon-App-20x20@3x.png"; sourceTree = "<group>"; };
+		016EA1702328BB8400CD20E2 /* Icon-App-60x60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-App-60x60@2x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/Icon-App-60x60@2x.png"; sourceTree = "<group>"; };
+		016EA1712328BB8400CD20E2 /* Icon-App-76x76@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-App-76x76@1x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/Icon-App-76x76@1x.png"; sourceTree = "<group>"; };
+		016EA1722328BB8400CD20E2 /* Icon-App-20x20@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-App-20x20@2x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/Icon-App-20x20@2x.png"; sourceTree = "<group>"; };
+		016EA1732328BB8400CD20E2 /* Icon-App-29x29@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-App-29x29@1x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/Icon-App-29x29@1x.png"; sourceTree = "<group>"; };
+		016EA1742328BB8400CD20E2 /* Icon-App-20x20@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-App-20x20@1x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/Icon-App-20x20@1x.png"; sourceTree = "<group>"; };
+		016EA1752328BB8400CD20E2 /* Icon-App-60x60@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-App-60x60@3x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/Icon-App-60x60@3x.png"; sourceTree = "<group>"; };
+		016EA1762328BB8400CD20E2 /* Icon-App-76x76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-App-76x76@2x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/Icon-App-76x76@2x.png"; sourceTree = "<group>"; };
+		016EA1772328BB8400CD20E2 /* Icon-App-29x29@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-App-29x29@2x.png"; path = "../../../../../../Downloads/icon/ios/AppIcon.appiconset/Icon-App-29x29@2x.png"; sourceTree = "<group>"; };
+		016EA1882328BB9700CD20E2 /* iTunesArtwork@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@1x.png"; sourceTree = "<group>"; };
+		016EA1892328BB9700CD20E2 /* iTunesArtwork@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@3x.png"; sourceTree = "<group>"; };
 		017E518423234B7600B71C11 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "QuranConnect/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		035EA2B8889C44CFA697AAE7 /* Ubuntu-Light-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Ubuntu-Light-Italic.ttf"; path = "../assets/fonts/Ubuntu-Light-Italic.ttf"; sourceTree = "<group>"; };
 		0771723325E04C1286FFE230 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
@@ -449,6 +484,23 @@
 		B5E54238FFE24651A23AB250 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				016EA1882328BB9700CD20E2 /* iTunesArtwork@1x.png */,
+				016EA1892328BB9700CD20E2 /* iTunesArtwork@3x.png */,
+				016EA1742328BB8400CD20E2 /* Icon-App-20x20@1x.png */,
+				016EA1722328BB8400CD20E2 /* Icon-App-20x20@2x.png */,
+				016EA16F2328BB8400CD20E2 /* Icon-App-20x20@3x.png */,
+				016EA1732328BB8400CD20E2 /* Icon-App-29x29@1x.png */,
+				016EA1772328BB8400CD20E2 /* Icon-App-29x29@2x.png */,
+				016EA16B2328BB8300CD20E2 /* Icon-App-40x40@2x.png */,
+				016EA16C2328BB8300CD20E2 /* Icon-App-29x29@3x.png */,
+				016EA16A2328BB8300CD20E2 /* Icon-App-40x40@1x.png */,
+				016EA16D2328BB8300CD20E2 /* Icon-App-40x40@3x.png */,
+				016EA1702328BB8400CD20E2 /* Icon-App-60x60@2x.png */,
+				016EA1752328BB8400CD20E2 /* Icon-App-60x60@3x.png */,
+				016EA1712328BB8400CD20E2 /* Icon-App-76x76@1x.png */,
+				016EA1762328BB8400CD20E2 /* Icon-App-76x76@2x.png */,
+				016EA16E2328BB8300CD20E2 /* Icon-App-83.5x83.5@2x.png */,
+				016EA1692328BB8300CD20E2 /* ItunesArtwork@2x.png */,
 				361E5738EC854C88BA54388A /* AntDesign.ttf */,
 				1C145925C77E4286BFA6A1F9 /* Entypo.ttf */,
 				0771723325E04C1286FFE230 /* EvilIcons.ttf */,
@@ -656,18 +708,22 @@
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
 						DevelopmentTeam = PHH78H2W53;
+						ProvisioningStyle = Manual;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = PHH78H2W53;
+						DevelopmentTeam = B65Y7865Z9;
+						ProvisioningStyle = Manual;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
-						ProvisioningStyle = Automatic;
+						DevelopmentTeam = B65Y7865Z9;
+						ProvisioningStyle = Manual;
 					};
 					2D02E48F1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
-						ProvisioningStyle = Automatic;
+						DevelopmentTeam = B65Y7865Z9;
+						ProvisioningStyle = Manual;
 						TestTargetID = 2D02E47A1E0B4A5D006451C7;
 					};
 				};
@@ -721,10 +777,14 @@
 				6351A045649044F69C987B13 /* Foundation.ttf in Resources */,
 				3FB03919AB8B44DCAA52ABF4 /* Ionicons.ttf in Resources */,
 				BC14A40F8A77469994EA882E /* MaterialCommunityIcons.ttf in Resources */,
+				016EA17C2328BB8400CD20E2 /* Icon-App-40x40@3x.png in Resources */,
+				016EA17E2328BB8400CD20E2 /* Icon-App-20x20@3x.png in Resources */,
+				016EA1792328BB8400CD20E2 /* Icon-App-40x40@1x.png in Resources */,
 				944B37439412487DBBC4243D /* MaterialIcons.ttf in Resources */,
 				A1F9761530F74189AA8ABB6B /* Octicons.ttf in Resources */,
 				EC98D9122FDD4B82BB3A08D9 /* SimpleLineIcons.ttf in Resources */,
 				7EB14B59E6F44A66ACC4824B /* Zocial.ttf in Resources */,
+				016EA18B2328BB9800CD20E2 /* iTunesArtwork@1x.png in Resources */,
 				EEF37A7F15E54CB3A311055F /* Georgia.ttf in Resources */,
 				636F1FDAD1A244C99C0A6CEC /* Montserrat-Bold.ttf in Resources */,
 				77F9433D4A524DDF90143055 /* Montserrat-Light.ttf in Resources */,
@@ -741,6 +801,7 @@
 				5387F950342C4F319553E90A /* is-icon-14.png in Resources */,
 				DF0A0B9C383F4D54B27B9BB0 /* is-icon-15.png in Resources */,
 				3C533147E5284A548784CFBE /* is-icon-16.png in Resources */,
+				016EA1852328BB8400CD20E2 /* Icon-App-76x76@2x.png in Resources */,
 				7341DB7B89A2473BB687E3EF /* is-icon-17.png in Resources */,
 				B1D1A38CF9B949D488431A02 /* is-icon-2.png in Resources */,
 				C30A9810DA214EB899970AEC /* is-icon-3.png in Resources */,
@@ -769,25 +830,33 @@
 				D5CB2C9B732D469F94431CD8 /* boy7.png in Resources */,
 				C87FF09FF14E4B4683226BD5 /* boy8.png in Resources */,
 				77E0951F447148E0A741DFDB /* boy9.png in Resources */,
+				016EA17F2328BB8400CD20E2 /* Icon-App-60x60@2x.png in Resources */,
 				33DFF6BB906246A5B30E7B0D /* boyc2.png in Resources */,
 				ACDF2177CA15408EBE8A6528 /* boyc4.png in Resources */,
 				17E13244FB0742B6B5B81BBD /* boyc5.png in Resources */,
 				C980950CC8824586A277CF54 /* girl1.png in Resources */,
 				75845E76589A4ED786E0451A /* girl10.png in Resources */,
+				016EA1802328BB8400CD20E2 /* Icon-App-76x76@1x.png in Resources */,
 				F477267AA3E04C99A246512D /* girl11.png in Resources */,
 				012BCE3CBEAA4A4FBB0D99F8 /* girl12.png in Resources */,
 				6753C913BBB641E3B0B28CC9 /* girl13.png in Resources */,
 				EAA6CE929ED44048822C6F71 /* girl14.png in Resources */,
 				21FF939CC868416388E4FD41 /* girl15.png in Resources */,
+				016EA1812328BB8400CD20E2 /* Icon-App-20x20@2x.png in Resources */,
 				7B96A35E3F254841A90DD965 /* girl16.png in Resources */,
 				9EF5E08EE0A74474BE02426B /* girl2.png in Resources */,
 				488A4EBE8C7247BA8A23928F /* girl3.png in Resources */,
+				016EA18A2328BB9800CD20E2 /* (null) in Resources */,
+				016EA1862328BB8400CD20E2 /* Icon-App-29x29@2x.png in Resources */,
+				016EA18C2328BB9800CD20E2 /* iTunesArtwork@3x.png in Resources */,
 				6749EB7078064E4D9E977415 /* girl4.png in Resources */,
 				A002C81CA9F148E4AE726F65 /* girl5.png in Resources */,
 				F96B7A0DD7CA4DF9BB7BE590 /* girl6.png in Resources */,
 				2DE3A05D020141CF9ABD1860 /* girl7.png in Resources */,
+				016EA17B2328BB8400CD20E2 /* Icon-App-29x29@3x.png in Resources */,
 				CE214CEB760F4F48B40AEC21 /* girl8.png in Resources */,
 				D3A189976684487A94CA8C32 /* girl9.png in Resources */,
+				016EA1832328BB8400CD20E2 /* Icon-App-20x20@1x.png in Resources */,
 				3C0D2A2488CB46D48269CA54 /* girlc3.png in Resources */,
 				FC65562ADC5844F094ACAAFA /* msq1.png in Resources */,
 				1DA45640C6D34F47B26BC39F /* msq2.png in Resources */,
@@ -800,11 +869,16 @@
 				84D01CE2390644D18ACD66FE /* female2.png in Resources */,
 				D87ED31A6B244399BD1A59A9 /* female3.png in Resources */,
 				75B2545005BB43A38145CF70 /* female4.png in Resources */,
+				016EA17A2328BB8400CD20E2 /* Icon-App-40x40@2x.png in Resources */,
+				016EA17D2328BB8400CD20E2 /* Icon-App-83.5x83.5@2x.png in Resources */,
+				016EA1782328BB8400CD20E2 /* ItunesArtwork@2x.png in Resources */,
+				016EA1822328BB8400CD20E2 /* Icon-App-29x29@1x.png in Resources */,
 				E2548107431F43B3925E134D /* female5.png in Resources */,
 				C3E2B1B45F414111A92AF6C3 /* female6.png in Resources */,
 				4FFC16E1C04040C6A618AE98 /* female7.png in Resources */,
 				5816F485CED4477D89F3138A /* female8.png in Resources */,
 				D85247DA4F0A4C18BE1E7ACE /* female9.png in Resources */,
+				016EA1842328BB8400CD20E2 /* Icon-App-60x60@3x.png in Resources */,
 				F202D4C0171440FCB284E684 /* male1.png in Resources */,
 				EC51F5A7EDC74BA9BACE2B23 /* male10.png in Resources */,
 				E4764F7BE5FA40C6A57B5A9F /* male11.png in Resources */,
@@ -1128,6 +1202,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = QConnectV3;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuranConnect.app/QuranConnect";
 			};
 			name = Debug;
@@ -1149,6 +1224,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = QConnectV3;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuranConnect.app/QuranConnect";
 			};
 			name = Release;
@@ -1158,18 +1234,23 @@
 			baseConfigurationReference = B1A2A0812B6BA8DE8FF406EB /* Pods-QuranConnect.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1.1.7;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = PHH78H2W53;
+				DEVELOPMENT_TEAM = B65Y7865Z9;
 				INFOPLIST_FILE = QuranConnect/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.1.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.yungdevz.quranconnect;
 				PRODUCT_NAME = QuranConnect;
+				PROVISIONING_PROFILE_SPECIFIER = QConnectV2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1179,17 +1260,23 @@
 			baseConfigurationReference = 8B00778C64086B4F31FD9346 /* Pods-QuranConnect.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = PHH78H2W53;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1.1.7;
+				DEVELOPMENT_TEAM = B65Y7865Z9;
 				INFOPLIST_FILE = QuranConnect/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.1.7;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.yungdevz.quranconnect;
 				PRODUCT_NAME = QuranConnect;
+				PROVISIONING_PROFILE_SPECIFIER = QConnectV2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1331,8 +1418,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = B65Y7865Z9;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1353,6 +1443,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE_SPECIFIER = QConnectV3;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -1384,8 +1475,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = YES;
+				DEVELOPMENT_TEAM = B65Y7865Z9;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1398,6 +1492,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE_SPECIFIER = QConnectV3;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

@@ -37,7 +37,6 @@ target 'QuranConnect' do
   pod 'Firebase/Messaging', '~> 6.3.0'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
-  pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
 
   target 'QuranConnectTests' do
     inherit! :search_paths

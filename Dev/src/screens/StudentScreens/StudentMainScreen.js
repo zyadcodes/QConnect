@@ -267,8 +267,8 @@ class StudentMainScreen extends QcParentScreen {
                                     <View style={{ paddingTop: screenHeight * 0.005, alignSelf: 'center' }}>
                                         <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{thisClassInfo.currentAssignment.toUpperCase()}</Text>
                                     </View>
-                                    <View style={{ alignSelf: 'flex-end' }}>
-                                        <Text style={fontStyles.bigTextStyleDarkGrey}>{strings.TotalAssignments + " " + thisClassInfo.totalAssignments + "  "}</Text>
+                                    <View style={{ alignSelf: 'flex-start' }}>
+                                        <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.TotalAssignments + ": " + thisClassInfo.totalAssignments + "  "}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -317,7 +317,7 @@ class StudentMainScreen extends QcParentScreen {
                                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                             <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
                                             <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
-                                            <Text style={fontStyles.mainTextStyleBlack}>{strings.CurrentAssignment}</Text>
+                                            <Text style={fontStyles.bigTextStyleBlack}>{strings.CurrentAssignment}</Text>
                                             <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
                                             <Text style={fontStyles.bigTextStyleBlack}>{thisClassInfo.currentAssignment}</Text>
                                         </View>
