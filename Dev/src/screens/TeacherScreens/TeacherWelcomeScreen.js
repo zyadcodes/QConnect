@@ -19,7 +19,8 @@ import { screenHeight, screenWidth } from 'config/dimensions';
 
 const initialState = {
   authCode: '',
-  password: ''
+  password: '',
+  passwordTwo: '',
 }
 
 //To-Do: All info in this class is static, still needs to be hooked up to data base in order
@@ -139,9 +140,25 @@ export class TeacherWelcomeScreen extends QcParentScreen {
       || emailAddress.trim() === ""
       || password.trim() === "") {
       Alert.alert(strings.Whoops, strings.PleaseMakeSureAllFieldsAreFilledOut);
-    } else if (!this.state.isPhoneValid) {
+    } 
+    /**
+     * Phone input Check
+     */
+    else if (!this.state.isPhoneValid) {
       Alert.alert(strings.Whoops, strings.InvalidPhoneNumber);
-    } else {
+    } 
+
+    /**
+     * Password Input Check
+     */
+    else if (!(this.state.password === this.state.passwordTwo)){
+      Alert.alert(strings.Whoops, strings.PasswordsDontMatch)
+    } 
+
+    /**
+     * Save Profile info
+     */
+    else {
       //else, create account and save profile info
       this.saveProfileInfo()
     }
@@ -162,9 +179,16 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   onEmailAddressChanged = value => {
     this.setState({ emailAddress: value });
   };
+
   onPasswordChanged = value => {
     this.setState({ password: value })
   }
+
+  onPasswordTwoChanged = value => {
+    this.setState({
+      passwordTwo: value
+    });
+  };
 
   componentWillMount() {
     if (Platform.OS === 'ios') {
@@ -220,12 +244,15 @@ export class TeacherWelcomeScreen extends QcParentScreen {
                 phoneNumber={this.state.phoneNumber}
                 emailAddress={this.state.emailAddress}
                 password={this.state.password}
+                passwordTwo = {this.state.passwordTwo}
                 onNameChanged={this.onNameChanged}
                 onPhoneNumberChanged={this.onPhoneNumberChanged}
                 onEmailAddressChanged={this.onEmailAddressChanged}
                 showPasswordField={true}
                 onPasswordChanged={this.onPasswordChanged}
+                onPasswordTwoChanged={this.onPasswordTwoChanged}
               />
+              
               <ImageSelectionRow
                 images={teacherImages.images}
                 highlightedImagesIndices={this.state.highlightedImagesIndices}
