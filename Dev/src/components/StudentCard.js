@@ -31,12 +31,12 @@ export default class StudentCard extends FontLoadingComponent {
                 <View
                     style={styles.infoStyle}>
                     {currentAssignment ? (
-                        <View style={{ marginLeft: Dimensions.get('window').width * 0.05 }}>
-                            <View style={{ marginBottom: Dimensions.get('window').height * 0.005 }}>
-                                <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{studentName}</Text>
+                        <View style={{ marginLeft: screenWidth * 0.05 }}>
+                            <View style={{ marginBottom: screenWidth * 0.004 }}>
+                                <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkestGrey}>{studentName}</Text>
                             </View>
-                            <View style={{ marginBottom: Dimensions.get('window').height * 0.005 }}>
-                                <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{currentAssignment}</Text>
+                            <View style={{ marginBottom: screenWidth * 0.004 }}>
+                                <Text numberOfLines={1} style={[fontStyles.bigTextStyleDarkGrey, {textAlign: 'left'}]}>{currentAssignment}</Text>
                             </View>
                             <View style={{ marginBottom: Dimensions.get('window').height * 0.005 }}>
                                 <Text style={fontStyles.mainTextStyleDarkGrey}>{status}</Text>

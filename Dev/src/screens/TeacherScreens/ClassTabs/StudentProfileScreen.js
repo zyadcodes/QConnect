@@ -135,8 +135,8 @@ class StudentProfileScreen extends QcParentScreen {
                   style={styles.profilePic}
                   source={studentImages.images[classStudent.profileImageID]} />
               </View>
-              <View style={{ flex: 1, flexDirection: 'column', height: 59 }}>
-                <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{this.state.currentAssignment.toUpperCase()}</Text>
+              <View style={{ flex: 1, flexDirection: 'column', height: 0.086 * screenHeight, paddingLeft: screenWidth * 0.05 }}>
+                <Text numberOfLines={1} style={[fontStyles.bigTextStyleDarkGrey, {textAlign: 'left'}]}>{this.state.currentAssignment.toUpperCase()}</Text>
                 <View style={{ flexDirection: 'row' }}>
                   <TouchableHighlight
                     onPress={() => { this.setState({ isDialogVisible: true }) }} >
@@ -197,12 +197,12 @@ class StudentProfileScreen extends QcParentScreen {
                       </View>
                     </View>
                     {item.evaluation.notes ?
-                      <Text numberOfLines={2} style={fontStyles.smallTextStyleBlack}>{strings.NotesColon + item.evaluation.notes}</Text>
+                      <Text numberOfLines={2} style={fontStyles.mainTextStyleBlack}>{strings.NotesColon + item.evaluation.notes}</Text>
                       : <View />
                     }
                     {item.evaluation.improvementAreas && item.evaluation.improvementAreas.length > 0 ?
-                      <View style={{ flexDirection: 'row', justifyContent: 'flex-start', height: Dimensions.get('window').height * 0.03 }}>
-                        <Text style={fontStyles.smallTextStyleBlack}>{strings.ImprovementAreas}</Text>
+                      <View style={{ flexDirection: 'row', justifyContent: 'flex-start', height: screenHeight * 0.03 }}>
+                        <Text style={[fontStyles.mainTextStyleBlack, {alignSelf: 'center'}]}>{strings.ImprovementAreas}</Text>
                         {item.evaluation.improvementAreas.map((tag) => { return (<Text key={tag} style={styles.corner}>{tag}</Text>) })}
                       </View>
                       : <View />
@@ -220,28 +220,6 @@ class StudentProfileScreen extends QcParentScreen {
 
 //styles for the entire page
 const styles = StyleSheet.create({
-  ratingDescText: {
-    fontSize: 18,
-    fontFamily: 'Montserrat-Light',
-    color: colors.primaryDark
-  },
-  assignmentTextSmall: {
-    fontSize: 14,
-    fontFamily: 'Montserrat-Regular',
-    color: colors.black,
-    paddingTop: 2
-  },
-  ratingText: {
-    fontSize: 24,
-    fontFamily: 'Montserrat-Regular',
-    color: colors.darkGrey,
-    marginLeft: 10,
-  },
-  container: {
-    flexDirection: "column",
-    backgroundColor: colors.lightGrey,
-    flex: 1
-  },
   studentInfoContainer: {
     marginTop: 10,
     marginBottom: 10,
@@ -297,15 +275,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1
   },
   profilePic: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    paddingBottom: 10
-  },
-  buttons: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: 0.10 * screenHeight,
+    height: 0.10 * screenHeight,
+    borderRadius: 0.075 * screenHeight,
+    paddingBottom: 0.015 * screenHeight
   },
   prevAssignments: {
     flexDirection: 'column',

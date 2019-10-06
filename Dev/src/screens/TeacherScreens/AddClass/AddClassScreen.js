@@ -183,9 +183,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   profilePic: {
-    width: 130,
-    height: 130,
-    borderRadius: 65,
+    width: screenHeight * 0.10,
+    height: screenHeight * 0.10,
+    borderRadius: screenHeight * 0.10 / 2,
+    marginBottom: screenHeight * 0.01
   },
   bottomContainer: {
     paddingTop: 15,

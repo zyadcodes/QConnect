@@ -234,14 +234,11 @@ const styles = StyleSheet.create({
         color: colors.black,
     },
     profilePic: {
-        width: 130,
-        height: 130,
-        borderRadius: 65
-    },
-    editInfo: {
-        flexDirection: 'column',
-        backgroundColor: colors.white
-    },
+        width: screenHeight * 0.10,
+        height: screenHeight * 0.10,
+        borderRadius: screenHeight * 0.1,
+        marginBottom: 10
+        },
     cardStyle: {
         flexDirection: 'row',
         marginRight: 7,

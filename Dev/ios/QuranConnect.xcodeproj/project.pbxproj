@@ -1293,11 +1293,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.1.7;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = B65Y7865Z9;
 				INFOPLIST_FILE = QuranConnect/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.1.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1305,7 +1306,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yungdevz.quranconnect;
 				PRODUCT_NAME = QuranConnect;
-				PROVISIONING_PROFILE_SPECIFIER = QConnectV3;
+				PROVISIONING_PROFILE_SPECIFIER = QConnectV2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1318,10 +1319,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.1.7;
 				DEVELOPMENT_TEAM = B65Y7865Z9;
 				INFOPLIST_FILE = QuranConnect/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.1.7;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1330,7 +1332,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yungdevz.quranconnect;
 				PRODUCT_NAME = QuranConnect;
-				PROVISIONING_PROFILE_SPECIFIER = QConnectV3;
+				PROVISIONING_PROFILE_SPECIFIER = QConnectV2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

@@ -11,12 +11,8 @@ import colors from 'config/colors';
 export default TouchableAvatar = (props) => {
   const { image, onPress, index, selected } = props;
   const backColor = props.backgroundColor ? props.backgroundColor : (selected ? colors.primaryLight : colors.white);
-  var {
-    width,
-    height
-  } = Dimensions.get('window');
-  let imgDiameter = width / 7;
-  const length = props.length ? props.length : (selected ? imgDiameter + 10 : imgDiameter);
+  let imgDiameter = screenWidth / 7;
+  const length = props.length ? props.length : (selected ? imgDiameter + 5 : imgDiameter);
 
 
   return (

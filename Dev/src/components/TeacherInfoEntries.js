@@ -11,21 +11,34 @@ import fontStyles from 'config/fontStyles';
 // Used from Teacher welcome flow as well as Teacher profile edit page
 //--------------------------------------------------------------------------
 export default TeacherInfoEntries = (props) => {
+
     return (
         <View style={styles.container}>
+            {
+                //Teacher information Section ------------------------
+            }
             <View style={styles.infoRow}>
                 <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.Information}</Text>
             </View>
+
+            {
+                //Teacher Name box ------------------------------------------------------
+            }
             <View style={styles.infoRow}>
                 <View style={{ paddingRight: Dimensions.get('window').width * 0.015 }}>
                     <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.namePlaceHolder}</Text>
                 </View>
+
                 <TextInput
                     style={styles.infoTextInput}
                     textContentType='name'
                     onChangeText={props.onNameChanged}
                     value={props.name} />
             </View>
+
+            {
+                //Teacher Phone box -----------------------------------------------------
+            }
             <View style={styles.infoRow}>
                 <View style={{ paddingRight: Dimensions.get('window').width * 0.015 }}>
                     <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.phoneNumberPlaceHolder}</Text>
@@ -38,6 +51,10 @@ export default TeacherInfoEntries = (props) => {
                     onChangePhoneNumber={() => props.onPhoneNumberChanged(this.phone)}
                 />
             </View>
+
+            {
+                //Teacher Email adress box ----------------------------------------------
+            }
             {
                 !props.noEmailField ? (
                     <View style={styles.infoRow}>
@@ -58,6 +75,12 @@ export default TeacherInfoEntries = (props) => {
                         <View></View>
                     )
             }
+
+            {
+                /**
+                 * The Password fields
+                 */
+            }
             {props.showPasswordField &&
                 <View style={styles.infoRow}>
                     <View style={{ paddingRight: Dimensions.get('window').width * 0.015 }}>
@@ -72,7 +95,21 @@ export default TeacherInfoEntries = (props) => {
                         value={props.password}
                         autoCapitalize="none"
                     />
+
+                    <View style={{ paddingRight: screenWidth * 0.015 }}>
+                        <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.ConfirmPasswordPlaceholder}</Text>
+                    </View>
+                    <TextInput
+                        style={[fontStyles.smallTextStyleDarkGrey, { flex: 1, paddingLeft: 0.049 * screenWidth, alignSelf: 'stretch' }]}
+                        textContentType='password'
+                        autoCompleteType='password'
+                        onChangeText={props.onPasswordTwoChanged}
+                        secureTextEntry={true}
+                        value={props.passwordTwo}
+                        autoCapitalize="none"
+                    />
                 </View>
+                
             }
         </View>
     );

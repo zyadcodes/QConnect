@@ -267,8 +267,8 @@ class StudentMainScreen extends QcParentScreen {
                                     <View style={{ paddingTop: Dimensions.get('window').height * 0.005, paddingLeft: Dimensions.get('window').width * 0.3 }}>
                                         <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{thisClassInfo.currentAssignment.toUpperCase()}</Text>
                                     </View>
-                                    <View style={{ alignSelf: 'flex-end' }}>
-                                        <Text style={fontStyles.bigTextStyleDarkGrey}>{strings.TotalAssignments + " " + thisClassInfo.totalAssignments + "  "}</Text>
+                                    <View style={{ alignSelf: 'flex-start' }}>
+                                        <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.TotalAssignments + ": " + thisClassInfo.totalAssignments + "  "}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -283,19 +283,40 @@ class StudentMainScreen extends QcParentScreen {
                             } else {
                                 Alert.alert(strings.Whoops, strings.CurrentlyNoAssignment);
                             }
-                        }}>
-                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
-                                <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
-                                <Text style={fontStyles.mainTextStyleBlack}>{strings.CurrentAssignment}</Text>
-                                <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
-                                <Text style={fontStyles.bigTextStyleBlack}>{thisClassInfo.currentAssignment}</Text>
-                            </View>
-                            <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
-                                <Text style={fontStyles.bigTextStyleBlack}>{"  "}</Text>
-                                <Text style={fontStyles.mainTextStylePrimaryDark}>{isReady ? strings.Ready : strings.NotReady}</Text>
-                            </View>
-                        </TouchableOpacity>
+                            onValueChange={value => {
+                                this.setState({ isReadyEnum: value.value });
+                                FirebaseFunctions.updateStudentAssignmentStatus(currentClassID, userID, value.value);
+                            }}
+                            getLabel={item => item.label}
+                            optionTemplate={(settings) => {
+                                const { item, getLabel } = settings;
+                                return (
+                                    <View style={styles.optionContainer}>
+                                        <View style={styles.innerContainer}>
+                                            <View style={[styles.box, { backgroundColor: item.color }]} />
+                                            <Text style={fontStyles.bigTextStyleBlack}>{getLabel(item)}</Text>
+                                        </View>
+                                    </View>
+                                )
+                            }}
+                            fieldTemplate={(settings) => {
+                                return (
+                                    <View style={styles.middleView}>
+                                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                            <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
+                                            <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
+                                            <Text style={fontStyles.bigTextStyleBlack}>{strings.CurrentAssignment}</Text>
+                                            <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
+                                            <Text style={fontStyles.bigTextStyleBlack}>{thisClassInfo.currentAssignment}</Text>
+                                        </View>
+                                        <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
+                                            <Text style={fontStyles.bigTextStyleBlack}>{"  "}</Text>
+                                            <Text style={fontStyles.mainTextStylePrimaryDark}>{isReadyEnum === "READY" ? strings.Ready : (isReadyEnum === "WORKING_ON_IT" ? strings.WorkingOnIt : strings.NeedHelp)}</Text>
+                                        </View>
+                                    </View>
+                                )
+                            }}
+                        />
                     </View>
                     <View style={styles.bottomView}>
                         <ScrollView style={styles.prevAssignments}>
@@ -407,11 +428,6 @@ const styles = StyleSheet.create({
     bottomView: {
         flex: 3
     },
-    studentNameStyle: {
-        fontFamily: 'Montserrat-Regular',
-        fontSize: 18,
-        color: colors.black,
-    },
     prevAssignmentCard: {
         flexDirection: 'column',
         borderBottomColor: colors.lightGrey,
@@ -449,26 +465,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: colors.white,
         flex: 1
-    },
-    profileInfo: {
-        flexDirection: 'column',
-        backgroundColor: colors.white,
-        marginBottom: 10
-    },
-    bigText: {
-        fontSize: 24,
-        fontFamily: 'Montserrat-Regular',
-    },
-    subText: {
-        fontSize: 16,
-        fontFamily: 'Montserrat-Regular',
-        color: colors.primaryDark
-    },
-    assignmentTextSmall: {
-        fontSize: 14,
-        fontFamily: 'Montserrat-Regular',
-        color: colors.black,
-        paddingTop: 2
     },
     modal: {
         backgroundColor: colors.white,
