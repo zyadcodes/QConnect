@@ -200,7 +200,7 @@ export class ProfileScreen extends QcParentScreen {
                         </View>
                         <View style={styles.buttonsContainer}>
                             <TouchableOpacity style={styles.cardStyle} onPress={async () => {
-                                await FirebaseFunctions.logOut();
+                                await FirebaseFunctions.logOut(this.state.userID);
                                 this.props.navigation.push("FirstScreenLoader");
                             }}>
                                 <Text style={fontStyles.bigTextStyleBlack}>{strings.LogOut}</Text>

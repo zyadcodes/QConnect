@@ -21,6 +21,8 @@ class FirstScreenLoader extends Component {
           this.props.navigation.push("FirstRunScreen");
           return;
         }
+        //Makes sure this user is subscribed to a topic
+        FirebaseFunctions.fcm.subscribeToTopic(user.uid);
         const student = await FirebaseFunctions.getStudentByID(user.uid);
         if (student !== -1) {
           this.props.navigation.push("StudentCurrentClass", {

@@ -5,6 +5,17 @@ export default {
     AppTitle: 'Quran Connect',
     AppSubTitle: 'Serving your passion for the Quran',
 
+    //--------------------- Notifications ---------------------
+    NeedsHelp: 'Needs help',
+    StudentUpdate: 'Student Update',
+    HasChangedAssignmentStatusTo: ' has changed their assignment status to ',
+    NewStudent: 'New Student',
+    HasJoinedYourClass: ' has joined your class',
+    AssignmentUpdate: 'Assignment Update',
+    YourTeacherHasUpdatedYourCurrentAssignment: 'Your teacher has updated your current assignment',
+    AssignmentGraded: "Assignment Graded",
+    YourAssignmentHasBeenGraded: 'Your assignment has been graded',
+
     //--------------------- Student Main Screen ---------------------
     TotalAssignments: 'Assignments Completed',
     Ready: 'READY',
@@ -31,6 +42,7 @@ export default {
     EmailSent: 'Email Sent',
     CheckEmail: 'If a user with this email exists, we\'ve sent a link to your email to reset your password',
     Ok: 'Ok',
+    PasswordsDontMatch: "Passwords Don't match",
 
     //--------------------- Evaluation Page ---------------------
     None: 'None',
@@ -76,9 +88,9 @@ export default {
     EnterAssignmentHere: 'Enter assignment here...',
     OutStanding: 'Outstanding!',
     EnterAssignment: 'Enter Assignment',
-    GetStarted: 'Get Started',
-    PracticePerfect: "Practice Makes Perfect",
-    GreatJob: "Great Job",
+    GetStarted: 'Get Started!',
+    PracticePerfect: "Practice Makes Perfect!",
+    GreatJob: "Great Job!",
     CurrentlyNoAssignment: 'You currently don\'t have an assignment',
     CurrentAssignment: 'Current Assignment',
     AddAssignment: 'Add Assignment',
