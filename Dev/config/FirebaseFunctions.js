@@ -481,7 +481,7 @@ export default class FirebaseFunctions {
         this.logEvent("JOIN_CLASS");
 
         //Sends a notification to the teachers of that class saying that a student has joined the class
-        classToJoin.teachers.forEach((teacherID) => {
+        classToJoin.data().teachers.forEach((teacherID) => {
             this.functions.httpsCallable('sendNotification', {
                 topic: teacherID,
                 title: strings.NewStudent,
