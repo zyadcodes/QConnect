@@ -59,7 +59,11 @@ export class EvaluationPage extends QcParentScreen {
     let evaluationDetails = {
       ID: evaluationID,
       name: assignmentName,
-      completionDate: new Date().toLocaleDateString("en-US"),
+      completionDate: new Date().toLocaleDateString("en-US", {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }),
       evaluation: {
         rating,
         notes,
