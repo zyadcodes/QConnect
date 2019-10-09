@@ -88,8 +88,8 @@ class StudentProfileScreen extends QcParentScreen {
 
   //---------- main UI render ===============================
   render() {
-    const { classStudent, isLoading, classID, studentID, hasCurrentAssignment } = this.state;
-    const { currentAssignment, assignmentHistory, averageRating, name } = classStudent;
+    const { classStudent, isLoading, classID, studentID, hasCurrentAssignment, currentAssignment } = this.state;
+    const { assignmentHistory, averageRating, name } = classStudent;
 
     //If the screen is loading, a spinner will display
     if (isLoading === true) {
@@ -148,7 +148,7 @@ class StudentProfileScreen extends QcParentScreen {
                     this.props.navigation.push("EvaluationPage", {
                       classID: classID,
                       studentID: studentID,
-                      assignmentName: this.state.currentAssignment,
+                      assignmentName: currentAssignment,
                       userID: this.props.navigation.state.params.userID,
                       classStudent: classStudent,
                       newAssignment: true,
