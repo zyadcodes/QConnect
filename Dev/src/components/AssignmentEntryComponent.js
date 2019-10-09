@@ -35,10 +35,11 @@ export default class AssignmentEntryComponent extends React.Component {
                     <View style={styles.modal}>
                         <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.EnterAssignment}</Text>
 
+                        <View style={styles.spacer}></View>
                         <InputAutoSuggest
                             staticData={surahNames}
                             onTextChanged={this.onTextChange.bind(this)}
-                            assignment={this.props.assignment}
+                            assignment={this.props.assignment === strings.None? "" : this.props.assignment }
                             inputStyle={fontStyles.mainTextStyleDarkGrey}
                         />
 
@@ -81,4 +82,7 @@ const styles = StyleSheet.create({
         marginHorizontal: screenWidth * 0.11,
         paddingHorizontal: 0.012 * screenWidth
     },
+    spacer: {
+        height: screenHeight * 0.01
+    }
 });
