@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
 import colors from 'config/colors';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import Sound from 'react-native-sound';
@@ -30,10 +30,11 @@ class Word extends React.Component {
         
 
     render() {
-        const { text, audio } = this.props;
+        const { text, audio, selected } = this.props;
         highlightedStyle = this.state.highlighted ? { backgroundColor: colors.green, borderRadius: 5 } : {};
 
         return (
+            <View style={selected? {backgroundColor: colors.black} : {}}>
             <TouchableHighlight onPress={() => 
             {
             this.setState({ highlighted: !this.state.highlighted  });
@@ -45,6 +46,7 @@ class Word extends React.Component {
                     {text}
                 </Text>
             </TouchableHighlight>
+            </View>
         )
     }
 }

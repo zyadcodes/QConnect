@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ImageBackground, StyleSheet, } from 'react-native';
+import { View, ImageBackground, StyleSheet} from 'react-native';
 import colors from 'config/colors';
 import Ayah from './Ayah';
 import LoadingSpinner from 'components/LoadingSpinner';
@@ -12,7 +12,8 @@ class Page extends React.Component {
 
     state = {
         isLoading: true,
-        lines: []
+        lines: [],
+        selectedAyahs: new Set()
     }
 
     async componentDidMount() {
@@ -71,10 +72,20 @@ class Page extends React.Component {
                                         {
                                             line.text.map((word) => {
                                                 if (word.char_type === "word") {
-                                                    return (<Word key={word.id} text={word.text} audio={word.audio} />)
+                                                    return (<Word key={word.id} text={word.text} audio={word.audio} 
+                                                    selected={false} />)
                                                 }
                                                 else if (word.char_type === "end") {
-                                                    return (<EndOfAyah key={word.id} ayahNumber={word.aya} />)
+                                                    return (<EndOfAyah key={word.id} ayahNumber={word.aya}  
+                                                    onPress={() => {
+                                                            let newSelectedAyah = this.state.selectedAyahs;
+
+                                                            newSelectedAyah.has(word.aya)? newSelectedAyah = newSelectedAyah.delete(word.aya) : newSelectedAyah = newSelectedAyah.add(word.aya);
+
+                                                            this.setState({selectedAyahs: newSelectedAyah})
+                                                            alert (JSON.stringify(this.state.selectedAyahs));
+                                                        }
+                                                        } />)
                                                 }
                                             }
                                             )
