@@ -162,9 +162,10 @@ style = StyleSheet.create({
   },
   flatList: {},
   inputDefaultStyle: {
-    height: screenHeight * 0.03,
+    height: screenHeight * 0.08,
     marginVertical: screenHeight * 0.01,
-    backgroundColor: colors.lightGrey,
+    color: colors.darkGrey,
+    backgroundColor: colors.black,
     borderBottomColor: colors.darkGrey,
     borderBottomWidth: 1,
   },
