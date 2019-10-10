@@ -207,6 +207,11 @@ export class EvaluationPage extends QcParentScreen {
                 editable={!readOnly}
                 value={notes}
               />
+
+              {/**
+                  The Things to work on button.
+              */}
+              
               <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                 <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.ImprovementAreas}</Text>
               </View>
