@@ -129,6 +129,9 @@ class StudentMainScreen extends QcParentScreen {
     render() {
         const { userID, isLoading, student, currentClassID, thisClassInfo, isReadyEnum, currentClass } = this.state;
 
+        let assignmentHistory = thisClassInfo.assignmentHistory.sort((a, b) => {
+            return a.completionDate - b.completionDate;
+        })
         if (isLoading === true) {
             return (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -333,7 +336,7 @@ class StudentMainScreen extends QcParentScreen {
                     <View style={styles.bottomView}>
                         <ScrollView style={styles.prevAssignments}>
                             <FlatList
-                                data={thisClassInfo.assignmentHistory}
+                                data={assignmentHistory}
                                 keyExtractor={(item, index) => item.name + index}
                                 renderItem={({ item, index }) => (
                                     <TouchableOpacity onPress={() => {

@@ -89,7 +89,12 @@ class StudentProfileScreen extends QcParentScreen {
   //---------- main UI render ===============================
   render() {
     const { classStudent, isLoading, classID, studentID, hasCurrentAssignment } = this.state;
-    const { currentAssignment, assignmentHistory, averageRating, name } = classStudent;
+    let { currentAssignment, assignmentHistory, averageRating, name } = classStudent;
+    
+    //Sorts the assignments by date completed
+    assignmentHistory = assignmentHistory.sort((a, b) => {
+      return a.completionDate - b.completionDate;
+    });
 
     //If the screen is loading, a spinner will display
     if (isLoading === true) {
