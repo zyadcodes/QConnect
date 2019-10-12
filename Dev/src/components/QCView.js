@@ -19,7 +19,7 @@ const QCViewHOC = (Comp) => {
                 extraScrollHeight={screenHeight * 0.007}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}>
-                <View style={{backgroundColor: "f2f2f2"}}>
+                <View>
                     <Comp {...props} >
                         {children}
                     </Comp>

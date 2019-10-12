@@ -20,7 +20,6 @@ import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
 import { CustomPicker } from 'react-native-custom-picker';
 import { screenHeight, screenWidth } from 'config/dimensions';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 class StudentMainScreen extends QcParentScreen {
 
@@ -311,7 +310,7 @@ class StudentMainScreen extends QcParentScreen {
                             fieldTemplate={(settings) => {
                                 return (
                                     <View style={styles.middleView}>
-                                        <View style={{ flex: .5, justifyContent: 'center', alignItems: 'center', paddingVertical: 15 }}>
+                                        <View style={{ flex: .5, justifyContent: 'center', alignItems: 'center', paddingVertical: screenHeight*0.0112 }}>
                                             <Text style={fontStyles.mainTextStyleBlack}>{strings.CurrentAssignment}</Text>
                                             <Text style={fontStyles.bigTextStyleBlack}>{thisClassInfo.currentAssignment}</Text>
                                         </View>
