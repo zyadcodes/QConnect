@@ -12,40 +12,38 @@ class Word extends React.Component {
     }
 
     playTrack = (audioFilePath) => {
-        const track = new Sound('https://dl.salamquran.com/wbw/'+audioFilePath, null, (e) => {
+        const track = new Sound('https://dl.salamquran.com/wbw/' + audioFilePath, null, (e) => {
             if (e) {
-            console.log('error loading track:', e)
+                console.log('error loading track:', e)
             } else {
-            track.play((success) => {
-                if (success) {
-                  console.log('successfully finished playing');
-                } else {
-                  console.log('playback failed due to audio decoding errors');
-                }
-                this.setState({ highlighted: false  });
-              });
+                track.play((success) => {
+                    if (success) {
+                        console.log('successfully finished playing');
+                    } else {
+                        console.log('playback failed due to audio decoding errors');
+                    }
+                    this.setState({ highlighted: false });
+                });
             }
         })
-        }
-        
+    }
+
 
     render() {
         const { text, audio, selected } = this.props;
         highlightedStyle = this.state.highlighted ? { backgroundColor: colors.green, borderRadius: 5 } : {};
 
         return (
-            <View style={selected? {backgroundColor: colors.black} : {}}>
-            <TouchableHighlight onPress={() => 
-            {
-            this.setState({ highlighted: !this.state.highlighted  });
-            this.playTrack(audio);
-            }
-
-            }>
-                <Text style={[styles.wordText, highlightedStyle]} >
-                    {text}
-                </Text>
-            </TouchableHighlight>
+            <View style={selected ? { backgroundColor: colors.black } : {}}>
+                <TouchableHighlight onPress={() => {
+                    this.setState({ highlighted: !this.state.highlighted });
+                    this.playTrack(audio);
+                }
+                }>
+                    <Text style={[styles.wordText, highlightedStyle]} >
+                        {text}
+                    </Text>
+                </TouchableHighlight>
             </View>
         )
     }

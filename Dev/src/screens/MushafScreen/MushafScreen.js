@@ -7,7 +7,7 @@ import QcParentScreen from "screens/QcParentScreen";
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
-import Page from './Components/Page';
+import SelectionPage from './Components/SelectionPage';
 
 export default class MushafScreen extends QcParentScreen {
     
@@ -19,7 +19,7 @@ export default class MushafScreen extends QcParentScreen {
     render() {
         return (
             <QCView style={screenStyle.container}>
-                <Page />
+                <SelectionPage />
             </QCView>
         )
     }
