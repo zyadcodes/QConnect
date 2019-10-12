@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ImageBackground, StyleSheet} from 'react-native';
+import { View, ImageBackground, StyleSheet, } from 'react-native';
 import colors from 'config/colors';
 import Ayah from './Ayah';
 import LoadingSpinner from 'components/LoadingSpinner';
@@ -13,7 +13,10 @@ class Page extends React.Component {
     state = {
         isLoading: true,
         lines: [],
-        selectedAyahs: new Set()
+        selectedAyahsStart: 0,
+        selectedAyahsEnd: 0,
+        selectionStarted: false,
+        selectionCompleted: false,
     }
 
     async componentDidMount() {
@@ -47,7 +50,48 @@ class Page extends React.Component {
 
         return lineAyahText;
     }
-    
+
+    onSelectAyah(ayaNumber){
+        //if the user taps on the same selected aya again, turn off selection
+        if(this.state.selectedAyahsStart === this.state.selectedAyahsEnd &&
+            this.state.selectedAyahsStart === ayaNumber) {
+                this.setState({
+                    selectionStarted: false,
+                    selectionCompleted: false,
+                    selectedAyahsStart: 0,
+                    selectedAyahsEnd: 0,
+                })
+            }
+        else if(!this.state.selectionStarted){
+            this.setState({
+                selectionStarted: true,
+                selectionCompleted: false,
+                selectedAyahsStart: ayaNumber,
+                selectedAyahsEnd: ayaNumber,
+            })
+        } else if(!this.state.selectionCompleted) {
+            this.setState(
+                {
+                    selectionStarted: false,
+                    selectionCompleted: true,
+                }
+            )
+
+            //Set the smallest number as the start, and the larger as the end
+            if(this.state.selectedAyahsStart < ayaNumber){
+                this.setState({ selectedAyahsEnd: ayaNumber})
+            } else{
+                this.setState({ selectedAyahsStart: ayaNumber})
+            }
+        }
+    }
+
+    isAyahSelected(ayahNumber){
+        return (this.state.selectionStarted || this.state.selectionCompleted) && // there are ayahs selected by the user
+            ayahNumber >= this.state.selectedAyahsStart &&
+            ayahNumber <= this.state.selectedAyahsEnd
+    }
+
 
     render() {
         const { isLoading, lines } = this.state;
@@ -61,40 +105,42 @@ class Page extends React.Component {
 
         else {
             return (
-                <View style={{backgroundColor: colors.white}}>
-                <ImageBackground source={require('assets/images/quran-page-frame.png')} style={{ width: '100%' }} resizeMethod='scale'>
-                    <View style={{ marginVertical: 30, marginHorizontal: 30, backgroundColor: colors.white }}>
-                        {
-                            lines !== undefined &&
-                            lines.map((line) => {
-                                return (
-                                    <View key={line.line} style={{ flexDirection: 'row-reverse', backgroundColor: 'transparent', justifyContent: 'space-between' }}>
-                                        {
-                                            line.text.map((word) => {
-                                                if (word.char_type === "word") {
-                                                    return (<Word key={word.id} text={word.text} audio={word.audio} 
-                                                    selected={false} />)
-                                                }
-                                                else if (word.char_type === "end") {
-                                                    return (<EndOfAyah key={word.id} ayahNumber={word.aya}  
-                                                    onPress={() => {
-                                                            let newSelectedAyah = this.state.selectedAyahs;
-
-                                                            newSelectedAyah.has(word.aya)? newSelectedAyah = newSelectedAyah.delete(word.aya) : newSelectedAyah = newSelectedAyah.add(word.aya);
-
-                                                            this.setState({selectedAyahs: newSelectedAyah})
-                                                            alert (JSON.stringify(this.state.selectedAyahs));
+                <View style={{ backgroundColor: colors.white }}>
+                    <ImageBackground source={require('assets/images/quran-page-frame.png')} style={{ width: '100%' }} resizeMethod='scale'>
+                        <View style={{ marginVertical: 30, marginHorizontal: 30, backgroundColor: colors.white, alignItems: 'stretch' }}>
+                            {
+                                lines !== undefined &&
+                                lines.map((line) => {
+                                    return (
+                                        <View key={line.line} style={{ flexDirection: 'row-reverse', backgroundColor: 'transparent', alignItems: 'stretch' }}>
+                                            {
+                                                line.ayas.map((aya) => {
+                                                    return(
+                                                        <View key={line.line + aya.aya} 
+                                                        style={this.isAyahSelected(aya.aya)? 
+                                                        {flexDirection: 'row-reverse', backgroundColor: colors.green, justifyContent: 'space-between', alignSelf:'stretch'} : 
+                                                        {flexDirection: 'row-reverse', backgroundColor: colors.black,  justifyContent: 'space-between', alignSelf:'stretch'}}>{
+                                                            aya.text.map((word) => {
+                                                                    if (word.char_type === "word") {
+                                                                        return (<Word key={word.id} text={word.text} audio={word.audio} />)
+                                                                    }
+                                                                    else if (word.char_type === "end") {
+                                                                        return (<EndOfAyah key={word.id} ayahNumber={word.aya}
+                                                                        onPress={() => this.onSelectAyah(word.aya)}  />)
+                                                                    }
+                                                                }
+                                                                )
                                                         }
-                                                        } />)
-                                                }
+                                                    </View>
+                                                    )
+
+                                                })
                                             }
-                                            )
-                                        }
-                                    </View>
-                                )
-                            })}
-                    </View>
-                </ImageBackground>
+                                        </View>
+                                    )
+                                })}
+                        </View>
+                    </ImageBackground>
                 </View>
 
             )

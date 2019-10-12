@@ -34,7 +34,7 @@ class Word extends React.Component {
         highlightedStyle = this.state.highlighted ? { backgroundColor: colors.green, borderRadius: 5 } : {};
 
         return (
-            <View style={selected ? { backgroundColor: colors.black } : {}}>
+            <View style={selected ? { flexGrow: 1, backgroundColor: colors.green, alignSelf: 'stretch' } : {flexGrow: 1, alignSelf: 'stretch'}}>
                 <TouchableHighlight onPress={() => {
                     this.setState({ highlighted: !this.state.highlighted });
                     this.playTrack(audio);

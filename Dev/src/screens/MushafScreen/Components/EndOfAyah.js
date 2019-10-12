@@ -11,7 +11,7 @@ const EndOfAyah = ({ ayahNumber, onPress, selected }) => {
     return (
         <View>
             <TouchableHighlight 
-            style={selected? {backgroundColor: colors.green} : {}}
+            style={selected? {flexGrow: 1, backgroundColor: colors.green, alignSelf: 'stretch'} : {flexGrow: 1, alignSelf: 'stretch'}}
             onPress={ () => onPress()}>
                 <Text style={styles.ayahSeparator}>
                     {leftBracket}
