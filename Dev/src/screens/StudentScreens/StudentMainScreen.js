@@ -128,10 +128,6 @@ class StudentMainScreen extends QcParentScreen {
     //Renders the screen
     render() {
         const { userID, isLoading, student, currentClassID, thisClassInfo, isReadyEnum, currentClass } = this.state;
-
-        let assignmentHistory = thisClassInfo.assignmentHistory.sort((a, b) => {
-            return a.completionDate - b.completionDate;
-        })
         if (isLoading === true) {
             return (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -234,6 +230,7 @@ class StudentMainScreen extends QcParentScreen {
             )
         }
 
+        let assignmentHistory = thisClassInfo.assignmentHistory.reverse();
         return (
             <SideMenu
                 isOpen={this.state.isOpen} menu={<LeftNavPane

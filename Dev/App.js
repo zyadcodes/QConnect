@@ -15,7 +15,7 @@ export default class App extends Component {
 
     const isPermissionsGranted = await checkNotifications();
     if (isPermissionsGranted !== 'granted') {
-      await requestNotifications();
+      await requestNotifications(['alert', 'sound', 'badge']);
       this.setState({ requestingPermissions: false });
     } else {
       this.setState({ requestingPermissions: false });
