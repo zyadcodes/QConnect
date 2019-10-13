@@ -144,6 +144,7 @@ class StudentProfileScreen extends QcParentScreen {
               <View style={{ flex: 1, flexDirection: 'column', height: 0.086 * screenHeight, paddingLeft: screenWidth * 0.05 }}>
                 <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{this.state.currentAssignment.toUpperCase()}</Text>
                 <View style={{ flexDirection: 'row' }}>
+                  
                   <TouchableHighlight
                     onPress={() => { this.setState({ isDialogVisible: true }) }} >
                     <Text style={fontStyles.mainTextStylePrimaryDark}>{strings.EditAssignment}</Text>
