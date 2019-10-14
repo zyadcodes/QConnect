@@ -129,6 +129,7 @@ export class EvaluationPage extends QcParentScreen {
         ]
       );
     } else {
+      this.setState({ isLoading: true });
       if (this.props.navigation.state.params.newAssignment === true) {
         this.doSubmitRating()
       } else {
@@ -211,7 +212,7 @@ export class EvaluationPage extends QcParentScreen {
               {/**
                   The Things to work on button.
               */}
-              
+
               <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                 <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.ImprovementAreas}</Text>
               </View>
@@ -229,12 +230,11 @@ export class EvaluationPage extends QcParentScreen {
           {!readOnly ?
             <QcActionButton
               text={strings.Submit}
-
               onPress={() => {
                 this.submitRating()
               }}
-              screen={this.name}
-            /> : <View></View>}
+              disabled={this.state.isLoading}
+              screen={this.name} /> : <View></View>}
         </View>
         <View style={styles.filler}></View>
       </QCView>

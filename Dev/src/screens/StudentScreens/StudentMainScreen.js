@@ -128,7 +128,6 @@ class StudentMainScreen extends QcParentScreen {
     //Renders the screen
     render() {
         const { userID, isLoading, student, currentClassID, thisClassInfo, isReadyEnum, currentClass } = this.state;
-
         if (isLoading === true) {
             return (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -231,6 +230,7 @@ class StudentMainScreen extends QcParentScreen {
             )
         }
 
+        let assignmentHistory = thisClassInfo.assignmentHistory.reverse();
         return (
 
             <SideMenu
@@ -326,7 +326,7 @@ class StudentMainScreen extends QcParentScreen {
                     <View style={styles.bottomView}>
                         <ScrollView style={styles.prevAssignments}>
                             <FlatList
-                                data={thisClassInfo.assignmentHistory}
+                                data={assignmentHistory}
                                 keyExtractor={(item, index) => item.name + index}
                                 renderItem={({ item, index }) => (
                                     <TouchableOpacity onPress={() => {
@@ -351,13 +351,13 @@ class StudentMainScreen extends QcParentScreen {
                                         style={{ paddingVertical: screenHeight * 0.019 }}>
                                         <View style={styles.prevAssignmentCard} key={index}>
                                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-start' }}>
+                                                <View style={{ flex: 3, justifyContent: 'center', alignItems: 'flex-start' }}>
                                                     <Text style={fontStyles.mainTextStylePrimaryDark}>{item.completionDate}</Text>
                                                 </View>
                                                 <View style={{ alignItems: 'center', justifyContent: 'center', flex: 3 }}>
                                                     <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{item.name}</Text>
                                                 </View>
-                                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end' }}>
+                                                <View style={{ flex: 3, justifyContent: 'center', alignItems: 'flex-end' }}>
                                                     <Rating readonly={true} startingValue={item.evaluation.rating} imageSize={17} />
                                                 </View>
                                             </View>

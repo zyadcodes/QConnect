@@ -34,7 +34,6 @@ class LoginScreen extends Component {
   state = {
     username: "",
     password: "",
-    isTeacher: this.props.navigation.state.params.isTeacher,
     isLoading: false
   };
 
@@ -48,11 +47,7 @@ class LoginScreen extends Component {
 
   onCreateAccount = () => {
 
-    if (this.state.isTeacher === true) {
-      this.props.navigation.navigate('TeacherWelcomeScreen');
-    } else {
-      this.props.navigation.navigate('StudentWelcomeScreen');
-    }
+    this.props.navigation.push("AccountTypeScreen")
   }
 
   //Logs the user in, fetches their ID, and then navigates to the correct screen according to whether they
@@ -74,16 +69,17 @@ class LoginScreen extends Component {
         Alert.alert(strings.Whoops, strings.IncorrectInfo);
       } else {
         const userID = account.uid;
-        if (this.state.isTeacher === true) {
-          FirebaseFunctions.logEvent("TEACHER_LOG_IN");
-          this.props.navigation.push("TeacherCurrentClass", {
-            userID,
-          })
-        } else {
+        const isTeacher = await FirebaseFunctions.getTeacherByID(userID);
+        if (isTeacher === -1) {
           FirebaseFunctions.logEvent("STUDENT_LOG_IN");
           this.props.navigation.push("StudentCurrentClass", {
             userID,
           });
+        } else {
+          FirebaseFunctions.logEvent("TEACHER_LOG_IN");
+          this.props.navigation.push("TeacherCurrentClass", {
+            userID,
+          })
         }
       }
     }
