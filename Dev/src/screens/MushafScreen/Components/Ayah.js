@@ -15,10 +15,11 @@ const Ayah = ({ text, number, id }) => {
 
 const styles = StyleSheet.create({
     ayahText: {
-        textAlign: 'right', 
+        textAlign: 'center', 
         fontFamily: 'me_quran', 
-        fontSize: 14, 
-        color: colors.darkGrey
+        fontSize: 16, 
+        color: colors.primaryDark
+
     }
 })
 

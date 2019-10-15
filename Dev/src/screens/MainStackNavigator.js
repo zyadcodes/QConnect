@@ -17,9 +17,11 @@ import ClassTabsNavigator from './TeacherScreens/ClassTabs/ClassTabsNavigator';
 import StudentProfileScreen from './TeacherScreens/ClassTabs/StudentProfileScreen';
 import ClassEditScreen from './TeacherScreens/ClassTabs/ClassEditScreen';
 import MushafScreen from './MushafScreen/MushafScreen'
+import PageHeader from './MushafScreen/Components/PageHeader'
 import EvaluationPage from './Evaluation/EvaluationPage';
 import strings from 'config/strings';
 import TopBanner from 'components/TopBanner';
+
 
 //The routes containing all the screens & their navigation options
 routeConfig = {
@@ -107,14 +109,7 @@ routeConfig = {
     MushafScreen: {
         screen: MushafScreen,
         navigationOptions: ({ navigation }) => ({
-            header: (
-                
-                <TopBanner
-                    LeftIconName="angle-left"
-                    LeftOnPress={() => navigation.goBack()}
-                    Title={"سورة النساء"}
-                />
-            )
+            header: null
         }),
     },
 

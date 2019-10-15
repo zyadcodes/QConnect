@@ -1,3 +1,5 @@
+import surahs from '../Data/Surahs.json'
+
 export async function getPageText (pageNumber) {
     try {
         let response = await fetch(
@@ -13,14 +15,18 @@ export async function getPageText (pageNumber) {
 var dbgString = "";
 
 function getPageByLines(pageJson){
-    var lines = [];
+    let lines = [];
     pageJson.map((lineData) => {
         lines.push(
             {
                 line: lineData.detail.line,
-                surah: lineData.detail.sura,
+                type: lineData.detail.line_type,
+                surahNumber: lineData.detail.sura,
+                surah: lineData.detail.surah? surahs[lineData.detail.sura].name : '', 
+                index: lineData.detail.index,
+                name: lineData.detail.name,
                 ayah: lineData.detail.aya,
-                text: lineData.word.map((word) => {return {id: word.id, char_type: word.char_type, text: word.text, aya: word.aya, sura: word.sura, audio: word.audio}})
+                text: lineData.word? lineData.word.map((word) => {return {id: word.id, char_type: word.char_type, text: word.text, aya: word.aya, sura: word.sura, audio: word.audio}}) : undefined
             }
         );
     });
@@ -29,10 +35,10 @@ function getPageByLines(pageJson){
 export async function getPageTextWbW (pageNumber) {
     try {
         let response = await fetch(
-            'https://salamquran.com/en/api/v6/page/wbw?index=200'
+            'https://salamquran.com/en/api/v6/page/wbw?index='+pageNumber
         );
         let responseJson = await response.json();
-        pageText = getPageByLines(responseJson.result);
+        let pageText = getPageByLines(responseJson.result);
         return pageText;
     } catch (error) {
         console.error(error);

@@ -110,7 +110,7 @@ export default StyleSheet.create({
     bigTextStylePrimaryDark: {
         fontFamily,
         fontSize: bodyFont * 1.25,
-        color: colors.black
+        color: colors.primaryDark
     },
 
     hugeTextStylePrimaryDark: {

@@ -106,7 +106,8 @@ class Page extends React.Component {
         else {
             return (
                 <View style={{ backgroundColor: colors.white }}>
-                        <View style={{ marginVertical: 10, marginHorizontal: 10, backgroundColor: colors.white, alignItems: 'stretch' }}>
+                    <ImageBackground source={require('assets/images/quran-page-frame.png')} style={{ width: '100%' }} resizeMethod='scale'>
+                        <View style={{ marginVertical: 30, marginHorizontal: 30, backgroundColor: colors.white, alignItems: 'stretch' }}>
                             {
                                 lines !== undefined &&
                                 lines.map((line) => {
@@ -139,6 +140,7 @@ class Page extends React.Component {
                                     )
                                 })}
                         </View>
+                    </ImageBackground>
                 </View>
 
             )

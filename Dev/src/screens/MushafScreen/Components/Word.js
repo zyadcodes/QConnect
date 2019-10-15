@@ -30,11 +30,14 @@ class Word extends React.Component {
 
 
     render() {
-        const { text, audio, selected } = this.props;
-        highlightedStyle = this.state.highlighted ? { backgroundColor: colors.green, borderRadius: 5 } : {};
+        const { text, audio, selected, isFirstSelectedWord } = this.props;
+        let highlightedStyle = this.state.highlighted ? { backgroundColor: colors.green, borderRadius: 5 } : {}
+        let containerStyle = [styles.container];
+        if(selected) {containerStyle.push(styles.selectionStyle)};
+        if(isFirstSelectedWord) {containerStyle.push(styles.firstSelectedWordText)};
 
         return (
-            <View style={selected ? { flexGrow: 1, backgroundColor: colors.green, alignSelf: 'stretch' } : {flexGrow: 1, alignSelf: 'stretch'}}>
+            <View style={containerStyle}>
                 <TouchableHighlight onPress={() => {
                     this.setState({ highlighted: !this.state.highlighted });
                     this.playTrack(audio);
@@ -53,8 +56,19 @@ const styles = StyleSheet.create({
     wordText: {
         textAlign: 'right',
         fontFamily: 'me_quran',
-        fontSize: 15,
+        fontSize: 21,
         color: colors.darkGrey
+    },
+    container: {
+        flexGrow: 1, 
+        alignSelf: 'stretch'
+    },
+    selectionStyle: {
+        backgroundColor: colors.green
+    },
+    firstSelectedWordText: {
+        borderTopRightRadius: 15,
+        borderBottomRightRadius: 15
     }
 })
 

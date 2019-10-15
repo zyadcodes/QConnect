@@ -4,14 +4,16 @@ import colors from 'config/colors';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 
 //Creates the higher order component
-const EndOfAyah = ({ ayahNumber, onPress, selected }) => {
+const EndOfAyah = ({ ayahNumber, onPress, selected, isLastSelectedAyah }) => {
     const rightBracket = '  \uFD3F';
     const leftBracket = '\uFD3E';
+    let containerStyle = [styles.container];
+    if(selected) {containerStyle.push(styles.selectionStyle)};
+    if(isLastSelectedAyah) {containerStyle.push(styles.lastSelectedAyah)};
 
     return (
-        <View>
+        <View style={containerStyle}>
             <TouchableHighlight 
-            style={selected? {flexGrow: 1, backgroundColor: colors.green, alignSelf: 'stretch'} : {flexGrow: 1, alignSelf: 'stretch'}}
             onPress={ () => onPress()}>
                 <Text style={styles.ayahSeparator}>
                     {leftBracket}
@@ -26,6 +28,11 @@ const EndOfAyah = ({ ayahNumber, onPress, selected }) => {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flexGrow: 1, 
+        alignSelf: 'stretch',
+        marginVertical: 1
+    },
     ayahNumber: {
         textAlign: 'right',
         fontFamily: 'me_quran',
@@ -41,6 +48,13 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         fontSize: 14,
         color: colors.darkGrey,
+    },
+    selectionStyle: {
+        backgroundColor: colors.green
+    },
+    lastSelectedAyah: {
+        borderTopLeftRadius: 15,
+        borderBottomLeftRadius: 15
     }
 })
 

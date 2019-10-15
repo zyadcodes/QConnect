@@ -34,6 +34,7 @@ export default {
     EmailSent: 'Email Sent',
     CheckEmail: 'If a user with this email exists, we\'ve sent a link to your email to reset your password',
     Ok: 'Ok',
+    Go: 'Change',
     PasswordsDontMatch: "Passwords Don't match",
 
     //--------------------- Evaluation Page ---------------------
@@ -191,4 +192,7 @@ export default {
     //--------------------------- Credits -------------------------------------------
     FirstScreenImageCredits: 'First screen background photo by © Hany Khalaf Photography',
     AvatarCredits: 'Computer vector created by brgfx - www.freepik.com',
+
+    //---------------------------  Mushaf ---------------------------------------
+    InvalidPageNumber: 'Invalid page number. Please enter a page between 1 and 604.'
 }
