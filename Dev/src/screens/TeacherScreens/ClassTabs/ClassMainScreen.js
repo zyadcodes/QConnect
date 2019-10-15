@@ -27,7 +27,8 @@ export class ClassMainScreen extends QcParentScreen {
     currentClassID: '',
     isOpen: false,
     classes: '',
-    isEditing: false
+    isEditing: false,
+    titleHasChanged: false
   }
 
   async componentDidMount() {
@@ -74,6 +75,12 @@ export class ClassMainScreen extends QcParentScreen {
     );
 
   }
+//to write implemntation of the function, updates class name
+updateTitle(newTitle){
+  this.setState({titleHasChanged: true})
+  this.setState({currentClass: {...this.state.currentClass, name: newTitle}})
+}
+
 
   render() {
     const { isLoading, teacher, userID, currentClass, currentClassID } = this.state;
@@ -98,7 +105,9 @@ export class ClassMainScreen extends QcParentScreen {
               <TopBanner
                 LeftIconName="navicon"
                 LeftOnPress={() => this.setState({ isOpen: true })}
+                isEditingTitle={this.state.isEditing}
                 Title={"Quran Connect"}
+                onTitleChanged={(newTitle)=> this.updateTitle(newTitle)}
               />
             </View>
             <View style={{ alignItems: "center", justifyContent: "flex-start", alignSelf: 'center', flex: 2 }}>
@@ -151,7 +160,9 @@ export class ClassMainScreen extends QcParentScreen {
               <TopBanner
                 LeftIconName="navicon"
                 LeftOnPress={() => this.setState({ isOpen: true })}
+                isEditingTitle={this.state.isEditing}
                 Title={this.state.currentClass.name}
+                onTitleChanged={(newTitle)=> this.updateTitle(newTitle)}
               />
             </View>
             <View style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'center' }}>
@@ -199,9 +210,17 @@ export class ClassMainScreen extends QcParentScreen {
                 Title={this.state.currentClass.name}
                 RightIconName={this.state.isEditing === false ? "edit" : null}
                 RightTextName={this.state.isEditing === true ? strings.Done : null}
+                isEditingTitle={this.state.isEditing}
+                onTitleChanged={(newTitle)=> this.updateTitle(newTitle)}
                 RightOnPress={() => {
-                  const { isEditing } = this.state;
-                  this.setState({ isEditing: !isEditing })
+                  const { isEditing, titleHasChanged} = this.state;
+                  
+                  if(isEditing && titleHasChanged){
+                    FirebaseFunctions.updateClassObject(this.state.currentClassID, {name: this.state.currentClass.name})
+                    this.setState({titleHasChanged: false});
+                  }
+
+                  this.setState({ isEditing: !isEditing})
                 }}
               />
             </View>
@@ -324,7 +343,7 @@ export class ClassMainScreen extends QcParentScreen {
                     <Icon
                       name='user-times'
                       size={PixelRatio.get() * 9}
-                      type='font-awesome'
+                      type='font-awyesome'
                       color={colors.primaryDark} />) : (null)}
                   compOnPress={() => { this.removeStudent(item.ID) }} />
               )} />
