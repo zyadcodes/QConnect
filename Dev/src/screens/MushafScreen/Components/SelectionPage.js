@@ -23,49 +23,26 @@ class SelectionPage extends React.Component {
         page: 222,
         editedPageNumber:  222,
         editPageNumber: false,
-        fetchNewPage: false,
         selectedAyahsStart: 0,
-
         selectedAyahsEnd: 0,
         selectionStarted: false,
         selectionCompleted: false,
     }
 
     async componentDidMount() {
-        let lines = await getPageTextWbW(this.state.page)
+        this.fetchPageLines(this.state.page);
+    }
+
+    async fetchPageLines(page){
+        this.setState({
+            isLoading: true,
+        });
+        const lines = await getPageTextWbW(page)
         this.setState({
             isLoading: false,
             lines
         });
-    }
-
-    async componentDidUpdate() {
-        //to force a refetch when user changed the page
-        if (this.state.fetchNewPage) {
-            this.setState({ isLoading: true });
-
-            let lines = await getPageTextWbW(this.state.page)
-            this.setState({
-                isLoading: false,
-                fetchNewPage: false,
-                lines
-            });
-        }
-    }
-
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     return true;
-    //     // //we only need to update the component if the page is currently loading
-    //     // // or the user has explicitly changed the page
-    //     // return (
-    //     //     nextState.fetchNewPage === true || 
-    //     //     nextState.editPageNumber === true ||
-    //     //     (
-    //     //         this.state.fetchNewPage === true && 
-    //     //         this.state.page !== nextState.page
-    //     //     ) || 
-    //     //     this.state.isLoading === true);    
-    // }
+    } 
 
     getLineAyahText(wordsList) {
         //if(wordsList[0].line === 2) {}
@@ -146,12 +123,13 @@ class SelectionPage extends React.Component {
             this.setState({
                 editPageNumber: false,
                 page: editedPageNumber,
-                fetchNewPage: true
             })
         }
         this.setState({
             editPageNumber: false,
         })
+
+        this.fetchPageLines(editedPageNumber);
     }
 
 
@@ -163,7 +141,7 @@ class SelectionPage extends React.Component {
 
         if (isLoading === true) {
             return (
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <View id={this.state.page + "spinner"} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <LoadingSpinner isVisible={true} />
                 </View>
             )
@@ -172,10 +150,8 @@ class SelectionPage extends React.Component {
         else {
             return (
                 <View id={this.state.page + "upperWrapper"} style={{ backgroundColor: colors.white }}>
-                    <TopBanner
-                        LeftIconName="navicon"
-                        LeftOnPress={() => this.setState({ isOpen: true })}
-                        Title={lines[0] && lines[0].surah? lines[0].surah : "New Assignment"}
+                    <PageHeader
+                        Title={(lines[0] && lines[0].surah)? lines[0].surah : "New Assignment"}
                     />
                     <View id={this.state.page} style={{ marginVertical: 5, marginHorizontal: 5, backgroundColor: colors.white }}>
                         {

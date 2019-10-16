@@ -22,7 +22,7 @@ function getPageByLines(pageJson){
                 line: lineData.detail.line,
                 type: lineData.detail.line_type,
                 surahNumber: lineData.detail.sura,
-                surah: lineData.detail.surah? surahs[lineData.detail.sura].name : '', 
+                surah: lineData.detail.sura? surahs[lineData.detail.sura].name : '', 
                 index: lineData.detail.index,
                 name: lineData.detail.name,
                 ayah: lineData.detail.aya,
