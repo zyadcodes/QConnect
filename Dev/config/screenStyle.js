@@ -5,8 +5,8 @@ import { screenHeight, screenWidth } from 'config/dimensions';
 export default {
     container: {
         flexDirection: 'column',
-        backgroundColor: colors.lightGrey,
+        backgroundColor: colors.veryLightGrey,
         width: screenWidth,
-        height: screenHeight
+        height: screenHeight,
     }
 }

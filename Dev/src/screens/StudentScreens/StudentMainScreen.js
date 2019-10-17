@@ -128,7 +128,6 @@ class StudentMainScreen extends QcParentScreen {
     //Renders the screen
     render() {
         const { userID, isLoading, student, currentClassID, thisClassInfo, isReadyEnum, currentClass } = this.state;
-
         if (isLoading === true) {
             return (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -231,7 +230,9 @@ class StudentMainScreen extends QcParentScreen {
             )
         }
 
+        let assignmentHistory = thisClassInfo.assignmentHistory.reverse();
         return (
+
             <SideMenu
                 isOpen={this.state.isOpen} menu={<LeftNavPane
                     student={student}
@@ -274,14 +275,14 @@ class StudentMainScreen extends QcParentScreen {
                             </View>
                         </View>
                     </View>
-                    <View style={{ backgroundColor: (isReadyEnum === "WORKING_ON_IT" ? colors.white : (isReadyEnum === "READY" ? colors.green : colors.red)) }}>
+                    <View style={{ backgroundColor: (isReadyEnum === "WORKING_ON_IT" ? colors.workingOnItColorBrown : (isReadyEnum === "READY" ? colors.green : colors.red)) }}>
                         <CustomPicker
                             options={
                                 [
                                     {
                                         label: strings.WorkingOnIt,
                                         value: "WORKING_ON_IT",
-                                        color: colors.white
+                                        color: colors.workingOnItColorBrown
                                     },
                                     {
                                         label: strings.Ready,
@@ -314,11 +315,8 @@ class StudentMainScreen extends QcParentScreen {
                             fieldTemplate={(settings) => {
                                 return (
                                     <View style={styles.middleView}>
-                                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                            <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
-                                            <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
-                                            <Text style={fontStyles.bigTextStyleBlack}>{strings.CurrentAssignment}</Text>
-                                            <Text style={fontStyles.bigTextStyleBlack}>{" "}</Text>
+                                        <View style={{ flex: .5, justifyContent: 'center', alignItems: 'center', paddingVertical: screenHeight*0.0112 }}>
+                                            <Text style={fontStyles.mainTextStyleBlack}>{strings.CurrentAssignment}</Text>
                                             <Text style={fontStyles.bigTextStyleBlack}>{thisClassInfo.currentAssignment}</Text>
                                         </View>
                                         <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
@@ -333,7 +331,7 @@ class StudentMainScreen extends QcParentScreen {
                     <View style={styles.bottomView}>
                         <ScrollView style={styles.prevAssignments}>
                             <FlatList
-                                data={thisClassInfo.assignmentHistory}
+                                data={assignmentHistory}
                                 keyExtractor={(item, index) => item.name + index}
                                 renderItem={({ item, index }) => (
                                     <TouchableOpacity onPress={() => {
@@ -354,16 +352,17 @@ class StudentMainScreen extends QcParentScreen {
                                             readOnly: true,
                                             newAssignment: false,
                                         })
-                                    }}>
+                                    }}
+                                        style={{ paddingVertical: screenHeight * 0.019 }}>
                                         <View style={styles.prevAssignmentCard} key={index}>
                                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-start' }}>
+                                                <View style={{ flex: 3, justifyContent: 'center', alignItems: 'flex-start' }}>
                                                     <Text style={fontStyles.mainTextStylePrimaryDark}>{item.completionDate}</Text>
                                                 </View>
                                                 <View style={{ alignItems: 'center', justifyContent: 'center', flex: 3 }}>
                                                     <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{item.name}</Text>
                                                 </View>
-                                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end' }}>
+                                                <View style={{ flex: 3, justifyContent: 'center', alignItems: 'flex-end' }}>
                                                     <Rating readonly={true} startingValue={item.evaluation.rating} imageSize={17} />
                                                 </View>
                                             </View>
@@ -393,9 +392,9 @@ class StudentMainScreen extends QcParentScreen {
 //Styles for the entire container along with the top banner
 const styles = StyleSheet.create({
     topView: {
-        flex: 2.3,
+        flex: 1,
         flexDirection: 'column',
-        backgroundColor: colors.white
+        backgroundColor: colors.veryLightGrey,
     },
     profileInfoTop: {
         paddingHorizontal: screenWidth * 0.024,
@@ -430,7 +429,6 @@ const styles = StyleSheet.create({
     profileInfoBottom: {
         flexDirection: 'row',
         paddingHorizontal: screenWidth * 0.024,
-        height: screenHeight * 0.11,
         borderBottomColor: colors.grey,
         borderBottomWidth: 1
     },
@@ -445,15 +443,17 @@ const styles = StyleSheet.create({
         borderColor: colors.grey
     },
     bottomView: {
-        flex: 3
+        flex: 3,
+        backgroundColor: colors.veryLightGrey,
     },
     prevAssignmentCard: {
         flexDirection: 'column',
-        borderBottomColor: colors.lightGrey,
-        borderBottomWidth: 1,
         height: screenHeight * 0.13,
-        paddingHorizontal: screenWidth * 0.012,
-        paddingVertical: screenHeight * 0.007
+        paddingHorizontal: screenWidth * 0.008,
+        paddingVertical: screenHeight * 0.019,
+        borderColor: colors.grey,
+        borderWidth: (screenHeight * 0.13) * 0.0066,
+        backgroundColor: colors.white,
     },
     profileInfo: {
         flexDirection: 'column',
@@ -472,7 +472,7 @@ const styles = StyleSheet.create({
     },
     prevAssignments: {
         flexDirection: 'column',
-        backgroundColor: colors.white,
+        backgroundColor: colors.veryLightGrey,
         flex: 1
     },
     modal: {

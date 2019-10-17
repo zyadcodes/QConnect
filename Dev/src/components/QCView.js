@@ -7,7 +7,7 @@ import { View, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import screenStyle from 'config/screenStyle';
 import { screenHeight } from 'config/dimensions';
-
+import colors from 'config/colors';
 //Creates the higher order component
 const QCViewHOC = (Comp) => {
     return ({ children, ...props }) => (
