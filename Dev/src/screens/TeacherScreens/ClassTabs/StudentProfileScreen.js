@@ -88,9 +88,9 @@ class StudentProfileScreen extends QcParentScreen {
 
   //---------- main UI render ===============================
   render() {
-    const { classStudent, isLoading, classID, studentID, hasCurrentAssignment } = this.state;
-    let { currentAssignment, assignmentHistory, averageRating, name } = classStudent;
-
+    const { classStudent, isLoading, classID, studentID, hasCurrentAssignment, currentAssignment } = this.state;
+    let { assignmentHistory, averageRating, name } = classStudent;
+   
     //Sorts the assignments by date completed
     if (classStudent) {
       assignmentHistory = assignmentHistory.reverse();
@@ -142,7 +142,7 @@ class StudentProfileScreen extends QcParentScreen {
                   source={studentImages.images[classStudent.profileImageID]} />
               </View>
               <View style={{ flex: 1, flexDirection: 'column', height: 0.086 * screenHeight, paddingLeft: screenWidth * 0.05 }}>
-                <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{this.state.currentAssignment.toUpperCase()}</Text>
+                <Text numberOfLines={1} style={[fontStyles.bigTextStyleDarkGrey, {textAlign: 'left'}]}>{this.state.currentAssignment.toUpperCase()}</Text>
                 <View style={{ flexDirection: 'row' }}>
                   
                   <TouchableHighlight
@@ -154,7 +154,7 @@ class StudentProfileScreen extends QcParentScreen {
                     this.props.navigation.push("EvaluationPage", {
                       classID: classID,
                       studentID: studentID,
-                      assignmentName: this.state.currentAssignment,
+                      assignmentName: currentAssignment,
                       userID: this.props.navigation.state.params.userID,
                       classStudent: classStudent,
                       newAssignment: true,
@@ -204,12 +204,12 @@ class StudentProfileScreen extends QcParentScreen {
                       </View>
                     </View>
                     {item.evaluation.notes ?
-                      <Text numberOfLines={2} style={fontStyles.smallTextStyleBlack}>{strings.NotesColon + item.evaluation.notes}</Text>
+                      <Text numberOfLines={2} style={fontStyles.mainTextStyleBlack}>{strings.NotesColon + item.evaluation.notes}</Text>
                       : <View />
                     }
                     {item.evaluation.improvementAreas && item.evaluation.improvementAreas.length > 0 ?
                       <View style={{ flexDirection: 'row', justifyContent: 'flex-start', height: screenHeight * 0.03 }}>
-                        <Text style={fontStyles.smallTextStyleBlack}>{strings.ImprovementAreas}</Text>
+                        <Text style={[fontStyles.mainTextStyleBlack, {alignSelf: 'center'}]}>{strings.ImprovementAreas}</Text>
                         {item.evaluation.improvementAreas.map((tag) => { return (<Text key={tag} style={styles.corner}>{tag}</Text>) })}
                       </View>
                       : <View />
@@ -277,8 +277,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1
   },
   profilePic: {
-    width: 0.15 * screenHeight,
-    height: 0.15 * screenHeight,
+    width: 0.10 * screenHeight,
+    height: 0.10 * screenHeight,
     borderRadius: 0.075 * screenHeight,
     paddingBottom: 0.015 * screenHeight
   },

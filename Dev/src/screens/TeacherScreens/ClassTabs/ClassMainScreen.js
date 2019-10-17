@@ -1,5 +1,6 @@
 import React from "react";
 import { ScrollView, StyleSheet, FlatList, View, Text, Image, PixelRatio, Alert } from "react-native";
+import { Icon } from 'react-native-elements';
 import StudentCard from "components/StudentCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages"
@@ -14,7 +15,6 @@ import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from "config/fontStyles";
-import { Icon } from 'react-native-elements';
 import { screenHeight, screenWidth } from 'config/dimensions';
 
 export class ClassMainScreen extends QcParentScreen {
@@ -152,6 +152,12 @@ export class ClassMainScreen extends QcParentScreen {
                 LeftIconName="navicon"
                 LeftOnPress={() => this.setState({ isOpen: true })}
                 Title={this.state.currentClass.name}
+                RightIconName="edit"
+                RightOnPress={() => this.props.navigation.push('ClassEdit', {
+                  classID: currentClassID,
+                  currentClass,
+                  userID: this.state.userID
+                })}
               />
             </View>
             <View style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'center' }}>
@@ -193,7 +199,7 @@ export class ClassMainScreen extends QcParentScreen {
           navigation={this.props.navigation} />}>
           <ScrollView style={styles.container}>
             <View>
-              <TopBanner
+            <TopBanner
                 LeftIconName="navicon"
                 LeftOnPress={() => this.setState({ isOpen: true })}
                 Title={this.state.currentClass.name}
@@ -201,15 +207,17 @@ export class ClassMainScreen extends QcParentScreen {
                 RightTextName={this.state.isEditing === true ? strings.Done : null}
                 RightOnPress={() => {
                   const { isEditing } = this.state;
-                  this.setState({ isEditing: !isEditing })
+                  //node/todo: setting isOpen is a hack to workaround what seems to be a bug in the SideMenu component
+                  // where flipping isEditing bit seems to flip isOpen as well when isOpen was true earlier
+                  this.setState({ isEditing: !isEditing, isOpen: false })
                 }}
               />
             </View>
             {
               isEditing === true ? (
                 <View style={styles.AddStudentButton}>
-                  <QcActionButton
-                    text={"+"}
+                  <TouchableText
+                    text={strings.AddStudents}
                     onPress={() => {
                       //Goes to add students screen
                       this.props.navigation.push("ShareClassCode", {
@@ -217,16 +225,25 @@ export class ClassMainScreen extends QcParentScreen {
                         userID,
                         currentClass: this.state.currentClass
                       });
-                    }} />
+                    }}
+                    style={{...fontStyles.bigTextStylePrimaryDark, paddingTop: 10}}
+                   />
                 </View>
               ) : (
-                  <View style={styles.AddStudentButton}></View>
+                  <View></View>
                 )
             }
             {
               studentsNeedHelp.length > 0 ? (
-                <View>
-                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.bigTextStyleDarkRed]}>{strings.NeedHelp}</Text>
+                <View style={{  alignItems: 'center', marginLeft: screenWidth * 0.017 , flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
+                  <Icon
+                    name='issue-opened'
+                    type='octicon'
+                    color={colors.darkRed}
+                    onPress={() => {
+                      onShowMore();
+                      }} />
+                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkRed]}>{strings.NeedHelp}</Text>
                 </View>
               ) : (
                   <View></View>
@@ -238,7 +255,7 @@ export class ClassMainScreen extends QcParentScreen {
               renderItem={({ item }) => (
                 <StudentCard
                   key={item.ID}
-                  studentName={item.name}
+                  studentName={item.name.toUpperCase()}
                   profilePic={studentImages.images[item.profileImageID]}
                   currentAssignment={item.currentAssignment}
                   onPress={() =>
@@ -260,8 +277,16 @@ export class ClassMainScreen extends QcParentScreen {
             />
             {
               studentsReady.length > 0 ? (
-                <View style={{ paddingTop: screenHeight * 0.025 }}>
-                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.bigTextStyleGreen]}>{strings.Ready}</Text>
+                <View style={{  alignItems: 'center', marginLeft: screenWidth * 0.017 , flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
+                  <Icon
+                    name='check-circle-outline'
+                    type='material-community'
+                    color={colors.darkGreen}
+                    onPress={() => {
+                      onShowMore();
+                    }} />
+                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkGreen]}>
+                    {strings.Ready}</Text>
                 </View>
               ) : (
                   <View></View>
@@ -273,7 +298,7 @@ export class ClassMainScreen extends QcParentScreen {
               renderItem={({ item }) => (
                 <StudentCard
                   key={item.id}
-                  studentName={item.name}
+                  studentName={item.name.toUpperCase()}
                   profilePic={studentImages.images[item.profileImageID]}
                   currentAssignment={item.currentAssignment}
                   onPress={() =>
@@ -295,8 +320,15 @@ export class ClassMainScreen extends QcParentScreen {
               )} />
             {
               studentsWorkingOnIt.length > 0 ? (
-                <View style={{ paddingTop: screenHeight * 0.025 }}>
-                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.bigTextStyleBlack]}>{strings.WorkingOnIt}</Text>
+                <View style={{  alignItems: 'center', marginLeft: screenWidth * 0.017 , flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
+                  <Icon
+                    name='update'
+                    type='material-community'
+                    color={colors.primaryDark}
+                    onPress={() => {
+                      onShowMore();
+                    }} />
+                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStylePrimaryDark]}>{strings.WorkingOnIt}</Text>
                 </View>
               ) : (
                   <View></View>
@@ -308,7 +340,7 @@ export class ClassMainScreen extends QcParentScreen {
               renderItem={({ item }) => (
                 <StudentCard
                   key={item.id}
-                  studentName={item.name}
+                  studentName={item.name.toUpperCase()}
                   profilePic={studentImages.images[item.profileImageID]}
                   currentAssignment={item.currentAssignment}
                   onPress={() =>
@@ -344,7 +376,7 @@ const styles = StyleSheet.create({
     flex: 3,
   },
   AddStudentButton: {
-    height: screenHeight * 0.08,
+    height: screenHeight * 0.04,
     alignItems: 'flex-end',
     paddingRight: screenWidth * 0.025
   }

@@ -20,6 +20,7 @@ export default class ImageSelectionModal extends Component {
 
     render() {
 
+        cancelStyle = {...fontStyles.smallTextStyleDarkGrey, marginTop: screenHeight * 0.015, marginBottom: screenHeight * 0.03 }
         return (
             <Modal
                 animationType="fade"
@@ -37,7 +38,7 @@ export default class ImageSelectionModal extends Component {
                         />
                         <TouchableText
                             text={this.props.cancelText}
-                            style={[fontStyles.smallTextStyleBlack, { marginTop: screenHeight * 0.015, marginBottom: screenHeight * 0.03 }]}
+                            style={cancelStyle}
                             onPress={() => {
                                 this.props.setModalVisible(false);
                             }} />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Text, View, StyleSheet } from 'react-native';
+import { Modal, Text, View, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import QcActionButton from 'components/QcActionButton'
 import strings from 'config/strings';
 import colors from 'config/colors';
@@ -24,6 +24,7 @@ export default class AssignmentEntryComponent extends React.Component {
 
     render() {
         return (
+            <KeyboardAvoidingView>
             <Modal
                 animationType="fade"
                 transparent={true}
@@ -35,11 +36,13 @@ export default class AssignmentEntryComponent extends React.Component {
                     <View style={styles.modal}>
                         <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.EnterAssignment}</Text>
 
+                        <View style={styles.spacer}></View>
                         <InputAutoSuggest
                             staticData={surahNames}
                             onTextChanged={this.onTextChange.bind(this)}
-                            assignment={this.props.assignment}
+                            assignment={this.props.assignment === strings.None? "" : this.props.assignment }
                             inputStyle={fontStyles.mainTextStyleDarkGrey}
+                            itemTextStyle={fontStyles.mainTextStyleDarkGrey}
                         />
 
                         <View style={{
@@ -58,17 +61,18 @@ export default class AssignmentEntryComponent extends React.Component {
                     </View>
                 </View>
             </Modal>
+            </KeyboardAvoidingView>
         )
     }
 }
 
 const styles = StyleSheet.create({
     modal: {
-        backgroundColor: colors.white,
+        backgroundColor: colors.lightGrey,
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        marginTop: screenHeight * 0.34,
+        marginTop: screenHeight * 0.03,
         borderWidth: 1,
         borderRadius: 2,
         borderColor: colors.grey,
@@ -81,4 +85,7 @@ const styles = StyleSheet.create({
         marginHorizontal: screenWidth * 0.11,
         paddingHorizontal: 0.012 * screenWidth
     },
+    spacer: {
+        height: screenHeight * 0.01
+    }
 });
