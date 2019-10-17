@@ -11,7 +11,7 @@ import fontStyles from 'config/fontStyles';
 class PageHeader extends FontLoadingComponent {
     render() {
         //Component properties
-        const { LeftIconName, LeftTextName, LeftOnPress, Title,
+        const { LeftIconName, LeftTextName, LeftOnPress, Title, TitleOnPress,
             RightIconName, RightTextName, RightOnPress } = this.props;
 
         return (
@@ -29,12 +29,22 @@ class PageHeader extends FontLoadingComponent {
                 </View>
 
                 <View style={styles.topMiddleView}>
+                <TouchableOpacity 
+                style={{ 
+                    flex: 1, 
+                    flexDirection: 'row', 
+                    height: 100, 
+                    justifyContent: 'flex-end', 
+                    alignItems: 'center' 
+                    }} 
+                onPress={TitleOnPress ? () => { TitleOnPress() } : () => { }}>
                 <ImageBackground source={require('assets/images/quran/title-frame.png')} 
                 style={{ width: '100%', justifyContent: 'center',
         alignSelf: 'center',
         alignItems: 'center',}} resizeMethod='scale'>
                     <Text style={fontStyles.bigTextStylePrimaryDark}>{Title}</Text>
                 </ImageBackground>
+                </TouchableOpacity>
                 </View>
 
                 <View style={styles.topRightView} >

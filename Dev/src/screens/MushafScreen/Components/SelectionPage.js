@@ -13,6 +13,8 @@ import strings from 'config/strings';
 import { screenHeight, screenWidth } from 'config/dimensions';
 import PageHeader from './PageHeader';
 import TopBanner from 'components/TopBanner';
+import AssignmentEntryComponent from 'components/AssignmentEntryComponent';
+import surahs from '../Data/Surahs.json'
 
 //Creates the higher order component
 class SelectionPage extends React.Component {
@@ -27,6 +29,7 @@ class SelectionPage extends React.Component {
         selectedAyahsEnd: 0,
         selectionStarted: false,
         selectionCompleted: false,
+        isSurahSelectionVisible: false,
     }
 
     async componentDidMount() {
@@ -132,11 +135,33 @@ class SelectionPage extends React.Component {
         this.fetchPageLines(editedPageNumber);
     }
 
+    updateSurah(surah){
+        try{
+            // in the surah array, indexes 0-113 have Arabic names and 114- 227 have English names
+            // the formula below gets the surah index from 1 to 114 (so we can get its info from the surah db)
+            const surahIndex = (Number(surah.id) % 114) + 1 
+
+            const startPage = surahs[surahIndex].startpage;
+            this.setState({
+                isSurahSelectionVisible: false,
+                editedPageNumber: startPage,
+                page: startPage
+            });
+            this.fetchPageLines(startPage);
+        }catch(error){
+            Alert.alert(strings.Whoops, 
+                "Something went wrong. If the error persists, please contact us at quranconnect@outlook.com")
+        }
+        
+    }
 
     render() {
         const { isLoading, lines, page } = this.state;
         let isFirstWord = true;
         let lineAlign = 'stretch'
+        const surahName = (lines[0] && lines[0].surah)? lines[0].surah : 
+            (lines[1] && lines[1].surah)? lines[1].surah : "Select new assignment";
+
         if(this.state.page === 1) {lineAlign = 'center'}
 
         if (isLoading === true) {
@@ -150,8 +175,18 @@ class SelectionPage extends React.Component {
         else {
             return (
                 <View id={this.state.page + "upperWrapper"} style={{ backgroundColor: colors.white }}>
+                    <AssignmentEntryComponent
+                        visible={this.state.isSurahSelectionVisible}
+                        onSubmit={(surah) =>
+                            this.updateSurah(surah)}
+                        assignment={surahName}
+                        onCancel={() => this.setState({isSurahSelectionVisible: false})}
+                    />
                     <PageHeader
-                        Title={(lines[0] && lines[0].surah)? lines[0].surah : "New Assignment"}
+                        Title={surahName}
+                        TitleOnPress={()=> {
+                            const {isSurahSelectionVisible} = this.state;
+                            this.setState({isSurahSelectionVisible: !isSurahSelectionVisible})}}
                     />
                     <View id={this.state.page} style={{ marginVertical: 5, marginHorizontal: 5, backgroundColor: colors.white }}>
                         {

@@ -29,8 +29,9 @@ class InputAutoSuggest extends Component {
     const existingItem = { id, name };
     this.setState({
       value: name,
+      id: id
     });
-    this.props.onTextChanged(name);
+    this.props.onTextChanged({name, id});
 
     onDataSelectedChange(existingItem);
     this.searchList;

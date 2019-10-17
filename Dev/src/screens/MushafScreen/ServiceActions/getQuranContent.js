@@ -14,6 +14,17 @@ export async function getPageText (pageNumber) {
 
 var dbgString = "";
 
+function getSurahName(info){
+   //if the line has surah index, let's get the name from surah index
+    if(!isNaN(info.sura)){
+        return surahs[info.sura].name;
+    }
+    else if(info.line_type === "start_sura"){
+        return info.name;
+    }
+    return "";
+
+}
 function getPageByLines(pageJson){
     let lines = [];
     pageJson.map((lineData) => {
@@ -22,7 +33,7 @@ function getPageByLines(pageJson){
                 line: lineData.detail.line,
                 type: lineData.detail.line_type,
                 surahNumber: lineData.detail.sura,
-                surah: lineData.detail.sura? surahs[lineData.detail.sura].name : '', 
+                surah: getSurahName(lineData.detail),
                 index: lineData.detail.index,
                 name: lineData.detail.name,
                 ayah: lineData.detail.aya,
