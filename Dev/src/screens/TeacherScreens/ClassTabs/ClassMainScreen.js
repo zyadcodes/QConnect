@@ -285,7 +285,7 @@ export class ClassMainScreen extends QcParentScreen {
                     onPress={() => {
                       onShowMore();
                     }} />
-                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleGreen]}>
+                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkGreen]}>
                     {strings.Ready}</Text>
                 </View>
               ) : (
