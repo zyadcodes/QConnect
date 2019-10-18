@@ -27,7 +27,7 @@ export class ClassMainScreen extends QcParentScreen {
     currentClassID: '',
     isOpen: false,
     classes: '',
-    isEditing: false
+    isEditing: false,
   }
 
   async componentDidMount() {
@@ -48,6 +48,32 @@ export class ClassMainScreen extends QcParentScreen {
       classes
     });
 
+  }
+
+  //method updates the current assignment of the student
+  editAssignment(newAssignmentName, studentID) {
+
+    if (newAssignmentName.trim() === "") {
+      Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
+    } else {
+
+      const { currentClassID } = this.state;
+      //Updates the local state then pushes to firestore
+      this.setState({
+        isDialogVisible: false,
+        currentAssignment: newAssignmentName,
+        hasCurrentAssignment: newAssignmentName === 'None' ? false : true
+      });
+      FirebaseFunctions.updateStudentCurrentAssignment(currentClassID, studentID, newAssignmentName);
+    }
+
+  }
+
+  editClassAssignment(newAssignmentName){
+    const {currentClass} = this.state;
+    currentClass.students.forEach((student) => {
+      this.editAssignment(newAssignmentName, student.ID)
+    })
   }
 
   removeStudent(studentID) {
@@ -220,7 +246,17 @@ export class ClassMainScreen extends QcParentScreen {
                     }} />
                 </View>
               ) : (
-                  <View style={styles.AddStudentButton}></View>
+
+                <View style={styles.AddStudentButton}>
+                  <QcActionButton
+                    text={"Edit Class Assignment"}
+                    onPress={() => {
+                      this.editClassAssignment("Test All Assignment")
+
+                      //edits assignments for whole class.
+                    }} />
+                </View>
+                  
                 )
             }
             {
