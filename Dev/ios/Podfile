@@ -5,6 +5,9 @@ platform :ios, '9.0'
 target 'QuranConnect' do
 
   # Pods for QuranConnect
+
+  permissions_path = '../node_modules/react-native-permissions/ios'
+
   pod 'React', :path => '../node_modules/react-native/'
   pod 'React-Core', :path => '../node_modules/react-native/React'
   pod 'React-DevSupport', :path => '../node_modules/react-native/React'
@@ -37,6 +40,8 @@ target 'QuranConnect' do
   pod 'Firebase/Messaging', '~> 6.3.0'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
+  pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications.podspec"
 
 
   pod 'RNSound', :path => '../node_modules/react-native-sound'

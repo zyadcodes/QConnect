@@ -34,15 +34,11 @@ QcActionButton.propTypes = {
 
 const styles = StyleSheet.create({
   buttonStyle: {
-    marginRight: 10,
-    marginLeft: 10,
-    marginTop: 10,
-    marginBottom: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingRight: 25,
-    paddingLeft: 25,
-    borderRadius: 25,
+    marginHorizontal: 0.025 * screenWidth,
+    marginVertical: 0.01 * screenHeight,
+    paddingVertical: 0.01 * screenHeight,
+    paddingHorizontal: 0.06 * screenWidth,
+    borderRadius: 0.05 * screenWidth,
     backgroundColor: colors.primaryLight,
     justifyContent: 'center',
     alignItems: 'center',

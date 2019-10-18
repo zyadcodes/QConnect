@@ -5,8 +5,8 @@ import { Dimensions } from 'react-native';
 export default {
     container: {
         flexDirection: 'column',
-        backgroundColor: colors.lightGrey,
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height
+        backgroundColor: colors.veryLightGrey,
+        width: screenWidth,
+        height: screenHeight,
     }
 }

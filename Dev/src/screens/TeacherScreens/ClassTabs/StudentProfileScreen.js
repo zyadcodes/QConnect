@@ -88,8 +88,13 @@ class StudentProfileScreen extends QcParentScreen {
 
   //---------- main UI render ===============================
   render() {
-    const { classStudent, isLoading, classID, studentID, hasCurrentAssignment } = this.state;
-    const { currentAssignment, assignmentHistory, averageRating, name } = classStudent;
+    const { classStudent, isLoading, classID, studentID, hasCurrentAssignment, currentAssignment } = this.state;
+    let { assignmentHistory, averageRating, name } = classStudent;
+   
+    //Sorts the assignments by date completed
+    if (classStudent) {
+      assignmentHistory = assignmentHistory.reverse();
+    }
 
     //If the screen is loading, a spinner will display
     if (isLoading === true) {
@@ -139,6 +144,7 @@ class StudentProfileScreen extends QcParentScreen {
               <View style={{ flex: 1, flexDirection: 'column', height: 0.086 * screenHeight, paddingLeft: screenWidth * 0.05 }}>
                 <Text numberOfLines={1} style={[fontStyles.bigTextStyleDarkGrey, {textAlign: 'left'}]}>{this.state.currentAssignment.toUpperCase()}</Text>
                 <View style={{ flexDirection: 'row' }}>
+                  
                   <TouchableHighlight
                     onPress={() => { this.setState({ isDialogVisible: true }) }} >
                     <Text style={fontStyles.mainTextStylePrimaryDark}>{strings.EditAssignment}</Text>
@@ -148,7 +154,7 @@ class StudentProfileScreen extends QcParentScreen {
                     this.props.navigation.push("EvaluationPage", {
                       classID: classID,
                       studentID: studentID,
-                      assignmentName: this.state.currentAssignment,
+                      assignmentName: currentAssignment,
                       userID: this.props.navigation.state.params.userID,
                       classStudent: classStudent,
                       newAssignment: true,
@@ -187,13 +193,13 @@ class StudentProfileScreen extends QcParentScreen {
                 })}>
                   <View style={styles.prevAssignmentCard} key={index}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-start' }}>
+                      <View style={{ flex: 3, justifyContent: 'center', alignItems: 'flex-start' }}>
                         <Text style={fontStyles.mainTextStylePrimaryDark}>{item.completionDate}</Text>
                       </View>
                       <View style={{ alignItems: 'center', justifyContent: 'center', flex: 3 }}>
                         <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{item.name}</Text>
                       </View>
-                      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end' }}>
+                      <View style={{ flex: 3, justifyContent: 'center', alignItems: 'flex-end' }}>
                         <Rating readonly={true} startingValue={item.evaluation.rating} imageSize={17} />
                       </View>
                     </View>

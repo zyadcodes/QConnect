@@ -108,7 +108,7 @@ export default {
     RulingsOfRaa: "Rulings of Raa'", 
     Muduud: "Muduud", 
     Qalqalah: "Qalqalah",
-    Ellipses: '...',
+    Ellipses: ' ... ',
     PlusSign: '+',
     MinusSign: '-',
 

@@ -17,7 +17,7 @@ const titleFont = bodyFont * 1.875;
 
 export default StyleSheet.create({
 
-    smallTextStyleBlack: {
+    smallTextStyleDarkGrey: {
         fontFamily,
         fontSize: bodyFontSmaller,
         color: colors.darkGrey
@@ -65,7 +65,7 @@ export default StyleSheet.create({
         color: colors.grey
     },
 
-    mainTextStyleGreen: {
+    mainTextStyleDarkGreen: {
         fontFamily,
         fontSize: bodyFont,
         color: colors.darkGreen

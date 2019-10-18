@@ -222,8 +222,8 @@ export default class FlowLayout extends Component {
 													style={[styles.textInputStyle, { minWidth: (this.state.newImprovementText.length * 4) + 80 }]}
 													value={this.state.newImprovementText}
 													onChangeText={(text) => { this.setState({ newImprovementText: text }) }}
-													onEndEditing={() => {
-														dataValue.push(this.state.newImprovementText);
+													onEndEditing={() => { this.state.newImprovementText ? 
+														dataValue.push(this.state.newImprovementText) : {}; 
 														this.setState({ dataValue, isNewAddition: false, newImprovementText: "" });
 														this.setState({ isNewAddition: true });
 													}}

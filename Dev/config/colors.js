@@ -12,5 +12,6 @@ export default {
   darkishGrey: '#9f9f9f',
   darkGrey: '#6b6b6b',
   darkestGrey: '#494949',
-  darkBlue: "#065cf1"
+  darkBlue: "#065cf1",
+  workingOnItColorBrown: "#EFDECC",
 };

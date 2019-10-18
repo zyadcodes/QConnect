@@ -18,7 +18,7 @@ class FirstScreenLoader extends Component {
       if (this.state.alreadyCalled === false) {
         this.setState({ alreadyCalled: true });
         if (!user) {
-          this.props.navigation.push("FirstRunScreen");
+          this.props.navigation.push("LoginScreen");
           return;
         }
         const student = await FirebaseFunctions.getStudentByID(user.uid);

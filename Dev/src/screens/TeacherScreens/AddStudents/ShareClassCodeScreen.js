@@ -36,9 +36,9 @@ class ShareClassCodeScreen extends Component {
                     </View>
                     <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'center' }}>
                         <Text style={{...fontStyles.hugeTextStylePrimaryDark, textAlign: 'center'}}>{currentClassID}</Text>
-                        <Text style={{...fontStyles.bigTextStyleDarkGrey, textAlign: 'center', paddingHorizontal: 10}}>{strings.ClassCodeDescription}</Text>
+                        <Text style={{...fontStyles.bigTextStyleDarkGrey, textAlign: 'center', paddingHorizontal: screenWidth * 0.01}}>{strings.ClassCodeDescription}</Text>
                     </View>
-                    <View style={{flex: 1, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 10 }}>
+                    <View style={{flex: 1, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingHorizontal: screenWidth * 0.01 }}>
                     </View>
                 </View>
                     

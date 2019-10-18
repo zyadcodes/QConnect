@@ -13,24 +13,20 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const BG_IMAGE = require("assets/images/read_child_bg.jpg");
 
-class FirstRunScreen extends QcParentScreen {
+class AccountTypeScreen extends QcParentScreen {
 
   componentDidMount() {
-    FirebaseFunctions.setCurrentScreen("First Run Screen", "FirstRunScreen");
+    FirebaseFunctions.setCurrentScreen("Account Type Screen", "AccountTypeScreen");
   }
 
   //Navigates to the teacher side
   onTeacherFlow() {
-    this.props.navigation.push('LoginScreen', {
-      isTeacher: true
-    });
+    this.props.navigation.push('TeacherWelcomeScreen');
   }
 
   //Navigates to the student side
   onStudentFlow() {
-    this.props.navigation.push('LoginScreen', {
-      isTeacher: false
-    });
+    this.props.navigation.push('StudentWelcomeScreen');
   }
 
   render() {
@@ -81,4 +77,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default FirstRunScreen;
+export default AccountTypeScreen;

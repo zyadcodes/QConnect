@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
         width: screenHeight * 0.10,
         height: screenHeight * 0.10,
         borderRadius: screenHeight * 0.1,
-        marginBottom: 10
+        marginBottom: screenHeight * 0.01,
         },
     cardStyle: {
         flexDirection: 'row',

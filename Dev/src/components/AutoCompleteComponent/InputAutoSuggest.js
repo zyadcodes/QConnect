@@ -7,6 +7,9 @@ import React, { Component } from 'react';
 import * as _ from 'lodash';
 import SuggestionListItem from './SuggestionListItem';
 import suggest from './services/suggest';
+import { screenWidth, screenHeight } from 'config/dimensions';
+import fontStyles from 'config/fontStyles';
+import { colors } from 'react-native-elements';
 
 
 let style;
@@ -34,7 +37,9 @@ class InputAutoSuggest extends Component {
     this.props.onTextChanged({name, id});
 
     onDataSelectedChange(existingItem);
-    this.searchList;
+    
+    //this.searchList;
+    this.myTextInput.focus();
   };
   
   keyExtractor = (item, index) => index+"";
@@ -97,10 +102,11 @@ class InputAutoSuggest extends Component {
     return (
       <View style={style.container}>
         <TextInput
-          style={[style.input, inputStyle]}
+          style={[style.inputDefaultStyle, inputStyle]}
           value={value}
           clearButtonMode="while-editing"
           onChangeText={this.searchList}
+          ref={(ref)=>{this.myTextInput = ref}}
         />
         <FlatList
           style={[style.flatList, flatListStyle]}
@@ -160,7 +166,15 @@ style = StyleSheet.create({
     borderBottomWidth: 1,
   },
   flatList: {},
-  itemTextStyle: { fontSize: 30 },
+  inputDefaultStyle: {
+    height: screenHeight * 0.08,
+    marginVertical: screenHeight * 0.01,
+    color: colors.darkGrey,
+    backgroundColor: colors.black,
+    borderBottomColor: colors.darkGrey,
+    borderBottomWidth: 1,
+  },
+  itemTextStyle: fontStyles.bigTextStylePrimaryDark,
 });
 
 export default InputAutoSuggest;
