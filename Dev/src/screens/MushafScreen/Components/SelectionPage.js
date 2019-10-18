@@ -19,14 +19,24 @@ import surahs from '../Data/Surahs.json'
 //Creates the higher order component
 class SelectionPage extends React.Component {
 
+    lastPage = 604;
+
     state = {
         isLoading: true,
         lines: [],
-        page: 222,
-        editedPageNumber:  222,
+        page: this.lastPage,
+        editedPageNumber: this.lastPage,
         editPageNumber: false,
-        selectedAyahsStart: 0,
-        selectedAyahsEnd: 0,
+        selectedAyahsStart: {
+            surah: 0,
+            page: this.lastPage,
+            ayah: 0
+        },
+        selectedAyahsEnd: {
+            surah: 0,
+            page: this.lastPage,
+            ayah: 0
+        },
         selectionStarted: false,
         selectionCompleted: false,
         isSurahSelectionVisible: false,
@@ -36,7 +46,7 @@ class SelectionPage extends React.Component {
         this.fetchPageLines(this.state.page);
     }
 
-    async fetchPageLines(page){
+    async fetchPageLines(page) {
         this.setState({
             isLoading: true,
         });
@@ -45,7 +55,7 @@ class SelectionPage extends React.Component {
             isLoading: false,
             lines
         });
-    } 
+    }
 
     getLineAyahText(wordsList) {
         //if(wordsList[0].line === 2) {}
@@ -71,24 +81,30 @@ class SelectionPage extends React.Component {
         return lineAyahText;
     }
 
-    onSelectAyah(ayaNumber) {
-        const {selectedAyahsStart, selectedAyahsEnd, selectionCompleted, selectionStarted} = this.state;
+    onSelectAyah(selectedAyah) {
+        const { selectedAyahsStart, selectedAyahsEnd, selectionCompleted, selectionStarted } = this.state;
+        const noAyahSelected = {
+            surah: 0,
+            page: 0,
+            ayah: 0
+        };
+
         //if the user taps on the same selected aya again, turn off selection
-        if (selectedAyahsStart === selectedAyahsEnd &&
-            selectedAyahsStart === ayaNumber) {
+        if (this.compareOrder(selectedAyahsStart, selectedAyahsEnd) === 0 &&
+            this.compareOrder(selectedAyahsStart, selectedAyah) === 0 ) {
             this.setState({
                 selectionStarted: false,
                 selectionCompleted: false,
-                selectedAyahsStart: 0,
-                selectedAyahsEnd: 0,
+                selectedAyahsStart: noAyahSelected,
+                selectedAyahsEnd: noAyahSelected,
             })
         }
         else if (!selectionStarted) {
             this.setState({
                 selectionStarted: true,
                 selectionCompleted: false,
-                selectedAyahsStart: ayaNumber,
-                selectedAyahsEnd: ayaNumber,
+                selectedAyahsStart: selectedAyah,
+                selectedAyahsEnd: selectedAyah
             })
         } else if (!selectionCompleted) {
             this.setState(
@@ -99,25 +115,52 @@ class SelectionPage extends React.Component {
             )
 
             //Set the smallest number as the start, and the larger as the end
-            if (Number(selectedAyahsStart) < Number(ayaNumber)) {
-                this.setState({ selectedAyahsEnd: ayaNumber })
+            if (this.compareOrder(selectedAyahsStart, selectedAyah) > 0) {
+                this.setState({ selectedAyahsEnd: selectedAyah })
             } else {
-                this.setState({ selectedAyahsStart: ayaNumber })
+                this.setState({ selectedAyahsStart: selectedAyah })
             }
         }
     }
 
-    isAyahSelected(ayahNumber) {
+    // compare which ayah comes first: ayah1 or ayah2
+    // return: 0 if they are the same ayah
+    //         1 if ayah1 is before ayah2
+    //         -1 if ayah2 is before ayah1
+    compareOrder(ayah1, ayah2) {
+
+        if (ayah1.page === ayah2.page &&
+            ayah1.ayah === ayah2.ayah &&
+            ayah1.surah === ayah2.surah) {
+            return 0; //
+        }
+        // ayah 1 is before ayah 2 if:
+        else if (ayah1.page < ayah2.page || // ayah1 page is before ayah 2 page
+            (ayah1.page === ayah2.page && ( // OR: ayah1 and ayah2 on the same page yet:
+                ayah1.surah < ayah2.surah || // ayah1's surah is before ayah 2's surah
+                (ayah1.surah === ayah2.surah && // OR: ayah1 and ayah2 are on the same surah yet 
+                    ayah1.ayah < ayah2.ayah) // ayah1's number is less than ayah2.
+                )
+             )) {
+            return 1;
+        }
+
+        //if not the same ayahs, and not ayah 1 before ayah 2, then ayah 2 is before ayah 1.
+        return -1;
+    }
+
+    isAyahSelected(ayah) {
         return (
-            this.state.selectionStarted || this.state.selectionCompleted) && // there are ayahs selected by the user
-            Number(ayahNumber) >= Number(this.state.selectedAyahsStart) &&
-            Number(ayahNumber) <= Number(this.state.selectedAyahsEnd)
+            (this.state.selectionStarted || this.state.selectionCompleted) && // there are ayahs selected by the user
+            this.compareOrder(this.state.selectedAyahsStart, ayah)  >= 0 && //if ayah is after selection start
+            this.compareOrder(this.state.selectedAyahsEnd, ayah, ) <= 0 //and ayah before selection end
+        ); 
     }
 
     updatePage() {
         const { editedPageNumber, page } = this.state
 
-        if(isNaN(editedPageNumber) || Number(editedPageNumber) < 1 || Number(editedPageNumber) > 604) {
+        if (isNaN(editedPageNumber) || Number(editedPageNumber) < 1 || Number(editedPageNumber) > this.lastPage) {
             Alert.alert(strings.Whoops, strings.InvalidPageNumber);
             return;
         }
@@ -125,7 +168,7 @@ class SelectionPage extends React.Component {
         if (editedPageNumber !== page) {
             this.setState({
                 editPageNumber: false,
-                page: editedPageNumber,
+                page: Number(editedPageNumber),
             })
         }
         this.setState({
@@ -135,34 +178,39 @@ class SelectionPage extends React.Component {
         this.fetchPageLines(editedPageNumber);
     }
 
-    updateSurah(surah){
-        try{
+    updateSurah(surah) {
+        try {
             // in the surah array, indexes 0-113 have Arabic names and 114- 227 have English names
             // the formula below gets the surah index from 1 to 114 (so we can get its info from the surah db)
-            const surahIndex = (Number(surah.id) % 114) + 1 
+            const surahIndex = (Number(surah.id) % 114) + 1
 
             const startPage = surahs[surahIndex].startpage;
             this.setState({
                 isSurahSelectionVisible: false,
-                editedPageNumber: startPage,
-                page: startPage
+                editedPageNumber: Number(startPage),
+                editPageNumber: false,
+                page: Number(startPage),
             });
             this.fetchPageLines(startPage);
-        }catch(error){
-            Alert.alert(strings.Whoops, 
+        } catch (error) {
+            Alert.alert(strings.Whoops,
                 "Something went wrong. If the error persists, please contact us at quranconnect@outlook.com")
         }
-        
+
     }
 
+    debugMe(isAyaSelected, curAyah){
+        let isLastSelectedAyah = isAyaSelected && (this.compareOrder(this.state.selectedAyahsEnd, curAyah) === 0)
+        return isLastSelectedAyah;
+    }
     render() {
         const { isLoading, lines, page } = this.state;
         let isFirstWord = true;
         let lineAlign = 'stretch'
-        const surahName = (lines[0] && lines[0].surah)? lines[0].surah : 
-            (lines[1] && lines[1].surah)? lines[1].surah : "Select new assignment";
+        const surahName = (lines[0] && lines[0].surah) ? lines[0].surah :
+            (lines[1] && lines[1].surah) ? lines[1].surah : "Select new assignment";
 
-        if(this.state.page === 1) {lineAlign = 'center'}
+        if (this.state.page === 1) { lineAlign = 'center' }
 
         if (isLoading === true) {
             return (
@@ -180,20 +228,21 @@ class SelectionPage extends React.Component {
                         onSubmit={(surah) =>
                             this.updateSurah(surah)}
                         assignment={surahName}
-                        onCancel={() => this.setState({isSurahSelectionVisible: false})}
+                        onCancel={() => this.setState({ isSurahSelectionVisible: false })}
                     />
                     <PageHeader
                         Title={surahName}
-                        TitleOnPress={()=> {
-                            const {isSurahSelectionVisible} = this.state;
-                            this.setState({isSurahSelectionVisible: !isSurahSelectionVisible})}}
+                        TitleOnPress={() => {
+                            const { isSurahSelectionVisible } = this.state;
+                            this.setState({ isSurahSelectionVisible: !isSurahSelectionVisible })
+                        }}
                     />
                     <View id={this.state.page} style={{ marginVertical: 5, marginHorizontal: 5, backgroundColor: colors.white }}>
                         {
                             lines !== undefined &&
                             lines.map((line, index) => {
                                 if (line.type === "start_sura") {
-                                    return <View style={styles.footer} key={line.line + "_" +index}>
+                                    return <View style={styles.footer} key={line.line + "_" + index}>
                                         <ImageBackground source={require('assets/images/quran/title-frame.png')}
                                             style={{
                                                 width: '100%', justifyContent: 'center',
@@ -208,27 +257,29 @@ class SelectionPage extends React.Component {
                                 }
                                 else {
                                     //show Al-Fatihah aligned center, all other pages should stretch to fill end to end the line.
-                                    
+
                                     return (
                                         <View key={page + "_" + line.line} style={{ flexDirection: 'row-reverse', backgroundColor: 'transparent', justifyContent: 'space-between', alignItems: lineAlign }}>
                                             {
                                                 line.text &&
                                                 line.text.map((word) => {
-                                                    let isAyaSelected = this.isAyahSelected(word.aya);
-                                                    let isLastSelectedAyah = isAyaSelected && (this.state.selectedAyahsEnd === word.aya)
+                                                    let curAyah = {ayah: Number(word.aya), surah: Number(word.sura), page: page};
+                                                    let isAyaSelected = this.isAyahSelected(curAyah);
+                                                    let isLastSelectedAyah = isAyaSelected && (this.compareOrder(this.state.selectedAyahsEnd, curAyah) === 0)
+                                                    if(isLastSelectedAyah){this.debugMe(isAyaSelected, curAyah)}
                                                     if (word.char_type === "word") {
                                                         let isFirstSelectedWord = isAyaSelected && isFirstWord;
-                                                        if(isFirstSelectedWord) {isFirstWord = false;}
-                                                        return (<AyahSelectionWord key={word.id} 
-                                                            text={word.text} 
+                                                        if (isFirstSelectedWord) { isFirstWord = false; }
+                                                        return (<AyahSelectionWord key={word.id}
+                                                            text={word.text}
                                                             selected={isAyaSelected}
-                                                            onPress={() => this.onSelectAyah(word.aya)}
+                                                            onPress={() => this.onSelectAyah(curAyah)}
                                                             isFirstSelectedWord={isFirstSelectedWord} />)
                                                     }
                                                     else if (word.char_type === "end") {
                                                         return (<EndOfAyah key={word.id} ayahNumber={word.aya}
-                                                            onPress={() => this.onSelectAyah(word.aya)}
-                                                            selected={this.isAyahSelected(word.aya)}
+                                                            onPress={() => this.onSelectAyah(curAyah)}
+                                                            selected={this.isAyahSelected(curAyah)}
                                                             isLastSelectedAyah={isLastSelectedAyah}
                                                         />)
                                                     }
@@ -252,8 +303,8 @@ class SelectionPage extends React.Component {
                                 <TouchableText
                                     text={page.toString()}
                                     style={{ ...fontStyles.mainTextStylePrimaryDark, marginLeft: 5 }}
-                                    onPress={() => {this.setState({ editPageNumber: true })}}
-                                    />
+                                    onPress={() => { this.setState({ editPageNumber: true }) }}
+                                />
                             }{
                                 this.state.editPageNumber &&
                                 <View
@@ -263,7 +314,7 @@ class SelectionPage extends React.Component {
                                         autoFocus={true}
                                         selectTextOnFocus={true}
                                         value={this.state.editedPageNumber.toString()}
-                                        onChangeText={(value) => this.setState({ editedPageNumber: value })}
+                                        onChangeText={(value) => this.setState({ editedPageNumber: Number(value) })}
                                         keyboardType='numeric'
                                     />
 
