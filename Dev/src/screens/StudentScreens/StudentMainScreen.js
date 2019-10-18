@@ -264,8 +264,13 @@ class StudentMainScreen extends QcParentScreen {
                                 </View>
                             </View>
                             <View style={styles.profileInfoBottom}>
-                                <View style={{ flex: 1, flexDirection: 'column', alignSelf: 'flex-start' }}>
-                                    <Text style={fontStyles.bigTextStyleDarkGrey}>{strings.TotalAssignments + ": " + thisClassInfo.totalAssignments + "  "}</Text>
+                                <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'column', height: screenHeight * 0.09 }}>
+                                    <View style={{ paddingTop: screenHeight * 0.005, alignSelf: 'center' }}>
+                                        <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{thisClassInfo.currentAssignment.toUpperCase()}</Text>
+                                    </View>
+                                    <View style={{ alignSelf: 'flex-start' }}>
+                                        <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.TotalAssignments + ": " + thisClassInfo.totalAssignments + "  "}</Text>
+                                    </View>
                                 </View>
                             </View>
                         </View>
@@ -362,12 +367,12 @@ class StudentMainScreen extends QcParentScreen {
                                                 </View>
                                             </View>
                                             {item.evaluation.notes ?
-                                                <Text numberOfLines={2} style={fontStyles.smallTextStyleBlack}>{"Notes: " + item.evaluation.notes}</Text>
+                                                <Text numberOfLines={2} style={fontStyles.smallTextStyleDarkGrey}>{"Notes: " + item.evaluation.notes}</Text>
                                                 : <View />
                                             }
                                             {item.evaluation.improvementAreas && item.evaluation.improvementAreas.length > 0 ?
                                                 <View style={{ flexDirection: 'row', justifyContent: 'flex-start', height: screenHeight * 0.03, }}>
-                                                    <Text style={fontStyles.smallTextStyleBlack}>{strings.ImprovementAreas}</Text>
+                                                    <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.ImprovementAreas}</Text>
                                                     {item.evaluation.improvementAreas.map((tag) => { return (<Text key={tag} style={styles.corner}>{tag}</Text>) })}
                                                 </View>
                                                 : <View />
