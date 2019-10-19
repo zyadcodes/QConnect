@@ -1,5 +1,5 @@
 import surahs from '../Data/Surahs.json'
-
+import pages from '../Data/mushaf-wbw.json'
 export async function getPageText (pageNumber) {
     try {
         let response = await fetch(
@@ -23,8 +23,8 @@ function getSurahName(info){
         return info.name;
     }
     return "";
-
 }
+
 function getPageByLines(pageJson){
     let lines = [];
     pageJson.map((lineData) => {
