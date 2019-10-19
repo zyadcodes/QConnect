@@ -15,6 +15,7 @@ import PageHeader from './PageHeader';
 import TopBanner from 'components/TopBanner';
 import AssignmentEntryComponent from 'components/AssignmentEntryComponent';
 import surahs from '../Data/Surahs.json'
+import pages from '../Data/mushaf-wbw.json'
 
 //Creates the higher order component
 class SelectionPage extends React.Component {
@@ -43,9 +44,25 @@ class SelectionPage extends React.Component {
     }
 
     async componentDidMount() {
-        this.fetchPageLines(this.state.page);
+        this.getPageLines(this.state.page);
     }
 
+    //retrieves the lines, ayahs, and words of a particular page of the mushhaf
+    //parameters: page: the page number we want to retrieve
+    // reads the data from a local json file
+    // data retrieved is saved under this.state.lines
+    async getPageLines(page){
+        const lines = await pages[page - 1] //(-1 to switch from 1 based index to 0 based index array)
+        this.setState({
+            isLoading: false,
+            lines
+        });
+    }
+
+    //retrieves the lines, ayahs, and words of a particular page of the mushhaf
+    //parameters: page: the page number we want to retrieve
+    // reads the data from a an online api (needs internet and has latency)
+    // data retrieved is saved under this.state.lines
     async fetchPageLines(page) {
         this.setState({
             isLoading: true,
@@ -175,7 +192,7 @@ class SelectionPage extends React.Component {
             editPageNumber: false,
         })
 
-        this.fetchPageLines(editedPageNumber);
+        this.getPageLines(editedPageNumber);
     }
 
     updateSurah(surah) {
@@ -191,7 +208,7 @@ class SelectionPage extends React.Component {
                 editPageNumber: false,
                 page: Number(startPage),
             });
-            this.fetchPageLines(startPage);
+            this.getPageLines(startPage);
         } catch (error) {
             Alert.alert(strings.Whoops,
                 "Something went wrong. If the error persists, please contact us at quranconnect@outlook.com")

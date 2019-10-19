@@ -5,6 +5,8 @@ var surahs = require('../Data/Surahs.json')
 const fs = require('fs');
 let AllLines = [];
 
+//audio prefix url: https://dl.salamquran.com/ayat/afasy-murattal-192/
+
 getAllPages();
 
 async function getAllPages(){
