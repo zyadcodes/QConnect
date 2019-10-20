@@ -266,10 +266,10 @@ export class ClassMainScreen extends QcParentScreen {
                 </View>
               ) : (
 
-                  <View style={styles.AddStudentButton}>
+                  <View style={styles.EditClassAssignment}>
                     <QcActionButton
                       text={"Edit Class Assignment"}
-                      onPress={() => {this.toggleAssignmentEntryComponent();}} />
+                      onPress={() => { this.toggleAssignmentEntryComponent(); }} />
                   </View>
 
                 )
@@ -424,6 +424,10 @@ const styles = StyleSheet.create({
   },
   AddStudentButton: {
     height: screenHeight * 0.04,
+    alignItems: 'flex-end',
+    paddingRight: screenWidth * 0.025
+  },
+  EditClassAssignment: {
     alignItems: 'flex-end',
     paddingRight: screenWidth * 0.025
   }

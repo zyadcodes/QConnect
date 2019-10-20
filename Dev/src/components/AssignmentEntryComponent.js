@@ -25,42 +25,42 @@ export default class AssignmentEntryComponent extends React.Component {
     render() {
         return (
             <KeyboardAvoidingView>
-            <Modal
-                animationType="fade"
-                transparent={true}
-                presentationStyle="overFullScreen"
-                visible={this.props.visible}
-                onRequestClose={() => {
-                }}>
-                <View style={{ marginVertical: screenHeight * 0.073, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingBottom: screenHeight * 0.029 }}>
-                    <View style={styles.modal}>
-                        <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.EnterAssignment}</Text>
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    presentationStyle="overFullScreen"
+                    visible={this.props.visible}
+                    onRequestClose={() => {
+                    }}>
+                    <View style={{ marginVertical: screenHeight * 0.073, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingBottom: screenHeight * 0.029 }}>
+                        <View style={styles.modal}>
+                            <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.EnterAssignment}</Text>
 
-                        <View style={styles.spacer}></View>
-                        <InputAutoSuggest
-                            staticData={surahNames}
-                            onTextChanged={this.onTextChange.bind(this)}
-                            assignment={this.props.assignment === strings.None? "" : this.props.assignment }
-                            inputStyle={fontStyles.mainTextStyleDarkGrey}
-                            itemTextStyle={fontStyles.mainTextStyleDarkGrey}
-                        />
+                            <View style={styles.spacer}></View>
+                            <InputAutoSuggest
+                                staticData={surahNames}
+                                onTextChanged={this.onTextChange.bind(this)}
+                                assignment={this.props.assignment === strings.None ? "" : this.props.assignment}
+                                inputStyle={fontStyles.mainTextStyleDarkGrey}
+                                itemTextStyle={fontStyles.mainTextStyleDarkGrey}
+                            />
 
-                        <View style={{
-                            flexDirection: "row-reverse"
-                        }}>
-                            <QcActionButton
-                                text={strings.Submit}
-                                screen={this.props.screen}
-                                onPress={() => {
-                                    this.props.onSubmit(this.state.input)
-                                }} />
-                            <QcActionButton
-                                text={strings.Cancel}
-                                onPress={() => this.props.onCancel()} />
+                            <View style={{
+                                flexDirection: "row-reverse"
+                            }}>
+                                <QcActionButton
+                                    text={strings.Submit}
+                                    screen={this.props.screen}
+                                    onPress={() => {
+                                        this.props.onSubmit(this.state.input)
+                                    }} />
+                                <QcActionButton
+                                    text={strings.Cancel}
+                                    onPress={() => this.props.onCancel()} />
+                            </View>
                         </View>
                     </View>
-                </View>
-            </Modal>
+                </Modal>
             </KeyboardAvoidingView>
         )
     }
