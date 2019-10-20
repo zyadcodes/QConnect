@@ -16,6 +16,7 @@ import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from "config/fontStyles";
 import { screenHeight, screenWidth } from 'config/dimensions';
+import AssignmentEntryComponent from "../../../components/AssignmentEntryComponent";
 
 export class ClassMainScreen extends QcParentScreen {
 
@@ -27,7 +28,9 @@ export class ClassMainScreen extends QcParentScreen {
     currentClassID: '',
     isOpen: false,
     classes: '',
-    isEditing: false
+    isEditing: false,
+    isEditingClassAssginment: false,
+
   }
 
   async componentDidMount() {
@@ -47,6 +50,17 @@ export class ClassMainScreen extends QcParentScreen {
       currentClassID,
       classes
     });
+
+  }
+
+
+  async editClassAssignment(newAssignmentName) {
+
+    const { currentClassID } = this.state;
+
+    await FirebaseFunctions.updateClassAssignment(currentClassID, newAssignmentName);
+
+    return 0;
 
   }
 
@@ -197,9 +211,30 @@ export class ClassMainScreen extends QcParentScreen {
           classes={this.state.classes}
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
+          <AssignmentEntryComponent
+            visible={this.state.isEditingClassAssginment}
+            onSubmit={async (inputText) => {
+              this.setState({
+                isLoading: true
+              })
+              await this.editClassAssignment(inputText);
+              const updatedClass = await FirebaseFunctions.getClassByID(this.state.currentClassID);
+              this.setState({
+                currentClass: updatedClass,
+                isLoading: false
+              })
+
+              //edits assignments for whole class.
+              this.toggleAssignmentEntryComponent();
+            }}
+            onCancel={() => {
+              this.toggleAssignmentEntryComponent();
+            }}
+
+          />
           <ScrollView style={styles.container}>
             <View>
-            <TopBanner
+              <TopBanner
                 LeftIconName="navicon"
                 LeftOnPress={() => this.setState({ isOpen: true })}
                 Title={this.state.currentClass.name}
@@ -226,23 +261,29 @@ export class ClassMainScreen extends QcParentScreen {
                         currentClass: this.state.currentClass
                       });
                     }}
-                    style={{...fontStyles.bigTextStylePrimaryDark, paddingTop: 10}}
-                   />
+                    style={{ ...fontStyles.bigTextStylePrimaryDark, paddingTop: 10 }}
+                  />
                 </View>
               ) : (
-                  <View></View>
+
+                  <View style={styles.AddStudentButton}>
+                    <QcActionButton
+                      text={"Edit Class Assignment"}
+                      onPress={() => {this.toggleAssignmentEntryComponent();}} />
+                  </View>
+
                 )
             }
             {
               studentsNeedHelp.length > 0 ? (
-                <View style={{  alignItems: 'center', marginLeft: screenWidth * 0.017 , flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
+                <View style={{ alignItems: 'center', marginLeft: screenWidth * 0.017, flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
                   <Icon
                     name='issue-opened'
                     type='octicon'
                     color={colors.darkRed}
                     onPress={() => {
                       onShowMore();
-                      }} />
+                    }} />
                   <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkRed]}>{strings.NeedHelp}</Text>
                 </View>
               ) : (
@@ -277,7 +318,7 @@ export class ClassMainScreen extends QcParentScreen {
             />
             {
               studentsReady.length > 0 ? (
-                <View style={{  alignItems: 'center', marginLeft: screenWidth * 0.017 , flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
+                <View style={{ alignItems: 'center', marginLeft: screenWidth * 0.017, flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
                   <Icon
                     name='check-circle-outline'
                     type='material-community'
@@ -320,7 +361,7 @@ export class ClassMainScreen extends QcParentScreen {
               )} />
             {
               studentsWorkingOnIt.length > 0 ? (
-                <View style={{  alignItems: 'center', marginLeft: screenWidth * 0.017 , flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
+                <View style={{ alignItems: 'center', marginLeft: screenWidth * 0.017, flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
                   <Icon
                     name='update'
                     type='material-community'
@@ -365,6 +406,12 @@ export class ClassMainScreen extends QcParentScreen {
       );
     }
 
+  }
+
+  toggleAssignmentEntryComponent() {
+    this.setState({
+      isEditingClassAssginment: !this.state.isEditingClassAssginment
+    });
   }
 }
 

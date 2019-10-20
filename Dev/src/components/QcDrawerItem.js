@@ -10,12 +10,16 @@ import { screenHeight, screenWidth } from 'config/dimensions';
 // params: 
 class QcDrawerItem extends FontLoadingComponent {
   render() {
-    const { title, image, icon, onPress, backColor } = this.props;
+    const { title, image, icon, onPress, backColor, borderColor } = this.props;
     let containerBg = backColor ? backColor : colors.white;
+    let containerBordr = borderColor ? borderColor : containerBg;
 
     return (
       <ListItem
-        backgroundColor={colors.white}
+        style = {{
+          borderColor: containerBordr
+        }}
+        backgroundColor={containerBg}
         containerStyle={[styles.cardStyle, { backgroundColor: containerBg }]}
         title={title}
         fontFamily='regular'
@@ -43,7 +47,8 @@ QcDrawerItem.propTypes = {
   onPress: PropTypes.func.isRequired,
   image: PropTypes.number,
   icon: PropTypes.string,
-  backColor: PropTypes.string
+  backColor: PropTypes.string,
+  borderColor: PropTypes.string,
 }
 
 //Styles that control the look of the card, and everything within it

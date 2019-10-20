@@ -303,7 +303,6 @@ export default class FirebaseFunctions {
     static async updateStudentCurrentAssignment(classID, studentID, newAssignmentName) {
 
         let currentClass = await this.getClassByID(classID);
-
         let arrayOfStudents = currentClass.students;
         let studentIndex = arrayOfStudents.findIndex((student) => {
             return student.ID === studentID;
@@ -322,6 +321,27 @@ export default class FirebaseFunctions {
             title: strings.AssignmentUpdate,
             body: strings.YourTeacherHasUpdatedYourCurrentAssignment
         })
+        return 0;
+
+    }
+
+    static async updateClassAssignment(classID, newAssignmentName) {
+
+        let currentClass = await this.getClassByID(classID);
+        let arrayOfStudents = currentClass.students;
+        arrayOfStudents.forEach((student) => {
+            student.currentAssignment = newAssignmentName;
+            //Notifies that student that their assignment has been updated
+            this.functions.httpsCallable('sendNotification', {
+                topic: student.ID,
+                title: strings.AssignmentUpdate,
+                body: strings.YourTeacherHasUpdatedYourCurrentAssignment
+            });
+        });
+
+        await this.updateClassObject(classID, {
+            students: arrayOfStudents
+        });
         return 0;
 
     }
