@@ -4,7 +4,8 @@ import colors from './colors';
 import { PixelRatio, Platform, StyleSheet } from 'react-native';
 
 //The default font family that'll be used throughout the app
-const fontFamily = 'Montserrat-Regular'; //(Platform.OS === "ios" ? "Arial" : "sans-serif-medium");
+const fontFamily = (Platform.OS === "ios" ? "Arial" : "Montserrat-Regular");
+
 
 //Sets the base font that'll be used throughout the app based on the size of the screen
 //Sets the font size

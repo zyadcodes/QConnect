@@ -4,14 +4,16 @@ import QcActionButton from 'components/QcActionButton'
 import strings from 'config/strings';
 import colors from 'config/colors';
 import surahNames from 'config/surahNames';
-import InputAutoSuggest from 'components/AutoCompleteComponent/InputAutoSuggest'
+import InputAutoSuggest from 'components/AutoCompleteComponent/InputAutoSuggest';
 import fontStyles from 'config/fontStyles';
+import MultiSwitch from "react-native-multi-switch";
 import { screenWidth, screenHeight } from 'config/dimensions';
 
 export default class AssignmentEntryComponent extends React.Component {
 
     state = {
-        input: ""
+        input: "",
+        type: "None"
     }
 
     onTextChange(text) {
@@ -25,42 +27,80 @@ export default class AssignmentEntryComponent extends React.Component {
     render() {
         return (
             <KeyboardAvoidingView>
-            <Modal
-                animationType="fade"
-                transparent={true}
-                presentationStyle="overFullScreen"
-                visible={this.props.visible}
-                onRequestClose={() => {
-                }}>
-                <View style={{ marginVertical: 50, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingBottom: 20 }}>
-                    <View style={styles.modal}>
-                        <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.EnterAssignment}</Text>
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    presentationStyle="overFullScreen"
+                    visible={this.props.visible}
+                    onRequestClose={() => {
+                    }}>
+                    <View style={{ marginVertical: screenHeight * 0.073, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingBottom: screenHeight * 0.029 }}>
+                        <View style={styles.modal}>
+                            <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.EnterAssignment}</Text>
 
-                        <View style={styles.spacer}></View>
-                        <InputAutoSuggest
-                            staticData={surahNames}
-                            onTextChanged={this.onTextChange.bind(this)}
-                            assignment={this.props.assignment === strings.None? "" : this.props.assignment }
-                            inputStyle={fontStyles.mainTextStyleDarkGrey}
-                            itemTextStyle={fontStyles.mainTextStyleDarkGrey}
-                        />
+                            <View style={styles.spacer}></View>
+                            <InputAutoSuggest
+                                staticData={surahNames}
+                                onTextChanged={this.onTextChange.bind(this)}
+                                assignment={this.props.assignment === strings.None ? "" : this.props.assignment}
+                                inputStyle={fontStyles.mainTextStyleDarkGrey}
+                                itemTextStyle={fontStyles.mainTextStyleDarkGrey}
+                            />
 
-                        <View style={{
-                            flexDirection: "row-reverse"
-                        }}>
-                            <QcActionButton
-                                text={strings.Submit}
-                                screen={this.props.screen}
-                                onPress={() => {
-                                    this.props.onSubmit(this.state.input)
-                                }} />
-                            <QcActionButton
-                                text={strings.Cancel}
-                                onPress={() => this.props.onCancel()} />
+                            {
+                                this.props.assignmentType === true ? (
+                                    <View>
+                                        <View style={styles.spacer}></View>
+                                        <MultiSwitch
+                                            choiceSize={screenWidth * 0.25}
+                                            onActivate={(index) => {
+                                                const type = index === 0 ? strings.Reading : (index === 1 ? strings.Memorization : strings.Revision);
+                                                this.setState({
+                                                    type
+                                                });
+                                            }}
+                                            activeContainerStyle={[{
+                                                backgroundColor: colors.grey,
+                                                borderRadius: screenWidth * 0.025,
+                                            },
+                                            {
+                                                backgroundColor: colors.green,
+                                                borderRadius: screenWidth * 0.025,
+                                            },
+                                            {
+                                                backgroundColor: colors.darkishGrey,
+                                                borderRadius: screenWidth * 0.025,
+                                            },]}
+                                            inactiveContainerStyle={[styles.inactiveAssignmentStyle, styles.inactiveAssignmentStyle, {
+                                                marginLeft: screenWidth * 0.005,
+                                                borderRadius: screenWidth * 0.025,
+                                            }]}>
+                                            <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.Reading}</Text>
+                                            <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.Memorization}</Text>
+                                            <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.Revision}</Text>
+                                        </MultiSwitch>
+                                    </View>
+                                ) : (
+                                        <View></View>
+                                    )
+                            }
+                            <View style={{
+                                flexDirection: "row-reverse"
+                            }}>
+                                <QcActionButton
+                                    text={strings.Submit}
+                                    screen={this.props.screen}
+                                    onPress={() => {
+                                        this.props.assignmentType ? this.props.onSubmit(this.state.input, this.state.type) :
+                                        this.props.onSubmit(this.state.input)
+                                    }} />
+                                <QcActionButton
+                                    text={strings.Cancel}
+                                    onPress={() => this.props.onCancel()} />
+                            </View>
                         </View>
                     </View>
-                </View>
-            </Modal>
+                </Modal>
             </KeyboardAvoidingView>
         )
     }
@@ -86,6 +126,9 @@ const styles = StyleSheet.create({
         marginRight: 45,
         paddingRight: 5,
         paddingLeft: 5
+    },
+    inactiveAssignmentStyle: {
+        borderRadius: screenWidth * 0.025,
     },
     spacer: {
         height: screenHeight * 0.01

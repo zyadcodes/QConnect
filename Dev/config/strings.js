@@ -78,6 +78,9 @@ export default {
 
     //--------------------- Student Profile Screen ---------------------
     EditAssignment: 'Edit Assignment',
+    Reading: 'Reading',
+    Memorization: 'Memorization',
+    Revision: 'Revision',
     EnterAssignmentHere: 'Enter assignment here...',
     OutStanding: 'Outstanding!',
     EnterAssignment: 'Enter Assignment',
