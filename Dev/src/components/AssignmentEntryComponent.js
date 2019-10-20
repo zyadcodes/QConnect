@@ -4,14 +4,16 @@ import QcActionButton from 'components/QcActionButton'
 import strings from 'config/strings';
 import colors from 'config/colors';
 import surahNames from 'config/surahNames';
-import InputAutoSuggest from 'components/AutoCompleteComponent/InputAutoSuggest'
+import InputAutoSuggest from 'components/AutoCompleteComponent/InputAutoSuggest';
 import fontStyles from 'config/fontStyles';
+import MultiSwitch from "react-native-multi-switch";
 import { screenWidth, screenHeight } from 'config/dimensions';
 
 export default class AssignmentEntryComponent extends React.Component {
 
     state = {
-        input: ""
+        input: "",
+        type: strings.Memorization
     }
 
     onTextChange(text) {
@@ -45,6 +47,44 @@ export default class AssignmentEntryComponent extends React.Component {
                                 itemTextStyle={fontStyles.mainTextStyleDarkGrey}
                             />
 
+                            {
+                                this.props.assignmentType === true ? (
+                                    <View>
+                                        <View style={styles.spacer}></View>
+                                        <MultiSwitch
+                                            choiceSize={screenWidth * 0.25}
+                                            active={1}
+                                            onActivate={(index) => {
+                                                const type = index === 0 ? strings.Reading : (index === 1 ? strings.Memorization : strings.Revision);
+                                                this.setState({
+                                                    type
+                                                });
+                                            }}
+                                            activeContainerStyle={[{
+                                                backgroundColor: colors.grey,
+                                                borderRadius: screenWidth * 0.025,
+                                            },
+                                            {
+                                                backgroundColor: colors.green,
+                                                borderRadius: screenWidth * 0.025,
+                                            },
+                                            {
+                                                backgroundColor: colors.darkishGrey,
+                                                borderRadius: screenWidth * 0.025,
+                                            },]}
+                                            inactiveContainerStyle={[styles.inactiveAssignmentStyle, styles.inactiveAssignmentStyle, {
+                                                marginLeft: screenWidth * 0.005,
+                                                borderRadius: screenWidth * 0.025,
+                                            }]}>
+                                            <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.Reading}</Text>
+                                            <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.Memorization}</Text>
+                                            <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.Revision}</Text>
+                                        </MultiSwitch>
+                                    </View>
+                                ) : (
+                                        <View></View>
+                                    )
+                            }
                             <View style={{
                                 flexDirection: "row-reverse"
                             }}>
@@ -84,6 +124,9 @@ const styles = StyleSheet.create({
         elevation: screenHeight * 0.003,
         marginHorizontal: screenWidth * 0.11,
         paddingHorizontal: 0.012 * screenWidth
+    },
+    inactiveAssignmentStyle: {
+        borderRadius: screenWidth * 0.025,
     },
     spacer: {
         height: screenHeight * 0.01
