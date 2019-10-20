@@ -208,7 +208,7 @@ class StudentProfileScreen extends QcParentScreen {
                       : <View />
                     }
                     {
-                      item.assignmentType ? (
+                      item.assignmentType !=="None" ? (
                         <View style={{ flexWrap: 'wrap', height: screenHeight * 0.03, margin: screenHeight * 0.005 }}>
                           <Text style={[styles.corner, {
                             backgroundColor: item.assignmentType === strings.Reading ? colors.grey :
