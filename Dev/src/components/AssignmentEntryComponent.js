@@ -54,7 +54,6 @@ export default class AssignmentEntryComponent extends React.Component {
                                         <MultiSwitch
                                             choiceSize={screenWidth * 0.25}
                                             onActivate={(index) => {
-                                                console.log(index)
                                                 const type = index === 0 ? strings.Reading : (index === 1 ? strings.Memorization : strings.Revision);
                                                 this.setState({
                                                     type

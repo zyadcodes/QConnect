@@ -207,6 +207,18 @@ class StudentProfileScreen extends QcParentScreen {
                       <Text numberOfLines={2} style={fontStyles.mainTextStyleBlack}>{strings.NotesColon + item.evaluation.notes}</Text>
                       : <View />
                     }
+                    {
+                      item.assignmentType ? (
+                        <View style={{ flexWrap: 'wrap', height: screenHeight * 0.03, margin: screenHeight * 0.005 }}>
+                          <Text style={[styles.corner, {
+                            backgroundColor: item.assignmentType === strings.Reading ? colors.grey :
+                              (item.assignmentType === strings.Memorization ? colors.green : colors.darkishGrey)
+                          }]}>{item.assignmentType}</Text>
+                        </View>
+                      ) : (
+                          <View></View>
+                        )
+                    }
                     {item.evaluation.improvementAreas && item.evaluation.improvementAreas.length > 0 ?
                       <View style={{ flexDirection: 'row', justifyContent: 'flex-start', height: screenHeight * 0.03 }}>
                         <Text style={[fontStyles.mainTextStyleBlack, { alignSelf: 'center' }]}>{strings.ImprovementAreas}</Text>
