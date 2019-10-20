@@ -45,7 +45,7 @@ class StudentProfileScreen extends QcParentScreen {
   }
 
   //method updates the current assignment of the student
-  editAssignment(newAssignmentName) {
+  editAssignment(newAssignmentName, assignmentType) {
 
     if (newAssignmentName.trim() === "") {
       Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
@@ -58,7 +58,7 @@ class StudentProfileScreen extends QcParentScreen {
         currentAssignment: newAssignmentName,
         hasCurrentAssignment: newAssignmentName === 'None' ? false : true
       });
-      FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, newAssignmentName);
+      FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, newAssignmentName, assignmentType);
     }
 
   }
@@ -90,7 +90,7 @@ class StudentProfileScreen extends QcParentScreen {
   render() {
     const { classStudent, isLoading, classID, studentID, hasCurrentAssignment, currentAssignment } = this.state;
     let { assignmentHistory, averageRating, name } = classStudent;
-   
+
     //Sorts the assignments by date completed
     if (classStudent) {
       assignmentHistory = assignmentHistory.reverse();
@@ -110,10 +110,10 @@ class StudentProfileScreen extends QcParentScreen {
 
         <AssignmentEntryComponent
           visible={this.state.isDialogVisible}
-          onSubmit={(inputText) =>
-            this.editAssignment(inputText)}
+          onSubmit={(inputText, assignmentType) => this.editAssignment(inputText, assignmentType)}
           assignment={currentAssignment}
           onCancel={() => this.setDialogueVisible(false)}
+          assignmentType={true}
         />
         <View style={styles.studentInfoContainer}>
 
@@ -142,9 +142,9 @@ class StudentProfileScreen extends QcParentScreen {
                   source={studentImages.images[classStudent.profileImageID]} />
               </View>
               <View style={{ flex: 1, flexDirection: 'column', height: 0.086 * screenHeight, paddingLeft: screenWidth * 0.05 }}>
-                <Text numberOfLines={1} style={[fontStyles.bigTextStyleDarkGrey, {textAlign: 'left'}]}>{this.state.currentAssignment.toUpperCase()}</Text>
+                <Text numberOfLines={1} style={[fontStyles.bigTextStyleDarkGrey, { textAlign: 'left' }]}>{this.state.currentAssignment.toUpperCase()}</Text>
                 <View style={{ flexDirection: 'row' }}>
-                  
+
                   <TouchableHighlight
                     onPress={() => { this.setState({ isDialogVisible: true }) }} >
                     <Text style={fontStyles.mainTextStylePrimaryDark}>{strings.EditAssignment}</Text>
@@ -207,9 +207,21 @@ class StudentProfileScreen extends QcParentScreen {
                       <Text numberOfLines={2} style={fontStyles.mainTextStyleBlack}>{strings.NotesColon + item.evaluation.notes}</Text>
                       : <View />
                     }
+                    {
+                      item.assignmentType !=="None" ? (
+                        <View style={{ flexWrap: 'wrap', height: screenHeight * 0.03, margin: screenHeight * 0.005 }}>
+                          <Text style={[styles.corner, {
+                            backgroundColor: item.assignmentType === strings.Reading ? colors.grey :
+                              (item.assignmentType === strings.Memorization ? colors.green : colors.darkishGrey)
+                          }]}>{item.assignmentType}</Text>
+                        </View>
+                      ) : (
+                          <View></View>
+                        )
+                    }
                     {item.evaluation.improvementAreas && item.evaluation.improvementAreas.length > 0 ?
                       <View style={{ flexDirection: 'row', justifyContent: 'flex-start', height: screenHeight * 0.03 }}>
-                        <Text style={[fontStyles.mainTextStyleBlack, {alignSelf: 'center'}]}>{strings.ImprovementAreas}</Text>
+                        <Text style={[fontStyles.mainTextStyleBlack, { alignSelf: 'center' }]}>{strings.ImprovementAreas}</Text>
                         {item.evaluation.improvementAreas.map((tag) => { return (<Text key={tag} style={styles.corner}>{tag}</Text>) })}
                       </View>
                       : <View />

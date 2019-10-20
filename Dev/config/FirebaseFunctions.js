@@ -300,7 +300,7 @@ export default class FirebaseFunctions {
     //To locate the correct student, the method will take in params of the classID, the studentID,
     //and finally, the name of the new assignment which it will set the currentAssignment property 
     //to
-    static async updateStudentCurrentAssignment(classID, studentID, newAssignmentName) {
+    static async updateStudentCurrentAssignment(classID, studentID, newAssignmentName, assignmentType) {
 
         let currentClass = await this.getClassByID(classID);
         let arrayOfStudents = currentClass.students;
@@ -308,6 +308,7 @@ export default class FirebaseFunctions {
             return student.ID === studentID;
         });
         arrayOfStudents[studentIndex].currentAssignment = newAssignmentName;
+        arrayOfStudents[studentIndex].currentAssignmentType = assignmentType;
         arrayOfStudents[studentIndex].isReadyEnum = "WORKING_ON_IT";
 
         await this.updateClassObject(classID, {

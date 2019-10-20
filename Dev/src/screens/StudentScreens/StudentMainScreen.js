@@ -315,7 +315,7 @@ class StudentMainScreen extends QcParentScreen {
                             fieldTemplate={(settings) => {
                                 return (
                                     <View style={styles.middleView}>
-                                        <View style={{ flex: .5, justifyContent: 'center', alignItems: 'center', paddingVertical: screenHeight*0.0112 }}>
+                                        <View style={{ flex: .5, justifyContent: 'center', alignItems: 'center', paddingVertical: screenHeight * 0.0112 }}>
                                             <Text style={fontStyles.mainTextStyleBlack}>{strings.CurrentAssignment}</Text>
                                             <Text style={fontStyles.bigTextStyleBlack}>{thisClassInfo.currentAssignment}</Text>
                                         </View>
@@ -369,6 +369,18 @@ class StudentMainScreen extends QcParentScreen {
                                             {item.evaluation.notes ?
                                                 <Text numberOfLines={2} style={fontStyles.smallTextStyleDarkGrey}>{"Notes: " + item.evaluation.notes}</Text>
                                                 : <View />
+                                            }
+                                            {
+                                                item.assignmentType !== "None" ? (
+                                                    <View style={{ flexWrap: 'wrap', height: screenHeight * 0.03, margin: screenHeight * 0.005 }}>
+                                                        <Text style={[styles.corner, {
+                                                            backgroundColor: item.assignmentType === strings.Reading ? colors.grey :
+                                                                (item.assignmentType === strings.Memorization ? colors.green : colors.darkishGrey)
+                                                        }]}>{item.assignmentType}</Text>
+                                                    </View>
+                                                ) : (
+                                                        <View></View>
+                                                    )
                                             }
                                             {item.evaluation.improvementAreas && item.evaluation.improvementAreas.length > 0 ?
                                                 <View style={{ flexDirection: 'row', justifyContent: 'flex-start', height: screenHeight * 0.03, }}>

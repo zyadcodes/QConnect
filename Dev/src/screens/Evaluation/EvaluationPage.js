@@ -43,11 +43,17 @@ export class EvaluationPage extends QcParentScreen {
       FirebaseFunctions.setCurrentScreen("New Evaluation Page", "EvaluationPage");
     }
 
+    //Refetches the class ID in order to fetch the most up to date of the student object
+    const currentClass = await FirebaseFunctions.getClassByID(this.state.classID);
+    const classStudent = await currentClass.students.find((eachStudent) => {
+      return eachStudent.ID === this.state.studentID;
+    });
+
     const studentObject = await FirebaseFunctions.getStudentByID(this.state.studentID);
 
     //Fetches the ID for the evaluation (if there is none, it is created)
     const evaluationID = this.props.navigation.state.params.evaluationID ? this.props.navigation.state.params.evaluationID : (this.state.studentID + (this.state.classStudent.totalAssignments + 1) + "");
-    this.setState({ studentObject, isLoading: false, evaluationID });
+    this.setState({ studentObject, isLoading: false, evaluationID, classStudent });
 
   }
   // --------------  Updates state to reflect a change in a category rating --------------
@@ -60,6 +66,7 @@ export class EvaluationPage extends QcParentScreen {
     let evaluationDetails = {
       ID: evaluationID,
       name: assignmentName,
+      assignmentType: classStudent.currentAssignmentType ? classStudent.currentAssignmentType : "None",
       completionDate: new Date().toLocaleDateString("en-US", {
         year: 'numeric',
         month: '2-digit',
@@ -88,13 +95,14 @@ export class EvaluationPage extends QcParentScreen {
   //Overwrites a previously saved assignment with the new data
   async overwriteOldEvaluation() {
 
-    const { classID, studentID, evaluationID, notes, rating, improvementAreas } = this.state;
+    const { classID, studentID, evaluationID, notes, rating, improvementAreas, classStudent } = this.state;
 
     this.setState({ isLoading: true });
     let evaluationDetails = {
       rating,
       notes,
       improvementAreas,
+      assignmentType: classStudent.currentAssignmentType ? classStudent.currentAssignmentType : "None",
     }
 
     await FirebaseFunctions.overwriteOldEvaluation(classID, studentID, evaluationID, evaluationDetails);
