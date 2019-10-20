@@ -43,11 +43,17 @@ export class EvaluationPage extends QcParentScreen {
       FirebaseFunctions.setCurrentScreen("New Evaluation Page", "EvaluationPage");
     }
 
+    //Refetches the class ID in order to fetch the most up to date of the student object
+    const currentClass = await FirebaseFunctions.getClassByID(this.state.classID);
+    const classStudent = await currentClass.students.find((eachStudent) => {
+      return eachStudent.ID === this.state.studentID;
+    });
+
     const studentObject = await FirebaseFunctions.getStudentByID(this.state.studentID);
 
     //Fetches the ID for the evaluation (if there is none, it is created)
     const evaluationID = this.props.navigation.state.params.evaluationID ? this.props.navigation.state.params.evaluationID : (this.state.studentID + (this.state.classStudent.totalAssignments + 1) + "");
-    this.setState({ studentObject, isLoading: false, evaluationID });
+    this.setState({ studentObject, isLoading: false, evaluationID, classStudent });
 
   }
   // --------------  Updates state to reflect a change in a category rating --------------
