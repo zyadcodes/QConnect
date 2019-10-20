@@ -92,6 +92,7 @@ export default class AssignmentEntryComponent extends React.Component {
                                     text={strings.Submit}
                                     screen={this.props.screen}
                                     onPress={() => {
+                                        this.props.assignmentType ? this.props.onSubmit(this.state.input, this.state.type) :
                                         this.props.onSubmit(this.state.input)
                                     }} />
                                 <QcActionButton

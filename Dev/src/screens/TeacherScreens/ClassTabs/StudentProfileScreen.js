@@ -45,7 +45,7 @@ class StudentProfileScreen extends QcParentScreen {
   }
 
   //method updates the current assignment of the student
-  editAssignment(newAssignmentName) {
+  editAssignment(newAssignmentName, assignmentType) {
 
     if (newAssignmentName.trim() === "") {
       Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
@@ -58,7 +58,7 @@ class StudentProfileScreen extends QcParentScreen {
         currentAssignment: newAssignmentName,
         hasCurrentAssignment: newAssignmentName === 'None' ? false : true
       });
-      FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, newAssignmentName);
+      FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, newAssignmentName, assignmentType);
     }
 
   }
@@ -110,7 +110,7 @@ class StudentProfileScreen extends QcParentScreen {
 
         <AssignmentEntryComponent
           visible={this.state.isDialogVisible}
-          onSubmit={(inputText) => this.editAssignment(inputText)}
+          onSubmit={(inputText, assignmentType) => this.editAssignment(inputText, assignmentType)}
           assignment={currentAssignment}
           onCancel={() => this.setDialogueVisible(false)}
           assignmentType={true}
