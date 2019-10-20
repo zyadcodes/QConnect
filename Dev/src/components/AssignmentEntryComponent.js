@@ -13,7 +13,7 @@ export default class AssignmentEntryComponent extends React.Component {
 
     state = {
         input: "",
-        type: strings.Memorization
+        type: "None"
     }
 
     onTextChange(text) {
@@ -53,8 +53,8 @@ export default class AssignmentEntryComponent extends React.Component {
                                         <View style={styles.spacer}></View>
                                         <MultiSwitch
                                             choiceSize={screenWidth * 0.25}
-                                            active={1}
                                             onActivate={(index) => {
+                                                console.log(index)
                                                 const type = index === 0 ? strings.Reading : (index === 1 ? strings.Memorization : strings.Revision);
                                                 this.setState({
                                                     type

@@ -60,6 +60,7 @@ export class EvaluationPage extends QcParentScreen {
     let evaluationDetails = {
       ID: evaluationID,
       name: assignmentName,
+      assignmentType: classStudent.currentAssignmentType ? classStudent.currentAssignmentType : "None",
       completionDate: new Date().toLocaleDateString("en-US", {
         year: 'numeric',
         month: '2-digit',
@@ -88,13 +89,14 @@ export class EvaluationPage extends QcParentScreen {
   //Overwrites a previously saved assignment with the new data
   async overwriteOldEvaluation() {
 
-    const { classID, studentID, evaluationID, notes, rating, improvementAreas } = this.state;
+    const { classID, studentID, evaluationID, notes, rating, improvementAreas, classStudent } = this.state;
 
     this.setState({ isLoading: true });
     let evaluationDetails = {
       rating,
       notes,
       improvementAreas,
+      assignmentType: classStudent.currentAssignmentType ? classStudent.currentAssignmentType : "None",
     }
 
     await FirebaseFunctions.overwriteOldEvaluation(classID, studentID, evaluationID, evaluationDetails);
