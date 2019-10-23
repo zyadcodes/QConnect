@@ -230,7 +230,7 @@ class StudentMainScreen extends QcParentScreen {
             )
         }
 
-        let assignmentHistory = thisClassInfo.assignmentHistory.reverse();
+        let assignmentHistory = thisClassInfo.assignmentHistory ? thisClassInfo.assignmentHistory.reverse() : null 
         return (
 
             <SideMenu
