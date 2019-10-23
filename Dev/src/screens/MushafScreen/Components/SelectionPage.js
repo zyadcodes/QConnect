@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ImageBackground, StyleSheet, Dimensions, Text, TextInput, Alert, I18nManager } from 'react-native';
+import { View, ImageBackground, StyleSheet, Dimensions, Text, TextInput, Alert } from 'react-native';
 import colors from 'config/colors';
 import TouchableText from 'components/TouchableText'
 import LoadingSpinner from 'components/LoadingSpinner';
@@ -8,12 +8,15 @@ import AyahSelectionWord from './AyahSelectionWord'
 import EndOfAyah from './EndOfAyah'
 import Ayah from './Ayah';
 import fontStyles from 'config/fontStyles';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import strings from 'config/strings';
 import { screenHeight, screenWidth } from 'config/dimensions';
 import PageHeader from './PageHeader';
+import TopBanner from 'components/TopBanner';
 import AssignmentEntryComponent from 'components/AssignmentEntryComponent';
 import surahs from '../Data/Surahs.json'
 import pages from '../Data/mushaf-wbw.json'
+import Swiper from 'react-native-swiper'
 
 //Creates the higher order component
 class SelectionPage extends React.Component {
@@ -277,9 +280,9 @@ class SelectionPage extends React.Component {
                                 }
                                 else {
                                     //show Al-Fatihah aligned center, all other pages should stretch to fill end to end the line.
-                                    let flexDir= I18nManager.isRTL? {flexDirection: 'row' } : {flexDirection: 'row-reverse'}
+
                                     return (
-                                        <View key={page + "_" + line.line} style={{ ...flexDir, backgroundColor: 'transparent', justifyContent: 'space-between', alignItems: lineAlign }}>
+                                        <View key={page + "_" + line.line} style={{ flexDirection: 'row-reverse', backgroundColor: 'transparent', justifyContent: 'space-between', alignItems: lineAlign }}>
                                             {
                                                 line.text &&
                                                 line.text.map((word) => {

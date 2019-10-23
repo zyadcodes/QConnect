@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* QuranConnectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* QuranConnectTests.m */; };
 		012BCE3CBEAA4A4FBB0D99F8 /* girl12.png in Resources */ = {isa = PBXBuildFile; fileRef = F73D7C4B100641C491C10838 /* girl12.png */; };
@@ -34,8 +33,6 @@
 		0188158B2334966A006806B3 /* me_quran.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188158823349669006806B3 /* me_quran.ttf */; };
 		0188158C2334966A006806B3 /* Scheherazade-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188158923349669006806B3 /* Scheherazade-Bold.ttf */; };
 		0188158D2334966A006806B3 /* Scheherazade-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188158A23349669006806B3 /* Scheherazade-Regular.ttf */; };
-		01F0CC51235FFDC900390215 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 01F0CC50235FFDC900390215 /* Localizable.strings */; };
-		01F0CC56235FFE6B00390215 /* File.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 01F0CC58235FFE6B00390215 /* File.stringsdict */; };
 		05A50DDD02074F07BE689CD2 /* is-icon-12.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB615236590451195990F95 /* is-icon-12.png */; };
 		05E9633F17454B3D983D7B89 /* boy11.png in Resources */ = {isa = PBXBuildFile; fileRef = 93AC74C0EF0D4E9A90B7F523 /* boy11.png */; };
 		0668C2EC39AF450D81C0049A /* is-icon-5.png in Resources */ = {isa = PBXBuildFile; fileRef = 64E7AC68B7CB40A4A3E6DBDC /* is-icon-5.png */; };
@@ -222,8 +219,6 @@
 		0188158823349669006806B3 /* me_quran.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = me_quran.ttf; path = ../assets/fonts/me_quran.ttf; sourceTree = "<group>"; };
 		0188158923349669006806B3 /* Scheherazade-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Scheherazade-Bold.ttf"; path = "../assets/fonts/Scheherazade-Bold.ttf"; sourceTree = "<group>"; };
 		0188158A23349669006806B3 /* Scheherazade-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Scheherazade-Regular.ttf"; path = "../assets/fonts/Scheherazade-Regular.ttf"; sourceTree = "<group>"; };
-		01F0CC50235FFDC900390215 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
-		01F0CC57235FFE6B00390215 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/File.stringsdict; sourceTree = "<group>"; };
 		035EA2B8889C44CFA697AAE7 /* Ubuntu-Light-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Ubuntu-Light-Italic.ttf"; path = "../assets/fonts/Ubuntu-Light-Italic.ttf"; sourceTree = "<group>"; };
 		0B1E0D87EEAD4898828F4FA1 /* female1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female1.png; path = "../assets/images/teacher-icons/female1.png"; sourceTree = "<group>"; };
 		0BAD306C0B2441F2B4D27E96 /* girl3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl3.png; path = "../assets/images/student-icons/girl3.png"; sourceTree = "<group>"; };
@@ -444,8 +439,6 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
-				01F0CC50235FFDC900390215 /* Localizable.strings */,
-				01F0CC58235FFE6B00390215 /* File.stringsdict */,
 			);
 			name = QuranConnect;
 			sourceTree = "<group>";
@@ -842,7 +835,6 @@
 				10CD2E2C3BB6433EA2768DEF /* Ubuntu-Light.ttf in Resources */,
 				6ECDD8F05D4B442598001582 /* is-icon-0.png in Resources */,
 				F62394FF9E1B48ACAB12523E /* is-icon-1.png in Resources */,
-				01F0CC56235FFE6B00390215 /* File.stringsdict in Resources */,
 				0188158C2334966A006806B3 /* Scheherazade-Bold.ttf in Resources */,
 				0188158B2334966A006806B3 /* me_quran.ttf in Resources */,
 				537EDF0E5AA440C691E7C508 /* is-icon-10.png in Resources */,
@@ -901,7 +893,6 @@
 				488A4EBE8C7247BA8A23928F /* girl3.png in Resources */,
 				016EA18A2328BB9800CD20E2 /* (null) in Resources */,
 				016EA1862328BB8400CD20E2 /* Icon-App-29x29@2x.png in Resources */,
-				01F0CC51235FFDC900390215 /* Localizable.strings in Resources */,
 				016EA18C2328BB9800CD20E2 /* iTunesArtwork@3x.png in Resources */,
 				6749EB7078064E4D9E977415 /* girl4.png in Resources */,
 				A002C81CA9F148E4AE726F65 /* girl5.png in Resources */,
@@ -1244,14 +1235,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		01F0CC58235FFE6B00390215 /* File.stringsdict */ = {
-			isa = PBXVariantGroup;
-			children = (
-				01F0CC57235FFE6B00390215 /* en */,
-			);
-			name = File.stringsdict;
-			sourceTree = "<group>";
-		};
 		13B07FB11A68108700A75B9A /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
