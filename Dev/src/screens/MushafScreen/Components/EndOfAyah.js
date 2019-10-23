@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet, View } from 'react-native';
+import { Text, StyleSheet, View, I18nManager } from 'react-native';
 import colors from 'config/colors';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 
@@ -9,7 +9,7 @@ const EndOfAyah = ({ ayahNumber, onPress, selected, isLastSelectedAyah }) => {
     const leftBracket = '\uFD3E';
     let containerStyle = [styles.container];
     if(selected) {containerStyle.push(styles.selectionStyle)};
-    if(isLastSelectedAyah) {containerStyle.push(styles.lastSelectedAyah)};
+    if(isLastSelectedAyah) {containerStyle.push(I18nManager.IsRTL? styles.lastSelectedAyah : styles.lastSelectedAyahNoRTL)};
 
     return (
         <View style={containerStyle}>
@@ -52,10 +52,15 @@ const styles = StyleSheet.create({
     selectionStyle: {
         backgroundColor: colors.green
     },
+    lastSelectedAyahNoRTL: {
+        borderTopRightRadius: 15,
+        borderBottomRightRadius: 15
+    },
     lastSelectedAyah: {
         borderTopLeftRadius: 15,
         borderBottomLeftRadius: 15
-    }
+    },
+
 })
 
 export default EndOfAyah;

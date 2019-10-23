@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet, View, TouchableWithoutFeedback } from 'react-native';
+import { Text, StyleSheet, View, TouchableWithoutFeedback, I18nManager } from 'react-native';
 import colors from 'config/colors';
 import Sound from 'react-native-sound';
 
@@ -11,7 +11,7 @@ class Word extends React.Component {
         const { text, onPress, selected, isFirstSelectedWord } = this.props;
         let containerStyle = [styles.container];
         if(selected) {containerStyle.push(styles.selectionStyle)};
-        if(isFirstSelectedWord) {containerStyle.push(styles.firstSelectedWordText)};
+        if(isFirstSelectedWord) {containerStyle.push(I18nManager.isRTL? styles.firstSelectedWordText : styles.firstSelectedWordTextNoRTL)};
 
         return (
             <View style={containerStyle}>
@@ -40,9 +40,13 @@ const styles = StyleSheet.create({
     selectionStyle: {
         backgroundColor: colors.green,
     },
-    firstSelectedWordText: {
+    firstSelectedWordTextNoRTL: {
         borderTopRightRadius: 15,
         borderBottomRightRadius: 15
+    },
+    firstSelectedWordText: {
+        borderTopLeftRadius: 15,
+        borderBottomLeftRadius: 15
     }
 })
 
