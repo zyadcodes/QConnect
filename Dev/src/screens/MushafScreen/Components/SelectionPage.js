@@ -16,6 +16,7 @@ import TopBanner from 'components/TopBanner';
 import AssignmentEntryComponent from 'components/AssignmentEntryComponent';
 import surahs from '../Data/Surahs.json'
 import pages from '../Data/mushaf-wbw.json'
+import Swiper from 'react-native-swiper'
 
 //Creates the higher order component
 class SelectionPage extends React.Component {
@@ -44,14 +45,26 @@ class SelectionPage extends React.Component {
     }
 
     async componentDidMount() {
-        this.getPageLines(this.state.page);
+        if(!this.props.isLoading){
+            this.getPageLines(this.state.page);
+        }
+        
     }
+
+    // only redraw lines if the page have changed
+    static getDerivedStateFromProps(nextProps, prevState){
+        if(nextProps.page!==prevState.page){
+          const lines = pages[nextProps.page - 1];
+          return { page: nextProps.page, lines, isLoading: false};
+       }
+       else return null;
+     }
 
     //retrieves the lines, ayahs, and words of a particular page of the mushhaf
     //parameters: page: the page number we want to retrieve
     // reads the data from a local json file
     // data retrieved is saved under this.state.lines
-    async getPageLines(page){
+    async getPageLines(page) {
         const lines = await pages[page - 1] //(-1 to switch from 1 based index to 0 based index array)
         this.setState({
             isLoading: false,
@@ -108,7 +121,7 @@ class SelectionPage extends React.Component {
 
         //if the user taps on the same selected aya again, turn off selection
         if (this.compareOrder(selectedAyahsStart, selectedAyahsEnd) === 0 &&
-            this.compareOrder(selectedAyahsStart, selectedAyah) === 0 ) {
+            this.compareOrder(selectedAyahsStart, selectedAyah) === 0) {
             this.setState({
                 selectionStarted: false,
                 selectionCompleted: false,
@@ -157,8 +170,8 @@ class SelectionPage extends React.Component {
                 ayah1.surah < ayah2.surah || // ayah1's surah is before ayah 2's surah
                 (ayah1.surah === ayah2.surah && // OR: ayah1 and ayah2 are on the same surah yet 
                     ayah1.ayah < ayah2.ayah) // ayah1's number is less than ayah2.
-                )
-             )) {
+            )
+            )) {
             return 1;
         }
 
@@ -169,30 +182,24 @@ class SelectionPage extends React.Component {
     isAyahSelected(ayah) {
         return (
             (this.state.selectionStarted || this.state.selectionCompleted) && // there are ayahs selected by the user
-            this.compareOrder(this.state.selectedAyahsStart, ayah)  >= 0 && //if ayah is after selection start
-            this.compareOrder(this.state.selectedAyahsEnd, ayah, ) <= 0 //and ayah before selection end
-        ); 
+            this.compareOrder(this.state.selectedAyahsStart, ayah) >= 0 && //if ayah is after selection start
+            this.compareOrder(this.state.selectedAyahsEnd, ayah) <= 0 //and ayah before selection end
+        );
     }
 
     updatePage() {
-        const { editedPageNumber, page } = this.state
+        const { editedPageNumber } = this.state
 
         if (isNaN(editedPageNumber) || Number(editedPageNumber) < 1 || Number(editedPageNumber) > this.lastPage) {
             Alert.alert(strings.Whoops, strings.InvalidPageNumber);
             return;
         }
 
-        if (editedPageNumber !== page) {
-            this.setState({
-                editPageNumber: false,
-                page: Number(editedPageNumber),
-            })
-        }
         this.setState({
             editPageNumber: false,
         })
 
-        this.getPageLines(editedPageNumber);
+        this.props.onChangePage(editedPageNumber);
     }
 
     updateSurah(surah) {
@@ -205,10 +212,8 @@ class SelectionPage extends React.Component {
             this.setState({
                 isSurahSelectionVisible: false,
                 editedPageNumber: Number(startPage),
-                editPageNumber: false,
-                page: Number(startPage),
             });
-            this.getPageLines(startPage);
+            this.props.onChangePage(startPage);
         } catch (error) {
             Alert.alert(strings.Whoops,
                 "Something went wrong. If the error persists, please contact us at quranconnect@outlook.com")
@@ -216,10 +221,11 @@ class SelectionPage extends React.Component {
 
     }
 
-    debugMe(isAyaSelected, curAyah){
+    debugMe(isAyaSelected, curAyah) {
         let isLastSelectedAyah = isAyaSelected && (this.compareOrder(this.state.selectedAyahsEnd, curAyah) === 0)
         return isLastSelectedAyah;
     }
+
     render() {
         const { isLoading, lines, page } = this.state;
         let isFirstWord = true;
@@ -280,10 +286,10 @@ class SelectionPage extends React.Component {
                                             {
                                                 line.text &&
                                                 line.text.map((word) => {
-                                                    let curAyah = {ayah: Number(word.aya), surah: Number(word.sura), page: page};
+                                                    let curAyah = { ayah: Number(word.aya), surah: Number(word.sura), page: page };
                                                     let isAyaSelected = this.isAyahSelected(curAyah);
                                                     let isLastSelectedAyah = isAyaSelected && (this.compareOrder(this.state.selectedAyahsEnd, curAyah) === 0)
-                                                    if(isLastSelectedAyah){this.debugMe(isAyaSelected, curAyah)}
+                                                    if (isLastSelectedAyah) { this.debugMe(isAyaSelected, curAyah) }
                                                     if (word.char_type === "word") {
                                                         let isFirstSelectedWord = isAyaSelected && isFirstWord;
                                                         if (isFirstSelectedWord) { isFirstWord = false; }
@@ -398,6 +404,9 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0.25,
         borderBottomColor: colors.grey,
     },
+    container: {
+        flex: 1,
+      }
 })
 
 export default SelectionPage;
