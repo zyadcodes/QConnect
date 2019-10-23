@@ -1,6 +1,6 @@
 //Screen which will provide all of the possible settings for the user to click on
 import React from 'react';
-import { View, Text, StyleSheet, I18nManager} from 'react-native';
+import { View, Text, StyleSheet} from 'react-native';
 import colors from 'config/colors';
 import QcParentScreen from "screens/QcParentScreen";
 import SelectionPage from './Components/SelectionPage';
@@ -10,9 +10,6 @@ import { Icon } from 'react-native-elements';
 
 export default class MushafScreen extends QcParentScreen {
 
-    async componentWillMount() {
-        I18nManager.forceRTL(true);
-    }
     state = {
         pages: ["2", "3", "4"],
         key: 1,
