@@ -169,7 +169,7 @@ routeConfig = {
 //The navigator config containing all the configurations of the navigator (initialRoute, header, etc)
 navigatorConfig = {
 
-    initialRouteName: 'FirstScreenLoader'
+    initialRouteName: 'MushafScreen'
 
 }
 

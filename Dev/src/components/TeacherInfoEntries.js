@@ -5,6 +5,7 @@ import colors from 'config/colors'
 import strings from '../../config/strings';
 import PhoneInput from 'react-native-phone-input'
 import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 //--------------------------------------------------------------------------
 // Teacher info entries (Name, Phone number, and Email address). 

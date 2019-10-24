@@ -2,6 +2,8 @@ import React from 'react'
 import { Image, TouchableHighlight, Dimensions } from 'react-native'
 import PropTypes from 'prop-types'
 import colors from 'config/colors';
+import { screenHeight, screenWidth } from 'config/dimensions';
+
 
 //--------------------------------------------------------------------------
 // A Touchable round image . Default size depends on whether the image is "selected"

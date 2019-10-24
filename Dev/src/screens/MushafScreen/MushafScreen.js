@@ -11,7 +11,7 @@ import { Icon } from 'react-native-elements';
 export default class MushafScreen extends QcParentScreen {
 
     state = {
-        pages: ["2", "3", "4"],
+        pages: ["604", "603", "602"],
         key: 1,
         index: 1
     }
@@ -34,23 +34,29 @@ export default class MushafScreen extends QcParentScreen {
         //if we are in the first page, change render page 1, 2, and 3, and set current page to index 0 (page 1)
         //this way, users can't swipe left to previous page since there is no previous page
         if (pageNumber === 1) {
+            //bug bug: there is a bug in swiper where if I set index to 0 (to indicate end of book), 
+            // onIndexChanged is not called on the next swipe.
+            // this is a temporary workaround until swiper bug is fixed or we find a better workaround.
             prevPage = pageNumber;
-            curPage =  pageNumber + 1; 
-            nextPage = pageNumber + 2;
-            index= 0;
+            curPage =  pageNumber; 
+            nextPage = pageNumber + 1;
+            index= 1;
         }
         //if we are in the last page, change render page 602, 603, and 604, and set current page to index 2 (page 604)
         //this way, users can't swipe right to next page, since there is no next page
         else if (pageNumber === 604) {
-            prevPage = pageNumber - 2;
-            curPage =  pageNumber - 1; 
+            //bug bug: there is a bug in swiper where if I set index to 0 (to indicate end of book), 
+            // onIndexChanged is not called on the next swipe.
+            // this is a temporary workaround until swiper bug is fixed or we find a better workaround.
+            prevPage = pageNumber - 1;
+            curPage =  pageNumber; 
             nextPage = pageNumber;
-            index= 2;
+            index= 1;
         } 
 
         //otherwise, set the current page to the middle screen (index = 1), and set previous and next screens to prev and next pages 
         this.setState({
-            pages: [prevPage.toString(), curPage.toString(), nextPage.toString()],
+            pages: [nextPage.toString(), curPage.toString(), prevPage.toString()],
             index: index
         }
         )
@@ -58,12 +64,12 @@ export default class MushafScreen extends QcParentScreen {
 
     onPageChanged(idx) {
         //if swipe right, go to next page, unless we are in the last page.
-        if (idx === this.state.index + 1 && parseInt(this.state.pages[2]) !== 604) {
+        if (idx === this.state.index - 1 && parseInt(this.state.pages[0]) !== 604) {
             const newPages = this.state.pages.map(i => (parseInt(i) + 1).toString())
             this.setState({ pages: newPages, key: ((this.state.key + 1) % 2), index: 1 })
         }
         //if swipe right, go to previous page, unless we are in the first page
-        else if (idx  === this.state.index -1  && parseInt(this.state.pages[0]) !== 1) {
+        else if (idx  === this.state.index + 1  && parseInt(this.state.pages[2]) !== 1) {
             const newPages = this.state.pages.map(i => (parseInt(i) - 1).toString())
             this.setState({ pages: newPages, key: ((this.state.key + 1) % 2), index: 1 })
         }
@@ -75,12 +81,12 @@ export default class MushafScreen extends QcParentScreen {
                 index={this.state.index}
                 key={this.state.key}
                 style={styles.wrapper}
-                nextButton={<Icon
+                prevButton={<Icon
                     color= {colors.primaryDark}
                     size={35}
                     name={'angle-left'}
                     type="font-awesome" />}
-                prevButton={<Icon
+                nextButton={<Icon
                     color= {colors.primaryDark}
                     size={35}
                     name={'angle-right'}
