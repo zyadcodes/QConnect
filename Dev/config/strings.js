@@ -146,10 +146,13 @@ export default {
     EnterYourStudentsName: 'Enter your student\'s name',
     Whoops: 'Whoops',
     AddStudents: 'Add Students',
-    JoinMyClass: 'Join my class on QuranConnect. Here is the class code: ',
     AddYourStudents: 'Add Your Students',
-    Or: '────────       Or      ────    ────',
-    AddStudentsManually: 'Manually Add Your Students',
+    Or: 'Or: ',
+    AddStudentsManually: 'Add students manually',
+    AddStudents: 'Add Students',
+    AddManualStudents: 'Add Manual Students',
+    ShareCode: 'Share code with students',
+    JoinMyClass: 'Join my class on QuranConnect. Here is the class code: ',
 
     //--------------------- Class Header Navigator ---------------------
     StudentProfile: 'Student Profile',

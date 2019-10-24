@@ -1,13 +1,16 @@
 //Screen which will provide all of the possible settings for the user to click on
 import React from 'react';
-import { View, Text, StyleSheet} from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import colors from 'config/colors';
 import QcParentScreen from "screens/QcParentScreen";
 import SelectionPage from './Components/SelectionPage';
 import Swiper from 'react-native-swiper'
 import { Icon } from 'react-native-elements';
-import {compareOrder} from './Helpers/AyahsOrder'
-
+import { compareOrder } from './Helpers/AyahsOrder'
+import QcActionButton from 'components/QcActionButton'
+import surahs from './Data/Surahs.json'
+import strings from 'config/strings';
+import fontStyles from 'config/fontStyles';
 
 export default class MushafScreen extends QcParentScreen {
 
@@ -31,17 +34,44 @@ export default class MushafScreen extends QcParentScreen {
         selectionCompleted: false,
     }
 
+    getAssignmentDescription(){
+        const {selectedAyahsStart, selectedAyahsEnd} = this.state;
+        if(selectedAyahsStart.surah  === 0) {
+            //no selection made
+            //todo: make this an explicit flag
+            return "";
+        }
+
+        desc = "Assignment: " + surahs[selectedAyahsStart.surah].tname + ":{" + selectedAyahsStart.ayah
+
+        if (selectedAyahsStart.surah === selectedAyahsEnd.surah){
+            if(selectedAyahsStart.ayah !== selectedAyahsEnd.ayah){
+                desc += " to " + selectedAyahsEnd.ayah 
+            }
+        } else {
+            desc += "} to " + surahs[selectedAyahsEnd.surah].tname + ":{" + selectedAyahsEnd.ayah
+        }
+
+        let pageDesc = "} p. " + selectedAyahsEnd.page;
+        if(selectedAyahsStart.page !== selectedAyahsEnd.page){
+            pageDesc = "} pp. " + selectedAyahsStart.page + " to " + selectedAyahsEnd.page
+        }
+        desc += pageDesc
+
+        return desc;
+    }
+
     renderItem(item, idx) {
         const itemInt = parseInt(item)
         return (
-            <View style={styles.container} key={idx}>
-                <SelectionPage 
-                    page={itemInt} 
+            <View style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }} key={idx}>
+                <SelectionPage
+                    page={itemInt}
                     onChangePage={this.onChangePage.bind(this)}
                     selectedAyahsStart={this.state.selectedAyahsStart}
                     selectedAyahsEnd={this.state.selectedAyahsEnd}
-                    selectionStarted= {this.state.selectionStarted}
-                    selectionCompleted= {this.state.selectionCompleted}
+                    selectionStarted={this.state.selectionStarted}
+                    selectionCompleted={this.state.selectionCompleted}
                     onSelectAyah={this.onSelectAyah.bind(this)}
                 />
             </View>
@@ -103,9 +133,9 @@ export default class MushafScreen extends QcParentScreen {
             // onIndexChanged is not called on the next swipe.
             // this is a temporary workaround until swiper bug is fixed or we find a better workaround.
             prevPage = pageNumber;
-            curPage =  pageNumber; 
+            curPage = pageNumber;
             nextPage = pageNumber + 1;
-            index= 1;
+            index = 1;
         }
         //if we are in the last page, change render page 602, 603, and 604, and set current page to index 2 (page 604)
         //this way, users can't swipe right to next page, since there is no next page
@@ -114,10 +144,10 @@ export default class MushafScreen extends QcParentScreen {
             // onIndexChanged is not called on the next swipe.
             // this is a temporary workaround until swiper bug is fixed or we find a better workaround.
             prevPage = pageNumber - 1;
-            curPage =  pageNumber; 
+            curPage = pageNumber;
             nextPage = pageNumber;
-            index= 1;
-        } 
+            index = 1;
+        }
 
         //otherwise, set the current page to the middle screen (index = 1), and set previous and next screens to prev and next pages 
         this.setState({
@@ -134,7 +164,7 @@ export default class MushafScreen extends QcParentScreen {
             this.setState({ pages: newPages, key: ((this.state.key + 1) % 2), index: 1 })
         }
         //if swipe right, go to previous page, unless we are in the first page
-        else if (idx  === this.state.index + 1  && parseInt(this.state.pages[2]) !== 1) {
+        else if (idx === this.state.index + 1 && parseInt(this.state.pages[2]) !== 1) {
             const newPages = this.state.pages.map(i => (parseInt(i) - 1).toString())
             this.setState({ pages: newPages, key: ((this.state.key + 1) % 2), index: 1 })
         }
@@ -142,17 +172,18 @@ export default class MushafScreen extends QcParentScreen {
 
     render() {
         return (
+            <View style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }}>
             <Swiper
                 index={this.state.index}
+                containerStyle={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }}
                 key={this.state.key}
-                style={styles.wrapper}
                 prevButton={<Icon
-                    color= {colors.primaryDark}
+                    color={colors.primaryDark}
                     size={35}
                     name={'angle-left'}
                     type="font-awesome" />}
                 nextButton={<Icon
-                    color= {colors.primaryDark}
+                    color={colors.primaryDark}
                     size={35}
                     name={'angle-right'}
                     type="font-awesome" />}
@@ -162,13 +193,36 @@ export default class MushafScreen extends QcParentScreen {
                 onIndexChanged={(index) => this.onPageChanged(index)}>
                 {this.state.pages.map((item, idx) => this.renderItem(item, idx))}
             </Swiper>
+            <View style={{paddingHorizontal: 10}}>
+                {
+                    this.state.selectedAyahsStart.surah > 0? 
+                    <Text style={fontStyles.mainTextStyleDarkGrey}>{this.getAssignmentDescription()}</Text>
+                     : <View></View>
+                }
+            </View>
+            <View style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                marginBottom: 15
+            }}>
+                <QcActionButton
+                    text={strings.Save}
+                    screen={this.props.screen}
+                    onPress={() => {
+                        this.props.assignmentType ? this.props.onSubmit(this.state.input, this.state.type) :
+                            this.props.onSubmit(this.state.input)
+                    }} />
+                <QcActionButton
+                    text={strings.Cancel}
+                    onPress={() => this.props.onCancel()} />
+            </View>
+            </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-
     },
     ayahText: {
         padding: 5,

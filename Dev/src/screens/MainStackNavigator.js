@@ -17,11 +17,11 @@ import ClassTabsNavigator from './TeacherScreens/ClassTabs/ClassTabsNavigator';
 import StudentProfileScreen from './TeacherScreens/ClassTabs/StudentProfileScreen';
 import ClassEditScreen from './TeacherScreens/ClassTabs/ClassEditScreen';
 import MushafScreen from './MushafScreen/MushafScreen'
-import PageHeader from './MushafScreen/Components/PageHeader'
+import ShareClassCodeScreen from './TeacherScreens/AddStudents/ShareClassCodeScreen';
 import EvaluationPage from './Evaluation/EvaluationPage';
 import strings from 'config/strings';
 import TopBanner from 'components/TopBanner';
-
+import AddManualStudentsScreen from './TeacherScreens/AddStudents/AddManualStudentsScreen';
 
 //The routes containing all the screens & their navigation options
 routeConfig = {
@@ -149,8 +149,20 @@ routeConfig = {
         })
     },
 
-    ClassEdit: {
-        screen: ClassEditScreen,
+    AddManualStudents: {
+        screen: AddManualStudentsScreen,
+        navigationOptions: ({ navigation }) => ({
+            header: (
+                <TopBanner
+                    Title={strings.AddManualStudents}
+                    LeftIconName="angle-left"
+                    LeftOnPress={() => navigation.goBack()} />
+            )
+        })
+    },
+
+    ShareClassCode: {
+        screen: ShareClassCodeScreen,
         navigationOptions: ({ navigation }) => ({
             header: (
                 <TopBanner
@@ -169,7 +181,7 @@ routeConfig = {
 //The navigator config containing all the configurations of the navigator (initialRoute, header, etc)
 navigatorConfig = {
 
-    initialRouteName: 'MushafScreen'
+    initialRouteName: 'FirstScreenLoader'
 
 }
 
