@@ -1,6 +1,6 @@
 //Screen which will provide all of the possible settings for the user to click on
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Alert } from 'react-native';
 import colors from 'config/colors';
 import QcParentScreen from "screens/QcParentScreen";
 import SelectionPage from './Components/SelectionPage';
@@ -11,6 +11,7 @@ import QcActionButton from 'components/QcActionButton'
 import surahs from './Data/Surahs.json'
 import strings from 'config/strings';
 import fontStyles from 'config/fontStyles';
+import FirebaseFunctions from 'config/FirebaseFunctions';
 
 export default class MushafScreen extends QcParentScreen {
 
@@ -20,6 +21,8 @@ export default class MushafScreen extends QcParentScreen {
         pages: ["604", "603", "602"],
         key: 1,
         index: 1,
+        studentID: this.props.navigation.state.params.studentID,
+        classID: this.props.navigation.state.params.classID,
         selectedAyahsStart: {
             surah: 0,
             page: this.lastPage,
@@ -32,9 +35,10 @@ export default class MushafScreen extends QcParentScreen {
         },
         selectionStarted: false,
         selectionCompleted: false,
+        assignmentName: "",
     }
 
-    getAssignmentDescription(){
+    updateAssignmentName(){
         const {selectedAyahsStart, selectedAyahsEnd} = this.state;
         if(selectedAyahsStart.surah  === 0) {
             //no selection made
@@ -42,7 +46,7 @@ export default class MushafScreen extends QcParentScreen {
             return "";
         }
 
-        desc = "Assignment: " + surahs[selectedAyahsStart.surah].tname + ":{" + selectedAyahsStart.ayah
+        desc = surahs[selectedAyahsStart.surah].tname + ":{" + selectedAyahsStart.ayah
 
         if (selectedAyahsStart.surah === selectedAyahsEnd.surah){
             if(selectedAyahsStart.ayah !== selectedAyahsEnd.ayah){
@@ -56,9 +60,9 @@ export default class MushafScreen extends QcParentScreen {
         if(selectedAyahsStart.page !== selectedAyahsEnd.page){
             pageDesc = "} pp. " + selectedAyahsStart.page + " to " + selectedAyahsEnd.page
         }
-        desc += pageDesc
+        desc += pageDesc;
 
-        return desc;
+        this.setState({assignmentName: desc});
     }
 
     renderItem(item, idx) {
@@ -94,7 +98,7 @@ export default class MushafScreen extends QcParentScreen {
                 selectionCompleted: false,
                 selectedAyahsStart: noAyahSelected,
                 selectedAyahsEnd: noAyahSelected,
-            })
+            }, () => this.updateAssignmentName())
         }
         else if (!selectionStarted) {
             this.setState({
@@ -102,7 +106,7 @@ export default class MushafScreen extends QcParentScreen {
                 selectionCompleted: false,
                 selectedAyahsStart: selectedAyah,
                 selectedAyahsEnd: selectedAyah
-            })
+            }, () => this.updateAssignmentName() )
         } else if (!selectionCompleted) {
             this.setState(
                 {
@@ -113,9 +117,9 @@ export default class MushafScreen extends QcParentScreen {
 
             //Set the smallest number as the start, and the larger as the end
             if (compareOrder(selectedAyahsStart, selectedAyah) > 0) {
-                this.setState({ selectedAyahsEnd: selectedAyah })
+                this.setState({ selectedAyahsEnd: selectedAyah }, () => this.updateAssignmentName())
             } else {
-                this.setState({ selectedAyahsStart: selectedAyah })
+                this.setState({ selectedAyahsStart: selectedAyah }, () => this.updateAssignmentName())
             }
         }
     }
@@ -170,6 +174,22 @@ export default class MushafScreen extends QcParentScreen {
         }
     }
 
+    onSaveAssignment(){
+        const { classID, studentID, assignmentName } = this.state;
+        if (assignmentName.trim() === "") {
+            Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
+        } else {
+            //Updates the local state then pushes to firestore
+            this.setState({
+                currentAssignment: this,
+                hasCurrentAssignment: assignmentName === 'None' ? false : true
+            });
+            FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, assignmentName, strings.Memorization);
+
+            this.props.navigation.pop();
+        }
+    }
+
     render() {
         return (
             <View style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }}>
@@ -193,10 +213,10 @@ export default class MushafScreen extends QcParentScreen {
                 onIndexChanged={(index) => this.onPageChanged(index)}>
                 {this.state.pages.map((item, idx) => this.renderItem(item, idx))}
             </Swiper>
-            <View style={{paddingHorizontal: 10}}>
+            <View style={{padding: 10}}>
                 {
                     this.state.selectedAyahsStart.surah > 0? 
-                    <Text style={fontStyles.mainTextStyleDarkGrey}>{this.getAssignmentDescription()}</Text>
+                    <Text style={fontStyles.mainTextStyleDarkGrey}>Assignment: {this.state.assignmentName}</Text>
                      : <View></View>
                 }
             </View>
@@ -207,14 +227,10 @@ export default class MushafScreen extends QcParentScreen {
             }}>
                 <QcActionButton
                     text={strings.Save}
-                    screen={this.props.screen}
-                    onPress={() => {
-                        this.props.assignmentType ? this.props.onSubmit(this.state.input, this.state.type) :
-                            this.props.onSubmit(this.state.input)
-                    }} />
+                    onPress={() => {this.onSaveAssignment()}} />
                 <QcActionButton
                     text={strings.Cancel}
-                    onPress={() => this.props.onCancel()} />
+                    onPress={() => this.props.navigation.pop()} />
             </View>
             </View>
         );

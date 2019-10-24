@@ -146,7 +146,7 @@ class StudentProfileScreen extends QcParentScreen {
                 <View style={{ flexDirection: 'row' }}>
 
                   <TouchableHighlight
-                    onPress={() => { this.setState({ isDialogVisible: true }) }} >
+                    onPress={() => { this.props.navigation.push("MushafScreen", {classID, studentID }) }} >
                     <Text style={fontStyles.mainTextStylePrimaryDark}>{strings.EditAssignment}</Text>
                   </TouchableHighlight>
 
