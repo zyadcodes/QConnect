@@ -6,23 +6,88 @@ import QcParentScreen from "screens/QcParentScreen";
 import SelectionPage from './Components/SelectionPage';
 import Swiper from 'react-native-swiper'
 import { Icon } from 'react-native-elements';
+import {compareOrder} from './Helpers/AyahsOrder'
 
 
 export default class MushafScreen extends QcParentScreen {
 
+    lastPage = 604;
+
     state = {
         pages: ["604", "603", "602"],
         key: 1,
-        index: 1
+        index: 1,
+        selectedAyahsStart: {
+            surah: 0,
+            page: this.lastPage,
+            ayah: 0
+        },
+        selectedAyahsEnd: {
+            surah: 0,
+            page: this.lastPage,
+            ayah: 0
+        },
+        selectionStarted: false,
+        selectionCompleted: false,
     }
 
     renderItem(item, idx) {
         const itemInt = parseInt(item)
         return (
             <View style={styles.container} key={idx}>
-                <SelectionPage page={itemInt} onChangePage={this.onChangePage.bind(this)} />
+                <SelectionPage 
+                    page={itemInt} 
+                    onChangePage={this.onChangePage.bind(this)}
+                    selectedAyahsStart={this.state.selectedAyahsStart}
+                    selectedAyahsEnd={this.state.selectedAyahsEnd}
+                    selectionStarted= {this.state.selectionStarted}
+                    selectionCompleted= {this.state.selectionCompleted}
+                    onSelectAyah={this.onSelectAyah.bind(this)}
+                />
             </View>
         )
+    }
+
+    onSelectAyah(selectedAyah) {
+        const { selectedAyahsStart, selectedAyahsEnd, selectionCompleted, selectionStarted } = this.state;
+        const noAyahSelected = {
+            surah: 0,
+            page: 0,
+            ayah: 0
+        };
+
+        //if the user taps on the same selected aya again, turn off selection
+        if (compareOrder(selectedAyahsStart, selectedAyahsEnd) === 0 &&
+            compareOrder(selectedAyahsStart, selectedAyah) === 0) {
+            this.setState({
+                selectionStarted: false,
+                selectionCompleted: false,
+                selectedAyahsStart: noAyahSelected,
+                selectedAyahsEnd: noAyahSelected,
+            })
+        }
+        else if (!selectionStarted) {
+            this.setState({
+                selectionStarted: true,
+                selectionCompleted: false,
+                selectedAyahsStart: selectedAyah,
+                selectedAyahsEnd: selectedAyah
+            })
+        } else if (!selectionCompleted) {
+            this.setState(
+                {
+                    selectionStarted: false,
+                    selectionCompleted: true,
+                }
+            )
+
+            //Set the smallest number as the start, and the larger as the end
+            if (compareOrder(selectedAyahsStart, selectedAyah) > 0) {
+                this.setState({ selectedAyahsEnd: selectedAyah })
+            } else {
+                this.setState({ selectedAyahsStart: selectedAyah })
+            }
+        }
     }
 
     onChangePage(pageNumber) {

@@ -16,7 +16,7 @@ import TopBanner from 'components/TopBanner';
 import AssignmentEntryComponent from 'components/AssignmentEntryComponent';
 import surahs from '../Data/Surahs.json'
 import pages from '../Data/mushaf-wbw.json'
-import Swiper from 'react-native-swiper'
+import {compareOrder} from '../Helpers/AyahsOrder'
 
 //Creates the higher order component
 class SelectionPage extends React.Component {
@@ -53,11 +53,19 @@ class SelectionPage extends React.Component {
 
     // only redraw lines if the page have changed
     static getDerivedStateFromProps(nextProps, prevState){
+        let lines = {}
         if(nextProps.page!==prevState.page){
-          const lines = pages[nextProps.page - 1];
-          return { page: nextProps.page, lines, isLoading: false};
-       }
-       else return null;
+            lines = {lines: pages[nextProps.page - 1]};
+        }
+        return { 
+            ...lines,
+            page: nextProps.page, 
+            selectedAyahsStart: nextProps.selectedAyahsStart,
+            selectedAyahsEnd: nextProps.selectedAyahsEnd,
+            selectionStarted: nextProps.selectionStarted,
+            selectionCompleted: nextProps.selectionCompleted,
+            isLoading: false
+        };
      }
 
     //retrieves the lines, ayahs, and words of a particular page of the mushhaf
@@ -111,79 +119,11 @@ class SelectionPage extends React.Component {
         return lineAyahText;
     }
 
-    onSelectAyah(selectedAyah) {
-        const { selectedAyahsStart, selectedAyahsEnd, selectionCompleted, selectionStarted } = this.state;
-        const noAyahSelected = {
-            surah: 0,
-            page: 0,
-            ayah: 0
-        };
-
-        //if the user taps on the same selected aya again, turn off selection
-        if (this.compareOrder(selectedAyahsStart, selectedAyahsEnd) === 0 &&
-            this.compareOrder(selectedAyahsStart, selectedAyah) === 0) {
-            this.setState({
-                selectionStarted: false,
-                selectionCompleted: false,
-                selectedAyahsStart: noAyahSelected,
-                selectedAyahsEnd: noAyahSelected,
-            })
-        }
-        else if (!selectionStarted) {
-            this.setState({
-                selectionStarted: true,
-                selectionCompleted: false,
-                selectedAyahsStart: selectedAyah,
-                selectedAyahsEnd: selectedAyah
-            })
-        } else if (!selectionCompleted) {
-            this.setState(
-                {
-                    selectionStarted: false,
-                    selectionCompleted: true,
-                }
-            )
-
-            //Set the smallest number as the start, and the larger as the end
-            if (this.compareOrder(selectedAyahsStart, selectedAyah) > 0) {
-                this.setState({ selectedAyahsEnd: selectedAyah })
-            } else {
-                this.setState({ selectedAyahsStart: selectedAyah })
-            }
-        }
-    }
-
-    // compare which ayah comes first: ayah1 or ayah2
-    // return: 0 if they are the same ayah
-    //         1 if ayah1 is before ayah2
-    //         -1 if ayah2 is before ayah1
-    compareOrder(ayah1, ayah2) {
-
-        if (ayah1.page === ayah2.page &&
-            ayah1.ayah === ayah2.ayah &&
-            ayah1.surah === ayah2.surah) {
-            return 0; //
-        }
-        // ayah 1 is before ayah 2 if:
-        else if (ayah1.page < ayah2.page || // ayah1 page is before ayah 2 page
-            (ayah1.page === ayah2.page && ( // OR: ayah1 and ayah2 on the same page yet:
-                ayah1.surah < ayah2.surah || // ayah1's surah is before ayah 2's surah
-                (ayah1.surah === ayah2.surah && // OR: ayah1 and ayah2 are on the same surah yet 
-                    ayah1.ayah < ayah2.ayah) // ayah1's number is less than ayah2.
-            )
-            )) {
-            return 1;
-        }
-
-        //if not the same ayahs, and not ayah 1 before ayah 2, then ayah 2 is before ayah 1.
-        return -1;
-    }
-
     isAyahSelected(ayah) {
         return (
             (this.state.selectionStarted || this.state.selectionCompleted) && // there are ayahs selected by the user
-            this.compareOrder(this.state.selectedAyahsStart, ayah) >= 0 && //if ayah is after selection start
-            this.compareOrder(this.state.selectedAyahsEnd, ayah) <= 0 //and ayah before selection end
+            compareOrder(this.state.selectedAyahsStart, ayah) >= 0 && //if ayah is after selection start
+            compareOrder(this.state.selectedAyahsEnd, ayah) <= 0 //and ayah before selection end
         );
     }
 
@@ -219,11 +159,6 @@ class SelectionPage extends React.Component {
                 "Something went wrong. If the error persists, please contact us at quranconnect@outlook.com")
         }
 
-    }
-
-    debugMe(isAyaSelected, curAyah) {
-        let isLastSelectedAyah = isAyaSelected && (this.compareOrder(this.state.selectedAyahsEnd, curAyah) === 0)
-        return isLastSelectedAyah;
     }
 
     render() {
@@ -288,20 +223,19 @@ class SelectionPage extends React.Component {
                                                 line.text.map((word) => {
                                                     let curAyah = { ayah: Number(word.aya), surah: Number(word.sura), page: page };
                                                     let isAyaSelected = this.isAyahSelected(curAyah);
-                                                    let isLastSelectedAyah = isAyaSelected && (this.compareOrder(this.state.selectedAyahsEnd, curAyah) === 0)
-                                                    if (isLastSelectedAyah) { this.debugMe(isAyaSelected, curAyah) }
+                                                    let isLastSelectedAyah = isAyaSelected && (compareOrder(this.state.selectedAyahsEnd, curAyah) === 0)
                                                     if (word.char_type === "word") {
                                                         let isFirstSelectedWord = isAyaSelected && isFirstWord;
                                                         if (isFirstSelectedWord) { isFirstWord = false; }
                                                         return (<AyahSelectionWord key={word.id}
                                                             text={word.text}
                                                             selected={isAyaSelected}
-                                                            onPress={() => this.onSelectAyah(curAyah)}
+                                                            onPress={() => this.props.onSelectAyah(curAyah)}
                                                             isFirstSelectedWord={isFirstSelectedWord} />)
                                                     }
                                                     else if (word.char_type === "end") {
                                                         return (<EndOfAyah key={word.id} ayahNumber={word.aya}
-                                                            onPress={() => this.onSelectAyah(curAyah)}
+                                                            onPress={() => this.props.onSelectAyah(curAyah)}
                                                             selected={this.isAyahSelected(curAyah)}
                                                             isLastSelectedAyah={isLastSelectedAyah}
                                                         />)
@@ -360,7 +294,7 @@ class SelectionPage extends React.Component {
 
 /**
  * 
-                            
+    Page styles                       
  */
 const styles = StyleSheet.create({
     ayahText: {
