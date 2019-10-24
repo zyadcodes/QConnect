@@ -214,13 +214,18 @@ updateTitle(newTitle){
                 onTitleChanged={(newTitle)=> this.updateTitle(newTitle)}
                 RightOnPress={() => {
                   const { isEditing, titleHasChanged} = this.state;
-                  
-                  if(isEditing && titleHasChanged){
-                    FirebaseFunctions.updateClassObject(this.state.currentClassID, {name: this.state.currentClass.name})
-                    this.setState({titleHasChanged: false});
+                  if(this.state.currentClass.name.trim().length ===0){
+                    Alert.alert(strings.Whoops,strings.AddText)
+                  }
+                  else{
+                    if(isEditing && titleHasChanged){
+                      FirebaseFunctions.updateClassObject(this.state.currentClassID, {name: this.state.currentClass.name})
+                      this.setState({titleHasChanged: false});
+                    }
+  
+                    this.setState({ isEditing: !isEditing})
                   }
 
-                  this.setState({ isEditing: !isEditing})
                 }}
               />
             </View>
@@ -343,7 +348,7 @@ updateTitle(newTitle){
                     <Icon
                       name='user-times'
                       size={PixelRatio.get() * 9}
-                      type='font-awyesome'
+                      type='font-awesome'
                       color={colors.primaryDark} />) : (null)}
                   compOnPress={() => { this.removeStudent(item.ID) }} />
               )} />

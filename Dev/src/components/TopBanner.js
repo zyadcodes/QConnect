@@ -8,11 +8,12 @@ import { Icon } from 'react-native-elements';
 import colors from 'config/colors'
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
+import { TextInput } from 'react-native-gesture-handler';
 
 class TopBanner extends FontLoadingComponent {
     render() {
         //Component properties
-        const { LeftIconName, LeftTextName, LeftOnPress, Title,
+        const { LeftIconName, LeftTextName, LeftOnPress, Title, isEditingTitle, onTitleChanged,
             RightIconName, RightTextName, RightOnPress } = this.props;
 
         return (
@@ -28,10 +29,22 @@ class TopBanner extends FontLoadingComponent {
                             onPress={LeftOnPress ? () => { LeftOnPress() } : () => { }}>{LeftTextName}</Text>
                     </TouchableOpacity>
                 </View>
-
                 <View style={styles.topMiddleView}>
+                
+
+                    {(isEditingTitle ?
+                   
+                    <TextInput
+                    value={Title}
+                    onChangeText={onTitleChanged}
+                    //colors.lightGrey
+                    style={{minWidth: screenWidth * 0.40, backgroundColor: "#e5c8b3", padding: 13, borderRadius: 400}}
+                    
+                    >
+                    </TextInput>:
                     <Text style={fontStyles.bigTextStylePrimaryDark}>{Title}</Text>
-                </View>
+                    )}
+                    </View>
 
                 <View style={styles.topRightView} >
                     <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: screenHeight * 0.15, justifyContent: 'flex-end', alignItems: 'center' }} onPress={RightOnPress ? () => { RightOnPress() } : () => { }}>
@@ -69,6 +82,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
         borderBottomWidth: 0.25,
         borderBottomColor: colors.black,
+
     },
     topLeftView: {
         flex: 1.5,
