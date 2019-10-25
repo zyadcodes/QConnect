@@ -60,7 +60,6 @@ class StudentProfileScreen extends QcParentScreen {
       });
       FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, newAssignmentName, assignmentType);
     }
-
   }
 
   setDialogueVisible(visible) {
@@ -146,7 +145,7 @@ class StudentProfileScreen extends QcParentScreen {
                 <View style={{ flexDirection: 'row' }}>
 
                   <TouchableHighlight
-                    onPress={() => { this.props.navigation.push("MushafScreen", {classID, studentID }) }} >
+                    onPress={() => { this.props.navigation.push("MushafScreen", {classID, studentID, onSaveAssignment: this.editAssignment.bind(this) }) }} >
                     <Text style={fontStyles.mainTextStylePrimaryDark}>{strings.EditAssignment}</Text>
                   </TouchableHighlight>
 

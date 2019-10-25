@@ -46,19 +46,19 @@ export default class MushafScreen extends QcParentScreen {
             return "";
         }
 
-        desc = surahs[selectedAyahsStart.surah].tname + ":{" + selectedAyahsStart.ayah
+        desc = surahs[selectedAyahsStart.surah].tname + " (" + selectedAyahsStart.ayah
 
         if (selectedAyahsStart.surah === selectedAyahsEnd.surah){
             if(selectedAyahsStart.ayah !== selectedAyahsEnd.ayah){
                 desc += " to " + selectedAyahsEnd.ayah 
             }
         } else {
-            desc += "} to " + surahs[selectedAyahsEnd.surah].tname + ":{" + selectedAyahsEnd.ayah
+            desc += ") to " + surahs[selectedAyahsEnd.surah].tname + " (" + selectedAyahsEnd.ayah
         }
 
-        let pageDesc = "} p. " + selectedAyahsEnd.page;
+        let pageDesc = ") p. " + selectedAyahsEnd.page;
         if(selectedAyahsStart.page !== selectedAyahsEnd.page){
-            pageDesc = "} pp. " + selectedAyahsStart.page + " to " + selectedAyahsEnd.page
+            pageDesc = ") pp. " + selectedAyahsStart.page + " to " + selectedAyahsEnd.page
         }
         desc += pageDesc;
 
@@ -179,12 +179,7 @@ export default class MushafScreen extends QcParentScreen {
         if (assignmentName.trim() === "") {
             Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
         } else {
-            //Updates the local state then pushes to firestore
-            this.setState({
-                currentAssignment: this,
-                hasCurrentAssignment: assignmentName === 'None' ? false : true
-            });
-            FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, assignmentName, strings.Memorization);
+            this.props.navigation.state.params.onSaveAssignment(assignmentName, strings.Memorization);
 
             this.props.navigation.pop();
         }
