@@ -17,6 +17,7 @@ import AssignmentEntryComponent from 'components/AssignmentEntryComponent';
 import surahs from '../Data/Surahs.json'
 import pages from '../Data/mushaf-wbw.json'
 import {compareOrder} from '../Helpers/AyahsOrder'
+import FirebaseFunctions from '../../../../config/FirebaseFunctions';
 
 //Creates the higher order component
 class SelectionPage extends React.Component {
@@ -144,9 +145,19 @@ class SelectionPage extends React.Component {
 
     updateSurah(surah) {
         try {
-            // in the surah array, indexes 0-113 have Arabic names and 114- 227 have English names
-            // the formula below gets the surah index from 1 to 114 (so we can get its info from the surah db)
-            const surahIndex = (Number(surah.id) % 114) + 1
+            // in the surah array, surah ids 1-114 have Arabic names and 115- 229 have English names
+            // the formula below gets the surah index from 0 to 113 (so we can get its info from the surah db)
+            let surahIndex = (Number(surah.id));
+            if(surahIndex > 114){
+                //names with index 115-229 are english surah names
+                if(surahIndex <= 229){
+                    surahIndex -= 114;
+                }
+                else{
+                    console.log("invalid surah Index");
+                    FirebaseFunctions.logEvent("Surah suggestion returned an invalid index: " + surahIndex);
+                }
+            }
 
             const startPage = surahs[surahIndex].startpage;
             this.setState({

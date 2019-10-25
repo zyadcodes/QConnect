@@ -124,7 +124,8 @@ export default class MushafScreen extends QcParentScreen {
         }
     }
 
-    onChangePage(pageNumber) {
+    onChangePage(page) {
+        let pageNumber = parseInt(page);
         let nextPage = parseInt(pageNumber) + 1;
         let curPage = parseInt(pageNumber);
         let prevPage = parseInt(pageNumber) - 1;
