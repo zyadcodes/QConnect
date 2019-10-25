@@ -140,7 +140,7 @@ class SelectionPage extends React.Component {
             editPageNumber: false,
         })
 
-        this.props.onChangePage(editedPageNumber);
+        this.props.onChangePage(editedPageNumber, true);
     }
 
     updateSurah(surah) {
@@ -164,7 +164,7 @@ class SelectionPage extends React.Component {
                 isSurahSelectionVisible: false,
                 editedPageNumber: Number(startPage),
             });
-            this.props.onChangePage(startPage);
+            this.props.onChangePage(startPage, false);
         } catch (error) {
             Alert.alert(strings.Whoops,
                 "Something went wrong. If the error persists, please contact us at quranconnect@outlook.com")

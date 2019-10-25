@@ -13,6 +13,12 @@ import strings from 'config/strings';
 import fontStyles from 'config/fontStyles';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 
+const noAyahSelected = {
+    surah: 0,
+    page: 0,
+    ayah: 0
+};
+
 export default class MushafScreen extends QcParentScreen {
 
     lastPage = 604;
@@ -84,11 +90,6 @@ export default class MushafScreen extends QcParentScreen {
 
     onSelectAyah(selectedAyah) {
         const { selectedAyahsStart, selectedAyahsEnd, selectionCompleted, selectionStarted } = this.state;
-        const noAyahSelected = {
-            surah: 0,
-            page: 0,
-            ayah: 0
-        };
 
         //if the user taps on the same selected aya again, turn off selection
         if (compareOrder(selectedAyahsStart, selectedAyahsEnd) === 0 &&
@@ -124,7 +125,7 @@ export default class MushafScreen extends QcParentScreen {
         }
     }
 
-    onChangePage(page) {
+    onChangePage(page, keepSelection) {
         let pageNumber = parseInt(page);
         let nextPage = parseInt(pageNumber) + 1;
         let curPage = parseInt(pageNumber);
@@ -154,10 +155,19 @@ export default class MushafScreen extends QcParentScreen {
             index = 1;
         }
 
+        //reset the selection state if we are passed a flag to do so
+        let resetSelectionIfApplicable = {};
+        if(keepSelection === false){
+            resetSelectionIfApplicable = {
+                selectedAyahsStart: noAyahSelected,
+                selectedAyahsEnd: noAyahSelected,
+            }
+        }
         //otherwise, set the current page to the middle screen (index = 1), and set previous and next screens to prev and next pages 
         this.setState({
+            ...resetSelectionIfApplicable,
             pages: [nextPage.toString(), curPage.toString(), prevPage.toString()],
-            index: index
+            index: index,
         }
         )
     }
