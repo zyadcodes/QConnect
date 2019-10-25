@@ -12,6 +12,7 @@ import QcActionButton from "components/QcActionButton";
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import QCView from 'components/QCView';
 import colors from 'config/colors';
+import {Icon} from 'react-native-elements'
 
 class ShareClassCodeScreen extends Component {
 
@@ -21,15 +22,26 @@ class ShareClassCodeScreen extends Component {
 
         return (
             <QCView style={screenStyle.container}>
-                <View style={styles.topSpacer}></View>
+                <View style={styles.topSpacer}>
+                <Icon
+                    name='mortar-board'
+                    type='octicon'
+                    color={colors.grey}
+                    size={screenHeight * 0.15}
+                 />
+                </View>
                 <View style={styles.classCode}>
                     <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'flex-start' }}>
                         <Text style={fontStyles.hugeTextStyleBlack}>{strings.YourClassCode}</Text>
                     </View>
                     <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'center' }}>
-                        <Text style={fontStyles.hugeTextStylePrimaryDark}>{currentClassID}</Text>
+                        <Text style={{...fontStyles.hugeTextStylePrimaryDark, textAlign: 'center'}}>{currentClassID}</Text>
+                        <Text style={{...fontStyles.bigTextStyleDarkGrey, textAlign: 'center', paddingHorizontal: screenWidth * 0.01}}>{strings.ClassCodeDescription}</Text>
+                    </View>
+                    <View style={{flex: 1, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingHorizontal: screenWidth * 0.01 }}>
                     </View>
                 </View>
+                    
                 <View style={styles.shareButton}>
                     <QcActionButton
                         text={strings.ShareCode}
@@ -75,17 +87,17 @@ const styles = StyleSheet.create({
         height: screenHeight * 0.15
     },
     classCode: {
-        height: screenHeight * 0.15,
+        height: screenHeight * 0.20,
         justifyContent: 'flex-start',
         alignItems: 'center'
     },
     shareButton: {
-        height: screenHeight * 0.25,
+        height: screenHeight * 0.10,
         justifyContent: 'flex-end',
         alignItems: 'center'
     },
     addStudentsManually: {
-        height: screenHeight * 0.15,
+        height: screenHeight * 0.1,
         justifyContent: 'center',
         alignItems: 'center'
     },

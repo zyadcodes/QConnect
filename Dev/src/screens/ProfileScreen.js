@@ -230,10 +230,11 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
     },
     profilePic: {
-        width: screenWidth * 0.32,
-        height: screenHeight * 0.19,
-        borderRadius: screenHeight * 0.1
-    },
+        width: screenHeight * 0.10,
+        height: screenHeight * 0.10,
+        borderRadius: screenHeight * 0.1,
+        marginBottom: screenHeight * 0.01,
+        },
     cardStyle: {
         flexDirection: 'row',
         marginRight: screenWidth * 0.017,

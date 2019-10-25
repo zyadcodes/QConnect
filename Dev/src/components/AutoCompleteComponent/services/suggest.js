@@ -35,7 +35,7 @@ function suggestFormat(
         id: String(index),
       })) : null;
       // search text presence
-      if (searching && (name === text)) {
+      if(searching && name.includes(text)) {
         existingItem = { id, name };
         searching = false;
       }
@@ -61,7 +61,7 @@ function searchForRelevant(
   const suggest:Array<SuggestionDescribe> = [];
   let counter = 0;
   let existingItem = null;
-  const reg = text ?  new RegExp(`^${text}`, 'iu') : null;
+  const reg = text ?  new RegExp(`${text}`, 'iu') : null;
   let tags: ?Array<{item: string, id: string}> = null;
   items.some((element) => {
     const name = _.get(element, itemFormat.name);

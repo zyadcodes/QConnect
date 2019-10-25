@@ -4,15 +4,13 @@ import colors from './colors';
 import { PixelRatio, Platform, StyleSheet } from 'react-native';
 
 //The default font family that'll be used throughout the app
-const fontFamily = (Platform.OS === "ios" ? "Arial" : "sans-serif-medium");
+const fontFamily = (Platform.OS === "ios" ? "Arial" : "Montserrat-Regular");
+
 
 //Sets the base font that'll be used throughout the app based on the size of the screen
 //Sets the font size
-let bodyFont = 16;
+let bodyFont = 14;
 const pixelRatio = PixelRatio.get();
-if (pixelRatio < 3) {
-    bodyFont = 14;
-}
 
 const bodyFontSmaller = bodyFont * 0.875;
 const bodyFontBigger = bodyFont * 1.25;
@@ -20,10 +18,10 @@ const titleFont = bodyFont * 1.875;
 
 export default StyleSheet.create({
 
-    smallTextStyleBlack: {
+    smallTextStyleDarkGrey: {
         fontFamily,
         fontSize: bodyFontSmaller,
-        color: colors.black
+        color: colors.darkGrey
     },
 
     smallTextStyleDarkGrey: {
@@ -59,7 +57,7 @@ export default StyleSheet.create({
     mainTextStyleBlack: {
         fontFamily,
         fontSize: bodyFont,
-        color: colors.black
+        color: colors.darkGrey
     },
 
     mainTextStyleGrey: {
@@ -68,16 +66,28 @@ export default StyleSheet.create({
         color: colors.grey
     },
 
+    mainTextStyleDarkGreen: {
+        fontFamily,
+        fontSize: bodyFont,
+        color: colors.darkGreen
+    },
+
+    mainTextStyleDarkRed: {
+        fontFamily,
+        fontSize: bodyFont,
+        color: colors.darkRed
+    },
+
     bigTextStyleBlack: {
         fontFamily,
         fontSize: bodyFontBigger,
-        color: colors.black
+        color: colors.darkGrey
     },
 
     bigTextStyleGreen: {
         fontFamily,
         fontSize: bodyFontBigger,
-        color: colors.green
+        color: colors.darkGreen
     },
 
     bigTextStyleDarkRed: {
@@ -90,6 +100,12 @@ export default StyleSheet.create({
         fontFamily,
         fontSize: bodyFontBigger,
         color: colors.darkGrey
+    },
+
+    bigTextStyleDarkestGrey: {
+        fontFamily,
+        fontSize: bodyFontBigger,
+        color: colors.darkestGrey
     },
 
     bigTextStylePrimaryDark: {

@@ -151,7 +151,7 @@ class AddManualStudentsScreen extends Component {
                         </View>
                         <View style={{ flex: 0.7, alignSelf: 'flex-start' }}>
                             <TextInput
-                                style={[fontStyles.smallTextStyleBlack, styles.studentNameTextInput]}
+                                style={[fontStyles.smallTextStyleDarkGrey, styles.studentNameTextInput]}
                                 placeholder={strings.StudentName}
                                 onChangeText={newStudentName => this.setState({ newStudentName })}
                                 value={this.state.newStudentName}

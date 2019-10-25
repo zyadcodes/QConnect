@@ -44,7 +44,7 @@ const navigatorConfig = {
   // Android's default option displays tabBars on top, but iOS is bottom
   tabBarPosition: 'bottom',
   tabBarOptions: {
-    activeTintColor: colors.black,
+    activeTintColor: colors.primaryDark,
     inactiveTintColor: colors.darkGrey,
     style: {
       backgroundColor: colors.white,

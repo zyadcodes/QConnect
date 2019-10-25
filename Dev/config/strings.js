@@ -17,11 +17,11 @@ export default {
     YourAssignmentHasBeenGraded: 'Your assignment has been graded',
 
     //--------------------- Student Main Screen ---------------------
-    TotalAssignments: 'Total Assignments',
-    Ready: 'Ready',
-    WorkingOnIt: 'Working on it',
+    TotalAssignments: 'Assignments Completed',
+    Ready: 'READY',
+    WorkingOnIt: 'WORKING ON IT',
     ClassAlreadyJoined: 'We know it\'s exciting to be in this class. But you can only join it once.',
-    NeedHelp: "Need help",
+    NeedHelp: "NEED HELP",
 
     //--------------------- Forgot Password Screen-------------------
     emailPlaceHolder: "Email",
@@ -42,6 +42,7 @@ export default {
     EmailSent: 'Email Sent',
     CheckEmail: 'If a user with this email exists, we\'ve sent a link to your email to reset your password',
     Ok: 'Ok',
+    PasswordsDontMatch: "Passwords Don't match",
 
     //--------------------- Evaluation Page ---------------------
     None: 'None',
@@ -85,12 +86,15 @@ export default {
 
     //--------------------- Student Profile Screen ---------------------
     EditAssignment: 'Edit Assignment',
+    Reading: 'Reading',
+    Memorization: 'Memorization',
+    Revision: 'Revision',
     EnterAssignmentHere: 'Enter assignment here...',
     OutStanding: 'Outstanding!',
     EnterAssignment: 'Enter Assignment',
-    GetStarted: 'Get Started',
-    PracticePerfect: "Practice Makes Perfect",
-    GreatJob: "Great Job",
+    GetStarted: 'Get Started!',
+    PracticePerfect: "Practice Makes Perfect!",
+    GreatJob: "Great Job!",
     CurrentlyNoAssignment: 'You currently don\'t have an assignment',
     CurrentAssignment: 'Current Assignment',
     AddAssignment: 'Add Assignment',
@@ -115,7 +119,7 @@ export default {
     RulingsOfRaa: "Rulings of Raa'", 
     Muduud: "Muduud", 
     Qalqalah: "Qalqalah",
-    Ellipses: '...',
+    Ellipses: ' ... ',
     PlusSign: '+',
     MinusSign: '-',
 
@@ -139,11 +143,12 @@ export default {
     Remove: 'Remove',
     RemoveStudent: 'Remove student',
     AreYouSureYouWantToRemoveStudent: 'Are you sure you want to remove this student?',
-    YourClassCode: 'Your class code',
+    YourClassCode: 'Class Code',
+    ClassCodeDescription: 'Share the class code above with your students to join this class',
     Done: 'Done',
     IsNowAddedToTheClass: ' is now added to the class',
     PleaseInputAName: 'Please input a name',
-    StudentName: 'Student name...',
+    StudentName: 'Enter new student name...',
     AddStudent: 'Add Student',
     ThereIsAlreadyAStudentWithThatName: 'There is already a student with that name',
     EnterYourStudentsName: 'Enter your student\'s name',
