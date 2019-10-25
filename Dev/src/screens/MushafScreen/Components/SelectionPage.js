@@ -8,16 +8,15 @@ import AyahSelectionWord from './AyahSelectionWord'
 import EndOfAyah from './EndOfAyah'
 import Ayah from './Ayah';
 import fontStyles from 'config/fontStyles';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import strings from 'config/strings';
 import { screenHeight, screenWidth } from 'config/dimensions';
 import PageHeader from './PageHeader';
-import TopBanner from 'components/TopBanner';
 import AssignmentEntryComponent from 'components/AssignmentEntryComponent';
 import surahs from '../Data/Surahs.json'
 import pages from '../Data/mushaf-wbw.json'
 import {compareOrder} from '../Helpers/AyahsOrder'
 import FirebaseFunctions from '../../../../config/FirebaseFunctions';
+import surahNames from 'config/surahNames'
 
 //Creates the higher order component
 class SelectionPage extends React.Component {
@@ -172,6 +171,52 @@ class SelectionPage extends React.Component {
 
     }
 
+    getFirstAyahOfPage(){
+        const {page, lines} = this.state;
+
+        //find the first line that has text inside (type === line, instad of basmalah or start_surah)
+        let startLine = lines.slice().find(line => line.type === "line");
+
+        return { ayah: Number(startLine.ayah), surah: Number(startLine.surahNumber), page: page };
+    }
+
+    getLastAyahOfLine(line) {
+        //reverse the order of words within the line, (so we search from last word moving backward)
+        // then return the first element we find of type === end (end of ayah mark),
+        // end return its number 
+        let word = line.text.slice().reverse().find(word => word.char_type === "end");
+
+        return Number(word.aya);
+    }
+
+    //returns the last ayah of the page..
+    //
+    getLastAyahOfPage(){
+        const {page, lines} = this.state;
+
+        //walk the lines array backward, and find the last line that has text inside (type === line, instad of basmalah or start_surah)
+        let lastLine = lines.slice().reverse().find(line => line.type === "line");
+
+        //then get the last ayah within the last line
+        let lastAyah = this.getLastAyahOfLine(lastLine);
+
+        return { ayah: lastAyah, surah: Number(lastLine.surahNumber), page: page };
+    }
+
+    //selects the entire page
+    onSelectPage(){
+        const {page, lines} = this.state;
+        
+        //capture the first ayah (where the selection starts from)
+        let firstAyah = this.getFirstAyahOfPage();
+
+        //capture the last ayah (the ayah of the last word in the page)
+        let lastAyah = this.getLastAyahOfPage();
+
+        //select all the ayahs between first and last ayah of the page
+        this.props.onSelectAyahs(firstAyah, lastAyah);
+    }
+
     render() {
         const { isLoading, lines, page } = this.state;
         let isFirstWord = true;
@@ -205,6 +250,8 @@ class SelectionPage extends React.Component {
                             const { isSurahSelectionVisible } = this.state;
                             this.setState({ isSurahSelectionVisible: !isSurahSelectionVisible })
                         }}
+                        RightIconName="check-all"
+                        RightOnPress={() => { this.onSelectPage(); }}
                     />
                     <View id={this.state.page} style={{ marginVertical: 5, marginHorizontal: 5, backgroundColor: colors.white }}>
                         {
@@ -225,8 +272,6 @@ class SelectionPage extends React.Component {
                                     return <Ayah key={line.line + "_basmalah"} text="بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ" />
                                 }
                                 else {
-                                    //show Al-Fatihah aligned center, all other pages should stretch to fill end to end the line.
-
                                     return (
                                         <View key={page + "_" + line.line} style={{ flexDirection: 'row-reverse', backgroundColor: 'transparent', justifyContent: 'space-between', alignItems: lineAlign }}>
                                             {

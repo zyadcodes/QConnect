@@ -21,7 +21,7 @@ class PageHeader extends FontLoadingComponent {
                     <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: 100, justifyContent: 'flex-start', alignItems: 'center' }} onPress={LeftOnPress ? () => { LeftOnPress() } : () => { }} >
                         <Icon
                             name={LeftIconName}
-                            type="font-awesome"
+                            type='material-community'
                         />
                         <Text style={fontStyles.mainTextStyleBlack}
                             onPress={LeftOnPress ? () => { LeftOnPress() } : () => { }}>{LeftTextName}</Text>
@@ -51,7 +51,7 @@ class PageHeader extends FontLoadingComponent {
                     <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: 100, justifyContent: 'flex-end', alignItems: 'center' }} onPress={RightOnPress ? () => { RightOnPress() } : () => { }}>
                         <Icon
                             name={RightIconName}
-                            type="font-awesome"
+                            type='material-community'
                         />
                         <Text style={fontStyles.mainTextStyleBlack}
                             onPress={RightOnPress ? () => { RightOnPress() } : () => { }}>{RightTextName}</Text>

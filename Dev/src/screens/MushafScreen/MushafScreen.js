@@ -82,7 +82,14 @@ export default class MushafScreen extends QcParentScreen {
                     selectedAyahsEnd={this.state.selectedAyahsEnd}
                     selectionStarted={this.state.selectionStarted}
                     selectionCompleted={this.state.selectionCompleted}
+
+                    //callback when user taps on a single ayah to selects
+                    //determines whether this would be the start of end of the selection
+                    // and select ayahs in between
                     onSelectAyah={this.onSelectAyah.bind(this)}
+
+                    //callback when user selects a range of ayahs (line an entire page or surah)
+                    onSelectAyahs={this.onSelectAyahs.bind(this)}
                 />
             </View>
         )
@@ -122,6 +129,23 @@ export default class MushafScreen extends QcParentScreen {
             } else {
                 this.setState({ selectedAyahsStart: selectedAyah }, () => this.updateAssignmentName())
             }
+        }
+    }
+
+    onSelectAyahs(firstAyah, lastAyah) {
+        //Set the smallest number as the start, and the larger as the end
+        if (compareOrder(firstAyah, lastAyah) > 0) {
+            this.setState({ selectedAyahsStart: firstAyah }, 
+                this.setState({ selectedAyahsEnd: lastAyah,
+                                selectionStarted: false,
+                                selectionCompleted: true }, 
+                    () => this.updateAssignmentName()))
+        } else {
+            this.setState({ selectedAyahsStart: lastAyah, }, 
+                this.setState({ selectedAyahsEnd: firstAyah,
+                                selectionStarted: false,
+                                selectionCompleted: true }, 
+                    () => this.updateAssignmentName()))
         }
     }
 
@@ -219,7 +243,7 @@ export default class MushafScreen extends QcParentScreen {
                 onIndexChanged={(index) => this.onPageChanged(index)}>
                 {this.state.pages.map((item, idx) => this.renderItem(item, idx))}
             </Swiper>
-            <View style={{padding: 10}}>
+            <View style={{padding: 5}}>
                 {
                     this.state.selectedAyahsStart.surah > 0? 
                     <Text style={fontStyles.mainTextStyleDarkGrey}>Assignment: {this.state.assignmentName}</Text>
