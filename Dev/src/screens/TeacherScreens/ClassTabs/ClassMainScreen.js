@@ -281,9 +281,7 @@ export class ClassMainScreen extends QcParentScreen {
                     name='issue-opened'
                     type='octicon'
                     color={colors.darkRed}
-                    onPress={() => {
-                      onShowMore();
-                    }} />
+                    />
                   <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkRed]}>{strings.NeedHelp}</Text>
                 </View>
               ) : (
@@ -323,9 +321,7 @@ export class ClassMainScreen extends QcParentScreen {
                     name='check-circle-outline'
                     type='material-community'
                     color={colors.darkGreen}
-                    onPress={() => {
-                      onShowMore();
-                    }} />
+                    />
                   <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkGreen]}>
                     {strings.Ready}</Text>
                 </View>
@@ -366,9 +362,7 @@ export class ClassMainScreen extends QcParentScreen {
                     name='update'
                     type='material-community'
                     color={colors.primaryDark}
-                    onPress={() => {
-                      onShowMore();
-                    }} />
+                    />
                   <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStylePrimaryDark]}>{strings.WorkingOnIt}</Text>
                 </View>
               ) : (
