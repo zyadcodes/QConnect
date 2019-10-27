@@ -1,6 +1,6 @@
 //Screen which will provide all of the possible settings for the user to click on
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions, Alert } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Alert, ScrollView } from 'react-native';
 import colors from 'config/colors';
 import QcParentScreen from "screens/QcParentScreen";
 import SelectionPage from './Components/SelectionPage';
@@ -12,6 +12,10 @@ import surahs from './Data/Surahs.json'
 import strings from 'config/strings';
 import fontStyles from 'config/fontStyles';
 import FirebaseFunctions from 'config/FirebaseFunctions';
+import studentImages from 'config/studentImages';
+import classImages from "config/classImages";
+import { screenHeight, screenWidth } from 'config/dimensions';
+
 
 const noAyahSelected = {
     surah: 0,
@@ -29,7 +33,8 @@ export default class MushafScreen extends QcParentScreen {
         index: 1,
         studentID: this.props.navigation.state.params.studentID,
         classID: this.props.navigation.state.params.classID,
-        profileImageID: this.props.navigation.state.params.profileImageID,
+        imageID: this.props.navigation.state.params.imageID,
+        assignToAllClass: this.props.navigation.state.params.assignToAllClass,
         selectedAyahsStart: {
             surah: 0,
             page: this.lastPage,
@@ -45,6 +50,30 @@ export default class MushafScreen extends QcParentScreen {
         assignmentName: "",
         freeFormAssignment: false
     }
+
+    async componentDidMount() {
+
+        FirebaseFunctions.setCurrentScreen("MushhafAssignmentScreen", "MushhafAssignmentScreen");
+
+        const { studentID } = this.props.navigation.state.params;
+
+        if (studentID === undefined) {
+            this.setState({ isLoading: true });
+            const { userID } = this.props.navigation.state.params;
+            const teacher = await FirebaseFunctions.getTeacherByID(userID);
+            const { currentClassID } = teacher;
+            const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
+            this.setState({
+                isLoading: false,
+                assignToAllClass: true,
+                userID,
+                imageID: currentClass.classImageID,
+                classID: currentClassID,
+            });
+        }
+
+    }
+
 
     updateAssignmentName() {
         const { selectedAyahsStart, selectedAyahsEnd } = this.state;
@@ -87,9 +116,13 @@ export default class MushafScreen extends QcParentScreen {
     }
 
     renderItem(item, idx) {
+        const { imageID, assignToAllClass } = this.state;
         const itemInt = parseInt(item)
+        profileImage = isNaN(imageID) ? undefined :
+            assignToAllClass ? classImages.images[imageID] : studentImages.images[imageID];
+
         return (
-            <View style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }} key={idx}>
+            <View style={{ width: screenWidth, height: screenHeight }} key={idx}>
                 <SelectionPage
                     page={itemInt}
                     onChangePage={this.onChangePage.bind(this)}
@@ -97,7 +130,7 @@ export default class MushafScreen extends QcParentScreen {
                     selectedAyahsEnd={this.state.selectedAyahsEnd}
                     selectionStarted={this.state.selectionStarted}
                     selectionCompleted={this.state.selectionCompleted}
-                    profileImageID={this.state.profileImageID}
+                    profileImage={profileImage}
 
                     //callback when user taps on a single ayah to selects
                     //determines whether this would be the start of end of the selection
@@ -231,23 +264,32 @@ export default class MushafScreen extends QcParentScreen {
         }
     }
 
+    async saveClassAssignment(newAssignmentName) {
+        const { classID } = this.state;
+        await FirebaseFunctions.updateClassAssignment(classID, newAssignmentName);
+    }
+
     onSaveAssignment() {
-        const { classID, studentID, assignmentName } = this.state;
+        const { classID, studentID, assignmentName, assignToAllClass, userID } = this.state;
         if (assignmentName.trim() === "") {
             Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
         } else {
-            this.props.navigation.state.params.onSaveAssignment(assignmentName, strings.Memorization);
-
-            this.props.navigation.pop();
+            if (assignToAllClass) {
+                this.saveClassAssignment(assignmentName);
+                this.props.navigation.push("TeacherCurrentClass", { userID });
+            } else {
+                this.props.navigation.state.params.onSaveAssignment(assignmentName, strings.Memorization);
+                this.props.navigation.pop();
+            }
         }
     }
 
     render() {
         return (
-            <View style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }}>
+            <View style={{ width: screenWidth, height: screenHeight }}>
                 <Swiper
                     index={this.state.index}
-                    containerStyle={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }}
+                    containerStyle={{ width: screenWidth, height: screenHeight }}
                     key={this.state.key}
                     prevButton={<Icon
                         color={colors.primaryDark}

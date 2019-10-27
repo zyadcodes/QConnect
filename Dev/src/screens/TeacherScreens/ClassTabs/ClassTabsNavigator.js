@@ -5,6 +5,7 @@ import { Icon } from 'react-native-elements';
 import ClassMainScreen from './ClassMainScreen';
 import ClassAttendanceScreen from './ClassAttendanceScreen';
 import strings from '../../../../config/strings';
+import MushafScreen from '../../MushafScreen/MushafScreen';
 
 const routeConfig = {
   AttendanceTab: {
@@ -20,6 +21,21 @@ const routeConfig = {
         />
       )
     },
+  },
+  AssignmentsTab: {
+    screen: MushafScreen,
+    navigationOptions: {
+      tabBarVisible: false,
+      tabBarLabel: strings.Assignments,
+      tabBarIcon: ({ tintColor, focused }) => (
+        <Icon
+          name="feather"
+          size={20}
+          type="material-community"
+          color={tintColor}
+          />
+      ),
+    }
   },
   ClassStudentsTab: {
     screen: ClassMainScreen,

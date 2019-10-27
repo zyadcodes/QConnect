@@ -36,7 +36,7 @@ class PageHeader extends FontLoadingComponent {
                 style={{ 
                     flex: 1, 
                     flexDirection: 'row', 
-                    height: 100, 
+                    height: screenHeight * 0.03, 
                     justifyContent: 'flex-end', 
                     alignItems: 'center' 
                     }} 
@@ -51,7 +51,7 @@ class PageHeader extends FontLoadingComponent {
                 </View>
 
                 <View style={styles.topRightView} >
-                    <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: 100, justifyContent: 'flex-end', alignItems: 'center' }} onPress={RightOnPress ? () => { RightOnPress() } : () => { }}>
+                    <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: screenHeight * 0.03, justifyContent: 'flex-end', alignItems: 'center' }} onPress={RightOnPress ? () => { RightOnPress() } : () => { }}>
                         <Icon
                             name={RightIconName}
                             type='material-community'
@@ -79,7 +79,7 @@ PageHeader.propTypes = {
 
 const styles = StyleSheet.create({
     entireTopView: {
-        height: Dimensions.get('window').height * 0.115,
+        height: screenHeight * 0.1,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -89,28 +89,28 @@ const styles = StyleSheet.create({
     },
     topLeftView: {
         flex: 1.5,
-        paddingTop: Dimensions.get('window').height * 0.035,
-        paddingBottom: Dimensions.get('window').height * 0.01
+        paddingTop: screenHeight * 0.035,
+        paddingBottom: screenHeight * 0.001
     },
     topMiddleView: {
         justifyContent: 'center',
         alignSelf: 'center',
         alignItems: 'center',
         flex: 10,
-        paddingTop: Dimensions.get('window').height * 0.035,
-        paddingBottom: Dimensions.get('window').height * 0.01
+        paddingTop: screenHeight * 0.035,
+        paddingBottom: screenHeight * 0.001
     },
     topRightView: {
         flex: 1.5,
         justifyContent: 'center',
-        paddingTop: Dimensions.get('window').height * 0.035,
-        paddingBottom: Dimensions.get('window').height * 0.01
+        paddingTop: screenHeight * 0.035,
+        paddingBottom: screenHeight * 0.001
     },
     profilePic: {
         width: 0.05 * screenHeight,
         height: 0.05 * screenHeight,
         borderRadius: 0.025 * screenHeight,
-        paddingBottom: 0.01 * screenHeight
+        paddingBottom: 0.001 * screenHeight
       },
 });
 export default PageHeader;

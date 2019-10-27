@@ -15,7 +15,6 @@ import AssignmentEntryComponent from 'components/AssignmentEntryComponent';
 import surahs from '../Data/Surahs.json'
 import pages from '../Data/mushaf-wbw.json'
 import {compareOrder} from '../Helpers/AyahsOrder'
-import studentImages from 'config/studentImages';
 
 
 //Creates the higher order component
@@ -236,7 +235,7 @@ class SelectionPage extends React.Component {
         }
 
         else {
-            LeftImage = isNaN(this.props.profileImageID) ? undefined : studentImages.images[this.props.profileImageID];
+            
             return (
                 <View id={this.state.page + "upperWrapper"} style={{ backgroundColor: colors.white }}>
                     <AssignmentEntryComponent
@@ -254,7 +253,7 @@ class SelectionPage extends React.Component {
                         }}
                         RightIconName="check-all"
                         RightOnPress={() => { this.onSelectPage(); }}
-                        LeftImage={LeftImage}
+                        LeftImage={this.props.profileImage}
                     />
                     <View id={this.state.page} style={{ marginVertical: 5, marginHorizontal: 5, backgroundColor: colors.white }}>
                         {
@@ -384,8 +383,8 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         alignItems: 'center',
         flex: 10,
-        paddingTop: Dimensions.get('window').height * 0.035,
-        paddingBottom: Dimensions.get('window').height * 0.01,
+        paddingTop: screenHeight * 0.035,
+        paddingBottom: screenHeight * 0.01,
         height: 600
     },
     entireTopView: {

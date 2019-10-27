@@ -53,16 +53,6 @@ export class ClassMainScreen extends QcParentScreen {
 
   }
 
-  async editClassAssignment(newAssignmentName) {
-
-    const { currentClassID } = this.state;
-
-    await FirebaseFunctions.updateClassAssignment(currentClassID, newAssignmentName);
-
-    return 0;
-
-  }
-
   removeStudent(studentID) {
     Alert.alert(
       strings.RemoveStudent,
@@ -212,27 +202,6 @@ export class ClassMainScreen extends QcParentScreen {
           classes={this.state.classes}
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
-          <AssignmentEntryComponent
-            visible={this.state.isEditingClassAssginment}
-            onSubmit={async (inputText) => {
-              this.setState({
-                isLoading: true
-              })
-              await this.editClassAssignment(inputText);
-              const updatedClass = await FirebaseFunctions.getClassByID(this.state.currentClassID);
-              this.setState({
-                currentClass: updatedClass,
-                isLoading: false
-              })
-
-              //edits assignments for whole class.
-              this.toggleAssignmentEntryComponent();
-            }}
-            onCancel={() => {
-              this.toggleAssignmentEntryComponent();
-            }}
-
-          />
           <ScrollView style={styles.container}>
             <View>
               <TopBanner
@@ -267,10 +236,7 @@ export class ClassMainScreen extends QcParentScreen {
                 </View>
               ) : (
 
-                  <View style={styles.EditClassAssignment}>
-                    <QcActionButton
-                      text={"Edit Class Assignment"}
-                      onPress={() => { this.toggleAssignmentEntryComponent(); }} />
+                  <View>
                   </View>
 
                 )
@@ -422,10 +388,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     paddingRight: screenWidth * 0.025
   },
-  EditClassAssignment: {
-    alignItems: 'flex-end',
-    paddingRight: screenWidth * 0.025
-  }
 });
 
 export default ClassMainScreen;

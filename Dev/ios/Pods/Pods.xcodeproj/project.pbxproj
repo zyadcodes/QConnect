@@ -21343,30 +21343,6 @@
 			};
 			name = Debug;
 		};
-		5CDFB31B35BE4234A6BEBB40A40E2EC4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7E7E440CEEA4FF9891CFAA70622E86AA /* Protobuf.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				GCC_PREFIX_HEADER = "Target Support Files/Protobuf/Protobuf-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = Protobuf;
-				PRODUCT_NAME = Protobuf;
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
 		5DB14544F617945E0C2114C187328C2A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E92DD667794ADC46E5B39274F9D8D6B2 /* FirebaseCore.xcconfig */;
@@ -22312,6 +22288,29 @@
 			};
 			name = Release;
 		};
+		BE4D0A3BF68239AE1D70BED952501FD7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7E7E440CEEA4FF9891CFAA70622E86AA /* Protobuf.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/Protobuf/Protobuf-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = protobuf;
+				PRODUCT_NAME = Protobuf;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 		BECA6AC5746A33112E8BAE2F37EFD746 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 601601442EC2757178B5E20671D32678 /* Pods-QuranConnect-tvOS.debug.xcconfig */;
@@ -22616,6 +22615,30 @@
 			};
 			name = Release;
 		};
+		D9BD46C21CD4CFB7EA1E6E72EFF03874 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7E7E440CEEA4FF9891CFAA70622E86AA /* Protobuf.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/Protobuf/Protobuf-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = protobuf;
+				PRODUCT_NAME = Protobuf;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		DA46774B7C3FDD8DA14C51631E3AE693 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D27639669E266252ACAE5279183894BC /* GoogleUtilities.xcconfig */;
@@ -22773,29 +22796,6 @@
 				PRIVATE_HEADERS_FOLDER_PATH = "";
 				PRODUCT_MODULE_NAME = Permission_Notifications;
 				PRODUCT_NAME = "Permission-Notifications";
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		E7C83B41AEF2E6ED153E196C3678B189 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7E7E440CEEA4FF9891CFAA70622E86AA /* Protobuf.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				GCC_PREFIX_HEADER = "Target Support Files/Protobuf/Protobuf-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = Protobuf;
-				PRODUCT_NAME = Protobuf;
 				PUBLIC_HEADERS_FOLDER_PATH = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -23507,8 +23507,8 @@
 		D340E851FFE9FB0BDA37562F4CBAB511 /* Build configuration list for PBXNativeTarget "Protobuf" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E7C83B41AEF2E6ED153E196C3678B189 /* Debug */,
-				5CDFB31B35BE4234A6BEBB40A40E2EC4 /* Release */,
+				BE4D0A3BF68239AE1D70BED952501FD7 /* Debug */,
+				D9BD46C21CD4CFB7EA1E6E72EFF03874 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

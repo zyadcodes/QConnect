@@ -302,12 +302,19 @@ export default class FirebaseFunctions {
         let arrayOfStudents = currentClass.students;
         arrayOfStudents.forEach((student) => {
             student.currentAssignment = newAssignmentName;
-            //Notifies that student that their assignment has been updated
-            this.functions.httpsCallable('sendNotification', {
-                topic: student.ID,
-                title: strings.AssignmentUpdate,
-                body: strings.YourTeacherHasUpdatedYourCurrentAssignment
-            });
+            try{
+                //Notifies that student that their assignment has been updated
+                this.functions.httpsCallable('sendNotification', {
+                    topic: student.ID,
+                    title: strings.AssignmentUpdate,
+                    body: strings.YourTeacherHasUpdatedYourCurrentAssignment
+                });
+            }catch(error){
+                console.log("failed to send notifications to students");
+                //todo: log event when this happens
+                //this.logEvent("FAILED_TO_SEND_NOTIFICATIONS" + error.toString())
+            }
+            
         });
 
         await this.updateClassObject(classID, {
