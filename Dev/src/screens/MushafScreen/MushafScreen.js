@@ -42,11 +42,12 @@ export default class MushafScreen extends QcParentScreen {
         selectionStarted: false,
         selectionCompleted: false,
         assignmentName: "",
+        freeFormAssignment: false
     }
 
-    updateAssignmentName(){
-        const {selectedAyahsStart, selectedAyahsEnd} = this.state;
-        if(selectedAyahsStart.surah  === 0) {
+    updateAssignmentName() {
+        const { selectedAyahsStart, selectedAyahsEnd } = this.state;
+        if (selectedAyahsStart.surah === 0) {
             //no selection made
             //todo: make this an explicit flag
             return "";
@@ -54,21 +55,34 @@ export default class MushafScreen extends QcParentScreen {
 
         desc = surahs[selectedAyahsStart.surah].tname + " (" + selectedAyahsStart.ayah
 
-        if (selectedAyahsStart.surah === selectedAyahsEnd.surah){
-            if(selectedAyahsStart.ayah !== selectedAyahsEnd.ayah){
-                desc += " to " + selectedAyahsEnd.ayah 
+        if (selectedAyahsStart.surah === selectedAyahsEnd.surah) {
+            if (selectedAyahsStart.ayah !== selectedAyahsEnd.ayah) {
+                desc += " to " + selectedAyahsEnd.ayah
             }
         } else {
             desc += ") to " + surahs[selectedAyahsEnd.surah].tname + " (" + selectedAyahsEnd.ayah
         }
 
         let pageDesc = ") p. " + selectedAyahsEnd.page;
-        if(selectedAyahsStart.page !== selectedAyahsEnd.page){
+        if (selectedAyahsStart.page !== selectedAyahsEnd.page) {
             pageDesc = ") pp. " + selectedAyahsStart.page + " to " + selectedAyahsEnd.page
         }
         desc += pageDesc;
 
-        this.setState({assignmentName: desc});
+        this.setState({
+            assignmentName: desc,
+            freeFormAssignment: false
+        });
+    }
+
+    //this is to update the assignment text without mapping it to a location in the mus7af
+    // this is to allow teachers to enter free form assignemnts
+    // for example: redo your last 3 assignments
+    setFreeFormAssignmentName(freeFormAssignmentName) {
+        this.setState({
+            assignmentName: freeFormAssignmentName,
+            freeFormAssignment: true
+        })
     }
 
     renderItem(item, idx) {
@@ -90,6 +104,8 @@ export default class MushafScreen extends QcParentScreen {
 
                     //callback when user selects a range of ayahs (line an entire page or surah)
                     onSelectAyahs={this.onSelectAyahs.bind(this)}
+
+                    onUpdateAssignmentName={(newAssignmentName) => this.setFreeFormAssignmentName(newAssignmentName)}
                 />
             </View>
         )
@@ -114,7 +130,7 @@ export default class MushafScreen extends QcParentScreen {
                 selectionCompleted: false,
                 selectedAyahsStart: selectedAyah,
                 selectedAyahsEnd: selectedAyah
-            }, () => this.updateAssignmentName() )
+            }, () => this.updateAssignmentName())
         } else if (!selectionCompleted) {
             this.setState(
                 {
@@ -135,16 +151,20 @@ export default class MushafScreen extends QcParentScreen {
     onSelectAyahs(firstAyah, lastAyah) {
         //Set the smallest number as the start, and the larger as the end
         if (compareOrder(firstAyah, lastAyah) > 0) {
-            this.setState({ selectedAyahsStart: firstAyah }, 
-                this.setState({ selectedAyahsEnd: lastAyah,
-                                selectionStarted: false,
-                                selectionCompleted: true }, 
+            this.setState({ selectedAyahsStart: firstAyah },
+                this.setState({
+                    selectedAyahsEnd: lastAyah,
+                    selectionStarted: false,
+                    selectionCompleted: true
+                },
                     () => this.updateAssignmentName()))
         } else {
-            this.setState({ selectedAyahsStart: lastAyah, }, 
-                this.setState({ selectedAyahsEnd: firstAyah,
-                                selectionStarted: false,
-                                selectionCompleted: true }, 
+            this.setState({ selectedAyahsStart: lastAyah, },
+                this.setState({
+                    selectedAyahsEnd: firstAyah,
+                    selectionStarted: false,
+                    selectionCompleted: true
+                },
                     () => this.updateAssignmentName()))
         }
     }
@@ -181,7 +201,7 @@ export default class MushafScreen extends QcParentScreen {
 
         //reset the selection state if we are passed a flag to do so
         let resetSelectionIfApplicable = {};
-        if(keepSelection === false){
+        if (keepSelection === false) {
             resetSelectionIfApplicable = {
                 selectedAyahsStart: noAyahSelected,
                 selectedAyahsEnd: noAyahSelected,
@@ -209,7 +229,7 @@ export default class MushafScreen extends QcParentScreen {
         }
     }
 
-    onSaveAssignment(){
+    onSaveAssignment() {
         const { classID, studentID, assignmentName } = this.state;
         if (assignmentName.trim() === "") {
             Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
@@ -223,45 +243,45 @@ export default class MushafScreen extends QcParentScreen {
     render() {
         return (
             <View style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }}>
-            <Swiper
-                index={this.state.index}
-                containerStyle={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }}
-                key={this.state.key}
-                prevButton={<Icon
-                    color={colors.primaryDark}
-                    size={35}
-                    name={'angle-left'}
-                    type="font-awesome" />}
-                nextButton={<Icon
-                    color={colors.primaryDark}
-                    size={35}
-                    name={'angle-right'}
-                    type="font-awesome" />}
-                loop={false}
-                showsButtons={true}
-                showsPagination={false}
-                onIndexChanged={(index) => this.onPageChanged(index)}>
-                {this.state.pages.map((item, idx) => this.renderItem(item, idx))}
-            </Swiper>
-            <View style={{padding: 5}}>
-                {
-                    this.state.selectedAyahsStart.surah > 0? 
-                    <Text style={fontStyles.mainTextStyleDarkGrey}>Assignment: {this.state.assignmentName}</Text>
-                     : <View></View>
-                }
-            </View>
-            <View style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                marginBottom: 15
-            }}>
-                <QcActionButton
-                    text={strings.Save}
-                    onPress={() => {this.onSaveAssignment()}} />
-                <QcActionButton
-                    text={strings.Cancel}
-                    onPress={() => this.props.navigation.pop()} />
-            </View>
+                <Swiper
+                    index={this.state.index}
+                    containerStyle={{ width: Dimensions.get('window').width, height: Dimensions.get('window').height }}
+                    key={this.state.key}
+                    prevButton={<Icon
+                        color={colors.primaryDark}
+                        size={35}
+                        name={'angle-left'}
+                        type="font-awesome" />}
+                    nextButton={<Icon
+                        color={colors.primaryDark}
+                        size={35}
+                        name={'angle-right'}
+                        type="font-awesome" />}
+                    loop={false}
+                    showsButtons={true}
+                    showsPagination={false}
+                    onIndexChanged={(index) => this.onPageChanged(index)}>
+                    {this.state.pages.map((item, idx) => this.renderItem(item, idx))}
+                </Swiper>
+                <View style={{ padding: 5 }}>
+                    {
+                        (this.state.selectedAyahsStart.surah > 0 || this.state.freeFormAssignment) ?
+                            <Text style={fontStyles.mainTextStyleDarkGrey}>Assignment: {this.state.assignmentName}</Text>
+                            : <View></View>
+                    }
+                </View>
+                <View style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    marginBottom: 15
+                }}>
+                    <QcActionButton
+                        text={strings.Save}
+                        onPress={() => { this.onSaveAssignment() }} />
+                    <QcActionButton
+                        text={strings.Cancel}
+                        onPress={() => this.props.navigation.pop()} />
+                </View>
             </View>
         );
     }

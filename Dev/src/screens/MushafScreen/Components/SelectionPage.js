@@ -154,7 +154,6 @@ class SelectionPage extends React.Component {
                 }
                 else{
                     console.log("invalid surah Index");
-                    FirebaseFunctions.logEvent("Surah suggestion returned an invalid index: " + surahIndex);
                 }
             }
 
@@ -165,8 +164,10 @@ class SelectionPage extends React.Component {
             });
             this.props.onChangePage(startPage, false);
         } catch (error) {
-            Alert.alert(strings.Whoops,
-                "Something went wrong. If the error persists, please contact us at quranconnect@outlook.com")
+            this.setState({
+                isSurahSelectionVisible: false,
+            });
+            this.props.onUpdateAssignmentName(surah)
         }
 
     }
