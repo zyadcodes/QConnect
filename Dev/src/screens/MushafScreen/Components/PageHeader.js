@@ -3,15 +3,16 @@
 import FontLoadingComponent from 'components/FontLoadingComponent';
 import React from 'React';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, ImageBackground, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import colors from 'config/colors'
 import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 class PageHeader extends FontLoadingComponent {
     render() {
         //Component properties
-        const { LeftIconName, LeftTextName, LeftOnPress, Title, TitleOnPress,
+        const { LeftIconName, LeftTextName, LeftOnPress, Title, TitleOnPress, LeftImage,
             RightIconName, RightTextName, RightOnPress } = this.props;
 
         return (
@@ -19,11 +20,13 @@ class PageHeader extends FontLoadingComponent {
                 <View style={{ flex: 0.5 }} />
                 <View style={styles.topLeftView}  >
                     <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: 100, justifyContent: 'flex-start', alignItems: 'center' }} onPress={LeftOnPress ? () => { LeftOnPress() } : () => { }} >
-                        <Icon
-                            name={LeftIconName}
-                            type='material-community'
-                        />
-                        <Text style={fontStyles.mainTextStyleBlack}
+                    
+                    {LeftImage && <Image
+                        style={styles.profilePic}
+                        source={LeftImage}
+                        ResizeMode="contain" />
+                    }
+                    <Text style={fontStyles.mainTextStyleBlack}
                             onPress={LeftOnPress ? () => { LeftOnPress() } : () => { }}>{LeftTextName}</Text>
                     </TouchableOpacity>
                 </View>
@@ -103,5 +106,11 @@ const styles = StyleSheet.create({
         paddingTop: Dimensions.get('window').height * 0.035,
         paddingBottom: Dimensions.get('window').height * 0.01
     },
+    profilePic: {
+        width: 0.05 * screenHeight,
+        height: 0.05 * screenHeight,
+        borderRadius: 0.025 * screenHeight,
+        paddingBottom: 0.01 * screenHeight
+      },
 });
 export default PageHeader;

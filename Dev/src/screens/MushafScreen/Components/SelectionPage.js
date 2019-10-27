@@ -15,8 +15,8 @@ import AssignmentEntryComponent from 'components/AssignmentEntryComponent';
 import surahs from '../Data/Surahs.json'
 import pages from '../Data/mushaf-wbw.json'
 import {compareOrder} from '../Helpers/AyahsOrder'
-import FirebaseFunctions from '../../../../config/FirebaseFunctions';
-import surahNames from 'config/surahNames'
+import studentImages from 'config/studentImages';
+
 
 //Creates the higher order component
 class SelectionPage extends React.Component {
@@ -236,6 +236,7 @@ class SelectionPage extends React.Component {
         }
 
         else {
+            LeftImage = isNaN(this.props.profileImageID) ? undefined : studentImages.images[this.props.profileImageID];
             return (
                 <View id={this.state.page + "upperWrapper"} style={{ backgroundColor: colors.white }}>
                     <AssignmentEntryComponent
@@ -253,6 +254,7 @@ class SelectionPage extends React.Component {
                         }}
                         RightIconName="check-all"
                         RightOnPress={() => { this.onSelectPage(); }}
+                        LeftImage={LeftImage}
                     />
                     <View id={this.state.page} style={{ marginVertical: 5, marginHorizontal: 5, backgroundColor: colors.white }}>
                         {

@@ -29,6 +29,7 @@ export default class MushafScreen extends QcParentScreen {
         index: 1,
         studentID: this.props.navigation.state.params.studentID,
         classID: this.props.navigation.state.params.classID,
+        profileImageID: this.props.navigation.state.params.profileImageID,
         selectedAyahsStart: {
             surah: 0,
             page: this.lastPage,
@@ -96,6 +97,7 @@ export default class MushafScreen extends QcParentScreen {
                     selectedAyahsEnd={this.state.selectedAyahsEnd}
                     selectionStarted={this.state.selectionStarted}
                     selectionCompleted={this.state.selectionCompleted}
+                    profileImageID={this.state.profileImageID}
 
                     //callback when user taps on a single ayah to selects
                     //determines whether this would be the start of end of the selection
