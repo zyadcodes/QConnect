@@ -22,6 +22,20 @@ const routeConfig = {
       )
     },
   },
+  ClassStudentsTab: {
+    screen: ClassMainScreen,
+    navigationOptions: {
+      tabBarLabel: strings.Class,
+      tabBarIcon: ({ tintColor, focused }) => (
+        <Icon
+          name="group"
+          size={20}
+          type="font-awesome"
+          color={tintColor}
+        />
+      ),
+    },
+  },
   AssignmentsTab: {
     screen: MushafScreen,
     navigationOptions: {
@@ -36,20 +50,6 @@ const routeConfig = {
           />
       ),
     }
-  },
-  ClassStudentsTab: {
-    screen: ClassMainScreen,
-    navigationOptions: {
-      tabBarLabel: strings.Class,
-      tabBarIcon: ({ tintColor, focused }) => (
-        <Icon
-          name="group"
-          size={20}
-          type="font-awesome"
-          color={tintColor}
-        />
-      ),
-    },
   },
 }
 

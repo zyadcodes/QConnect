@@ -254,6 +254,7 @@ class SelectionPage extends React.Component {
                         RightIconName="check-all"
                         RightOnPress={() => { this.onSelectPage(); }}
                         LeftImage={this.props.profileImage}
+                        currentClass={this.props.currentClass}
                     />
                     <View id={this.state.page} style={{ marginVertical: 5, marginHorizontal: 5, backgroundColor: colors.white }}>
                         {

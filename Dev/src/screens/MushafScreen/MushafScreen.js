@@ -69,6 +69,7 @@ export default class MushafScreen extends QcParentScreen {
                 userID,
                 imageID: currentClass.classImageID,
                 classID: currentClassID,
+                currentClass: currentClass
             });
         }
 
@@ -131,6 +132,7 @@ export default class MushafScreen extends QcParentScreen {
                     selectionStarted={this.state.selectionStarted}
                     selectionCompleted={this.state.selectionCompleted}
                     profileImage={profileImage}
+                    currentClass={this.state.currentClass}
 
                     //callback when user taps on a single ayah to selects
                     //determines whether this would be the start of end of the selection

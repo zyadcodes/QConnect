@@ -80,6 +80,7 @@ export class ClassMainScreen extends QcParentScreen {
 
   render() {
     const { isLoading, teacher, userID, currentClass, currentClassID } = this.state;
+    
     if (isLoading === true) {
       return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

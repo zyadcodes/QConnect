@@ -5,29 +5,57 @@ import React from 'React';
 import PropTypes from 'prop-types';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, ImageBackground, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
+import StudentSelectorModal from 'components/StudentSelector/StudentSelectorModal'
 import colors from 'config/colors'
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
 
 class PageHeader extends FontLoadingComponent {
+
+    state = {
+        selectorModalVisible: false
+    }
+    
+    onLeftImagePress(){
+        if(this.props.currentClass){
+            const { selectorModalVisible } = this.state;
+            this.setState({ selectorModalVisible: !selectorModalVisible })
+        }
+    }
+
     render() {
         //Component properties
-        const { LeftIconName, LeftTextName, LeftOnPress, Title, TitleOnPress, LeftImage,
+        const { LeftTextName, LeftOnPress, Title, TitleOnPress, LeftImage, currentClass,
             RightIconName, RightTextName, RightOnPress } = this.props;
 
         return (
             <View style={styles.entireTopView}>
                 <View style={{ flex: 0.5 }} />
                 <View style={styles.topLeftView}  >
-                    <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: 100, justifyContent: 'flex-start', alignItems: 'center' }} onPress={LeftOnPress ? () => { LeftOnPress() } : () => { }} >
+                    <TouchableOpacity 
+                        style={{ flex: 1, flexDirection: 'row', height: 100, justifyContent: 'flex-start', alignItems: 'center' }} 
+                        onPress={() => this.onLeftImagePress()} >
                     
                     {LeftImage && <Image
                         style={styles.profilePic}
                         source={LeftImage}
                         ResizeMode="contain" />
                     }
+
+                    {currentClass && 
+                    <StudentSelectorModal 
+                                currentClass={currentClass}
+                                visible={this.state.selectorModalVisible}
+                                setModalVisible={(visible) => 
+                                    {
+                                        const {selectorModalVisible} = this.state;
+                                        this.setState({selectorModalVisible: visible})}
+                                    }
+                            />
+                    }
+
                     <Text style={fontStyles.mainTextStyleBlack}
-                            onPress={LeftOnPress ? () => { LeftOnPress() } : () => { }}>{LeftTextName}</Text>
+                            onPress={currentClass ? () => { LeftOnPress() } : () => { }}>{LeftTextName}</Text>
                     </TouchableOpacity>
                 </View>
 
