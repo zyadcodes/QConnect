@@ -311,7 +311,7 @@ export default class MushafScreen extends QcParentScreen {
   }
 
     onSaveAssignment() {
-        const { classID, invokedFromProfileScreen, assignmentName, assignToAllClass, userID } = this.state;
+        const { assignmentName, assignToAllClass} = this.state;
         if (assignmentName.trim() === "") {
             Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
         } else {
@@ -323,12 +323,20 @@ export default class MushafScreen extends QcParentScreen {
                 
             }
 
-            //go back to student profile screen if invoked from there, otherwise go back to main screen
-            if(invokedFromProfileScreen){
-                this.props.navigation.pop();
-            }else {
-                this.props.navigation.push("TeacherCurrentClass", { userID });
-            }
+            this.closeScreen();
+        }
+    }
+
+    closeScreen(){
+        const {invokedFromProfileScreen, userID, assignmentName } = this.state;
+
+        //go back to student profile screen if invoked from there, otherwise go back to main screen
+        if(invokedFromProfileScreen){
+            //update the caller screen with the new assignment then close
+            this.props.navigation.state.params.onSaveAssignment(assignmentName);
+            this.props.navigation.pop();
+        }else {
+            this.props.navigation.push("TeacherCurrentClass", { userID });
         }
     }
 
@@ -372,7 +380,7 @@ export default class MushafScreen extends QcParentScreen {
                         onPress={() => { this.onSaveAssignment() }} />
                     <QcActionButton
                         text={strings.Cancel}
-                        onPress={() => this.props.navigation.pop()} />
+                        onPress={() => this.closeScreen()} />
                 </View>
             </View>
         );

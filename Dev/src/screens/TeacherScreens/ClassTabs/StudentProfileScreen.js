@@ -5,7 +5,6 @@ import { Rating } from 'react-native-elements';
 import strings from 'config/strings';
 import studentImages from 'config/studentImages';
 import QcParentScreen from 'screens/QcParentScreen';
-import AssignmentEntryComponent from 'components/AssignmentEntryComponent';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
@@ -44,24 +43,6 @@ class StudentProfileScreen extends QcParentScreen {
 
   }
 
-  //method updates the current assignment of the student
-  editAssignment(newAssignmentName, assignmentType) {
-
-    if (newAssignmentName.trim() === "") {
-      Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
-    } else {
-
-      const { classID, studentID } = this.state;
-      //Updates the local state then pushes to firestore
-      this.setState({
-        isDialogVisible: false,
-        currentAssignment: newAssignmentName,
-        hasCurrentAssignment: newAssignmentName === 'None' ? false : true
-      });
-      FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, newAssignmentName, assignmentType);
-    }
-  }
-
   setDialogueVisible(visible) {
     this.setState({ isDialogVisible: visible })
   }
@@ -82,6 +63,12 @@ class StudentProfileScreen extends QcParentScreen {
     }
 
     return caption
+  }
+
+  editAssignment(assignmentName){
+    this.setState({
+      currentAssignment: assignmentName
+    });
   }
 
 
@@ -106,14 +93,6 @@ class StudentProfileScreen extends QcParentScreen {
 
     return (
       <QCView style={screenStyle.container}>
-
-        <AssignmentEntryComponent
-          visible={this.state.isDialogVisible}
-          onSubmit={(inputText, assignmentType) => this.editAssignment(inputText, assignmentType)}
-          assignment={currentAssignment}
-          onCancel={() => this.setDialogueVisible(false)}
-          assignmentType={true}
-        />
         <View style={styles.studentInfoContainer}>
 
           <View style={styles.profileInfo}>
@@ -147,10 +126,12 @@ class StudentProfileScreen extends QcParentScreen {
                   <TouchableHighlight
                     onPress={() => { this.props.navigation.push("MushafScreen", {
                       invokedFromProfileScreen: true,
+                      assignToAllClass: false,
                       classID, 
                       studentID, 
-                      profileImageID: classStudent.profileImageID,
-                      onSaveAssignment: this.editAssignment.bind(this) }) }} >
+                      imageID: classStudent.profileImageID,
+                      onSaveAssignment: this.editAssignment.bind(this) }) 
+                      }}>
                     <Text style={fontStyles.mainTextStylePrimaryDark}>{strings.EditAssignment}</Text>
                   </TouchableHighlight>
 
