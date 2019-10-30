@@ -15,19 +15,22 @@ class StudentSelectorComponent extends Component {
     }
 
     render() {
-        const {currentClass} = this.props;
+        const {currentClass, selectedItemID} = this.props;
         
-
         return (
             <FlatList
-                data={currentClass? [{name: 'All "' + currentClass.name + '" class', profileImageID: currentClass.classImageID}, ...currentClass.students] : []}
+                data={currentClass? [{name: 'All "' + currentClass.name + '" class', profileImageID: currentClass.classImageID, ID: currentClass.ID}, ...currentClass.students] : []}
                 keyExtractor={(item) => item.name} 
                 renderItem={({ item, index }) => (
                     <ListItem
                         title={item.name}
                         leftAvatar={{ rounded: true, size: 40, source: this.getItemAvatar(item, index) }}
-                        onPress={() => { alert (item.name) }}
+                        onPress={() => { 
+                            //2nd param indicates whether the ID is for a class. index 0 is always reserved for class
+                            this.props.onSelect(item.ID, item.profileImageID, index === 0)
+                            }} 
                         bottomDivider
+                        checkmark={selectedItemID === item.ID}
                     />
                 )
                 }

@@ -255,6 +255,8 @@ class SelectionPage extends React.Component {
                         RightOnPress={() => { this.onSelectPage(); }}
                         LeftImage={this.props.profileImage}
                         currentClass={this.props.currentClass}
+                        assignToID={this.props.assignToID}
+                        onSelect={this.props.onChangeAssignee}
                     />
                     <View id={this.state.page} style={{ marginVertical: 5, marginHorizontal: 5, backgroundColor: colors.white }}>
                         {

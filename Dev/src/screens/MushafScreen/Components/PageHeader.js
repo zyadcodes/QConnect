@@ -9,73 +9,117 @@ import StudentSelectorModal from 'components/StudentSelector/StudentSelectorModa
 import colors from 'config/colors'
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
+import studentImages from 'config/studentImages';
+import classImages from 'config/classImages';
 
 class PageHeader extends FontLoadingComponent {
 
     state = {
-        selectorModalVisible: false
+        selectorModalVisible: false,
+
+        //who are is the assignment for (student or class id)
+        assignToID: this.props.assignToID,
+
+        //avatar image of the assignee
+        leftImage: this.props.LeftImage
     }
-    
-    onLeftImagePress(){
-        if(this.props.currentClass){
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        //once there is an avatar image and assignee id, let's initialize our state vars with them.
+        if (prevState.leftImage === undefined) {
+            return {
+                leftImage: nextProps.LeftImage,
+                assignToID: nextProps.assignToID
+            };
+        }
+
+        return {}
+    }
+
+    onLeftImagePress() {
+        if (this.props.currentClass) {
             const { selectorModalVisible } = this.state;
             this.setState({ selectorModalVisible: !selectorModalVisible })
         }
     }
 
+    setLeftImage(id, imageID, isClassID) {
+        if (isClassID === true) {
+            this.setState({
+                leftImage: classImages.images[imageID],
+                assignToID: id
+            });
+        }
+        else {
+            this.setState({
+                leftImage: studentImages.images[imageID],
+                assignToID: id
+            });
+        }
+    }
+
     render() {
+        
         //Component properties
-        const { LeftTextName, LeftOnPress, Title, TitleOnPress, LeftImage, currentClass,
-            RightIconName, RightTextName, RightOnPress } = this.props;
+        const { LeftTextName, LeftOnPress, Title, TitleOnPress, currentClass,
+                RightIconName, RightTextName, RightOnPress, onSelect } = this.props;
+
+        const { leftImage, assignToID } = this.state;
 
         return (
             <View style={styles.entireTopView}>
                 <View style={{ flex: 0.5 }} />
                 <View style={styles.topLeftView}  >
-                    <TouchableOpacity 
-                        style={{ flex: 1, flexDirection: 'row', height: 100, justifyContent: 'flex-start', alignItems: 'center' }} 
+                    <TouchableOpacity
+                        style={{ flex: 1, flexDirection: 'row', height: 100, justifyContent: 'flex-start', alignItems: 'center' }}
                         onPress={() => this.onLeftImagePress()} >
-                    
-                    {LeftImage && <Image
-                        style={styles.profilePic}
-                        source={LeftImage}
-                        ResizeMode="contain" />
-                    }
 
-                    {currentClass && 
-                    <StudentSelectorModal 
+                        {leftImage && <Image
+                            style={styles.profilePic}
+                            source={leftImage}
+                            ResizeMode="contain" />
+                        }
+
+                        {currentClass &&
+                            <StudentSelectorModal
                                 currentClass={currentClass}
                                 visible={this.state.selectorModalVisible}
-                                setModalVisible={(visible) => 
-                                    {
-                                        const {selectorModalVisible} = this.state;
-                                        this.setState({selectorModalVisible: visible})}
-                                    }
+                                setModalVisible={(visible) => {
+                                    const { selectorModalVisible } = this.state;
+                                    this.setState({ selectorModalVisible: visible })
+                                }}
+                                selectedItemID={assignToID}
+                                onSelect={(id, imageID, isClassID) => {
+                                    this.setLeftImage(id, imageID, isClassID);
+                                    onSelect(id, imageID, isClassID);
+                                    }}
                             />
-                    }
+                        }
 
-                    <Text style={fontStyles.mainTextStyleBlack}
+                        <Text style={fontStyles.mainTextStyleBlack}
                             onPress={currentClass ? () => { LeftOnPress() } : () => { }}>{LeftTextName}</Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.topMiddleView}>
-                <TouchableOpacity 
-                style={{ 
-                    flex: 1, 
-                    flexDirection: 'row', 
-                    height: screenHeight * 0.03, 
-                    justifyContent: 'flex-end', 
-                    alignItems: 'center' 
-                    }} 
-                onPress={TitleOnPress ? () => { TitleOnPress() } : () => { }}>
-                <ImageBackground source={require('assets/images/quran/title-frame.png')} 
-                style={{ width: '100%', justifyContent: 'center',
-        alignSelf: 'center',
-        alignItems: 'center',}} resizeMethod='scale'>
-                    <Text style={fontStyles.bigTextStylePrimaryDark}>{Title}</Text>
-                </ImageBackground>
-                </TouchableOpacity>
+                    <TouchableOpacity
+                        style={{
+                            flex: 1,
+                            flexDirection: 'row',
+                            height: screenHeight * 0.03,
+                            justifyContent: 'flex-end',
+                            alignItems: 'center'
+                        }}
+                        onPress={TitleOnPress ? () => { TitleOnPress() } : () => { }}>
+                        <ImageBackground source={require('assets/images/quran/title-frame.png')}
+                            style={{
+                                width: '100%', justifyContent: 'center',
+                                alignSelf: 'center',
+                                alignItems: 'center',
+                            }} resizeMethod='scale'>
+                            <Text style={fontStyles.bigTextStylePrimaryDark}>{Title}</Text>
+                        </ImageBackground>
+                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.topRightView} >
@@ -139,6 +183,6 @@ const styles = StyleSheet.create({
         height: 0.05 * screenHeight,
         borderRadius: 0.025 * screenHeight,
         paddingBottom: 0.001 * screenHeight
-      },
+    },
 });
 export default PageHeader;

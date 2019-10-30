@@ -48,14 +48,21 @@ export default class MushafScreen extends QcParentScreen {
         selectionStarted: false,
         selectionCompleted: false,
         assignmentName: "",
-        freeFormAssignment: false
+        freeFormAssignment: false,
+        invokedFromProfileScreen: false,
     }
 
     async componentDidMount() {
 
         FirebaseFunctions.setCurrentScreen("MushhafAssignmentScreen", "MushhafAssignmentScreen");
 
-        const { studentID } = this.props.navigation.state.params;
+        const { studentID, invokedFromProfileScreen } = this.props.navigation.state.params;
+
+        if(invokedFromProfileScreen === true){
+            this.setState({
+                invokedFromProfileScreen: true
+            })
+        }
 
         if (studentID === undefined) {
             this.setState({ isLoading: true });
@@ -133,6 +140,8 @@ export default class MushafScreen extends QcParentScreen {
                     selectionCompleted={this.state.selectionCompleted}
                     profileImage={profileImage}
                     currentClass={this.state.currentClass}
+                    assignToID={this.state.assignToAllClass? this.state.classID : this.state.studentID}
+                    onChangeAssignee={(id, imageID, isClassID) => this.onChangeAssignee(id, imageID, isClassID)}
 
                     //callback when user taps on a single ayah to selects
                     //determines whether this would be the start of end of the selection
@@ -266,22 +275,59 @@ export default class MushafScreen extends QcParentScreen {
         }
     }
 
+    /**
+     * studentID: this.props.navigation.state.params.studentID,
+        classID: this.props.navigation.state.params.classID,
+        assignToAllClass: this.props.navigation.state.params.assignToAllClass,
+     */
+    onChangeAssignee(id, imageID, isClassID){
+        if(isClassID === true){
+            this.setState({
+                    classID: id,
+                    assignToAllClass: true,
+                    imageID: imageID
+                }
+            )
+        }else {
+            this.setState({
+                studentID: id,
+                assignToAllClass: false,
+                imageID: imageID
+            }
+        )
+        }
+    }
+
     async saveClassAssignment(newAssignmentName) {
         const { classID } = this.state;
         await FirebaseFunctions.updateClassAssignment(classID, newAssignmentName);
     }
 
+    //method updates the current assignment of the student
+    saveStudentAssignment(newAssignmentName) {
+
+      const { classID, studentID } = this.state;
+      FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, newAssignmentName, strings.Memorization);
+  }
+
     onSaveAssignment() {
-        const { classID, studentID, assignmentName, assignToAllClass, userID } = this.state;
+        const { classID, invokedFromProfileScreen, assignmentName, assignToAllClass, userID } = this.state;
         if (assignmentName.trim() === "") {
             Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
         } else {
             if (assignToAllClass) {
                 this.saveClassAssignment(assignmentName);
-                this.props.navigation.push("TeacherCurrentClass", { userID });
+                
             } else {
-                this.props.navigation.state.params.onSaveAssignment(assignmentName, strings.Memorization);
+                this.saveStudentAssignment(assignmentName);
+                
+            }
+
+            //go back to student profile screen if invoked from there, otherwise go back to main screen
+            if(invokedFromProfileScreen){
                 this.props.navigation.pop();
+            }else {
+                this.props.navigation.push("TeacherCurrentClass", { userID });
             }
         }
     }

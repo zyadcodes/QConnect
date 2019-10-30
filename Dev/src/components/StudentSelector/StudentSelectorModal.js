@@ -14,8 +14,6 @@ import StudentSelectorComponent from './StudentSelectorComponent';
 //---------------------------------------------------------------
 export default class StudentSelectorModal extends Component {
 
-
-    
     render() {
 
         cancelStyle = {...fontStyles.smallTextStyleDarkGrey,
@@ -36,6 +34,11 @@ export default class StudentSelectorModal extends Component {
                         <Text style={{...fontStyles.mainTextStyleDarkGrey, paddingLeft: 20, paddingTop: 15}}>Assign to:</Text>
                         <StudentSelectorComponent
                             currentClass={this.props.currentClass}
+                            selectedItemID={this.props.selectedItemID}
+                            onSelect={(id, imageID, isClassID) => {
+                                this.props.onSelect(id, imageID, isClassID);
+                                this.props.setModalVisible(false);
+                            }}
                         />
                         <TouchableText
                             text="Cancel"
@@ -53,13 +56,16 @@ export default class StudentSelectorModal extends Component {
 StudentSelectorModal.propTypes = {
     visible: PropTypes.bool.isRequired,
     setModalVisible: PropTypes.func.isRequired,
+    onSelect: PropTypes.func.isRequired,
+    selectedItemID: PropTypes.string,
+    currentClass: PropTypes.object.isRequired
 }
 
 //Styles for the Teacher profile class
 const styles = StyleSheet.create({
     container: {
         backgroundColor: colors.white,
-        width: screenWidth * 0.7,
+        width: screenWidth * 0.8,
         marginTop: 80,
         borderWidth: 1,
         borderRadius: 2,
