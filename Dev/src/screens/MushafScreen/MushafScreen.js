@@ -48,6 +48,7 @@ export default class MushafScreen extends QcParentScreen {
         selectionStarted: false,
         selectionCompleted: false,
         assignmentName: "",
+        assignmentType: strings.Memorization,
         freeFormAssignment: false,
         invokedFromProfileScreen: false,
     }
@@ -142,6 +143,7 @@ export default class MushafScreen extends QcParentScreen {
                     currentClass={this.state.currentClass}
                     assignToID={this.state.assignToAllClass? this.state.classID : this.state.studentID}
                     onChangeAssignee={(id, imageID, isClassID) => this.onChangeAssignee(id, imageID, isClassID)}
+                    onChangeAssignmentType={(value) => this.setState({assignmentType: value})}
 
                     //callback when user taps on a single ayah to selects
                     //determines whether this would be the start of end of the selection
@@ -299,15 +301,30 @@ export default class MushafScreen extends QcParentScreen {
     }
 
     async saveClassAssignment(newAssignmentName) {
-        const { classID } = this.state;
-        await FirebaseFunctions.updateClassAssignment(classID, newAssignmentName);
+        const { classID, assignmentType, currentClass} = this.state;
+        await FirebaseFunctions.updateClassAssignment(classID, newAssignmentName, assignmentType);
+        
+        //since there might be a latency before firebase returns the updated assignments, 
+        //let's save them here and later pass them to the calling screen so that it can update its state without
+        //relying on the Firebase async latency
+        let students = currentClass.students.map((student) => {
+            student.currentAssignment = newAssignmentName;
+        })
+        let updatedClass = {
+            ...currentClass,
+            students
+        }
+
+        this.setState({
+            currentClass: updatedClass
+        });
     }
 
     //method updates the current assignment of the student
     saveStudentAssignment(newAssignmentName) {
 
-      const { classID, studentID } = this.state;
-      FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, newAssignmentName, strings.Memorization);
+      const { classID, studentID, assignmentType} = this.state;
+      FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, newAssignmentName, assignmentType);
   }
 
     onSaveAssignment() {
@@ -328,7 +345,7 @@ export default class MushafScreen extends QcParentScreen {
     }
 
     closeScreen(){
-        const {invokedFromProfileScreen, userID, assignmentName } = this.state;
+        const {invokedFromProfileScreen, userID, assignmentName, currentClass } = this.state;
 
         //go back to student profile screen if invoked from there, otherwise go back to main screen
         if(invokedFromProfileScreen){
@@ -336,7 +353,7 @@ export default class MushafScreen extends QcParentScreen {
             this.props.navigation.state.params.onSaveAssignment(assignmentName);
             this.props.navigation.pop();
         }else {
-            this.props.navigation.push("TeacherCurrentClass", { userID });
+            this.props.navigation.push("TeacherCurrentClass", { userID, currentClass });
         }
     }
 

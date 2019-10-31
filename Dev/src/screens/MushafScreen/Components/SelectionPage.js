@@ -15,6 +15,7 @@ import AssignmentEntryComponent from 'components/AssignmentEntryComponent';
 import surahs from '../Data/Surahs.json'
 import pages from '../Data/mushaf-wbw.json'
 import {compareOrder} from '../Helpers/AyahsOrder'
+import SwitchSelector from "react-native-switch-selector";
 
 
 //Creates the higher order component
@@ -224,6 +225,12 @@ class SelectionPage extends React.Component {
         const surahName = (lines[0] && lines[0].surah) ? lines[0].surah :
             (lines[1] && lines[1].surah) ? lines[1].surah : "Select new assignment";
 
+        const options = [
+            { label: strings.Memorization, value: strings.Memorization },
+            { label: strings.Revision, value: strings.Revision },
+            { label: strings.Reading, value: strings.Reading }
+            ];
+
         if (this.state.page === 1) { lineAlign = 'center' }
 
         if (isLoading === true) {
@@ -258,6 +265,18 @@ class SelectionPage extends React.Component {
                         assignToID={this.props.assignToID}
                         onSelect={this.props.onChangeAssignee}
                     />
+                    
+                    
+                        <SwitchSelector
+                        options={options}
+                        initial={0}
+                        textColor={colors.darkGrey} //'#7a44cf'
+                        selectedColor={colors.primaryDark}
+                        buttonColor={colors.primaryLight}
+                        borderColor={colors.lightGrey}
+                        onPress={value => this.props.onChangeAssignmentType(value)}
+                        />
+
                     <View id={this.state.page} style={{ marginVertical: 5, marginHorizontal: 5, backgroundColor: colors.white }}>
                         {
                             lines !== undefined &&

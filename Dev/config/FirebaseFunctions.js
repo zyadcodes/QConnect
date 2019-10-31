@@ -296,12 +296,14 @@ export default class FirebaseFunctions {
 
     }
 
-    static async updateClassAssignment(classID, newAssignmentName) {
+    static async updateClassAssignment(classID, newAssignmentName, assignmentType) {
 
         let currentClass = await this.getClassByID(classID);
         let arrayOfStudents = currentClass.students;
         arrayOfStudents.forEach((student) => {
             student.currentAssignment = newAssignmentName;
+            student.currentAssignmentType = assignmentType;
+            
             try{
                 //Notifies that student that their assignment has been updated
                 this.functions.httpsCallable('sendNotification', {
