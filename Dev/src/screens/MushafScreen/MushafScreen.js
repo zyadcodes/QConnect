@@ -1,6 +1,7 @@
 //Screen which will provide all of the possible settings for the user to click on
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions, Alert, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
+import LoadingSpinner from 'components/LoadingSpinner';
 import colors from 'config/colors';
 import QcParentScreen from "screens/QcParentScreen";
 import SelectionPage from './Components/SelectionPage';
@@ -60,6 +61,7 @@ export default class MushafScreen extends QcParentScreen {
         assignmentType: strings.Memorization,
         freeFormAssignment: false,
         invokedFromProfileScreen: false,
+        isLoading: true
     }
 
     async componentDidMount() {
@@ -75,19 +77,33 @@ export default class MushafScreen extends QcParentScreen {
         }
 
         if (studentID === undefined) {
-            this.setState({ isLoading: true });
             const { userID } = this.props.navigation.state.params;
             const teacher = await FirebaseFunctions.getTeacherByID(userID);
             const { currentClassID } = teacher;
             const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
+
             this.setState({
-                isLoading: false,
+                selection: {
+                    start: currentClass.currentAssignmentLocation ? currentClass.currentAssignmentLocation.start : noAyahSelected,
+                    end: currentClass.currentAssignmentLocation ? currentClass.currentAssignmentLocation.end : noAyahSelected,
+                    started: false,
+                    completed: currentClass.currentAssignmentLocation ? true : false,
+                },
                 assignToAllClass: true,
                 userID,
                 imageID: currentClass.classImageID,
                 classID: currentClassID,
-                currentClass: currentClass
-            });
+                currentClass: currentClass,
+                assignmentName: currentClass.currentAssignment,
+                assignmentType: currentClass.currentAssignmentType
+            },
+                () => {
+                    if (currentClass.currentAssignmentLocation !== undefined) {
+                        let newPage = currentClass.currentAssignmentLocation.start.page;
+                        this.onChangePage(newPage, true);
+                        this.setState({isLoading: false});
+                    }
+                });
         }
 
     }
@@ -133,7 +149,8 @@ export default class MushafScreen extends QcParentScreen {
     }
 
     renderItem(item, idx) {
-        const { imageID, assignToAllClass } = this.state;
+        const { imageID, assignToAllClass, assignmentType, selection, classID, student } = this.state;
+
         const itemInt = parseInt(item)
         profileImage = isNaN(imageID) ? undefined :
             assignToAllClass ? classImages.images[imageID] : studentImages.images[imageID];
@@ -143,13 +160,14 @@ export default class MushafScreen extends QcParentScreen {
                 <SelectionPage
                     page={itemInt}
                     onChangePage={this.onChangePage.bind(this)}
-                    selectedAyahsStart={this.state.selection.start}
-                    selectedAyahsEnd={this.state.selection.end}
-                    selectionStarted={this.state.selection.started}
-                    selectionCompleted={this.state.selection.completed}
+                    selectedAyahsStart={selection.start}
+                    selectedAyahsEnd={selection.end}
+                    selectionStarted={selection.started}
+                    selectionCompleted={selection.completed}
                     profileImage={profileImage}
                     currentClass={this.state.currentClass}
-                    assignToID={this.state.assignToAllClass ? this.state.classID : this.state.studentID}
+                    assignmentType={assignmentType}
+                    assignToID={assignToAllClass ? classID : studentID}
                     onChangeAssignee={(id, imageID, isClassID) => this.onChangeAssignee(id, imageID, isClassID)}
                     onChangeAssignmentType={(value) => this.setState({ assignmentType: value })}
 
@@ -173,7 +191,7 @@ export default class MushafScreen extends QcParentScreen {
         //if the user taps on the same selected aya again, turn off selection
         if (compareOrder(selection.start, selection.end) === 0 &&
             compareOrder(selection.start, selectedAyah) === 0) {
-            this.setState({selection: noSelection}, () => this.updateAssignmentName())
+            this.setState({ selection: noSelection }, () => this.updateAssignmentName())
         }
         else if (!selection.started) {
             this.setState({
@@ -203,7 +221,7 @@ export default class MushafScreen extends QcParentScreen {
                 }
             )
 
-            
+
         }
     }
 
@@ -235,7 +253,7 @@ export default class MushafScreen extends QcParentScreen {
                 }
             };
         },
-        () => this.updateAssignmentName()));
+            () => this.updateAssignmentName()));
     }
 
     onChangePage(page, keepSelection) {
@@ -322,14 +340,17 @@ export default class MushafScreen extends QcParentScreen {
     }
 
     async saveClassAssignment(newAssignmentName) {
-        const { classID, assignmentType, currentClass } = this.state;
-        await FirebaseFunctions.updateClassAssignment(classID, newAssignmentName, assignmentType);
+        const { classID, assignmentType, currentClass, selection } = this.state;
+        let assignmentLocation = { start: selection.start, end: selection.end };
+
+        await FirebaseFunctions.updateClassAssignment(classID, newAssignmentName, assignmentType, assignmentLocation);
 
         //since there might be a latency before firebase returns the updated assignments, 
         //let's save them here and later pass them to the calling screen so that it can update its state without
         //relying on the Firebase async latency
         let students = currentClass.students.map((student) => {
             student.currentAssignment = newAssignmentName;
+            student.assignmentLocation = assignmentLocation;
         })
         let updatedClass = {
             ...currentClass,
@@ -344,8 +365,10 @@ export default class MushafScreen extends QcParentScreen {
     //method updates the current assignment of the student
     saveStudentAssignment(newAssignmentName) {
 
-        const { classID, studentID, assignmentType } = this.state;
-        FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, newAssignmentName, assignmentType);
+        const { classID, studentID, assignmentType, selection } = this.state;
+        let assignmentLocation = { start: selection.start, end: selection.end };
+
+        FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, newAssignmentName, assignmentType, assignmentLocation);
     }
 
     onSaveAssignment() {
@@ -379,49 +402,60 @@ export default class MushafScreen extends QcParentScreen {
     }
 
     render() {
-        return (
-            <View style={{ width: screenWidth, height: screenHeight }}>
-                <Swiper
-                    index={this.state.index}
-                    containerStyle={{ width: screenWidth, height: screenHeight }}
-                    key={this.state.key}
-                    prevButton={<Icon
-                        color={colors.primaryDark}
-                        size={35}
-                        name={'angle-left'}
-                        type="font-awesome" />}
-                    nextButton={<Icon
-                        color={colors.primaryDark}
-                        size={35}
-                        name={'angle-right'}
-                        type="font-awesome" />}
-                    loop={false}
-                    showsButtons={true}
-                    showsPagination={false}
-                    onIndexChanged={(index) => this.onPageChanged(index)}>
-                    {this.state.pages.map((item, idx) => this.renderItem(item, idx))}
-                </Swiper>
-                <View style={{ padding: 5 }}>
-                    {
-                        (this.state.selection.start.surah > 0 || this.state.freeFormAssignment) ?
-                            <Text style={fontStyles.mainTextStyleDarkGrey}>Assignment: {this.state.assignmentName}</Text>
-                            : <View></View>
-                    }
+        const { isLoading } = this.state;
+
+        if (isLoading === true) {
+            return (
+                <View id={this.state.page + "spinner"} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <LoadingSpinner isVisible={true} />
                 </View>
-                <View style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    marginBottom: 15
-                }}>
-                    <QcActionButton
-                        text={strings.Save}
-                        onPress={() => { this.onSaveAssignment() }} />
-                    <QcActionButton
-                        text={strings.Cancel}
-                        onPress={() => this.closeScreen()} />
+            )
+        } else {
+
+            return (
+                <View style={{ width: screenWidth, height: screenHeight }}>
+                    <Swiper
+                        index={this.state.index}
+                        containerStyle={{ width: screenWidth, height: screenHeight }}
+                        key={this.state.key}
+                        prevButton={<Icon
+                            color={colors.primaryDark}
+                            size={35}
+                            name={'angle-left'}
+                            type="font-awesome" />}
+                        nextButton={<Icon
+                            color={colors.primaryDark}
+                            size={35}
+                            name={'angle-right'}
+                            type="font-awesome" />}
+                        loop={false}
+                        showsButtons={true}
+                        showsPagination={false}
+                        onIndexChanged={(index) => this.onPageChanged(index)}>
+                        {this.state.pages.map((item, idx) => this.renderItem(item, idx))}
+                    </Swiper>
+                    <View style={{ padding: 5 }}>
+                        {
+                            (this.state.selection.start.surah > 0 || this.state.freeFormAssignment) ?
+                                <Text style={fontStyles.mainTextStyleDarkGrey}>{this.state.assignmentName}</Text>
+                                : <View></View>
+                        }
+                    </View>
+                    <View style={{
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        marginBottom: 15
+                    }}>
+                        <QcActionButton
+                            text={strings.Save}
+                            onPress={() => { this.onSaveAssignment() }} />
+                        <QcActionButton
+                            text={strings.Cancel}
+                            onPress={() => this.closeScreen()} />
+                    </View>
                 </View>
-            </View>
-        );
+            );
+        }
     }
 }
 

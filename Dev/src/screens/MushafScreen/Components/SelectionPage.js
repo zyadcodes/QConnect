@@ -14,7 +14,7 @@ import PageHeader from './PageHeader';
 import AssignmentEntryComponent from 'components/AssignmentEntryComponent';
 import surahs from '../Data/Surahs.json'
 import pages from '../Data/mushaf-wbw.json'
-import {compareOrder} from '../Helpers/AyahsOrder'
+import { compareOrder } from '../Helpers/AyahsOrder'
 import SwitchSelector from "react-native-switch-selector";
 
 
@@ -45,28 +45,28 @@ class SelectionPage extends React.Component {
     }
 
     async componentDidMount() {
-        if(!this.props.isLoading){
+        if (!this.props.isLoading) {
             this.getPageLines(this.state.page);
         }
-        
+
     }
 
     // only redraw lines if the page have changed
-    static getDerivedStateFromProps(nextProps, prevState){
+    static getDerivedStateFromProps(nextProps, prevState) {
         let lines = {}
-        if(nextProps.page!==prevState.page){
-            lines = {lines: pages[nextProps.page - 1]};
+        if (nextProps.page !== prevState.page || prevState.lines === undefined || prevState.lines.length === 0) {
+            lines = { lines: pages[nextProps.page - 1] };
         }
-        return { 
+        return {
             ...lines,
-            page: nextProps.page, 
+            page: nextProps.page,
             selectedAyahsStart: nextProps.selectedAyahsStart,
             selectedAyahsEnd: nextProps.selectedAyahsEnd,
             selectionStarted: nextProps.selectionStarted,
             selectionCompleted: nextProps.selectionCompleted,
             isLoading: false
         };
-     }
+    }
 
     //retrieves the lines, ayahs, and words of a particular page of the mushhaf
     //parameters: page: the page number we want to retrieve
@@ -147,12 +147,12 @@ class SelectionPage extends React.Component {
             // in the surah array, surah ids 1-114 have Arabic names and 115- 229 have English names
             // the formula below gets the surah index from 0 to 113 (so we can get its info from the surah db)
             let surahIndex = (Number(surah.id));
-            if(surahIndex > 114){
+            if (surahIndex > 114) {
                 //names with index 115-229 are english surah names
-                if(surahIndex <= 229){
+                if (surahIndex <= 229) {
                     surahIndex -= 114;
                 }
-                else{
+                else {
                     console.log("invalid surah Index");
                 }
             }
@@ -172,8 +172,8 @@ class SelectionPage extends React.Component {
 
     }
 
-    getFirstAyahOfPage(){
-        const {page, lines} = this.state;
+    getFirstAyahOfPage() {
+        const { page, lines } = this.state;
 
         //find the first line that has text inside (type === line, instad of basmalah or start_surah)
         let startLine = lines.slice().find(line => line.type === "line");
@@ -192,8 +192,8 @@ class SelectionPage extends React.Component {
 
     //returns the last ayah of the page..
     //
-    getLastAyahOfPage(){
-        const {page, lines} = this.state;
+    getLastAyahOfPage() {
+        const { page, lines } = this.state;
 
         //walk the lines array backward, and find the last line that has text inside (type === line, instad of basmalah or start_surah)
         let lastLine = lines.slice().reverse().find(line => line.type === "line");
@@ -205,9 +205,9 @@ class SelectionPage extends React.Component {
     }
 
     //selects the entire page
-    onSelectPage(){
-        const {page, lines} = this.state;
-        
+    onSelectPage() {
+        const { page, lines } = this.state;
+
         //capture the first ayah (where the selection starts from)
         let firstAyah = this.getFirstAyahOfPage();
 
@@ -220,18 +220,6 @@ class SelectionPage extends React.Component {
 
     render() {
         const { isLoading, lines, page } = this.state;
-        let isFirstWord = true;
-        let lineAlign = 'stretch'
-        const surahName = (lines[0] && lines[0].surah) ? lines[0].surah :
-            (lines[1] && lines[1].surah) ? lines[1].surah : "Select new assignment";
-
-        const options = [
-            { label: strings.Memorization, value: strings.Memorization },
-            { label: strings.Revision, value: strings.Revision },
-            { label: strings.Reading, value: strings.Reading }
-            ];
-
-        if (this.state.page === 1) { lineAlign = 'center' }
 
         if (isLoading === true) {
             return (
@@ -242,7 +230,21 @@ class SelectionPage extends React.Component {
         }
 
         else {
-            
+            let isFirstWord = true;
+            let lineAlign = 'stretch'
+
+            const surahName = (lines[0] && lines[0].surah) ? lines[0].surah :
+                (lines[1] && lines[1].surah) ? lines[1].surah : "Select new assignment";
+
+            const options = [
+                { label: strings.Memorization, value: strings.Memorization },
+                { label: strings.Revision, value: strings.Revision },
+                { label: strings.Reading, value: strings.Reading }
+            ];
+
+            if (this.state.page === 1) { lineAlign = 'center' }
+
+
             return (
                 <View id={this.state.page + "upperWrapper"} style={{ backgroundColor: colors.white }}>
                     <AssignmentEntryComponent
@@ -265,17 +267,19 @@ class SelectionPage extends React.Component {
                         assignToID={this.props.assignToID}
                         onSelect={this.props.onChangeAssignee}
                     />
-                    
-                    
-                        <SwitchSelector
+
+
+                    <SwitchSelector
                         options={options}
-                        initial={0}
-                        textColor={colors.darkGrey} //'#7a44cf'
+                        initial={this.props.assignmentType !== undefined?  options.findIndex(option => option.value === this.props.assignmentType) : 0}
+                        height={20}
+                        textColor={colors.darkGrey} 
                         selectedColor={colors.primaryDark}
                         buttonColor={colors.primaryLight}
                         borderColor={colors.lightGrey}
                         onPress={value => this.props.onChangeAssignmentType(value)}
-                        />
+                        style={{marginTop: 2}}
+                    />
 
                     <View id={this.state.page} style={{ marginVertical: 5, marginHorizontal: 5, backgroundColor: colors.white }}>
                         {
@@ -386,7 +390,7 @@ const styles = StyleSheet.create({
     footer: {
         justifyContent: 'center',
         alignSelf: 'stretch',
-        height: 30,
+        height: 20,
         alignItems: 'center',
     },
     textInputStyle: {
@@ -420,7 +424,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-      }
+    }
 })
 
 export default SelectionPage;
