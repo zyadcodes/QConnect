@@ -50,6 +50,14 @@ export class ClassMainScreen extends QcParentScreen {
     });
 
   }
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
+  }
+
+  onImageSelected(imageId) {
+    this.setState({ classImageId: imageId })
+    this.setModalVisible(false);
+  }
 
   removeStudent(studentID) {
     Alert.alert(
@@ -80,6 +88,10 @@ updateTitle(newTitle){
   this.setState({titleHasChanged: true})
   this.setState({currentClass: {...this.state.currentClass, name: newTitle}})
 }
+updatePicture(newPicture){
+  this.setState({pictureHasChanged: true})
+  this.setState({currentClass: {...this.state.currentClass, name: newPicture}})
+}
 
 
   render() {
@@ -106,8 +118,11 @@ updateTitle(newTitle){
                 LeftIconName="navicon"
                 LeftOnPress={() => this.setState({ isOpen: true })}
                 isEditingTitle={this.state.isEditing}
+                isEditingPicture={this.state.isEditing}
+                onEditingPicture={(newPicture)=> this.updatePicture(newPicture)}
                 Title={"Quran Connect"}
                 onTitleChanged={(newTitle)=> this.updateTitle(newTitle)}
+                profileImageID={currentClass.classImageID}
               />
             </View>
             <View style={{ alignItems: "center", justifyContent: "flex-start", alignSelf: 'center', flex: 2 }}>
@@ -161,8 +176,11 @@ updateTitle(newTitle){
                 LeftIconName="navicon"
                 LeftOnPress={() => this.setState({ isOpen: true })}
                 isEditingTitle={this.state.isEditing}
+                isEditingPicture={this.state.isEditing}
                 Title={this.state.currentClass.name}
                 onTitleChanged={(newTitle)=> this.updateTitle(newTitle)}
+                onEditingPicture={(newPicture)=> this.updatePicture(newPicture)}
+                profileImageID={currentClass.classImageID}
               />
             </View>
             <View style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'center' }}>
@@ -211,7 +229,10 @@ updateTitle(newTitle){
                 RightIconName={this.state.isEditing === false ? "edit" : null}
                 RightTextName={this.state.isEditing === true ? strings.Done : null}
                 isEditingTitle={this.state.isEditing}
+                isEditingPicture={this.state.isEditing}
                 onTitleChanged={(newTitle)=> this.updateTitle(newTitle)}
+                onEditingPicture={(newPicture)=> this.updatePicture(newPicture)}
+                profileImageID={currentClass.classImageID}
                 RightOnPress={() => {
                   const { isEditing, titleHasChanged} = this.state;
                   if(this.state.currentClass.name.trim().length ===0){
