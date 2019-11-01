@@ -23,6 +23,13 @@ const noAyahSelected = {
     ayah: 0
 };
 
+const noSelection = {
+    start: noAyahSelected,
+    end: noAyahSelected,
+    started: false,
+    completed: false
+}
+
 export default class MushafScreen extends QcParentScreen {
 
     lastPage = 604;
@@ -35,18 +42,20 @@ export default class MushafScreen extends QcParentScreen {
         classID: this.props.navigation.state.params.classID,
         imageID: this.props.navigation.state.params.imageID,
         assignToAllClass: this.props.navigation.state.params.assignToAllClass,
-        selectedAyahsStart: {
-            surah: 0,
-            page: this.lastPage,
-            ayah: 0
+        selection: {
+            started: false,
+            completed: false,
+            start: {
+                surah: 0,
+                page: this.lastPage,
+                ayah: 0
+            },
+            end: {
+                surah: 0,
+                page: this.lastPage,
+                ayah: 0
+            }
         },
-        selectedAyahsEnd: {
-            surah: 0,
-            page: this.lastPage,
-            ayah: 0
-        },
-        selectionStarted: false,
-        selectionCompleted: false,
         assignmentName: "",
         assignmentType: strings.Memorization,
         freeFormAssignment: false,
@@ -59,7 +68,7 @@ export default class MushafScreen extends QcParentScreen {
 
         const { studentID, invokedFromProfileScreen } = this.props.navigation.state.params;
 
-        if(invokedFromProfileScreen === true){
+        if (invokedFromProfileScreen === true) {
             this.setState({
                 invokedFromProfileScreen: true
             })
@@ -83,28 +92,27 @@ export default class MushafScreen extends QcParentScreen {
 
     }
 
-
     updateAssignmentName() {
-        const { selectedAyahsStart, selectedAyahsEnd } = this.state;
-        if (selectedAyahsStart.surah === 0) {
+        const { selection } = this.state;
+        if (selection.start.surah === 0) {
             //no selection made
             //todo: make this an explicit flag
             return "";
         }
 
-        desc = surahs[selectedAyahsStart.surah].tname + " (" + selectedAyahsStart.ayah
+        desc = surahs[selection.start.surah].tname + " (" + selection.start.ayah
 
-        if (selectedAyahsStart.surah === selectedAyahsEnd.surah) {
-            if (selectedAyahsStart.ayah !== selectedAyahsEnd.ayah) {
-                desc += " to " + selectedAyahsEnd.ayah
+        if (selection.start.surah === selection.end.surah) {
+            if (selection.start.ayah !== selection.end.ayah) {
+                desc += " to " + selection.end.ayah
             }
         } else {
-            desc += ") to " + surahs[selectedAyahsEnd.surah].tname + " (" + selectedAyahsEnd.ayah
+            desc += ") to " + surahs[selection.end.surah].tname + " (" + selection.end.ayah
         }
 
-        let pageDesc = ") p. " + selectedAyahsEnd.page;
-        if (selectedAyahsStart.page !== selectedAyahsEnd.page) {
-            pageDesc = ") pp. " + selectedAyahsStart.page + " to " + selectedAyahsEnd.page
+        let pageDesc = ") p. " + selection.end.page;
+        if (selection.start.page !== selection.end.page) {
+            pageDesc = ") pp. " + selection.start.page + " to " + selection.end.page
         }
         desc += pageDesc;
 
@@ -135,15 +143,15 @@ export default class MushafScreen extends QcParentScreen {
                 <SelectionPage
                     page={itemInt}
                     onChangePage={this.onChangePage.bind(this)}
-                    selectedAyahsStart={this.state.selectedAyahsStart}
-                    selectedAyahsEnd={this.state.selectedAyahsEnd}
-                    selectionStarted={this.state.selectionStarted}
-                    selectionCompleted={this.state.selectionCompleted}
+                    selectedAyahsStart={this.state.selection.start}
+                    selectedAyahsEnd={this.state.selection.end}
+                    selectionStarted={this.state.selection.started}
+                    selectionCompleted={this.state.selection.completed}
                     profileImage={profileImage}
                     currentClass={this.state.currentClass}
-                    assignToID={this.state.assignToAllClass? this.state.classID : this.state.studentID}
+                    assignToID={this.state.assignToAllClass ? this.state.classID : this.state.studentID}
                     onChangeAssignee={(id, imageID, isClassID) => this.onChangeAssignee(id, imageID, isClassID)}
-                    onChangeAssignmentType={(value) => this.setState({assignmentType: value})}
+                    onChangeAssignmentType={(value) => this.setState({ assignmentType: value })}
 
                     //callback when user taps on a single ayah to selects
                     //determines whether this would be the start of end of the selection
@@ -160,61 +168,74 @@ export default class MushafScreen extends QcParentScreen {
     }
 
     onSelectAyah(selectedAyah) {
-        const { selectedAyahsStart, selectedAyahsEnd, selectionCompleted, selectionStarted } = this.state;
+        const { selection } = this.state;
 
         //if the user taps on the same selected aya again, turn off selection
-        if (compareOrder(selectedAyahsStart, selectedAyahsEnd) === 0 &&
-            compareOrder(selectedAyahsStart, selectedAyah) === 0) {
-            this.setState({
-                selectionStarted: false,
-                selectionCompleted: false,
-                selectedAyahsStart: noAyahSelected,
-                selectedAyahsEnd: noAyahSelected,
-            }, () => this.updateAssignmentName())
+        if (compareOrder(selection.start, selection.end) === 0 &&
+            compareOrder(selection.start, selectedAyah) === 0) {
+            this.setState({selection: noSelection}, () => this.updateAssignmentName())
         }
-        else if (!selectionStarted) {
+        else if (!selection.started) {
             this.setState({
-                selectionStarted: true,
-                selectionCompleted: false,
-                selectedAyahsStart: selectedAyah,
-                selectedAyahsEnd: selectedAyah
+                selection: {
+                    started: true,
+                    completed: false,
+                    start: selectedAyah,
+                    end: selectedAyah
+                }
             }, () => this.updateAssignmentName())
-        } else if (!selectionCompleted) {
+        } else if (!selection.completed) {
             this.setState(
                 {
-                    selectionStarted: false,
-                    selectionCompleted: true,
+                    selection: {
+                        ...this.state.selection,
+                        started: false,
+                        completed: true
+                    }
+                },
+                () => {
+                    //Set the smallest number as the start, and the larger as the end
+                    if (compareOrder(selection.start, selectedAyah) > 0) {
+                        this.setState({ selection: { ...this.state.selection, end: selectedAyah } }, () => this.updateAssignmentName())
+                    } else {
+                        this.setState({ selection: { ...this.state.selection, start: selectedAyah } }, () => this.updateAssignmentName())
+                    }
                 }
             )
 
-            //Set the smallest number as the start, and the larger as the end
-            if (compareOrder(selectedAyahsStart, selectedAyah) > 0) {
-                this.setState({ selectedAyahsEnd: selectedAyah }, () => this.updateAssignmentName())
-            } else {
-                this.setState({ selectedAyahsStart: selectedAyah }, () => this.updateAssignmentName())
-            }
+            
         }
     }
 
     onSelectAyahs(firstAyah, lastAyah) {
+
+        let startA = firstAyah;
+        let endA = lastAyah;
+
         //Set the smallest number as the start, and the larger as the end
-        if (compareOrder(firstAyah, lastAyah) > 0) {
-            this.setState({ selectedAyahsStart: firstAyah },
-                this.setState({
-                    selectedAyahsEnd: lastAyah,
-                    selectionStarted: false,
-                    selectionCompleted: true
-                },
-                    () => this.updateAssignmentName()))
-        } else {
-            this.setState({ selectedAyahsStart: lastAyah, },
-                this.setState({
-                    selectedAyahsEnd: firstAyah,
-                    selectionStarted: false,
-                    selectionCompleted: true
-                },
-                    () => this.updateAssignmentName()))
+        if (compareOrder(firstAyah, lastAyah) <= 0) {
+            startA = lastAyah;
+            endA = firstAyah;
         }
+
+        this.setState((prevState) => {
+            return {
+                selection: {
+                    ...prevState.selection,
+                    start: startA
+                }
+            }
+        }, () => this.setState((prevState2) => {
+            return {
+                selection: {
+                    ...prevState2.selection,
+                    started: false,
+                    completed: true,
+                    end: endA
+                }
+            };
+        },
+        () => this.updateAssignmentName()));
     }
 
     onChangePage(page, keepSelection) {
@@ -251,10 +272,10 @@ export default class MushafScreen extends QcParentScreen {
         let resetSelectionIfApplicable = {};
         if (keepSelection === false) {
             resetSelectionIfApplicable = {
-                selectedAyahsStart: noAyahSelected,
-                selectedAyahsEnd: noAyahSelected,
+                selection: noSelection
             }
         }
+
         //otherwise, set the current page to the middle screen (index = 1), and set previous and next screens to prev and next pages 
         this.setState({
             ...resetSelectionIfApplicable,
@@ -282,28 +303,28 @@ export default class MushafScreen extends QcParentScreen {
         classID: this.props.navigation.state.params.classID,
         assignToAllClass: this.props.navigation.state.params.assignToAllClass,
      */
-    onChangeAssignee(id, imageID, isClassID){
-        if(isClassID === true){
+    onChangeAssignee(id, imageID, isClassID) {
+        if (isClassID === true) {
             this.setState({
-                    classID: id,
-                    assignToAllClass: true,
-                    imageID: imageID
-                }
+                classID: id,
+                assignToAllClass: true,
+                imageID: imageID
+            }
             )
-        }else {
+        } else {
             this.setState({
                 studentID: id,
                 assignToAllClass: false,
                 imageID: imageID
             }
-        )
+            )
         }
     }
 
     async saveClassAssignment(newAssignmentName) {
-        const { classID, assignmentType, currentClass} = this.state;
+        const { classID, assignmentType, currentClass } = this.state;
         await FirebaseFunctions.updateClassAssignment(classID, newAssignmentName, assignmentType);
-        
+
         //since there might be a latency before firebase returns the updated assignments, 
         //let's save them here and later pass them to the calling screen so that it can update its state without
         //relying on the Firebase async latency
@@ -323,36 +344,36 @@ export default class MushafScreen extends QcParentScreen {
     //method updates the current assignment of the student
     saveStudentAssignment(newAssignmentName) {
 
-      const { classID, studentID, assignmentType} = this.state;
-      FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, newAssignmentName, assignmentType);
-  }
+        const { classID, studentID, assignmentType } = this.state;
+        FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, newAssignmentName, assignmentType);
+    }
 
     onSaveAssignment() {
-        const { assignmentName, assignToAllClass} = this.state;
+        const { assignmentName, assignToAllClass } = this.state;
         if (assignmentName.trim() === "") {
             Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
         } else {
             if (assignToAllClass) {
                 this.saveClassAssignment(assignmentName);
-                
+
             } else {
                 this.saveStudentAssignment(assignmentName);
-                
+
             }
 
             this.closeScreen();
         }
     }
 
-    closeScreen(){
-        const {invokedFromProfileScreen, userID, assignmentName, currentClass } = this.state;
+    closeScreen() {
+        const { invokedFromProfileScreen, userID, assignmentName, currentClass } = this.state;
 
         //go back to student profile screen if invoked from there, otherwise go back to main screen
-        if(invokedFromProfileScreen){
+        if (invokedFromProfileScreen) {
             //update the caller screen with the new assignment then close
             this.props.navigation.state.params.onSaveAssignment(assignmentName);
             this.props.navigation.pop();
-        }else {
+        } else {
             this.props.navigation.push("TeacherCurrentClass", { userID, currentClass });
         }
     }
@@ -382,7 +403,7 @@ export default class MushafScreen extends QcParentScreen {
                 </Swiper>
                 <View style={{ padding: 5 }}>
                     {
-                        (this.state.selectedAyahsStart.surah > 0 || this.state.freeFormAssignment) ?
+                        (this.state.selection.start.surah > 0 || this.state.freeFormAssignment) ?
                             <Text style={fontStyles.mainTextStyleDarkGrey}>Assignment: {this.state.assignmentName}</Text>
                             : <View></View>
                     }
