@@ -39,8 +39,8 @@ export default class MushafScreen extends QcParentScreen {
         pages: ["604", "603", "602"],
         key: 1,
         index: 1,
-        studentID: this.props.navigation.state.params.studentID,
         classID: this.props.navigation.state.params.classID,
+        studentID: this.props.navigation.state.params.studentID,
         imageID: this.props.navigation.state.params.imageID,
         assignToAllClass: this.props.navigation.state.params.assignToAllClass,
         selection: {
@@ -68,7 +68,7 @@ export default class MushafScreen extends QcParentScreen {
 
         FirebaseFunctions.setCurrentScreen("MushhafAssignmentScreen", "MushhafAssignmentScreen");
 
-        const { studentID, invokedFromProfileScreen } = this.props.navigation.state.params;
+        const { studentID, invokedFromProfileScreen, assignmentType, assignmentLocation, assignmentName } = this.props.navigation.state.params;
 
         if (invokedFromProfileScreen === true) {
             this.setState({
@@ -76,11 +76,12 @@ export default class MushafScreen extends QcParentScreen {
             })
         }
 
+        const { userID } = this.props.navigation.state.params;
+        const teacher = await FirebaseFunctions.getTeacherByID(userID);
+        const { currentClassID } = teacher;
+        const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
+
         if (studentID === undefined) {
-            const { userID } = this.props.navigation.state.params;
-            const teacher = await FirebaseFunctions.getTeacherByID(userID);
-            const { currentClassID } = teacher;
-            const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
 
             this.setState({
                 selection: {
@@ -101,9 +102,37 @@ export default class MushafScreen extends QcParentScreen {
                     if (currentClass.currentAssignmentLocation !== undefined) {
                         let newPage = currentClass.currentAssignmentLocation.start.page;
                         this.onChangePage(newPage, true);
-                        this.setState({isLoading: false});
                     }
+                    this.setState({isLoading: false});
                 });
+        }
+        else {
+            let pagesSection = {};
+            if(assignmentLocation !== undefined){
+                let newPage = assignmentLocation.start.page;
+                pages = this.getPagesToLoad(newPage);
+                pagesSection = {
+                    pages: pages.pages,
+                    index: pages.index
+                }
+            }
+            
+            this.setState(
+                {
+                    ...pagesSection,
+                    isLoading: false,
+                    assignToAllClass: false,
+                    currentClass: currentClass,
+                    studentID: studentID,
+                    selection: assignmentLocation? {
+                        start: assignmentLocation.start,
+                        end: assignmentLocation.end,
+                        started: false,
+                        completed: true
+                    } : noSelection,
+                    assignmentName,
+                    assignmentType: assignmentType !== undefined? assignmentType : strings.Memorization,
+                }); 
         }
 
     }
@@ -146,43 +175,6 @@ export default class MushafScreen extends QcParentScreen {
             assignmentName: freeFormAssignmentName,
             freeFormAssignment: true
         })
-    }
-
-    renderItem(item, idx) {
-        const { imageID, assignToAllClass, assignmentType, selection, classID, student } = this.state;
-
-        const itemInt = parseInt(item)
-        profileImage = isNaN(imageID) ? undefined :
-            assignToAllClass ? classImages.images[imageID] : studentImages.images[imageID];
-
-        return (
-            <View style={{ width: screenWidth, height: screenHeight }} key={idx}>
-                <SelectionPage
-                    page={itemInt}
-                    onChangePage={this.onChangePage.bind(this)}
-                    selectedAyahsStart={selection.start}
-                    selectedAyahsEnd={selection.end}
-                    selectionStarted={selection.started}
-                    selectionCompleted={selection.completed}
-                    profileImage={profileImage}
-                    currentClass={this.state.currentClass}
-                    assignmentType={assignmentType}
-                    assignToID={assignToAllClass ? classID : studentID}
-                    onChangeAssignee={(id, imageID, isClassID) => this.onChangeAssignee(id, imageID, isClassID)}
-                    onChangeAssignmentType={(value) => this.setState({ assignmentType: value })}
-
-                    //callback when user taps on a single ayah to selects
-                    //determines whether this would be the start of end of the selection
-                    // and select ayahs in between
-                    onSelectAyah={this.onSelectAyah.bind(this)}
-
-                    //callback when user selects a range of ayahs (line an entire page or surah)
-                    onSelectAyahs={this.onSelectAyahs.bind(this)}
-
-                    onUpdateAssignmentName={(newAssignmentName) => this.setFreeFormAssignmentName(newAssignmentName)}
-                />
-            </View>
-        )
     }
 
     onSelectAyah(selectedAyah) {
@@ -256,7 +248,7 @@ export default class MushafScreen extends QcParentScreen {
             () => this.updateAssignmentName()));
     }
 
-    onChangePage(page, keepSelection) {
+    getPagesToLoad(page){
         let pageNumber = parseInt(page);
         let nextPage = parseInt(pageNumber) + 1;
         let curPage = parseInt(pageNumber);
@@ -286,6 +278,12 @@ export default class MushafScreen extends QcParentScreen {
             index = 1;
         }
 
+        return {pages: [nextPage.toString(), curPage.toString(), prevPage.toString()], index: index}; 
+    }
+
+    onChangePage(page, keepSelection) {
+        
+
         //reset the selection state if we are passed a flag to do so
         let resetSelectionIfApplicable = {};
         if (keepSelection === false) {
@@ -294,11 +292,12 @@ export default class MushafScreen extends QcParentScreen {
             }
         }
 
+        let pages = this.getPagesToLoad(page);
         //otherwise, set the current page to the middle screen (index = 1), and set previous and next screens to prev and next pages 
         this.setState({
             ...resetSelectionIfApplicable,
-            pages: [nextPage.toString(), curPage.toString(), prevPage.toString()],
-            index: index,
+            pages: pages.pages,
+            index: pages.index,
         }
         )
     }
@@ -365,8 +364,26 @@ export default class MushafScreen extends QcParentScreen {
     //method updates the current assignment of the student
     saveStudentAssignment(newAssignmentName) {
 
-        const { classID, studentID, assignmentType, selection } = this.state;
+        const { classID, studentID, assignmentType, selection, currentClass } = this.state;
         let assignmentLocation = { start: selection.start, end: selection.end };
+
+        //update the current class object (so we can pass it to caller without having to re-render fron firebase)
+        let students = currentClass.students.map((student) => {
+            if(student.ID === studentID){
+                student.currentAssignment = newAssignmentName;
+                student.assignmentLocation = assignmentLocation;
+            }
+            return student; 
+        })
+
+        let updatedClass = {
+            ...currentClass,
+            students
+        }
+
+        this.setState({
+            currentClass: updatedClass
+        });
 
         FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, newAssignmentName, assignmentType, assignmentLocation);
     }
@@ -393,12 +410,52 @@ export default class MushafScreen extends QcParentScreen {
 
         //go back to student profile screen if invoked from there, otherwise go back to main screen
         if (invokedFromProfileScreen) {
-            //update the caller screen with the new assignment then close
-            this.props.navigation.state.params.onSaveAssignment(assignmentName);
+
+            if(assignmentName && assignmentName.trim().length > 0){
+                //update the caller screen with the new assignment then close
+                this.props.navigation.state.params.onSaveAssignment(assignmentName);
+            }
             this.props.navigation.pop();
         } else {
             this.props.navigation.push("TeacherCurrentClass", { userID, currentClass });
         }
+    }
+
+    renderItem(item, idx) {
+        const { imageID, assignToAllClass, assignmentType, selection, classID, studentID } = this.state;
+
+        const itemInt = parseInt(item)
+        profileImage = isNaN(imageID) ? undefined :
+            assignToAllClass ? classImages.images[imageID] : studentImages.images[imageID];
+
+        return (
+            <View style={{ width: screenWidth, height: screenHeight }} key={idx}>
+                <SelectionPage
+                    page={itemInt}
+                    onChangePage={this.onChangePage.bind(this)}
+                    selectedAyahsStart={selection.start}
+                    selectedAyahsEnd={selection.end}
+                    selectionStarted={selection.started}
+                    selectionCompleted={selection.completed}
+                    profileImage={profileImage}
+                    currentClass={this.state.currentClass}
+                    assignmentType={assignmentType}
+                    assignToID={assignToAllClass ? classID : studentID}
+                    onChangeAssignee={(id, imageID, isClassID) => this.onChangeAssignee(id, imageID, isClassID)}
+                    onChangeAssignmentType={(value) => this.setState({ assignmentType: value })}
+
+                    //callback when user taps on a single ayah to selects
+                    //determines whether this would be the start of end of the selection
+                    // and select ayahs in between
+                    onSelectAyah={this.onSelectAyah.bind(this)}
+
+                    //callback when user selects a range of ayahs (line an entire page or surah)
+                    onSelectAyahs={this.onSelectAyahs.bind(this)}
+
+                    onUpdateAssignmentName={(newAssignmentName) => this.setFreeFormAssignmentName(newAssignmentName)}
+                />
+            </View>
+        )
     }
 
     render() {

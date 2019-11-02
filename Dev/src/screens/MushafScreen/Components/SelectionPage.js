@@ -244,6 +244,12 @@ class SelectionPage extends React.Component {
 
             if (this.state.page === 1) { lineAlign = 'center' }
 
+            let selectedAssignmentTypeIndex = 0;
+            if(this.props.assignmentType !== undefined){
+                if(options.findIndex(option => option.value === this.props.assignmentType) !== -1){
+                    selectedAssignmentTypeIndex = options.findIndex(option => option.value === this.props.assignmentType);
+                }
+            }
 
             return (
                 <View id={this.state.page + "upperWrapper"} style={{ backgroundColor: colors.white }}>
@@ -268,10 +274,9 @@ class SelectionPage extends React.Component {
                         onSelect={this.props.onChangeAssignee}
                     />
 
-
                     <SwitchSelector
                         options={options}
-                        initial={this.props.assignmentType !== undefined?  options.findIndex(option => option.value === this.props.assignmentType) : 0}
+                        initial={selectedAssignmentTypeIndex}
                         height={20}
                         textColor={colors.darkGrey} 
                         selectedColor={colors.primaryDark}

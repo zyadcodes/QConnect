@@ -127,8 +127,12 @@ class StudentProfileScreen extends QcParentScreen {
                     onPress={() => { this.props.navigation.push("MushafScreen", {
                       invokedFromProfileScreen: true,
                       assignToAllClass: false,
+                      userID: this.props.navigation.state.params.userID,
                       classID, 
                       studentID, 
+                      assignmentLocation: classStudent.currentAssignmentLocation,
+                      assignmentType: classStudent.currentAssignmentType,
+                      assignmentName: currentAssignment,
                       imageID: classStudent.profileImageID,
                       onSaveAssignment: this.editAssignment.bind(this) }) 
                       }}>
@@ -142,6 +146,8 @@ class StudentProfileScreen extends QcParentScreen {
                       assignmentName: currentAssignment,
                       userID: this.props.navigation.state.params.userID,
                       classStudent: classStudent,
+                      assignmentLocation: classStudent.currentAssignmentLocation,
+                      assignmentType: classStudent.currentAssignmentType,
                       newAssignment: true,
                       readOnly: false,
                     })} >
