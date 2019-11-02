@@ -3,14 +3,13 @@
 //--------------------------------------------------------------------------------
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, PixelRatio, Text, View, TouchableOpacity, Dimensions, Modal, TextInput } from 'react-native';
+import { StyleSheet, PixelRatio, Text, View, TouchableOpacity, Modal, TextInput } from 'react-native';
 import colors from 'config/colors';
 import strings from 'config/strings';
 import QcActionButton from './QcActionButton';
 import { Badge } from 'react-native-elements';
 import fontStyles from 'config/fontStyles';
-
-var { width } = Dimensions.get('window');
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 class FlowView extends Component {
 
@@ -306,7 +305,7 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.white,
 		alignItems: 'center',
 		justifyContent: 'center',
-		height: Dimensions.get('window').height - 200,
+		height: screenHeight - 200,
 		flexDirection: 'column',
 		marginTop: 100,
 		borderWidth: 1,
@@ -329,7 +328,7 @@ const styles = StyleSheet.create({
 		borderColor: colors.grey,
 		borderWidth: 1 / PixelRatio.get(),
 		borderRadius: 5,
-		height: Dimensions.get('window').height * 0.065,
+		height: screenHeight * 0.065,
 		justifyContent: 'center',
 		alignItems: 'center',
 		marginRight: 10,
@@ -339,7 +338,7 @@ const styles = StyleSheet.create({
 		borderColor: colors.grey,
 		borderWidth: 1 / PixelRatio.get(),
 		borderRadius: 5,
-		height: Dimensions.get('window').height * 0.065,
+		height: screenHeight * 0.065,
 		justifyContent: 'center',
 		alignItems: 'center',
 		paddingLeft: 10,
@@ -359,7 +358,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		flexWrap: 'wrap',
 		marginHorizontal: 15,
-		width: width - 40,
+		width: screenWidth - 40,
 	},
 
 });

@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, View, StyleSheet, FlatList, Dimensions, Text, Alert, Share, TextInput, PixelRatio } from "react-native";
+import { ScrollView, View, StyleSheet, FlatList, Text, Alert, Share, TextInput, PixelRatio } from "react-native";
 import StudentCard from "components/StudentCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages";
@@ -13,6 +13,8 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
 import fontStyles from "config/fontStyles";
+import { screenHeight, screenWidth } from 'config/dimensions';
+
 
 export class ClassEditScreen extends QcParentScreen {
 
@@ -130,8 +132,8 @@ export class ClassEditScreen extends QcParentScreen {
       <QCView style={{
         flexDirection: 'column',
         backgroundColor: colors.lightGrey,
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height
+        width: screenWidth,
+        height: screenHeight
       }}>
         <ScrollView nestedScrollEnabled={true} style={styles.container}>
           <ImageSelectionModal
@@ -183,7 +185,7 @@ export class ClassEditScreen extends QcParentScreen {
             <View style={{ flex: 0.7, alignSelf: 'flex-start' }}>
               <TextInput
                 style={{
-                  height: Dimensions.get('window').height * 0.07,
+                  height: screenHeight * 0.07,
                   paddingLeft: 7,
                   fontSize: 14,
                   color: colors.darkGrey,
@@ -277,7 +279,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     backgroundColor: colors.white,
     flex: 2.5,
-    height: Dimensions.get('window').height * 0.5,
+    height: screenHeight * 0.5,
     alignItems: 'center',
   },
 });

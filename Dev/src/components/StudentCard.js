@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TouchableOpacity, Text, StyleSheet, Image, View, Dimensions } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, Image, View } from 'react-native';
 import colors from 'config/colors'
 import FontLoadingComponent from './FontLoadingComponent';
 import fontStyles from 'config/fontStyles';
@@ -39,7 +39,7 @@ export default class StudentCard extends FontLoadingComponent {
                             <View style={{ marginBottom: screenWidth * 0.004 }}>
                                 <Text numberOfLines={1} style={[fontStyles.bigTextStyleDarkGrey, {textAlign: 'left'}]}>{currentAssignment}</Text>
                             </View>
-                            <View style={{ marginBottom: Dimensions.get('window').height * 0.005 }}>
+                            <View style={{ marginBottom: screenHeight * 0.005 }}>
                                 <Text style={fontStyles.mainTextStyleDarkGrey}>{status}</Text>
                             </View>
                         </View>
@@ -56,7 +56,7 @@ export default class StudentCard extends FontLoadingComponent {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 height: 100,
-                                width: Dimensions.get('window').width * 0.2
+                                width: screenWidth * 0.2
                             }}
                                 onPress={() => { compOnPress() }}>
                                 {comp}
@@ -88,17 +88,17 @@ StudentCard.propTypes = {
 const styles = StyleSheet.create({
     cardStyle: {
         flexDirection: 'row',
-        marginRight: Dimensions.get('window').width * 0.017,
-        height: Dimensions.get('window').height * 0.112,
+        marginRight: screenWidth * 0.017,
+        height: screenHeight * 0.112,
         alignItems: 'center',
-        marginLeft: Dimensions.get('window').width * 0.017,
-        marginTop: Dimensions.get('window').height * 0.01,
+        marginLeft: screenWidth * 0.017,
+        marginTop: screenHeight * 0.01,
         fontFamily: 'Montserrat-Regular',
     },
     removeStudentStyle: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginRight: Dimensions.get('window').width * 0.05,
+        marginRight: screenWidth * 0.05,
         flex: 1
     },
     infoStyle: {
@@ -108,9 +108,9 @@ const styles = StyleSheet.create({
         flex: 4
     },
     profilePicStyle: {
-        width: Dimensions.get('window').width * 0.15,
-        height: Dimensions.get('window').width * 0.15,
+        width: screenWidth * 0.15,
+        height: screenWidth * 0.15,
         borderRadius: 30,
-        marginLeft: Dimensions.get('window').width * 0.05
+        marginLeft: screenWidth * 0.05
     },
 });

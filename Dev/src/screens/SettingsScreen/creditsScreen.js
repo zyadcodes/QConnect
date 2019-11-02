@@ -1,6 +1,6 @@
 //This will be the credits screen
 import React from 'react';
-import { View, StyleSheet, Text, ScrollView, Dimensions, Linking } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, Linking } from 'react-native';
 import colors from 'config/colors';
 import strings from 'config/strings';
 import QcParentScreen from "screens/QcParentScreen";
@@ -8,6 +8,7 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
+import { screenWidth } from 'config/dimensions';
 
 export default class CreditsScreen extends QcParentScreen {
 
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
     },
     creditsContainer: {
         flexDirection: 'column',
-        width: Dimensions.get('window').width - 40,
+        width: screenWidth - 40,
         backgroundColor: colors.white,
         borderRadius: 20,
         padding: 15,

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Image, Text, TouchableOpacity, Alert, ScrollView, LayoutAnimation, Platform, Dimensions } from "react-native";
+import { StyleSheet, View, Image, Text, TouchableOpacity, Alert, ScrollView, LayoutAnimation, Platform } from "react-native";
 import QcActionButton from "components/QcActionButton";
 import Toast, { DURATION } from "react-native-easy-toast";
 import colors from "config/colors";
@@ -11,10 +11,11 @@ import strings from "config/strings";
 import QcParentScreen from "screens/QcParentScreen";
 import FadeInView from "../../components/FadeInView";
 import FirebaseFunctions from 'config/FirebaseFunctions';
-import { Input, Icon } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from "config/fontStyles";
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 const initialState = {
   authCode: '',
@@ -217,7 +218,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
             />
             <View style={styles.picContainer}>
               <View style={{ flex: 1 }}></View>
-              <View style={{ flex: 1, paddingTop: Dimensions.get('window').height * 0.025, alignSelf: 'flex-start', flexDirection: 'row' }}>
+              <View style={{ flex: 1, paddingTop: screenHeight * 0.025, alignSelf: 'flex-start', flexDirection: 'row' }}>
                 <View style={{ flex: 0.1 }}><Text>   </Text></View>
                 <TouchableOpacity style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
                   <Icon
@@ -226,7 +227,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
                 </TouchableOpacity>
                 <View style={{ flex: 3 }}></View>
               </View>
-              <View style={{ flex: 1, paddingLeft: Dimensions.get('window').width * 0.05, paddingRight: Dimensions.get('window').width * 0.05 }}>
+              <View style={{ flex: 1, paddingLeft: screenWidth * 0.05, paddingRight: screenWidth * 0.05 }}>
                 <FadeInView
                   style={{ alignItems: 'center', justifyContent: 'center' }}>
                   <Image

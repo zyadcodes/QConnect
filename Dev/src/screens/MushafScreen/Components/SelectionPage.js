@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ImageBackground, StyleSheet, Dimensions, Text, TextInput, Alert } from 'react-native';
+import { View, ImageBackground, StyleSheet, Text, TextInput, Alert } from 'react-native';
 import colors from 'config/colors';
 import TouchableText from 'components/TouchableText'
 import LoadingSpinner from 'components/LoadingSpinner';
@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
         height: 600
     },
     entireTopView: {
-        height: Dimensions.get('window').height * 0.05,
+        height: screenHeight * 0.05,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',

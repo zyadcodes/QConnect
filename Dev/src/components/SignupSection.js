@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Dimensions from 'Dimensions';
+import { screenWidth } from 'config/dimensions';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import colors from 'config/colors';
 import fontStyles from 'config/fontStyles';
@@ -25,7 +25,7 @@ export default class SignupSection extends Component {
   }
 }
 
-const DEVICE_WIDTH = Dimensions.get('window').width;
+const DEVICE_WIDTH = screenWidth;
 
 const styles = StyleSheet.create({
   container: {

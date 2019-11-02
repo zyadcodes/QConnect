@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, View, TextInput, Dimensions } from 'react-native';
+import { Text, StyleSheet, View, TextInput } from 'react-native';
 import QCView from 'components/QCView';
 import strings from 'config/strings';
 import colors from 'config/colors';
@@ -8,6 +8,8 @@ import { Alert } from 'react-native';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
+import { screenWidth } from 'config/dimensions';
+
 
 class ForgotPassword extends Component {
 
@@ -95,7 +97,7 @@ const styles = StyleSheet.create({
         borderBottomColor: colors.PrimaryLight,
         borderBottomWidth: 1,
         height: 45,
-        width: Dimensions.get('window').width * 0.75
+        width: screenWidth * 0.75
     },
     mainTextContainer: {
         alignContent: 'center',

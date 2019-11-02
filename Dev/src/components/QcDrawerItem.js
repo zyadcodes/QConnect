@@ -2,8 +2,9 @@ import React from 'react'
 import { ListItem } from 'react-native-elements'
 import PropTypes from 'prop-types';
 import colors from "config/colors";
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet } from "react-native";
 import FontLoadingComponent from './FontLoadingComponent';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 // a card that displays one menu item in the left navigation menu (hamburger menu)
 // params: 
@@ -53,9 +54,9 @@ QcDrawerItem.propTypes = {
 //Styles that control the look of the card, and everything within it
 const styles = StyleSheet.create({
   cardStyle: {
-    marginTop: Dimensions.get('window').height * 0.00558,
-    marginBottom: Dimensions.get('window').height * 0.00558,
-    width: Dimensions.get('window').width * 0.67,
+    marginTop: screenHeight * 0.00558,
+    marginBottom: screenHeight * 0.00558,
+    width: screenWidth * 0.67,
     borderBottomWidth: 1,
     borderBottomColor: colors.lightGrey,
   },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet, ScrollView, FlatList, TouchableHighlight, TouchableOpacity, Alert, Dimensions } from 'react-native';
+import { View, Image, Text, StyleSheet, ScrollView, FlatList, TouchableHighlight, TouchableOpacity } from 'react-native';
 import colors from 'config/colors';
 import { Rating } from 'react-native-elements';
 import strings from 'config/strings';
@@ -151,7 +151,7 @@ class StudentProfileScreen extends QcParentScreen {
                       newAssignment: true,
                       readOnly: false,
                     })} >
-                    <View style={{ paddingLeft: Dimensions.get('window').width * 0.02 }}>
+                    <View style={{ paddingLeft: screenWidth * 0.02 }}>
                       <Text style={fontStyles.mainTextStylePrimaryDark}>{strings.Grade}</Text>
                     </View>
                   </TouchableHighlight> : <View />}

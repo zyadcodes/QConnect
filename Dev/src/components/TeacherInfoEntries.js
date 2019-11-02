@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TextInput, StyleSheet, Dimensions } from 'react-native'
+import { View, Text, TextInput, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
 import colors from 'config/colors'
 import strings from '../../config/strings';
@@ -26,7 +26,7 @@ export default TeacherInfoEntries = (props) => {
                 //Teacher Name box ------------------------------------------------------
             }
             <View style={styles.infoRow}>
-                <View style={{ paddingRight: Dimensions.get('window').width * 0.015 }}>
+                <View style={{ paddingRight: screenWidth * 0.015 }}>
                     <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.namePlaceHolder}</Text>
                 </View>
 
@@ -41,7 +41,7 @@ export default TeacherInfoEntries = (props) => {
                 //Teacher Phone box -----------------------------------------------------
             }
             <View style={styles.infoRow}>
-                <View style={{ paddingRight: Dimensions.get('window').width * 0.015 }}>
+                <View style={{ paddingRight: screenWidth * 0.015 }}>
                     <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.phoneNumberPlaceHolder}</Text>
                 </View>
                 <PhoneInput
@@ -59,7 +59,7 @@ export default TeacherInfoEntries = (props) => {
             {
                 !props.noEmailField ? (
                     <View style={styles.infoRow}>
-                        <View style={{ paddingRight: Dimensions.get('window').width * 0.015 }}>
+                        <View style={{ paddingRight: screenWidth * 0.015 }}>
                             <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.emailPlaceHolder}</Text>
                         </View>
                         <TextInput
@@ -84,7 +84,7 @@ export default TeacherInfoEntries = (props) => {
             }
             {props.showPasswordField &&
                 <View style={styles.infoRow}>
-                    <View style={{ paddingRight: Dimensions.get('window').width * 0.015 }}>
+                    <View style={{ paddingRight: screenWidth * 0.015 }}>
                         <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.password}</Text>
                     </View>
                     <TextInput
@@ -136,8 +136,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingLeft: Dimensions.get('window').width * 0.025,
-        height: Dimensions.get('window').height * 0.05,
+        paddingLeft: screenWidth * 0.025,
+        height: screenHeight * 0.05,
         borderBottomColor: colors.grey,
         borderBottomWidth: 0.25
     },
