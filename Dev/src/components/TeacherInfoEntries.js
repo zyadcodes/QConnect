@@ -93,18 +93,18 @@ export default TeacherInfoEntries = (props) => {
 
             {
                 <View style={styles.infoRow}>
-                <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.ConfirmPasswordPlaceholder}</Text>
+                 <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.ConfirmPasswordPlaceholder}</Text>
+                    <TextInput
+                        style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
+                        textContentType='password'
+                        autoCompleteType='password'
+                        onChangeText={props.onPasswordTwoChanged}
+                        secureTextEntry={true}
+                        value={props.passwordTwo}
+                        autoCapitalize="none"
+                    />
 
-                <TextInput
-                style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
-                textContentType='password'
-                autoCompleteType='password'
-                onChangeText={props.onPasswordChanged}
-                secureTextEntry={true}
-                value={props.password}
-                autoCapitalize="none"
-            />
-            </View>
+                </View>
                 
                 /*props.showPasswordField &&
                 <View style={styles.passwordRow}>
