@@ -36,7 +36,7 @@ export default TeacherInfoEntries = (props) => {
                 //Teacher Phone box -----------------------------------------------------
             }
             <View style={styles.infoRow}>
-                <View style={{ paddingRight: screenWidth * 0.015}}>
+                <View style={{ paddingRight: screenWidth * 0.015 }}>
                     <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.phoneNumberPlaceHolder}</Text>
                 </View>
                 <PhoneInput style={styles.textInput}
@@ -75,11 +75,16 @@ export default TeacherInfoEntries = (props) => {
             {
                 /**
                  * The Password fields
+                 * 
+                 * Here is Field one:
+                 * 
+                 * the spaces in the text are to help with the asthetic and 
+                 * make both password input boxes the same length.
                  */
                 <View style={styles.infoRow}>
-                        <Text style={fontStyles.smallTextStyleDarkGrey}>{"     "+strings.password+"      "}</Text>
+                    <Text style={fontStyles.smallTextStyleDarkGrey}>{"     " + strings.password + "      "}</Text>
 
-                        <TextInput
+                    <TextInput
                         style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
                         textContentType='password'
                         autoCompleteType='password'
@@ -88,12 +93,15 @@ export default TeacherInfoEntries = (props) => {
                         value={props.password}
                         autoCapitalize="none"
                     />
-                    </View>
+                </View>
             }
 
             {
+                /**
+                 * Password field two
+                 */
                 <View style={styles.infoRow}>
-                 <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.ConfirmPasswordPlaceholder}</Text>
+                    <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.ConfirmPasswordPlaceholder}</Text>
                     <TextInput
                         style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
                         textContentType='password'
@@ -105,41 +113,8 @@ export default TeacherInfoEntries = (props) => {
                     />
 
                 </View>
-                
-                /*props.showPasswordField &&
-                <View style={styles.passwordRow}>
-                    
-                    <View style={{ paddingRight: screenWidth * 0.015, flexDirection: "row" }}>
-                        <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.password}</Text>
 
-                        <TextInput
-                        style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
-                        textContentType='password'
-                        autoCompleteType='password'
-                        onChangeText={props.onPasswordChanged}
-                        secureTextEntry={true}
-                        value={props.password}
-                        autoCapitalize="none"
-                    />
-                    </View>
-                    
-
-                <View style={{ paddingRight: screenWidth * 0.015 }}>
-                        <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.ConfirmPasswordPlaceholder}</Text>
-                    </View>
-                    <TextInput
-                        style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
-                        textContentType='password'
-                        autoCompleteType='password'
-                        onChangeText={props.onPasswordTwoChanged}
-                        secureTextEntry={true}
-                        value={props.passwordTwo}
-                        autoCapitalize="none"
-                    />
-
-                </View>
-                
-            */}
+            }
         </View>
     );
 }
@@ -164,7 +139,7 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingLeft: 0.049 * screenWidth,
         backgroundColor: colors.veryLightGrey,
-        height: screenHeight*0.08 *0.6,
+        height: screenHeight * 0.08 * 0.6,
         borderRadius: screenWidth * 0.05
     },
     infoRow: {
