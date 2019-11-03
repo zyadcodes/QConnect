@@ -1,28 +1,27 @@
 import React from 'react';
-import { View, ImageBackground, StyleSheet, Text, TextInput, Alert } from 'react-native';
+import { View, ImageBackground, StyleSheet, TextInput, Alert } from 'react-native';
 import colors from 'config/colors';
 import TouchableText from 'components/TouchableText'
 import LoadingSpinner from 'components/LoadingSpinner';
-import { getPageTextWbW, getPageText } from '../ServiceActions/getQuranContent'
-import AyahSelectionWord from './AyahSelectionWord'
-import EndOfAyah from './EndOfAyah'
-import Ayah from './Ayah';
+import { getPageTextWbW } from '../ServiceActions/getQuranContent'
+import Basmalah from './Basmalah';
 import fontStyles from 'config/fontStyles';
 import strings from 'config/strings';
 import { screenHeight, screenWidth } from 'config/dimensions';
 import PageHeader from './PageHeader';
+import TextLine from './TextLine';
 import AssignmentEntryComponent from 'components/AssignmentEntryComponent';
 import surahs from '../Data/Surahs.json'
 import pages from '../Data/mushaf-wbw.json'
-import { compareOrder } from '../Helpers/AyahsOrder'
 import SwitchSelector from "react-native-switch-selector";
+import SurahHeader from './SurahHeader'
 
 
 //Creates the higher order component
 class SelectionPage extends React.Component {
 
+    //------------------------ default state ----------------------------------------
     lastPage = 604;
-
     state = {
         isLoading: true,
         lines: [],
@@ -44,6 +43,7 @@ class SelectionPage extends React.Component {
         isSurahSelectionVisible: false,
     }
 
+    //------------------------ initialize component ----------------------------------------
     async componentDidMount() {
         if (!this.props.isLoading) {
             this.getPageLines(this.state.page);
@@ -67,6 +67,8 @@ class SelectionPage extends React.Component {
             isLoading: false
         };
     }
+
+    //------------------------ Getters and content formatters ----------------------------------------
 
     //retrieves the lines, ayahs, and words of a particular page of the mushhaf
     //parameters: page: the page number we want to retrieve
@@ -96,8 +98,6 @@ class SelectionPage extends React.Component {
     }
 
     getLineAyahText(wordsList) {
-        //if(wordsList[0].line === 2) {}
-        lineText = "";
         const rightBracket = '  \uFD3F';
         const leftBracket = '\uFD3E';
 
@@ -119,14 +119,39 @@ class SelectionPage extends React.Component {
         return lineAyahText;
     }
 
-    isAyahSelected(ayah) {
-        return (
-            (this.state.selectionStarted || this.state.selectionCompleted) && // there are ayahs selected by the user
-            compareOrder(this.state.selectedAyahsStart, ayah) >= 0 && //if ayah is after selection start
-            compareOrder(this.state.selectedAyahsEnd, ayah) <= 0 //and ayah before selection end
-        );
+    getFirstAyahOfPage() {
+        const { page, lines } = this.state;
+
+        //find the first line that has text inside (type === line, instad of basmalah or start_surah)
+        let startLine = lines.slice().find(line => line.type === "line");
+
+        return { ayah: Number(startLine.ayah), surah: Number(startLine.surahNumber), page: page };
     }
 
+    getLastAyahOfLine(line) {
+        //reverse the order of words within the line, (so we search from last word moving backward)
+        // then return the first element we find of type === end (end of ayah mark),
+        // end return its number 
+        let word = line.text.slice().reverse().find(word => word.char_type === "end");
+
+        return Number(word.aya);
+    }
+
+    //returns the last ayah of the page..
+    //
+    getLastAyahOfPage() {
+        const { page, lines } = this.state;
+
+        //walk the lines array backward, and find the last line that has text inside (type === line, instad of basmalah or start_surah)
+        let lastLine = lines.slice().reverse().find(line => line.type === "line");
+
+        //then get the last ayah within the last line
+        let lastAyah = this.getLastAyahOfLine(lastLine);
+
+        return { ayah: lastAyah, surah: Number(lastLine.surahNumber), page: page };
+    }
+
+    //------------------------ event handlers ----------------------------------------
     updatePage() {
         const { editedPageNumber } = this.state
 
@@ -172,38 +197,6 @@ class SelectionPage extends React.Component {
 
     }
 
-    getFirstAyahOfPage() {
-        const { page, lines } = this.state;
-
-        //find the first line that has text inside (type === line, instad of basmalah or start_surah)
-        let startLine = lines.slice().find(line => line.type === "line");
-
-        return { ayah: Number(startLine.ayah), surah: Number(startLine.surahNumber), page: page };
-    }
-
-    getLastAyahOfLine(line) {
-        //reverse the order of words within the line, (so we search from last word moving backward)
-        // then return the first element we find of type === end (end of ayah mark),
-        // end return its number 
-        let word = line.text.slice().reverse().find(word => word.char_type === "end");
-
-        return Number(word.aya);
-    }
-
-    //returns the last ayah of the page..
-    //
-    getLastAyahOfPage() {
-        const { page, lines } = this.state;
-
-        //walk the lines array backward, and find the last line that has text inside (type === line, instad of basmalah or start_surah)
-        let lastLine = lines.slice().reverse().find(line => line.type === "line");
-
-        //then get the last ayah within the last line
-        let lastAyah = this.getLastAyahOfLine(lastLine);
-
-        return { ayah: lastAyah, surah: Number(lastLine.surahNumber), page: page };
-    }
-
     //selects the entire page
     onSelectPage() {
         const { page, lines } = this.state;
@@ -218,12 +211,13 @@ class SelectionPage extends React.Component {
         this.props.onSelectAyahs(firstAyah, lastAyah);
     }
 
+    //------------------------ render component ----------------------------------------
     render() {
-        const { isLoading, lines, page } = this.state;
+        const { isLoading, lines, page, selectedAyahsStart, selectedAyahsEnd, selectionStarted, selectionCompleted} = this.state;
 
         if (isLoading === true) {
             return (
-                <View id={this.state.page + "spinner"} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <View id={this.state.page + "spinner"} style={styles.spinner}>
                     <LoadingSpinner isVisible={true} />
                 </View>
             )
@@ -245,8 +239,8 @@ class SelectionPage extends React.Component {
             if (this.state.page === 1) { lineAlign = 'center' }
 
             let selectedAssignmentTypeIndex = 0;
-            if(this.props.assignmentType !== undefined){
-                if(options.findIndex(option => option.value === this.props.assignmentType) !== -1){
+            if (this.props.assignmentType !== undefined) {
+                if (options.findIndex(option => option.value === this.props.assignmentType) !== -1) {
                     selectedAssignmentTypeIndex = options.findIndex(option => option.value === this.props.assignmentType);
                 }
             }
@@ -278,61 +272,37 @@ class SelectionPage extends React.Component {
                         options={options}
                         initial={selectedAssignmentTypeIndex}
                         height={20}
-                        textColor={colors.darkGrey} 
+                        textColor={colors.darkGrey}
                         selectedColor={colors.primaryDark}
                         buttonColor={colors.primaryLight}
                         borderColor={colors.lightGrey}
                         onPress={value => this.props.onChangeAssignmentType(value)}
-                        style={{marginTop: 2}}
+                        style={{ marginTop: 2 }}
                     />
 
-                    <View id={this.state.page} style={{ marginVertical: 5, marginHorizontal: 5, backgroundColor: colors.white }}>
+                    <View id={this.state.page} style={styles.pageContent}>
                         {
                             lines !== undefined &&
                             lines.map((line, index) => {
                                 if (line.type === "start_sura") {
-                                    return <View style={styles.footer} key={line.line + "_" + index}>
-                                        <ImageBackground source={require('assets/images/quran/title-frame.png')}
-                                            style={{
-                                                width: '100%', justifyContent: 'center',
-                                                alignSelf: 'center',
-                                                alignItems: 'center',
-                                            }} resizeMethod='scale'>
-                                            <Text style={fontStyles.bigTextStylePrimaryDark}>{line.name}</Text>
-                                        </ImageBackground>
-                                    </View>
+                                    return <SurahHeader surahName={line.name} key={line.line + "_" + index} />
                                 } else if (line.type === "besmellah") {
-                                    return <Ayah key={line.line + "_basmalah"} text="بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ" />
+                                    return <Basmalah key={line.line + "_basmalah"} />
                                 }
                                 else {
                                     return (
-                                        <View key={page + "_" + line.line} style={{ flexDirection: 'row-reverse', backgroundColor: 'transparent', justifyContent: 'space-between', alignItems: lineAlign }}>
-                                            {
-                                                line.text &&
-                                                line.text.map((word) => {
-                                                    let curAyah = { ayah: Number(word.aya), surah: Number(word.sura), page: page };
-                                                    let isAyaSelected = this.isAyahSelected(curAyah);
-                                                    let isLastSelectedAyah = isAyaSelected && (compareOrder(this.state.selectedAyahsEnd, curAyah) === 0)
-                                                    if (word.char_type === "word") {
-                                                        let isFirstSelectedWord = isAyaSelected && isFirstWord;
-                                                        if (isFirstSelectedWord) { isFirstWord = false; }
-                                                        return (<AyahSelectionWord key={word.id}
-                                                            text={word.text}
-                                                            selected={isAyaSelected}
-                                                            onPress={() => this.props.onSelectAyah(curAyah)}
-                                                            isFirstSelectedWord={isFirstSelectedWord} />)
-                                                    }
-                                                    else if (word.char_type === "end") {
-                                                        return (<EndOfAyah key={word.id} ayahNumber={word.aya}
-                                                            onPress={() => this.props.onSelectAyah(curAyah)}
-                                                            selected={this.isAyahSelected(curAyah)}
-                                                            isLastSelectedAyah={isLastSelectedAyah}
-                                                        />)
-                                                    }
-                                                }
-                                                )
-                                            }
-                                        </View>
+                                        <TextLine
+                                            key={page + "_" + line.line} 
+                                            lineText={line.text}
+                                            selectedAyahsEnd={selectedAyahsEnd}
+                                            selectedAyahsStart={selectedAyahsStart}
+                                            selectionStarted={selectionStarted}
+                                            selectionCompleted={selectionCompleted}
+                                            isFirstWord={isFirstWord}
+                                            onSelectAyah={(ayah) => this.props.onSelectAyah(ayah)}
+                                            page={this.state.page}
+                                            lineAlign={lineAlign}
+                                        />
                                     )
                                 }
                             })}
@@ -429,6 +399,16 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+    },
+    spinner: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    pageContent: {
+        marginVertical: 5,
+        marginHorizontal: 5,
+        backgroundColor: colors.white
     }
 })
 

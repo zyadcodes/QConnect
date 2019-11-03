@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ImageBackground, StyleSheet, } from 'react-native';
 import colors from 'config/colors';
-import Ayah from './Ayah';
+import Ayah from './Basmalah';
 import LoadingSpinner from 'components/LoadingSpinner';
 import { getPageTextWbW, getPageText } from '../ServiceActions/getQuranContent'
 import Word from './Word'

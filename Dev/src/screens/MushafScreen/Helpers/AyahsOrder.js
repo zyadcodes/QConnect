@@ -23,3 +23,11 @@ export function compareOrder(ayah1, ayah2) {
     //if not the same ayahs, and not ayah 1 before ayah 2, then ayah 2 is before ayah 1.
     return -1;
 }
+
+export function isAyahSelected(ayah, selectionStarted, selectionCompleted, selectedAyahsStart, selectedAyahsEnd) {
+    return (
+        (selectionStarted || selectionCompleted) && // there are ayahs selected by the user
+        compareOrder(selectedAyahsStart, ayah) >= 0 && //if ayah is after selection start
+        compareOrder(selectedAyahsEnd, ayah) <= 0 //and ayah before selection end
+    );
+}

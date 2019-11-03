@@ -149,15 +149,15 @@ export default class MushafScreen extends QcParentScreen {
 
         if (selection.start.surah === selection.end.surah) {
             if (selection.start.ayah !== selection.end.ayah) {
-                desc += " to " + selection.end.ayah
+                desc += strings.To + selection.end.ayah
             }
         } else {
-            desc += ") to " + surahs[selection.end.surah].tname + " (" + selection.end.ayah
+            desc += ")" + strings.To + surahs[selection.end.surah].tname + " (" + selection.end.ayah
         }
 
-        let pageDesc = ") p. " + selection.end.page;
+        let pageDesc = strings.ParenthesisPage + selection.end.page;
         if (selection.start.page !== selection.end.page) {
-            pageDesc = ") pp. " + selection.start.page + " to " + selection.end.page
+            pageDesc = strings.PagesWithParenthesis + selection.start.page + strings.To + selection.end.page
         }
         desc += pageDesc;
 

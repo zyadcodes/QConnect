@@ -4,11 +4,11 @@ import colors from 'config/colors';
 import EndOfAyah from './EndOfAyah';
 
 //Creates the higher order component
-const Ayah = ({ text, number, id }) => {
+const Basmalah = ({  number, id }) => {
     
     return (
         <Text numberOfLines={1} style={styles.ayahText} >
-            {text}
+            بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
         </Text>
     )
 }
@@ -24,4 +24,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Ayah;
+export default Basmalah;

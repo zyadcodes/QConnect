@@ -97,6 +97,9 @@ export default {
     NoClass: "Uh Oh! No Classes",
     addClassButton: "Click Here to Add A Class",
     NotesColon: 'Notes: ',
+    ParenthesisPage: ") p. ",
+    PagesWithParenthesis: ") pp. ",
+    To: " to ",
 
     //--------------------- Join Class Screen ---------------------
     JoinClass: 'Join Class',
