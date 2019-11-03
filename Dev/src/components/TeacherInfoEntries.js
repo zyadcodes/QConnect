@@ -14,13 +14,8 @@ import { screenHeight, screenWidth } from 'config/dimensions';
 export default TeacherInfoEntries = (props) => {
 
     return (
+
         <View style={styles.container}>
-            {
-                //Teacher information Section ------------------------
-            }
-            <View style={styles.infoRow}>
-                <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.Information}</Text>
-            </View>
 
             {
                 //Teacher Name box ------------------------------------------------------
@@ -31,7 +26,7 @@ export default TeacherInfoEntries = (props) => {
                 </View>
 
                 <TextInput
-                    style={styles.infoTextInput}
+                    style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
                     textContentType='name'
                     onChangeText={props.onNameChanged}
                     value={props.name} />
@@ -44,7 +39,7 @@ export default TeacherInfoEntries = (props) => {
                 <View style={{ paddingRight: screenWidth * 0.015 }}>
                     <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.phoneNumberPlaceHolder}</Text>
                 </View>
-                <PhoneInput
+                <PhoneInput style={styles.textInput}
                     ref={ref => {
                         this.phone = ref;
                     }}
@@ -63,7 +58,7 @@ export default TeacherInfoEntries = (props) => {
                             <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.emailPlaceHolder}</Text>
                         </View>
                         <TextInput
-                            style={styles.infoTextInput}
+                            style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
                             keyboardType='email-address'
                             autoCapitalize='none'
                             textContentType='emailAddress'
@@ -80,15 +75,17 @@ export default TeacherInfoEntries = (props) => {
             {
                 /**
                  * The Password fields
+                 * 
+                 * Here is Field one:
+                 * 
+                 * the spaces in the text are to help with the asthetic and 
+                 * make both password input boxes the same length.
                  */
-            }
-            {props.showPasswordField &&
                 <View style={styles.infoRow}>
-                    <View style={{ paddingRight: screenWidth * 0.015 }}>
-                        <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.password}</Text>
-                    </View>
+                    <Text style={fontStyles.smallTextStyleDarkGrey}>{"     " + strings.password + "      "}</Text>
+
                     <TextInput
-                        style={styles.infoTextInput}
+                        style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
                         textContentType='password'
                         autoCompleteType='password'
                         onChangeText={props.onPasswordChanged}
@@ -96,12 +93,17 @@ export default TeacherInfoEntries = (props) => {
                         value={props.password}
                         autoCapitalize="none"
                     />
+                </View>
+            }
 
-                    <View style={{ paddingRight: screenWidth * 0.015 }}>
-                        <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.ConfirmPasswordPlaceholder}</Text>
-                    </View>
+            {
+                /**
+                 * Password field two
+                 */
+                <View style={styles.infoRow}>
+                    <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.ConfirmPasswordPlaceholder}</Text>
                     <TextInput
-                        style={[fontStyles.smallTextStyleDarkGrey, { flex: 1, paddingLeft: 0.049 * screenWidth, alignSelf: 'stretch' }]}
+                        style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
                         textContentType='password'
                         autoCompleteType='password'
                         onChangeText={props.onPasswordTwoChanged}
@@ -109,8 +111,9 @@ export default TeacherInfoEntries = (props) => {
                         value={props.passwordTwo}
                         autoCapitalize="none"
                     />
+
                 </View>
-                
+
             }
         </View>
     );
@@ -132,12 +135,29 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: colors.white,
     },
+    textInput: {
+        flex: 1,
+        paddingLeft: 0.049 * screenWidth,
+        backgroundColor: colors.veryLightGrey,
+        height: screenHeight * 0.08 * 0.6,
+        borderRadius: screenWidth * 0.05
+    },
     infoRow: {
-        flexDirection: 'row',
+        flexDirection: "row",
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingLeft: screenWidth * 0.025,
-        height: screenHeight * 0.05,
+        height: screenHeight * 0.08,
+        borderBottomColor: colors.grey,
+        borderBottomWidth: 0.25
+    },
+
+    passwordRow: {
+        flexDirection: "column",
+        justifyContent: 'space-between',
+        alignContent: "flex-start",
+        paddingLeft: screenWidth * 0.025,
+        height: screenHeight * 0.07,
         borderBottomColor: colors.grey,
         borderBottomWidth: 0.25
     },
