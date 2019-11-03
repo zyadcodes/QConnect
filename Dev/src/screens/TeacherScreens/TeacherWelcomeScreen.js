@@ -217,15 +217,12 @@ export class TeacherWelcomeScreen extends QcParentScreen {
               screen={this.name}
             />
             <View style={styles.picContainer}>
-              <View style={{ flex: 1 }}></View>
-              <View style={{ flex: 1, paddingTop: screenHeight * 0.025, alignSelf: 'flex-start', flexDirection: 'row' }}>
-                <View style={{ flex: 0.1 }}><Text>   </Text></View>
-                <TouchableOpacity style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
+              <View style={{ flex: 1, paddingTop: screenHeight * 0.02, alignSelf: 'flex-start', flexDirection: 'row' }}>
+                <TouchableOpacity style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start', paddingLeft: screenWidth*0.03 }} onPress={() => { this.props.navigation.goBack() }}>
                   <Icon
                     name={'angle-left'}
                     type="font-awesome" />
                 </TouchableOpacity>
-                <View style={{ flex: 3 }}></View>
               </View>
               <View style={{ flex: 1, paddingLeft: screenWidth * 0.05, paddingRight: screenWidth * 0.05 }}>
                 <FadeInView
@@ -239,7 +236,8 @@ export class TeacherWelcomeScreen extends QcParentScreen {
               </View>
             </View>
             <View style={styles.editInfo} behavior="padding">
-              <TeacherInfoEntries
+              <TeacherInfoEntries 
+              
                 name={this.state.name}
                 phoneNumber={this.state.phoneNumber}
                 emailAddress={this.state.emailAddress}
@@ -252,8 +250,9 @@ export class TeacherWelcomeScreen extends QcParentScreen {
                 onPasswordChanged={this.onPasswordChanged}
                 onPasswordTwoChanged={this.onPasswordTwoChanged}
               />
-              
+               <Text></Text>
               <ImageSelectionRow
+                
                 images={teacherImages.images}
                 highlightedImagesIndices={this.state.highlightedImagesIndices}
                 onImageSelected={this.onImageSelected.bind(this)}
@@ -281,9 +280,8 @@ export class TeacherWelcomeScreen extends QcParentScreen {
 //-----------------   Styles for the Teacher profile class-----------------------------------
 const styles = StyleSheet.create({
   picContainer: {
-    paddingTop: 0.015 * screenHeight,
+
     alignItems: "center",
-    marginTop: 0.022 * screenHeight,
     marginBottom: 0.015 * screenHeight,
     backgroundColor: colors.white
   },
@@ -295,7 +293,7 @@ const styles = StyleSheet.create({
   editInfo: {
     flexDirection: "column",
     backgroundColor: colors.white,
-    color: colors.darkGrey
+    color: colors.darkGrey,
   },
   buttonsContainer: {
     flexDirection: "column",
