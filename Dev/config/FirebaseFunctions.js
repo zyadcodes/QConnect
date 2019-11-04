@@ -346,7 +346,7 @@ export default class FirebaseFunctions {
             }catch(error){
                 console.log("failed to send notifications to students");
                 //todo: log event when this happens
-                this.logEvent("FAILED_TO_SEND_NOTIFICATIONS" + error.toString())
+                this.logEvent("FAILED_TO_SEND_NOTIFICATIONS. Error: " + error.toString())
             }
         });
 

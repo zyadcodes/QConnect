@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { screenWidth } from 'config/dimensions';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { screenWidth } from 'config/dimensions';
 import fontStyles from 'config/fontStyles';
 import strings from '../../config/strings';
+import { screenWidth } from 'config/dimensions';
 
 export default class SignupSection extends Component {
 

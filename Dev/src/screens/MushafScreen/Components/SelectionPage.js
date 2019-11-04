@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
     footer: {
         justifyContent: 'center',
         alignSelf: 'stretch',
-        height: 20,
+        height: screenHeight * 0.025,
         alignItems: 'center',
     },
     textInputStyle: {
@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
         flex: 10,
         paddingTop: screenHeight * 0.035,
         paddingBottom: screenHeight * 0.01,
-        height: 600
+        height: screenHeight * 0.7
     },
     entireTopView: {
         height: screenHeight * 0.05,

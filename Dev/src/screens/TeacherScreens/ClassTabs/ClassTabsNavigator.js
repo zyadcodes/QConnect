@@ -64,7 +64,7 @@ const navigatorConfig = {
     inactiveTintColor: colors.darkGrey,
     style: {
       backgroundColor: colors.white,
-      height: 70,
+      height: screenHeight * 0.1,
       padding: 10,
     },
     labelStyle: {

@@ -71,7 +71,7 @@ class PageHeader extends FontLoadingComponent {
                 <View style={{ flex: 0.5 }} />
                 <View style={styles.topLeftView}  >
                     <TouchableOpacity
-                        style={{ flex: 1, flexDirection: 'row', height: 100, justifyContent: 'flex-start', alignItems: 'center' }}
+                        style={{ flex: 1, flexDirection: 'row', height: screenHeight * 0.1, justifyContent: 'flex-start', alignItems: 'center' }}
                         onPress={() => this.onLeftImagePress()} >
 
                         {leftImage && <Image

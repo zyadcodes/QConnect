@@ -15,7 +15,7 @@ const Basmalah = ({  number, id }) => {
 
 const styles = StyleSheet.create({
     ayahText: {
-        height: 30,
+        height: screenHeight * 0.03,
         textAlign: 'center', 
         fontFamily: 'me_quran', 
         fontSize: 17, 
