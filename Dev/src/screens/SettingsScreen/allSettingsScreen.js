@@ -40,16 +40,6 @@ export default class AllSettingsScreen extends QcParentScreen {
                         LeftIconName="navicon"
                         LeftOnPress={() => this.setState({ isOpen: true })}
                         Title={strings.Settings} />
-                    <TouchableOpacity style={[styles.cardStyle, { marginTop: screenHeight * 0.03 }]} onPress={async () => {
-                        this.props.navigation.push("MushafScreen");
-                    }}>
-                        <Text style={styles.textStyle}>{strings.Mushaf}</Text>
-                        <Icon
-                            name='angle-right'
-                            type='font-awesome'
-                            iconStyle={{ marginRight: 20 }}
-                            color={colors.primaryDark} />
-                    </TouchableOpacity>
                     <TouchableOpacity style={[styles.cardStyle, { marginTop: screenHeight * 0.03 }]} onPress={() => {
                         this.props.navigation.push("CreditsScreen");
                     }}>

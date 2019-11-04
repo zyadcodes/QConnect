@@ -203,6 +203,7 @@ class StudentMainScreen extends QcParentScreen {
                                                                 paddingLeft: 0.017 * screenWidth,
                                                             }, fontStyles.mainTextStyleDarkGrey]}
                                                             placeholder={strings.TypeInAClassCode}
+                                                            autoCorrect={false}
                                                             onChangeText={classCode => this.setState({ classCode })}
                                                             value={this.state.classCode}
                                                         />

@@ -191,6 +191,7 @@ export class ClassEditScreen extends QcParentScreen {
                   color: colors.darkGrey,
                 }}
                 placeholder={strings.StudentName}
+                autoCorrect={false}
                 onChangeText={newStudentName => this.setState({ newStudentName })}
                 value={this.state.newStudentName}
               />

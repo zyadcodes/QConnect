@@ -15,7 +15,6 @@ import ProfileScreen from './ProfileScreen';
 import StudentMainScreen from './StudentScreens/StudentMainScreen';
 import ClassTabsNavigator from './TeacherScreens/ClassTabs/ClassTabsNavigator';
 import StudentProfileScreen from './TeacherScreens/ClassTabs/StudentProfileScreen';
-import ClassEditScreen from './TeacherScreens/ClassTabs/ClassEditScreen';
 import MushafScreen from './MushafScreen/MushafScreen'
 import ShareClassCodeScreen from './TeacherScreens/AddStudents/ShareClassCodeScreen';
 import EvaluationPage from './Evaluation/EvaluationPage';

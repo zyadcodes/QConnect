@@ -16,6 +16,7 @@ export default class UserInput extends Component {
           secureTextEntry={this.props.secureTextEntry}
           autoCorrect={this.props.autoCorrect}
           autoCapitalize={this.props.autoCapitalize}
+          autoCorrect={false}
           returnKeyType={this.props.returnKeyType}
           placeholderTextColor={colors.darkishGrey}
           onChangeText={this.props.onChangeText}

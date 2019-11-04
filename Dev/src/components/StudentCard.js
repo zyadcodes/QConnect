@@ -108,9 +108,9 @@ const styles = StyleSheet.create({
         flex: 4
     },
     profilePicStyle: {
-        width: screenWidth * 0.15,
-        height: screenWidth * 0.15,
-        borderRadius: 30,
+        width: screenWidth * 0.12,
+        height: screenWidth * 0.12,
+        borderRadius: screenWidth * 0.06,
         marginLeft: screenWidth * 0.05
     },
 });

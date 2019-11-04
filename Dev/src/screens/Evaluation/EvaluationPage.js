@@ -209,6 +209,7 @@ export class EvaluationPage extends QcParentScreen {
                   notes: teacherNotes
                 })}
                 returnKeyType={"done"}
+                autoCorrect={false}
                 blurOnSubmit={true}
                 placeholder={strings.WriteANote}
                 placeholderColor={colors.black}

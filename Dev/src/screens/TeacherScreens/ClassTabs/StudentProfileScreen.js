@@ -36,7 +36,7 @@ class StudentProfileScreen extends QcParentScreen {
 
     this.setState({
       classStudent: student,
-      currentAssignment: student.currentAssignment,
+      currentAssignment: student.currentAssignment === "None"? strings.NoAssignmentsYet : student.currentAssignment,
       isLoading: false,
       hasCurrentAssignment: student.currentAssignment === 'None' ? false : true
     });
@@ -136,7 +136,7 @@ class StudentProfileScreen extends QcParentScreen {
                       imageID: classStudent.profileImageID,
                       onSaveAssignment: this.editAssignment.bind(this) }) 
                       }}>
-                    <Text style={fontStyles.mainTextStylePrimaryDark}>{strings.EditAssignment}</Text>
+                    <Text style={fontStyles.mainTextStylePrimaryDark}>{classStudent.currentAssignment === "None" ? strings.AddAssignment : strings.EditAssignment}</Text>
                   </TouchableHighlight>
 
                   {hasCurrentAssignment ? <TouchableHighlight onPress={() =>

@@ -1,6 +1,7 @@
 //This class will contain all the functions that interact with the react native firebase
 //library
 import firebase from 'react-native-firebase';
+import strings from './strings';
 
 export default class FirebaseFunctions {
 
@@ -10,6 +11,8 @@ export default class FirebaseFunctions {
     static teachers = this.database.collection('teachers');
     static students = this.database.collection('students');
     static classes = this.database.collection('classes');
+    static functions = firebase.functions();
+    static fcm = firebase.messaging();
     static auth = firebase.auth();
     static analytics = firebase.analytics();
 
@@ -23,9 +26,10 @@ export default class FirebaseFunctions {
     static async signUp(email, password, isTeacher, accountObject) {
 
         let account = await this.auth.createUserWithEmailAndPassword(email, password);
-
         //Creates the firestore object with an ID that matches this one
         let ID = account.user.uid;
+        //Suscribes to the topic so that any  notifications sent to this user are recieved to the phone
+        this.fcm.subscribeToTopic(ID);
         accountObject.ID = ID;
         if (isTeacher === true) {
 
@@ -54,6 +58,8 @@ export default class FirebaseFunctions {
 
         try {
             let account = await this.auth.signInWithEmailAndPassword(email, password);
+            //Subscribes to the notification topic associated with this user
+            this.fcm.subscribeToTopic(account.user.uid);
             return account.user;
         } catch (err) {
             return -1;
@@ -72,8 +78,10 @@ export default class FirebaseFunctions {
     }
 
     //This functions will log out whatever user is currently signed into the device
-    static async logOut() {
+    static async logOut(userID) {
 
+        //Unsubscribes the user from the topic so they no longer recieve notification
+        this.fcm.unsubscribeFromTopic(userID);
         this.logEvent("LOG_OUT");
         await this.auth.signOut();
 
@@ -254,7 +262,7 @@ export default class FirebaseFunctions {
     //This function will update the assignment status of a particular student within a class. It will
     //simply reverse whatever the property is at the moment (true --> false & vice verca). This property
     //is located within a student object that is within a class object
-    static async updateStudentAssignmentStatus(classID, studentID) {
+    static async updateStudentAssignmentStatus(classID, studentID, status) {
 
         let currentClass = await this.getClassByID(classID);
 
@@ -263,12 +271,27 @@ export default class FirebaseFunctions {
             return student.ID === studentID;
         });
 
-        arrayOfStudents[studentIndex].isReady = !(arrayOfStudents[studentIndex].isReady);
+        arrayOfStudents[studentIndex].isReadyEnum = status;
 
         await this.updateClassObject(classID, {
             students: arrayOfStudents
         });
         this.logEvent("UPDATE_ASSIGNMENT_STATUS");
+
+
+        //Sends a notification to each of the teachers that are teacher this class,
+        //letting them know of the updated assignment status
+        const message = status === "WORKING_ON_IT" ? strings.WorkingOnIt : (
+            status === "NEED_HELP" ? strings.NeedsHelp : strings.Ready
+        )
+        currentClass.teachers.forEach(async (teacherID) => {
+            this.functions.httpsCallable('sendNotification', {
+                topic: teacherID,
+                title: strings.StudentUpdate,
+                body: arrayOfStudents[studentIndex].name + strings.HasChangedAssignmentStatusTo + message
+            })
+        });
+
         return 0;
 
     }
@@ -287,13 +310,19 @@ export default class FirebaseFunctions {
         arrayOfStudents[studentIndex].currentAssignment = newAssignmentName;
         arrayOfStudents[studentIndex].currentAssignmentType = assignmentType;
         arrayOfStudents[studentIndex].currentAssignmentLocation = assignmentLocation;
-
         arrayOfStudents[studentIndex].isReadyEnum = "WORKING_ON_IT";
 
         await this.updateClassObject(classID, {
             students: arrayOfStudents
         });
         this.logEvent("UPDATE_CURRENT_ASSIGNMENT");
+
+        //Notifies that student that their assignment has been updated
+        this.functions.httpsCallable('sendNotification', {
+            topic: studentID,
+            title: strings.AssignmentUpdate,
+            body: strings.YourTeacherHasUpdatedYourCurrentAssignment
+        })
         return 0;
 
     }
@@ -317,9 +346,8 @@ export default class FirebaseFunctions {
             }catch(error){
                 console.log("failed to send notifications to students");
                 //todo: log event when this happens
-                //this.logEvent("FAILED_TO_SEND_NOTIFICATIONS" + error.toString())
+                this.logEvent("FAILED_TO_SEND_NOTIFICATIONS" + error.toString())
             }
-            
         });
 
         await this.updateClassObject(classID, {
@@ -355,7 +383,7 @@ export default class FirebaseFunctions {
         });
         avgGrade /= arrayOfStudents[studentIndex].totalAssignments;
         arrayOfStudents[studentIndex].averageRating = avgGrade;
-        arrayOfStudents[studentIndex].isReady = true;
+        arrayOfStudents[studentIndex].isReadyEnum = "WORKING_ON_IT";
 
         await this.updateClassObject(classID, {
             students: arrayOfStudents
@@ -364,6 +392,12 @@ export default class FirebaseFunctions {
             improvementAreas: evaluationDetails.improvementAreas
         });
 
+        //Notifies that student that their assignment has been graded
+        this.functions.httpsCallable('sendNotification', {
+            topic: studentID,
+            title: strings.AssignmentGraded,
+            body: strings.YourAssignmentHasBeenGraded
+        })
         return 0;
 
     }
@@ -464,7 +498,7 @@ export default class FirebaseFunctions {
             attendanceHistory: {},
             averageRating: 0,
             currentAssignment: 'None',
-            isReady: false,
+            isReadyEnum: "WORKING_ON_IT",
             profileImageID: student.profileImageID,
             name: student.name,
             totalAssignments: 0
@@ -527,7 +561,7 @@ export default class FirebaseFunctions {
             attendanceHistory: {},
             averageRating: 0,
             currentAssignment: 'None',
-            isReady: true,
+            isReadyEnum: "WORKING_ON_IT",
             profileImageID: student.profileImageID,
             name: student.name,
             isManual: true,

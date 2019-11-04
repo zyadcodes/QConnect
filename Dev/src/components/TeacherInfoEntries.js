@@ -28,6 +28,7 @@ export default TeacherInfoEntries = (props) => {
                 <TextInput
                     style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
                     textContentType='name'
+                    autoCorrect={false}
                     onChangeText={props.onNameChanged}
                     value={props.name} />
             </View>
@@ -60,6 +61,7 @@ export default TeacherInfoEntries = (props) => {
                         <TextInput
                             style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
                             keyboardType='email-address'
+                            autoCorrect={false}
                             autoCapitalize='none'
                             textContentType='emailAddress'
                             onChangeText={props.onEmailAddressChanged}
@@ -88,6 +90,7 @@ export default TeacherInfoEntries = (props) => {
                         style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
                         textContentType='password'
                         autoCompleteType='password'
+                        autoCorrect={false}
                         onChangeText={props.onPasswordChanged}
                         secureTextEntry={true}
                         value={props.password}
@@ -105,6 +108,7 @@ export default TeacherInfoEntries = (props) => {
                     <TextInput
                         style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
                         textContentType='password'
+                        autoCorrect={false}
                         autoCompleteType='password'
                         onChangeText={props.onPasswordTwoChanged}
                         secureTextEntry={true}

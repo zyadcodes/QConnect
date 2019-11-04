@@ -9,6 +9,7 @@ export default {
     TotalAssignments: 'Assignments Completed',
     Ready: 'READY',
     WorkingOnIt: 'WORKING ON IT',
+    NeedAssignment: "NEED ASSIGNMENT",
     ClassAlreadyJoined: 'We know it\'s exciting to be in this class. But you can only join it once.',
     NeedHelp: "NEED HELP",
 
@@ -39,6 +40,7 @@ export default {
 
     //--------------------- Evaluation Page ---------------------
     None: 'None',
+    NoAssignmentsYet: "No assignments yet",
     HowWas: 'How was ',
     sTasmee3: '\'s tasmee\'?',
     WriteANote: 'Write a note',
@@ -78,6 +80,7 @@ export default {
 
     //--------------------- Student Profile Screen ---------------------
     EditAssignment: 'Edit Assignment',
+    AddAssignment: "Add Assignment",
     Assignments: 'Assignments',
     Reading: 'Reading',
     Memorization: 'Memorization',

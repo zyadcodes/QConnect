@@ -220,6 +220,7 @@ export default class FlowLayout extends Component {
 												<TextInput
 													style={[styles.textInputStyle, { minWidth: (this.state.newImprovementText.length * 4) + 80 }]}
 													value={this.state.newImprovementText}
+													autoCorrect={false}
 													onChangeText={(text) => { this.setState({ newImprovementText: text }) }}
 													onEndEditing={() => { this.state.newImprovementText ? 
 														dataValue.push(this.state.newImprovementText) : {}; 

@@ -102,7 +102,8 @@ class AddManualStudentsScreen extends Component {
             //Sets the new state
             this.setState({
                 isLoading: false,
-                students: newArrayOfStudents
+                students: newArrayOfStudents,
+                highlightedImagesIndices: this.getHighlightedImages()
             });
 
         }
@@ -151,8 +152,9 @@ class AddManualStudentsScreen extends Component {
                         </View>
                         <View style={{ flex: 0.7, alignSelf: 'flex-start' }}>
                             <TextInput
-                                style={[fontStyles.smallTextStyleDarkGrey, styles.studentNameTextInput]}
+                                style={[fontStyles.mainTextStyleDarkGrey, styles.studentNameTextInput]}
                                 placeholder={strings.StudentName}
+                                autoCorrect={false}
                                 onChangeText={newStudentName => this.setState({ newStudentName })}
                                 value={this.state.newStudentName}
                             />
@@ -254,9 +256,14 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start'
     },
     studentNameTextInput: {
-        paddingLeft: screenWidth * 0.05,
+        marginLeft: screenWidth * 0.02,
+        marginTop: screenHeight * 0.01,
+        paddingLeft: screenWidth * 0.03,
         width: screenWidth * 0.95,
-        height: screenHeight * 0.07
+        height: screenHeight * 0.07,
+        backgroundColor: colors.veryLightGrey,
+        height: screenHeight * 0.08 * 0.6,
+        borderRadius: screenWidth * 0.05
     },
     doneButton: {
         alignItems: 'center',

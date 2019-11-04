@@ -329,6 +329,7 @@ class SelectionPage extends React.Component {
                                         style={[styles.textInputStyle, fontStyles.mainTextStyleDarkGrey]}
                                         autoFocus={true}
                                         selectTextOnFocus={true}
+                                        autoCorrect={false}
                                         value={this.state.editedPageNumber.toString()}
                                         onChangeText={(value) => this.setState({ editedPageNumber: Number(value) })}
                                         keyboardType='numeric'

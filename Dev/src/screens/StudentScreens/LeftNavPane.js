@@ -171,6 +171,7 @@ class LeftNavPane extends QcParentScreen {
                                                                 fontSize: 14,
                                                                 color: colors.darkGrey,
                                                             }}
+                                                            autoCorrect={false}
                                                             placeholder={strings.TypeInAClassCode}
                                                             onChangeText={classCode => this.setState({ classCode })}
                                                             value={this.state.classCode}

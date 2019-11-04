@@ -105,6 +105,7 @@ class InputAutoSuggest extends Component {
           style={[style.inputDefaultStyle, inputStyle]}
           value={value}
           clearButtonMode="while-editing"
+          autoCorrect={false}
           onChangeText={this.searchList}
           ref={(ref)=>{this.myTextInput = ref}}
         />
