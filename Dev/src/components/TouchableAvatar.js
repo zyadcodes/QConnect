@@ -1,9 +1,8 @@
 import React from 'react'
-import { Image, TouchableHighlight, Dimensions } from 'react-native'
+import { Image, TouchableHighlight } from 'react-native'
 import PropTypes from 'prop-types'
 import colors from 'config/colors';
-import { screenHeight, screenWidth } from 'config/dimensions';
-
+import { screenWidth, screenHeight } from 'config/dimensions';
 
 //--------------------------------------------------------------------------
 // A Touchable round image . Default size depends on whether the image is "selected"
@@ -21,7 +20,7 @@ export default TouchableAvatar = (props) => {
     <TouchableHighlight
       style={{
         backgroundColor: backColor,
-        borderRadius: 40
+        borderRadius: length /2 
       }}
       onPress={onPress}>
       <Image
@@ -35,7 +34,8 @@ export default TouchableAvatar = (props) => {
           height: length,
           alignItems: "center",
           justifyContent: "center",
-          margin: 5,
+          marginHorizontal: screenWidth * 0.012,
+          marginVertical: screenHeight * 0.007
         }}
       />
     </TouchableHighlight>

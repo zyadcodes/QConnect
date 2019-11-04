@@ -23,7 +23,7 @@ class AddManualStudentsScreen extends Component {
     componentDidMount() {
 
         //Sets the screen for firebase analytics
-        FirebaseFunctions.setCurrentScreen("Class Edit Screen", "ClassEditScreen");
+        FirebaseFunctions.setCurrentScreen("Add Students Manually Screen", "AddManualStudentsScreen");
 
     }
 

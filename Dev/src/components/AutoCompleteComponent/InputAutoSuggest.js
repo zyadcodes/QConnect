@@ -159,8 +159,8 @@ style = StyleSheet.create({
   container: {
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    width: 300,
-    height: 200
+    width: screenWidth * 0.73,
+    height: screenHeight * 0.29
   },
   input: {
     fontSize: 22,

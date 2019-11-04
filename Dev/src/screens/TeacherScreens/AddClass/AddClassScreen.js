@@ -152,8 +152,7 @@ export class AddClassScreen extends QcParentScreen {
                 this.setState({
                   className: classInput
                 })
-              }
-            />
+              } />
 
             <QcActionButton
               text={strings.AddClass}
@@ -171,17 +170,10 @@ export class AddClassScreen extends QcParentScreen {
 
 //Styles for the Teacher profile class
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    backgroundColor: colors.lightGrey,
-    flex: 1,
-  },
   picContainer: {
-    paddingTop: 25,
+    paddingVertical: screenHeight * 0.033,
     alignItems: 'center',
-    paddingBottom: 20,
-    marginTop: 10,
-    marginBottom: 10,
+    marginVertical: screenHeight * 0.015,
     backgroundColor: colors.white,
   },
   profilePic: {
@@ -191,7 +183,7 @@ const styles = StyleSheet.create({
     marginBottom: screenHeight * 0.01
   },
   bottomContainer: {
-    paddingTop: 15,
+    paddingTop: screenHeight * 0.022,
     flex: 1,
     backgroundColor: colors.white,
     alignItems: "center",
@@ -200,14 +192,12 @@ const styles = StyleSheet.create({
   textInputStyle: {
     backgroundColor: colors.lightGrey,
     borderColor: colors.darkGrey,
-    width: 250,
-    height: 40,
+    width: screenWidth * 0.61,
+    height: screenHeight * 0.056,
     textAlign: "center",
     alignItems: "center",
     justifyContent: "center"
   }
-
-}
-);
+});
 
 export default AddClassScreen;

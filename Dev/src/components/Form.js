@@ -4,6 +4,7 @@ import UserInput from 'components/UserInput';
 import usernameImg from '../screens/images/username.png';
 import passwordImg from '../screens/images/password.png';
 import eyeImg from '../screens/images/eye_black.png';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 export default class Form extends Component {
   constructor(props) {
@@ -61,13 +62,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnEye: {
-    top: 6,
+    top: 0.009 * screenHeight,
     position: 'absolute',
-    right: 28,
+    right: 0.07 * screenWidth,
   },
   iconEye: {
-    width: 25,
-    height: 25,
+    width: screenWidth * 0.06,
+    height: screenHeight * 0.04,
     tintColor: 'rgba(0,0,0,0.2)',
   },
 });

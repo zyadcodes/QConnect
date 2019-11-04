@@ -116,8 +116,8 @@ export class ClassMainScreen extends QcParentScreen {
               <Image
                 source={require('assets/emptyStateIdeas/ghostGif.gif')}
                 style={{
-                  width: 300,
-                  height: 150,
+                  width: 0.73 * screenWidth,
+                  height: 0.22 * screenHeight,
                   resizeMode: 'contain',
                 }}
               />
@@ -175,8 +175,8 @@ export class ClassMainScreen extends QcParentScreen {
               <Image
                 source={require('assets/emptyStateIdeas/ghostGif.gif')}
                 style={{
-                  width: 300,
-                  height: 150,
+                  width: 0.73 * screenWidth,
+                  height: 0.22 * screenHeight,
                   resizeMode: 'contain',
                 }}
               />
@@ -274,11 +274,12 @@ export class ClassMainScreen extends QcParentScreen {
                   profilePic={studentImages.images[item.profileImageID]}
                   currentAssignment={item.currentAssignment === "None"? strings.NoAssignmentsYet : item.currentAssignment}
                   onPress={() =>
-                    this.props.navigation.push("ShareClassCode", {
-                        currentClassID,
-                        userID,
-                        currentClass: this.state.currentClass
-                      })
+                    this.props.navigation.push("TeacherStudentProfile", {
+                      userID: userID,
+                      studentID: item.ID,
+                      currentClass: currentClass,
+                      classID: currentClassID
+                    })
                   }
                   background={colors.red}
                   comp={isEditing === true ? (

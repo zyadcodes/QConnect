@@ -44,7 +44,7 @@ export default class StudentCard extends FontLoadingComponent {
                             </View>
                         </View>
                     ) : (
-                            <View>
+                        <View style={{ marginLeft: screenWidth * 0.05 }}>
                                 <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{studentName}</Text>
                             </View>
                         )}
@@ -55,7 +55,7 @@ export default class StudentCard extends FontLoadingComponent {
                             <TouchableOpacity style={{
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                height: 100,
+                                height: screenHeight * 0.2,
                                 width: screenWidth * 0.2
                             }}
                                 onPress={() => { compOnPress() }}>

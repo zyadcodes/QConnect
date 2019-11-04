@@ -5,8 +5,7 @@ import colors from 'config/colors';
 import fontStyles from 'config/fontStyles';
 
 
-const DEVICE_WIDTH = screenWidth;
-const MARGIN = 40;
+const MARGIN = screenWidth * 0.15;
 
 export default class ButtonSubmit extends Component {
   constructor() {
@@ -70,7 +69,7 @@ export default class ButtonSubmit extends Component {
   render() {
     const changeWidth = this.buttonAnimated.interpolate({
       inputRange: [0, 1],
-      outputRange: [DEVICE_WIDTH - MARGIN, MARGIN],
+      outputRange: [screenWidth - MARGIN, MARGIN],
     });
     const changeScale = this.growAnimated.interpolate({
       inputRange: [0, 1],
@@ -102,7 +101,7 @@ export default class ButtonSubmit extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
+    marginTop: 0.03 * screenHeight,
     alignItems: 'center',
     justifyContent: 'flex-start',
     backgroundColor: 'transparent',
@@ -112,14 +111,14 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     justifyContent: 'center',
     backgroundColor: colors.primaryLight,
-    height: MARGIN,
+    height: screenHeight * 0.05,
     borderRadius: 20,
     zIndex: 10,
   },
   circle: {
-    height: MARGIN,
+    height: screenHeight * 0.05,
     width: MARGIN,
-    marginTop: -MARGIN,
+    marginTop: -0.05 * screenHeight,
     borderWidth: 1,
     borderColor: colors.primaryLight,
     borderRadius: 100,
@@ -128,7 +127,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryLight,
   },
   image: {
-    width: 24,
-    height: 24,
+    width: 0.06 * screenWidth,
+    height: screenHeight * 0.04,
   },
 });

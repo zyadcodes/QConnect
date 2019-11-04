@@ -16,7 +16,7 @@ const QCViewHOC = (Comp) => {
                 resetScrollToCoords={{ x: 0, y: 0 }}
                 scrollEnabled={true}
                 contentContainerStyle={screenStyle.container}
-                extraScrollHeight={5}
+                extraScrollHeight={screenHeight * 0.007}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}>
                 <View>

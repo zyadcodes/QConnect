@@ -2,28 +2,35 @@
 //tabs navigator in the teacher screens & the drawerNavigators).
 import React from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
+import MushafScreen from './MushafScreen/MushafScreen'
 import FirstScreenLoader from './FirstScreenLoader/FirstScreenLoader';
 import LoginScreen from './AuthenticationScreens/LoginScreen';
 import AccountTypeScreen from './AuthenticationScreens/AccountTypeScreen';
 import TeacherWelcomeScreen from './TeacherScreens/TeacherWelcomeScreen';
-import AddClassScreen from './TeacherScreens/AddClass/AddClassScreen';
+import AddClassScreen from './TeacherScreens/AddClassScreen';
 import ForgotPassword from './AuthenticationScreens/ForgotPassword';
 import StudentWelcomeScren from './StudentScreens/StudentWelcomeScreen';
 import allSettingsScreen from './SettingsScreen/allSettingsScreen';
 import creditsScreen from './SettingsScreen/creditsScreen';
 import ProfileScreen from './ProfileScreen';
+import AddManualStudentsScreen from './TeacherScreens/AddStudents/AddManualStudentsScreen';
 import StudentMainScreen from './StudentScreens/StudentMainScreen';
 import ClassTabsNavigator from './TeacherScreens/ClassTabs/ClassTabsNavigator';
 import StudentProfileScreen from './TeacherScreens/ClassTabs/StudentProfileScreen';
-import MushafScreen from './MushafScreen/MushafScreen'
-import ShareClassCodeScreen from './TeacherScreens/AddStudents/ShareClassCodeScreen';
 import EvaluationPage from './Evaluation/EvaluationPage';
+import ShareClassCodeScreen from './TeacherScreens/AddStudents/ShareClassCodeScreen';
 import strings from 'config/strings';
 import TopBanner from 'components/TopBanner';
-import AddManualStudentsScreen from './TeacherScreens/AddStudents/AddManualStudentsScreen';
 
 //The routes containing all the screens & their navigation options
 routeConfig = {
+
+    MushafScreen: {
+        screen: MushafScreen,
+        navigationOptions: ({ navigation }) => ({
+            header: null
+        }),
+    },
 
     FirstScreenLoader: {
         screen: FirstScreenLoader,
@@ -105,13 +112,6 @@ routeConfig = {
         }),
     },
 
-    MushafScreen: {
-        screen: MushafScreen,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        }),
-    },
-
     Profile: {
         screen: ProfileScreen,
         navigationOptions: ({ navigation }) => ({
@@ -131,11 +131,11 @@ routeConfig = {
         navigationOptions: ({ navigation }) => ({
             header: (
                 <TopBanner
+                    Title={strings.StudentProfile}
                     LeftIconName="angle-left"
                     LeftOnPress={() => navigation.push('TeacherCurrentClass', {
                         userID: navigation.state.params.userID
                     })}
-                    Title={strings.StudentProfile}
                 />
             )
         })
@@ -145,6 +145,16 @@ routeConfig = {
         screen: EvaluationPage,
         navigationOptions: ({ navigation }) => ({
             header: null
+        })
+    },
+
+    ShareClassCode: {
+        screen: ShareClassCodeScreen,
+        navigationOptions: ({ navigation }) => ({
+            header: (
+                <TopBanner
+                    Title={strings.AddStudents} />
+            )
         })
     },
 
@@ -158,22 +168,7 @@ routeConfig = {
                     LeftOnPress={() => navigation.goBack()} />
             )
         })
-    },
-
-    ShareClassCode: {
-        screen: ShareClassCodeScreen,
-        navigationOptions: ({ navigation }) => ({
-            header: (
-                <TopBanner
-                    Title={strings.EditClass}
-                    RightTextName={strings.Done}
-                    RightOnPress={() => navigation.push('TeacherCurrentClass', {
-                        userID: navigation.state.params.userID
-                    })}
-                />
-            )
-        })
-    },
+    }
 
 }
 

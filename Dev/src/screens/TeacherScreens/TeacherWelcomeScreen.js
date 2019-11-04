@@ -291,8 +291,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white
   },
   welcomeImage: {
-    marginTop: 15,
-    width: 180,
+    marginTop: 0.022 * screenHeight,
+    width: screenWidth * 0.44,
     resizeMode: "contain"
   },
   editInfo: {
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: "column",
-    marginTop: 10,
+    marginTop: 0.015 * screenHeight,
     backgroundColor: colors.white,
     justifyContent: "center"
   },
@@ -310,32 +310,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     flex: 1
   },
-  modal: {
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    marginTop: 230,
-    borderWidth: 1,
-    borderRadius: 2,
-    borderColor: colors.grey,
-    borderBottomWidth: 1,
-    shadowColor: colors.darkGrey,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 3,
-    elevation: 2,
-    marginLeft: 45,
-    marginRight: 45,
-    paddingRight: 5,
-    paddingLeft: 5
-  },
-  confirmationMessage: {
-    fontSize: 16,
-    marginVertical: 10,
-    fontFamily: 'Montserrat-Regular',
-    color: colors.darkGrey
-  }
 });
 
 export default TeacherWelcomeScreen;

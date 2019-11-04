@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0.25
     },
     infoTextInput: {
-        paddingLeft: 20,
+        paddingLeft: screenWidth * 0.025,
         fontSize: 14,
         color: colors.darkGrey,
         flex: 1,

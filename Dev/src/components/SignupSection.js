@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { screenWidth } from 'config/dimensions';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import colors from 'config/colors';
+import { screenWidth } from 'config/dimensions';
 import fontStyles from 'config/fontStyles';
 import strings from '../../config/strings';
 
@@ -25,12 +25,10 @@ export default class SignupSection extends Component {
   }
 }
 
-const DEVICE_WIDTH = screenWidth;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: DEVICE_WIDTH,
+    width: screenWidth,
     alignItems: 'flex-start',
     flexDirection: 'row',
     justifyContent: 'space-around',
