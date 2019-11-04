@@ -5,6 +5,17 @@ export default {
     AppTitle: 'QuranConnect',
     AppSubTitle: 'Serving your passion for the Quran',
 
+    //--------------------- Notifications ---------------------
+    NeedsHelp: 'Needs help',
+    StudentUpdate: 'Student Update',
+    HasChangedAssignmentStatusTo: ' has changed their assignment status to ',
+    NewStudent: 'New Student',
+    HasJoinedYourClass: ' has joined your class',
+    AssignmentUpdate: 'Assignment Update',
+    YourTeacherHasUpdatedYourCurrentAssignment: 'Your teacher has updated your current assignment',
+    AssignmentGraded: "Assignment Graded",
+    YourAssignmentHasBeenGraded: 'Your assignment has been graded',
+
     //--------------------- Student Main Screen ---------------------
     TotalAssignments: 'Assignments Completed',
     Ready: 'READY',
@@ -138,7 +149,7 @@ export default {
     Confirm: 'Confirm',
     SaveAttendance: 'Save Attendance',
 
-    //--------------------- Class Edit Screen ---------------------
+    //--------------------- Add Students Screens ---------------------
     Remove: 'Remove',
     RemoveStudent: 'Remove student',
     AreYouSureYouWantToRemoveStudent: 'Are you sure you want to remove this student?',
