@@ -12,9 +12,9 @@ const fontFamily = "Montserrat-Regular";
 let bodyFont = 14;
 const pixelRatio = PixelRatio.get();
 
-const bodyFontSmaller = bodyFont * 0.75;
+const bodyFontSmaller = bodyFont * 0.875;
 const bodyFontBigger = bodyFont * 1.25;
-const titleFont = bodyFont * 1.875;
+const titleFont = titleFont;
 
 export default StyleSheet.create({
 
@@ -26,7 +26,7 @@ export default StyleSheet.create({
 
     smallTextStylePrimaryDark: {
         fontFamily,
-        fontSize: bodyFont * 0.75,
+        fontSize: bodyFontSmaller,
         color: colors.primaryDark
     },
 
@@ -92,7 +92,7 @@ export default StyleSheet.create({
 
     bigTextStyleDarkGrey: {
         fontFamily,
-        fontSize: bodyFont * 1.25,
+        fontSize: bodyFontBigger,
         color: colors.darkGrey
     },
 
@@ -104,13 +104,13 @@ export default StyleSheet.create({
 
     bigTextStylePrimaryDark: {
         fontFamily,
-        fontSize: bodyFont * 1.25,
+        fontSize: bodyFontBigger,
         color: colors.primaryDark
     },
 
     hugeTextStylePrimaryDark: {
         fontFamily,
-        fontSize: bodyFont * 1.875,
+        fontSize: titleFont,
         color: colors.primaryDark
     }
 
