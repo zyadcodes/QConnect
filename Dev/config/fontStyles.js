@@ -14,7 +14,7 @@ const pixelRatio = PixelRatio.get();
 
 const bodyFontSmaller = bodyFont * 0.875;
 const bodyFontBigger = bodyFont * 1.25;
-const titleFont = titleFont;
+const titleFont = bodyFont * 1.875;
 
 export default StyleSheet.create({
 
@@ -112,7 +112,18 @@ export default StyleSheet.create({
         fontFamily,
         fontSize: titleFont,
         color: colors.primaryDark
-    }
+    },
+    hugeTextStylePrimaryLight: {
+        fontFamily,
+        fontSize: titleFont,
+        color: colors.primaryLight
+    },
+
+    hugeTextStyleBlack: {
+        fontFamily,
+        fontSize: titleFont,
+        color: colors.black
+    },
 
 });
 
