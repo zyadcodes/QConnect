@@ -60,22 +60,22 @@ export default class AssignmentEntryComponent extends React.Component {
                                                 });
                                             }}
                                             activeContainerStyle={[{
-                                                marginVertical: 20,
+                                                marginVertical: screenHeight * 0.025,
                                                 backgroundColor: colors.grey,
                                                 borderRadius: screenWidth * 0.025,
                                             },
                                             {
-                                                marginVertical: 20,
+                                                marginVertical: screenHeight * 0.025,
                                                 backgroundColor: colors.green,
                                                 borderRadius: screenWidth * 0.025,
                                             },
                                             {
-                                                marginVertical: 20,
+                                                marginVertical: screenHeight * 0.025,
                                                 backgroundColor: colors.darkishGrey,
                                                 borderRadius: screenWidth * 0.025,
                                             },]}
                                             inactiveContainerStyle={[styles.inactiveAssignmentStyle, styles.inactiveAssignmentStyle, {
-                                                marginVertical: 20,
+                                                marginVertical: screenHeight * 0.025,
                                                 marginLeft: screenWidth * 0.005,
                                                 borderRadius: screenWidth * 0.025,
                                             }]}>
@@ -122,14 +122,12 @@ const styles = StyleSheet.create({
         borderColor: colors.grey,
         borderBottomWidth: 1,
         shadowColor: colors.darkGrey,
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: { width: 0, height: screenHeight * 0.0029 },
         shadowOpacity: 0.8,
-        shadowRadius: 3,
-        elevation: 2,
-        marginLeft: 45,
-        marginRight: 45,
-        paddingRight: 5,
-        paddingLeft: 5
+        shadowRadius: screenHeight * 0.004,
+        elevation: screenHeight * 0.003,
+        marginHorizontal: screenWidth * 0.11,
+        paddingHorizontal: 0.012 * screenWidth
     },
     inactiveAssignmentStyle: {
         borderRadius: screenWidth * 0.025,
