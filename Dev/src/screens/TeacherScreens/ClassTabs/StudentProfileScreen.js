@@ -199,7 +199,7 @@ class StudentProfileScreen extends QcParentScreen {
                     }
                     {
                       item.assignmentType !== undefined && item.assignmentType !=="None" ? (
-                        <View style={{ flexWrap: 'wrap', height: screenHeight * 0.02, margin: screenHeight * 0.001 }}>
+                        <View style={{ flexWrap: 'wrap', paddingTop: screenHeight * 0.005, justifyContent: 'flex-start', height: screenHeight * 0.03 }}>
                           <Text style={[styles.corner, {
                             backgroundColor: item.assignmentType === strings.Reading ? colors.grey :
                               (item.assignmentType === strings.Memorization ? colors.green : colors.darkishGrey)
@@ -210,11 +210,11 @@ class StudentProfileScreen extends QcParentScreen {
                         )
                     }
                     {item.evaluation.improvementAreas && item.evaluation.improvementAreas.length > 0 ?
-                      <View style={{ flexDirection: 'row', paddingTop: screenHeight * 0.005, justifyContent: 'flex-start', height: screenHeight * 0.03 }}>
+                      <View style={{ flexDirection: 'row', paddingTop: screenHeight * 0.005, justifyContent: 'flex-start', height: screenHeight * 0.04 }}>
                         <Text style={[fontStyles.smallTextStyleBlack, { alignSelf: 'center' }]}>{strings.ImprovementAreas}</Text>
                         {item.evaluation.improvementAreas.map((tag) => { return (<Text key={tag} style={styles.corner}>{tag}</Text>) })}
                       </View>
-                      : <View />
+                      : <View style={{height: 10}}></View>
                     }
                   </View>
                 </TouchableOpacity>
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: screenWidth * 0.012,
     marginRight: screenHeight * 0.012,
-    marginTop: screenHeight * 0.004,
+    marginVertical: screenHeight * 0.004,
   },
   profileInfoTop: {
     paddingHorizontal: screenWidth * 0.024,

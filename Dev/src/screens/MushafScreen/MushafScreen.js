@@ -1,6 +1,6 @@
 //Screen which will provide all of the possible settings for the user to click on
 import React from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet, Alert, ScrollView } from 'react-native';
 import LoadingSpinner from 'components/LoadingSpinner';
 import colors from 'config/colors';
 import QcParentScreen from "screens/QcParentScreen";
@@ -479,6 +479,7 @@ export default class MushafScreen extends QcParentScreen {
 
             return (
                 <View style={{ width: screenWidth, height: screenHeight }}>
+                    <ScrollView>
                     <Swiper
                         index={this.state.index}
                         containerStyle={{ width: screenWidth, height: screenHeight }}
@@ -499,6 +500,7 @@ export default class MushafScreen extends QcParentScreen {
                         onIndexChanged={(index) => this.onPageChanged(index)}>
                         {this.state.pages.map((item, idx) => this.renderItem(item, idx))}
                     </Swiper>
+                    </ScrollView>
                     <View style={{ padding: 5 }}>
                         {
                             (this.state.selection.start.surah > 0 || this.state.freeFormAssignment) ?
