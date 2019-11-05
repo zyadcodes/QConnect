@@ -59,7 +59,7 @@ class ForgotPassword extends Component {
                         disabled={false}
                         onPress={() => {
                             if (this.state.emailText == "") {
-                                Alert.alert(strings.EmailErrorHeader, strings.EmailErrorHeader)
+                                Alert.alert(strings.EmailErrorHeader, strings.PleaseEnterYourEmailAddress)
                             }
                             else {
                                 let emailText = this.state.emailText
