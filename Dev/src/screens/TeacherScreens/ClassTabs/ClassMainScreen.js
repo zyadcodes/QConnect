@@ -270,8 +270,13 @@ updatePicture(newPicture){
             }
             {
               studentsNeedHelp.length > 0 ? (
-                <View>
-                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.bigTextStyleDarkRed]}>{strings.NeedHelp}</Text>
+                <View style={{ alignItems: 'center', marginLeft: screenWidth * 0.017, flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
+                  <Icon
+                    name='issue-opened'
+                    type='octicon'
+                    color={colors.darkRed}
+                    />
+                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkRed]}>{strings.NeedHelp}</Text>
                 </View>
               ) : (
                   <View></View>
@@ -305,8 +310,14 @@ updatePicture(newPicture){
             />
             {
               studentsReady.length > 0 ? (
-                <View style={{ paddingTop: screenHeight * 0.025 }}>
-                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.bigTextStyleGreen]}>{strings.Ready}</Text>
+                <View style={{ alignItems: 'center', marginLeft: screenWidth * 0.017, flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
+                  <Icon
+                    name='check-circle-outline'
+                    type='material-community'
+                    color={colors.darkGreen}
+                    />
+                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkGreen]}>
+                    {strings.Ready}</Text>
                 </View>
               ) : (
                   <View></View>
@@ -340,8 +351,13 @@ updatePicture(newPicture){
               )} />
             {
               studentsWorkingOnIt.length > 0 ? (
-                <View style={{ paddingTop: screenHeight * 0.025 }}>
-                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.bigTextStyleBlack]}>{strings.WorkingOnIt}</Text>
+                <View style={{ alignItems: 'center', marginLeft: screenWidth * 0.017, flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
+                  <Icon
+                    name='update'
+                    type='material-community'
+                    color={colors.primaryDark}
+                    />
+                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStylePrimaryDark]}>{strings.WorkingOnIt}</Text>
                 </View>
               ) : (
                   <View></View>
