@@ -181,16 +181,16 @@ class StudentProfileScreen extends QcParentScreen {
                   readOnly: true,
                   newAssignment: false,
                 })}>
-                  <View style={styles.prevAssignmentCard} key={index}>
+                  <View style={{...styles.prevAssignmentCard, minHeight: 0.1 * screenHeight}} key={index}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <View style={{ flex: 3, justifyContent: 'center', alignItems: 'flex-start' }}>
-                        <Text style={fontStyles.mainTextStylePrimaryDark}>{item.completionDate}</Text>
+                      <View style={{ flex: 2, justifyContent: 'center', alignItems: 'flex-start' }}>
+                        <Text style={fontStyles.smallTextStylePrimaryDark}>{item.completionDate}</Text>
                       </View>
-                      <View style={{ alignItems: 'center', justifyContent: 'center', flex: 3 }}>
-                        <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{item.name}</Text>
+                      <View style={{ alignItems: 'center', justifyContent: 'center', flex: 5 }}>
+                        <Text numberOfLines={1} style={fontStyles.mainTextStyleBlack}>{item.name}</Text>
                       </View>
-                      <View style={{ flex: 3, justifyContent: 'center', alignItems: 'flex-end' }}>
-                        <Rating readonly={true} startingValue={item.evaluation.rating} imageSize={17} />
+                      <View style={{ flex: 2, justifyContent: 'center', alignItems: 'flex-end', paddingLeft: screenWidth * 0.005 }}>
+                        <Rating readonly={true} startingValue={item.evaluation.rating} imageSize={15} />
                       </View>
                     </View>
                     {item.evaluation.notes ?
@@ -198,8 +198,8 @@ class StudentProfileScreen extends QcParentScreen {
                       : <View />
                     }
                     {
-                      item.assignmentType !=="None" ? (
-                        <View style={{ flexWrap: 'wrap', height: screenHeight * 0.03, margin: screenHeight * 0.005 }}>
+                      item.assignmentType !== undefined && item.assignmentType !=="None" ? (
+                        <View style={{ flexWrap: 'wrap', height: screenHeight * 0.02, margin: screenHeight * 0.001 }}>
                           <Text style={[styles.corner, {
                             backgroundColor: item.assignmentType === strings.Reading ? colors.grey :
                               (item.assignmentType === strings.Memorization ? colors.green : colors.darkishGrey)
@@ -210,8 +210,8 @@ class StudentProfileScreen extends QcParentScreen {
                         )
                     }
                     {item.evaluation.improvementAreas && item.evaluation.improvementAreas.length > 0 ?
-                      <View style={{ flexDirection: 'row', justifyContent: 'flex-start', height: screenHeight * 0.03 }}>
-                        <Text style={[fontStyles.mainTextStyleBlack, { alignSelf: 'center' }]}>{strings.ImprovementAreas}</Text>
+                      <View style={{ flexDirection: 'row', paddingTop: screenHeight * 0.005, justifyContent: 'flex-start', height: screenHeight * 0.03 }}>
+                        <Text style={[fontStyles.smallTextStyleBlack, { alignSelf: 'center' }]}>{strings.ImprovementAreas}</Text>
                         {item.evaluation.improvementAreas.map((tag) => { return (<Text key={tag} style={styles.corner}>{tag}</Text>) })}
                       </View>
                       : <View />
@@ -230,7 +230,7 @@ class StudentProfileScreen extends QcParentScreen {
 //styles for the entire page
 const styles = StyleSheet.create({
   studentInfoContainer: {
-    marginVertical: 0.015 * screenHeight,
+    marginVertical: 0.005 * screenHeight,
     backgroundColor: colors.white,
     flex: 1,
     borderColor: colors.lightGrey,
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
   profileInfo: {
     flexDirection: 'column',
     backgroundColor: colors.white,
-    marginBottom: 0.015 * screenHeight
+    marginBottom: 0.001 * screenHeight
   },
   corner: {
     borderColor: '#D0D0D0',
@@ -293,9 +293,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     borderBottomColor: colors.lightGrey,
     borderBottomWidth: 1,
-    height: 0.13 * screenHeight,
-    paddingHorizontal: screenWidth * 0.012,
-    paddingVertical: screenHeight * 0.007
+    paddingHorizontal: screenWidth * 0.007,
+    paddingVertical: screenHeight * 0.005
   },
 });
 

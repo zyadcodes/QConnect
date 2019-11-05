@@ -1,70 +1,80 @@
-import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Icon } from 'react-native-elements';
-import TouchableAvatar from 'components/TouchableAvatar';
-import colors from 'config/colors';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import { View, StyleSheet, Modal } from 'react-native'
+import PropTypes from 'prop-types'
+import ImageSelectionGrid from 'components/ImageSelectionGrid'
+import TouchableText from 'components/TouchableText'
+import colors from 'config/colors'
+import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
 
-//---------------------------------------------------------
-// Renders set of passed in images in a single row, and adds 
-//  an "expand more" ellipsis in the end that calls back to passed in function
-//  to show more images.
-//--------------------------------------------------------------
-export default class ImageSelectionRow extends Component {
+//-------------------------------------------------------------
+// A Modal dialog that renders passed in data over ImageSelectionGrid
+// + a cancel button. It also styles the Modal to center it, wrap content,
+//  and adds shadow and other styling.
+//---------------------------------------------------------------
+export default class ImageSelectionModal extends Component {
 
-    //log event and dispatch image selection event to screen
-    onRowImageSelected(index) {
-
+    onImageSelected(index) {
         this.props.onImageSelected(index);
     }
 
     render() {
-        const { highlightedImagesIndices, onShowMore, selectedImageIndex, images } = this.props;
 
+        cancelStyle = {...fontStyles.smallTextStyleDarkGrey, marginTop: screenHeight * 0.015, marginBottom: screenHeight * 0.03 }
         return (
-            <View style={styles.rowContainer}>
-                {highlightedImagesIndices.map((index) => {
-                    return (
-                        <View
-                            key={index}>
-                            <TouchableAvatar
-                                index={index}
-                                image={images[index]}
-                                selected={selectedImageIndex === index}
-                                onPress={() => this.onRowImageSelected(index)} />
-                        </View>
-                    )
-                })}
-                <Icon
-                    raised
-                    name='ellipsis-h'
-                    type='font-awesome'
-                    color={colors.primaryDark}
-                    onPress={() => {
-                        onShowMore();
-                    }} />
-            </View>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                presentationStyle="overFullScreen"
+                visible={this.props.visible}
+                onRequestClose={() => {
+                }}>
+
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingBottom: 20 }}>
+                    <View style={styles.container}>
+                        <ImageSelectionGrid
+                            images={this.props.images}
+                            onImageSelected={this.props.onImageSelected}
+                        />
+                        <TouchableText
+                            text={this.props.cancelText}
+                            style={cancelStyle}
+                            onPress={() => {
+                                this.props.setModalVisible(false);
+                            }} />
+                    </View>
+                </View>
+            </Modal>
         );
     }
 }
 
-ImageSelectionRow.propTypes = {
-    highlightedImagesIndices: PropTypes.array.isRequired,
-    onImageSelected: PropTypes.func.isRequired,
-    onShowMore: PropTypes.func.isRequired,
-    selectedImageIndex: PropTypes.number.isRequired,
+ImageSelectionModal.propTypes = {
+    visible: PropTypes.bool.isRequired,
     images: PropTypes.array.isRequired,
-    style: PropTypes.object
+    cancelText: PropTypes.string.isRequired,
+    setModalVisible: PropTypes.func.isRequired,
+    onImageSelected: PropTypes.func.isRequired,
 }
 
 //Styles for the Teacher profile class
 const styles = StyleSheet.create({
-    rowContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+    container: {
+        backgroundColor: colors.white,
         alignItems: 'center',
-        paddingVertical: 0.015 * screenHeight,
-        paddingHorizontal: screenWidth * 0.012
+        justifyContent: 'center',
+        flexDirection: 'column',
+        marginTop: 0.044 * screenHeight,
+        borderWidth: 1,
+        borderRadius: 2,
+        borderColor: colors.grey,
+        borderBottomWidth: 1,
+        shadowColor: colors.darkGrey,
+        shadowOffset: { width: 0, height: 0.002 * screenHeight },
+        shadowOpacity: 0.8,
+        shadowRadius: 3,
+        elevation: 0.003 * screenHeight,
+        marginHorizontal: screenWidth * 0.012,
+        paddingHorizontal: 0.036 * screenWidth
     },
-});
+})

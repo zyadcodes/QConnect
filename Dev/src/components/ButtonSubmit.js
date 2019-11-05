@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { screenWidth } from 'config/dimensions';
+import { screenWidth, screenHeight } from 'config/dimensions';
 import { StyleSheet, TouchableOpacity, Text, Animated, Easing, ActivityIndicator, View } from 'react-native';
 import colors from 'config/colors';
 import fontStyles from 'config/fontStyles';
-
 
 const MARGIN = screenWidth * 0.15;
 

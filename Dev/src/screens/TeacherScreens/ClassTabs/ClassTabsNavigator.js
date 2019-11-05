@@ -6,6 +6,8 @@ import ClassMainScreen from './ClassMainScreen';
 import ClassAttendanceScreen from './ClassAttendanceScreen';
 import strings from '../../../../config/strings';
 import MushafScreen from '../../MushafScreen/MushafScreen';
+import { screenHeight } from 'config/dimensions';
+
 
 const routeConfig = {
   AttendanceTab: {

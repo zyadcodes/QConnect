@@ -190,14 +190,15 @@ const styles = StyleSheet.create({
     flex: 1
   },
   textInputStyle: {
-    backgroundColor: colors.lightGrey,
-    borderColor: colors.darkGrey,
-    width: screenWidth * 0.61,
-    height: screenHeight * 0.056,
-    textAlign: "center",
-    alignItems: "center",
-    justifyContent: "center"
-  }
+    marginLeft: screenWidth * 0.02,
+    marginTop: screenHeight * 0.01,
+    paddingLeft: screenWidth * 0.03,
+    width: screenWidth * 0.95,
+    height: screenHeight * 0.07,
+    backgroundColor: colors.veryLightGrey,
+    height: screenHeight * 0.08 * 0.6,
+    borderRadius: screenWidth * 0.05
+  },
 });
 
 export default AddClassScreen;

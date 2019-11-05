@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { compareOrder, isAyahSelected } from '../Helpers/AyahsOrder'
 import AyahSelectionWord from './AyahSelectionWord'
 import EndOfAyah from './EndOfAyah'
+import { screenHeight } from 'config/dimensions';
 
 
 //Creates the higher order component

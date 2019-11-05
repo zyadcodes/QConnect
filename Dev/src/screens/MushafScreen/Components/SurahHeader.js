@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet, View, ImageBackground } from 'react-native';
 import fontStyles from 'config/fontStyles';
+import { screenHeight } from 'config/dimensions';
 
 
 //Creates the higher order component
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
     footer: {
         justifyContent: 'center',
         alignSelf: 'stretch',
-        height: screenHeight * 0.05,
+        height: screenHeight * 0.025,
         alignItems: 'center',
     },
     imageContainer: {

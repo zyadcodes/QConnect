@@ -8,7 +8,7 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
-import { screenWidth } from 'config/dimensions';
+import { screenWidth, screenHeight } from 'config/dimensions';
 
 export default class CreditsScreen extends QcParentScreen {
 

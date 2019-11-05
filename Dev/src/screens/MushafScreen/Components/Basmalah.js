@@ -1,7 +1,8 @@
 import React from 'react';
 import { Text, StyleSheet } from 'react-native';
 import colors from 'config/colors';
-import EndOfAyah from './EndOfAyah';
+import { screenHeight } from 'config/dimensions';
+
 
 //Creates the higher order component
 const Basmalah = ({  number, id }) => {
@@ -15,7 +16,7 @@ const Basmalah = ({  number, id }) => {
 
 const styles = StyleSheet.create({
     ayahText: {
-        height: screenHeight * 0.03,
+        height: screenHeight * 0.04,
         textAlign: 'center', 
         fontFamily: 'me_quran', 
         fontSize: 17, 
