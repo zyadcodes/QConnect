@@ -148,6 +148,8 @@ export default {
     HasBeenSaved: ' has been saved',
     Confirm: 'Confirm',
     SaveAttendance: 'Save Attendance',
+    Present: "Present",
+    Absent: "Absent",
 
     //--------------------- Add Students Screens ---------------------
     Remove: 'Remove',
