@@ -23,6 +23,7 @@ export default {
     NeedAssignment: "NEED ASSIGNMENT",
     ClassAlreadyJoined: 'We know it\'s exciting to be in this class. But you can only join it once.',
     NeedHelp: "NEED HELP",
+    EnableMicPermissions: 'You need to enable microphone permissions from your settings',
 
     //--------------------- Forgot Password Screen-------------------
     emailPlaceHolder: "Email",

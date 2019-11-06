@@ -25,11 +25,11 @@
 		016EA1842328BB8400CD20E2 /* Icon-App-60x60@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1752328BB8400CD20E2 /* Icon-App-60x60@3x.png */; };
 		016EA1852328BB8400CD20E2 /* Icon-App-76x76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1762328BB8400CD20E2 /* Icon-App-76x76@2x.png */; };
 		016EA1862328BB8400CD20E2 /* Icon-App-29x29@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1772328BB8400CD20E2 /* Icon-App-29x29@2x.png */; };
-		016EA18A2328BB9800CD20E2 /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		016EA18A2328BB9800CD20E2 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		016EA18B2328BB9800CD20E2 /* iTunesArtwork@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1882328BB9700CD20E2 /* iTunesArtwork@1x.png */; };
 		016EA18C2328BB9800CD20E2 /* iTunesArtwork@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1892328BB9700CD20E2 /* iTunesArtwork@3x.png */; };
 		017E518523234B7600B71C11 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 017E518423234B7600B71C11 /* GoogleService-Info.plist */; };
-		0188157D23348C52006806B3 /* MADDINA.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188157C23348C52006806B3 /* MADDINA.ttf */; };
+		0188157D23348C52006806B3 /* ../assets/fonts/MADDINA.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188157C23348C52006806B3 /* ../assets/fonts/MADDINA.ttf */; };
 		0188158423349101006806B3 /* MADDINA.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188158323349101006806B3 /* MADDINA.ttf */; };
 		0188158B2334966A006806B3 /* me_quran.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188158823349669006806B3 /* me_quran.ttf */; };
 		0188158C2334966A006806B3 /* Scheherazade-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188158923349669006806B3 /* Scheherazade-Bold.ttf */; };
@@ -215,7 +215,7 @@
 		016EA1882328BB9700CD20E2 /* iTunesArtwork@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@1x.png"; sourceTree = "<group>"; };
 		016EA1892328BB9700CD20E2 /* iTunesArtwork@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@3x.png"; sourceTree = "<group>"; };
 		017E518423234B7600B71C11 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "QuranConnect/GoogleService-Info.plist"; sourceTree = "<group>"; };
-		0188157C23348C52006806B3 /* MADDINA.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ../assets/fonts/MADDINA.ttf; sourceTree = "<group>"; };
+		0188157C23348C52006806B3 /* ../assets/fonts/MADDINA.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ../assets/fonts/MADDINA.ttf; sourceTree = "<group>"; };
 		0188158323349101006806B3 /* MADDINA.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MADDINA.ttf; path = ../assets/fonts/MADDINA.ttf; sourceTree = "<group>"; };
 		0188158823349669006806B3 /* me_quran.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = me_quran.ttf; path = ../assets/fonts/me_quran.ttf; sourceTree = "<group>"; };
 		0188158923349669006806B3 /* Scheherazade-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Scheherazade-Bold.ttf"; path = "../assets/fonts/Scheherazade-Bold.ttf"; sourceTree = "<group>"; };
@@ -529,7 +529,7 @@
 				016EA16C2328BB8300CD20E2 /* Icon-App-29x29@3x.png */,
 				016EA16A2328BB8300CD20E2 /* Icon-App-40x40@1x.png */,
 				016EA16D2328BB8300CD20E2 /* Icon-App-40x40@3x.png */,
-				0188157C23348C52006806B3 /* MADDINA.ttf */,
+				0188157C23348C52006806B3 /* ../assets/fonts/MADDINA.ttf */,
 				016EA1702328BB8400CD20E2 /* Icon-App-60x60@2x.png */,
 				016EA1752328BB8400CD20E2 /* Icon-App-60x60@3x.png */,
 				016EA1712328BB8400CD20E2 /* Icon-App-76x76@1x.png */,
@@ -749,13 +749,13 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = PHH78H2W53;
-						ProvisioningStyle = Manual;
+						DevelopmentTeam = B65Y7865Z9;
+						ProvisioningStyle = Automatic;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = B65Y7865Z9;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -856,7 +856,7 @@
 				DB3C8CC34F5D48FF8D0B28DC /* is-icon-8.png in Resources */,
 				134C6DF41BF74CB595EDFC09 /* is-icon-9.png in Resources */,
 				0188158423349101006806B3 /* MADDINA.ttf in Resources */,
-				0188157D23348C52006806B3 /* MADDINA.ttf in Resources */,
+				0188157D23348C52006806B3 /* ../assets/fonts/MADDINA.ttf in Resources */,
 				AC79FAAFE82949FE864B8316 /* read_child_bg.jpg in Resources */,
 				362B6B1D5B5947A98D6D51BC /* read_child_bg.orig.jpg in Resources */,
 				CD4C3A352ABA488D9A2DFD37 /* salam.jpg in Resources */,
@@ -892,7 +892,7 @@
 				7B96A35E3F254841A90DD965 /* girl16.png in Resources */,
 				9EF5E08EE0A74474BE02426B /* girl2.png in Resources */,
 				488A4EBE8C7247BA8A23928F /* girl3.png in Resources */,
-				016EA18A2328BB9800CD20E2 /* BuildFile in Resources */,
+				016EA18A2328BB9800CD20E2 /* (null) in Resources */,
 				016EA1862328BB8400CD20E2 /* Icon-App-29x29@2x.png in Resources */,
 				016EA18C2328BB9800CD20E2 /* iTunesArtwork@3x.png in Resources */,
 				6749EB7078064E4D9E977415 /* girl4.png in Resources */,
@@ -1253,7 +1253,10 @@
 			baseConfigurationReference = A0CA38EBE6F0F8C88C97627D /* Pods-QuranConnectTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = PHH78H2W53;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = B65Y7865Z9;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1268,7 +1271,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = QConnectV3;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuranConnect.app/QuranConnect";
 			};
 			name = Debug;
@@ -1278,8 +1282,11 @@
 			baseConfigurationReference = BB1F5508B58D76148F73327F /* Pods-QuranConnectTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = PHH78H2W53;
+				DEVELOPMENT_TEAM = B65Y7865Z9;
 				INFOPLIST_FILE = QuranConnectTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1290,7 +1297,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = QConnectV3;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuranConnect.app/QuranConnect";
 			};
 			name = Release;
@@ -1300,8 +1308,8 @@
 			baseConfigurationReference = B1A2A0812B6BA8DE8FF406EB /* Pods-QuranConnect.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.1.9;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = B65Y7865Z9;
@@ -1315,7 +1323,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yungdevz.quranconnect;
 				PRODUCT_NAME = QuranConnect;
-				PROVISIONING_PROFILE_SPECIFIER = QConnectV2;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1326,8 +1334,8 @@
 			baseConfigurationReference = 8B00778C64086B4F31FD9346 /* Pods-QuranConnect.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.1.9;
 				DEVELOPMENT_TEAM = B65Y7865Z9;
 				INFOPLIST_FILE = QuranConnect/Info.plist;
@@ -1341,7 +1349,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yungdevz.quranconnect;
 				PRODUCT_NAME = QuranConnect;
-				PROVISIONING_PROFILE_SPECIFIER = QConnectV2;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

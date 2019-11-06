@@ -42,6 +42,7 @@ target 'QuranConnect' do
 
   pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications.podspec"
+  pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone.podspec"
 
 
   pod 'RNSound', :path => '../node_modules/react-native-sound'

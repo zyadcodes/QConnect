@@ -2587,11 +2587,11 @@ standalone and requires a support library to be linked with it.  This
 support library is itself covered by the above license.
 
 
-## RNAudio
+## RNAudioRecorderPlayer
 
-The MIT License (MIT)
+MIT License
 
-Copyright (c) [2016] [Joshua Sierles]
+Copyright (c) 2018 dooboolab
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
