@@ -30,8 +30,6 @@ export class ProfileScreen extends QcParentScreen {
         } else {
             FirebaseFunctions.setCurrentScreen("Student Profile Screen", "ProfileScreen");
         }
-
-
     }
 
     state = {

@@ -29,9 +29,9 @@ export default class StudentSelectorModal extends Component {
                 onRequestClose={() => {
                 }}>
 
-                <View style={{ paddingBottom: 20 }}>
+                <View style={{ paddingBottom: screenHeight * 0.015 }}>
                     <View style={styles.container}>
-                        <Text style={{...fontStyles.mainTextStyleDarkGrey, paddingLeft: 20, paddingTop: 15}}>Assign to:</Text>
+                        <Text style={{...fontStyles.mainTextStyleDarkGrey, paddingLeft: screenWidth * 0.02, paddingTop: screenHeight * 0.01}}>Assign to:</Text>
                         <StudentSelectorComponent
                             currentClass={this.props.currentClass}
                             selectedItemID={this.props.selectedItemID}
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: colors.white,
         width: screenWidth * 0.8,
-        marginTop: 80,
+        marginTop: screenHeight * 0.1,
         borderWidth: 1,
         borderRadius: 2,
         borderColor: colors.grey,
