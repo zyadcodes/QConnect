@@ -13,7 +13,7 @@ import QcActionButton from 'components/QcActionButton';
 import LeftNavPane from './LeftNavPane';
 import SideMenu from 'react-native-side-menu';
 import LoadingSpinner from 'components/LoadingSpinner';
-import { Input } from 'react-native-elements';
+import { RNVoiceRecorder } from 'react-native-voice-recorder';
 import { TextInput } from 'react-native-gesture-handler';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
@@ -32,6 +32,7 @@ class StudentMainScreen extends QcParentScreen {
         thisClassInfo: '',
         isReadyEnum: '',
         modalVisible: false,
+        recordingModaVisible: false,
         classCode: '',
         classes: ''
     }
@@ -186,6 +187,29 @@ class StudentMainScreen extends QcParentScreen {
                                 paddingTop: screenHeight / 3
                             }}>
                                 <View style={styles.modal}>
+                                    <QcActionButton
+                                        text={strings.Record}
+                                        onPress={() => { 
+                                            
+                                         }} />
+                                </View>
+                            </View>
+                        </Modal>
+                        <Modal
+                            animationType="fade"
+                            style={{ alignItems: 'center', justifyContent: 'center' }}
+                            transparent={true}
+                            presentationStyle="overFullScreen"
+                            visible={this.state.modalVisible}
+                            onRequestClose={() => {
+                            }}>
+                            <View style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                paddingTop: screenHeight / 3
+                            }}>
+                                <View style={styles.modal}>
                                     {
                                         this.state.isLoading === true ? (
                                             <View>
@@ -298,8 +322,12 @@ class StudentMainScreen extends QcParentScreen {
                                 ]
                             }
                             onValueChange={value => {
-                                this.setState({ isReadyEnum: value.value });
-                                FirebaseFunctions.updateStudentAssignmentStatus(currentClassID, userID, value.value);
+                                if (value.value === "READY") {
+                                    this.setState({ recordingModaVisible: true });
+                                } else {
+                                    this.setState({ isReadyEnum: value.value });
+                                    FirebaseFunctions.updateStudentAssignmentStatus(currentClassID, userID, value.value);
+                                }
                             }}
                             getLabel={item => item.label}
                             optionTemplate={(settings) => {
