@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, Text, Alert, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, Text, Alert, ScrollView } from 'react-native';
 import Toast, { DURATION } from 'react-native-easy-toast'
 import QcActionButton from 'components/QcActionButton';
 import TouchableText from 'components/TouchableText'
@@ -30,8 +30,6 @@ export class ProfileScreen extends QcParentScreen {
         } else {
             FirebaseFunctions.setCurrentScreen("Student Profile Screen", "ProfileScreen");
         }
-
-
     }
 
     state = {
@@ -256,4 +254,3 @@ const styles = StyleSheet.create({
 });
 
 export default ProfileScreen;
-

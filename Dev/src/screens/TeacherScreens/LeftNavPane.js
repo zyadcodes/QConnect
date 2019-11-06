@@ -153,4 +153,3 @@ class LeftNavPane extends QcParentScreen {
 
 
 export default LeftNavPane;
-

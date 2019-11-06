@@ -2,11 +2,12 @@
 //tabs navigator in the teacher screens & the drawerNavigators).
 import React from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
+import MushafScreen from './MushafScreen/MushafScreen'
 import FirstScreenLoader from './FirstScreenLoader/FirstScreenLoader';
 import LoginScreen from './AuthenticationScreens/LoginScreen';
 import AccountTypeScreen from './AuthenticationScreens/AccountTypeScreen';
 import TeacherWelcomeScreen from './TeacherScreens/TeacherWelcomeScreen';
-import AddClassScreen from './TeacherScreens/AddClassScreen';
+import AddClassScreen from './TeacherScreens/AddClass/AddClassScreen';
 import ForgotPassword from './AuthenticationScreens/ForgotPassword';
 import StudentWelcomeScren from './StudentScreens/StudentWelcomeScreen';
 import allSettingsScreen from './SettingsScreen/allSettingsScreen';
@@ -23,6 +24,13 @@ import TopBanner from 'components/TopBanner';
 
 //The routes containing all the screens & their navigation options
 routeConfig = {
+
+    MushafScreen: {
+        screen: MushafScreen,
+        navigationOptions: ({ navigation }) => ({
+            header: null
+        }),
+    },
 
     FirstScreenLoader: {
         screen: FirstScreenLoader,

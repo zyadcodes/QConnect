@@ -7,7 +7,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import colors from 'config/colors'
 import fontStyles from 'config/fontStyles';
-import { screenHeight, screenWidth } from 'config/dimensions';
+import { screenHeight } from 'config/dimensions';
 
 class TopBanner extends FontLoadingComponent {
     render() {
@@ -19,7 +19,7 @@ class TopBanner extends FontLoadingComponent {
             <View style={styles.entireTopView}>
                 <View style={{ flex: 0.5 }} />
                 <View style={styles.topLeftView}  >
-                    <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: screenHeight * 0.15, justifyContent: 'flex-start', alignItems: 'center' }} onPress={LeftOnPress ? () => { LeftOnPress() } : () => { }} >
+                <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: screenHeight * 0.15, justifyContent: 'flex-start', alignItems: 'center' }} onPress={LeftOnPress ? () => { LeftOnPress() } : () => { }} >
                         <Icon
                             name={LeftIconName}
                             type="font-awesome"
@@ -34,7 +34,7 @@ class TopBanner extends FontLoadingComponent {
                 </View>
 
                 <View style={styles.topRightView} >
-                    <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: screenHeight * 0.15, justifyContent: 'flex-end', alignItems: 'center' }} onPress={RightOnPress ? () => { RightOnPress() } : () => { }}>
+                <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: screenHeight * 0.15, justifyContent: 'flex-end', alignItems: 'center' }} onPress={RightOnPress ? () => { RightOnPress() } : () => { }}>
                         <Icon
                             name={RightIconName}
                             type="font-awesome"

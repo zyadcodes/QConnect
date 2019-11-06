@@ -1,11 +1,11 @@
 import React from 'react'
 import { View, Text, TextInput, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
-import colors from 'config/colors';
-import { screenHeight, screenWidth } from 'config/dimensions';
+import colors from 'config/colors'
 import strings from '../../config/strings';
 import PhoneInput from 'react-native-phone-input'
 import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 //--------------------------------------------------------------------------
 // Teacher info entries (Name, Phone number, and Email address). 
@@ -28,6 +28,7 @@ export default TeacherInfoEntries = (props) => {
                 <TextInput
                     style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
                     textContentType='name'
+                    autoCorrect={false}
                     onChangeText={props.onNameChanged}
                     value={props.name} />
             </View>
@@ -60,6 +61,7 @@ export default TeacherInfoEntries = (props) => {
                         <TextInput
                             style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
                             keyboardType='email-address'
+                            autoCorrect={false}
                             autoCapitalize='none'
                             textContentType='emailAddress'
                             onChangeText={props.onEmailAddressChanged}
@@ -88,6 +90,7 @@ export default TeacherInfoEntries = (props) => {
                         style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
                         textContentType='password'
                         autoCompleteType='password'
+                        autoCorrect={false}
                         onChangeText={props.onPasswordChanged}
                         secureTextEntry={true}
                         value={props.password}
@@ -105,6 +108,7 @@ export default TeacherInfoEntries = (props) => {
                     <TextInput
                         style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
                         textContentType='password'
+                        autoCorrect={false}
                         autoCompleteType='password'
                         onChangeText={props.onPasswordTwoChanged}
                         secureTextEntry={true}
@@ -160,5 +164,12 @@ const styles = StyleSheet.create({
         height: screenHeight * 0.07,
         borderBottomColor: colors.grey,
         borderBottomWidth: 0.25
+    },
+    infoTextInput: {
+        paddingLeft: screenWidth * 0.025,
+        fontSize: 14,
+        color: colors.darkGrey,
+        flex: 1,
+        alignSelf: 'stretch',
     },
 })

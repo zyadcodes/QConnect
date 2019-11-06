@@ -210,6 +210,7 @@ export class EvaluationPage extends QcParentScreen {
                   notes: teacherNotes
                 })}
                 returnKeyType={"done"}
+                autoCorrect={false}
                 blurOnSubmit={true}
                 placeholder={strings.WriteANote}
                 placeholderColor={colors.black}
@@ -252,6 +253,12 @@ export class EvaluationPage extends QcParentScreen {
 
 //--------------- Styles used on this screen -------------------
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'column',
+    backgroundColor: colors.lightGrey,
+    flex: 1,
+    justifyContent: "flex-end"
+  },
   evaluationContainer: {
     flexDirection: 'column',
     paddingTop: screenHeight * 0.048,

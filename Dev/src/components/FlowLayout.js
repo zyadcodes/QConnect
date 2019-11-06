@@ -3,7 +3,7 @@
 //--------------------------------------------------------------------------------
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, PixelRatio, Text, View, TouchableOpacity, Dimensions, Modal, TextInput } from 'react-native';
+import { StyleSheet, PixelRatio, Text, View, TouchableOpacity, Modal, TextInput } from 'react-native';
 import colors from 'config/colors';
 import strings from 'config/strings';
 import QcActionButton from './QcActionButton';
@@ -220,6 +220,7 @@ export default class FlowLayout extends Component {
 												<TextInput
 													style={[styles.textInputStyle, { minWidth: (this.state.newImprovementText.length * 4) + 80 }]}
 													value={this.state.newImprovementText}
+													autoCorrect={false}
 													onChangeText={(text) => { this.setState({ newImprovementText: text }) }}
 													onEndEditing={() => { this.state.newImprovementText ? 
 														dataValue.push(this.state.newImprovementText) : {}; 
@@ -350,5 +351,12 @@ const styles = StyleSheet.create({
 		marginHorizontal: 0.036 * screenWidth,
 		width: screenWidth * 0.9,
 	},
-
+	text: {
+		fontSize: 16,
+		textAlign: 'center',
+	},
+	minusText: {
+		fontSize: 10,
+		color: colors.white
+	}
 });

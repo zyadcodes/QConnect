@@ -300,7 +300,7 @@ export default class FirebaseFunctions {
     //To locate the correct student, the method will take in params of the classID, the studentID,
     //and finally, the name of the new assignment which it will set the currentAssignment property 
     //to
-    static async updateStudentCurrentAssignment(classID, studentID, newAssignmentName, assignmentType) {
+    static async updateStudentCurrentAssignment(classID, studentID, newAssignmentName, assignmentType, assignmentLocation) {
 
         let currentClass = await this.getClassByID(classID);
         let arrayOfStudents = currentClass.students;
@@ -309,6 +309,7 @@ export default class FirebaseFunctions {
         });
         arrayOfStudents[studentIndex].currentAssignment = newAssignmentName;
         arrayOfStudents[studentIndex].currentAssignmentType = assignmentType;
+        arrayOfStudents[studentIndex].currentAssignmentLocation = assignmentLocation;
         arrayOfStudents[studentIndex].isReadyEnum = "WORKING_ON_IT";
 
         await this.updateClassObject(classID, {
@@ -326,22 +327,34 @@ export default class FirebaseFunctions {
 
     }
 
-    static async updateClassAssignment(classID, newAssignmentName) {
+    static async updateClassAssignment(classID, newAssignmentName, assignmentType, assignmentLocation) {
 
         let currentClass = await this.getClassByID(classID);
         let arrayOfStudents = currentClass.students;
         arrayOfStudents.forEach((student) => {
             student.currentAssignment = newAssignmentName;
-            //Notifies that student that their assignment has been updated
-            this.functions.httpsCallable('sendNotification', {
-                topic: student.ID,
-                title: strings.AssignmentUpdate,
-                body: strings.YourTeacherHasUpdatedYourCurrentAssignment
-            });
+            student.currentAssignmentType = assignmentType;
+            student.currentAssignmentLocation = assignmentLocation;
+            
+            try{
+                //Notifies that student that their assignment has been updated
+                this.functions.httpsCallable('sendNotification', {
+                    topic: student.ID,
+                    title: strings.AssignmentUpdate,
+                    body: strings.YourTeacherHasUpdatedYourCurrentAssignment
+                });
+            }catch(error){
+                console.log("failed to send notifications to students");
+                //todo: log event when this happens
+                this.logEvent("FAILED_TO_SEND_NOTIFICATIONS. Error: " + error.toString())
+            }
         });
 
         await this.updateClassObject(classID, {
-            students: arrayOfStudents
+            students: arrayOfStudents,
+            currentAssignment: newAssignmentName,
+            currentAssignmentType: assignmentType,
+            currentAssignmentLocation: assignmentLocation
         });
         return 0;
 

@@ -2,7 +2,7 @@ import React from 'react'
 import { ListItem } from 'react-native-elements'
 import PropTypes from 'prop-types';
 import colors from "config/colors";
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet } from "react-native";
 import FontLoadingComponent from './FontLoadingComponent';
 import { screenHeight, screenWidth } from 'config/dimensions';
 

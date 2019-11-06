@@ -14,7 +14,7 @@ export default class UserInput extends Component {
           style={styles.input}
           placeholder={this.props.placeholder}
           secureTextEntry={this.props.secureTextEntry}
-          autoCorrect={this.props.autoCorrect}
+          autoCorrect={false}
           autoCapitalize={this.props.autoCapitalize}
           returnKeyType={this.props.returnKeyType}
           placeholderTextColor={colors.darkishGrey}

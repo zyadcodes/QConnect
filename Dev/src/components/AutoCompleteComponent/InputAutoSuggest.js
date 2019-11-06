@@ -32,8 +32,9 @@ class InputAutoSuggest extends Component {
     const existingItem = { id, name };
     this.setState({
       value: name,
+      id: id
     });
-    this.props.onTextChanged(name);
+    this.props.onTextChanged({name, id});
 
     onDataSelectedChange(existingItem);
     
@@ -41,7 +42,7 @@ class InputAutoSuggest extends Component {
     this.myTextInput.focus();
   };
   
-  keyExtractor = (item, index) => index+"";
+  keyExtractor = (item, index) => item.id+"";
 
   async searchList(text) {
 
@@ -87,7 +88,7 @@ class InputAutoSuggest extends Component {
       <SuggestionListItem
         textStyle={itemTextStyle}
         tagStyle={itemTagStyle}
-        id={index+""}
+        id={item.id}
         onPressItem={this.onPressItem}
         name={item.name}
         tags={item.tags}
@@ -104,6 +105,7 @@ class InputAutoSuggest extends Component {
           style={[style.inputDefaultStyle, inputStyle]}
           value={value}
           clearButtonMode="while-editing"
+          autoCorrect={false}
           onChangeText={this.searchList}
           ref={(ref)=>{this.myTextInput = ref}}
         />
@@ -113,7 +115,7 @@ class InputAutoSuggest extends Component {
           extraData={this.state}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
-          initialNumToRender = {7}
+          initialNumToRender = {10}
           keyboardShouldPersistTaps = "handled"
         />
       </View>
@@ -159,6 +161,10 @@ style = StyleSheet.create({
     justifyContent: 'flex-start',
     width: screenWidth * 0.73,
     height: screenHeight * 0.29
+  },
+  input: {
+    fontSize: 22,
+    borderBottomWidth: 1,
   },
   flatList: {},
   inputDefaultStyle: {
