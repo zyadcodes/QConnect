@@ -10,7 +10,6 @@ import colors from 'config/colors'
 import strings from 'config/strings';
 import TopBanner from 'components/TopBanner'
 import FirebaseFunctions from 'config/FirebaseFunctions';
-import { Icon } from 'react-native-elements';
 import QcActionButton from 'components/QcActionButton';
 import LeftNavPane from './LeftNavPane';
 import SideMenu from 'react-native-side-menu';
