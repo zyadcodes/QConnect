@@ -14,7 +14,6 @@ async function getAllPages(){
     for (i = 1; i <= 604; i++) {
         try{
         let lines = await getPageTextWbW(i);
-        console.log("fetched page: " + i)
         if (lines && lines.length > 0) {
             AllLines.push(lines);
             if (i === 604) {
@@ -26,7 +25,6 @@ async function getAllPages(){
             }
         }
         catch(error) {
-            console.log("failed to fetch: " + i + ". error: " + error)
     }
 }
 }
@@ -99,11 +97,8 @@ async function getPageTextWbW(pageNumber) {
         let pageText = getPageByLines(jsonPage.result);
         return pageText;
     } catch (error) {
-        console.error(error);
     }
 
-    //console.log("result: " + JSON.stringify(result));
-    //console.log("returning: " + ret);
     return ret;
 
 }
