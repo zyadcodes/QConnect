@@ -73,6 +73,8 @@ export class ProfileScreen extends QcParentScreen {
         } else if (!this.state.isPhoneValid) {
             Alert.alert(strings.Whoops, strings.InvalidPhoneNumber);
         } else {
+           // teacherCustomTags = [];
+            //await FirebaseFunctions.updateTeacherObject{userID, { customTags: teacherCustomTags}}
 
             if (this.state.isTeacher === true) {
                 await FirebaseFunctions.updateTeacherObject(userID, {
