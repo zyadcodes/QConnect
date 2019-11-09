@@ -87,7 +87,7 @@ class TopBanner extends FontLoadingComponent {
                     </View>
 
                 <View style={styles.topRightView} >
-                    <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: screenHeight * 0.15, justifyContent: 'flex-end', alignItems: 'center' }} onPress={RightOnPress ? () => { RightOnPress() } : () => { }}>
+                <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: screenHeight * 0.15, justifyContent: 'flex-end', alignItems: 'center' }} onPress={RightOnPress ? () => { RightOnPress() } : () => { }}>
                         <Icon
                             name={RightIconName}
                             type="font-awesome"

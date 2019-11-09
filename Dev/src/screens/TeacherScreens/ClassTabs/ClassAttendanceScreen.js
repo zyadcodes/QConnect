@@ -244,12 +244,14 @@ export class ClassAttendanceScreen extends QcParentScreen {
               let color = this.state.absentStudents.includes(student.ID)
                 ? colors.red
                 : colors.green;
+              let attendanceCaption = this.state.absentStudents.includes(student.ID)
+                ? strings.Absent : strings.Present;
               return (
                 <StudentCard
                   key={student.ID}
                   studentName={student.name}
+                  currentAssignment={attendanceCaption}
                   profilePic={studentImages.images[student.profileImageID]}
-                  currentAssignment={student.currentAssignment}
                   background={color}
                   onPress={() => this.onStudentSelected(student.ID)}
                 />

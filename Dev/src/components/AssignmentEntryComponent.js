@@ -60,18 +60,22 @@ export default class AssignmentEntryComponent extends React.Component {
                                                 });
                                             }}
                                             activeContainerStyle={[{
+                                                marginVertical: screenHeight * 0.025,
                                                 backgroundColor: colors.grey,
                                                 borderRadius: screenWidth * 0.025,
                                             },
                                             {
+                                                marginVertical: screenHeight * 0.025,
                                                 backgroundColor: colors.green,
                                                 borderRadius: screenWidth * 0.025,
                                             },
                                             {
+                                                marginVertical: screenHeight * 0.025,
                                                 backgroundColor: colors.darkishGrey,
                                                 borderRadius: screenWidth * 0.025,
                                             },]}
                                             inactiveContainerStyle={[styles.inactiveAssignmentStyle, styles.inactiveAssignmentStyle, {
+                                                marginVertical: screenHeight * 0.025,
                                                 marginLeft: screenWidth * 0.005,
                                                 borderRadius: screenWidth * 0.025,
                                             }]}>

@@ -46,6 +46,7 @@ class ForgotPassword extends Component {
                         style={styles.textInputStyle}
                         returnKeyType={"done"}
                         blurOnSubmit={true}
+                        autoCorrect={false}
                         placeholder={strings.emailPlaceHolder}
                         placeholderColor={colors.black}
                         value={this.state.emailText}

@@ -2,7 +2,7 @@
 export default {
 
     //---------------------  App info ---------------------------
-    AppTitle: 'Quran Connect',
+    AppTitle: 'QuranConnect',
     AppSubTitle: 'Serving your passion for the Quran',
 
     //--------------------- Notifications ---------------------
@@ -20,12 +20,16 @@ export default {
     TotalAssignments: 'Assignments Completed',
     Ready: 'READY',
     WorkingOnIt: 'WORKING ON IT',
+    NeedAssignment: "NEED ASSIGNMENT",
     ClassAlreadyJoined: 'We know it\'s exciting to be in this class. But you can only join it once.',
     NeedHelp: "NEED HELP",
 
     //--------------------- Forgot Password Screen-------------------
     emailPlaceHolder: "Email",
     Submit: 'Submit',
+    AskForEmail: 'Please Enter Email Here',
+    EnterCode: 'Code',
+    EmailError: 'Please Enter Email',
     PleaseEnterYourEmailAddress: 'Please enter your email address',
     EmailErrorHeader: "Error with Email",
     NewPasswordPlaceholder: 'New Password',
@@ -42,10 +46,12 @@ export default {
     EmailSent: 'Email Sent',
     CheckEmail: 'If a user with this email exists, we\'ve sent a link to your email to reset your password',
     Ok: 'Ok',
+    Go: 'Change',
     PasswordsDontMatch: "Passwords Don't match",
 
     //--------------------- Evaluation Page ---------------------
     None: 'None',
+    NoAssignmentsYet: "No assignments yet",
     HowWas: 'How was ',
     sTasmee3: '\'s tasmee\'?',
     WriteANote: 'Write a note',
@@ -86,6 +92,8 @@ export default {
 
     //--------------------- Student Profile Screen ---------------------
     EditAssignment: 'Edit Assignment',
+    AddAssignment: "Add Assignment",
+    Assignments: 'Assignments',
     Reading: 'Reading',
     Memorization: 'Memorization',
     Revision: 'Revision',
@@ -95,15 +103,18 @@ export default {
     GetStarted: 'Get Started!',
     PracticePerfect: "Practice Makes Perfect!",
     GreatJob: "Great Job!",
-    CurrentlyNoAssignment: 'You currently don\'t have an assignment',
+    CurrentlyNoAssignment: 'You currently don\'t have an assignment.',
     CurrentAssignment: 'Current Assignment',
     AddAssignment: 'Add Assignment',
     Grade: 'Grade',
-    PleaseEnterAnAssignmentName: 'Please enter an assignment name',
+    PleaseEnterAnAssignmentName: 'Please select an assignment.',
     ImprovementAreas: 'Things to work on: ',
     NoClass: "Uh Oh! No Classes",
     addClassButton: "Click Here to Add A Class",
     NotesColon: 'Notes: ',
+    ParenthesisPage: ") p. ",
+    PagesWithParenthesis: ") pp. ",
+    To: " to ",
 
     //--------------------- Join Class Screen ---------------------
     JoinClass: 'Join Class',
@@ -138,6 +149,8 @@ export default {
     HasBeenSaved: ' has been saved',
     Confirm: 'Confirm',
     SaveAttendance: 'Save Attendance',
+    Present: "Present",
+    Absent: "Absent",
 
     //--------------------- Add Students Screens ---------------------
     Remove: 'Remove',
@@ -153,13 +166,14 @@ export default {
     ThereIsAlreadyAStudentWithThatName: 'There is already a student with that name',
     EnterYourStudentsName: 'Enter your student\'s name',
     Whoops: 'Whoops',
-    JoinMyClass: 'Join my class on Quran Connect. Here is the class code: \n',
+    AddStudents: 'Add Students',
     AddYourStudents: 'Add Your Students',
     Or: 'Or: ',
     AddStudentsManually: 'Add students manually',
     AddStudents: 'Add Students',
     AddManualStudents: 'Add Manual Students',
     ShareCode: 'Share code with students',
+    JoinMyClass: 'Join my class on QuranConnect. Here is the class code: ',
 
     //--------------------- Class Header Navigator ---------------------
     StudentProfile: 'Student Profile',
@@ -200,8 +214,12 @@ export default {
     Credits: 'Photo Credit',
     PrivacyPolicy: 'Privacy Policy',
     LogOut: 'Log Out',
-
+    Mushaf: 'Mushaf',
+    
     //--------------------------- Credits -------------------------------------------
     FirstScreenImageCredits: 'First screen background photo by © Hany Khalaf Photography',
     AvatarCredits: 'Computer vector created by brgfx - www.freepik.com',
+
+    //---------------------------  Mushaf ---------------------------------------
+    InvalidPageNumber: 'Invalid page number. Please enter a page between 1 and 604.'
 }

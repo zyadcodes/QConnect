@@ -43,6 +43,9 @@ target 'QuranConnect' do
   pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications.podspec"
 
+
+  pod 'RNSound', :path => '../node_modules/react-native-sound'
+
   target 'QuranConnectTests' do
     inherit! :search_paths
     # Pods for testing

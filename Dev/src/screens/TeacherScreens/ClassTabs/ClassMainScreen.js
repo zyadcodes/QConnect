@@ -38,7 +38,14 @@ export class ClassMainScreen extends QcParentScreen {
     const { userID } = this.props.navigation.state.params;
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
     const { currentClassID } = teacher;
-    const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
+
+
+    let { currentClass } = this.props.navigation.state.params;
+    if (currentClass === undefined) {
+      currentClass = await FirebaseFunctions.getClassByID(currentClassID);
+    }
+
+
     const classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
     this.setState({
       isLoading: false,
@@ -96,6 +103,7 @@ updatePicture(newPicture){
 
   render() {
     const { isLoading, teacher, userID, currentClass, currentClassID } = this.state;
+
     if (isLoading === true) {
       return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -181,6 +189,12 @@ updatePicture(newPicture){
                 onTitleChanged={(newTitle)=> this.updateTitle(newTitle)}
                 onEditingPicture={(newPicture)=> this.updatePicture(newPicture)}
                 profileImageID={currentClass.classImageID}
+                RightIconName="edit"
+                RightOnPress={() => this.props.navigation.push("ShareClassCode", {
+                  currentClassID,
+                  userID: this.state.userID,
+                  currentClass
+                })}
               />
             </View>
             <View style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'center' }}>
@@ -197,9 +211,9 @@ updatePicture(newPicture){
               <QcActionButton
                 text={strings.AddStudentButton}
                 onPress={() => this.props.navigation.push("ShareClassCode", {
-                  currentClassID: this.state.currentClassID,
+                  currentClassID,
                   userID: this.state.userID,
-                  currentClass: this.state.currentClass
+                  currentClass
                 })} />
             </View>
           </QCView>
@@ -209,10 +223,13 @@ updatePicture(newPicture){
 
 
     else {
+
       const studentsNeedHelp = currentClass.students.filter((student) => student.isReadyEnum === "NEED_HELP");
       const studentsReady = currentClass.students.filter((student) => student.isReadyEnum === "READY");
-      const studentsWorkingOnIt = currentClass.students.filter((student) => student.isReadyEnum === "WORKING_ON_IT");
+      const studentsWorkingOnIt = currentClass.students.filter((student) => student.isReadyEnum === "WORKING_ON_IT" && student.currentAssignment !== "None");
+      const studentsWithNoAssignments = currentClass.students.filter((student) => student.currentAssignment === "None");
       const { isEditing, currentClassID, userID } = this.state;
+
       return (
         <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
           teacher={teacher}
@@ -275,7 +292,7 @@ updatePicture(newPicture){
                     name='issue-opened'
                     type='octicon'
                     color={colors.darkRed}
-                    />
+                  />
                   <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkRed]}>{strings.NeedHelp}</Text>
                 </View>
               ) : (
@@ -290,7 +307,7 @@ updatePicture(newPicture){
                   key={item.ID}
                   studentName={item.name}
                   profilePic={studentImages.images[item.profileImageID]}
-                  currentAssignment={item.currentAssignment}
+                  currentAssignment={item.currentAssignment === "None"? strings.NoAssignmentsYet : item.currentAssignment}
                   onPress={() =>
                     this.props.navigation.push("TeacherStudentProfile", {
                       userID: userID,
@@ -315,7 +332,7 @@ updatePicture(newPicture){
                     name='check-circle-outline'
                     type='material-community'
                     color={colors.darkGreen}
-                    />
+                  />
                   <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkGreen]}>
                     {strings.Ready}</Text>
                 </View>
@@ -331,7 +348,7 @@ updatePicture(newPicture){
                   key={item.id}
                   studentName={item.name}
                   profilePic={studentImages.images[item.profileImageID]}
-                  currentAssignment={item.currentAssignment}
+                  currentAssignment={item.currentAssignment === "None"? strings.NoAssignmentsYet : item.currentAssignment}
                   onPress={() =>
                     this.props.navigation.push("TeacherStudentProfile", {
                       userID: userID,
@@ -350,13 +367,54 @@ updatePicture(newPicture){
                   compOnPress={() => { this.removeStudent(item.ID) }} />
               )} />
             {
+              studentsWithNoAssignments.length > 0 ? (
+                <View style={{ alignItems: 'center', marginLeft: screenWidth * 0.017, flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
+                  <Icon
+                    name='pencil-plus-outline'
+                    type='material-community'
+                    color={colors.primaryDark}
+                  />
+                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStylePrimaryDark]}>{strings.NeedAssignment}</Text>
+                </View>
+              ) : (
+                  <View></View>
+                )
+            }
+            <FlatList
+              data={studentsWithNoAssignments}
+              keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
+              renderItem={({ item }) => (
+                <StudentCard
+                  key={item.id}
+                  studentName={item.name.toUpperCase()}
+                  profilePic={studentImages.images[item.profileImageID]}
+                  currentAssignment={strings.NoAssignmentsYet}
+                  onPress={() =>
+                    this.props.navigation.push("TeacherStudentProfile", {
+                      userID: userID,
+                      studentID: item.ID,
+                      currentClass: currentClass,
+                      classID: currentClassID
+                    })
+                  }
+                  background={colors.white}
+                  comp={isEditing === true ? (
+                    <Icon
+                      name='user-times'
+                      size={PixelRatio.get() * 9}
+                      type='font-awesome'
+                      color={colors.primaryDark} />) : (null)}
+                  compOnPress={() => { this.removeStudent(item.ID) }} />
+              )} />
+
+            {
               studentsWorkingOnIt.length > 0 ? (
                 <View style={{ alignItems: 'center', marginLeft: screenWidth * 0.017, flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
                   <Icon
                     name='update'
                     type='material-community'
                     color={colors.primaryDark}
-                    />
+                  />
                   <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStylePrimaryDark]}>{strings.WorkingOnIt}</Text>
                 </View>
               ) : (
@@ -371,7 +429,7 @@ updatePicture(newPicture){
                   key={item.id}
                   studentName={item.name}
                   profilePic={studentImages.images[item.profileImageID]}
-                  currentAssignment={item.currentAssignment}
+                  currentAssignment={item.currentAssignment === "None"? strings.NoAssignmentsYet : item.currentAssignment}
                   onPress={() =>
                     this.props.navigation.push("TeacherStudentProfile", {
                       userID: userID,
@@ -405,10 +463,10 @@ const styles = StyleSheet.create({
     flex: 3,
   },
   AddStudentButton: {
-    height: screenHeight * 0.08,
+    height: screenHeight * 0.04,
     alignItems: 'flex-end',
     paddingRight: screenWidth * 0.025
-  }
+  },
 });
 
 export default ClassMainScreen;

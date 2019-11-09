@@ -1,6 +1,6 @@
 //This will be the credits screen
 import React from 'react';
-import { StyleSheet, Text, ScrollView, Linking } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, Linking } from 'react-native';
 import colors from 'config/colors';
 import strings from 'config/strings';
 import QcParentScreen from "screens/QcParentScreen";
@@ -8,7 +8,7 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
-import { screenHeight, screenWidth } from 'config/dimensions';
+import { screenWidth, screenHeight } from 'config/dimensions';
 
 export default class CreditsScreen extends QcParentScreen {
 

@@ -41,6 +41,17 @@
 	<string/>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Georgia.ttf</string>
+		<string>Montserrat-Bold.ttf</string>
+		<string>Montserrat-Light.ttf</string>
+		<string>Montserrat-Regular.ttf</string>
+		<string>Ubuntu-Bold.ttf</string>
+		<string>Ubuntu-Light-Italic.ttf</string>
+		<string>Ubuntu-Light.ttf</string>
+		<string>MADDINA.ttf</string>
+		<string>me_quran.ttf</string>
+		<string>Scheherazade-Regular</string>
+		<string>Scheherazade-Bold</string>
 		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
@@ -57,13 +68,6 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
-		<string>Georgia.ttf</string>
-		<string>Montserrat-Bold.ttf</string>
-		<string>Montserrat-Light.ttf</string>
-		<string>Montserrat-Regular.ttf</string>
-		<string>Ubuntu-Bold.ttf</string>
-		<string>Ubuntu-Light-Italic.ttf</string>
-		<string>Ubuntu-Light.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
