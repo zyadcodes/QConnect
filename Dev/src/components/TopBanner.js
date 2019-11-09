@@ -26,11 +26,13 @@ class TopBanner extends FontLoadingComponent {
     onImageSelected(index) {
         this.setState({ profileImageID: index, })
         this.setModalVisible(false);
+        this.props.onEditingPicture(index);
+
     }
     render() {
         //Component properties
         const { LeftIconName, LeftTextName, LeftOnPress, Title, isEditingTitle, onTitleChanged,isEditingPicture,
-            RightIconName, RightTextName, RightOnPress, profilePic, UpdateProfileImage, profileImageID,} = this.props;
+            RightIconName, RightTextName, RightOnPress, profilePic, onEditingPicture, profileImageID,} = this.props;
 
         return (
             <View style={styles.entireTopView}>
@@ -48,7 +50,6 @@ class TopBanner extends FontLoadingComponent {
                     <View style={styles.picContainer}>
                         <Image
                             style={styles.profilePic}
-                            onEditingPicture={UpdateProfileImage}
                             source={teacherImages.images[profileImageID]} />
                         <TouchableText
                             text={"Update Image"}
@@ -152,12 +153,10 @@ const styles = StyleSheet.create({
         marginBottom: screenHeight * 0.005,
         },
         picContainer: {
-            paddingVertical: screenHeight * .09,
+            paddingTop: screenHeight * .02,
             //width: screenHeight *.03,
             //height: screenHeight *.03,
             alignItems: 'center',
-            marginVertical: screenHeight * 0.005,
-            backgroundColor: colors.white,
           },
 
     

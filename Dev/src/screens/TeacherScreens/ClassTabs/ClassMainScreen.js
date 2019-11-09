@@ -95,9 +95,10 @@ updateTitle(newTitle){
   this.setState({titleHasChanged: true})
   this.setState({currentClass: {...this.state.currentClass, name: newTitle}})
 }
-updatePicture(newPicture){
+async updatePicture(newPicture){
   this.setState({pictureHasChanged: true})
-  this.setState({currentClass: {...this.state.currentClass, name: newPicture}})
+  this.setState({currentClass: {...this.state.currentClass, classImageID: newPicture}})
+  await FirebaseFunctions.updateClassObject(this.state.currentClassID, {classImageID: newPicture})
 }
 
 
