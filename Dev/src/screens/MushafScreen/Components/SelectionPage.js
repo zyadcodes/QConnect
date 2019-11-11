@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ImageBackground, StyleSheet, TextInput, Alert } from 'react-native';
+import { View, ImageBackground, StyleSheet, TextInput, Alert, KeyboardAvoidingView } from 'react-native';
 import colors from 'config/colors';
 import TouchableText from 'components/TouchableText'
 import LoadingSpinner from 'components/LoadingSpinner';
@@ -246,7 +246,8 @@ class SelectionPage extends React.Component {
             }
 
             return (
-                <View id={this.state.page + "upperWrapper"} style={{ backgroundColor: colors.white }}>
+                <KeyboardAvoidingView  behavior='padding'>
+                <View id={this.state.page + "upperWrapper"} style={{ backgroundColor: colors.white, justifyContent: "flex-end" }}>
                     <AssignmentEntryComponent
                         visible={this.state.isSurahSelectionVisible}
                         onSubmit={(surah) =>
@@ -318,7 +319,7 @@ class SelectionPage extends React.Component {
                                 !this.state.editPageNumber &&
                                 <TouchableText
                                     text={page.toString()}
-                                    style={{ ...fontStyles.mainTextStylePrimaryDark, marginLeft: 5 }}
+                                    style={{ ...fontStyles.mainTextStylePrimaryDark, ...fontStyles.textInputStyle }}
                                     onPress={() => { this.setState({ editPageNumber: true }) }}
                                 />
                             }{
@@ -337,7 +338,7 @@ class SelectionPage extends React.Component {
 
                                     <TouchableText
                                         text={strings.Go}
-                                        style={{ ...fontStyles.mainTextStylePrimaryDark, marginLeft: 5 }}
+                                        style={{ ...fontStyles.mainTextStylePrimaryDark, marginLeft: screenWidth * 0.01 }}
                                         onPress={() => { this.updatePage() }
                                         } />
 
@@ -346,7 +347,7 @@ class SelectionPage extends React.Component {
                         </ImageBackground>
                     </View>
                 </View>
-
+                </KeyboardAvoidingView>
             )
         }
     }
@@ -370,10 +371,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     textInputStyle: {
-        backgroundColor: colors.lightGrey,
+        backgroundColor: colors.veryLightGrey,
         borderColor: colors.darkGrey,
-        width: screenWidth * 0.2,
-        height: screenHeight * 0.03,
+        width: screenWidth * 0.3,
+        height: screenHeight * 0.055,
+        borderRadius: screenWidth * 0.028,
         marginTop: 5,
         marginBottom: 5,
         textAlign: "center",

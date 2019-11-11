@@ -26,6 +26,9 @@ const TextLine = ({ page, lineText, selectedAyahsEnd, selectedAyahsStart, select
                             isFirstSelectedWord={isFirstSelectedWord} />)
                     }
                     else if (word.char_type === "end") {
+                        if(Number(word.aya) === 9){
+                            console.log("debug me");
+                        }
                         return (<EndOfAyah key={word.id} ayahNumber={word.aya}
                             onPress={() => onSelectAyah(curAyah)}
                             selected={isAyahSelected(curAyah, selectionStarted, selectionCompleted, selectedAyahsStart, selectedAyahsEnd)}

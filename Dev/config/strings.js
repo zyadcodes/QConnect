@@ -52,6 +52,8 @@ export default {
     //--------------------- Evaluation Page ---------------------
     None: 'None',
     NoAssignmentsYet: "No assignments yet",
+    YouDontHaveAssignments: "You don't have any assignments currently.",
+    EnjoyYourTime: "Enjoy your time!",
     HowWas: 'How was ',
     sTasmee3: '\'s tasmee\'?',
     WriteANote: 'Write a note',

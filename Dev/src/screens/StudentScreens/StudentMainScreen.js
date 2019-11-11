@@ -267,7 +267,7 @@ class StudentMainScreen extends QcParentScreen {
                             <View style={styles.profileInfoBottom}>
                                 <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'column', height: screenHeight * 0.09 }}>
                                     <View style={{ paddingTop: screenHeight * 0.005, alignSelf: 'center' }}>
-                                        <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{thisClassInfo.currentAssignment.toUpperCase()}</Text>
+                                        <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{thisClassInfo.currentAssignment !== "None"? thisClassInfo.currentAssignment.toUpperCase() : ""}</Text>
                                     </View>
                                     <View style={{ alignSelf: 'flex-start' }}>
                                         <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.TotalAssignments + ": " + thisClassInfo.totalAssignments + "  "}</Text>
@@ -276,6 +276,7 @@ class StudentMainScreen extends QcParentScreen {
                             </View>
                         </View>
                     </View>
+                    {thisClassInfo.currentAssignment !== "None" ? 
                     <View style={{ backgroundColor: (isReadyEnum === "WORKING_ON_IT" ? colors.workingOnItColorBrown : (isReadyEnum === "READY" ? colors.green : colors.red)) }}>
                         <CustomPicker
                             options={
@@ -327,8 +328,18 @@ class StudentMainScreen extends QcParentScreen {
                                     </View>
                                 )
                             }}
-                        />
+                        /> 
                     </View>
+                    :
+                    <View style={{ ...styles.middleView, backgroundColor: colors.primaryLight }}>
+                        <View style={{ flex: .5, justifyContent: 'center', alignItems: 'center', paddingVertical: screenHeight * 0.04 }}>
+                            <Text style={fontStyles.bigTextStyleBlack}>{strings.NoAssignmentsYet}</Text>
+                            <Text style={fontStyles.mainTextStyleBlack}>{strings.YouDontHaveAssignments}</Text>
+                            <Text style={fontStyles.bigTextStyleBlack}>{"  "}</Text>
+                            <Text style={fontStyles.mainTextStylePrimaryDark}>{strings.EnjoyYourTime}</Text>
+                        </View>
+                    </View> 
+                    }
                     <View style={styles.bottomView}>
                         <ScrollView style={styles.prevAssignments}>
                             <FlatList

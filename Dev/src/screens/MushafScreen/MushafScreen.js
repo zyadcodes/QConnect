@@ -86,6 +86,7 @@ export default class MushafScreen extends QcParentScreen {
         const { userID } = this.props.navigation.state.params;
         const teacher = await FirebaseFunctions.getTeacherByID(userID);
         const { currentClassID } = teacher;
+
         const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
 
         if (studentID === undefined) {
@@ -479,23 +480,13 @@ export default class MushafScreen extends QcParentScreen {
 
             return (
                 <View style={{ width: screenWidth, height: screenHeight }}>
-                    <ScrollView>
+                    <ScrollView style={{ width: screenWidth, height: screenHeight * 0.95 }}>
                     <Swiper
                         index={this.state.index}
                         containerStyle={{ width: screenWidth, height: screenHeight }}
                         key={this.state.key}
-                        prevButton={<Icon
-                            color={colors.primaryDark}
-                            size={35}
-                            name={'angle-left'}
-                            type="font-awesome" />}
-                        nextButton={<Icon
-                            color={colors.primaryDark}
-                            size={35}
-                            name={'angle-right'}
-                            type="font-awesome" />}
                         loop={false}
-                        showsButtons={true}
+                        showsButtons={false}
                         showsPagination={false}
                         onIndexChanged={(index) => this.onPageChanged(index)}>
                         {this.state.pages.map((item, idx) => this.renderItem(item, idx))}
