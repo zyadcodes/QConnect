@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
         fontFamily: 'me_quran',
         alignItems: 'center',
         alignSelf: 'center',
-        fontSize: 10,
+        fontSize: 9,
         color: colors.darkGrey
     },
     ayahSeparator: {
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
         fontFamily: 'me_quran',
         alignItems: 'center',
         alignSelf: 'center',
-        fontSize: 14,
+        fontSize: 12,
         color: colors.darkGrey,
     },
     selectionStyle: {

@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     wordText: {
         textAlign: 'right',
         fontFamily: 'me_quran',
-        fontSize: 17,
+        fontSize: 15,
         color: colors.darkGrey
     },
     container: {

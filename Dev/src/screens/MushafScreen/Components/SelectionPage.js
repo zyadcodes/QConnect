@@ -13,8 +13,8 @@ import TextLine from './TextLine';
 import AssignmentEntryComponent from 'components/AssignmentEntryComponent';
 import surahs from '../Data/Surahs.json'
 import pages from '../Data/mushaf-wbw.json'
-import SwitchSelector from "react-native-switch-selector";
 import SurahHeader from './SurahHeader'
+import { compareOrder } from '../Helpers/AyahsOrder';
 
 
 //Creates the higher order component
@@ -26,7 +26,7 @@ class SelectionPage extends React.Component {
         isLoading: true,
         lines: [],
         page: this.lastPage,
-        editedPageNumber: this.lastPage,
+        editedPageNumber: this.props.page,
         editPageNumber: false,
         selectedAyahsStart: {
             surah: 0,
@@ -41,31 +41,100 @@ class SelectionPage extends React.Component {
         selectionStarted: false,
         selectionCompleted: false,
         isSurahSelectionVisible: false,
+        selectionOn: false,
     }
 
     //------------------------ initialize component ----------------------------------------
-    async componentDidMount() {
+    componentDidMount() {
         if (!this.props.isLoading) {
-            this.getPageLines(this.state.page);
+            this.getPageLines(this.props.page);
         }
-
     }
 
     // only redraw lines if the page have changed
     static getDerivedStateFromProps(nextProps, prevState) {
-        let lines = {}
-        if (nextProps.page !== prevState.page || prevState.lines === undefined || prevState.lines.length === 0) {
-            lines = { lines: pages[nextProps.page - 1] };
+        let retValue = null;
+        //if we didn't have the page text initialized before, let's initialize it.
+        if ((!prevState.lines || prevState.lines.length === 0) && !nextProps.isLoading) {
+            retValue = {
+                page: nextProps.page,
+                isLoading: false,
+                lines: pages[nextProps.page - 1]
+            }
         }
-        return {
-            ...lines,
-            page: nextProps.page,
-            selectedAyahsStart: nextProps.selectedAyahsStart,
-            selectedAyahsEnd: nextProps.selectedAyahsEnd,
-            selectionStarted: nextProps.selectionStarted,
-            selectionCompleted: nextProps.selectionCompleted,
-            isLoading: false
-        };
+
+        //if there is a new selection, update the page.
+        if (nextProps.selectionOn && (
+            compareOrder(nextProps.selectedAyahsStart, prevState.selectedAyahsStart) !== 0 ||
+            compareOrder(nextProps.selectedAyahsEnd, prevState.selectedAyahsEnd) !== 0)) {
+            retValue = {
+                ...retValue,
+                page: nextProps.page,
+                selectedAyahsStart: nextProps.selectedAyahsStart,
+                selectedAyahsEnd: nextProps.selectedAyahsEnd,
+                selectionStarted: nextProps.selectionStarted,
+                selectionCompleted: nextProps.selectionCompleted,
+                selectionOn: nextProps.selectionOn,
+                isLoading: false
+            };
+        }
+
+        //clear previous selection if the page has no longer an active selection
+        if (!nextProps.selectionOn && prevState.selectionOn) {
+            retValue = {
+                ...retValue,
+                page: nextProps.page,
+                selectedAyahsStart: nextProps.selectedAyahsStart,
+                selectedAyahsEnd: nextProps.selectedAyahsEnd,
+                selectionStarted: nextProps.selectionStarted,
+                selectionCompleted: nextProps.selectionCompleted,
+                selectionOn: nextProps.selectionOn,
+                isLoading: false
+            };
+        }
+
+        return retValue;
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        //if there are no lines initialized yet, skip rendering.
+        if (!nextState.lines || nextState.lines.length === 0) {
+            return false;
+        }
+
+        //if there were no lines initialized, and now we have them, let's re-render.
+        if (!this.state.lines || this.state.lines.length === 0) {
+            return true;
+        }
+
+        //if we have a change in the selection, let's re-render
+        if (nextProps.selectionOn && (
+            compareOrder(nextProps.selectedAyahsStart, this.state.selectedAyahsStart) !== 0 ||
+            compareOrder(nextProps.selectedAyahsEnd, this.state.selectedAyahsEnd) !== 0)) {
+            return true;
+        }
+
+        //if the sele.getDerivedStateFromPropsr
+        if (nextProps.selectionOn != this.state.selectionOn ||
+            nextProps.isLoading !== this.state.isLoading ||
+            nextState.isSurahSelectionVisible !== this.state.isSurahSelectionVisible || 
+            nextState.editPageNumber !== this.state.editPageNumber ||
+            nextState.editedPageNumber !== this.state.editedPageNumber ||
+            nextState.selectionStarted !== this.state.selectionStarted ||
+            nextState.selectionCompleted !== this.state.selectionCompleted ) {
+            return true;
+        }
+        
+        //if the text of the page has changed, let's re-render
+        if (nextState.lines[0].surah !== this.state.lines[0].surah ||
+            nextState.lines[0].ayah !== this.state.lines[0].ayah ||
+            nextState.lines[1].surah !== this.state.lines[1].surah ||
+            nextState.lines[1].ayah !== this.state.lines[1].ayah) {
+            return true;
+        }
+        
+        //otherwise, don't re-render.
+        return false;
     }
 
     //------------------------ Getters and content formatters ----------------------------------------
@@ -74,11 +143,11 @@ class SelectionPage extends React.Component {
     //parameters: page: the page number we want to retrieve
     // reads the data from a local json file
     // data retrieved is saved under this.state.lines
-    async getPageLines(page) {
-        const lines = await pages[page - 1] //(-1 to switch from 1 based index to 0 based index array)
+    getPageLines(page) {
         this.setState({
+            page: page,
             isLoading: false,
-            lines
+            lines: pages[page - 1]
         });
     }
 
@@ -213,7 +282,15 @@ class SelectionPage extends React.Component {
 
     //------------------------ render component ----------------------------------------
     render() {
-        const { isLoading, lines, page, selectedAyahsStart, selectedAyahsEnd, selectionStarted, selectionCompleted} = this.state;
+        const { isLoading,
+            lines,
+            page,
+            selectedAyahsStart,
+            selectedAyahsEnd,
+            selectionStarted,
+            selectionCompleted,
+            selectionOn
+        } = this.state;
 
         if (isLoading === true) {
             return (
@@ -230,123 +307,100 @@ class SelectionPage extends React.Component {
             const surahName = (lines[0] && lines[0].surah) ? lines[0].surah :
                 (lines[1] && lines[1].surah) ? lines[1].surah : "Select new assignment";
 
-            const options = [
-                { label: strings.Memorization, value: strings.Memorization },
-                { label: strings.Revision, value: strings.Revision },
-                { label: strings.Reading, value: strings.Reading }
-            ];
 
             if (this.state.page === 1) { lineAlign = 'center' }
 
-            let selectedAssignmentTypeIndex = 0;
-            if (this.props.assignmentType !== undefined) {
-                if (options.findIndex(option => option.value === this.props.assignmentType) !== -1) {
-                    selectedAssignmentTypeIndex = options.findIndex(option => option.value === this.props.assignmentType);
-                }
-            }
-
             return (
-                <KeyboardAvoidingView  behavior='padding'>
-                <View id={this.state.page + "upperWrapper"} style={{ backgroundColor: colors.white, justifyContent: "flex-end" }}>
-                    <AssignmentEntryComponent
-                        visible={this.state.isSurahSelectionVisible}
-                        onSubmit={(surah) =>
-                            this.updateSurah(surah)}
-                        assignment={surahName}
-                        onCancel={() => this.setState({ isSurahSelectionVisible: false })}
-                    />
-                    <PageHeader
-                        Title={surahName}
-                        TitleOnPress={() => {
-                            const { isSurahSelectionVisible } = this.state;
-                            this.setState({ isSurahSelectionVisible: !isSurahSelectionVisible })
-                        }}
-                        RightIconName="check-all"
-                        RightOnPress={() => { this.onSelectPage(); }}
-                        LeftImage={this.props.profileImage}
-                        currentClass={this.props.currentClass}
-                        assignToID={this.props.assignToID}
-                        onSelect={this.props.onChangeAssignee}
-                    />
+                <KeyboardAvoidingView behavior='padding'>
+                    <View id={this.state.page + "upperWrapper"} style={{ backgroundColor: colors.white, justifyContent: "flex-end" }}>
+                        <AssignmentEntryComponent
+                            visible={this.state.isSurahSelectionVisible}
+                            onSubmit={(surah) =>
+                                this.updateSurah(surah)}
+                            assignment={surahName}
+                            onCancel={() => this.setState({ isSurahSelectionVisible: false })}
+                        />
+                        <PageHeader
+                            Title={surahName}
+                            TitleOnPress={() => {
+                                const { isSurahSelectionVisible } = this.state;
+                                this.setState({ isSurahSelectionVisible: !isSurahSelectionVisible })
+                            }}
+                            RightIconName="check-all"
+                            RightOnPress={() => { this.onSelectPage(); }}
+                            LeftImage={this.props.profileImage}
+                            currentClass={this.props.currentClass}
+                            assignToID={this.props.assignToID}
+                            onSelect={this.props.onChangeAssignee}
+                        />
 
-                    <SwitchSelector
-                        options={options}
-                        initial={selectedAssignmentTypeIndex}
-                        height={20}
-                        textColor={colors.darkGrey}
-                        selectedColor={colors.primaryDark}
-                        buttonColor={colors.primaryLight}
-                        borderColor={colors.lightGrey}
-                        onPress={value => this.props.onChangeAssignmentType(value)}
-                        style={{ marginTop: 2 }}
-                    />
-
-                    <View id={this.state.page} style={styles.pageContent}>
-                        {
-                            lines !== undefined &&
-                            lines.map((line, index) => {
-                                if (line.type === "start_sura") {
-                                    return <SurahHeader surahName={line.name} key={line.line + "_" + index} />
-                                } else if (line.type === "besmellah") {
-                                    return <Basmalah key={line.line + "_basmalah"} />
-                                }
-                                else {
-                                    return (
-                                        <TextLine
-                                            key={page + "_" + line.line} 
-                                            lineText={line.text}
-                                            selectedAyahsEnd={selectedAyahsEnd}
-                                            selectedAyahsStart={selectedAyahsStart}
-                                            selectionStarted={selectionStarted}
-                                            selectionCompleted={selectionCompleted}
-                                            isFirstWord={isFirstWord}
-                                            onSelectAyah={(ayah) => this.props.onSelectAyah(ayah)}
-                                            page={this.state.page}
-                                            lineAlign={lineAlign}
-                                        />
-                                    )
-                                }
-                            })}
-                    </View>
-                    <View style={styles.footer}>
-                        <ImageBackground source={require('assets/images/quran/title-frame.png')}
-                            style={{
-                                width: '100%', justifyContent: 'center',
-                                alignSelf: 'center',
-                                alignItems: 'center',
-                            }} resizeMethod='scale'>
+                        <View id={this.state.page} style={styles.pageContent}>
                             {
-                                !this.state.editPageNumber &&
-                                <TouchableText
-                                    text={page.toString()}
-                                    style={{ ...fontStyles.mainTextStylePrimaryDark, ...fontStyles.textInputStyle }}
-                                    onPress={() => { this.setState({ editPageNumber: true }) }}
-                                />
-                            }{
-                                this.state.editPageNumber &&
-                                <View
-                                    style={{ flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center' }}>
-                                    <TextInput
-                                        style={[styles.textInputStyle, fontStyles.mainTextStyleDarkGrey]}
-                                        autoFocus={true}
-                                        selectTextOnFocus={true}
-                                        autoCorrect={false}
-                                        value={this.state.editedPageNumber.toString()}
-                                        onChangeText={(value) => this.setState({ editedPageNumber: Number(value) })}
-                                        keyboardType='numeric'
-                                    />
-
+                                lines !== undefined &&
+                                lines.map((line, index) => {
+                                    if (line.type === "start_sura") {
+                                        return <SurahHeader surahName={line.name} key={line.line + "_" + index} />
+                                    } else if (line.type === "besmellah") {
+                                        return <Basmalah key={line.line + "_basmalah"} />
+                                    }
+                                    else {
+                                        return (
+                                            <TextLine
+                                                key={page + "_" + line.line}
+                                                lineText={line.text}
+                                                selectionOn={selectionOn}
+                                                selectedAyahsEnd={selectedAyahsEnd}
+                                                selectedAyahsStart={selectedAyahsStart}
+                                                selectionStarted={selectionStarted}
+                                                selectionCompleted={selectionCompleted}
+                                                isFirstWord={isFirstWord}
+                                                onSelectAyah={(ayah) => this.props.onSelectAyah(ayah)}
+                                                page={this.state.page}
+                                                lineAlign={lineAlign}
+                                            />
+                                        )
+                                    }
+                                })}
+                        </View>
+                        <View style={styles.footer}>
+                            <ImageBackground source={require('assets/images/quran/title-frame.png')}
+                                style={{
+                                    width: '100%', justifyContent: 'center',
+                                    alignSelf: 'center',
+                                    alignItems: 'center',
+                                }} resizeMethod='scale'>
+                                {
+                                    !this.state.editPageNumber &&
                                     <TouchableText
-                                        text={strings.Go}
-                                        style={{ ...fontStyles.mainTextStylePrimaryDark, marginLeft: screenWidth * 0.01 }}
-                                        onPress={() => { this.updatePage() }
-                                        } />
+                                        text={page.toString()}
+                                        style={{ ...fontStyles.mainTextStylePrimaryDark, ...fontStyles.textInputStyle }}
+                                        onPress={() => { this.setState({ editPageNumber: true }) }}
+                                    />
+                                }{
+                                    this.state.editPageNumber &&
+                                    <View
+                                        style={{ flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center' }}>
+                                        <TextInput
+                                            style={[styles.textInputStyle, fontStyles.mainTextStyleDarkGrey]}
+                                            autoFocus={true}
+                                            selectTextOnFocus={true}
+                                            autoCorrect={false}
+                                            value={this.state.editedPageNumber.toString()}
+                                            onChangeText={(value) => this.setState({ editedPageNumber: Number(value) })}
+                                            keyboardType='numeric'
+                                        />
 
-                                </View>
-                            }
-                        </ImageBackground>
+                                        <TouchableText
+                                            text={strings.Go}
+                                            style={{ ...fontStyles.mainTextStylePrimaryDark, marginLeft: screenWidth * 0.01 }}
+                                            onPress={() => { this.updatePage() }
+                                            } />
+
+                                    </View>
+                                }
+                            </ImageBackground>
+                        </View>
                     </View>
-                </View>
                 </KeyboardAvoidingView>
             )
         }

@@ -16,7 +16,7 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import studentImages from 'config/studentImages';
 import classImages from "config/classImages";
 import { screenHeight, screenWidth } from 'config/dimensions';
-
+import SwitchSelector from "react-native-switch-selector";
 
 //------- constants to indicate the case when there is no ayah selected 
 const noAyahSelected = {
@@ -43,9 +43,9 @@ export default class MushafScreen extends QcParentScreen {
     //------------------------ initial state ----------------------------
     lastPage = 604;
     state = {
-        pages: ["604", "603", "602"],
+        pages: [],
         key: 1,
-        index: 1,
+        index: 3,
         classID: this.props.navigation.state.params.classID,
         studentID: this.props.navigation.state.params.studentID,
         imageID: this.props.navigation.state.params.imageID,
@@ -88,11 +88,15 @@ export default class MushafScreen extends QcParentScreen {
         const { currentClassID } = teacher;
 
         const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
+        allPages = [];
+        for(var i = 604; i > 0; i--){
+            allPages.push(i.toString());
+        }
 
         if (studentID === undefined) {
-
             //assign to all class -----
             this.setState({
+                pages:allPages,
                 selection: {
                     start: currentClass.currentAssignmentLocation ? currentClass.currentAssignmentLocation.start : noAyahSelected,
                     end: currentClass.currentAssignmentLocation ? currentClass.currentAssignmentLocation.end : noAyahSelected,
@@ -117,19 +121,17 @@ export default class MushafScreen extends QcParentScreen {
         }
         else {
             // assign to a particular student ----------
-            let pagesSection = {};
+            let indexSection = {};
             if(assignmentLocation !== undefined){
-                let newPage = assignmentLocation.start.page;
-                pages = this.getPagesToLoad(newPage);
-                pagesSection = {
-                    pages: pages.pages,
-                    index: pages.index
+                indexSection = {
+                    index: assignmentLocation.start.page -1
                 }
             }
             
             this.setState(
                 {
-                    ...pagesSection,
+                    ...indexSection,
+                    pages: allPages,
                     isLoading: false,
                     assignToAllClass: false,
                     currentClass: currentClass,
@@ -149,10 +151,14 @@ export default class MushafScreen extends QcParentScreen {
     // ------------------------- Helpers and Getters  --------------------------------------
     getPagesToLoad(page){
         let pageNumber = parseInt(page);
-        let nextPage = parseInt(pageNumber) + 1;
+        let nextPage1 = parseInt(pageNumber) + 1;
+        let nextPage2 = parseInt(pageNumber) + 2;
+        let nextPage3 = parseInt(pageNumber) + 3;
         let curPage = parseInt(pageNumber);
-        let prevPage = parseInt(pageNumber) - 1;
-        let index = 1;
+        let prevPage1 = parseInt(pageNumber) - 1;
+        let prevPage2 = parseInt(pageNumber) - 2;
+        let prevPage3 = parseInt(pageNumber) - 3;
+        let index = 3;
 
         //if we are in the first page, change render page 1, 2, and 3, and set current page to index 0 (page 1)
         //this way, users can't swipe left to previous page since there is no previous page
@@ -160,10 +166,11 @@ export default class MushafScreen extends QcParentScreen {
             //bug bug: there is a bug in swiper where if I set index to 0 (to indicate end of book), 
             // onIndexChanged is not called on the next swipe.
             // this is a temporary workaround until swiper bug is fixed or we find a better workaround.
-            prevPage = pageNumber;
+            prevPage1 = pageNumber;
+            prevPage2 = pageNumber;
+            prevPage3 = pageNumber;
             curPage = pageNumber;
-            nextPage = pageNumber + 1;
-            index = 1;
+            index = 3;
         }
         //if we are in the last page, change render page 602, 603, and 604, and set current page to index 2 (page 604)
         //this way, users can't swipe right to next page, since there is no next page
@@ -171,13 +178,14 @@ export default class MushafScreen extends QcParentScreen {
             //bug bug: there is a bug in swiper where if I set index to 0 (to indicate end of book), 
             // onIndexChanged is not called on the next swipe.
             // this is a temporary workaround until swiper bug is fixed or we find a better workaround.
-            prevPage = pageNumber - 1;
             curPage = pageNumber;
-            nextPage = pageNumber;
-            index = 1;
+            nextPage1 = pageNumber;
+            nextPage2 = pageNumber;
+            nextPage3 = pageNumber;
+            index = 3;
         }
 
-        return {pages: [nextPage.toString(), curPage.toString(), prevPage.toString()], index: index}; 
+        return {pages: [nextPage3.toString(), nextPage2.toString(), nextPage1.toString(), curPage.toString(), prevPage1.toString(), prevPage2.toString(), prevPage3.toString()], index: index}; 
     }
 
     // ------------------------- Event handlers --------------------------------------------
@@ -296,31 +304,17 @@ export default class MushafScreen extends QcParentScreen {
         let resetSelectionIfApplicable = {};
         if (keepSelection === false) {
             resetSelectionIfApplicable = {
-                selection: noSelection
+                selection: noSelection,
             }
         }
 
-        let pages = this.getPagesToLoad(page);
-        //otherwise, set the current page to the middle screen (index = 1), and set previous and next screens to prev and next pages 
+        //otherwise, set the current page to the middle screen (index = 3), and set previous and next screens to prev and next pages 
         this.setState({
             ...resetSelectionIfApplicable,
-            pages: pages.pages,
-            index: pages.index,
+            page: page,
+            index: 604 - page,
         }
         )
-    }
-
-    onPageChanged(idx) {
-        //if swipe right, go to next page, unless we are in the last page.
-        if (idx === this.state.index - 1 && parseInt(this.state.pages[0]) !== 604) {
-            const newPages = this.state.pages.map(i => (parseInt(i) + 1).toString())
-            this.setState({ pages: newPages, key: ((this.state.key + 1) % 2), index: 1 })
-        }
-        //if swipe right, go to previous page, unless we are in the first page
-        else if (idx === this.state.index + 1 && parseInt(this.state.pages[2]) !== 1) {
-            const newPages = this.state.pages.map(i => (parseInt(i) - 1).toString())
-            this.setState({ pages: newPages, key: ((this.state.key + 1) % 2), index: 1 })
-        }
     }
 
     /**
@@ -446,13 +440,14 @@ export default class MushafScreen extends QcParentScreen {
                     selectedAyahsEnd={selection.end}
                     selectionStarted={selection.started}
                     selectionCompleted={selection.completed}
+                    selectionOn={itemInt >= selection.start.page && itemInt <= selection.end.page}
                     profileImage={profileImage}
                     currentClass={this.state.currentClass}
+                    isLoading={this.state.isLoading}
                     assignmentType={assignmentType}
                     assignToID={assignToAllClass ? classID : studentID}
                     onChangeAssignee={(id, imageID, isClassID) => this.onChangeAssignee(id, imageID, isClassID)}
-                    onChangeAssignmentType={(value) => this.setState({ assignmentType: value })}
-
+                    
                     //callback when user taps on a single ayah to selects
                     //determines whether this would be the start of end of the selection
                     // and select ayahs in between
@@ -478,6 +473,18 @@ export default class MushafScreen extends QcParentScreen {
             )
         } else {
 
+            const options = [
+                { label: strings.Memorization, value: strings.Memorization },
+                { label: strings.Revision, value: strings.Revision },
+                { label: strings.Reading, value: strings.Reading }
+            ];
+            let selectedAssignmentTypeIndex = 0;
+            if (this.props.assignmentType !== undefined) {
+                if (options.findIndex(option => option.value === this.props.assignmentType) !== -1) {
+                    selectedAssignmentTypeIndex = options.findIndex(option => option.value === this.props.assignmentType);
+                }
+            }
+
             return (
                 <View style={{ width: screenWidth, height: screenHeight }}>
                     <ScrollView style={{ width: screenWidth, height: screenHeight * 0.95 }}>
@@ -487,8 +494,10 @@ export default class MushafScreen extends QcParentScreen {
                         key={this.state.key}
                         loop={false}
                         showsButtons={false}
+                        loadMinimal={true}
+                        loadMinimalSize={3}
                         showsPagination={false}
-                        onIndexChanged={(index) => this.onPageChanged(index)}>
+                        onIndexChanged={(index) => {this.setState({page: 604 - index})}}>
                         {this.state.pages.map((item, idx) => this.renderItem(item, idx))}
                     </Swiper>
                     </ScrollView>
@@ -499,6 +508,17 @@ export default class MushafScreen extends QcParentScreen {
                                 : <View></View>
                         }
                     </View>
+                    <SwitchSelector
+                        options={options}
+                        initial={selectedAssignmentTypeIndex}
+                        height={20}
+                        textColor={colors.darkGrey}
+                        selectedColor={colors.primaryDark}
+                        buttonColor={colors.primaryLight}
+                        borderColor={colors.lightGrey}
+                        onPress={(value) => this.setState({ assignmentType: value })}
+                        style={{ marginTop: 2 }}
+                    />
                     <View style={{
                         flexDirection: "row",
                         justifyContent: "center",
