@@ -495,7 +495,7 @@ export default class MushafScreen extends QcParentScreen {
                         loop={false}
                         showsButtons={false}
                         loadMinimal={true}
-                        loadMinimalSize={3}
+                        loadMinimalSize={1}
                         showsPagination={false}
                         onIndexChanged={(index) => {this.setState({page: 604 - index})}}>
                         {this.state.pages.map((item, idx) => this.renderItem(item, idx))}
