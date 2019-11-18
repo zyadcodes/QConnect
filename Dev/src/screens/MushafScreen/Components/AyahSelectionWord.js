@@ -6,6 +6,18 @@ import Sound from 'react-native-sound';
 //Creates the higher order component
 class Word extends React.Component {
 
+    state = {
+        selected: this.props.selected,
+        isFirstSelectedWord: this.props.isFirstSelectedWord
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if(nextProps.selected === this.state.selected && 
+            nextProps.isFirstSelectedWord === this.props.isFirstSelectedWord){
+                return false;
+            }
+        return true;
+    }
 
     render() {
         const { text, onPress, selected, isFirstSelectedWord } = this.props;
