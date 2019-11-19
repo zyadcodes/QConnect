@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet, View, TouchableWithoutFeedback } from 'react-native';
 import colors from 'config/colors';
-import Sound from 'react-native-sound';
 
 //Creates the higher order component
 class Word extends React.Component {
