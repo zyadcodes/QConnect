@@ -88,6 +88,7 @@ export default {
     EmptyClass:"Uh Oh! No students",
     AddStudentButton: "Click here to add a student",
     AddClassButton: "Click here to add a class",
+    AddText: "It's hard to call a class without a name. Please enter a valid class name",
 
     //--------------------- Student Profile Screen ---------------------
     EditAssignment: 'Edit Assignment',

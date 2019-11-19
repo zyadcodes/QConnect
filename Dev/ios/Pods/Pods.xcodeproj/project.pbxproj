@@ -20893,6 +20893,22 @@
 			};
 			name = Debug;
 		};
+		23F67BD8394F0BD0C0034AA1F82A640E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F478CA414729F32A7B53A0283ABF749 /* gRPC-C++.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC-C++";
+				INFOPLIST_FILE = "Target Support Files/gRPC-C++/ResourceBundle-gRPCCertificates-Cpp-gRPC-C++-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = "gRPCCertificates-Cpp";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
 		249D4B62C668AEC921DFC9AC7F78A88B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A31EA407FE8B96CAF608879F796DFA28 /* FirebaseMessaging.xcconfig */;
@@ -20914,23 +20930,6 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
-		};
-		2513C3DC1E73F2025CDEBB21D5039DF9 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4F478CA414729F32A7B53A0283ABF749 /* gRPC-C++.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC-C++";
-				IBSC_MODULE = grpcpp;
-				INFOPLIST_FILE = "Target Support Files/gRPC-C++/ResourceBundle-gRPCCertificates-Cpp-gRPC-C++-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = "gRPCCertificates-Cpp";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Release;
 		};
 		258EDD5C89E2F397DBD97B35456B7308 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -21743,23 +21742,6 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		8E4711074E2370F4782154CA48D9C453 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4F478CA414729F32A7B53A0283ABF749 /* gRPC-C++.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC-C++";
-				IBSC_MODULE = grpcpp;
-				INFOPLIST_FILE = "Target Support Files/gRPC-C++/ResourceBundle-gRPCCertificates-Cpp-gRPC-C++-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = "gRPCCertificates-Cpp";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
 			};
 			name = Debug;
 		};
@@ -22757,6 +22739,22 @@
 			};
 			name = Release;
 		};
+		E4A40DCE0CD0EB16D0FEB4EDDE4798B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F478CA414729F32A7B53A0283ABF749 /* gRPC-C++.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC-C++";
+				INFOPLIST_FILE = "Target Support Files/gRPC-C++/ResourceBundle-gRPCCertificates-Cpp-gRPC-C++-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = "gRPCCertificates-Cpp";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
 		E770655B86458816CEB01060E1C34AC4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 31F17F9011872C4F428B6BCA958BD5DD /* GTMSessionFetcher.xcconfig */;
@@ -23282,8 +23280,8 @@
 		62313533440695714103686446CE7249 /* Build configuration list for PBXNativeTarget "gRPC-C++-gRPCCertificates-Cpp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8E4711074E2370F4782154CA48D9C453 /* Debug */,
-				2513C3DC1E73F2025CDEBB21D5039DF9 /* Release */,
+				23F67BD8394F0BD0C0034AA1F82A640E /* Debug */,
+				E4A40DCE0CD0EB16D0FEB4EDDE4798B6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
