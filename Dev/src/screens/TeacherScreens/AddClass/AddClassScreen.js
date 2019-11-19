@@ -99,7 +99,7 @@ export class AddClassScreen extends QcParentScreen {
 
     let classInfo = {
       name: this.state.className,
-      classImageID: this.state.classImageId,
+      classImageID: this.state.classImageID,
       students: [],
       teachers: [this.state.userID]
     };
