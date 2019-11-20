@@ -252,7 +252,10 @@ async updatePicture(newPicture){
                 onEditingPicture={(newPicture)=> this.updatePicture(newPicture)}
                 profileImageID={currentClass.classImageID}
                 RightOnPress={() => {
-                  const { isEditing, titleHasChanged} = this.state;
+                  const { isEditing, titleHasChanged } = this.state;
+                  //node/todo: setting isOpen is a hack to workaround what seems to be a bug in the SideMenu component
+                  // where flipping isEditing bit seems to flip isOpen as well when isOpen was true earlier
+                  this.setState({ isEditing: !isEditing, isOpen: false })
                   if(this.state.currentClass.name.trim().length ===0){
                     Alert.alert(strings.Whoops,strings.AddText)
                   }
