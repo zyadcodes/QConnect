@@ -5,7 +5,7 @@ import React from 'React';
 import ImageSelectionModal from 'components/ImageSelectionModal'
 import strings from 'config/strings';
 import PropTypes from 'prop-types';
-import teacherImages from 'config/teacherImages'
+import classImages from 'config/classImages'
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import colors from 'config/colors'
@@ -43,7 +43,7 @@ class TopBanner extends FontLoadingComponent {
                             <View>
                                 <ImageSelectionModal
                                     visible={this.state.modalVisible}
-                                    images={teacherImages.images}
+                                    images={classImages.images}
                                     cancelText={strings.Cancel}
                                     setModalVisible={this.setModalVisible.bind(this)}
                                     onImageSelected={this.onImageSelected.bind(this)}
@@ -51,7 +51,7 @@ class TopBanner extends FontLoadingComponent {
                                 <View style={styles.picContainer}>
                                     <Image
                                         style={styles.profilePic}
-                                        source={teacherImages.images[profileImageID]} />
+                                        source={classImages.images[profileImageID]} />
                                 </View>
                             </View>
                             :
