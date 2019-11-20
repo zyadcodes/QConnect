@@ -271,8 +271,8 @@ async updatePicture(newPicture){
             {
               isEditing === true ? (
                 <View style={styles.AddStudentButton}>
-                  <QcActionButton
-                    text={"+"}
+                  <TouchableText
+                    text={strings.AddStudents}
                     onPress={() => {
                       //Goes to add students screen
                       this.props.navigation.push("ShareClassCode", {
@@ -280,10 +280,15 @@ async updatePicture(newPicture){
                         userID,
                         currentClass: this.state.currentClass
                       });
-                    }} />
+                    }}
+                    style={{ ...fontStyles.bigTextStylePrimaryDark, paddingTop: 10 }}
+                  />
                 </View>
               ) : (
-                  <View style={styles.AddStudentButton}></View>
+
+                  <View>
+                  </View>
+
                 )
             }
             {
