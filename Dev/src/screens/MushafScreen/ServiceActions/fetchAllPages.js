@@ -98,7 +98,6 @@ async function getPageTextWbW(pageNumber) {
         let pageText = getPageByLines(jsonPage.result);
         return pageText;
     } catch (error) {
-        console.error(error);
     }
     
     return ret;

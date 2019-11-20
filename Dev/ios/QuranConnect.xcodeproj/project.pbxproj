@@ -1266,7 +1266,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = QConnectV3;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuranConnect.app/QuranConnect";
 			};
 			name = Debug;
@@ -1276,6 +1277,9 @@
 			baseConfigurationReference = BB1F5508B58D76148F73327F /* Pods-QuranConnectTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = B65Y7865Z9;
 				INFOPLIST_FILE = QuranConnectTests/Info.plist;
@@ -1288,7 +1292,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = QConnectV3;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuranConnect.app/QuranConnect";
 			};
 			name = Release;
@@ -1313,7 +1318,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yungdevz.quranconnect;
 				PRODUCT_NAME = QuranConnect;
-				PROVISIONING_PROFILE_SPECIFIER = QConnectV2;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1339,7 +1344,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yungdevz.quranconnect;
 				PRODUCT_NAME = QuranConnect;
-				PROVISIONING_PROFILE_SPECIFIER = QConnectV2;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
