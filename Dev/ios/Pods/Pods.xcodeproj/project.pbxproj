@@ -21471,7 +21471,23 @@
 			};
 			name = Release;
 		};
-		2FA4B5E0DC5980F32DBC6A31F3AA27DE /* Debug */ = {
+		23F67BD8394F0BD0C0034AA1F82A640E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F478CA414729F32A7B53A0283ABF749 /* gRPC-C++.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC-C++";
+				INFOPLIST_FILE = "Target Support Files/gRPC-C++/ResourceBundle-gRPCCertificates-Cpp-gRPC-C++-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = "gRPCCertificates-Cpp";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		249D4B62C668AEC921DFC9AC7F78A88B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C8A5B49C703D0689F5C3C3D07B80BF5F /* RNPermissions.xcconfig */;
 			buildSettings = {
@@ -21494,31 +21510,7 @@
 			};
 			name = Debug;
 		};
-		2FF2301599B019648E0AE132C8C5DDCF /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4BA8F4FA74F790B46F47CDB6CEACBE55 /* Protobuf.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				GCC_PREFIX_HEADER = "Target Support Files/Protobuf/Protobuf-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = protobuf;
-				PRODUCT_NAME = Protobuf;
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		30FAA0CE493A4C291A9F66B23635E8F1 /* Release */ = {
+		258EDD5C89E2F397DBD97B35456B7308 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 09866C82A589395DC7833B0E6870E0EC /* DoubleConversion.xcconfig */;
 			buildSettings = {
@@ -23404,7 +23396,23 @@
 			};
 			name = Release;
 		};
-		E416F33D2526661535A1388CC3405C4B /* Release */ = {
+		E4A40DCE0CD0EB16D0FEB4EDDE4798B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F478CA414729F32A7B53A0283ABF749 /* gRPC-C++.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC-C++";
+				INFOPLIST_FILE = "Target Support Files/gRPC-C++/ResourceBundle-gRPCCertificates-Cpp-gRPC-C++-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = "gRPCCertificates-Cpp";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
+		E770655B86458816CEB01060E1C34AC4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7C6AD71CA8AE84EA6D57162704B7C1F1 /* React-jsiexecutor.xcconfig */;
 			buildSettings = {
@@ -24000,8 +24008,8 @@
 		63856FF929326F4C9C4843BBAB8FFB21 /* Build configuration list for PBXNativeTarget "Folly" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A9EF79AC7613BA0E695AB49D67766860 /* Debug */,
-				582080F69AB25BEDAD089E66869DC30D /* Release */,
+				23F67BD8394F0BD0C0034AA1F82A640E /* Debug */,
+				E4A40DCE0CD0EB16D0FEB4EDDE4798B6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

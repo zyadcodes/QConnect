@@ -1,6 +1,5 @@
 import React from "react";
 import { ScrollView, StyleSheet, FlatList, View, Text, Image, PixelRatio, Alert } from "react-native";
-import { Icon } from 'react-native-elements';
 import StudentCard from "components/StudentCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages"
@@ -15,8 +14,8 @@ import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from "config/fontStyles";
+import { Icon } from 'react-native-elements';
 import { screenHeight, screenWidth } from 'config/dimensions';
-import AssignmentEntryComponent from "../../../components/AssignmentEntryComponent";
 
 export class ClassMainScreen extends QcParentScreen {
 
@@ -29,8 +28,7 @@ export class ClassMainScreen extends QcParentScreen {
     isOpen: false,
     classes: '',
     isEditing: false,
-    isEditingClassAssginment: false,
-
+    titleHasChanged: false
   }
 
   async componentDidMount() {
@@ -59,6 +57,14 @@ export class ClassMainScreen extends QcParentScreen {
     });
 
   }
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
+  }
+
+  onImageSelected(imageId) {
+    this.setState({ classImageId: imageId })
+    this.setModalVisible(false);
+  }
 
   removeStudent(studentID) {
     Alert.alert(
@@ -84,6 +90,17 @@ export class ClassMainScreen extends QcParentScreen {
     );
 
   }
+//to write implemntation of the function, updates class name
+updateTitle(newTitle){
+  this.setState({titleHasChanged: true})
+  this.setState({currentClass: {...this.state.currentClass, name: newTitle}})
+}
+async updatePicture(newPicture){
+  this.setState({pictureHasChanged: true})
+  this.setState({currentClass: {...this.state.currentClass, classImageID: newPicture}})
+  await FirebaseFunctions.updateClassObject(this.state.currentClassID, {classImageID: newPicture})
+}
+
 
   render() {
     const { isLoading, teacher, userID, currentClass, currentClassID } = this.state;
@@ -109,7 +126,12 @@ export class ClassMainScreen extends QcParentScreen {
               <TopBanner
                 LeftIconName="navicon"
                 LeftOnPress={() => this.setState({ isOpen: true })}
+                isEditingTitle={this.state.isEditing}
+                isEditingPicture={this.state.isEditing}
+                onEditingPicture={(newPicture)=> this.updatePicture(newPicture)}
                 Title={"Quran Connect"}
+                onTitleChanged={(newTitle)=> this.updateTitle(newTitle)}
+                profileImageID={currentClass.classImageID}
               />
             </View>
             <View style={{ alignItems: "center", justifyContent: "flex-start", alignSelf: 'center', flex: 2 }}>
@@ -162,7 +184,12 @@ export class ClassMainScreen extends QcParentScreen {
               <TopBanner
                 LeftIconName="navicon"
                 LeftOnPress={() => this.setState({ isOpen: true })}
+                isEditingTitle={this.state.isEditing}
+                isEditingPicture={this.state.isEditing}
                 Title={this.state.currentClass.name}
+                onTitleChanged={(newTitle)=> this.updateTitle(newTitle)}
+                onEditingPicture={(newPicture)=> this.updatePicture(newPicture)}
+                profileImageID={currentClass.classImageID}
                 RightIconName="edit"
                 RightOnPress={() => this.props.navigation.push("ShareClassCode", {
                   currentClassID,
@@ -219,19 +246,33 @@ export class ClassMainScreen extends QcParentScreen {
                 Title={this.state.currentClass.name}
                 RightIconName={this.state.isEditing === false ? "edit" : null}
                 RightTextName={this.state.isEditing === true ? strings.Done : null}
+                isEditingTitle={this.state.isEditing}
+                isEditingPicture={this.state.isEditing}
+                onTitleChanged={(newTitle)=> this.updateTitle(newTitle)}
+                onEditingPicture={(newPicture)=> this.updatePicture(newPicture)}
+                profileImageID={currentClass.classImageID}
                 RightOnPress={() => {
-                  const { isEditing } = this.state;
-                  //node/todo: setting isOpen is a hack to workaround what seems to be a bug in the SideMenu component
-                  // where flipping isEditing bit seems to flip isOpen as well when isOpen was true earlier
-                  this.setState({ isEditing: !isEditing, isOpen: false })
+                  const { isEditing, titleHasChanged} = this.state;
+                  if(this.state.currentClass.name.trim().length ===0){
+                    Alert.alert(strings.Whoops,strings.AddText)
+                  }
+                  else{
+                    if(isEditing && titleHasChanged){
+                      FirebaseFunctions.updateClassObject(this.state.currentClassID, {name: this.state.currentClass.name})
+                      this.setState({titleHasChanged: false});
+                    }
+  
+                    this.setState({ isEditing: !isEditing})
+                  }
+
                 }}
               />
             </View>
             {
               isEditing === true ? (
                 <View style={styles.AddStudentButton}>
-                  <TouchableText
-                    text={strings.AddStudents}
+                  <QcActionButton
+                    text={"+"}
                     onPress={() => {
                       //Goes to add students screen
                       this.props.navigation.push("ShareClassCode", {
@@ -239,15 +280,10 @@ export class ClassMainScreen extends QcParentScreen {
                         userID,
                         currentClass: this.state.currentClass
                       });
-                    }}
-                    style={{ ...fontStyles.bigTextStylePrimaryDark, paddingTop: 10 }}
-                  />
+                    }} />
                 </View>
               ) : (
-
-                  <View>
-                  </View>
-
+                  <View style={styles.AddStudentButton}></View>
                 )
             }
             {
@@ -270,7 +306,7 @@ export class ClassMainScreen extends QcParentScreen {
               renderItem={({ item }) => (
                 <StudentCard
                   key={item.ID}
-                  studentName={item.name.toUpperCase()}
+                  studentName={item.name}
                   profilePic={studentImages.images[item.profileImageID]}
                   currentAssignment={item.currentAssignment === "None"? strings.NoAssignmentsYet : item.currentAssignment}
                   onPress={() =>
@@ -311,7 +347,7 @@ export class ClassMainScreen extends QcParentScreen {
               renderItem={({ item }) => (
                 <StudentCard
                   key={item.id}
-                  studentName={item.name.toUpperCase()}
+                  studentName={item.name}
                   profilePic={studentImages.images[item.profileImageID]}
                   currentAssignment={item.currentAssignment === "None"? strings.NoAssignmentsYet : item.currentAssignment}
                   onPress={() =>
@@ -392,7 +428,7 @@ export class ClassMainScreen extends QcParentScreen {
               renderItem={({ item }) => (
                 <StudentCard
                   key={item.id}
-                  studentName={item.name.toUpperCase()}
+                  studentName={item.name}
                   profilePic={studentImages.images[item.profileImageID]}
                   currentAssignment={item.currentAssignment === "None"? strings.NoAssignmentsYet : item.currentAssignment}
                   onPress={() =>
@@ -417,12 +453,6 @@ export class ClassMainScreen extends QcParentScreen {
       );
     }
 
-  }
-
-  toggleAssignmentEntryComponent() {
-    this.setState({
-      isEditingClassAssginment: !this.state.isEditingClassAssginment
-    });
   }
 }
 

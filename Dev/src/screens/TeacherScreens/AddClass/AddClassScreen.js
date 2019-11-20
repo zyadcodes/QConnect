@@ -24,7 +24,8 @@ export class AddClassScreen extends QcParentScreen {
     userID: "",
     teacher: "",
     isOpen: false,
-    classes: ''
+    classes: '',
+    addClassButton: false
   };
 
   //Sets the current screen for firebase analytics
@@ -43,6 +44,12 @@ export class AddClassScreen extends QcParentScreen {
     }
     FirebaseFunctions.setCurrentScreen("Add Class", "AddClassScreen");
 
+  }
+  //disable add class button to prohibit duplication of a class feom having the same name
+  disableAddClassButton(){
+    this.setState({
+      addClassButton: !this.state.addClassButton    
+    });
   }
 
 
@@ -86,10 +93,13 @@ export class AddClassScreen extends QcParentScreen {
       )
       return;
     }
+    //End of check for bad input--------------------------------------------
+    
+    this.disableAddClassButton();
 
     let classInfo = {
       name: this.state.className,
-      classImageID: this.state.classImageId,
+      classImageID: this.state.classImageID,
       students: [],
       teachers: [this.state.userID]
     };
@@ -155,9 +165,11 @@ export class AddClassScreen extends QcParentScreen {
               } />
 
             <QcActionButton
+              disabled={this.state.addClassButton}
               text={strings.AddClass}
               onPress={() => {
                 this.addNewClass();
+                
               }}
               screen={this.name}
             />
