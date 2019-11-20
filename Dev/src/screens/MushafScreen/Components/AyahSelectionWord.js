@@ -1,11 +1,22 @@
 import React from 'react';
 import { Text, StyleSheet, View, TouchableWithoutFeedback } from 'react-native';
 import colors from 'config/colors';
-import Sound from 'react-native-sound';
 
 //Creates the higher order component
 class Word extends React.Component {
 
+    state = {
+        selected: this.props.selected,
+        isFirstSelectedWord: this.props.isFirstSelectedWord
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if(nextProps.selected === this.state.selected && 
+            nextProps.isFirstSelectedWord === this.props.isFirstSelectedWord){
+                return false;
+            }
+        return true;
+    }
 
     render() {
         const { text, onPress, selected, isFirstSelectedWord } = this.props;
@@ -29,7 +40,7 @@ const styles = StyleSheet.create({
     wordText: {
         textAlign: 'right',
         fontFamily: 'me_quran',
-        fontSize: 17,
+        fontSize: 15,
         color: colors.darkGrey
     },
     container: {
