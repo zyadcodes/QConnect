@@ -22,7 +22,11 @@ export default {
     WorkingOnIt: 'WORKING ON IT',
     NeedAssignment: "NEED ASSIGNMENT",
     ClassAlreadyJoined: 'We know it\'s exciting to be in this class. But you can only join it once.',
-    NeedHelp: "NEED HELP",
+	NeedHelp: "NEED HELP",
+	EnableMicPermissions: 'You need to enable microphone permissions from your settings',
+	SubmitAssignment: 'Submit Assignment',
+	Record: 'Record',
+	Stop: 'Stop',
 
     //--------------------- Forgot Password Screen-------------------
     emailPlaceHolder: "Email",
@@ -57,7 +61,10 @@ export default {
     WriteANote: 'Write a note',
     Submit: 'Submit',
     AreYouSureYouWantToProceed: 'Students benefit from recieving feedback. Are you sure you want to proceed without giving a grade?',
-    Save: "Save",
+	Save: 'Save',
+	Pause: 'Pause',
+	Resume: 'Resume',
+	Play: 'Play',
 
     //--------------------- First Run Screen ---------------------
     IAmATeacher: 'I am a teacher',

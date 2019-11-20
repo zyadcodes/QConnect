@@ -178,7 +178,6 @@ class SelectionPage extends React.Component {
                     surahIndex -= 114;
                 }
                 else {
-                    console.log("invalid surah Index");
                 }
             }
 
