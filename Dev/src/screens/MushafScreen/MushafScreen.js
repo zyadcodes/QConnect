@@ -308,13 +308,13 @@ export default class MushafScreen extends QcParentScreen {
             }
         }
 
-        //otherwise, set the current page to the middle screen (index = 3), and set previous and next screens to prev and next pages 
+        let index = 604 - page;
         this.setState({
             ...resetSelectionIfApplicable,
             page: page,
-            index: 604 - page,
-        }
-        )
+            index: index,
+            key: index
+        } )
     }
 
     /**
