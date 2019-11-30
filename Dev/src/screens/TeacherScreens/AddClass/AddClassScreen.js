@@ -204,11 +204,10 @@ const styles = StyleSheet.create({
   textInputStyle: {
     marginLeft: screenWidth * 0.02,
     marginTop: screenHeight * 0.01,
+    paddingVertical: screenHeight * 0.01,
     paddingLeft: screenWidth * 0.03,
     width: screenWidth * 0.95,
-    height: screenHeight * 0.07,
     backgroundColor: colors.veryLightGrey,
-    height: screenHeight * 0.08 * 0.6,
     borderRadius: screenWidth * 0.05
   },
 });

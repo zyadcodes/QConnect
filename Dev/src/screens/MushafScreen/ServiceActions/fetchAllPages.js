@@ -25,6 +25,7 @@ async function getAllPages(){
             }
         }
         catch(error) {
+            Firebase.logEvent("FAILED_TO_FETCH_PAGE_" + i)
     }
 }
 }
@@ -98,7 +99,7 @@ async function getPageTextWbW(pageNumber) {
         return pageText;
     } catch (error) {
     }
-
+    
     return ret;
 
 }

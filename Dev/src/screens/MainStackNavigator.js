@@ -26,37 +26,45 @@ import TopBanner from 'components/TopBanner';
 routeConfig = {
 
     MushafScreen: {
+
         screen: MushafScreen,
         navigationOptions: ({ navigation }) => ({
-            header: null
+            header: null,
+            //disable swipe back to go to previous screen as it interfers with mus7af page swipes
+            //https://github.com/zyadelgohary/QConnect/issues/234
+            gesturesEnabled: false,
         }),
     },
 
     FirstScreenLoader: {
         screen: FirstScreenLoader,
         navigationOptions: ({ navigation }) => ({
-            header: null
+            header: null,
+            gesturesEnabled: false,
         }),
     },
 
     LoginScreen: {
         screen: LoginScreen,
         navigationOptions: ({ navigation }) => ({
-            header: null
+            header: null,
+            gesturesEnabled: false,
         }),
     },
 
     StudentCurrentClass: {
         screen: StudentMainScreen,
         navigationOptions: ({ navigation }) => ({
-            header: null
+            header: null,
+            gesturesEnabled: false,
         }),
     },
 
     AccountTypeScreen: {
         screen: AccountTypeScreen,
         navigationOptions: ({ navigation }) => ({
-            header: null
+            header: null,
+            gesturesEnabled: false,
         }),
     },
 
@@ -74,28 +82,32 @@ routeConfig = {
     TeacherWelcomeScreen: {
         screen: TeacherWelcomeScreen,
         navigationOptions: ({ navigation }) => ({
-            header: null
+            header: null,
+            gesturesEnabled: false,
         }),
     },
 
     StudentWelcomeScreen: {
         screen: StudentWelcomeScren,
         navigationOptions: ({ navigation }) => ({
-            header: null
+            header: null,
+            gesturesEnabled: false,
         }),
     },
 
     AddClass: {
         screen: AddClassScreen,
         navigationOptions: ({ navigation }) => ({
-            header: null
+            header: null,
+            gesturesEnabled: false,
         }),
     },
 
     Settings: {
         screen: allSettingsScreen,
         navigationOptions: ({ navigation }) => ({
-            header: null
+            header: null,
+            gesturesEnabled: false,
         }),
     },
 
@@ -115,6 +127,7 @@ routeConfig = {
     Profile: {
         screen: ProfileScreen,
         navigationOptions: ({ navigation }) => ({
+            gesturesEnabled: false,
             header: null
         })
     },
@@ -122,6 +135,7 @@ routeConfig = {
     TeacherCurrentClass: {
         screen: ClassTabsNavigator,
         navigationOptions: ({ navigation }) => ({
+            gesturesEnabled: false,
             header: null
         }),
     },
@@ -129,6 +143,7 @@ routeConfig = {
     TeacherStudentProfile: {
         screen: StudentProfileScreen,
         navigationOptions: ({ navigation }) => ({
+            gesturesEnabled: false,
             header: (
                 <TopBanner
                     Title={strings.StudentProfile}
@@ -144,6 +159,7 @@ routeConfig = {
     EvaluationPage: {
         screen: EvaluationPage,
         navigationOptions: ({ navigation }) => ({
+            gesturesEnabled: false,
             header: null
         })
     },
@@ -151,6 +167,7 @@ routeConfig = {
     ShareClassCode: {
         screen: ShareClassCodeScreen,
         navigationOptions: ({ navigation }) => ({
+            gesturesEnabled: false,
             header: (
                 <TopBanner
                     Title={strings.AddStudents} />
@@ -161,6 +178,7 @@ routeConfig = {
     AddManualStudents: {
         screen: AddManualStudentsScreen,
         navigationOptions: ({ navigation }) => ({
+            gesturesEnabled: false,
             header: (
                 <TopBanner
                     Title={strings.AddManualStudents}
