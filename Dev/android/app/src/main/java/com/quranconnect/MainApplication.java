@@ -9,7 +9,6 @@ import com.facebook.react.bridge.JavaScriptExecutorFactory;
 import com.facebook.react.ReactApplication;
 import com.swmansion.reanimated.ReanimatedPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
@@ -40,7 +39,6 @@ public class MainApplication extends Application implements ReactApplication {
       packages.add(new RNFirebaseAnalyticsPackage());
       packages.add(new RNFirebaseFunctionsPackage());
       packages.add(new RNFirebaseMessagingPackage()); 
-      packages.add(new RNFirebaseStoragePackage());
       // Packages that cannot be autolinked yet can be added manually here, for example:
       // packages.add(new MyReactNativePackage());
       return packages;

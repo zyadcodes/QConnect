@@ -14,10 +14,13 @@ class Word extends React.Component {
     playTrack = (audioFilePath) => {
         const track = new Sound('https://dl.salamquran.com/wbw/' + audioFilePath, null, (e) => {
             if (e) {
+                console.log('error loading track:', e)
             } else {
                 track.play((success) => {
                     if (success) {
+                        console.log('successfully finished playing');
                     } else {
+                        console.log('playback failed due to audio decoding errors');
                     }
                     this.setState({ highlighted: false });
                 });
