@@ -2,10 +2,9 @@
 //sign up or log in
 import React from 'react';
 import QcParentScreen from "../QcParentScreen";
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView, Modal, Alert, Platform } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView, Modal, Alert, Picker } from 'react-native';
 import studentImages from 'config/studentImages';
 import { Rating } from 'react-native-elements';
-import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import colors from 'config/colors'
 import strings from 'config/strings';
 import TopBanner from 'components/TopBanner'
@@ -14,10 +13,10 @@ import QcActionButton from 'components/QcActionButton';
 import LeftNavPane from './LeftNavPane';
 import SideMenu from 'react-native-side-menu';
 import LoadingSpinner from 'components/LoadingSpinner';
+import { RNVoiceRecorder } from 'react-native-voice-recorder';
 import { TextInput } from 'react-native-gesture-handler';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
-import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import fontStyles from 'config/fontStyles';
 import { CustomPicker } from 'react-native-custom-picker';
 import { screenHeight, screenWidth } from 'config/dimensions';
@@ -35,8 +34,7 @@ class StudentMainScreen extends QcParentScreen {
         modalVisible: false,
         recordingModaVisible: false,
         classCode: '',
-        classes: '',
-        isRecording: false
+        classes: ''
     }
 
     //Joins the class by first testing if this class exists. If the class doesn't exist, then it will
@@ -65,65 +63,6 @@ class StudentMainScreen extends QcParentScreen {
                 this.props.navigation.push("StudentCurrentClass", {
                     userID,
                 });
-            }
-        }
-    }
-
-    //This method will record the audio that the student records and sends it up to firebase
-    async recordAudio() {
-
-        const audioRecorder = new AudioRecorderPlayer();
-        if (this.state.isRecording) {
-            const doneRecording = await audioRecorder.stopRecorder();
-            console.log(done);
-            this.setState({ isRecording: false });
-        } else {
-            //Handles permissions for microphone usage
-            let isGranted = true;
-            let permission = '';
-            if (Platform.OS === 'android') {
-                permission = PERMISSIONS.ANDROID.RECORD_AUDIO;
-            } else {
-                permission = PERMISSIONS.IOS.MICROPHONE;
-            }
-            const permissionStatus = await check(permission);
-            if (permissionStatus === RESULTS.UNAVAILABLE || permissionStatus === RESULTS.BLOCKED) {
-                isGranted = false;
-            } else if (permissionStatus === RESULTS.GRANTED) {
-                isGranted = true;
-            } else {
-                const requestPermission = await request(permission);
-                if (requestPermission === RESULTS.GRANTED) {
-                    isGranted = true;
-                } else {
-                    isGranted = false
-                }
-            }
-
-            //Android also requires another permission
-            if (Platform.OS=== 'android') {
-                const permissionStatus = await check(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE);
-                if (permissionStatus === RESULTS.UNAVAILABLE || permissionStatus === RESULTS.BLOCKED) {
-                    isGranted = false;
-                } else if (permissionStatus === RESULTS.GRANTED) {
-                    isGranted = true;
-                } else {
-                    const requestPermission = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE);
-                    if (requestPermission === RESULTS.GRANTED) {
-                        isGranted = true;
-                    } else {
-                        isGranted = false
-                    }
-                }
-            }
-
-            //If mic permission granted, records normally, otherwise, displays a pop up saying
-            //the user must enable permissions from settings
-            if (isGranted === true) {
-                const startRecording = await audioRecorder.startRecorder();
-                console.log(startRecording);
-            } else {
-                Alert.alert(strings.Whoops, strings.EnableMicPermissions);
             }
         }
     }
@@ -233,6 +172,29 @@ class StudentMainScreen extends QcParentScreen {
                                 text={strings.JoinClass}
                                 onPress={() => this.setState({ modalVisible: true })} />
                         </View>
+                        <Modal
+                            animationType="fade"
+                            style={{ alignItems: 'center', justifyContent: 'center' }}
+                            transparent={true}
+                            presentationStyle="overFullScreen"
+                            visible={this.state.modalVisible}
+                            onRequestClose={() => {
+                            }}>
+                            <View style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                paddingTop: screenHeight / 3
+                            }}>
+                                <View style={styles.modal}>
+                                    <QcActionButton
+                                        text={strings.Record}
+                                        onPress={() => { 
+                                            
+                                         }} />
+                                </View>
+                            </View>
+                        </Modal>
                         <Modal
                             animationType="fade"
                             style={{ alignItems: 'center', justifyContent: 'center' }}
@@ -472,29 +434,6 @@ class StudentMainScreen extends QcParentScreen {
                                 )}
                             />
                         </ScrollView>
-                        <Modal
-                            animationType="fade"
-                            style={{ alignItems: 'center', justifyContent: 'center' }}
-                            transparent={true}
-                            presentationStyle="overFullScreen"
-                            visible={this.state.recordingModaVisible}
-                            onRequestClose={() => {
-                            }}>
-                            <View style={{
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                alignSelf: 'center',
-                                paddingTop: screenHeight / 3
-                            }}>
-                                <View style={styles.modal}>
-                                    <QcActionButton
-                                        text={strings.Done}
-                                        onPress={async () => { 
-                                            this.recordAudio();    
-                                        }} />
-                                </View>
-                            </View>
-                        </Modal>
                     </View>
                 </QCView>
             </SideMenu>
