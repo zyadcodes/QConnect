@@ -50,8 +50,17 @@ class LeftNavPane extends QcParentScreen {
         } else {
             const didJoinClass = await FirebaseFunctions.joinClass(student, classCode);
             if (didJoinClass === -1) {
-                Alert.alert(strings.Whoops, strings.IncorrectClassCode);
-                this.setState({ isLoading: false, modalVisible: false });
+                
+                this.setState({ isLoading: false, modalVisible: false },
+                    () => {
+                        //todo: hack hack.. alerts and modals don't play well with each other. 
+                        // currently we show an infinite spinner in this case.
+                        // this is an ugly quick workaround.
+                        // the right fix is to display an error string right in the modal instead.
+                        setTimeout( () => {
+                            Alert.alert(strings.Whoops, strings.IncorrectClassCode); 
+                          }, 200)
+                    });
             } else {
                 //Refetches the student object to reflect the updated database
                 this.setState({
@@ -171,6 +180,7 @@ class LeftNavPane extends QcParentScreen {
                                                         <TextInput
                                                             style={[{
                                                                 height: screenHeight * 0.07,
+                                                                width: screenWidth * 0.60,
                                                                 paddingLeft: 0.017 * screenWidth,
                                                             }, fontStyles.mainTextStyleDarkGrey]}
                                                             placeholder={strings.TypeInAClassCode}
