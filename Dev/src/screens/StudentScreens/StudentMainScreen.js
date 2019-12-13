@@ -36,8 +36,7 @@ class StudentMainScreen extends QcParentScreen {
         recordingModaVisible: false,
         classCode: '',
         classes: '',
-        isRecording: false,
-        currentPosition: "0:00"
+        isRecording: false
     }
 
     //Joins the class by first testing if this class exists. If the class doesn't exist, then it will
@@ -75,12 +74,9 @@ class StudentMainScreen extends QcParentScreen {
 
         const audioRecorder = new AudioRecorderPlayer();
         if (this.state.isRecording) {
-            await audioRecorder.stopRecorder();
-            audioRecorder.removeRecordBackListener();
-            this.setState({ 
-                currentPosition: this.state.currentPosition, 
-                isRecording: false
-             });
+            const doneRecording = await audioRecorder.stopRecorder();
+            console.log(done);
+            this.setState({ isRecording: false });
         } else {
             //Handles permissions for microphone usage
             let isGranted = true;
@@ -123,23 +119,9 @@ class StudentMainScreen extends QcParentScreen {
 
             //If mic permission granted, records normally, otherwise, displays a pop up saying
             //the user must enable permissions from settings
-            if (isGranted === true) { 
-                this.setState({
-                    isRecording: true,
-                })
-                const path = Platform.select({
-                    ios: 'hello.m4a',
-                    android: 'sdcard/hello.mp4', // should give extra dir name in android. Won't grant permission to the first level of dir.
-                });
-                const resultURI = await audioRecorder.startRecorder(path);
-                this.setState({
-                    recorded: resultURI
-                })
-                audioRecorder.addRecordBackListener((e) => {
-                    if (this.state.isRecording) {
-                        this.setState({ currentPosition: audioRecorder.mmssss(Math.floor(e.current_position)) });
-                    }
-                })
+            if (isGranted === true) {
+                const startRecording = await audioRecorder.startRecorder();
+                console.log(startRecording);
             } else {
                 Alert.alert(strings.Whoops, strings.EnableMicPermissions);
             }
@@ -219,9 +201,6 @@ class StudentMainScreen extends QcParentScreen {
         if (this.state.noCurrentClass) {
             return (
                 <SideMenu
-                    onChange={(isOpen) => {
-					    this.setState({ isOpen });
-				    }}
                     openMenuOffset={screenWidth * 0.7}
                     isOpen={this.state.isOpen} menu={<LeftNavPane
                         student={student}
@@ -318,9 +297,6 @@ class StudentMainScreen extends QcParentScreen {
         return (
 
             <SideMenu
-                onChange={(isOpen) => {
-                    this.setState({ isOpen });
-                }}
                 isOpen={this.state.isOpen} menu={<LeftNavPane
                     student={student}
                     userID={userID}
@@ -511,45 +487,11 @@ class StudentMainScreen extends QcParentScreen {
                                 paddingTop: screenHeight / 3
                             }}>
                                 <View style={styles.modal}>
-                                    <View style={{ marginVertical: screenHeight * 0.01 }}>
-                                        <Text style={fontStyles.bigTextStyleBlack}>{strings.SubmitAssignment}</Text>
-                                    </View>
-                                    <View 
-                                        style={{ 
-                                            height: screenHeight * 0.1, 
-                                            justifyContent: 'center', 
-                                            alignItems: 'center', }}>
-                                        <QcActionButton
-                                            text={this.state.isRecording ? strings.Stop : strings.Record}
-                                            onPress={() => {
-                                                this.recordAudio();
-                                            }} />
-                                    </View>
-                                    <View style={{ marginVertical: screenHeight * 0.01 }}>
-                                        <Text style={fontStyles.smallTextStyleBlack}>{this.state.currentPosition}</Text>
-                                    </View>
-                                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                                        <QcActionButton
-                                            text={strings.Cancel}
-                                            disabled={this.state.isRecording}
-                                            onPress={() => {
-                                                this.setState({ recordingModaVisible: false });
-                                            }} />
-                                        <QcActionButton
-                                            text={strings.Submit}
-                                            disabled={this.state.isRecording}
-                                            onPress={() => {
-                                                this.setState({
-                                                    currentPosition: '0:00',
-                                                    recordingModaVisible: false
-                                                });
-                                                this.setState({ isReadyEnum: "READY" });
-                                                FirebaseFunctions.updateStudentAssignmentStatus(this.state.currentClassID, this.state.userID, "READY");
-                                                if (this.state.recorded) {
-                                                    FirebaseFunctions.uploadAudio(this.state.recorded, this.state.userID);
-                                                }
-                                            }}/>
-                                    </View>     
+                                    <QcActionButton
+                                        text={strings.Done}
+                                        onPress={async () => { 
+                                            this.recordAudio();    
+                                        }} />
                                 </View>
                             </View>
                         </Modal>
