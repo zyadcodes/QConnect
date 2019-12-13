@@ -323,8 +323,12 @@ class StudentMainScreen extends QcParentScreen {
                                 ]
                             }
                             onValueChange={value => {
-                                this.setState({ isReadyEnum: value.value });
-                                FirebaseFunctions.updateStudentAssignmentStatus(currentClassID, userID, value.value);
+                                if (value.value === "READY") {
+                                    this.setState({ recordingModaVisible: true });
+                                } else {
+                                    this.setState({ isReadyEnum: value.value });
+                                    FirebaseFunctions.updateStudentAssignmentStatus(currentClassID, userID, value.value);
+                                }
                             }}
                             getLabel={item => item.label}
                             optionTemplate={(settings) => {
