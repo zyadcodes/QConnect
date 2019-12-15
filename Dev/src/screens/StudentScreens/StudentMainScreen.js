@@ -13,7 +13,7 @@ import QcActionButton from 'components/QcActionButton';
 import LeftNavPane from './LeftNavPane';
 import SideMenu from 'react-native-side-menu';
 import LoadingSpinner from 'components/LoadingSpinner';
-import { RNVoiceRecorder } from 'react-native-voice-recorder';
+//import { RNVoiceRecorder } from 'react-native-voice-recorder';
 import { TextInput } from 'react-native-gesture-handler';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';

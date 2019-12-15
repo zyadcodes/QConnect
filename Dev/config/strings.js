@@ -170,7 +170,7 @@ export default {
     Done: 'Done',
     IsNowAddedToTheClass: ' is now added to the class',
     PleaseInputAName: 'Please input a name',
-    StudentName: 'Enter new student name...',
+    StudentName: 'Student name',
     AddStudent: 'Add Student',
     ThereIsAlreadyAStudentWithThatName: 'There is already a student with that name',
     EnterYourStudentsName: 'Enter your student\'s name',
