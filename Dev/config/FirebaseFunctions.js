@@ -8,6 +8,7 @@ export default class FirebaseFunctions {
     //References that'll be used throughout the class's static functions
     static database = firebase.firestore();
     static batch = this.database.batch();
+    static storage = firebase.storage();
     static teachers = this.database.collection('teachers');
     static students = this.database.collection('students');
     static classes = this.database.collection('classes');
@@ -296,6 +297,24 @@ export default class FirebaseFunctions {
 
     }
 
+    //This method will take in an audio file and a studentID, and will upload the audio file to that path
+    static async uploadAudio(file, studentID) {
+        await this.storage.ref('audioFiles/' + studentID).putFile(file);
+        return 0;
+    }
+
+    //This method will take in a student ID and return the audio file associated with that studentID. If an audio
+    //file doesn't exist, then the method will return -1.
+    static async downloadAudioFile(studentID) {
+        try {
+            const file = this.storage.ref('audioFiles/' + studentID);
+            const download = await file.getDownloadURL();
+            return download;
+        } catch (err) {
+            return -1;
+        }
+    }
+
     //This method will update the currentAssignment property of a student within a class.
     //To locate the correct student, the method will take in params of the classID, the studentID,
     //and finally, the name of the new assignment which it will set the currentAssignment property 
@@ -344,7 +363,6 @@ export default class FirebaseFunctions {
                     body: strings.YourTeacherHasUpdatedYourCurrentAssignment
                 });
             }catch(error){
-                console.log("failed to send notifications to students");
                 //todo: log event when this happens
                 this.logEvent("FAILED_TO_SEND_NOTIFICATIONS. Error: " + error.toString())
             }
