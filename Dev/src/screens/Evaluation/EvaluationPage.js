@@ -15,6 +15,7 @@ import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import { screenWidth, screenHeight } from 'config/dimensions';
+import AudioPlayer from 'components/AudioPlayer/AudioPlayer'
 
 export class EvaluationPage extends QcParentScreen {
 	//Default improvement areas
@@ -79,8 +80,15 @@ export class EvaluationPage extends QcParentScreen {
 	async playAudio() {
 		const audioRecorderPlayer = new AudioRecorderPlayer();
 		audioRecorderPlayer.addPlayBackListener((e) => {
+			if (e.current_position === e.duration) {
+				this.setState({
+					isPlaying: 'Finished'
+				});
+				console.log('donedone');
+				audioRecorderPlayer.stopPlayer();
+			  }
 			if (this.state.isPlaying === 'Playing') {
-				this.setState({ currentPosition: audioRecorder.mmssss(Math.floor(e.current_position)) });
+				this.setState({ currentPosition: audioRecorderPlayer.mmssss(Math.floor(e.current_position)) });
 			}
 		});
 		if (this.state.isPlaying === 'Playing') {
@@ -97,7 +105,12 @@ export class EvaluationPage extends QcParentScreen {
 			this.setState({
 				isPlaying: 'Playing'
 			});
-			await audioRecorderPlayer.startPlayer(this.state.audioFile);
+			try{
+				await audioRecorderPlayer.startPlayer(this.state.audioFile);
+			}catch(err){
+				console.log("error starting audio player: " + err);
+			}
+			
 		}
 	}
 
@@ -274,21 +287,16 @@ export class EvaluationPage extends QcParentScreen {
 						{this.state.audioFile !== -1 ? (
 							<View style={{ justifyContent: 'center', alignItems: 'center' }}>
 								<View style={styles.playAudio}>
-									<QcActionButton
-										text={
-											this.state.isPlaying === 'Playing'
-												? strings.Pause
-												: this.state.isPlaying === 'Paused'
-												? strings.Resume
-												: strings.Play
-										}
-										onPress={() => {
-											this.playAudio();
+								<AudioPlayer
+								image={studentImages.images[profileImageID]}
+								reciter={classStudent.name}
+								title={assignmentName}
+								isPlaying={this.state.isPlaying}
+								audioFilePath={this.state.audioFile}
+								onPress={() => {
+											//this.playAudio();
 										}}
-									/>
-								</View>
-								<View style={{ marginVertical: screenHeight * 0.01 }}>
-									<Text style={fontStyles.smallTextStyleBlack}>{this.state.currentPosition}</Text>
+								/>
 								</View>
 							</View>
 						) : (
