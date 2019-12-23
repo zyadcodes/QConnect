@@ -130,7 +130,6 @@ export class EvaluationPage extends QcParentScreen {
         this.setState({
           isPlaying: "Finished"
         });
-        console.log("donedone");
         audioRecorderPlayer.stopPlayer();
       }
       if (this.state.isPlaying === "Playing") {
@@ -157,8 +156,8 @@ export class EvaluationPage extends QcParentScreen {
       });
       try {
         await audioRecorderPlayer.startPlayer(this.state.audioFile);
-      } catch (err) {
-        console.log("error starting audio player: " + err);
+      } catch (error) {
+        FirebaseFunctions.logEvent("error starting audio player: ", {error});
       }
     }
   }

@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 //This class will hold all of the strings throughout the app
 export default {
   //---------------------  App info ---------------------------
@@ -68,6 +69,7 @@ export default {
   Pause: "Pause",
   Resume: "Resume",
   Play: "Play",
+  FailedToPlayAudioFile: "Failed to play student recording.",
 
   //--------------------- First Run Screen ---------------------
   IAmATeacher: "I am a teacher",

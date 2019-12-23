@@ -1,11 +1,13 @@
+/* eslint-disable quotes */
 import React, { useState } from "react";
 
 import styled from "styled-components";
 import { ProgressBar } from "react-native-paper";
-import { TouchableOpacity, Animated, Easing, View } from "react-native";
+import { TouchableOpacity, Animated, Easing, View, Alert } from "react-native";
 import AudioRecorderPlayer from "react-native-audio-recorder-player";
 import colors from "config/colors";
 import strings from "config/strings";
+import FirebaseFunctions from "../../../config/FirebaseFunctions";
 
 const translateX = new Animated.Value(0);
 const scale = new Animated.Value(1);
@@ -40,11 +42,16 @@ const AudioPlayer = props => {
     ).start();
   };
 
-  const onPress = () => {
-    setToggled(!toggled);
+  const onPress = async () => {
     if (toggled) {
-      animateStartAudio();
-      onStartPlay();
+      let success = await onStartPlay();
+      if (success) {
+        setToggled(false);
+        animateStartAudio();
+      } else {
+        setToggled(true);
+        Alert.alert(strings.Whoops, strings.FailedToPlayAudioFile);
+      }
     } else {
       animateStopAudio();
       onPausePlay();
@@ -71,9 +78,17 @@ const AudioPlayer = props => {
   };
 
   onStartPlay = async () => {
-    const msg = await audioRecorderPlayer.startPlayer(props.audioFilePath);
+    try {
+      const msg = await audioRecorderPlayer.startPlayer(props.audioFilePath);
+      if (msg === undefined) {
+        throw "audioRecorderPlayer.startPlayer returned undefined.";
+      }
+    } catch (error) {
+      FirebaseFunctions.logEvent("PLAY_AUDIO_FAILED", { error });
+      return false;
+    }
+
     audioRecorderPlayer.setVolume(1.0);
-    console.log(msg);
     audioRecorderPlayer.addPlayBackListener(e => {
       if (e.current_position === e.duration) {
         audioRecorderPlayer.stopPlayer();
@@ -85,11 +100,13 @@ const AudioPlayer = props => {
       }
       setPlayTime(audioRecorderPlayer.mmssss(Math.floor(e.current_position)));
     });
+
+    return true;
   };
 
   onPausePlay = async () => {
     await audioRecorderPlayer.pausePlayer();
-    setToggled(false);
+    setToggled(true);
   };
 
   onStopPlay = async () => {
@@ -102,14 +119,17 @@ const AudioPlayer = props => {
       <Row>
         <TouchableOpacity onPress={onPress}>
           <AnimatedImage
+            key={`image_${toggled}`}
             source={toggled ? require("./play-c.png") : require("./pause.png")}
             style={{ transform: [{ scale }, { rotate: spin }] }}
           />
         </TouchableOpacity>
         {toggled && (
           <AudioDesc>
-          <AudioStatus>{strings.AudioRecordingReceived}</AudioStatus>
-          <Subtitle>{strings.Sent} {props.sent}</Subtitle>
+            <AudioStatus>{strings.AudioRecordingReceived}</AudioStatus>
+            <Subtitle>
+              {strings.Sent} {props.sent}
+            </Subtitle>
           </AudioDesc>
         )}
       </Row>
@@ -117,7 +137,9 @@ const AudioPlayer = props => {
         <AnimatedDiskCenter style={{ transform: [{ scale }] }} />
         <AnimatedColumn style={{ opacity: opacityInterpolate }}>
           <Reciter>{props.title}</Reciter>
-          <Subtitle>{strings.Sent} {props.sent}</Subtitle>
+          <Subtitle>
+            {strings.Sent} {props.sent}
+          </Subtitle>
           <ProgressBar
             progress={playWidth}
             color={colors.primaryDark}
