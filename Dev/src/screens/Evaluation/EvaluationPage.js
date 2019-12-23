@@ -121,47 +121,6 @@ export class EvaluationPage extends QcParentScreen {
     });
   }
 
-  //This method fetches the audio file that was fetched in componentDidMount and plays it, while making sure the correct
-  //state is set to let the rest of the screen
-  async playAudio() {
-    const audioRecorderPlayer = new AudioRecorderPlayer();
-    audioRecorderPlayer.addPlayBackListener(e => {
-      if (e.current_position === e.duration) {
-        this.setState({
-          isPlaying: "Finished"
-        });
-        audioRecorderPlayer.stopPlayer();
-      }
-      if (this.state.isPlaying === "Playing") {
-        this.setState({
-          currentPosition: audioRecorderPlayer.mmssss(
-            Math.floor(e.current_position)
-          )
-        });
-      }
-    });
-    if (this.state.isPlaying === "Playing") {
-      this.setState({
-        isPlaying: "Paused"
-      });
-      await audioRecorderPlayer.pausePlayer();
-    } else if (this.state.isPlaying === "Paused") {
-      this.setState({
-        isPlaying: "Playing"
-      });
-      await audioRecorderPlayer.resumePlayer();
-    } else {
-      this.setState({
-        isPlaying: "Playing"
-      });
-      try {
-        await audioRecorderPlayer.startPlayer(this.state.audioFile);
-      } catch (error) {
-        FirebaseFunctions.logEvent("error starting audio player: ", {error});
-      }
-    }
-  }
-
   // --------------  Updates state to reflect a change in a category rating --------------
 
   //Saves the evaluation as a new assignment
@@ -365,9 +324,6 @@ export class EvaluationPage extends QcParentScreen {
                     isPlaying={this.state.isPlaying}
                     audioFilePath={this.state.audioFile}
                     sent={this.state.audioSentDateTime ? this.state.audioSentDateTime : ""}
-                    onPress={() => {
-                      //this.playAudio();
-                    }}
                   />
                 </View>
               </View>
