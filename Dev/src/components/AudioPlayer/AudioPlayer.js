@@ -5,6 +5,7 @@ import { ProgressBar } from "react-native-paper";
 import { TouchableOpacity, Animated, Easing, View } from "react-native";
 import AudioRecorderPlayer from "react-native-audio-recorder-player";
 import colors from "config/colors";
+import strings from "config/strings";
 
 const translateX = new Animated.Value(0);
 const scale = new Animated.Value(1);
@@ -102,14 +103,13 @@ const AudioPlayer = props => {
         <TouchableOpacity onPress={onPress}>
           <AnimatedImage
             source={toggled ? require("./play-c.png") : require("./pause.png")}
-            //source={props.image}
             style={{ transform: [{ scale }, { rotate: spin }] }}
           />
         </TouchableOpacity>
         {toggled && (
           <AudioDesc>
-          <AudioStatus>Tasmee' audio recording received.</AudioStatus>
-          <Subtitle>Sent: 6/15/19, 5:22pm</Subtitle>
+          <AudioStatus>{strings.AudioRecordingReceived}</AudioStatus>
+          <Subtitle>{strings.Sent} {props.sent}</Subtitle>
           </AudioDesc>
         )}
       </Row>
@@ -117,7 +117,7 @@ const AudioPlayer = props => {
         <AnimatedDiskCenter style={{ transform: [{ scale }] }} />
         <AnimatedColumn style={{ opacity: opacityInterpolate }}>
           <Reciter>{props.title}</Reciter>
-          <Subtitle>Sent: 6/15/19, 5:22pm</Subtitle>
+          <Subtitle>{strings.Sent} {props.sent}</Subtitle>
           <ProgressBar
             progress={playWidth}
             color={colors.primaryDark}
