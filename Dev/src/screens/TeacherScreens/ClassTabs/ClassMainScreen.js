@@ -45,8 +45,8 @@ export class ClassMainScreen extends QcParentScreen {
       currentClass = await FirebaseFunctions.getClassByID(currentClassID);
     }
 
-    const { classInviteCode } = currentClass.classInviteCode;
-
+    const classInviteCode = currentClass.classInviteCode;
+    console.log(classInviteCode);
     const classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
     this.setState({
       isLoading: false,

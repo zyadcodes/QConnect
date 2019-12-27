@@ -211,8 +211,7 @@ export default class FirebaseFunctions {
         let newClass = await this.classes.add(newClassObject);
         const ID = currentClassID = newClass.id + "";
         //Creates a class Invite code and updates it as well as making sure the document has a reference to its own ID
-        const updatedClassIC = newClass.id.substring(0, 5);
-        console.warn('name: '+newClass.name);
+        const updatedClassIC = ID.substring(0, 5);
         await this.updateClassObject(newClass.id, {
             ID,
             classInviteCode: updatedClassIC
@@ -499,17 +498,18 @@ export default class FirebaseFunctions {
         return absentStudents;
 
     }
-
+    static async getClassesState(){
+        return this.classes;
+    }
     //This method will allow a student to join a class. It will take in a student object and a classID.
     //It will add that student to the array of students within the class object. Then it will add
     //the classID to the array of classes withint the student object. Then it will finally update
     //the "currentClassID" property within the student object. If the class does not exist, the method
-    //will return a value of -1, otherwise it will return 0;
+    //will return a value of -1, otherwise it will return 0
     static async joinClass(student, classInviteCode) {
 
         const studentID = student.ID;
-
-        const classToJoin = await this.classes.doc(classInviteCode).get();
+        const classToJoin = this.classes.where("classInviteCode", "==", classInviteCode);
         if (!classToJoin.exists) {
             return -1;
         }
