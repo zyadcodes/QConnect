@@ -101,6 +101,7 @@ export class AddClassScreen extends QcParentScreen {
       name: this.state.className,
       classImageID: this.state.classImageID,
       students: [],
+      classInviteCode: '',
       teachers: [this.state.userID]
     };
 
@@ -109,6 +110,7 @@ export class AddClassScreen extends QcParentScreen {
 
     //Navigates to the class
     this.props.navigation.push("ShareClassCode", {
+      classInviteCode: newClass.classInviteCode,
       currentClassID: newClassID,
       userID: this.state.userID,
       currentClass: newClass

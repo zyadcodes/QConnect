@@ -25,6 +25,7 @@ export class ClassMainScreen extends QcParentScreen {
     userID: '',
     currentClass: '',
     currentClassID: '',
+    classInviteCode: '',
     isOpen: false,
     classes: '',
     isEditing: false,
@@ -38,19 +39,20 @@ export class ClassMainScreen extends QcParentScreen {
     const { userID } = this.props.navigation.state.params;
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
     const { currentClassID } = teacher;
-
-
     let { currentClass } = this.props.navigation.state.params;
+
     if (currentClass === undefined) {
       currentClass = await FirebaseFunctions.getClassByID(currentClassID);
     }
 
+    const { classInviteCode } = currentClass.classInviteCode;
 
     const classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
     this.setState({
       isLoading: false,
       teacher,
       userID,
+      classInviteCode,
       currentClass,
       currentClassID,
       classes
@@ -103,7 +105,7 @@ async updatePicture(newPicture){
 
 
   render() {
-    const { isLoading, teacher, userID, currentClass, currentClassID } = this.state;
+    const { isLoading, classInviteCode, teacher, userID, currentClass, currentClassID } = this.state;
 
     if (isLoading === true) {
       return (
@@ -192,6 +194,7 @@ async updatePicture(newPicture){
                 profileImageID={currentClass.classImageID}
                 RightIconName="edit"
                 RightOnPress={() => this.props.navigation.push("ShareClassCode", {
+                  classInviteCode,
                   currentClassID,
                   userID: this.state.userID,
                   currentClass
@@ -212,6 +215,7 @@ async updatePicture(newPicture){
               <QcActionButton
                 text={strings.AddStudentButton}
                 onPress={() => this.props.navigation.push("ShareClassCode", {
+                  classInviteCode,
                   currentClassID,
                   userID: this.state.userID,
                   currentClass
@@ -229,7 +233,7 @@ async updatePicture(newPicture){
       const studentsReady = currentClass.students.filter((student) => student.isReadyEnum === "READY" || (!student.isReadyEnum && student.isReady === true));
       const studentsWorkingOnIt = currentClass.students.filter((student) => (student.isReadyEnum === "WORKING_ON_IT" || (!student.isReadyEnum && student.isReady === false) && student.currentAssignment !== "None" ));
       const studentsWithNoAssignments = currentClass.students.filter((student) => student.currentAssignment === "None");
-      const { isEditing, currentClassID, userID } = this.state;
+      const { isEditing, currentClassID, userID, classInviteCode } = this.state;
 
       return (
         <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
@@ -279,6 +283,7 @@ async updatePicture(newPicture){
                     onPress={() => {
                       //Goes to add students screen
                       this.props.navigation.push("ShareClassCode", {
+                        classInviteCode,
                         currentClassID,
                         userID,
                         currentClass: this.state.currentClass

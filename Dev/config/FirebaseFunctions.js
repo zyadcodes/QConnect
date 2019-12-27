@@ -210,8 +210,12 @@ export default class FirebaseFunctions {
         //Adds the new class document and makes sure it has a reference to its own ID
         let newClass = await this.classes.add(newClassObject);
         const ID = currentClassID = newClass.id + "";
+        //Creates a class Invite code and updates it as well as making sure the document has a reference to its own ID
+        const updatedClassIC = newClass.id.substring(0, 5);
+        console.warn('name: '+newClass.name);
         await this.updateClassObject(newClass.id, {
-            ID
+            ID,
+            classInviteCode: updatedClassIC
         });
         //Appends the class ID to the array of classes belonging to this teacher
         let ref = this.teachers.doc(teacherID);
@@ -501,11 +505,11 @@ export default class FirebaseFunctions {
     //the classID to the array of classes withint the student object. Then it will finally update
     //the "currentClassID" property within the student object. If the class does not exist, the method
     //will return a value of -1, otherwise it will return 0;
-    static async joinClass(student, classID) {
+    static async joinClass(student, classInviteCode) {
 
         const studentID = student.ID;
 
-        const classToJoin = await this.classes.doc(classID).get();
+        const classToJoin = await this.classes.doc(classInviteCode).get();
         if (!classToJoin.exists) {
             return -1;
         }
@@ -522,13 +526,13 @@ export default class FirebaseFunctions {
             totalAssignments: 0
         }
 
-        await this.updateClassObject(classID, {
+        await this.updateClassObject(classInviteCode, {
             students: firebase.firestore.FieldValue.arrayUnion(studentObject)
         });
 
         await this.updateStudentObject(studentID, {
-            classes: firebase.firestore.FieldValue.arrayUnion(classID),
-            currentClassID: classID
+            classes: firebase.firestore.FieldValue.arrayUnion(classInviteCode),
+            currentClassID: classInviteCode
         });
         this.logEvent("JOIN_CLASS");
 

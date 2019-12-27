@@ -341,6 +341,7 @@ class StudentMainScreen extends QcParentScreen {
                                     source={studentImages.images[student.profileImageID]} />
                                 <View style={styles.profileInfoTopRight}>
                                     <Text numberOfLines={1} style={fontStyles.mainTextStyleBlack}>{student.name.toUpperCase()}</Text>
+                                    <Text numberOfLines={1} style={fontStyles.mainTextStyleBlack}>Classes Missed: </Text>
                                     <View style={{ flexDirection: 'row', height: screenHeight * 0.04 }}>
                                         <Rating readonly={true} startingValue={thisClassInfo.averageRating} imageSize={25} />
                                         <View style={{ flexDirection: 'column', justifyContent: 'center' }}>

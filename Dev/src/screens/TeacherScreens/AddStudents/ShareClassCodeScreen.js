@@ -18,7 +18,7 @@ class ShareClassCodeScreen extends Component {
 
     render() {
 
-        const { userID, currentClassID, currentClass } = this.props.navigation.state.params;
+        const { userID, currentClassID, classInviteCode, currentClass } = this.props.navigation.state.params;
 
         return (
             <QCView style={screenStyle.container}>
@@ -35,7 +35,7 @@ class ShareClassCodeScreen extends Component {
                         <Text style={fontStyles.hugeTextStyleBlack}>{strings.YourClassCode}</Text>
                     </View>
                     <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'center' }}>
-                        <Text style={{...fontStyles.hugeTextStylePrimaryDark, textAlign: 'center'}}>{currentClassID}</Text>
+                        <Text style={{...fontStyles.hugeTextStylePrimaryDark, textAlign: 'center'}}>{classInviteCode}</Text>
                         <Text style={{...fontStyles.bigTextStyleDarkGrey, textAlign: 'center', paddingHorizontal: screenWidth * 0.01}}>{strings.ClassCodeDescription}</Text>
                     </View>
                     <View style={{flex: 1, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingHorizontal: screenWidth * 0.01 }}>
@@ -49,7 +49,7 @@ class ShareClassCodeScreen extends Component {
                             FirebaseFunctions.logEvent("TEACHER_SHARE_CLASS_CODE");
                             Share.share(
                                 {
-                                    message: strings.JoinMyClass + currentClassID + (
+                                    message: strings.JoinMyClass + classInviteCode + (
                                         '\niOS: ' + 'https://apps.apple.com/us/app/quran-connect/id1459057386' +
                                         '\nAndroid: ' + 'https://play.google.com/store/apps/details?id=com.yungdevz.quranconnect')
                                 }
@@ -62,6 +62,7 @@ class ShareClassCodeScreen extends Component {
                         onPress={() => {
                             this.props.navigation.push("AddManualStudents", {
                                 userID,
+                                classInviteCode: classInviteCode,
                                 classID: currentClassID,
                                 currentClass
                             })
