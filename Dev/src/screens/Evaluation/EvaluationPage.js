@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable quotes */
 /* eslint-disable comma-dangle */
 import React from "react";
@@ -24,7 +23,6 @@ import LoadingSpinner from "components/LoadingSpinner";
 import QCView from "components/QCView";
 import screenStyle from "config/screenStyle";
 import fontStyles from "config/fontStyles";
-import AudioRecorderPlayer from "react-native-audio-recorder-player";
 import { screenWidth, screenHeight } from "config/dimensions";
 import AudioPlayer from "components/AudioPlayer/AudioPlayer";
 
@@ -321,7 +319,6 @@ export class EvaluationPage extends QcParentScreen {
                     image={studentImages.images[profileImageID]}
                     reciter={classStudent.name}
                     title={assignmentName}
-                    isPlaying={this.state.isPlaying}
                     audioFilePath={this.state.audioFile}
                     sent={this.state.audioSentDateTime ? this.state.audioSentDateTime : ""}
                   />

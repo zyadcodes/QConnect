@@ -18,7 +18,7 @@ export default {
   YourAssignmentHasBeenGraded: "Your assignment has been graded",
 
   //--------------------- Student Main Screen ---------------------
-  TotalAssignments: "Assignments Completed",
+  TotalAssignments: "Total assignments completed",
   Ready: "READY",
   WorkingOnIt: "WORKING ON IT",
   NeedAssignment: "NEED ASSIGNMENT",
@@ -69,8 +69,8 @@ export default {
   Pause: "Pause",
   Resume: "Resume",
   Play: "Play",
-  FailedToPlayAudioFile: "Failed to play student recording.",
-
+  FailedToPlayAudioFile: "Failed to play student recording. We know it is a bummer. Please try again later.",
+  FailedToRecordAudio: "Failed to record the audio. We know it is a bummer. Please try again later.",
   //--------------------- First Run Screen ---------------------
   IAmATeacher: "I am a teacher",
   IAmAStudent: "I am a student",
@@ -197,6 +197,7 @@ export default {
   Evaluation: "Assignment Evaluation",
   NoNotesProvided: "There are no additional notes provided.",
   AudioRecordingReceived: "Tasmee' audio recording received",
+  SendRecording: "Send Tasmee' audio to teacher",
   Sent: "Sent:",
 
   //--------------------- Class Tabs Navigator ---------------------

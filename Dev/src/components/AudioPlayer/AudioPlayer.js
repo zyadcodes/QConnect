@@ -3,11 +3,24 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 import { ProgressBar } from "react-native-paper";
-import { TouchableOpacity, Animated, Easing, View, Alert } from "react-native";
-import AudioRecorderPlayer from "react-native-audio-recorder-player";
+import {
+  TouchableOpacity,
+  Animated,
+  Easing,
+  Alert,
+  Platform
+} from "react-native";
+import AudioRecorderPlayer, {
+  AVEncoderAudioQualityIOSType,
+  AVEncodingOption,
+  AudioEncoderAndroidType,
+  AudioSet,
+  AudioSourceAndroidType
+} from "react-native-audio-recorder-player";
 import colors from "config/colors";
 import strings from "config/strings";
-import FirebaseFunctions from "../../../config/FirebaseFunctions";
+import FirebaseFunctions from "config/FirebaseFunctions";
+import { check, request, PERMISSIONS, RESULTS } from "react-native-permissions";
 
 const translateX = new Animated.Value(0);
 const scale = new Animated.Value(1);
@@ -26,7 +39,7 @@ const AudioPlayer = props => {
     inputRange: [0, 1],
     outputRange: ["0deg", "360deg"]
   });
-
+  ``;
   const opacityInterpolate = opacity.interpolate({
     inputRange: [0, 0.85, 1],
     outputRange: [0, 0, 1]
@@ -40,41 +53,6 @@ const AudioPlayer = props => {
         easing: Easing.linear
       })
     ).start();
-  };
-
-  const onPress = async () => {
-    if (toggled) {
-      let success = await onStartPlay();
-      if (success) {
-        setToggled(false);
-        animateStartAudio();
-      } else {
-        setToggled(true);
-        Alert.alert(strings.Whoops, strings.FailedToPlayAudioFile);
-      }
-    } else {
-      animateStopAudio();
-      onPausePlay();
-    }
-    //props.onPress();
-  };
-
-  const animateStartAudio = () => {
-    Animated.parallel([
-      Animated.timing(translateX, { toValue: 35 }),
-      Animated.timing(scale, { toValue: 1.2 }),
-      rotationLoop(),
-      Animated.timing(opacity, { toValue: 1 })
-    ]).start();
-  };
-
-  const animateStopAudio = () => {
-    Animated.parallel([
-      Animated.timing(translateX, { toValue: -60 }),
-      Animated.timing(scale, { toValue: 1 }),
-      Animated.timing(rotation, { toValue: 0 }),
-      Animated.timing(opacity, { toValue: 0 })
-    ]).start();
   };
 
   onStartPlay = async () => {
@@ -114,19 +92,151 @@ const AudioPlayer = props => {
     audioRecorderPlayer.removePlayBackListener();
   };
 
+  var uri = "";
+
+  onStartRecord = async () => {
+    //Handles permissions for microphone usage
+    let isGranted = true;
+
+    let permission = "";
+    if (Platform.OS === "android") {
+      permission = PERMISSIONS.ANDROID.RECORD_AUDIO;
+    } else {
+      permission = PERMISSIONS.IOS.MICROPHONE;
+    }
+    let permissionStatus = await request(permission);
+    if (permissionStatus === RESULTS.GRANTED) {
+      isGranted = true;
+    } else {
+      isGranted = false;
+    }
+
+    //Android also requires another permission
+    if (Platform.OS === "android") {
+      permissionStatus = await request(
+        PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE
+      );
+      if (permissionStatus === RESULTS.GRANTED) {
+        isGranted = true;
+      } else {
+        isGranted = false;
+      }
+    }
+
+    //If mic permission granted, records normally, otherwise, displays a pop up saying
+    //the user must enable permissions from settings
+    if (!isGranted) {
+      Alert.alert(strings.Whoops, strings.EnableMicPermissions);
+      return false;
+    }
+
+    const path = Platform.select({
+      ios: "hello.m4a",
+      android: "sdcard/hello.mp4"
+    });
+    const audioSet = {
+      AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
+      AudioSourceAndroid: AudioSourceAndroidType.MIC,
+      AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
+      AVNumberOfChannelsKeyIOS: 2,
+      AVFormatIDKeyIOS: AVEncodingOption.aac
+    };
+
+    try {
+      uri = await audioRecorderPlayer.startRecorder(path, audioSet);
+      audioRecorderPlayer.addRecordBackListener(e => {
+        setPlayTime(audioRecorderPlayer.mmssss(Math.floor(e.current_position)));
+      });
+      console.log(`uri: ${uri}`);
+      return true;
+    } catch (error) {
+      Alert.alert(strings.Whoops, JSON.stringify(error));
+      FirebaseFunctions.logEvent("RECORD_AUDIO_FAILED", { error });
+      return false;
+    }
+  };
+
+  onStopRecord = async () => {
+    await audioRecorderPlayer.stopRecorder();
+    audioRecorderPlayer.removeRecordBackListener();
+    setPlayWidth(0);
+    props.onStopRecording("/sdcard/hello.mp4");
+  };
+
+  const onStartAction = async () => {
+    if (props.isRecordMode === true) {
+      return await onStartRecord();
+    } else {
+      return await onStartPlay();
+    }
+  };
+
+  const onStopAction = async () => {
+    if (props.isRecordMode === true) {
+      await onStopRecord();
+    } else {
+      await onPausePlay();
+    }
+    setToggled(true);
+  };
+
+  const onPress = async () => {
+    if (toggled) {
+      let success = await onStartAction();
+      if (success) {
+        setToggled(false);
+        animateStartAudio();
+      } else {
+        setToggled(true);
+        //Alert.alert(strings.Whoops, props.isRecordMode? strings.FailedToRecordAudio : strings.FailedToPlayAudioFile);
+      }
+    } else {
+      animateStopAudio();
+      onStopAction();
+    }
+  };
+
+  const animateStartAudio = () => {
+    Animated.parallel([
+      Animated.timing(translateX, { toValue: 35 }),
+      Animated.timing(scale, { toValue: 1.2 }),
+      rotationLoop(),
+      Animated.timing(opacity, { toValue: 1 })
+    ]).start();
+  };
+
+  const animateStopAudio = () => {
+    Animated.parallel([
+      Animated.timing(translateX, { toValue: -60 }),
+      Animated.timing(scale, { toValue: 1 }),
+      Animated.timing(rotation, { toValue: 0 }),
+      Animated.timing(opacity, { toValue: 0 })
+    ]).start();
+  };
+
   return (
     <Container>
       <Row>
         <TouchableOpacity onPress={onPress}>
           <AnimatedImage
             key={`image_${toggled}`}
-            source={toggled ? require("./play-c.png") : require("./pause.png")}
+            source={
+              toggled
+                ? props.isRecordMode
+                  ? require("./record.png")
+                  : require("./play-c.png")
+                : require("./pause.png")
+            }
             style={{ transform: [{ scale }, { rotate: spin }] }}
           />
         </TouchableOpacity>
         {toggled && (
           <AudioDesc>
-            <AudioStatus>{strings.AudioRecordingReceived}</AudioStatus>
+            <AudioStatus>
+              {props.isRecordMode
+                ? strings.SendRecording
+                : strings.AudioRecordingReceived}
+            </AudioStatus>
             <Subtitle>
               {strings.Sent} {props.sent}
             </Subtitle>
@@ -218,18 +328,18 @@ const AnimatedColumn = Animated.createAnimatedComponent(Column);
 
 const AudioStatus = styled.Text`
   font-size: 15px;
-  font-family: "roboto-bold";
+  font-family: "Montserrat-Regular";
   color: rgba(0, 0, 0, 0.7);
 `;
 
 const Subtitle = styled.Text`
   font-size: 12px;
-  font-family: "roboto-light";
+  font-family: "Montserrat-Light";
   color: rgba(0, 0, 0, 0.7);
 `;
 
 const Reciter = styled.Text`
   font-size: 15px;
-  font-family: "roboto-bold";
+  font-family: "Montserrat-Bold";
   color: rgba(0, 0, 0, 0.7);
 `;
