@@ -13,6 +13,7 @@ import {
   Modal,
   Alert
 } from "react-native";
+import { Icon } from "react-native-elements";
 import studentImages from "config/studentImages";
 import { Rating } from "react-native-elements";
 import colors from "config/colors";
@@ -307,7 +308,6 @@ class StudentMainScreen extends QcParentScreen {
             newAssignment: false
           });
         }}
-        style={{ paddingVertical: screenHeight * 0.019 }}
       >
         <View style={styles.prevAssignmentCard} key={index}>
           <View
@@ -335,8 +335,24 @@ class StudentMainScreen extends QcParentScreen {
                 flex: 3
               }}
             >
-              <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>
-                {item.name}
+              <Text
+                numberOfLines={1}
+                style={[
+                  fontStyles.mainTextStyleBlack,
+                  {
+                    color:
+                      item.assignmentType === strings.Reading ||
+                      item.assignmentType === strings.Read
+                        ? colors.grey
+                        : item.assignmentType === strings.Memorization ||
+                          item.assignmentType === strings.Memorize ||
+                          item.assignmentType == null
+                        ? colors.darkGreen
+                        : colors.darkishGrey
+                  }
+                ]}
+              >
+                {item.assignmentType ? item.assignmentType : strings.Memorize}
               </Text>
             </View>
             <View
@@ -353,37 +369,20 @@ class StudentMainScreen extends QcParentScreen {
               />
             </View>
           </View>
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>
+              {item.name}
+            </Text>
+          </View>
           {item.evaluation.notes ? (
             <Text numberOfLines={2} style={fontStyles.smallTextStyleDarkGrey}>
               {"Notes: " + item.evaluation.notes}
             </Text>
-          ) : (
-            <View />
-          )}
-          {item.assignmentType !== "None" ? (
-            <View
-              style={{
-                flexWrap: "wrap",
-                height: screenHeight * 0.03,
-                margin: screenHeight * 0.005
-              }}
-            >
-              <Text
-                style={[
-                  styles.corner,
-                  {
-                    backgroundColor:
-                      item.assignmentType === strings.Reading
-                        ? colors.grey
-                        : item.assignmentType === strings.Memorization
-                        ? colors.green
-                        : colors.darkishGrey
-                  }
-                ]}
-              >
-                {item.assignmentType}
-              </Text>
-            </View>
           ) : (
             <View />
           )}
@@ -399,9 +398,10 @@ class StudentMainScreen extends QcParentScreen {
               <Text style={fontStyles.smallTextStyleDarkGrey}>
                 {strings.ImprovementAreas}
               </Text>
-              {item.evaluation.improvementAreas.map(tag => {
+              {item.evaluation.improvementAreas.map((tag, cnt) => {
                 return (
-                  <Text key={tag} style={styles.corner}>
+                  <Text key={tag}>
+                    {cnt > 0 ? ", " : ""}
                     {tag}
                   </Text>
                 );
@@ -515,8 +515,10 @@ class StudentMainScreen extends QcParentScreen {
     return (
       <View style={[styles.currentAssignment, { backgroundColor: bgdClr }]}>
         <View style={styles.middleView}>
-          <Text style={fontStyles.mainTextStyleBlack}>
-            {strings.CurrentAssignment}
+          <Text style={fontStyles.bigTextStyleBlack}>
+            {thisClassInfo.currentAssignmentType
+              ? thisClassInfo.currentAssignmentType
+              : strings.Memorize}
           </Text>
           <Text
             style={[
@@ -611,6 +613,34 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 
+  renderAssignmentsSectionHeader(label, iconName) {
+    return (
+      <View
+        style={{
+          alignItems: "center",
+          marginLeft: screenWidth * 0.017,
+          flexDirection: "row",
+          paddingTop: screenHeight * 0.007,
+          paddingBottom: screenHeight * 0.019
+        }}
+      >
+        <Icon
+          name={iconName}
+          type="material-community"
+          color={colors.darkGrey}
+        />
+        <Text
+          style={[
+            { marginLeft: screenWidth * 0.017 },
+            fontStyles.mainTextStyleDarkGrey
+          ]}
+        >
+          {label.toUpperCase()}
+        </Text>
+      </View>
+    );
+  }
+
   renderCurrentAssignmentCard() {
     const { isReadyEnum } = this.state;
 
@@ -634,6 +664,11 @@ class StudentMainScreen extends QcParentScreen {
 
     return (
       <View>
+        {this.renderAssignmentsSectionHeader(
+          strings.CurrentAssignment,
+          "book-open-outline"
+        )}
+
         <CustomPicker
           options={customPickerOptions}
           onValueChange={value => this.updateCurrentAssignmentStatus(value)}
@@ -737,6 +772,10 @@ class StudentMainScreen extends QcParentScreen {
             : this.renderEmptyAssignmentCard()}
           <View>
             <ScrollView>
+              {this.renderAssignmentsSectionHeader(
+                strings.PastAssignments,
+                "history"
+              )}
               <FlatList
                 data={assignmentHistory}
                 keyExtractor={(item, index) => item.name + index}
@@ -818,15 +857,15 @@ const styles = StyleSheet.create({
   prevAssignmentCard: {
     flexDirection: "column",
     paddingHorizontal: screenWidth * 0.008,
-    paddingVertical: screenHeight * 0.019,
+    paddingBottom: screenHeight * 0.019,
+    marginBottom: screenHeight * 0.009,
     borderColor: colors.grey,
     borderWidth: screenHeight * 0.13 * 0.0066,
     backgroundColor: colors.white
   },
   profileInfo: {
     flexDirection: "column",
-    backgroundColor: colors.white,
-    marginBottom: screenHeight * 0.015
+    backgroundColor: colors.white
   },
   corner: {
     borderColor: "#D0D0D0",
