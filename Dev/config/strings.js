@@ -201,8 +201,10 @@ export default {
   Evaluation: "Assignment Evaluation",
   NoNotesProvided: "There are no additional notes provided.",
   AudioRecordingReceived: "Tasmee' audio recording received",
-  SendRecording: "Send Tasmee' audio to teacher",
+  SendRecording: "Send tasmee' audio to teacher",
   Sent: "Sent:",
+  Recording: "Recording",
+  PressToStartRecording: "Start recording to send to teacher.",
 
   //--------------------- Class Tabs Navigator ---------------------
   Attendance: "Attendance",

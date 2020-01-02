@@ -238,17 +238,16 @@ const AudioPlayer = props => {
                 : strings.AudioRecordingReceived}
             </AudioStatus>
             <Subtitle>
-              {strings.Sent} {props.sent}
+              {!props.isRecordMode ? strings.Sent + " " + props.sent : strings.PressToStartRecording}
             </Subtitle>
           </AudioDesc>
         )}
       </Row>
       <AnimatedPlaying style={{ transform: [{ translateX }] }}>
-        <AnimatedDiskCenter style={{ transform: [{ scale }] }} />
         <AnimatedColumn style={{ opacity: opacityInterpolate }}>
           <Reciter>{props.title}</Reciter>
           <Subtitle>
-            {strings.Sent} {props.sent}
+            {!props.isRecordMode ? strings.Sent + " " + props.sent : strings.Recording}
           </Subtitle>
           <ProgressBar
             progress={playWidth}
@@ -306,8 +305,6 @@ const Row = styled.View`
   position: absolute;
   right: 30px;
 `;
-
-const Icon = styled.Image``;
 
 const Playing = styled.View`
   width: 300px;

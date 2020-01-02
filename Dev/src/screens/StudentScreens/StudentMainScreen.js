@@ -11,7 +11,8 @@ import {
   FlatList,
   ScrollView,
   Modal,
-  Alert
+  Alert,
+  Animated
 } from "react-native";
 import { Icon } from "react-native-elements";
 import studentImages from "config/studentImages";
@@ -31,6 +32,14 @@ import fontStyles from "config/fontStyles";
 import { CustomPicker } from "react-native-custom-picker";
 import { screenHeight, screenWidth } from "config/dimensions";
 import AudioPlayer from "components/AudioPlayer/AudioPlayer";
+import TouchableText from "components/TouchableText";
+
+const translateY = new Animated.Value(-35);
+const opacity = new Animated.Value(0);
+const opacityInterpolate = opacity.interpolate({
+  inputRange: [0, 0.85, 1],
+  outputRange: [0, 0, 1]
+});
 
 class StudentMainScreen extends QcParentScreen {
   state = {
@@ -42,7 +51,7 @@ class StudentMainScreen extends QcParentScreen {
     thisClassInfo: "",
     isReadyEnum: "",
     modalVisible: false,
-    recordingModaVisible: false,
+    recordingUIVisible: false,
     classCode: "",
     classes: "",
     isRecording: false,
@@ -558,8 +567,30 @@ class StudentMainScreen extends QcParentScreen {
       value.value
     );
     if (value.value === "READY") {
-      this.setState({ recordingModaVisible: true });
+      this.setState({ recordingUIVisible: true }, () =>
+        this.animateShowAudioUI()
+      );
     }
+  }
+
+  animateShowAudioUI() {
+    Animated.parallel([
+      Animated.timing(translateY, {
+        toValue: 0,
+        duration: 1000
+      }),
+      Animated.timing(opacity, { toValue: 1 })
+    ]).start();
+  }
+
+  animateHideAudioUI() {
+    Animated.parallel([
+      Animated.timing(translateY, {
+        toValue: -35,
+        duration: 300
+      }),
+      Animated.timing(opacity, { toValue: 0 })
+    ]).start(() => this.setState({ recordingUIVisible: false }));
   }
 
   renderAudioRecordingUI() {
@@ -567,17 +598,26 @@ class StudentMainScreen extends QcParentScreen {
       student,
       thisClassInfo,
       isRecording,
-      recordingModaVisible
+      recordingUIVisible
     } = this.state;
+
+    const transformStyle = {
+      transform: [{ translateY }],
+      opacity: opacityInterpolate,
+    };
+
     return (
       <View>
-        {recordingModaVisible && (
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              alignSelf: "center"
-            }}
+        {recordingUIVisible && (
+          <Animated.View
+            style={[
+              {
+                justifyContent: "center",
+                alignItems: "center",
+                alignSelf: "center"
+              },
+              transformStyle
+            ]}
           >
             <AudioPlayer
               image={studentImages.images[student.profileImageID]}
@@ -585,29 +625,31 @@ class StudentMainScreen extends QcParentScreen {
               title={thisClassInfo.currentAssignment}
               isRecordMode={true}
               onStopRecording={recordedFileUri => {
-                alert("called!! " + recordedFileUri);
                 this.setState({ recordedFileUri: recordedFileUri });
                 FirebaseFunctions.uploadAudio(
                   recordedFileUri,
                   this.state.userID
                 );
+                this.animateHideAudioUI();
               }}
             />
             <View
               style={{
                 flexDirection: "row",
-                justifyContent: "space-evenly"
+                justifyContent: "flex-end",
+                alignSelf: "flex-end",
+                justifySelf: "align-self"
               }}
             >
-              <QcActionButton
+              <TouchableText
                 text={strings.Cancel}
                 disabled={isRecording}
                 onPress={() => {
-                  this.setState({ recordingModaVisible: false });
+                  this.animateHideAudioUI();
                 }}
               />
             </View>
-          </View>
+          </Animated.View>
         )}
       </View>
     );
