@@ -31,8 +31,12 @@ const audioRecorderPlayer = new AudioRecorderPlayer();
 
 const AudioPlayer = props => {
   const [toggled, setToggled] = useState(true);
-  const [playTime, setPlayTime] = useState(true);
-  const [playWidth, setPlayWidth] = useState(true);
+  const [playTime, setPlayTime] = useState(0);
+  const [playWidth, setPlayWidth] = useState(0);
+  const [recordingCompleted, setRecordingCompleted] = useState(false);
+  const [recordingPlaybackPlaying, setRecordingPlaybackPlaying] = useState(
+    false
+  );
 
   audioRecorderPlayer.setSubscriptionDuration(0.09); // optional. Default is 0.1
   const spin = rotation.interpolate({
@@ -95,6 +99,7 @@ const AudioPlayer = props => {
   var uri = "";
 
   onStartRecord = async () => {
+    setRecordingCompleted(false);
     //Handles permissions for microphone usage
     let isGranted = true;
 
@@ -160,6 +165,7 @@ const AudioPlayer = props => {
     await audioRecorderPlayer.stopRecorder();
     audioRecorderPlayer.removeRecordBackListener();
     setPlayWidth(0);
+    setRecordingCompleted(true);
     props.onStopRecording("/sdcard/hello.mp4");
   };
 
@@ -193,6 +199,19 @@ const AudioPlayer = props => {
     } else {
       animateStopAudio();
       onStopAction();
+    }
+  };
+
+  //handles re-play button after recording an audio
+  const onPlayRecording = async () => {
+    if (props.isRecordMode && recordingCompleted) {
+      if (!recordingPlaybackPlaying) {
+        setRecordingPlaybackPlaying(true);
+        return await onStartPlay();
+      } else {
+        setRecordingPlaybackPlaying(false);
+        return await onPausePlay();
+      }
     }
   };
 
@@ -230,6 +249,20 @@ const AudioPlayer = props => {
             style={{ transform: [{ scale }, { rotate: spin }] }}
           />
         </TouchableOpacity>
+        {props.isRecordMode && recordingCompleted && (
+          <TouchableOpacity
+            style={{ justifyContent: "center", alignItems: "center" }}
+            onPress={onPlayRecording}
+          >
+            <SmallImage
+              source={
+                !recordingPlaybackPlaying
+                  ? require("./play-c.png")
+                  : require("./pause.png")
+              }
+            />
+          </TouchableOpacity>
+        )}
         {toggled && (
           <AudioDesc>
             <AudioStatus>
@@ -238,7 +271,11 @@ const AudioPlayer = props => {
                 : strings.AudioRecordingReceived}
             </AudioStatus>
             <Subtitle>
-              {!props.isRecordMode ? strings.Sent + " " + props.sent : strings.PressToStartRecording}
+              {!props.isRecordMode
+                ? strings.Sent + " " + props.sent
+                : recordingCompleted
+                ? strings.TasmeeRecorded
+                : strings.PressToStartRecording}
             </Subtitle>
           </AudioDesc>
         )}
@@ -247,7 +284,9 @@ const AudioPlayer = props => {
         <AnimatedColumn style={{ opacity: opacityInterpolate }}>
           <Reciter>{props.title}</Reciter>
           <Subtitle>
-            {!props.isRecordMode ? strings.Sent + " " + props.sent : strings.Recording}
+            {!props.isRecordMode
+              ? strings.Sent + " " + props.sent
+              : strings.Recording}
           </Subtitle>
           <ProgressBar
             progress={playWidth}
@@ -280,12 +319,19 @@ const Image = styled.Image`
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 
+const SmallImage = styled.Image`
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  margin-left: 10px;
+`;
+
 const DiskCenter = styled.View`
   width: 10px;
   height: 10px;
   border-radius: 5px;
   position: absolute;
-  left: 30px;
+  left: 20px;
   top: 5px;
   z-index: 10;
   background: #ffffff;

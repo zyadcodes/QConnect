@@ -570,6 +570,11 @@ class StudentMainScreen extends QcParentScreen {
       this.setState({ recordingUIVisible: true }, () =>
         this.animateShowAudioUI()
       );
+    } else {
+      if (this.state.recordingUIVisible) {
+        this.animateHideAudioUI();
+      }
+      this.setState({ recordingUIVisible: false });
     }
   }
 
@@ -612,9 +617,9 @@ class StudentMainScreen extends QcParentScreen {
           <Animated.View
             style={[
               {
-                justifyContent: "center",
+                justifyContent: "flex-start",
                 alignItems: "center",
-                alignSelf: "center"
+                alignSelf: "flex-start"
               },
               transformStyle
             ]}
@@ -630,7 +635,6 @@ class StudentMainScreen extends QcParentScreen {
                   recordedFileUri,
                   this.state.userID
                 );
-                this.animateHideAudioUI();
               }}
             />
             <View
@@ -644,6 +648,17 @@ class StudentMainScreen extends QcParentScreen {
               <TouchableText
                 text={strings.Cancel}
                 disabled={isRecording}
+                onPress={() => {
+                  this.animateHideAudioUI();
+                }}
+              />
+              <View style={{ width: 20 }} />
+
+              <TouchableText
+                text={strings.Send}
+                style={{
+                  ...fontStyles.mainTextStylePrimaryDark,
+                }}
                 onPress={() => {
                   this.animateHideAudioUI();
                 }}

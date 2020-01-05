@@ -203,8 +203,10 @@ export default {
   AudioRecordingReceived: "Tasmee' audio recording received",
   SendRecording: "Send tasmee' audio to teacher",
   Sent: "Sent:",
+  Send: "Send",
   Recording: "Recording",
   PressToStartRecording: "Start recording to send to teacher.",
+  TasmeeRecorded: "Tasmee' is recorded and ready to send.",
 
   //--------------------- Class Tabs Navigator ---------------------
   Attendance: "Attendance",
