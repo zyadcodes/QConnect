@@ -148,7 +148,7 @@ class AddManualStudentsScreen extends Component {
                     />
                     <View style={styles.addStudentsView}>
                         <View style={styles.enterStudentNameText}>
-                            <Text style={fontStyles.mainTextStyleBlack}>{strings.EnterYourStudentsName}</Text>
+                            <Text style={{...fontStyles.mainTextStyleBlack, marginBottom: 3}}>{strings.EnterYourStudentsName}</Text>
                         </View>
                         <View style={{ flex: 0.7, alignSelf: 'flex-start' }}>
                             <TextInput
@@ -257,13 +257,11 @@ const styles = StyleSheet.create({
     },
     studentNameTextInput: {
         marginLeft: screenWidth * 0.02,
-        marginTop: screenHeight * 0.01,
         paddingLeft: screenWidth * 0.03,
         width: screenWidth * 0.95,
-        height: screenHeight * 0.07,
         backgroundColor: colors.veryLightGrey,
-        height: screenHeight * 0.08 * 0.6,
-        borderRadius: screenWidth * 0.05
+        height: screenHeight * 0.06,
+        borderRadius: screenHeight * 0.03
     },
     doneButton: {
         alignItems: 'center',

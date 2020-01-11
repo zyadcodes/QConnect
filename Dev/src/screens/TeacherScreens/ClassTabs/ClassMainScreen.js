@@ -227,7 +227,7 @@ async updatePicture(newPicture){
 
       const studentsNeedHelp = currentClass.students.filter((student) => student.isReadyEnum === "NEED_HELP");
       const studentsReady = currentClass.students.filter((student) => student.isReadyEnum === "READY" || (!student.isReadyEnum && student.isReady === true));
-      const studentsWorkingOnIt = currentClass.students.filter((student) => (student.isReadyEnum === "WORKING_ON_IT" || (!student.isReadyEnum && student.isReady === false) && student.currentAssignment !== "None" ));
+      const studentsWorkingOnIt = currentClass.students.filter((student) => ((student.isReadyEnum === "WORKING_ON_IT" || (student.isReadyEnum === undefined && student.isReady === false)) && student.currentAssignment !== "None" ));
       const studentsWithNoAssignments = currentClass.students.filter((student) => student.currentAssignment === "None");
       const { isEditing, currentClassID, userID } = this.state;
 

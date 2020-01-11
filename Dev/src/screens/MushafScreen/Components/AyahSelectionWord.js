@@ -11,7 +11,7 @@ class Word extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if(nextProps.selected === this.state.selected && 
+        if(nextProps.selected === this.props.selected && 
             nextProps.isFirstSelectedWord === this.props.isFirstSelectedWord){
                 return false;
             }

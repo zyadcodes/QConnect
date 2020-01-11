@@ -124,7 +124,7 @@ export default class MushafScreen extends QcParentScreen {
             let indexSection = {};
             if(assignmentLocation !== undefined){
                 indexSection = {
-                    index: assignmentLocation.start.page -1
+                    index: 604 - assignmentLocation.start.page
                 }
             }
             
