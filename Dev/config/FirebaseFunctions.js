@@ -262,7 +262,7 @@ export default class FirebaseFunctions {
         ? strings.NeedsHelp
         : strings.Ready;
     currentClass.teachers.forEach(async teacherID => {
-      this.functions.httpsCallable("sendNotification", {
+      this.functions.httpsCallable('sendNotification')({
         topic: teacherID,
         title: strings.StudentUpdate,
         body:
@@ -323,7 +323,7 @@ export default class FirebaseFunctions {
     this.logEvent("UPDATE_CURRENT_ASSIGNMENT");
 
     //Notifies that student that their assignment has been updated
-    this.functions.httpsCallable("sendNotification", {
+    this.functions.httpsCallable('sendNotification')({
       topic: studentID,
       title: strings.AssignmentUpdate,
       body: strings.YourTeacherHasUpdatedYourCurrentAssignment
@@ -346,7 +346,7 @@ export default class FirebaseFunctions {
 
       try {
         //Notifies that student that their assignment has been updated
-        this.functions.httpsCallable("sendNotification", {
+        this.functions.httpsCallable('sendNotification')({
           topic: student.ID,
           title: strings.AssignmentUpdate,
           body: strings.YourTeacherHasUpdatedYourCurrentAssignment
@@ -404,7 +404,7 @@ export default class FirebaseFunctions {
     });
 
     //Notifies that student that their assignment has been graded
-    this.functions.httpsCallable("sendNotification", {
+    this.functions.httpsCallable('sendNotification')({
       topic: studentID,
       title: strings.AssignmentGraded,
       body: strings.YourAssignmentHasBeenGraded
@@ -528,7 +528,7 @@ export default class FirebaseFunctions {
 
     //Sends a notification to the teachers of that class saying that a student has joined the class
     classToJoin.data().teachers.forEach(teacherID => {
-      this.functions.httpsCallable("sendNotification", {
+      this.functions.httpsCallable('sendNotification')({
         topic: teacherID,
         title: strings.NewStudent,
         body: student.name + strings.HasJoinedYourClass
