@@ -601,7 +601,8 @@ class StudentMainScreen extends QcParentScreen {
     const {
       student,
       thisClassInfo,
-      isRecording,
+      userID,
+      currentClassID,
       recordingUIVisible
     } = this.state;
 
@@ -634,9 +635,10 @@ class StudentMainScreen extends QcParentScreen {
               }}
               onSend={recordedFileUri => {
                 this.setState({ recordedFileUri: recordedFileUri });
-                FirebaseFunctions.uploadAudio(
+                FirebaseFunctions.submitRecordingAudio(
                   recordedFileUri,
-                  this.state.userID
+                  userID,
+                  currentClassID
                 );
                 this.animateHideAudioUI();
               }}

@@ -16,6 +16,7 @@ export default class FirebaseFunctions {
   static auth = firebase.auth();
   static analytics = firebase.analytics();
 
+  //-----------------------------
   //Methods that can be called from any other class
 
   //This functions will take in an email and a password & will sign a user up using
@@ -276,8 +277,41 @@ export default class FirebaseFunctions {
   }
 
   //This method will take in an audio file and a studentID, and will upload the audio file to that path
-  static async uploadAudio(file, studentID) {
-    await this.storage.ref("audioFiles/" + studentID).putFile(file);
+  static async uploadAudio(file, fileID) {
+    await this.storage.ref("audioFiles/" + fileID).putFile(file);
+    return 0;
+  }
+
+  static async submitRecordingAudio(file, studentID, classID) {
+    try {
+      const uuidv4 = require('uuid/v4');
+      const audioFileID = uuidv4().substring(0, 13);
+
+      await this.uploadAudio(file, audioFileID);
+
+      let currentClass = await this.getClassByID(classID);
+      let arrayOfStudents = currentClass.students;
+      let studentIndex = arrayOfStudents.findIndex(student => {
+        return student.ID === studentID;
+      });
+      let sent = new Date();
+
+      arrayOfStudents[studentIndex].submission = {
+        audioFileID,
+        sent,
+      };
+
+      await this.updateClassObject(classID, {
+        students: arrayOfStudents
+      });
+    } catch (error) {
+      this.logEvent("SUBMIT_RECORDING_FAILED", { error });
+      console.log(
+        "error siubmitting recording audio: " + JSON.stringify(error)
+      );
+      return -1;
+    }
+
     return 0;
   }
 
