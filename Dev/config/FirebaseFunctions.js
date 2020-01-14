@@ -16,6 +16,33 @@ export default class FirebaseFunctions {
 	static auth = firebase.auth();
 	static analytics = firebase.analytics();
 
+	/*static async migrate() {
+		const allClasses = await this.classes.get();
+		const allClassesDocs = await allClasses.docs.map((doc) => doc.data());
+		for (const c of allClassesDocs) {
+			if (c.ID && c.ID !== 'Example ID') {
+				const students = c.students;
+				const newArray = [];
+				for (let student of students) {
+					if (student.currentAssignment !== 'None') {
+						let newCurrentAssignments = [{
+							name: student.currentAssignment,
+							location: student.currentAssignmentLocation,
+							type: student.currentAssignmentType,
+							isReadyEnum: student.isReadyEnum
+						}];
+						student.currentAssignments = newCurrentAssignments;
+					}
+					newArray.push(student);
+				}
+				await this.updateClassObject(c.ID, {
+					students: students
+				});
+			}
+		}
+		return 0;
+	}*/
+
 	//Methods that can be called from any other class
 
 	//This functions will take in an email and a password & will sign a user up using
@@ -229,7 +256,7 @@ export default class FirebaseFunctions {
 	//This function will update the assignment status of a particular student within a class. It will
 	//simply reverse whatever the property is at the moment (true --> false & vice verca). This property
 	//is located within a student object that is within a class object
-	static async updateStudentAssignmentStatus(classID, studentID, status) {
+	static async updateStudentAssignmentStatus(classID, studentID, status, index) {
 		let currentClass = await this.getClassByID(classID);
 
 		let arrayOfStudents = currentClass.students;
@@ -237,7 +264,7 @@ export default class FirebaseFunctions {
 			return student.ID === studentID;
 		});
 
-		arrayOfStudents[studentIndex].isReadyEnum = status;
+		arrayOfStudents[studentIndex].currentAssignments[index].isReadyEnum = status;
 
 		await this.updateClassObject(classID, {
 			students: arrayOfStudents
@@ -271,49 +298,15 @@ export default class FirebaseFunctions {
 
 	//This method will take in a student ID and return the audio file associated with that studentID. If an audio
 	//file doesn't exist, then the method will return -1.
-	static async downloadAudioFile(studentID) {
+	static async downloadAudioFile(audioFileID) {
 		try {
-			const file = this.storage.ref('audioFiles/' + studentID);
+			const file = this.storage.ref('audioFiles/' + audioFileID);
 			const download = await file.getDownloadURL();
 			return download;
-		} catch (err) {
+		} catch (error) {
+			this.logEvent('DOWNLOAD_AUDIO_FAILED', { audioFileID, error });
 			return -1;
 		}
-	}
-
-	//This method will update the currentAssignment property of a student within a class.
-	//To locate the correct student, the method will take in params of the classID, the studentID,
-	//and finally, the name of the new assignment which it will set the currentAssignment property
-	//to
-	static async updateStudentCurrentAssignment(
-		classID,
-		studentID,
-		newAssignmentName,
-		assignmentType,
-		assignmentLocation
-	) {
-		let currentClass = await this.getClassByID(classID);
-		let arrayOfStudents = currentClass.students;
-		let studentIndex = arrayOfStudents.findIndex((student) => {
-			return student.ID === studentID;
-		});
-		arrayOfStudents[studentIndex].currentAssignment = newAssignmentName;
-		arrayOfStudents[studentIndex].currentAssignmentType = assignmentType;
-		arrayOfStudents[studentIndex].currentAssignmentLocation = assignmentLocation;
-		arrayOfStudents[studentIndex].isReadyEnum = 'WORKING_ON_IT';
-
-		await this.updateClassObject(classID, {
-			students: arrayOfStudents
-		});
-		this.logEvent('UPDATE_CURRENT_ASSIGNMENT');
-
-		//Notifies that student that their assignment has been updated
-		this.functions.httpsCallable('sendNotification')({
-			topic: studentID,
-			title: strings.AssignmentUpdate,
-			body: strings.YourTeacherHasUpdatedYourCurrentAssignment
-		});
-		return 0;
 	}
 
 	static async updateClassAssignment(
@@ -373,7 +366,12 @@ export default class FirebaseFunctions {
 		});
 		avgGrade /= arrayOfStudents[studentIndex].totalAssignments;
 		arrayOfStudents[studentIndex].averageRating = avgGrade;
-		arrayOfStudents[studentIndex].isReadyEnum = 'WORKING_ON_IT';
+
+		let indexOfAssignment = arrayOfStudents[studentIndex].currentAssignments.findIndex((element) => {
+			return element.name === evaluationDetails.name && element.type === evaluationDetails.type;
+		});
+
+		arrayOfStudents[studentIndex].currentAssignments.splice(indexOfAssignment, 1);
 
 		await this.updateClassObject(classID, {
 			students: arrayOfStudents
@@ -481,7 +479,7 @@ export default class FirebaseFunctions {
 			assignmentHistory: [],
 			attendanceHistory: {},
 			averageRating: 0,
-			currentAssignment: 'None',
+			currentAssignments: [],
 			isReadyEnum: 'WORKING_ON_IT',
 			profileImageID: student.profileImageID,
 			name: student.name,
@@ -602,8 +600,12 @@ export default class FirebaseFunctions {
 	}
 
 	//This function will take a name of an event and log it to firebase analytics (not async)
-	static logEvent(eventName) {
-		this.analytics.logEvent(eventName);
+	static logEvent(eventName, eventArgs) {
+		if (eventArgs !== undefined) {
+			this.analytics.logEvent(eventName, eventArgs);
+		} else {
+			this.analytics.logEvent(eventName);
+		}
 	}
 
 	//This function will take in the name of a screen as well as the name of the class and set the
