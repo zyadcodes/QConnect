@@ -309,41 +309,6 @@ export default class FirebaseFunctions {
 		}
 	}
 
-	//This method will update the currentAssignment property of a student within a class.
-	//To locate the correct student, the method will take in params of the classID, the studentID,
-	//and finally, the name of the new assignment which it will set the currentAssignment property
-	//to
-	static async updateStudentCurrentAssignment(
-		classID,
-		studentID,
-		newAssignmentName,
-		assignmentType,
-		assignmentLocation
-	) {
-		let currentClass = await this.getClassByID(classID);
-		let arrayOfStudents = currentClass.students;
-		let studentIndex = arrayOfStudents.findIndex((student) => {
-			return student.ID === studentID;
-		});
-		arrayOfStudents[studentIndex].currentAssignment = newAssignmentName;
-		arrayOfStudents[studentIndex].currentAssignmentType = assignmentType;
-		arrayOfStudents[studentIndex].currentAssignmentLocation = assignmentLocation;
-		arrayOfStudents[studentIndex].isReadyEnum = 'WORKING_ON_IT';
-
-		await this.updateClassObject(classID, {
-			students: arrayOfStudents
-		});
-		this.logEvent('UPDATE_CURRENT_ASSIGNMENT');
-
-		//Notifies that student that their assignment has been updated
-		this.functions.httpsCallable('sendNotification')({
-			topic: studentID,
-			title: strings.AssignmentUpdate,
-			body: strings.YourTeacherHasUpdatedYourCurrentAssignment
-		});
-		return 0;
-	}
-
 	static async updateClassAssignment(
 		classID,
 		newAssignmentName,

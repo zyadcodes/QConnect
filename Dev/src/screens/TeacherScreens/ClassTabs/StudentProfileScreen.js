@@ -20,6 +20,7 @@ import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
+import { Icon } from 'react-native-elements';
 
 class StudentProfileScreen extends QcParentScreen {
 	state = {
@@ -131,66 +132,20 @@ class StudentProfileScreen extends QcParentScreen {
 									source={studentImages.images[classStudent.profileImageID]}
 								/>
 							</View>
-							<View
-								style={{
-									flex: 1,
-									flexDirection: 'column',
-									height: 0.086 * screenHeight,
-									paddingLeft: screenWidth * 0.05
-								}}>
-								<Text
-									numberOfLines={1}
-									style={[fontStyles.bigTextStyleDarkGrey, { textAlign: 'left' }]}>
-									{this.state.currentAssignment.toUpperCase()}
-								</Text>
-								<View style={{ flexDirection: 'row' }}>
-									<TouchableHighlight
-										onPress={() => {
-											this.props.navigation.push('MushafScreen', {
-												invokedFromProfileScreen: true,
-												assignToAllClass: false,
-												userID: this.props.navigation.state.params.userID,
-												classID,
-												studentID,
-												assignmentLocation: classStudent.currentAssignmentLocation,
-												assignmentType: classStudent.currentAssignmentType,
-												assignmentName: currentAssignment,
-												imageID: classStudent.profileImageID,
-												onSaveAssignment: this.editAssignment.bind(this)
-											});
-										}}>
-										<Text style={fontStyles.mainTextStylePrimaryDark}>
-											{classStudent.currentAssignment === 'None'
-												? strings.AddAssignment
-												: strings.EditAssignment}
-										</Text>
-									</TouchableHighlight>
-
-									{hasCurrentAssignment ? (
-										<TouchableHighlight
-											onPress={() =>
-												this.props.navigation.push('EvaluationPage', {
-													classID: classID,
-													studentID: studentID,
-													assignmentName: currentAssignment,
-													userID: this.props.navigation.state.params.userID,
-													classStudent: classStudent,
-													assignmentLocation: classStudent.currentAssignmentLocation,
-													assignmentType: classStudent.currentAssignmentType,
-													newAssignment: true,
-													readOnly: false
-												})
-											}>
-											<View style={{ paddingLeft: screenWidth * 0.02 }}>
-												<Text style={fontStyles.mainTextStylePrimaryDark}>{strings.Grade}</Text>
-											</View>
-										</TouchableHighlight>
-									) : (
-										<View />
-									)}
-								</View>
-							</View>
 						</View>
+					</View>
+					<View
+						style={{
+							alignItems: 'center',
+							marginLeft: screenWidth * 0.017,
+							flexDirection: 'row',
+							paddingTop: screenHeight * 0.007,
+							paddingBottom: screenHeight * 0.019
+						}}>
+						<Icon name={'book-open-outline'} type='material-community' color={colors.darkGrey} />
+						<Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkGrey]}>
+							{strings.CurrentAssignment.toUpperCase()}
+						</Text>
 					</View>
 					<FlatList
 						data={this.state.classStudent.currentAssignments}
@@ -218,10 +173,9 @@ class StudentProfileScreen extends QcParentScreen {
 								</View>
 								<View
 									style={{
-										justifyContent: 'flex-start',
-										alignItems: 'flex-end',
 										flexDirection: 'row',
-										paddingLeft: screenWidth * 0.02
+										paddingLeft: screenWidth * 0.02,
+										justifyContent: 'space-between'
 									}}>
 									<Text style={fontStyles.mainTextStylePrimaryDark}>
 										{item.isReadyEnum === 'READY'
@@ -230,9 +184,66 @@ class StudentProfileScreen extends QcParentScreen {
 											? strings.WorkingOnIt
 											: strings.NeedHelp}
 									</Text>
+									<View
+										style={{
+											flexDirection: 'row',
+											paddingRight: screenWidth * 0.02,
+											justifyContent: 'space-between'
+										}}>
+										<TouchableHighlight
+											onPress={() => {
+												this.props.navigation.push('MushafScreen', {
+													invokedFromProfileScreen: true,
+													assignToAllClass: false,
+													userID: this.props.navigation.state.params.userID,
+													classID,
+													studentID,
+													assignmentLocation: item.location,
+													assignmentType: item.type,
+													assignmentName: item.name,
+													imageID: classStudent.profileImageID,
+													onSaveAssignment: this.editAssignment.bind(this)
+												});
+											}}>
+											<Text style={fontStyles.mainTextStylePrimaryDark}>
+												{strings.EditAssignment}
+											</Text>
+										</TouchableHighlight>
+										<TouchableHighlight
+											onPress={() =>
+												this.props.navigation.push('EvaluationPage', {
+													classID: classID,
+													studentID: studentID,
+													assignmentName: item.name,
+													userID: this.props.navigation.state.params.userID,
+													classStudent: classStudent,
+													assignmentLocation: item.location,
+													assignmentType: item.type,
+													newAssignment: true,
+													readOnly: false
+												})
+											}>
+											<View style={{ paddingLeft: screenWidth * 0.02 }}>
+												<Text style={fontStyles.mainTextStylePrimaryDark}>{strings.Grade}</Text>
+											</View>
+										</TouchableHighlight>
+									</View>
 								</View>
 							</View>
 						)}></FlatList>
+					<View
+						style={{
+							alignItems: 'center',
+							marginLeft: screenWidth * 0.017,
+							flexDirection: 'row',
+							paddingTop: screenHeight * 0.007,
+							paddingBottom: screenHeight * 0.019
+						}}>
+						<Icon name={'history'} type='material-community' color={colors.darkGrey} />
+						<Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkGrey]}>
+							{strings.PastAssignments.toUpperCase()}
+						</Text>
+					</View>
 					<ScrollView style={styles.prevAssignments}>
 						<FlatList
 							data={assignmentHistory}
