@@ -366,7 +366,12 @@ export default class FirebaseFunctions {
 		});
 		avgGrade /= arrayOfStudents[studentIndex].totalAssignments;
 		arrayOfStudents[studentIndex].averageRating = avgGrade;
-		arrayOfStudents[studentIndex].isReadyEnum = 'WORKING_ON_IT';
+
+		let indexOfAssignment = arrayOfStudents[studentIndex].currentAssignments.findIndex((element) => {
+			return element.name === evaluationDetails.name && element.type === evaluationDetails.type;
+		});
+
+		arrayOfStudents[studentIndex].currentAssignments.splice(indexOfAssignment, 1);
 
 		await this.updateClassObject(classID, {
 			students: arrayOfStudents
