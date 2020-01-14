@@ -149,6 +149,7 @@ class StudentMainScreen extends QcParentScreen {
 	//---------- Helper methods to render parts of the screen, or certain cases ------------
 	//Renders the screen when student didn't join any class
 	renderEmptyState() {
+		const { student, userID } = this.state;
 		return (
 			<SideMenu
 				onChange={(isOpen) => {
@@ -482,7 +483,7 @@ class StudentMainScreen extends QcParentScreen {
 						backgroundColor:
 							item.isReadyEnum === 'WORKING_ON_IT'
 								? colors.workingOnItColorBrown
-								: itme.isReadyEnum === 'READY'
+								: item.isReadyEnum === 'READY'
 								? colors.green
 								: colors.red
 					}

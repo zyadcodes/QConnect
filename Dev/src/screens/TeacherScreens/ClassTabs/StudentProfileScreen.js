@@ -124,7 +124,29 @@ class StudentProfileScreen extends QcParentScreen {
 								<Text style={fontStyles.mainTextStylePrimaryDark}>{this.getRatingCaption()}</Text>
 							</View>
 						</View>
-
+						<View
+							style={{
+								flexDirection: 'row',
+								justifyContent: 'flex-end',
+								marginRight: screenWidth * 0.02,
+								marginHorizontal: screenHeight * 0.05
+							}}>
+							<TouchableHighlight
+								onPress={() => {
+									this.props.navigation.push('MushafScreen', {
+										invokedFromProfileScreen: true,
+										assignToAllClass: false,
+										userID: this.props.navigation.state.params.userID,
+										classID,
+										studentID,
+										imageID: classStudent.profileImageID,
+										onSaveAssignment: this.editAssignment.bind(this),
+										newAssignment: true
+									});
+								}}>
+								<Text style={fontStyles.bigTextStylePrimaryDark}>{strings.AddAssignment}</Text>
+							</TouchableHighlight>
+						</View>
 						<View style={styles.profileInfoBottom}>
 							<View style={styles.profileInfoTopLeft}>
 								<Image
@@ -134,19 +156,23 @@ class StudentProfileScreen extends QcParentScreen {
 							</View>
 						</View>
 					</View>
-					<View
-						style={{
-							alignItems: 'center',
-							marginLeft: screenWidth * 0.017,
-							flexDirection: 'row',
-							paddingTop: screenHeight * 0.007,
-							paddingBottom: screenHeight * 0.019
-						}}>
-						<Icon name={'book-open-outline'} type='material-community' color={colors.darkGrey} />
-						<Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkGrey]}>
-							{strings.CurrentAssignment.toUpperCase()}
-						</Text>
-					</View>
+					{this.state.classStudent.currentAssignments.length > 0 ? (
+						<View
+							style={{
+								alignItems: 'center',
+								marginLeft: screenWidth * 0.017,
+								flexDirection: 'row',
+								paddingTop: screenHeight * 0.007,
+								paddingBottom: screenHeight * 0.019
+							}}>
+							<Icon name={'book-open-outline'} type='material-community' color={colors.darkGrey} />
+							<Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkGrey]}>
+								{strings.CurrentAssignment.toUpperCase()}
+							</Text>
+						</View>
+					) : (
+						<View />
+					)}
 					<FlatList
 						data={this.state.classStudent.currentAssignments}
 						keyExtractor={(item, index) => item.name + index}
@@ -158,7 +184,7 @@ class StudentProfileScreen extends QcParentScreen {
 										backgroundColor:
 											item.isReadyEnum === 'WORKING_ON_IT'
 												? colors.workingOnItColorBrown
-												: itme.isReadyEnum === 'READY'
+												: item.isReadyEnum === 'READY'
 												? colors.green
 												: colors.red
 									}
@@ -391,7 +417,8 @@ const styles = StyleSheet.create({
 	profileInfo: {
 		flexDirection: 'column',
 		backgroundColor: colors.white,
-		marginBottom: 0.001 * screenHeight
+		marginBottom: 0.001 * screenHeight,
+		paddingBottom: screenHeight * 0.01
 	},
 	corner: {
 		borderColor: '#D0D0D0',
@@ -407,8 +434,6 @@ const styles = StyleSheet.create({
 		paddingHorizontal: screenWidth * 0.024,
 		paddingTop: screenHeight * 0.015,
 		flexDirection: 'row',
-		borderBottomColor: colors.lightGrey,
-		borderBottomWidth: 1
 	},
 	profileInfoTopLeft: {
 		flexDirection: 'column',
@@ -426,6 +451,7 @@ const styles = StyleSheet.create({
 	profileInfoBottom: {
 		flexDirection: 'row',
 		paddingHorizontal: 0.024 * screenWidth,
+		paddingBottom: screenHeight * 0.02,
 		borderBottomColor: colors.grey,
 		borderBottomWidth: 1
 	},

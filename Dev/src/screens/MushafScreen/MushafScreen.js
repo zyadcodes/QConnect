@@ -409,7 +409,7 @@ export default class MushafScreen extends QcParentScreen {
 			students
 		};
 
-		await FirebaseFunctions.updateClassObject(updatedClass.ID, updatedClass);
+		//await FirebaseFunctions.updateClassObject(updatedClass.ID, updatedClass);
 
 		this.setState({
 			currentClass: updatedClass
@@ -417,24 +417,33 @@ export default class MushafScreen extends QcParentScreen {
 	}
 
 	//method updates the current assignment of the student
-	async saveStudentAssignment(newAssignmentName) {
+	async saveStudentAssignment(newAssignmentName, isNewAssignment) {
 		const { classID, studentID, assignmentType, selection, currentClass } = this.state;
 		let assignmentLocation = { start: selection.start, end: selection.end };
 		//update the current class object (so we can pass it to caller without having to re-render fron firebase)
 		let students = currentClass.students.map((student) => {
 			if (student.ID === studentID) {
-				const index = student.currentAssignments.findIndex((element) => {
-					return (
-						element.name === this.props.navigation.state.params.assignmentName &&
-						element.type === this.props.navigation.state.params.assignmentType
-					);
-				});
-				student.currentAssignments[index] = {
-					name: newAssignmentName,
-					type: assignmentType,
-					location: assignmentLocation,
-					isReadyEnum: 'WORKING_ON_IT'
-                };
+				if (isNewAssignment === true) {
+					student.currentAssignments[index].push({
+						name: newAssignmentName,
+						type: assignmentType,
+						location: assignmentLocation,
+						isReadyEnum: 'WORKING_ON_IT'
+					});
+				} else {
+					const index = student.currentAssignments.findIndex((element) => {
+						return (
+							element.name === this.props.navigation.state.params.assignmentName &&
+							element.type === this.props.navigation.state.params.assignmentType
+						);
+					});
+					student.currentAssignments[index] = {
+						name: newAssignmentName,
+						type: assignmentType,
+						location: assignmentLocation,
+						isReadyEnum: 'WORKING_ON_IT'
+					};
+				}
 			}
 			return student;
 		});
@@ -448,7 +457,7 @@ export default class MushafScreen extends QcParentScreen {
 			currentClass: updatedClass
 		});
 
-		await FirebaseFunctions.updateClassObject(updatedClass.ID, updatedClass);
+		//await FirebaseFunctions.updateClassObject(updatedClass.ID, updatedClass);
 	}
 
 	onSaveAssignment() {
@@ -458,8 +467,11 @@ export default class MushafScreen extends QcParentScreen {
 		} else {
 			if (assignToAllClass) {
 				this.saveClassAssignment(assignmentName);
+				
+			} else if (this.props.navigation.state.params.newAssignment === true) {
+				this.saveClassAssignment(assignmentName, true);
 			} else {
-				this.saveStudentAssignment(assignmentName);
+				this.saveStudentAssignment(assignmentName, false);
 			}
 
 			this.closeScreen();
@@ -467,16 +479,16 @@ export default class MushafScreen extends QcParentScreen {
 	}
 
 	closeScreen() {
-        const { invokedFromProfileScreen, userID, assignmentName, currentClass } = this.state;
+		const { invokedFromProfileScreen, userID, assignmentName, currentClass } = this.state;
 
 		//go back to student profile screen if invoked from there, otherwise go back to main screen
 		if (invokedFromProfileScreen) {
-			this.props.navigation.push("TeacherStudentProfile", {
-                userID: userID,
-                studentID: this.state.studentID,
-                currentClass: currentClass,
-                classID: currentClass.ID
-              })
+			this.props.navigation.push('TeacherStudentProfile', {
+				userID: userID,
+				studentID: this.state.studentID,
+				currentClass: currentClass,
+				classID: currentClass.ID
+			});
 		} else {
 			this.props.navigation.push('TeacherCurrentClass', { userID, currentClass });
 		}

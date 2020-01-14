@@ -152,7 +152,6 @@ const AudioPlayer = props => {
       audioRecorderPlayer.addRecordBackListener(e => {
         setPlayTime(audioRecorderPlayer.mmssss(Math.floor(e.current_position)));
       });
-      console.log(`uri: ${uri}`);
       return true;
     } catch (error) {
       Alert.alert(strings.Whoops, JSON.stringify(error));
