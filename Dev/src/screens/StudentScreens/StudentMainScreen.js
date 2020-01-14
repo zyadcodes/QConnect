@@ -32,7 +32,6 @@ import fontStyles from "config/fontStyles";
 import { CustomPicker } from "react-native-custom-picker";
 import { screenHeight, screenWidth } from "config/dimensions";
 import AudioPlayer from "components/AudioPlayer/AudioPlayer";
-import TouchableText from "components/TouchableText";
 
 const translateY = new Animated.Value(-35);
 const opacity = new Animated.Value(0);
@@ -629,41 +628,22 @@ class StudentMainScreen extends QcParentScreen {
               reciter={student.name}
               title={thisClassInfo.currentAssignment}
               isRecordMode={true}
-              onStopRecording={recordedFileUri => {
+              showSendCancel={true}
+              onClose={() => {
+                this.animateHideAudioUI();
+              }}
+              onSend={recordedFileUri => {
                 this.setState({ recordedFileUri: recordedFileUri });
                 FirebaseFunctions.uploadAudio(
                   recordedFileUri,
                   this.state.userID
                 );
+                this.animateHideAudioUI();
+              }}
+              onStopRecording={recordedFileUri => {
+                this.setState({ recordedFileUri: recordedFileUri });
               }}
             />
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                alignSelf: "flex-end",
-                justifySelf: "align-self"
-              }}
-            >
-              <TouchableText
-                text={strings.Cancel}
-                disabled={isRecording}
-                onPress={() => {
-                  this.animateHideAudioUI();
-                }}
-              />
-              <View style={{ width: 20 }} />
-
-              <TouchableText
-                text={strings.Send}
-                style={{
-                  ...fontStyles.mainTextStylePrimaryDark,
-                }}
-                onPress={() => {
-                  this.animateHideAudioUI();
-                }}
-              />
-            </View>
           </Animated.View>
         )}
       </View>
