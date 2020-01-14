@@ -3,42 +3,42 @@ import MainStackNavigator from './src/screens/MainStackNavigator';
 import { YellowBox } from 'react-native';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
-import { checkNotifications, requestNotifications, check, request, PERMISSIONS } from 'react-native-permissions';
+import {
+	checkNotifications,
+	requestNotifications,
+	check,
+	request,
+	PERMISSIONS
+} from 'react-native-permissions';
+import FirebaseFunctions from 'config/FirebaseFunctions';
 
 export default class App extends Component {
+	state = {
+		requestingPermissions: true
+	};
 
-  state = {
-    requestingPermissions: true,
-  }
+	async componentDidMount() {
+		const isPermissionsGranted = await checkNotifications();
+		if (isPermissionsGranted !== 'granted') {
+			await requestNotifications(['alert', 'sound', 'badge']);
+			this.setState({ requestingPermissions: false });
+		} else {
+			this.setState({ requestingPermissions: false });
+		}
 
-  async componentDidMount() {
+	}
 
-    const isPermissionsGranted = await checkNotifications();
-    if (isPermissionsGranted !== 'granted') {
-      await requestNotifications(['alert', 'sound', 'badge']);
-      this.setState({ requestingPermissions: false });
-    } else {
-      this.setState({ requestingPermissions: false });
-    }
+	render() {
+		YellowBox.ignoreWarnings([
+			'componentWillUpdate',
+			'componentWillMount',
+			'componentWillReceiveProps'
+		]);
 
-  }
-
-  render() {
-
-    YellowBox.ignoreWarnings(['componentWillUpdate', 'componentWillMount', 'componentWillReceiveProps']);
-
-    if (this.state.requestingPermissions === false) {
-      return (
-        <MainStackNavigator />
-      );
-    } else  {
-      return (
-        <QCView style={screenStyle.container} />
-      )
-    }
-
-  }
-
+		if (this.state.requestingPermissions === false) {
+			return <MainStackNavigator />;
+		} else {
+			return <QCView style={screenStyle.container} />;
+		}
+	}
 }
-
-
