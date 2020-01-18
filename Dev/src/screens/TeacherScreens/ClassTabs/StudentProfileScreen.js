@@ -154,6 +154,14 @@ class StudentProfileScreen extends QcParentScreen {
 									source={studentImages.images[classStudent.profileImageID]}
 								/>
 							</View>
+							<View style={{flexDirection:'row',paddingTop: 20, justifyContent:"space-between"}}>
+							<Text style={fontStyles.smallTextStyleBlack}>
+							{'Classes attended: 26'}</Text>
+						</View>	
+						<View style={{flexDirection:'row',paddingTop: 5, justifyContent:"space-between"}}>
+						<Text style={fontStyles.smallTextStyleBlack}>
+							{'Classes missed: 13'}</Text>
+							</View>				
 						</View>
 					</View>
 					{this.state.classStudent.currentAssignments.length > 0 ? (
@@ -449,7 +457,7 @@ const styles = StyleSheet.create({
 		paddingBottom: 0.007 * screenHeight
 	},
 	profileInfoBottom: {
-		flexDirection: 'row',
+		flexDirection: 'column',
 		paddingHorizontal: 0.024 * screenWidth,
 		paddingBottom: screenHeight * 0.02,
 		borderBottomColor: colors.grey,
