@@ -491,7 +491,7 @@ export default class FirebaseFunctions {
             if (studentAttendanceHistory[date] === false) {
                 absentStudents.push(student.ID);
             }
-
+            
         });
         this.logEvent("GET_ATTENDANCE_BY_DATE");
 
