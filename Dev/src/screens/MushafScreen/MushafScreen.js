@@ -409,11 +409,13 @@ export default class MushafScreen extends QcParentScreen {
 			students
 		};
 
-		//await FirebaseFunctions.updateClassObject(updatedClass.ID, updatedClass);
+		await FirebaseFunctions.updateClassObject(updatedClass.ID, updatedClass);
 
 		this.setState({
 			currentClass: updatedClass
 		});
+
+		console.log(updatedClass);
 	}
 
 	//method updates the current assignment of the student
@@ -424,7 +426,7 @@ export default class MushafScreen extends QcParentScreen {
 		let students = currentClass.students.map((student) => {
 			if (student.ID === studentID) {
 				if (isNewAssignment === true) {
-					student.currentAssignments[index].push({
+					student.currentAssignments.push({
 						name: newAssignmentName,
 						type: assignmentType,
 						location: assignmentLocation,
@@ -457,7 +459,9 @@ export default class MushafScreen extends QcParentScreen {
 			currentClass: updatedClass
 		});
 
-		//await FirebaseFunctions.updateClassObject(updatedClass.ID, updatedClass);
+		console.log(updatedClass);
+
+		await FirebaseFunctions.updateClassObject(updatedClass.ID, updatedClass);
 	}
 
 	onSaveAssignment() {
@@ -467,9 +471,8 @@ export default class MushafScreen extends QcParentScreen {
 		} else {
 			if (assignToAllClass) {
 				this.saveClassAssignment(assignmentName);
-				
 			} else if (this.props.navigation.state.params.newAssignment === true) {
-				this.saveClassAssignment(assignmentName, true);
+				this.saveStudentAssignment(assignmentName, true);
 			} else {
 				this.saveStudentAssignment(assignmentName, false);
 			}

@@ -79,14 +79,7 @@ class StudentProfileScreen extends QcParentScreen {
 
 	//---------- main UI render ===============================
 	render() {
-		const {
-			classStudent,
-			isLoading,
-			classID,
-			studentID,
-			hasCurrentAssignment,
-			currentAssignment
-		} = this.state;
+		const { classStudent, isLoading, classID, studentID } = this.state;
 		let { assignmentHistory, averageRating, name } = classStudent;
 
 		//Sorts the assignments by date completed
@@ -433,7 +426,7 @@ const styles = StyleSheet.create({
 	profileInfoTop: {
 		paddingHorizontal: screenWidth * 0.024,
 		paddingTop: screenHeight * 0.015,
-		flexDirection: 'row',
+		flexDirection: 'row'
 	},
 	profileInfoTopLeft: {
 		flexDirection: 'column',
