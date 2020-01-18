@@ -415,7 +415,6 @@ export default class MushafScreen extends QcParentScreen {
 			currentClass: updatedClass
 		});
 
-		console.log(updatedClass);
 	}
 
 	//method updates the current assignment of the student
@@ -458,8 +457,6 @@ export default class MushafScreen extends QcParentScreen {
 		this.setState({
 			currentClass: updatedClass
 		});
-
-		console.log(updatedClass);
 
 		await FirebaseFunctions.updateClassObject(updatedClass.ID, updatedClass);
 	}
