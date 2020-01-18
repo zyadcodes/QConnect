@@ -47,7 +47,7 @@ class StudentMainScreen extends QcParentScreen {
 
         this.setState({ isLoading: true });
         const { userID, classCode, student } = this.state;
-        console.log(await FirebaseFunctions.getClassesState());
+        //console.log(await FirebaseFunctions.getClassesState());
 
         //Tests if the user is already a part of this class and throws an alert if they are
         if (student.classes.includes(classCode)) {
