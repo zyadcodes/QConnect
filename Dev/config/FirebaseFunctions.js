@@ -155,8 +155,9 @@ export default class FirebaseFunctions {
     static async updateClassObject(ID, newObject) {
 
         let docRef = this.classes.doc(ID);
+        //alert(docRef.id);
         let updated = await docRef.update(newObject);
-        alert(updated.students);
+        //alert(updated);
         return 0;
 
     }
@@ -531,7 +532,7 @@ export default class FirebaseFunctions {
         await this.updateClassObject(classToJoin.docs[0].id, {
             students: firebase.firestore.FieldValue.arrayUnion(studentObject)
         });
-        alert(classToJoin.docs[0].data().teachers);
+        //alert(classToJoin.docs[0].data().teachers);
 
         await this.updateStudentObject(studentID, {
             classes: firebase.firestore.FieldValue.arrayUnion(classToJoin.docs[0].id),
@@ -540,7 +541,7 @@ export default class FirebaseFunctions {
         this.logEvent("JOIN_CLASS");
 
         //Sends a notification to the teachers of that class saying that a student has joined the class
-        alert(classToJoin.docs[0].data().teachers);
+        //alert(classToJoin.docs[0].data().teachers);
         classToJoin.docs[0].data().teachers.forEach((teacherID) => {
             this.functions.httpsCallable('sendNotification', {
                 topic: teacherID,
