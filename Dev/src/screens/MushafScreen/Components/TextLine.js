@@ -26,7 +26,7 @@ const TextLine = ({
             ayah: Number(word.aya),
             surah: Number(word.sura),
             page: page
-          };
+          }
           if (selectionOn === false) {
             if (word.char_type === 'word') {
               return (
@@ -35,7 +35,7 @@ const TextLine = ({
                   text={word.text}
                   selected={false}
                   onPress={() => onSelectAyah(curAyah)}
-                  isFirstSelectedWord={false};
+                  isFirstSelectedWord={false}
                 />
               );
             } else if (word.char_type === 'end') {
@@ -46,7 +46,7 @@ const TextLine = ({
                   onPress={() => onSelectAyah(curAyah)}
                   selected={false}
                   isLastSelectedAyah={false}
-                />;
+                />
               );
             }
           } else {
@@ -62,7 +62,7 @@ const TextLine = ({
             if (word.char_type === 'word') {
               let isFirstSelectedWord = isAyaSelected && isFirstWord;
               if (isFirstSelectedWord) {
-                isFirstWord = false;
+                isFirstWord = false
               }
               return (
                 <AyahSelectionWord
@@ -70,7 +70,7 @@ const TextLine = ({
                   text={word.text}
                   selected={isAyaSelected}
                   onPress={() => onSelectAyah(curAyah)}
-                  isFirstSelectedWord={isFirstSelectedWord};
+                  isFirstSelectedWord={isFirstSelectedWord}
                 />
               );
             } else if (word.char_type === 'end') {
@@ -87,14 +87,14 @@ const TextLine = ({
                     selectedAyahsEnd
                   )}
                   isLastSelectedAyah={isLastSelectedAyah}
-                />;
+                />
               );
             }
           }
         })}
     </View>
-  );;
-};
+  );
+}
 
 const styles = StyleSheet.create({
   line: {
