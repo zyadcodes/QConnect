@@ -1,8 +1,8 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { compareOrder, isAyahSelected } from "../Helpers/AyahsOrder";;
-import AyahSelectionWord from "./AyahSelectionWord";;
-import EndOfAyah from "./EndOfAyah";;
+import { compareOrder, isAyahSelected } from "../Helpers/AyahsOrder";
+import AyahSelectionWord from "./AyahSelectionWord";
+import EndOfAyah from "./EndOfAyah";
 import { screenHeight } from "config/dimensions";
 
 //Creates the higher order component
@@ -58,7 +58,7 @@ const TextLine = ({
               selectedAyahsEnd
             );
             let isLastSelectedAyah =
-              isAyaSelected && compareOrder(selectedAyahsEnd, curAyah) === 0;;
+              isAyaSelected && compareOrder(selectedAyahsEnd, curAyah) === 0;
             if (word.char_type === 'word') {
               let isFirstSelectedWord = isAyaSelected && isFirstWord;
               if (isFirstSelectedWord) {
