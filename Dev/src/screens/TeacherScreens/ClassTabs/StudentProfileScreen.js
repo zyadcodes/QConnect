@@ -124,7 +124,7 @@ class StudentProfileScreen extends QcParentScreen {
 
                   <TouchableHighlight
                     onPress={() => { this.props.navigation.push("MushafScreen", {
-                      invokedFromProfileScreen: true,
+                      popOnClose: true,
                       assignToAllClass: false,
                       userID: this.props.navigation.state.params.userID,
                       classID, 

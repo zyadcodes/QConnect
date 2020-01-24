@@ -316,6 +316,10 @@ class SelectionPage extends React.Component {
     this.props.onSelectAyahs(firstAyah, lastAyah);
   }
 
+  onSelectAyah(){
+    
+  }
+
   //------------------------ render component ----------------------------------------
   render() {
     const {

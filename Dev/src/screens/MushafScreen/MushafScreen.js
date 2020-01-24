@@ -1,36 +1,36 @@
 //Screen which will provide all of the possible settings for the user to click on
-import React from "react";
-import { View, Text, StyleSheet, Alert, ScrollView } from "react-native";
-import LoadingSpinner from "components/LoadingSpinner";
-import colors from "config/colors";
-import QcParentScreen from 'screens/QcParentScreen';
-import SelectionPage from "./Components/SelectionPage";
-import Swiper from "react-native-swiper";;
-import { Icon } from "react-native-elements";
-import { compareOrder } from "./Helpers/AyahsOrder";;
-import QcActionButton from "components/QcActionButton";;
-import surahs from "./Data/Surahs.json";;
-import strings from "config/strings";
-import fontStyles from "config/fontStyles";
-import FirebaseFunctions from "config/FirebaseFunctions";
-import studentImages from "config/studentImages";
-import classImages from 'config/classImages';
-import { screenHeight, screenWidth } from "config/dimensions";
-import SwitchSelector from 'react-native-switch-selector';
+import React from 'react';
+import { View, Text, StyleSheet, Alert, ScrollView } from 'react-native';
+import LoadingSpinner from 'components/LoadingSpinner';
+import colors from 'config/colors';
+import QcParentScreen from "screens/QcParentScreen";
+import SelectionPage from './Components/SelectionPage';
+import Swiper from 'react-native-swiper';
+import { Icon } from 'react-native-elements';
+import { compareOrder } from './Helpers/AyahsOrder';
+import QcActionButton from 'components/QcActionButton';
+import surahs from './Data/Surahs.json';
+import strings from 'config/strings';
+import fontStyles from 'config/fontStyles';
+import FirebaseFunctions from 'config/FirebaseFunctions';
+import studentImages from 'config/studentImages';
+import classImages from "config/classImages";
+import { screenHeight, screenWidth } from 'config/dimensions';
+import SwitchSelector from "react-native-switch-selector";
 
 //------- constants to indicate the case when there is no ayah selected
 const noAyahSelected = {
   surah: 0,
   page: 0,
-  ayah: 0,
+  ayah: 0
 };
 
 const noSelection = {
   start: noAyahSelected,
   end: noAyahSelected,
   started: false,
-  completed: false,
-};;
+  completed: false
+};
 
 //-------- MushafScreen: container component for the screen holding Mushaf pages ------
 // Implements pagination through a swiper component with a fixed width: 3 screens
@@ -54,43 +54,35 @@ export default class MushafScreen extends QcParentScreen {
       start: {
         surah: 0,
         page: this.lastPage,
-        ayah: 0,
+        ayah: 0
       },
       end: {
         surah: 0,
         page: this.lastPage,
-        ayah: 0,
-      },
+        ayah: 0
+      }
     },
-    assignmentName: '',
+    assignmentName: "",
     assignmentType: strings.Memorization,
     freeFormAssignment: false,
-    invokedFromProfileScreen: false,
-    isLoading: true,
+    loadScreenOnClose: this.props.navigation.state.params.loadScreenOnClose,
+    popOnClose: this.props.navigation.state.params.popOnClose,
+    isLoading: true
   };
 
   async componentDidMount() {
     FirebaseFunctions.setCurrentScreen(
-      "MushhafAssignmentScreen",
-      "MushhafAssignmentScreen"
+      'MushhafAssignmentScreen',
+      'MushhafAssignmentScreen'
     );
     const {
       studentID,
-      invokedFromProfileScreen,
       assignmentType,
       assignmentLocation,
-      assignmentName
+      assignmentName,
+      userID,
     } = this.props.navigation.state.params;
 
-    // if the page was invoked from the student profile screen, we need to go back (pop) when done,
-    // otherwise, we need to reload the teacher main screen when done
-    if (invokedFromProfileScreen === true) {
-      this.setState({
-        invokedFromProfileScreen: true,
-      });;
-    }
-
-    const { userID } = this.props.navigation.state.params;
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
     const { currentClassID } = teacher;
 
@@ -113,7 +105,7 @@ export default class MushafScreen extends QcParentScreen {
               ? currentClass.currentAssignmentLocation.end
               : noAyahSelected,
             started: false,
-            completed: currentClass.currentAssignmentLocation ? true : false
+            completed: currentClass.currentAssignmentLocation ? true : false,
           },
           assignToAllClass: true,
           userID,
@@ -121,7 +113,7 @@ export default class MushafScreen extends QcParentScreen {
           classID: currentClassID,
           currentClass: currentClass,
           assignmentName: currentClass.currentAssignment,
-          assignmentType: currentClass.currentAssignmentType,
+          assignmentType: currentClass.currentAssignmentType
         },
         () => {
           if (currentClass.currentAssignmentLocation !== undefined) {
@@ -136,8 +128,8 @@ export default class MushafScreen extends QcParentScreen {
       let indexSection = {};
       if (assignmentLocation !== undefined) {
         indexSection = {
-          index: 604 - assignmentLocation.start.page,
-        };;
+          index: 604 - assignmentLocation.start.page
+        };
       }
 
       this.setState({
@@ -152,12 +144,12 @@ export default class MushafScreen extends QcParentScreen {
               start: assignmentLocation.start,
               end: assignmentLocation.end,
               started: false,
-              completed: true,
+              completed: true
             }
           : noSelection,
         assignmentName,
         assignmentType:
-          assignmentType !== undefined ? assignmentType : strings.Memorization
+          assignmentType !== undefined ? assignmentType : strings.Memorization,
       });
     }
   }
@@ -207,9 +199,9 @@ export default class MushafScreen extends QcParentScreen {
         curPage.toString(),
         prevPage1.toString(),
         prevPage2.toString(),
-        prevPage3.toString()
+        prevPage3.toString(),
       ],
-      index: index
+      index: index,
     };
   }
 
@@ -221,8 +213,8 @@ export default class MushafScreen extends QcParentScreen {
   setFreeFormAssignmentName(freeFormAssignmentName) {
     this.setState({
       assignmentName: freeFormAssignmentName,
-      freeFormAssignment: true,
-    });;
+      freeFormAssignment: true
+    });
   }
 
   onSelectAyah(selectedAyah) {
@@ -243,8 +235,8 @@ export default class MushafScreen extends QcParentScreen {
             started: true,
             completed: false,
             start: selectedAyah,
-            end: selectedAyah,
-          }
+            end: selectedAyah
+          },
         },
         () => this.updateAssignmentName()
       );
@@ -254,8 +246,8 @@ export default class MushafScreen extends QcParentScreen {
           selection: {
             ...this.state.selection,
             started: false,
-            completed: true,
-          },
+            completed: true
+          }
         },
         () => {
           //Set the smallest number as the start, and the larger as the end
@@ -271,7 +263,7 @@ export default class MushafScreen extends QcParentScreen {
             );
           }
         }
-      );;
+      );
     }
   }
 
@@ -280,22 +272,22 @@ export default class MushafScreen extends QcParentScreen {
     if (selection.start.surah === 0) {
       //no selection made
       //todo: make this an explicit flag
-      return '';
+      return "";
     }
 
-    desc = surahs[selection.start.surah].tname + " (" + selection.start.ayah;;
+    desc = surahs[selection.start.surah].tname + ' (' + selection.start.ayah;
 
     if (selection.start.surah === selection.end.surah) {
       if (selection.start.ayah !== selection.end.ayah) {
-        desc += strings.To + selection.end.ayah;;
+        desc += strings.To + selection.end.ayah;
       }
     } else {
       desc +=
-        ")" +
+        ')' +
         strings.To +
         surahs[selection.end.surah].tname +
-        " (" +
-        selection.end.ayah;;
+        ' (' +
+        selection.end.ayah;
     }
 
     let pageDesc = strings.ParenthesisPage + selection.end.page;
@@ -304,13 +296,13 @@ export default class MushafScreen extends QcParentScreen {
         strings.PagesWithParenthesis +
         selection.start.page +
         strings.To +
-        selection.end.page;;
+        selection.end.page;
     }
     desc += pageDesc;
 
     this.setState({
       assignmentName: desc,
-      freeFormAssignment: false,
+      freeFormAssignment: false
     });
   }
 
@@ -330,8 +322,8 @@ export default class MushafScreen extends QcParentScreen {
         return {
           selection: {
             ...prevState.selection,
-            start: startA
-          }
+            start: startA,
+          },
         };
       },
       () =>
@@ -342,8 +334,8 @@ export default class MushafScreen extends QcParentScreen {
                 ...prevState2.selection,
                 started: false,
                 completed: true,
-                end: endA,
-              },
+                end: endA
+              }
             };
           },
           () => this.updateAssignmentName()
@@ -356,8 +348,8 @@ export default class MushafScreen extends QcParentScreen {
     let resetSelectionIfApplicable = {};
     if (keepSelection === false) {
       resetSelectionIfApplicable = {
-        selection: noSelection
-      };;
+        selection: noSelection,
+      };
     }
 
     let index = 604 - page;
@@ -365,8 +357,8 @@ export default class MushafScreen extends QcParentScreen {
       ...resetSelectionIfApplicable,
       page: page,
       index: index,
-      key: index,
-    });;
+      key: index
+    });
   }
 
   /**
@@ -379,14 +371,14 @@ export default class MushafScreen extends QcParentScreen {
       this.setState({
         classID: id,
         assignToAllClass: true,
-        imageID: imageID,
-      });;
+        imageID: imageID
+      });
     } else {
       this.setState({
         studentID: id,
         assignToAllClass: false,
-        imageID: imageID,
-      });;
+        imageID: imageID
+      });
     }
   }
 
@@ -407,14 +399,14 @@ export default class MushafScreen extends QcParentScreen {
     let students = currentClass.students.map(student => {
       student.currentAssignment = newAssignmentName;
       student.assignmentLocation = assignmentLocation;
-    });;
+    });
     let updatedClass = {
       ...currentClass,
-      students,
-    };;
+      students
+    };
 
     this.setState({
-      currentClass: updatedClass,
+      currentClass: updatedClass
     });
   }
 
@@ -425,7 +417,7 @@ export default class MushafScreen extends QcParentScreen {
       studentID,
       assignmentType,
       selection,
-      currentClass
+      currentClass,
     } = this.state;
     let assignmentLocation = { start: selection.start, end: selection.end };
 
@@ -436,15 +428,15 @@ export default class MushafScreen extends QcParentScreen {
         student.assignmentLocation = assignmentLocation;
       }
       return student;
-    });;
+    });
 
     let updatedClass = {
       ...currentClass,
-      students,
-    };;
+      students
+    };
 
     this.setState({
-      currentClass: updatedClass,
+      currentClass: updatedClass
     });
 
     FirebaseFunctions.updateStudentCurrentAssignment(
@@ -458,7 +450,7 @@ export default class MushafScreen extends QcParentScreen {
 
   onSaveAssignment() {
     const { assignmentName, assignToAllClass } = this.state;
-    if (assignmentName.trim() === '') {
+    if (assignmentName.trim() === "") {
       Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
     } else {
       if (assignToAllClass) {
@@ -473,23 +465,28 @@ export default class MushafScreen extends QcParentScreen {
 
   closeScreen() {
     const {
-      invokedFromProfileScreen,
+      popOnClose,
+      loadScreenOnClose,
       userID,
       assignmentName,
-      currentClass
+      currentClass,
     } = this.state;
 
     //go back to student profile screen if invoked from there, otherwise go back to main screen
-    if (invokedFromProfileScreen) {
+    if (popOnClose === true) {
       if (assignmentName && assignmentName.trim().length > 0) {
         //update the caller screen with the new assignment then close
         this.props.navigation.state.params.onSaveAssignment(assignmentName);
       }
       this.props.navigation.pop();
     } else {
-      this.props.navigation.push("TeacherCurrentClass", {
+      let screenName =
+        loadScreenOnClose !== undefined
+          ? loadScreenOnClose
+          : 'TeacherCurrentClass';
+      this.props.navigation.push(screenName, {
         userID,
-        currentClass
+        currentClass,
       });
     }
   }
@@ -502,10 +499,10 @@ export default class MushafScreen extends QcParentScreen {
       assignmentType,
       selection,
       classID,
-      studentID
+      studentID,
     } = this.state;
 
-    const itemInt = parseInt(item);;
+    const itemInt = parseInt(item);
     profileImage = isNaN(imageID)
       ? undefined
       : assignToAllClass
@@ -552,17 +549,17 @@ export default class MushafScreen extends QcParentScreen {
     if (isLoading === true) {
       return (
         <View
-          id={this.state.page + "spinner"}
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          id={this.state.page + 'spinner'}
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
         >
           <LoadingSpinner isVisible={true} />
         </View>
-      );;
+      );
     } else {
       const options = [
         { label: strings.Memorization, value: strings.Memorization },
         { label: strings.Revision, value: strings.Revision },
-        { label: strings.Reading, value: strings.Reading },
+        { label: strings.Reading, value: strings.Reading }
       ];
       let selectedAssignmentTypeIndex = 0;
       if (this.props.assignmentType !== undefined) {
@@ -621,9 +618,9 @@ export default class MushafScreen extends QcParentScreen {
           />
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              marginBottom: 15,
+              flexDirection: "row",
+              justifyContent: "center",
+              marginBottom: 15
             }}
           >
             <QcActionButton
@@ -647,11 +644,9 @@ const styles = StyleSheet.create({
   container: {},
   ayahText: {
     padding: 5,
-    textAlign: "right",
-    fontFamily: "me_quran",
+    textAlign: 'right',
+    fontFamily: 'me_quran',
     fontSize: 30,
-    color: colors.darkGrey,
-  },
+    color: colors.darkGrey
+  }
 });
-
-;

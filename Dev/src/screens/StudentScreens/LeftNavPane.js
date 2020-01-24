@@ -135,6 +135,19 @@ class LeftNavPane extends QcParentScreen {
                 })
               }
             />
+            <QcDrawerItem
+              title="Mus7af"
+              icon="cogs"
+              onPress={() =>
+                this.props.navigation.push('MushafScreen', {
+                  isTeacher: false,
+                  accountObject: this.state.student,
+                  classID: this.state.classes[0].ID,
+                  userID: this.state.userID,
+                  loadScreenOnClose: "StudentCurrentClass"
+                })
+              }
+            />
 
             <FlatList
               data={classes}
