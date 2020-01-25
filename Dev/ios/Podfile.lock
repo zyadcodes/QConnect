@@ -239,6 +239,8 @@ PODS:
     - RNSound/Core (= 0.11.0)
   - RNSound/Core (0.11.0):
     - React
+  - RNSVG (11.0.1):
+    - React
   - RNVectorIcons (6.6.0):
     - React
   - yoga (0.60.5.React)
@@ -280,6 +282,7 @@ DEPENDENCIES:
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNSound (from `../node_modules/react-native-sound`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -367,6 +370,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNSound:
     :path: "../node_modules/react-native-sound"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   yoga:
@@ -425,6 +430,7 @@ SPEC CHECKSUMS:
   RNPermissions: 409e55ed060f7e35d4a3dfc3a336f94a5811dec1
   RNReanimated: b2ab0b693dddd2339bd2f300e770f6302d2e960c
   RNSound: c980916b596cc15c8dcd2f6ecd3b13c4881dbe20
+  RNSVG: 67f1f12dae2cef6ed59a42cae74a6b8f5a9e7b46
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   yoga: 312528f5bbbba37b4dcea5ef00e8b4033fdd9411
 

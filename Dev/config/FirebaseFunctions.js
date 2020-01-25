@@ -16,35 +16,6 @@ export default class FirebaseFunctions {
 	static auth = firebase.auth();
 	static analytics = firebase.analytics();
 
-	/*static async migrate() {
-		const allClasses = await this.classes.get();
-		const allClassesDocs = await allClasses.docs.map((doc) => doc.data());
-		for (const c of allClassesDocs) {
-			if (c.ID && c.ID !== 'Example ID') {
-				const students = c.students;
-				const newArray = [];
-				for (let student of students) {
-					if (student.currentAssignment !== 'None') {
-						let newCurrentAssignments = [{
-							name: student.currentAssignment,
-							location: student.currentAssignmentLocation,
-							type: student.currentAssignmentType,
-							isReadyEnum: student.isReadyEnum
-						}];
-						student.currentAssignments = newCurrentAssignments;
-					}
-					newArray.push(student);
-				}
-				await this.updateClassObject(c.ID, {
-					students: students
-				});
-			}
-		}
-		return 0;
-	}*/
-
-	//Methods that can be called from any other class
-
 	//This functions will take in an email and a password & will sign a user up using
 	//firebase authentication (will also sign the user in). Additionally, it will take
 	//in a boolean to determine whether this is a student or a teacher account. Based
