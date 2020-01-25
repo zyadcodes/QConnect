@@ -463,34 +463,6 @@ export default class MushafScreen extends QcParentScreen {
     }
   }
 
-  closeScreen() {
-    const {
-      popOnClose,
-      loadScreenOnClose,
-      userID,
-      assignmentName,
-      currentClass,
-    } = this.state;
-
-    //go back to student profile screen if invoked from there, otherwise go back to main screen
-    if (popOnClose === true) {
-      if (assignmentName && assignmentName.trim().length > 0) {
-        //update the caller screen with the new assignment then close
-        this.props.navigation.state.params.onSaveAssignment(assignmentName);
-      }
-      this.props.navigation.pop();
-    } else {
-      let screenName =
-        loadScreenOnClose !== undefined
-          ? loadScreenOnClose
-          : 'TeacherCurrentClass';
-      this.props.navigation.push(screenName, {
-        userID,
-        currentClass,
-      });
-    }
-  }
-
   // ------------------------ Render the Mushhaf Component ----------------------------------------
   renderItem(item, idx) {
     const {
@@ -535,6 +507,8 @@ export default class MushafScreen extends QcParentScreen {
           onSelectAyah={this.onSelectAyah.bind(this)}
           //callback when user selects a range of ayahs (line an entire page or surah)
           onSelectAyahs={this.onSelectAyahs.bind(this)}
+          topRightIconName={this.props.topRightIconName}
+          topRightOnPress={() => this.props.topRightOnPress()}
           onUpdateAssignmentName={newAssignmentName =>
             this.setFreeFormAssignmentName(newAssignmentName)
           }

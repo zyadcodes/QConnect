@@ -4,6 +4,7 @@ import React from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import MushafScreen from './MushafScreen/MushafScreen'
 import MushafAssignmentScreen from './MushafScreen/MushafAssignmentScreen';
+import MushafReadingScreen from './MushafScreen/MushafReadingScreen';
 import FirstScreenLoader from './FirstScreenLoader/FirstScreenLoader';
 import LoginScreen from './AuthenticationScreens/LoginScreen';
 import AccountTypeScreen from './AuthenticationScreens/AccountTypeScreen';
@@ -29,6 +30,17 @@ routeConfig = {
     MushafAssignmentScreen: {
 
         screen: MushafAssignmentScreen,
+        navigationOptions: ({ navigation }) => ({
+            header: null,
+            //disable swipe back to go to previous screen as it interfers with mus7af page swipes
+            //https://github.com/zyadelgohary/QConnect/issues/234
+            gesturesEnabled: false,
+        }),
+    },
+
+    MushafReadingScreen: {
+
+        screen: MushafReadingScreen,
         navigationOptions: ({ navigation }) => ({
             header: null,
             //disable swipe back to go to previous screen as it interfers with mus7af page swipes

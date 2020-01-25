@@ -317,7 +317,7 @@ class SelectionPage extends React.Component {
   }
 
   onSelectAyah(){
-    
+
   }
 
   //------------------------ render component ----------------------------------------
@@ -377,9 +377,15 @@ class SelectionPage extends React.Component {
                   isSurahSelectionVisible: !isSurahSelectionVisible
                 });
               }}
-              RightIconName="check-all"
+              RightIconName={
+                this.props.topRightIconName
+                  ? this.props.topRightIconName
+                  : "check-all"
+              }
               RightOnPress={() => {
-                this.onSelectPage();
+                this.props.topRightOnPress
+                  ? this.props.topRightOnPress()
+                  : this.onSelectPage();
               }}
               LeftImage={this.props.profileImage}
               currentClass={this.props.currentClass}
