@@ -38,7 +38,10 @@ class StudentProfileScreen extends QcParentScreen {
 		classStudent: '',
 		isDialogVisible: false,
 		isLoading: true,
-		hasCurrentAssignment: ''
+		hasCurrentAssignment: '',
+		classesAttended: '',
+		classesMissed: ''
+
 	};
 
 	//Sets the screen for firebase analytics & fetches the correct student from this class
@@ -54,7 +57,11 @@ class StudentProfileScreen extends QcParentScreen {
 			currentAssignment:
 				student.currentAssignment === 'None' ? strings.NoAssignmentsYet : student.currentAssignment,
 			isLoading: false,
-			hasCurrentAssignment: student.currentAssignment === 'None' ? false : true
+			hasCurrentAssignment: student.currentAssignment === 'None' ? false : true,
+			classesAttended: 
+				student.classesAttended? student.classesAttended: '0',
+			classesMissed:
+				student.classesMissed? student.classesMissed: '0',
 		});
 	}
 
@@ -86,7 +93,16 @@ class StudentProfileScreen extends QcParentScreen {
 
 	//---------- main UI render ===============================
 	render() {
-		const { classStudent, isLoading, classID, studentID } = this.state;
+		const {
+			classStudent,
+			isLoading,
+			classID,
+			studentID,
+			hasCurrentAssignment,
+			currentAssignment,
+			classesAttended,
+			classesMissed,
+		} = this.state;
 		let { assignmentHistory, averageRating, name } = classStudent;
 
 		//Sorts the assignments by date completed
@@ -154,6 +170,14 @@ class StudentProfileScreen extends QcParentScreen {
 									source={studentImages.images[classStudent.profileImageID]}
 								/>
 							</View>
+							<View style={{flexDirection:'row',paddingTop: 20, justifyContent:"space-between"}}>
+							<Text style={fontStyles.smallTextStyleBlack}>
+							Classes attended: {classesAttended}</Text>
+						</View>	
+						<View style={{flexDirection:'row',paddingTop: 5, justifyContent:"space-between"}}>
+						<Text style={fontStyles.smallTextStyleBlack}>
+							Classes missed: {classesMissed}</Text>
+							</View>				
 						</View>
 					</View>
 					{this.state.classStudent.currentAssignments.length > 0 ? (
@@ -491,7 +515,7 @@ const styles = StyleSheet.create({
 		paddingBottom: 0.007 * screenHeight
 	},
 	profileInfoBottom: {
-		flexDirection: 'row',
+		flexDirection: 'column',
 		paddingHorizontal: 0.024 * screenWidth,
 		paddingBottom: screenHeight * 0.02,
 		borderBottomColor: colors.grey,
