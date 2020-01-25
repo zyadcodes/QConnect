@@ -24,6 +24,7 @@ class MushafReadingScreen extends Component {
           {...this.props}
           topRightIconName="close"
           topRightOnPress={this.closeScreen.bind(this)}
+          onClose={this.closeScreen.bind(this)}
         />
       </View>
     );

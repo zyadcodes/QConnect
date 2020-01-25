@@ -449,7 +449,7 @@ export default class MushafScreen extends QcParentScreen {
   }
 
   onSaveAssignment() {
-    const { assignmentName, assignToAllClass } = this.state;
+    const { assignmentName, assignToAllClass, currentClass } = this.state;
     if (assignmentName.trim() === "") {
       Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
     } else {
@@ -459,7 +459,7 @@ export default class MushafScreen extends QcParentScreen {
         this.saveStudentAssignment(assignmentName);
       }
 
-      this.closeScreen();
+      this.props.onClose(assignmentName, currentClass);
     }
   }
 
@@ -508,7 +508,7 @@ export default class MushafScreen extends QcParentScreen {
           //callback when user selects a range of ayahs (line an entire page or surah)
           onSelectAyahs={this.onSelectAyahs.bind(this)}
           topRightIconName={this.props.topRightIconName}
-          topRightOnPress={() => this.props.topRightOnPress()}
+          topRightOnPress={this.props.topRightOnPress}
           onUpdateAssignmentName={newAssignmentName =>
             this.setFreeFormAssignmentName(newAssignmentName)
           }
@@ -518,7 +518,7 @@ export default class MushafScreen extends QcParentScreen {
   }
 
   render() {
-    const { isLoading } = this.state;
+    const { isLoading, assignmentName, currentClass } = this.state;
 
     if (isLoading === true) {
       return (
@@ -605,7 +605,7 @@ export default class MushafScreen extends QcParentScreen {
             />
             <QcActionButton
               text={strings.Cancel}
-              onPress={() => this.closeScreen()}
+              onPress={() => this.props.onClose(assignmentName, currentClass)}
             />
           </View>
         </View>

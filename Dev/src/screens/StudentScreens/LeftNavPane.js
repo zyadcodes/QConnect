@@ -141,6 +141,7 @@ class LeftNavPane extends QcParentScreen {
               onPress={() =>
                 this.props.navigation.push('MushafAssignmentScreen', {
                   isTeacher: false,
+                  loadScreenOnClose: "StudentCurrentClass",
                   accountObject: this.state.student,
                   classID: this.state.classes[0].ID,
                   userID: this.state.userID,
