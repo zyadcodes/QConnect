@@ -432,6 +432,13 @@ export default class FirebaseFunctions {
 			attendanceHistory[selectedDate] = absentStudents.includes(student.ID) ? false : true;
 			copyOfStudent.attendanceHistory = attendanceHistory;
 			arrayOfStudents[index] = copyOfStudent;
+			if (absentStudents.includes(student.ID)){
+				copyOfStudent.classesMissed? copyOfStudent.classesMissed += 1: copyOfStudent.classesMissed = 1; 
+			}
+			else {
+				copyOfStudent.classesAttended? copyOfStudent.classesAttended += 1: copyOfStudent.classesAttended = 1; 
+
+			}
 		});
 
 		await this.updateClassObject(classID, {
@@ -483,7 +490,9 @@ export default class FirebaseFunctions {
 			isReadyEnum: 'WORKING_ON_IT',
 			profileImageID: student.profileImageID,
 			name: student.name,
-			totalAssignments: 0
+			totalAssignments: 0,
+			classesAttended: 0,
+			classesMissed: 0
 		};
 
 		await this.updateClassObject(classID, {
@@ -521,7 +530,9 @@ export default class FirebaseFunctions {
 			name,
 			phoneNumber: '',
 			profileImageID,
-			isManual: true
+			isManual: true,
+			classesMissed: 0,
+			classesAttended: 0
 		};
 		const studentAdded = await this.students.add(studentObject);
 		const studentID = studentAdded.id;

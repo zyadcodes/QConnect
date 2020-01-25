@@ -31,7 +31,10 @@ class StudentProfileScreen extends QcParentScreen {
 		classStudent: '',
 		isDialogVisible: false,
 		isLoading: true,
-		hasCurrentAssignment: ''
+		hasCurrentAssignment: '',
+		classesAttended: '',
+		classesMissed: ''
+
 	};
 
 	//Sets the screen for firebase analytics & fetches the correct student from this class
@@ -47,7 +50,11 @@ class StudentProfileScreen extends QcParentScreen {
 			currentAssignment:
 				student.currentAssignment === 'None' ? strings.NoAssignmentsYet : student.currentAssignment,
 			isLoading: false,
-			hasCurrentAssignment: student.currentAssignment === 'None' ? false : true
+			hasCurrentAssignment: student.currentAssignment === 'None' ? false : true,
+			classesAttended: 
+				student.classesAttended? student.classesAttended: '0',
+			classesMissed:
+				student.classesMissed? student.classesMissed: '0',
 		});
 	}
 
@@ -85,7 +92,9 @@ class StudentProfileScreen extends QcParentScreen {
 			classID,
 			studentID,
 			hasCurrentAssignment,
-			currentAssignment
+			currentAssignment,
+			classesAttended,
+			classesMissed,
 		} = this.state;
 		let { assignmentHistory, averageRating, name } = classStudent;
 
@@ -156,11 +165,11 @@ class StudentProfileScreen extends QcParentScreen {
 							</View>
 							<View style={{flexDirection:'row',paddingTop: 20, justifyContent:"space-between"}}>
 							<Text style={fontStyles.smallTextStyleBlack}>
-							{'Classes attended: 26'}</Text>
+							Classes attended: {classesAttended}</Text>
 						</View>	
 						<View style={{flexDirection:'row',paddingTop: 5, justifyContent:"space-between"}}>
 						<Text style={fontStyles.smallTextStyleBlack}>
-							{'Classes missed: 13'}</Text>
+							Classes missed: {classesMissed}</Text>
 							</View>				
 						</View>
 					</View>
