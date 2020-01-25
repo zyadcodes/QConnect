@@ -123,7 +123,7 @@ class StudentProfileScreen extends QcParentScreen {
                 <View style={{ flexDirection: 'row' }}>
 
                   <TouchableHighlight
-                    onPress={() => { this.props.navigation.push("MushafScreen", {
+                    onPress={() => { this.props.navigation.push("MushafAssignmentScreen", {
                       popOnClose: true,
                       assignToAllClass: false,
                       userID: this.props.navigation.state.params.userID,

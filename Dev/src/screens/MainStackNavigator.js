@@ -3,6 +3,7 @@
 import React from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import MushafScreen from './MushafScreen/MushafScreen'
+import MushafAssignmentScreen from './MushafScreen/MushafAssignmentScreen';
 import FirstScreenLoader from './FirstScreenLoader/FirstScreenLoader';
 import LoginScreen from './AuthenticationScreens/LoginScreen';
 import AccountTypeScreen from './AuthenticationScreens/AccountTypeScreen';
@@ -25,9 +26,9 @@ import TopBanner from 'components/TopBanner';
 //The routes containing all the screens & their navigation options
 routeConfig = {
 
-    MushafScreen: {
+    MushafAssignmentScreen: {
 
-        screen: MushafScreen,
+        screen: MushafAssignmentScreen,
         navigationOptions: ({ navigation }) => ({
             header: null,
             //disable swipe back to go to previous screen as it interfers with mus7af page swipes

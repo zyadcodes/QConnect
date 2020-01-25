@@ -5,7 +5,7 @@ import { Icon } from 'react-native-elements';
 import ClassMainScreen from './ClassMainScreen';
 import ClassAttendanceScreen from './ClassAttendanceScreen';
 import strings from '../../../../config/strings';
-import MushafScreen from '../../MushafScreen/MushafScreen';
+import MushafAssignmentScreen from '../../MushafScreen/MushafAssignmentScreen';
 import { screenHeight } from 'config/dimensions';
 
 
@@ -39,7 +39,7 @@ const routeConfig = {
     },
   },
   AssignmentsTab: {
-    screen: MushafScreen,
+    screen: MushafAssignmentScreen,
     navigationOptions: {
       tabBarVisible: false,
       tabBarLabel: strings.Assignments,

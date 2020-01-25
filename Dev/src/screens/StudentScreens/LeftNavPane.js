@@ -139,7 +139,7 @@ class LeftNavPane extends QcParentScreen {
               title="Mus7af"
               icon="cogs"
               onPress={() =>
-                this.props.navigation.push('MushafScreen', {
+                this.props.navigation.push('MushafAssignmentScreen', {
                   isTeacher: false,
                   accountObject: this.state.student,
                   classID: this.state.classes[0].ID,
