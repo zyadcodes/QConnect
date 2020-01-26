@@ -1,35 +1,33 @@
 //Screen which will provide all of the possible settings for the user to click on
-import React from 'react';
-import { View, Text, StyleSheet, Alert, ScrollView } from 'react-native';
-import LoadingSpinner from 'components/LoadingSpinner';
-import colors from 'config/colors';
-import QcParentScreen from "screens/QcParentScreen";
-import SelectionPage from './Components/SelectionPage';
-import Swiper from 'react-native-swiper';
-import { Icon } from 'react-native-elements';
-import { compareOrder } from './Helpers/AyahsOrder';
-import QcActionButton from 'components/QcActionButton';
-import surahs from './Data/Surahs.json';
-import strings from 'config/strings';
-import fontStyles from 'config/fontStyles';
-import FirebaseFunctions from 'config/FirebaseFunctions';
-import studentImages from 'config/studentImages';
-import classImages from "config/classImages";
-import { screenHeight, screenWidth } from 'config/dimensions';
-import SwitchSelector from "react-native-switch-selector";
+import React from "react";
+import { View, Text, StyleSheet, Alert, ScrollView } from "react-native";
+import LoadingSpinner from "components/LoadingSpinner";
+import colors from "config/colors";
+import QcParentScreen from 'screens/QcParentScreen';
+import SelectionPage from "./Components/SelectionPage";
+import Swiper from "react-native-swiper";
+import { compareOrder } from "./Helpers/AyahsOrder";
+import surahs from "./Data/Surahs.json";
+import strings from "config/strings";
+import fontStyles from "config/fontStyles";
+import FirebaseFunctions from "config/FirebaseFunctions";
+import studentImages from "config/studentImages";
+import classImages from 'config/classImages';
+import { screenHeight, screenWidth } from "config/dimensions";
+import SwitchSelector from 'react-native-switch-selector';
 
 //------- constants to indicate the case when there is no ayah selected
 const noAyahSelected = {
   surah: 0,
   page: 0,
-  ayah: 0
+  ayah: 0,
 };
 
 const noSelection = {
   start: noAyahSelected,
   end: noAyahSelected,
   started: false,
-  completed: false
+  completed: false,
 };
 
 //-------- MushafScreen: container component for the screen holding Mushaf pages ------
@@ -44,53 +42,49 @@ export default class MushafScreen extends QcParentScreen {
     pages: [],
     key: 1,
     index: 3,
-    classID: this.props.navigation.state.params.classID,
-    studentID: this.props.navigation.state.params.studentID,
-    imageID: this.props.navigation.state.params.imageID,
-    assignToAllClass: this.props.navigation.state.params.assignToAllClass,
+    classID: this.props,
+    studentID: this.props.studentID,
+    imageID: this.props.imageID,
+    assignToAllClass: this.props.assignToAllClass,
     selection: {
       started: false,
       completed: false,
       start: {
         surah: 0,
         page: this.lastPage,
-        ayah: 0
+        ayah: 0,
       },
       end: {
         surah: 0,
         page: this.lastPage,
-        ayah: 0
-      }
+        ayah: 0,
+      },
     },
-    assignmentName: "",
-    assignmentType: strings.Memorization,
+    assignmentName: this.props.assignmentName,
+    assignmentType: this.props.assignmentType,
     freeFormAssignment: false,
-    loadScreenOnClose: this.props.navigation.state.params.loadScreenOnClose,
-    popOnClose: this.props.navigation.state.params.popOnClose,
-    isLoading: true
+    loadScreenOnClose: this.props.loadScreenOnClose,
+    popOnClose: this.props.popOnClose,
+    isLoading: true,
   };
 
   async componentDidMount() {
     FirebaseFunctions.setCurrentScreen(
-      'MushhafAssignmentScreen',
-      'MushhafAssignmentScreen'
+      "MushhafAssignmentScreen",
+      "MushhafAssignmentScreen"
     );
     const {
       studentID,
       assignmentType,
       assignmentLocation,
       assignmentName,
+      currentClass,
       userID,
-    } = this.props.navigation.state.params;
+      classID
+    } = this.props;
 
-    const teacher = await FirebaseFunctions.getTeacherByID(userID);
-    const { currentClassID } = teacher;
-
-    const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
-    allPages = [];
-    for (var i = 604; i > 0; i--) {
-      allPages.push(i.toString());
-    }
+    //we mimmic right to left pages scanning by reversing the pages order in the swiper component
+    allPages = Array.from(Array(604), (e,i)=>604-i);
 
     if (studentID === undefined) {
       //assign to all class -----
@@ -105,15 +99,15 @@ export default class MushafScreen extends QcParentScreen {
               ? currentClass.currentAssignmentLocation.end
               : noAyahSelected,
             started: false,
-            completed: currentClass.currentAssignmentLocation ? true : false,
+            completed: currentClass.currentAssignmentLocation ? true : false
           },
           assignToAllClass: true,
           userID,
           imageID: currentClass.classImageID,
-          classID: currentClassID,
+          classID,
           currentClass: currentClass,
           assignmentName: currentClass.currentAssignment,
-          assignmentType: currentClass.currentAssignmentType
+          assignmentType: currentClass.currentAssignmentType,
         },
         () => {
           if (currentClass.currentAssignmentLocation !== undefined) {
@@ -128,7 +122,7 @@ export default class MushafScreen extends QcParentScreen {
       let indexSection = {};
       if (assignmentLocation !== undefined) {
         indexSection = {
-          index: 604 - assignmentLocation.start.page
+          index: 604 - assignmentLocation.start.page,
         };
       }
 
@@ -144,12 +138,12 @@ export default class MushafScreen extends QcParentScreen {
               start: assignmentLocation.start,
               end: assignmentLocation.end,
               started: false,
-              completed: true
+              completed: true,
             }
           : noSelection,
         assignmentName,
         assignmentType:
-          assignmentType !== undefined ? assignmentType : strings.Memorization,
+          assignmentType !== undefined ? assignmentType : strings.Memorization
       });
     }
   }
@@ -199,9 +193,9 @@ export default class MushafScreen extends QcParentScreen {
         curPage.toString(),
         prevPage1.toString(),
         prevPage2.toString(),
-        prevPage3.toString(),
+        prevPage3.toString()
       ],
-      index: index,
+      index: index
     };
   }
 
@@ -213,7 +207,7 @@ export default class MushafScreen extends QcParentScreen {
   setFreeFormAssignmentName(freeFormAssignmentName) {
     this.setState({
       assignmentName: freeFormAssignmentName,
-      freeFormAssignment: true
+      freeFormAssignment: true,
     });
   }
 
@@ -235,8 +229,8 @@ export default class MushafScreen extends QcParentScreen {
             started: true,
             completed: false,
             start: selectedAyah,
-            end: selectedAyah
-          },
+            end: selectedAyah,
+          }
         },
         () => this.updateAssignmentName()
       );
@@ -246,8 +240,8 @@ export default class MushafScreen extends QcParentScreen {
           selection: {
             ...this.state.selection,
             started: false,
-            completed: true
-          }
+            completed: true,
+          },
         },
         () => {
           //Set the smallest number as the start, and the larger as the end
@@ -272,10 +266,10 @@ export default class MushafScreen extends QcParentScreen {
     if (selection.start.surah === 0) {
       //no selection made
       //todo: make this an explicit flag
-      return "";
+      return '';
     }
 
-    desc = surahs[selection.start.surah].tname + ' (' + selection.start.ayah;
+    desc = surahs[selection.start.surah].tname + " (" + selection.start.ayah;
 
     if (selection.start.surah === selection.end.surah) {
       if (selection.start.ayah !== selection.end.ayah) {
@@ -283,10 +277,10 @@ export default class MushafScreen extends QcParentScreen {
       }
     } else {
       desc +=
-        ')' +
+        ")" +
         strings.To +
         surahs[selection.end.surah].tname +
-        ' (' +
+        " (" +
         selection.end.ayah;
     }
 
@@ -302,7 +296,7 @@ export default class MushafScreen extends QcParentScreen {
 
     this.setState({
       assignmentName: desc,
-      freeFormAssignment: false
+      freeFormAssignment: false,
     });
   }
 
@@ -322,8 +316,8 @@ export default class MushafScreen extends QcParentScreen {
         return {
           selection: {
             ...prevState.selection,
-            start: startA,
-          },
+            start: startA
+          }
         };
       },
       () =>
@@ -334,8 +328,8 @@ export default class MushafScreen extends QcParentScreen {
                 ...prevState2.selection,
                 started: false,
                 completed: true,
-                end: endA
-              }
+                end: endA,
+              },
             };
           },
           () => this.updateAssignmentName()
@@ -348,7 +342,7 @@ export default class MushafScreen extends QcParentScreen {
     let resetSelectionIfApplicable = {};
     if (keepSelection === false) {
       resetSelectionIfApplicable = {
-        selection: noSelection,
+        selection: noSelection
       };
     }
 
@@ -357,109 +351,28 @@ export default class MushafScreen extends QcParentScreen {
       ...resetSelectionIfApplicable,
       page: page,
       index: index,
-      key: index
+      key: index,
     });
   }
 
   /**
-     * studentID: this.props.navigation.state.params.studentID,
-        classID: this.props.navigation.state.params.classID,
-        assignToAllClass: this.props.navigation.state.params.assignToAllClass,
+     * studentID: this.props.studentID,
+        classID: this.props.classID,
+        assignToAllClass: this.props.assignToAllClass,
      */
   onChangeAssignee(id, imageID, isClassID) {
     if (isClassID === true) {
       this.setState({
         classID: id,
         assignToAllClass: true,
-        imageID: imageID
+        imageID: imageID,
       });
     } else {
       this.setState({
         studentID: id,
         assignToAllClass: false,
-        imageID: imageID
+        imageID: imageID,
       });
-    }
-  }
-
-  async saveClassAssignment(newAssignmentName) {
-    const { classID, assignmentType, currentClass, selection } = this.state;
-    let assignmentLocation = { start: selection.start, end: selection.end };
-
-    await FirebaseFunctions.updateClassAssignment(
-      classID,
-      newAssignmentName,
-      assignmentType,
-      assignmentLocation
-    );
-
-    //since there might be a latency before firebase returns the updated assignments,
-    //let's save them here and later pass them to the calling screen so that it can update its state without
-    //relying on the Firebase async latency
-    let students = currentClass.students.map(student => {
-      student.currentAssignment = newAssignmentName;
-      student.assignmentLocation = assignmentLocation;
-    });
-    let updatedClass = {
-      ...currentClass,
-      students
-    };
-
-    this.setState({
-      currentClass: updatedClass
-    });
-  }
-
-  //method updates the current assignment of the student
-  saveStudentAssignment(newAssignmentName) {
-    const {
-      classID,
-      studentID,
-      assignmentType,
-      selection,
-      currentClass,
-    } = this.state;
-    let assignmentLocation = { start: selection.start, end: selection.end };
-
-    //update the current class object (so we can pass it to caller without having to re-render fron firebase)
-    let students = currentClass.students.map(student => {
-      if (student.ID === studentID) {
-        student.currentAssignment = newAssignmentName;
-        student.assignmentLocation = assignmentLocation;
-      }
-      return student;
-    });
-
-    let updatedClass = {
-      ...currentClass,
-      students
-    };
-
-    this.setState({
-      currentClass: updatedClass
-    });
-
-    FirebaseFunctions.updateStudentCurrentAssignment(
-      classID,
-      studentID,
-      newAssignmentName,
-      assignmentType,
-      assignmentLocation
-    );
-  }
-
-  onSaveAssignment() {
-    const { assignmentName, assignToAllClass, currentClass } = this.state;
-    if (assignmentName.trim() === "") {
-      Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
-    } else {
-      if (assignToAllClass) {
-        this.saveClassAssignment(assignmentName);
-      } else {
-        this.saveStudentAssignment(assignmentName);
-      }
-
-      this.props.onClose(assignmentName, currentClass);
     }
   }
 
@@ -471,7 +384,7 @@ export default class MushafScreen extends QcParentScreen {
       assignmentType,
       selection,
       classID,
-      studentID,
+      studentID
     } = this.state;
 
     const itemInt = parseInt(item);
@@ -523,8 +436,8 @@ export default class MushafScreen extends QcParentScreen {
     if (isLoading === true) {
       return (
         <View
-          id={this.state.page + 'spinner'}
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+          id={this.state.page + "spinner"}
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
           <LoadingSpinner isVisible={true} />
         </View>
@@ -533,7 +446,7 @@ export default class MushafScreen extends QcParentScreen {
       const options = [
         { label: strings.Memorization, value: strings.Memorization },
         { label: strings.Revision, value: strings.Revision },
-        { label: strings.Reading, value: strings.Reading }
+        { label: strings.Reading, value: strings.Reading },
       ];
       let selectedAssignmentTypeIndex = 0;
       if (this.props.assignmentType !== undefined) {
@@ -590,24 +503,6 @@ export default class MushafScreen extends QcParentScreen {
             onPress={value => this.setState({ assignmentType: value })}
             style={{ marginTop: 2 }}
           />
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              marginBottom: 15
-            }}
-          >
-            <QcActionButton
-              text={strings.Save}
-              onPress={() => {
-                this.onSaveAssignment();
-              }}
-            />
-            <QcActionButton
-              text={strings.Cancel}
-              onPress={() => this.props.onClose(assignmentName, currentClass)}
-            />
-          </View>
         </View>
       );
     }
@@ -618,9 +513,9 @@ const styles = StyleSheet.create({
   container: {},
   ayahText: {
     padding: 5,
-    textAlign: 'right',
-    fontFamily: 'me_quran',
+    textAlign: "right",
+    fontFamily: "me_quran",
     fontSize: 30,
-    color: colors.darkGrey
-  }
+    color: colors.darkGrey,
+  },
 });

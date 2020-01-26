@@ -7,24 +7,38 @@ import { screenHeight, screenWidth } from "config/dimensions";
 class MushafReadingScreen extends Component {
   closeScreen() {
     const {
-      userID,
+      userID
     } = this.props.navigation.state.params;
-    
-    //todo: if we need to generalize this, then we can add a props: onClose, and the caller specifies the onClose behavior with 
+
+    //todo: if we need to generalize this, then we can add a props: onClose, and the caller specifies the onClose behavior with
     // the call to push navigation to the proper next screen.
     this.props.navigation.push("StudentCurrentClass", {
-    userID
+      userID
     });
   }
 
   render() {
+    const {
+      userID,
+      assignmentName,
+      assignmentLocation,
+      assignmentType,
+      currentClass,
+      classID,
+    } = this.props.navigation.state.params;
+
     return (
       <View style={{ width: screenWidth, height: screenHeight }}>
         <MushafScreen
-          {...this.props}
+          userID={userID}
+          classID={classID}
+          assignmentName={assignmentName}
+          assignmentLocation={assignmentLocation}
+          assignmentType={assignmentType}
           topRightIconName="close"
           topRightOnPress={this.closeScreen.bind(this)}
           onClose={this.closeScreen.bind(this)}
+          currentClass={currentClass}
         />
       </View>
     );

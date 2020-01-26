@@ -681,7 +681,7 @@ class StudentMainScreen extends QcParentScreen {
   }
 
   renderCurrentAssignmentCard() {
-    const { isReadyEnum } = this.state;
+    const { isReadyEnum, thisClassInfo } = this.state;
 
     const customPickerOptions = [
       {
@@ -701,14 +701,14 @@ class StudentMainScreen extends QcParentScreen {
       }
     ];
 
-    return (
-      <View>
-        {this.renderAssignmentsSectionHeader(
-          strings.CurrentAssignment,
-          "book-open-outline"
-        )}
+    let bgdClr =
+      isReadyEnum === "WORKING_ON_IT"
+        ? colors.workingOnItColorBrown
+        : isReadyEnum === "READY"
+        ? colors.green
+        : colors.red;
 
-        <CustomPicker
+      /* <CustomPicker
           options={customPickerOptions}
           onValueChange={value => this.updateCurrentAssignmentStatus(value)}
           getLabel={item => item.label}
@@ -716,8 +716,63 @@ class StudentMainScreen extends QcParentScreen {
             this.getCustomPickerOptionTemplate(settings)
           }
           fieldTemplate={() => this.getCustomPickerTemplate()}
-        />
-        {this.renderAudioRecordingUI()}
+        /> */
+
+    return (
+      <View>
+        {this.renderAssignmentsSectionHeader(
+          strings.CurrentAssignment,
+          "book-open-outline"
+        )}
+
+        <View style={[styles.currentAssignment, { backgroundColor: bgdClr }]}>
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.push('MushafReadingScreen', {
+                isTeacher: false,
+                accountObject: this.state.student,
+                classID: this.state.classes[0].ID,
+                userID: this.state.userID,
+                assignmentDesc: thisClassInfo.currentAssignment,
+                assignmentLocation: thisClassInfo.currentAssignmentLocation,
+                assignmentType: thisClassInfo.currentAssignmentType,
+                currentClass: this.state.currentClass
+              })
+            }
+          >
+            <View style={styles.middleView}>
+              <Text style={fontStyles.bigTextStyleBlack}>
+                {thisClassInfo.currentAssignmentType
+                  ? thisClassInfo.currentAssignmentType
+                  : strings.Memorize}
+              </Text>
+              <Text
+                style={[
+                  fontStyles.bigTextStyleBlack,
+                  { paddingTop: screenHeight * 0.04 }
+                ]}
+              >
+                {thisClassInfo.currentAssignment.toUpperCase()}
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: "flex-start",
+                alignItems: "flex-end",
+                flexDirection: "row",
+                paddingLeft: screenWidth * 0.02
+              }}
+            >
+              <Text style={fontStyles.mainTextStylePrimaryDark}>
+                {isReadyEnum === "READY"
+                  ? strings.Ready
+                  : isReadyEnum === "WORKING_ON_IT"
+                  ? strings.WorkingOnIt
+                  : strings.NeedHelp}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
