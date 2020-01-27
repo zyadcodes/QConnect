@@ -24,6 +24,7 @@ class MushafReadingScreen extends Component {
       assignmentLocation,
       assignmentType,
       currentClass,
+      studentID,
       classID,
     } = this.props.navigation.state.params;
 
@@ -31,6 +32,7 @@ class MushafReadingScreen extends Component {
       <View style={{ width: screenWidth, height: screenHeight }}>
         <MushafScreen
           userID={userID}
+          studentID={studentID}
           classID={classID}
           assignmentName={assignmentName}
           assignmentLocation={assignmentLocation}

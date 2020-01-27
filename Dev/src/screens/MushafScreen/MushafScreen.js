@@ -69,10 +69,6 @@ export default class MushafScreen extends QcParentScreen {
   };
 
   async componentDidMount() {
-    FirebaseFunctions.setCurrentScreen(
-      "MushhafAssignmentScreen",
-      "MushhafAssignmentScreen"
-    );
     const {
       studentID,
       assignmentType,
@@ -80,7 +76,7 @@ export default class MushafScreen extends QcParentScreen {
       assignmentName,
       currentClass,
       userID,
-      classID
+      classID,
     } = this.props;
 
     //we mimmic right to left pages scanning by reversing the pages order in the swiper component

@@ -3,18 +3,57 @@ import { View } from 'react-native';
 import MushafScreen from './MushafScreen';
 import { screenHeight, screenWidth } from 'config/dimensions';
 import FirebaseFunctions from 'config/FirebaseFunctions';
+import QcActionButton from 'components/QcActionButton'
+import strings from "config/strings";
+import { ScrollView } from 'react-native-gesture-handler';
 
 class MushafAssignmentScreen extends Component {
+  //=================== Initialize Component ============================
   state = {
-    userID,
-    studentID,
-    classID,
-    assignmentName,
-    assignmentType,
-    selection,
-    currentClass,
+    userID: this.props.navigation.state.params.userID,
+    studentID: this.props.navigation.state.params.studentID,
+    classID: this.props.navigation.state.params.classID,
+    assignmentName: this.props.navigation.state.params.assignmentName,
+    assignmentType: this.props.navigation.state.params.assignmentType,
+    assignmentLocation: this.props.navigation.state.params.assignmentLocation,
+    currentClass: this.props.navigation.state.params.currentClass,
+    isTeacher: this.props.navigation.state.params.isTeacher
   };
-  
+
+  async componentDidMount() {
+    FirebaseFunctions.setCurrentScreen(
+      "MushhafAssignmentScreen",
+      "MushhafAssignmentScreen"
+    );
+
+    //getClassInfoFromDbIfNotPassedIn
+    await this.getClassInfoFromDbIfNotPassedIn();
+  }
+
+  async getClassInfoFromDbIfNotPassedIn() {
+    let { isTeacher, classID, currentClass, userID } = this.state;
+    if (classID === undefined && currentClass !== undefined) {
+      this.setState({ classID: currentClass.ID });
+    } else if (
+      classID === undefined &&
+      currentClass === undefined &&
+      isTeacher === true
+    ) {
+      const teacher = await FirebaseFunctions.getTeacherByID(userID);
+      const { currentClassID } = teacher;
+      const currentClassInfo = await FirebaseFunctions.getClassByID(
+        currentClassID
+      );
+      this.setState({
+        classID: currentClassID,
+        currentClass: currentClassInfo
+      });
+    }
+  }
+
+  //======== end of Initialize Component ========================
+
+  //======== action methods to handle user interation actions ===
   closeScreen(assignmentName, currentClass) {
     const {
       popOnClose,
@@ -148,10 +187,31 @@ class MushafAssignmentScreen extends Component {
     );
   }
 
+  //============= end of action methods =============================
+
+  //============ render method: UI entry point for this component ===
   render() {
+    const {
+      userID,
+      assignmentName,
+      assignmentLocation,
+      assignmentType,
+      currentClass,
+      classID,
+    } = this.state;
+
     return (
-      <View style={{ width: screenWidth, height: screenHeight }}>
-        <MushafScreen {...this.props} onClose={this.closeScreen.bind(this)} />
+      <ScrollView containerStyle={{ width: screenWidth, height: screenHeight }}>
+        <MushafScreen
+          {...this.props}
+          userID={userID}
+          classID={classID}
+          assignmentName={assignmentName}
+          assignmentLocation={assignmentLocation}
+          assignmentType={assignmentType}
+          onClose={this.closeScreen.bind(this)}
+          currentClass={currentClass}
+        />
         <View
           style={{
             flexDirection: "row",
@@ -169,8 +229,8 @@ class MushafAssignmentScreen extends Component {
             text={strings.Cancel}
             onPress={() => this.closeScreen(assignmentName, currentClass)}
           />
-        </View>
-      </View>
+          </View>
+        </ScrollView>
     );
   }
 }

@@ -733,6 +733,7 @@ class StudentMainScreen extends QcParentScreen {
                 accountObject: this.state.student,
                 classID: this.state.classes[0].ID,
                 userID: this.state.userID,
+                studentID: this.state.userID,
                 assignmentDesc: thisClassInfo.currentAssignment,
                 assignmentLocation: thisClassInfo.currentAssignmentLocation,
                 assignmentType: thisClassInfo.currentAssignmentType,

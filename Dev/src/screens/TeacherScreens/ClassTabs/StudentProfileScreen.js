@@ -74,7 +74,7 @@ class StudentProfileScreen extends QcParentScreen {
 
   //---------- main UI render ===============================
   render() {
-    const { classStudent, isLoading, classID, studentID, hasCurrentAssignment, currentAssignment } = this.state;
+    const { classStudent, isLoading, classID, studentID, hasCurrentAssignment, currentAssignment, currentClass } = this.state;
     let { assignmentHistory, averageRating, name } = classStudent;
 
     //Sorts the assignments by date completed
@@ -121,14 +121,15 @@ class StudentProfileScreen extends QcParentScreen {
               <View style={{ flex: 1, flexDirection: 'column', height: 0.086 * screenHeight, paddingLeft: screenWidth * 0.05 }}>
                 <Text numberOfLines={1} style={[fontStyles.bigTextStyleDarkGrey, { textAlign: 'left' }]}>{this.state.currentAssignment.toUpperCase()}</Text>
                 <View style={{ flexDirection: 'row' }}>
-
                   <TouchableHighlight
                     onPress={() => { this.props.navigation.push("MushafAssignmentScreen", {
                       popOnClose: true,
+                      isTeacher: true,
                       assignToAllClass: false,
                       userID: this.props.navigation.state.params.userID,
                       classID, 
                       studentID, 
+                      currentClass,
                       assignmentLocation: classStudent.currentAssignmentLocation,
                       assignmentType: classStudent.currentAssignmentType,
                       assignmentName: currentAssignment,
