@@ -1,7 +1,7 @@
 //This screen will be the main screen that will display for students as a landing page for when they first
 //sign up or log in
-import React from "react";
-import QcParentScreen from "../QcParentScreen";
+import React from 'react';
+import QcParentScreen from '../QcParentScreen';
 import {
   View,
   Text,
@@ -36,8 +36,8 @@ import AudioPlayer from "components/AudioPlayer/AudioPlayer";
 const translateY = new Animated.Value(-35);
 const opacity = new Animated.Value(0);
 const opacityInterpolate = opacity.interpolate({
-  inputRange: [0, 0.85, 1],
-  outputRange: [0, 0, 1]
+	inputRange: [0, 0.85, 1],
+	outputRange: [0, 0, 1]
 });
 
 class StudentMainScreen extends QcParentScreen {
@@ -512,69 +512,59 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 
-  getCustomPickerTemplate() {
-    const { thisClassInfo, isReadyEnum } = this.state;
-    let bgdClr =
-      isReadyEnum === "WORKING_ON_IT"
-        ? colors.workingOnItColorBrown
-        : isReadyEnum === "READY"
-        ? colors.green
-        : colors.red;
-    return (
-      <View style={[styles.currentAssignment, { backgroundColor: bgdClr }]}>
-        <View style={styles.middleView}>
-          <Text style={fontStyles.bigTextStyleBlack}>
-            {thisClassInfo.currentAssignmentType
-              ? thisClassInfo.currentAssignmentType
-              : strings.Memorize}
-          </Text>
-          <Text
-            style={[
-              fontStyles.bigTextStyleBlack,
-              { paddingTop: screenHeight * 0.04 }
-            ]}
-          >
-            {thisClassInfo.currentAssignment.toUpperCase()}
-          </Text>
-        </View>
-        <View
-          style={{
-            justifyContent: "flex-start",
-            alignItems: "flex-end",
-            flexDirection: "row",
-            paddingLeft: screenWidth * 0.02
-          }}
-        >
-          <Text style={fontStyles.mainTextStylePrimaryDark}>
-            {isReadyEnum === "READY"
-              ? strings.Ready
-              : isReadyEnum === "WORKING_ON_IT"
-              ? strings.WorkingOnIt
-              : strings.NeedHelp}
-          </Text>
-        </View>
-      </View>
-    );
+  getCustomPickerTemplate(item) {
+		return (
+			<View
+				style={[
+					styles.currentAssignment,
+					{
+						backgroundColor:
+							item.isReadyEnum === 'WORKING_ON_IT'
+								? colors.workingOnItColorBrown
+								: item.isReadyEnum === 'READY'
+								? colors.green
+								: colors.red
+					}
+				]}>
+				<View style={styles.middleView}>
+					<Text style={fontStyles.bigTextStyleBlack}>
+						{item.type ? item.type : strings.Memorize}
+					</Text>
+					<Text style={[fontStyles.bigTextStyleBlack, { paddingTop: screenHeight * 0.04 }]}>
+						{item.name.toUpperCase()}
+					</Text>
+				</View>
+				<View
+					style={{
+						justifyContent: 'flex-start',
+						alignItems: 'flex-end',
+						flexDirection: 'row',
+						paddingLeft: screenWidth * 0.02
+					}}>
+					<Text style={fontStyles.mainTextStylePrimaryDark}>
+						{item.isReadyEnum === 'READY'
+							? strings.Ready
+							: item.isReadyEnum === 'WORKING_ON_IT'
+							? strings.WorkingOnIt
+							: strings.NeedHelp}
+					</Text>
+				</View>
+			</View>
+		);
   }
 
-  updateCurrentAssignmentStatus(value) {
-    const { currentClassID, userID } = this.state;
-    this.setState({ isReadyEnum: value.value });
-    FirebaseFunctions.updateStudentAssignmentStatus(
-      currentClassID,
-      userID,
-      value.value
-    );
-    if (value.value === "READY") {
-      this.setState({ recordingUIVisible: true }, () =>
-        this.animateShowAudioUI()
-      );
-    } else {
-      if (this.state.recordingUIVisible) {
-        this.animateHideAudioUI();
-      }
-      this.setState({ recordingUIVisible: false });
-    }
+  updateCurrentAssignmentStatus(value, index) {
+		const { currentClassID, userID } = this.state;
+		this.setState({ isReadyEnum: value.value });
+		FirebaseFunctions.updateStudentAssignmentStatus(currentClassID, userID, value.value, index);
+		if (value.value === 'READY') {
+			this.setState({ recordingUIVisible: true }, () => this.animateShowAudioUI());
+		} else {
+			if (this.state.recordingUIVisible) {
+				this.animateHideAudioUI();
+			}
+			this.setState({ recordingUIVisible: false });
+		}
   }
 
   animateShowAudioUI() {
@@ -680,6 +670,50 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 
+  renderCurrentAssignmentCards() {
+		const customPickerOptions = [
+			{
+				label: strings.WorkingOnIt,
+				value: 'WORKING_ON_IT',
+				color: colors.workingOnItColorBrown
+			},
+			{
+				label: strings.Ready,
+				value: 'READY',
+				color: colors.green
+			},
+			{
+				label: strings.NeedHelp,
+				value: 'NEED_HELP',
+				color: colors.red
+			}
+		];
+
+		return (
+			<View>
+				{this.renderAssignmentsSectionHeader(strings.CurrentAssignment, 'book-open-outline')}
+				<FlatList
+					data={this.state.thisClassInfo.currentAssignments}
+					keyExtractor={(item, index) => item.name + index}
+					renderItem={({ item, index }) => {
+						return (
+							<View>
+								<CustomPicker
+									options={customPickerOptions}
+									onValueChange={(value) => this.updateCurrentAssignmentStatus(value, index)}
+									getLabel={(item) => item.label}
+									optionTemplate={(settings) => this.getCustomPickerOptionTemplate(settings)}
+									fieldTemplate={() => this.getCustomPickerTemplate(item)}
+								/>
+								{this.renderAudioRecordingUI()}
+							</View>
+						);
+					}}
+				/>
+			</View>
+		);
+  }
+  
   renderCurrentAssignmentCard() {
     const { isReadyEnum, thisClassInfo } = this.state;
 
@@ -889,110 +923,110 @@ class StudentMainScreen extends QcParentScreen {
 //------------------ Component styles ----------------------------
 //Styles for the entire container along with the top banner
 const styles = StyleSheet.create({
-  topView: {
-    flexDirection: "column",
-    backgroundColor: colors.veryLightGrey
-  },
-  profileInfoTop: {
-    paddingHorizontal: screenWidth * 0.024,
-    paddingTop: screenHeight * 0.015,
-    flexDirection: "row",
-    height: screenHeight * 0.125,
-    borderBottomColor: colors.lightGrey,
-    borderBottomWidth: 1
-  },
-  profileInfoTopRight: {
-    flexDirection: "column",
-    alignItems: "flex-start",
-    paddingLeft: screenWidth * 0.075,
-    paddingBottom: screenHeight * 0.007
-  },
-  innerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: colors.grey
-  },
-  optionContainer: {
-    backgroundColor: colors.grey,
-    height: screenHeight * 0.08,
-    justifyContent: "center",
-    paddingLeft: screenWidth * 0.25
-  },
-  box: {
-    width: screenWidth * 0.049,
-    height: screenHeight * 0.03,
-    marginRight: screenWidth * 0.024
-  },
-  profileInfoBottom: {
-    flexDirection: "row",
-    paddingHorizontal: screenWidth * 0.024,
-    borderBottomColor: colors.grey,
-    borderBottomWidth: 1
-  },
-  profilePic: {
-    width: screenHeight * 0.1,
-    height: screenHeight * 0.1,
-    borderRadius: (screenHeight * 0.1) / 2
-  },
-  currentAssignment: {
-    justifyContent: "flex-end",
-    height: screenHeight * 0.16,
-    borderWidth: 0.5,
-    borderColor: colors.grey
-  },
-  middleView: {
-    justifyContent: "center",
-    alignItems: "center",
-    paddingVertical: screenHeight * 0.0112
-  },
-  bottomView: {
-    flex: 3,
-    backgroundColor: colors.veryLightGrey
-  },
-  prevAssignmentCard: {
-    flexDirection: "column",
-    paddingHorizontal: screenWidth * 0.008,
-    paddingBottom: screenHeight * 0.019,
-    marginBottom: screenHeight * 0.009,
-    borderColor: colors.grey,
-    borderWidth: screenHeight * 0.13 * 0.0066,
-    backgroundColor: colors.white
-  },
-  profileInfo: {
-    flexDirection: "column",
-    backgroundColor: colors.white
-  },
-  corner: {
-    borderColor: "#D0D0D0",
-    borderWidth: 1,
-    borderRadius: 3,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: screenWidth * 0.012,
-    marginRight: screenWidth * 0.015,
-    marginTop: screenHeight * 0.007
-  },
-  prevAssignments: {
-    flexDirection: "column",
-    backgroundColor: colors.veryLightGrey,
-    flex: 1
-  },
-  modal: {
-    backgroundColor: colors.white,
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "column",
-    height: screenHeight * 0.25,
-    width: screenWidth * 0.75,
-    borderWidth: screenHeight * 0.003,
-    borderRadius: screenHeight * 0.003,
-    borderColor: colors.grey,
-    shadowColor: colors.darkGrey,
-    shadowOffset: { width: 0, height: screenHeight * 0.003 },
-    shadowOpacity: 0.8,
-    shadowRadius: screenHeight * 0.0045,
-    elevation: screenHeight * 0.003
-  }
+	topView: {
+		flexDirection: 'column',
+		backgroundColor: colors.veryLightGrey
+	},
+	profileInfoTop: {
+		paddingHorizontal: screenWidth * 0.024,
+		paddingTop: screenHeight * 0.015,
+		flexDirection: 'row',
+		height: screenHeight * 0.125,
+		borderBottomColor: colors.lightGrey,
+		borderBottomWidth: 1
+	},
+	profileInfoTopRight: {
+		flexDirection: 'column',
+		alignItems: 'flex-start',
+		paddingLeft: screenWidth * 0.075,
+		paddingBottom: screenHeight * 0.007
+	},
+	innerContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		backgroundColor: colors.grey
+	},
+	optionContainer: {
+		backgroundColor: colors.grey,
+		height: screenHeight * 0.08,
+		justifyContent: 'center',
+		paddingLeft: screenWidth * 0.25
+	},
+	box: {
+		width: screenWidth * 0.049,
+		height: screenHeight * 0.03,
+		marginRight: screenWidth * 0.024
+	},
+	profileInfoBottom: {
+		flexDirection: 'row',
+		paddingHorizontal: screenWidth * 0.024,
+		borderBottomColor: colors.grey,
+		borderBottomWidth: 1
+	},
+	profilePic: {
+		width: screenHeight * 0.1,
+		height: screenHeight * 0.1,
+		borderRadius: (screenHeight * 0.1) / 2
+	},
+	currentAssignment: {
+		justifyContent: 'flex-end',
+		height: screenHeight * 0.16,
+		borderWidth: 0.5,
+		borderColor: colors.grey
+	},
+	middleView: {
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingVertical: screenHeight * 0.0112
+	},
+	bottomView: {
+		flex: 3,
+		backgroundColor: colors.veryLightGrey
+	},
+	prevAssignmentCard: {
+		flexDirection: 'column',
+		paddingHorizontal: screenWidth * 0.008,
+		paddingBottom: screenHeight * 0.019,
+		marginBottom: screenHeight * 0.009,
+		borderColor: colors.grey,
+		borderWidth: screenHeight * 0.13 * 0.0066,
+		backgroundColor: colors.white
+	},
+	profileInfo: {
+		flexDirection: 'column',
+		backgroundColor: colors.white
+	},
+	corner: {
+		borderColor: '#D0D0D0',
+		borderWidth: 1,
+		borderRadius: 3,
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingHorizontal: screenWidth * 0.012,
+		marginRight: screenWidth * 0.015,
+		marginTop: screenHeight * 0.007
+	},
+	prevAssignments: {
+		flexDirection: 'column',
+		backgroundColor: colors.veryLightGrey,
+		flex: 1
+	},
+	modal: {
+		backgroundColor: colors.white,
+		alignItems: 'center',
+		justifyContent: 'center',
+		flexDirection: 'column',
+		height: screenHeight * 0.25,
+		width: screenWidth * 0.75,
+		borderWidth: screenHeight * 0.003,
+		borderRadius: screenHeight * 0.003,
+		borderColor: colors.grey,
+		shadowColor: colors.darkGrey,
+		shadowOffset: { width: 0, height: screenHeight * 0.003 },
+		shadowOpacity: 0.8,
+		shadowRadius: screenHeight * 0.0045,
+		elevation: screenHeight * 0.003
+	}
 });
 
 export default StudentMainScreen;

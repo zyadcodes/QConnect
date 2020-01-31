@@ -1,7 +1,7 @@
 //This class will contain all the functions that interact with the react native firebase
 //library
-import firebase from "react-native-firebase";
-import strings from "./strings";
+import firebase from 'react-native-firebase';
+import strings from './strings';
 
 export default class FirebaseFunctions {
   //References that'll be used throughout the class's static functions
@@ -239,7 +239,7 @@ export default class FirebaseFunctions {
   //This function will update the assignment status of a particular student within a class. It will
   //simply reverse whatever the property is at the moment (true --> false & vice verca). This property
   //is located within a student object that is within a class object
-  static async updateStudentAssignmentStatus(classID, studentID, status) {
+  static async updateStudentAssignmentStatus(classID, studentID, status, index) {
     let currentClass = await this.getClassByID(classID);
 
     let arrayOfStudents = currentClass.students;
@@ -247,7 +247,7 @@ export default class FirebaseFunctions {
       return student.ID === studentID;
     });
 
-    arrayOfStudents[studentIndex].isReadyEnum = status;
+		arrayOfStudents[studentIndex].currentAssignments[index].isReadyEnum = status;
 
     await this.updateClassObject(classID, {
       students: arrayOfStudents
@@ -430,6 +430,12 @@ export default class FirebaseFunctions {
     arrayOfStudents[studentIndex].averageRating = avgGrade;
     arrayOfStudents[studentIndex].isReadyEnum = "WORKING_ON_IT";
 
+    let indexOfAssignment = arrayOfStudents[studentIndex].currentAssignments.findIndex((element) => {
+			return element.name === evaluationDetails.name && element.type === evaluationDetails.type;
+		});
+
+		arrayOfStudents[studentIndex].currentAssignments.splice(indexOfAssignment, 1);
+
     await this.updateClassObject(classID, {
       students: arrayOfStudents
     });
@@ -496,6 +502,12 @@ export default class FirebaseFunctions {
         : true;
       copyOfStudent.attendanceHistory = attendanceHistory;
       arrayOfStudents[index] = copyOfStudent;
+      if (absentStudents.includes(student.ID)){
+				copyOfStudent.classesMissed? copyOfStudent.classesMissed += 1: copyOfStudent.classesMissed = 1; 
+			}
+			else {
+				copyOfStudent.classesAttended? copyOfStudent.classesAttended += 1: copyOfStudent.classesAttended = 1; 
+			}
     });
 
     await this.updateClassObject(classID, {
@@ -543,11 +555,13 @@ export default class FirebaseFunctions {
       assignmentHistory: [],
       attendanceHistory: {},
       averageRating: 0,
-      currentAssignment: "None",
+			currentAssignments: [],
       isReadyEnum: "WORKING_ON_IT",
       profileImageID: student.profileImageID,
       name: student.name,
-      totalAssignments: 0
+      totalAssignments: 0,
+      classesAttended: 0,
+			classesMissed: 0
     };
 
     await this.updateClassObject(classID, {
@@ -585,7 +599,9 @@ export default class FirebaseFunctions {
       name,
       phoneNumber: "",
       profileImageID,
-      isManual: true
+      isManual: true,
+			classesMissed: 0,
+			classesAttended: 0
     };
     const studentAdded = await this.students.add(studentObject);
     const studentID = studentAdded.id;
@@ -604,7 +620,7 @@ export default class FirebaseFunctions {
       assignmentHistory: [],
       attendanceHistory: {},
       averageRating: 0,
-      currentAssignment: "None",
+      currentAssignments: [],
       isReadyEnum: "WORKING_ON_IT",
       profileImageID: student.profileImageID,
       name: student.name,
