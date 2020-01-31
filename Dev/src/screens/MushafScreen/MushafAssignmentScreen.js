@@ -180,22 +180,34 @@ class MushafAssignmentScreen extends Component {
     );
 
     //since there might be a latency before firebase returns the updated assignments,
-    //let's save them here and later pass them to the calling screen so that it can update its state without
-    //relying on the Firebase async latency
-    let students = currentClass.students.map(student => {
-      student.currentAssignment = newAssignmentName;
-      student.assignmentLocation = assignmentLocation;
-    });
-    let updatedClass = {
-      ...currentClass,
-      students
-    };
+		//let's save them here and later pass them to the calling screen so that it can update its state without
+		//relying on the Firebase async latency
+		let students = currentClass.students.map((student) => {
+			//Temporary solution until we use assignmentIDs.
+			const index = student.currentAssignments.findIndex((element) => {
+				return (
+					element.name === this.props.navigation.state.params.assignmentName &&
+					element.type === this.props.navigation.state.params.assignmentType &&
+					element.location === this.props.navigation.state.params.assignmentLocation
+				);
+			});
+			student.currentAssignments[index] = {
+				name: newAssignmentName,
+				type: assignmentType,
+				location: assignmentLocation,
+				isReadyEnum: 'WORKING_ON_IT'
+			};
+		});
+		let updatedClass = {
+			...currentClass,
+			students
+		};
 
     this.setState({
       currentClass: updatedClass
     });
   }
-
+  
   //method updates the current assignment of the student
   saveStudentAssignment(
     newAssignmentName,
@@ -208,22 +220,30 @@ class MushafAssignmentScreen extends Component {
     let assignmentLocation = { start: selection.start, end: selection.end };
 
     //update the current class object (so we can pass it to caller without having to re-render from firebase)
-    let students = currentClass.students.map(student => {
-      if (student.ID === studentID) {
-        student.currentAssignment = newAssignmentName;
-        student.assignmentLocation = assignmentLocation;
-      }
-      return student;
-    });
-
-    let updatedClass = {
-      ...currentClass,
-      students
-    };
-
-    this.setState({
-      currentClass: updatedClass
-    });
+    let students = currentClass.students.map((student) => {
+			if (student.ID === studentID) {
+				if (isNewAssignment === true) {
+					student.currentAssignments.push({
+						name: newAssignmentName,
+						type: assignmentType,
+						location: assignmentLocation,
+						isReadyEnum: 'WORKING_ON_IT'
+					});
+				} else {
+					const index = student.currentAssignments.findIndex((element) => {
+						return (
+							element.name === this.props.navigation.state.params.assignmentName &&
+							element.type === this.props.navigation.state.params.assignmentType
+						);
+					});
+					student.currentAssignments[index] = {
+						name: newAssignmentName,
+						type: assignmentType,
+						location: assignmentLocation,
+						isReadyEnum: 'WORKING_ON_IT'
+					};
+				}
+			}
 
     FirebaseFunctions.updateStudentCurrentAssignment(
       classID,
