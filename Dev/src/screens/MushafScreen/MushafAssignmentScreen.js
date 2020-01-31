@@ -252,7 +252,8 @@ class MushafAssignmentScreen extends Component {
       assignmentType,
       assignmentLocation
     );
-  }
+  });
+}
 
   updateAssignmentName() {
     const { selection } = this.state;
