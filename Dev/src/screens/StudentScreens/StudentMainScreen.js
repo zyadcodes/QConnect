@@ -21,6 +21,7 @@ import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import fontStyles from 'config/fontStyles';
 import { CustomPicker } from 'react-native-custom-picker';
 import { screenHeight, screenWidth } from 'config/dimensions';
+import ShiftingTextInput from '../../components/ShiftingTextInput';
 
 class StudentMainScreen extends QcParentScreen {
 
@@ -281,13 +282,13 @@ class StudentMainScreen extends QcParentScreen {
                                                         <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.TypeInAClassCode}</Text>
                                                     </View>
                                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                                        <TextInput
+                                                        <ShiftingTextInput
                                                             style={[{
                                                                 height: screenHeight * 0.07,
                                                                 paddingLeft: 0.017 * screenWidth,
                                                             }, fontStyles.mainTextStyleDarkGrey]}
-                                                            placeholder={strings.TypeInAClassCode}
                                                             autoCorrect={false}
+                                                            numInputs={5}
                                                             onChangeText={classCode => this.setState({ classCode })}
                                                             value={this.state.classCode}
                                                         />
