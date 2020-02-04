@@ -1,6 +1,6 @@
 //Screen which will provide all of the possible settings for the user to click on
 import React from "react";
-import { View, StyleSheet, Alert, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import LoadingSpinner from "components/LoadingSpinner";
 import colors from "config/colors";
 import QcParentScreen from 'screens/QcParentScreen';
@@ -8,8 +8,6 @@ import SelectionPage from "./Components/SelectionPage";
 import Swiper from "react-native-swiper";
 import strings from "config/strings";
 import FirebaseFunctions from "config/FirebaseFunctions";
-import studentImages from "config/studentImages";
-import classImages from 'config/classImages';
 import { screenHeight, screenWidth } from "config/dimensions";
 
 //------- constants to indicate the case when there is no ayah selected
@@ -37,25 +35,12 @@ export default class MushafScreen extends QcParentScreen {
   state = {
     pages: [],
     key: 1,
-    index: 3,
+    index:
+      this.props.selection && this.props.selection.start
+        ? 604 - this.props.selection.start.page
+        : 3,
     classID: this.props,
     studentID: this.props.studentID,
-    imageID: this.props.imageID,
-    assignToAllClass: this.props.assignToAllClass,
-    selection: {
-      started: false,
-      completed: false,
-      start: {
-        surah: 0,
-        page: this.lastPage,
-        ayah: 0,
-      },
-      end: {
-        surah: 0,
-        page: this.lastPage,
-        ayah: 0,
-      },
-    },
     assignmentType: this.props.assignmentType,
     loadScreenOnClose: this.props.loadScreenOnClose,
     popOnClose: this.props.popOnClose,
@@ -63,77 +48,13 @@ export default class MushafScreen extends QcParentScreen {
   };
 
   async componentDidMount() {
-    const {
-      studentID,
-      assignmentType,
-      assignmentLocation,
-      assignmentName,
-      currentClass,
-      userID,
-      classID,
-    } = this.props;
-
     //we mimmic right to left pages scanning by reversing the pages order in the swiper component
-    allPages = Array.from(Array(604), (e, i) => 604 - i);
+    let allPages = Array.from(Array(604), (e, i) => 604 - i);
 
-    if (studentID === undefined) {
-      //assign to all class -----
-      this.setState(
-        {
-          pages: allPages,
-          selection: {
-            start: currentClass.currentAssignmentLocation
-              ? currentClass.currentAssignmentLocation.start
-              : noAyahSelected,
-            end: currentClass.currentAssignmentLocation
-              ? currentClass.currentAssignmentLocation.end
-              : noAyahSelected,
-            started: false,
-            completed: currentClass.currentAssignmentLocation ? true : false
-          },
-          assignToAllClass: true,
-          userID,
-          imageID: currentClass.classImageID,
-          classID,
-          currentClass: currentClass,
-          assignmentType: currentClass.currentAssignmentType,
-        },
-        () => {
-          if (currentClass.currentAssignmentLocation !== undefined) {
-            let newPage = currentClass.currentAssignmentLocation.start.page;
-            this.onChangePage(newPage, true);
-          }
-          this.setState({ isLoading: false });
-        }
-      );
-    } else {
-      // assign to a particular student ----------
-      let indexSection = {};
-      if (assignmentLocation !== undefined) {
-        indexSection = {
-          index: 604 - assignmentLocation.start.page,
-        };
-      }
-
-      this.setState({
-        ...indexSection,
-        pages: allPages,
-        isLoading: false,
-        assignToAllClass: false,
-        currentClass: currentClass,
-        studentID: studentID,
-        selection: assignmentLocation
-          ? {
-              start: assignmentLocation.start,
-              end: assignmentLocation.end,
-              started: false,
-              completed: true,
-            }
-          : noSelection,
-        assignmentType:
-          assignmentType !== undefined ? assignmentType : strings.Memorization
-      });
-    }
+    this.setState({
+      pages: allPages,
+      isLoading: false,
+    });
   }
 
   // ------------------------- Helpers and Getters  --------------------------------------
@@ -190,61 +111,25 @@ export default class MushafScreen extends QcParentScreen {
   // ------------------------- Event handlers --------------------------------------------
 
   onChangePage(page, keepSelection) {
-    //reset the selection state if we are passed a flag to do so
-    let resetSelectionIfApplicable = {};
-    if (keepSelection === false) {
-      resetSelectionIfApplicable = {
-        selection: noSelection
-      };
-    }
-
     let index = 604 - page;
+
     this.setState({
-      ...resetSelectionIfApplicable,
       page: page,
       index: index,
       key: index,
     });
-  }
 
-  /**
-     * studentID: this.props.studentID,
-        classID: this.props.classID,
-        assignToAllClass: this.props.assignToAllClass,
-     */
-  onChangeAssignee(id, imageID, isClassID) {
-    if (isClassID === true) {
-      this.setState({
-        classID: id,
-        assignToAllClass: true,
-        imageID: imageID,
-      });
-    } else {
-      this.setState({
-        studentID: id,
-        assignToAllClass: false,
-        imageID: imageID,
-      });
+    if (this.props.onChangePage) {
+      this.props.onChangePage(page, keepSelection);
     }
   }
 
   // ------------------------ Render the Mushhaf Component ----------------------------------------
   renderItem(item, idx) {
-    const {
-      imageID,
-      assignToAllClass,
-      assignmentType,
-      selection,
-      classID,
-      studentID
-    } = this.state;
+    const { assignmentType } = this.state;
+    const { profileImage, assignToID, selection } = this.props;
 
     const itemInt = parseInt(item);
-    profileImage = isNaN(imageID)
-      ? undefined
-      : assignToAllClass
-      ? classImages.images[imageID]
-      : studentImages.images[imageID];
 
     return (
       <View style={{ width: screenWidth, height: screenHeight }} key={idx}>
@@ -262,10 +147,12 @@ export default class MushafScreen extends QcParentScreen {
           currentClass={this.state.currentClass}
           isLoading={this.state.isLoading}
           assignmentType={assignmentType}
-          assignToID={assignToAllClass ? classID : studentID}
-          onChangeAssignee={(id, imageID, isClassID) =>
-            this.onChangeAssignee(id, imageID, isClassID)
-          }
+          assignToID={assignToID}
+          onChangeAssignee={(id, imageID, isClassID) => {
+            if (this.props.onChangeAssignee !== undefined) {
+              this.props.onChangeAssignee(id, imageID, isClassID);
+            }
+          }}
           //callback when user taps on a single ayah to selects
           //determines whether this would be the start of end of the selection
           // and select ayahs in between

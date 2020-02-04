@@ -122,6 +122,7 @@ export default {
   GreatJob: "Great Job!",
   CurrentlyNoAssignment: "You currently don't have an assignment.",
   CurrentAssignment: "Current Assignment",
+  CurrentAssignments: "Current Assignments",
   Grade: "Grade",
   PleaseEnterAnAssignmentName: "Please select an assignment.",
   ImprovementAreas: "Things to work on: ",

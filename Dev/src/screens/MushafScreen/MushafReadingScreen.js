@@ -17,6 +17,10 @@ class MushafReadingScreen extends Component {
     });
   }
 
+  onSelectAyah(selectedAyah){
+    alert(JSON.stringify(selectedAyah))
+  }
+
   render() {
     const {
       userID,
@@ -41,6 +45,7 @@ class MushafReadingScreen extends Component {
           topRightOnPress={this.closeScreen.bind(this)}
           onClose={this.closeScreen.bind(this)}
           currentClass={currentClass}
+          onSelectAyah={this.onSelectAyah.bind(this)}
         />
       </View>
     );

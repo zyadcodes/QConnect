@@ -337,19 +337,20 @@ export default class FirebaseFunctions {
     studentID,
     newAssignmentName,
     assignmentType,
-    assignmentLocation
+    assignmentLocation,
+    assignmentIndex
   ) {
     let currentClass = await this.getClassByID(classID);
     let arrayOfStudents = currentClass.students;
     let studentIndex = arrayOfStudents.findIndex(student => {
       return student.ID === studentID;
     });
-    arrayOfStudents[studentIndex].currentAssignment = newAssignmentName;
-    arrayOfStudents[studentIndex].currentAssignmentType = assignmentType;
-    arrayOfStudents[
-      studentIndex
-    ].currentAssignmentLocation = assignmentLocation;
-    arrayOfStudents[studentIndex].isReadyEnum = "WORKING_ON_IT";
+    arrayOfStudents[studentIndex].currentAssignments[assignmentIndex] = {
+      name: newAssignmentName,
+      type: assignmentType,
+      location: assignmentLocation,
+      isReadyEnum: 'NOT_STARTED'
+    }
 
     await this.updateClassObject(classID, {
       students: arrayOfStudents

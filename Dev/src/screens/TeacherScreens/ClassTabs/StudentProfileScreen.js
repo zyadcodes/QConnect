@@ -34,7 +34,7 @@ class StudentProfileScreen extends QcParentScreen {
     studentID: this.props.navigation.state.params.studentID,
     currentClass: this.props.navigation.state.params.currentClass,
     classID: this.props.navigation.state.params.classID,
-    currentAssignment: '',
+    currentAssignments: [],
     classStudent: '',
     isDialogVisible: false,
     isLoading: true,
@@ -56,12 +56,10 @@ class StudentProfileScreen extends QcParentScreen {
 
     this.setState({
       classStudent: student,
-      currentAssignment:
-        student.currentAssignment === 'None'
-          ? strings.NoAssignmentsYet
-          : student.currentAssignment,
+      currentAssignments: student.currentAssignments,
       isLoading: false,
-      hasCurrentAssignment: student.currentAssignment === 'None' ? false : true,
+      hasCurrentAssignment:
+        student.currentAssignments && student.currentAssignments.length > 0,
       classesAttended: student.classesAttended ? student.classesAttended : '0',
       classesMissed: student.classesMissed ? student.classesMissed : '0'
     });
@@ -134,9 +132,12 @@ class StudentProfileScreen extends QcParentScreen {
     return caption;
   }
 
-  editAssignment(assignmentName) {
+  updateStateWithNewAssignmentInfo(newAssignment, index, currentClass) {
+    let updatedStudentInfo = this.state.classStudent;
+    updatedStudentInfo.currentAssignments[index] = newAssignment;
     this.setState({
-      currentAssignment: assignmentName
+      classStudent: updatedStudentInfo,
+      currentClass: currentClass,
     });
   }
 
@@ -147,8 +148,8 @@ class StudentProfileScreen extends QcParentScreen {
       isLoading,
       classID,
       studentID,
-      hasCurrentAssignment,
-      currentAssignment,
+      currentClass,
+      currentAssignments,
       classesAttended,
       classesMissed,
     } = this.state;
@@ -216,15 +217,23 @@ class StudentProfileScreen extends QcParentScreen {
             >
               <TouchableHighlight
                 onPress={() => {
-                  this.props.navigation.push('MushafScreen', {
-                    invokedFromProfileScreen: true,
+                  this.props.navigation.push("MushafAssignmentScreen", {
+                    popOnClose: true,
+                    isTeacher: true,
                     assignToAllClass: false,
                     userID: this.props.navigation.state.params.userID,
                     classID,
                     studentID,
+                    currentClass,
+                    assignmentLocation:
+                      classStudent.currentAssignments[0].location,
+                    assignmentType: classStudent.currentAssignments[0].type,
+                    assignmentName: currentAssignments[0].name,
                     imageID: classStudent.profileImageID,
-                    onSaveAssignment: this.editAssignment.bind(this),
-                    newAssignment: true
+                    isNewAssignment: true,
+                    onSaveAssignment: this.updateStateWithNewAssignmentInfo.bind(
+                      this
+                    ),
                   });
                 }}
               >
@@ -285,15 +294,23 @@ class StudentProfileScreen extends QcParentScreen {
                   fontStyles.mainTextStyleDarkGrey,
                 ]}
               >
-                {strings.CurrentAssignment.toUpperCase()}
+                {strings.CurrentAssignments.toUpperCase()}
               </Text>
             </View>
           ) : (
             <View />
           )}
+          <Text>
+            Testing: {this.state.classStudent.currentAssignments[0].name}
+          </Text>
           <FlatList
+            extraData={this.state.classStudent.currentAssignments.map(
+              value => value.name
+            )}
             data={this.state.classStudent.currentAssignments}
-            keyExtractor={(item, index) => item.name + index}
+            keyExtractor={(item, index) =>
+              item.name + index + Math.random() * 10
+            }
             renderItem={({ item, index }) => (
               <View
                 style={[
@@ -344,17 +361,22 @@ class StudentProfileScreen extends QcParentScreen {
                   >
                     <TouchableHighlight
                       onPress={() => {
-                        this.props.navigation.push('MushafScreen', {
-                          invokedFromProfileScreen: true,
+                        this.props.navigation.push("MushafAssignmentScreen", {
+                          popOnClose: true,
+                          isTeacher: true,
                           assignToAllClass: false,
                           userID: this.props.navigation.state.params.userID,
                           classID,
                           studentID,
+                          currentClass,
                           assignmentLocation: item.location,
                           assignmentType: item.type,
                           assignmentName: item.name,
+                          assignmentIndex: index,
                           imageID: classStudent.profileImageID,
-                          onSaveAssignment: this.editAssignment.bind(this)
+                          onSaveAssignment: this.updateStateWithNewAssignmentInfo.bind(
+                            this
+                          ),
                         });
                       }}
                     >
@@ -580,7 +602,7 @@ const styles = StyleSheet.create({
   },
   currentAssignment: {
     justifyContent: 'flex-end',
-    height: screenHeight * 0.16,
+    height: screenHeight * 0.26,
     borderWidth: 0.5,
     borderColor: colors.grey
   },

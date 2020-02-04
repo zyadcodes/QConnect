@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TextInput,
   Alert,
+  Text,
   KeyboardAvoidingView
 } from "react-native";
 import colors from "config/colors";
@@ -369,10 +370,11 @@ class SelectionPage extends React.Component {
               assignment={surahName}
               onCancel={() => this.setState({ isSurahSelectionVisible: false })}
             />
+            
             <PageHeader
               Title={surahName}
               TitleOnPress={() => {
-                const { isSurahSelectionVisible } = this.state;
+                const { isSurahSelectionVisible } = this.state; 
                 this.setState({
                   isSurahSelectionVisible: !isSurahSelectionVisible
                 });
