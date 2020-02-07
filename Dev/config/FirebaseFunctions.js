@@ -239,7 +239,12 @@ export default class FirebaseFunctions {
   //This function will update the assignment status of a particular student within a class. It will
   //simply reverse whatever the property is at the moment (true --> false & vice verca). This property
   //is located within a student object that is within a class object
-  static async updateStudentAssignmentStatus(classID, studentID, status, index) {
+  static async updateStudentAssignmentStatus(
+    classID,
+    studentID,
+    status,
+    index
+  ) {
     let currentClass = await this.getClassByID(classID);
 
     let arrayOfStudents = currentClass.students;
@@ -247,7 +252,9 @@ export default class FirebaseFunctions {
       return student.ID === studentID;
     });
 
-		arrayOfStudents[studentIndex].currentAssignments[index].isReadyEnum = status;
+    arrayOfStudents[studentIndex].currentAssignments[
+      index
+    ].isReadyEnum = status;
 
     await this.updateClassObject(classID, {
       students: arrayOfStudents
@@ -332,6 +339,7 @@ export default class FirebaseFunctions {
   //To locate the correct student, the method will take in params of the classID, the studentID,
   //and finally, the name of the new assignment which it will set the currentAssignment property
   //to
+
   static async updateStudentCurrentAssignment(
     classID,
     studentID,
@@ -350,7 +358,7 @@ export default class FirebaseFunctions {
       type: assignmentType,
       location: assignmentLocation,
       isReadyEnum: 'NOT_STARTED'
-    }
+    };
 
     await this.updateClassObject(classID, {
       students: arrayOfStudents
@@ -370,14 +378,22 @@ export default class FirebaseFunctions {
     classID,
     newAssignmentName,
     assignmentType,
-    assignmentLocation
+    assignmentLocation,
+    assignmentIndex
   ) {
+    if (assignmentIndex === undefined) {
+      this.logEvent("UpdateClassAssignment_IndexIsUndefined");
+      //fallback to update first assignment
+      //this is potentially dangerous,.. consider throwing instead.
+      assignmentIndex = 0; 
+    }
+
     let currentClass = await this.getClassByID(classID);
     let arrayOfStudents = currentClass.students;
     arrayOfStudents.forEach(student => {
-      student.currentAssignment = newAssignmentName;
-      student.currentAssignmentType = assignmentType;
-      student.currentAssignmentLocation = assignmentLocation;
+      student.currentAssignments[assignmentIndex].name = newAssignmentName;
+      student.currentAssignments[assignmentIndex].type = assignmentType;
+      student.currentAssignments[assignmentIndex].location = assignmentLocation;
 
       try {
         //Notifies that student that their assignment has been updated
@@ -394,6 +410,7 @@ export default class FirebaseFunctions {
       }
     });
 
+    //todo: update the below to support multiple assignments
     await this.updateClassObject(classID, {
       students: arrayOfStudents,
       currentAssignment: newAssignmentName,
@@ -431,11 +448,19 @@ export default class FirebaseFunctions {
     arrayOfStudents[studentIndex].averageRating = avgGrade;
     arrayOfStudents[studentIndex].isReadyEnum = "WORKING_ON_IT";
 
-    let indexOfAssignment = arrayOfStudents[studentIndex].currentAssignments.findIndex((element) => {
-			return element.name === evaluationDetails.name && element.type === evaluationDetails.type;
-		});
+    let indexOfAssignment = arrayOfStudents[
+      studentIndex
+    ].currentAssignments.findIndex(element => {
+      return (
+        element.name === evaluationDetails.name &&
+        element.type === evaluationDetails.type
+      );
+    });
 
-		arrayOfStudents[studentIndex].currentAssignments.splice(indexOfAssignment, 1);
+    arrayOfStudents[studentIndex].currentAssignments.splice(
+      indexOfAssignment,
+      1
+    );
 
     await this.updateClassObject(classID, {
       students: arrayOfStudents
@@ -503,12 +528,15 @@ export default class FirebaseFunctions {
         : true;
       copyOfStudent.attendanceHistory = attendanceHistory;
       arrayOfStudents[index] = copyOfStudent;
-      if (absentStudents.includes(student.ID)){
-				copyOfStudent.classesMissed? copyOfStudent.classesMissed += 1: copyOfStudent.classesMissed = 1; 
-			}
-			else {
-				copyOfStudent.classesAttended? copyOfStudent.classesAttended += 1: copyOfStudent.classesAttended = 1; 
-			}
+      if (absentStudents.includes(student.ID)) {
+        copyOfStudent.classesMissed
+          ? (copyOfStudent.classesMissed += 1)
+          : (copyOfStudent.classesMissed = 1);
+      } else {
+        copyOfStudent.classesAttended
+          ? (copyOfStudent.classesAttended += 1)
+          : (copyOfStudent.classesAttended = 1);
+      }
     });
 
     await this.updateClassObject(classID, {
@@ -556,13 +584,13 @@ export default class FirebaseFunctions {
       assignmentHistory: [],
       attendanceHistory: {},
       averageRating: 0,
-			currentAssignments: [],
+      currentAssignments: [],
       isReadyEnum: "WORKING_ON_IT",
       profileImageID: student.profileImageID,
       name: student.name,
       totalAssignments: 0,
       classesAttended: 0,
-			classesMissed: 0
+      classesMissed: 0
     };
 
     await this.updateClassObject(classID, {
@@ -601,8 +629,8 @@ export default class FirebaseFunctions {
       phoneNumber: "",
       profileImageID,
       isManual: true,
-			classesMissed: 0,
-			classesAttended: 0
+      classesMissed: 0,
+      classesAttended: 0
     };
     const studentAdded = await this.students.add(studentObject);
     const studentID = studentAdded.id;

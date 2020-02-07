@@ -300,9 +300,6 @@ class StudentProfileScreen extends QcParentScreen {
           ) : (
             <View />
           )}
-          <Text>
-            Testing: {this.state.classStudent.currentAssignments[0].name}
-          </Text>
           <FlatList
             extraData={this.state.classStudent.currentAssignments.map(
               value => value.name

@@ -107,11 +107,11 @@ class SelectionPage extends React.Component {
         isLoading: false,
       };
     }
-
     return retValue;
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+
     //if there are no lines initialized yet, skip rendering.
     if (!nextState.lines || nextState.lines.length === 0) {
       return false;
@@ -158,6 +158,10 @@ class SelectionPage extends React.Component {
       nextState.lines[1].surah !== this.state.lines[1].surah ||
       nextState.lines[1].ayah !== this.state.lines[1].ayah
     ) {
+      return true;
+    }
+
+    if (nextProps.profileImage !== this.props.profileImage) {
       return true;
     }
 
@@ -317,9 +321,7 @@ class SelectionPage extends React.Component {
     this.props.onSelectAyahs(firstAyah, lastAyah);
   }
 
-  onSelectAyah(){
-
-  }
+  onSelectAyah() {}
 
   //------------------------ render component ----------------------------------------
   render() {
@@ -370,11 +372,11 @@ class SelectionPage extends React.Component {
               assignment={surahName}
               onCancel={() => this.setState({ isSurahSelectionVisible: false })}
             />
-            
+
             <PageHeader
               Title={surahName}
               TitleOnPress={() => {
-                const { isSurahSelectionVisible } = this.state; 
+                const { isSurahSelectionVisible } = this.state;
                 this.setState({
                   isSurahSelectionVisible: !isSurahSelectionVisible
                 });
@@ -521,7 +523,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     textAlign: 'center',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   topMiddleView: {
     justifyContent: "center",
@@ -547,7 +549,7 @@ const styles = StyleSheet.create({
   spinner: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
   pageContent: {
     marginVertical: 5,

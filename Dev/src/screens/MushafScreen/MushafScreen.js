@@ -57,55 +57,24 @@ export default class MushafScreen extends QcParentScreen {
     });
   }
 
-  // ------------------------- Helpers and Getters  --------------------------------------
-  getPagesToLoad(page) {
-    let pageNumber = parseInt(page);
-    let nextPage1 = parseInt(pageNumber) + 1;
-    let nextPage2 = parseInt(pageNumber) + 2;
-    let nextPage3 = parseInt(pageNumber) + 3;
-    let curPage = parseInt(pageNumber);
-    let prevPage1 = parseInt(pageNumber) - 1;
-    let prevPage2 = parseInt(pageNumber) - 2;
-    let prevPage3 = parseInt(pageNumber) - 3;
-    let index = 3;
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (
+      JSON.stringify(prevState.selection) !==
+      JSON.stringify(nextProps.selection)
+    ) {
+      let index = nextProps.selection && nextProps.selection.start
+      ? 604 - nextProps.selection.start.page
+      : 3;
 
-    //if we are in the first page, change render page 1, 2, and 3, and set current page to index 0 (page 1)
-    //this way, users can't swipe left to previous page since there is no previous page
-    if (pageNumber === 1) {
-      //bug bug: there is a bug in swiper where if I set index to 0 (to indicate end of book),
-      // onIndexChanged is not called on the next swipe.
-      // this is a temporary workaround until swiper bug is fixed or we find a better workaround.
-      prevPage1 = pageNumber;
-      prevPage2 = pageNumber;
-      prevPage3 = pageNumber;
-      curPage = pageNumber;
-      index = 3;
-    }
-    //if we are in the last page, change render page 602, 603, and 604, and set current page to index 2 (page 604)
-    //this way, users can't swipe right to next page, since there is no next page
-    else if (pageNumber === 604) {
-      //bug bug: there is a bug in swiper where if I set index to 0 (to indicate end of book),
-      // onIndexChanged is not called on the next swipe.
-      // this is a temporary workaround until swiper bug is fixed or we find a better workaround.
-      curPage = pageNumber;
-      nextPage1 = pageNumber;
-      nextPage2 = pageNumber;
-      nextPage3 = pageNumber;
-      index = 3;
+      return {
+        selection: nextProps.selection,
+        page: nextProps.selection.start.page,
+        index: index,
+        key: index,        
+      };
     }
 
-    return {
-      pages: [
-        nextPage3.toString(),
-        nextPage2.toString(),
-        nextPage1.toString(),
-        curPage.toString(),
-        prevPage1.toString(),
-        prevPage2.toString(),
-        prevPage3.toString()
-      ],
-      index: index
-    };
+    return null;
   }
 
   // ------------------------- Event handlers --------------------------------------------
@@ -144,7 +113,7 @@ export default class MushafScreen extends QcParentScreen {
             itemInt >= selection.start.page && itemInt <= selection.end.page
           }
           profileImage={profileImage}
-          currentClass={this.state.currentClass}
+          currentClass={this.props.currentClass}
           isLoading={this.state.isLoading}
           assignmentType={assignmentType}
           assignToID={assignToID}

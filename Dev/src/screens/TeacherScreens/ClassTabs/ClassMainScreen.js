@@ -272,6 +272,7 @@ export class ClassMainScreen extends QcParentScreen {
         </SideMenu>
       );
     } else {
+      
       const studentsNeedHelp = currentClass.students.filter(
         student => student.currentAssignments[0].isReadyEnum === "NEED_HELP"
       );

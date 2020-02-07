@@ -13,7 +13,7 @@ export default {
   HasJoinedYourClass: " has joined your class",
   AssignmentUpdate: "Assignment Update",
   YourTeacherHasUpdatedYourCurrentAssignment:
-    "Your teacher has updated your current assignment",
+    "You have a new assignment from your teacher",
   AssignmentGraded: "Assignment Graded",
   YourAssignmentHasBeenGraded: "Your assignment has been graded",
 

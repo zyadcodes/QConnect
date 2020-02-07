@@ -8,7 +8,6 @@ import strings from '../../../../config/strings';
 import MushafAssignmentScreen from '../../MushafScreen/MushafAssignmentScreen';
 import { screenHeight } from 'config/dimensions';
 
-
 const routeConfig = {
   AttendanceTab: {
     screen: ClassAttendanceScreen,
@@ -29,31 +28,31 @@ const routeConfig = {
     navigationOptions: {
       tabBarLabel: strings.Class,
       tabBarIcon: ({ tintColor, focused }) => (
-        <Icon
-          name="group"
-          size={20}
-          type="font-awesome"
-          color={tintColor}
-        />
+        <Icon name="group" size={20} type="font-awesome" color={tintColor} />
       ),
     },
   },
   AssignmentsTab: {
     screen: MushafAssignmentScreen,
-    navigationOptions: {
-      tabBarVisible: false,
-      tabBarLabel: strings.Assignments,
-      tabBarIcon: ({ tintColor, focused }) => (
-        <Icon
-          name="feather"
-          size={20}
-          type="material-community"
-          color={tintColor}
+    navigationOptions: ({ navigation }) => {
+      return {
+        isTeacher: true,
+        assignToAllClass: true,
+        userID: navigation.getParam("userID"),
+        tabBarVisible: false,
+        tabBarLabel: strings.Assignments,
+        tabBarIcon: ({ tintColor, focused }) => (
+          <Icon
+            name="feather"
+            size={20}
+            type="material-community"
+            color={tintColor}
           />
-      ),
-    }
-  },
-}
+        ),
+      };
+    },
+  }
+};
 
 const navigatorConfig = {
   initialRouteName: 'ClassStudentsTab',
@@ -92,7 +91,10 @@ const navigatorConfig = {
   }
 };
 
-const TeacherBottomTabNavigator = createBottomTabNavigator(routeConfig, navigatorConfig);
+const TeacherBottomTabNavigator = createBottomTabNavigator(
+  routeConfig,
+  navigatorConfig
+);
 
 const ClassTabsNavigator = createAppContainer(TeacherBottomTabNavigator);
 
