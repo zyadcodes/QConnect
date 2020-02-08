@@ -16,35 +16,6 @@ export default class FirebaseFunctions {
 	static auth = firebase.auth();
 	static analytics = firebase.analytics();
 
-	/*static async migrate() {
-		const allClasses = await this.classes.get();
-		const allClassesDocs = await allClasses.docs.map((doc) => doc.data());
-		for (const c of allClassesDocs) {
-			if (c.ID && c.ID !== 'Example ID') {
-				const students = c.students;
-				const newArray = [];
-				for (let student of students) {
-					if (student.currentAssignment !== 'None') {
-						let newCurrentAssignments = [{
-							name: student.currentAssignment,
-							location: student.currentAssignmentLocation,
-							type: student.currentAssignmentType,
-							isReadyEnum: student.isReadyEnum
-						}];
-						student.currentAssignments = newCurrentAssignments;
-					}
-					newArray.push(student);
-				}
-				await this.updateClassObject(c.ID, {
-					students: students
-				});
-			}
-		}
-		return 0;
-	}*/
-
-	//Methods that can be called from any other class
-
 	//This functions will take in an email and a password & will sign a user up using
 	//firebase authentication (will also sign the user in). Additionally, it will take
 	//in a boolean to determine whether this is a student or a teacher account. Based
@@ -432,6 +403,13 @@ export default class FirebaseFunctions {
 			attendanceHistory[selectedDate] = absentStudents.includes(student.ID) ? false : true;
 			copyOfStudent.attendanceHistory = attendanceHistory;
 			arrayOfStudents[index] = copyOfStudent;
+			if (absentStudents.includes(student.ID)){
+				copyOfStudent.classesMissed? copyOfStudent.classesMissed += 1: copyOfStudent.classesMissed = 1; 
+			}
+			else {
+				copyOfStudent.classesAttended? copyOfStudent.classesAttended += 1: copyOfStudent.classesAttended = 1; 
+
+			}
 		});
 
 		await this.updateClassObject(classID, {
@@ -483,7 +461,9 @@ export default class FirebaseFunctions {
 			isReadyEnum: 'WORKING_ON_IT',
 			profileImageID: student.profileImageID,
 			name: student.name,
-			totalAssignments: 0
+			totalAssignments: 0,
+			classesAttended: 0,
+			classesMissed: 0
 		};
 
 		await this.updateClassObject(classID, {
@@ -521,7 +501,9 @@ export default class FirebaseFunctions {
 			name,
 			phoneNumber: '',
 			profileImageID,
-			isManual: true
+			isManual: true,
+			classesMissed: 0,
+			classesAttended: 0
 		};
 		const studentAdded = await this.students.add(studentObject);
 		const studentID = studentAdded.id;

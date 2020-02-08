@@ -20,6 +20,13 @@ import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
+import {
+	BarChart,
+	PieChart,
+	ProgressChart,
+	ContributionGraph,
+	StackedBarChart
+} from 'react-native-chart-kit';
 import { Icon } from 'react-native-elements';
 
 class StudentProfileScreen extends QcParentScreen {
@@ -31,7 +38,10 @@ class StudentProfileScreen extends QcParentScreen {
 		classStudent: '',
 		isDialogVisible: false,
 		isLoading: true,
-		hasCurrentAssignment: ''
+		hasCurrentAssignment: '',
+		classesAttended: '',
+		classesMissed: ''
+
 	};
 
 	//Sets the screen for firebase analytics & fetches the correct student from this class
@@ -47,7 +57,11 @@ class StudentProfileScreen extends QcParentScreen {
 			currentAssignment:
 				student.currentAssignment === 'None' ? strings.NoAssignmentsYet : student.currentAssignment,
 			isLoading: false,
-			hasCurrentAssignment: student.currentAssignment === 'None' ? false : true
+			hasCurrentAssignment: student.currentAssignment === 'None' ? false : true,
+			classesAttended: 
+				student.classesAttended? student.classesAttended: '0',
+			classesMissed:
+				student.classesMissed? student.classesMissed: '0',
 		});
 	}
 
@@ -85,7 +99,9 @@ class StudentProfileScreen extends QcParentScreen {
 			classID,
 			studentID,
 			hasCurrentAssignment,
-			currentAssignment
+			currentAssignment,
+			classesAttended,
+			classesMissed,
 		} = this.state;
 		let { assignmentHistory, averageRating, name } = classStudent;
 
@@ -154,6 +170,14 @@ class StudentProfileScreen extends QcParentScreen {
 									source={studentImages.images[classStudent.profileImageID]}
 								/>
 							</View>
+							<View style={{flexDirection:'row',paddingTop: 20, justifyContent:"space-between"}}>
+							<Text style={fontStyles.smallTextStyleBlack}>
+							Classes attended: {classesAttended}</Text>
+						</View>	
+						<View style={{flexDirection:'row',paddingTop: 5, justifyContent:"space-between"}}>
+						<Text style={fontStyles.smallTextStyleBlack}>
+							Classes missed: {classesMissed}</Text>
+							</View>				
 						</View>
 					</View>
 					{this.state.classStudent.currentAssignments.length > 0 ? (
@@ -173,6 +197,48 @@ class StudentProfileScreen extends QcParentScreen {
 					) : (
 						<View />
 					)}
+					<BarChart
+						data={{
+							labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+							datasets: [
+								{
+									data: [
+										Math.random() * 100,
+										Math.random() * 100,
+										Math.random() * 100,
+										Math.random() * 100,
+										Math.random() * 100,
+										Math.random() * 100
+									]
+								}
+							]
+						}}
+						width={screenWidth}
+						height={220}
+						yAxisLabel='$'
+						yAxisSuffix='k'
+						chartConfig={{
+							backgroundColor: '#e26a00',
+							backgroundGradientFrom: '#fb8c00',
+							backgroundGradientTo: '#ffa726',
+							decimalPlaces: 2, // optional, defaults to 2dp
+							color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+							labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+							style: {
+								borderRadius: 16
+							},
+							propsForDots: {
+								r: '6',
+								strokeWidth: '2',
+								stroke: '#ffa726'
+							}
+						}}
+						bezier
+						style={{
+							marginVertical: 8,
+							borderRadius: 16
+						}}
+					/>
 					<FlatList
 						data={this.state.classStudent.currentAssignments}
 						keyExtractor={(item, index) => item.name + index}
@@ -433,7 +499,7 @@ const styles = StyleSheet.create({
 	profileInfoTop: {
 		paddingHorizontal: screenWidth * 0.024,
 		paddingTop: screenHeight * 0.015,
-		flexDirection: 'row',
+		flexDirection: 'row'
 	},
 	profileInfoTopLeft: {
 		flexDirection: 'column',
@@ -449,7 +515,7 @@ const styles = StyleSheet.create({
 		paddingBottom: 0.007 * screenHeight
 	},
 	profileInfoBottom: {
-		flexDirection: 'row',
+		flexDirection: 'column',
 		paddingHorizontal: 0.024 * screenWidth,
 		paddingBottom: screenHeight * 0.02,
 		borderBottomColor: colors.grey,
