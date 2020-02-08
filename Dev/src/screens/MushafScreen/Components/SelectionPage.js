@@ -395,6 +395,7 @@ class SelectionPage extends React.Component {
               currentClass={this.props.currentClass}
               assignToID={this.props.assignToID}
               onSelect={this.props.onChangeAssignee}
+              disableChangingUser={this.props.disableChangingUser}
             />
 
             <View id={this.state.page} style={styles.pageContent}>

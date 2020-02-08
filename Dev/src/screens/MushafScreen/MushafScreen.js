@@ -68,7 +68,7 @@ export default class MushafScreen extends QcParentScreen {
 
       return {
         selection: nextProps.selection,
-        page: nextProps.selection.start.page,
+        page: nextProps.selection.start? nextProps.selection.start.page : 3,
         index: index,
         key: index,        
       };
@@ -96,7 +96,7 @@ export default class MushafScreen extends QcParentScreen {
   // ------------------------ Render the Mushhaf Component ----------------------------------------
   renderItem(item, idx) {
     const { assignmentType } = this.state;
-    const { profileImage, assignToID, selection } = this.props;
+    const { profileImage, assignToID, selection, disableChangingUser } = this.props;
 
     const itemInt = parseInt(item);
 
@@ -117,6 +117,7 @@ export default class MushafScreen extends QcParentScreen {
           isLoading={this.state.isLoading}
           assignmentType={assignmentType}
           assignToID={assignToID}
+          disableChangingUser={disableChangingUser}
           onChangeAssignee={(id, imageID, isClassID) => {
             if (this.props.onChangeAssignee !== undefined) {
               this.props.onChangeAssignee(id, imageID, isClassID);

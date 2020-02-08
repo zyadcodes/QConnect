@@ -12,7 +12,8 @@ import {
   ScrollView,
   Modal,
   Alert,
-  Animated
+  Animated,
+  TouchableHighlight
 } from "react-native";
 import { Icon } from "react-native-elements";
 import studentImages from "config/studentImages";
@@ -47,10 +48,10 @@ class StudentMainScreen extends QcParentScreen {
     userID: "",
     currentClass: "",
     currentClassID: "",
-    thisClassInfo: "",
-    isReadyEnum: "",
+    studentClassInfo: "",
     modalVisible: false,
     recordingUIVisible: false,
+    noCurrentClass: false,
     classCode: "",
     classes: "",
     isRecording: false,
@@ -71,7 +72,9 @@ class StudentMainScreen extends QcParentScreen {
     const { userID } = this.props.navigation.state.params;
     const student = await FirebaseFunctions.getStudentByID(userID);
     const { currentClassID } = student;
+    
     if (currentClassID === "") {
+      alert(JSON.stringify(currentClass))
       this.setState({
         isLoading: false,
         noCurrentClass: true,
@@ -82,18 +85,16 @@ class StudentMainScreen extends QcParentScreen {
       });
     } else {
       const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
-      const thisClassInfo = currentClass.students.find(student => {
+      const studentClassInfo = currentClass.students.find(student => {
         return student.ID === userID;
       });
-      const { isReadyEnum } = thisClassInfo;
       const classes = await FirebaseFunctions.getClassesByIDs(student.classes);
       this.setState({
         student,
         userID,
         currentClass,
         currentClassID,
-        thisClassInfo,
-        isReadyEnum,
+        studentClassInfo,
         isLoading: false,
         isOpen: false,
         classes
@@ -138,7 +139,7 @@ class StudentMainScreen extends QcParentScreen {
   //Returns the correct caption based on the student's average grade
   getRatingCaption() {
     let caption = strings.GetStarted;
-    let { averageRating } = this.state.thisClassInfo;
+    let { averageRating } = this.state.studentClassInfo;
 
     if (averageRating > 4) {
       caption = strings.OutStanding;
@@ -294,7 +295,7 @@ class StudentMainScreen extends QcParentScreen {
   }
 
   //renders a past assignment info card
-  renderHistoryItem(item, index, thisClassInfo) {
+  renderHistoryItem(item, index, studentClassInfo) {
     return (
       <TouchableOpacity
         onPress={() => {
@@ -302,7 +303,7 @@ class StudentMainScreen extends QcParentScreen {
           this.props.navigation.push("EvaluationPage", {
             classID: this.state.currentClassID,
             studentID: this.state.userID,
-            classStudent: thisClassInfo,
+            studentClassInfo: studentClassInfo,
             assignmentName: item.name,
             completionDate: item.completionDate,
             rating: item.evaluation.rating,
@@ -434,7 +435,7 @@ class StudentMainScreen extends QcParentScreen {
   }
 
   renderTopView() {
-    const { student, thisClassInfo, currentClass } = this.state;
+    const { student, studentClassInfo, currentClass } = this.state;
 
     return (
       <View style={styles.topView}>
@@ -457,7 +458,7 @@ class StudentMainScreen extends QcParentScreen {
               >
                 <Rating
                   readonly={true}
-                  startingValue={thisClassInfo.averageRating}
+                  startingValue={studentClassInfo.averageRating}
                   imageSize={25}
                 />
                 <View
@@ -467,9 +468,9 @@ class StudentMainScreen extends QcParentScreen {
                   }}
                 >
                   <Text style={fontStyles.bigTextStyleDarkGrey}>
-                    {thisClassInfo.averageRating === 0
+                    {studentClassInfo.averageRating === 0
                       ? ""
-                      : parseFloat(thisClassInfo.averageRating).toFixed(1)}
+                      : parseFloat(studentClassInfo.averageRating).toFixed(1)}
                   </Text>
                 </View>
               </View>
@@ -489,7 +490,7 @@ class StudentMainScreen extends QcParentScreen {
                 <Text style={fontStyles.mainTextStyleDarkGrey}>
                   {strings.TotalAssignments +
                     ": " +
-                    thisClassInfo.totalAssignments +
+                    studentClassInfo.totalAssignments +
                     "  "}
                 </Text>
               </View>
@@ -554,10 +555,12 @@ class StudentMainScreen extends QcParentScreen {
   }
 
   updateCurrentAssignmentStatus(value, index) {
-		const { currentClassID, userID } = this.state;
-		this.setState({ isReadyEnum: value.value });
+		const { currentClassID, studentClassInfo, userID } = this.state;
+    let updatedAssignments = studentClassInfo.currentAssignments;
+    updatedAssignments[index].isReadyEnum = value.value;
+		this.setState({ studentClassInfo: {...studentClassInfo, currentAssignments: updatedAssignments} });
 		FirebaseFunctions.updateStudentAssignmentStatus(currentClassID, userID, value.value, index);
-		if (value.value === 'READY') {
+		 if (value.value === 'READY') {
 			this.setState({ recordingUIVisible: true }, () => this.animateShowAudioUI());
 		} else {
 			if (this.state.recordingUIVisible) {
@@ -590,7 +593,7 @@ class StudentMainScreen extends QcParentScreen {
   renderAudioRecordingUI() {
     const {
       student,
-      thisClassInfo,
+      studentClassInfo,
       userID,
       currentClassID,
       recordingUIVisible
@@ -617,7 +620,7 @@ class StudentMainScreen extends QcParentScreen {
             <AudioPlayer
               image={studentImages.images[student.profileImageID]}
               reciter={student.name}
-              title={thisClassInfo.currentAssignment}
+              title={studentClassInfo.currentAssignment}
               isRecordMode={true}
               showSendCancel={true}
               onClose={() => {
@@ -693,7 +696,7 @@ class StudentMainScreen extends QcParentScreen {
 			<View>
 				{this.renderAssignmentsSectionHeader(strings.CurrentAssignment, 'book-open-outline')}
 				<FlatList
-					data={this.state.thisClassInfo.currentAssignments}
+					data={this.state.studentClassInfo.currentAssignments}
 					keyExtractor={(item, index) => item.name + index}
 					renderItem={({ item, index }) => {
 						return (
@@ -715,8 +718,7 @@ class StudentMainScreen extends QcParentScreen {
   }
   
   renderCurrentAssignmentCard() {
-    const { isReadyEnum, thisClassInfo } = this.state;
-
+    const {studentClassInfo, currentClassID, userID, student} = this.state;
     const customPickerOptions = [
       {
         label: strings.WorkingOnIt,
@@ -735,23 +737,6 @@ class StudentMainScreen extends QcParentScreen {
       }
     ];
 
-    let bgdClr =
-      isReadyEnum === "WORKING_ON_IT"
-        ? colors.workingOnItColorBrown
-        : isReadyEnum === "READY"
-        ? colors.green
-        : colors.red;
-
-      /* <CustomPicker
-          options={customPickerOptions}
-          onValueChange={value => this.updateCurrentAssignmentStatus(value)}
-          getLabel={item => item.label}
-          optionTemplate={settings =>
-            this.getCustomPickerOptionTemplate(settings)
-          }
-          fieldTemplate={() => this.getCustomPickerTemplate()}
-        /> */
-
     return (
       <View>
         {this.renderAssignmentsSectionHeader(
@@ -759,67 +744,101 @@ class StudentMainScreen extends QcParentScreen {
           "book-open-outline"
         )}
 
-        <View style={[styles.currentAssignment, { backgroundColor: bgdClr }]}>
-          <TouchableOpacity
-            onPress={() =>
-              this.props.navigation.push('MushafReadingScreen', {
-                isTeacher: false,
-                accountObject: this.state.student,
-                classID: this.state.classes[0].ID,
-                userID: this.state.userID,
-                studentID: this.state.userID,
-                assignmentDesc: thisClassInfo.currentAssignment,
-                assignmentLocation: thisClassInfo.currentAssignmentLocation,
-                assignmentType: thisClassInfo.currentAssignmentType,
-                currentClass: this.state.currentClass
-              })
+        <FlatList
+            style={{flexGrow: 0}}
+            extraData={this.state.studentClassInfo.currentAssignments}
+            data={this.state.studentClassInfo.currentAssignments}
+            keyExtractor={(item, index) =>
+              item.name + index + Math.random() * 10
             }
-          >
-            <View style={styles.middleView}>
-              <Text style={fontStyles.bigTextStyleBlack}>
-                {thisClassInfo.currentAssignmentType
-                  ? thisClassInfo.currentAssignmentType
-                  : strings.Memorize}
-              </Text>
-              <Text
+            renderItem={({ item, index }) => (
+              <View
                 style={[
-                  fontStyles.bigTextStyleBlack,
-                  { paddingTop: screenHeight * 0.04 }
+                  styles.currentAssignment,
+                  {
+                    backgroundColor:
+                      item.isReadyEnum === 'WORKING_ON_IT'
+                        ? colors.workingOnItColorBrown
+                        : item.isReadyEnum === 'READY'
+                        ? colors.green
+                        : item.isReadyEnum === 'NOT_STARTED'? colors.primaryVeryLight : colors.red
+                  }
                 ]}
               >
-                {thisClassInfo.currentAssignment.toUpperCase()}
-              </Text>
-            </View>
-            <View
-              style={{
-                justifyContent: "flex-start",
-                alignItems: "flex-end",
-                flexDirection: "row",
-                paddingLeft: screenWidth * 0.02
-              }}
-            >
-              <Text style={fontStyles.mainTextStylePrimaryDark}>
-                {isReadyEnum === "READY"
-                  ? strings.Ready
-                  : isReadyEnum === "WORKING_ON_IT"
-                  ? strings.WorkingOnIt
-                  : strings.NeedHelp}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+                <View style={styles.middleView}>
+                  <Text style={fontStyles.bigTextStyleBlack}>
+                    {item.type ? item.type : strings.Memorize}
+                  </Text>
+                  <Text
+                    style={[
+                      fontStyles.bigTextStyleBlack,
+                      { paddingTop: screenHeight * 0.04 },
+                    ]}
+                  >
+                    {item.name.toUpperCase()}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    paddingLeft: screenWidth * 0.02,
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <Text style={fontStyles.mainTextStylePrimaryDark}>
+                    {(item.isReadyEnum === 'READY') && strings.Ready}
+                    {(item.isReadyEnum === 'WORKING_ON_IT') && strings.WorkingOnIt}
+                    {(item.isReadyEnum === 'NOT_STARTED') && strings.NotStarted}
+                    {(item.isReadyEnum === 'NEED_HELP') && strings.NeedHelp}
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      paddingRight: screenWidth * 0.02,
+                      justifyContent: 'space-between'
+                    }}
+                  >
+                    <TouchableHighlight
+                      onPress={() => {
+                        this.props.navigation.push("MushafReadingScreen", {
+                          popOnClose: true,
+                          isTeacher: true,
+                          assignToAllClass: false,
+                          userID: this.props.navigation.state.params.userID,
+                          classID: currentClassID,
+                          studentID: userID,
+                          currentClass: studentClassInfo,
+                          assignmentLocation: item.location,
+                          assignmentType: item.type,
+                          assignmentName: item.name,
+                          assignmentIndex: index,
+                          imageID: studentClassInfo.profileImageID,
+                        });
+                      }}
+                    >
+                      <Text style={fontStyles.mainTextStylePrimaryDark}>
+                        {strings.OpenAssignment}
+                      </Text>
+                    </TouchableHighlight>
+                  </View>
+                </View>
+              </View>
+            )}
+          />
       </View>
     );
   }
 
   renderEmptyAssignmentCard() {
     return (
-      <View
-        style={{
-          ...styles.middleView,
-          backgroundColor: colors.primaryLight
-        }}
-      >
+       <View
+            style={[
+              styles.currentAssignment,
+              {
+                backgroundColor: colors.primaryVeryLight
+              }
+            ]}
+          >
         <View
           style={{
             flex: 0.5,
@@ -835,7 +854,7 @@ class StudentMainScreen extends QcParentScreen {
             {strings.YouDontHaveAssignments}
           </Text>
           <Text style={fontStyles.bigTextStyleBlack}>{"  "}</Text>
-          <Text style={fontStyles.mainTextStylePrimaryDark}>
+          <Text style={[fontStyles.mainTextStylePrimaryDark, {paddingBottom: 30}]}>
             {strings.EnjoyYourTime}
           </Text>
         </View>
@@ -851,8 +870,7 @@ class StudentMainScreen extends QcParentScreen {
       isLoading,
       student,
       currentClassID,
-      thisClassInfo,
-      isReadyEnum,
+      studentClassInfo,
       currentClass,
       classes,
       isOpen
@@ -873,8 +891,8 @@ class StudentMainScreen extends QcParentScreen {
 
     // show history from oldest to newest
     // todo: this should be managed at db to avoid cost of reversing the list every time we render the screen
-    let assignmentHistory = thisClassInfo.assignmentHistory
-      ? thisClassInfo.assignmentHistory.reverse()
+    let assignmentHistory = studentClassInfo.assignmentHistory
+      ? studentClassInfo.assignmentHistory.reverse()
       : null;
 
     // UI to show
@@ -896,7 +914,7 @@ class StudentMainScreen extends QcParentScreen {
       >
         <QCView style={screenStyle.container}>
           {this.renderTopView()}
-          {thisClassInfo.currentAssignment !== "None"
+          {(studentClassInfo.currentAssignments && studentClassInfo.currentAssignments.length !== 0)
             ? this.renderCurrentAssignmentCard()
             : this.renderEmptyAssignmentCard()}
           <View>
@@ -909,7 +927,7 @@ class StudentMainScreen extends QcParentScreen {
                 data={assignmentHistory}
                 keyExtractor={(item, index) => item.name + index}
                 renderItem={({ item, index }) => {
-                  return this.renderHistoryItem(item, index, thisClassInfo);
+                  return this.renderHistoryItem(item, index, studentClassInfo);
                 }}
               />
             </ScrollView>
@@ -969,16 +987,17 @@ const styles = StyleSheet.create({
 		borderRadius: (screenHeight * 0.1) / 2
 	},
 	currentAssignment: {
-		justifyContent: 'flex-end',
-		height: screenHeight * 0.16,
-		borderWidth: 0.5,
-		borderColor: colors.grey
-	},
-	middleView: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		paddingVertical: screenHeight * 0.0112
-	},
+    justifyContent: 'flex-end',
+    height: screenHeight * 0.16,
+    borderWidth: 0.5,
+    borderColor: colors.grey,
+    marginBottom: 5
+  },
+  middleView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: screenHeight * 0.0112
+  },
 	bottomView: {
 		flex: 3,
 		backgroundColor: colors.veryLightGrey

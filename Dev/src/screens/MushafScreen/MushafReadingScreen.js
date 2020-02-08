@@ -3,8 +3,33 @@ import PropTypes from "prop-types";
 import { View } from "react-native";
 import MushafScreen from "./MushafScreen";
 import { screenHeight, screenWidth } from "config/dimensions";
+import studentImages from "config/studentImages";
+
+const noAyahSelected = {
+  surah: 0,
+  page: 0,
+  ayah: 0
+};
+
+const noSelection = {
+  start: noAyahSelected,
+  end: noAyahSelected,
+  started: false,
+  completed: false
+};
 
 class MushafReadingScreen extends Component {
+  state = {
+    selection: this.props.navigation.state.params.assignmentLocation
+      ? {
+          start: this.props.navigation.state.params.assignmentLocation.start,
+          end: this.props.navigation.state.params.assignmentLocation.end,
+          started: false,
+          completed: true
+        }
+      : noSelection,
+  }
+
   closeScreen() {
     const {
       userID
@@ -18,7 +43,7 @@ class MushafReadingScreen extends Component {
   }
 
   onSelectAyah(selectedAyah){
-    alert(JSON.stringify(selectedAyah))
+    //todo: implement audio playback
   }
 
   render() {
@@ -30,14 +55,20 @@ class MushafReadingScreen extends Component {
       currentClass,
       studentID,
       classID,
+      imageID,
     } = this.props.navigation.state.params;
+
+    const {selection} = this.state;
+
+   
 
     return (
       <View style={{ width: screenWidth, height: screenHeight }}>
         <MushafScreen
-          userID={userID}
-          studentID={studentID}
+          assignToID={studentID}
           classID={classID}
+          profileImage={studentImages.images[imageID]}
+          selection={selection}
           assignmentName={assignmentName}
           assignmentLocation={assignmentLocation}
           assignmentType={assignmentType}
@@ -46,6 +77,7 @@ class MushafReadingScreen extends Component {
           onClose={this.closeScreen.bind(this)}
           currentClass={currentClass}
           onSelectAyah={this.onSelectAyah.bind(this)}
+          disableChangingUser={true}
         />
       </View>
     );

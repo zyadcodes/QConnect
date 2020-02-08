@@ -44,7 +44,7 @@ class PageHeader extends FontLoadingComponent {
   }
 
   onLeftImagePress() {
-    if (this.props.currentClass) {
+    if (this.props.currentClass && !this.props.disableChangingUser) {
       const { selectorModalVisible } = this.state;
       this.setState({ selectorModalVisible: !selectorModalVisible });
     }
