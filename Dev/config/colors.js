@@ -15,4 +15,5 @@ export default {
   darkestGrey: '#494949',
   darkBlue: "#065cf1",
   workingOnItColorBrown: "#EFDECC",
+  primaryVeryLight: "#F4EFEA"
 };

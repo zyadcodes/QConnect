@@ -134,7 +134,8 @@ class MushafAssignmentScreen extends Component {
     let assignment = {
       name: assignmentName,
       type: assignmentType,
-      location
+      location,
+      isReadyEnum: "NOT_STARTED",
     };
 
     //go back to student profile screen if invoked from there, otherwise go back to main screen
@@ -274,37 +275,41 @@ class MushafAssignmentScreen extends Component {
   ) {
     let assignmentLocation = { start: selection.start, end: selection.end };
 
-    FirebaseFunctions.updateStudentCurrentAssignment(
-      classID,
-      studentID,
-      newAssignmentName,
-      assignmentType,
-      assignmentLocation,
-      assignmentIndex //todo: handle new assignment, and delete assignment
-    );
-
     //update the current class object (so we can pass it to caller without having to re-render from firebase)
     let students = currentClass.students.map(student => {
       if (student.ID === studentID) {
-        let currentAssignments = [
-          {
+        if (isNewAssignment === true) {
+          student.currentAssignments.push({
             name: newAssignmentName,
             type: assignmentType,
             location: assignmentLocation,
-            isReadyEnum: "NOT_STARTED"
-          }
-        ];
-
-        return { ...student, currentAssignments };
-      } else {
-        return student;
+            isReadyEnum: 'NOT_STARTED'
+          });
+        } else {
+          const index = student.currentAssignments.findIndex(element => {
+            return (
+              element.name ===
+                this.props.navigation.state.params.assignmentName &&
+              element.type === this.props.navigation.state.params.assignmentType
+            );
+          });
+          student.currentAssignments[index] = {
+            name: newAssignmentName,
+            type: assignmentType,
+            location: assignmentLocation,
+            isReadyEnum: 'NOT_STARTED'
+          };
+        }
       }
+      return student;
     });
 
     let updatedClass = {
       ...currentClass,
       students
     };
+
+    FirebaseFunctions.updateClassObject(updatedClass.ID, updatedClass);
 
     this.setState(
       {

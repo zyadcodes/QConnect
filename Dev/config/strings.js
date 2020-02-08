@@ -26,6 +26,7 @@ export default {
   ClassAlreadyJoined:
     "We know it's exciting to be in this class. But you can only join it once.",
   NeedHelp: "NEED HELP",
+  NotStarted: "NOT STARTED",
   EnableMicPermissions:
     "You need to enable microphone permissions from your settings",
   SubmitAssignment: "Submit Assignment",
