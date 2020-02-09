@@ -1,7 +1,7 @@
 //This screen will be the main screen that will display for students as a landing page for when they first
 //sign up or log in
-import React from 'react';
-import QcParentScreen from '../QcParentScreen';
+import React from "react";
+import QcParentScreen from "../QcParentScreen";
 import {
   View,
   Text,
@@ -13,49 +13,48 @@ import {
   Modal,
   Alert,
   Animated,
-  TouchableHighlight
-} from "react-native";
-import { Icon } from "react-native-elements";
-import studentImages from "config/studentImages";
-import { Rating } from "react-native-elements";
-import colors from "config/colors";
-import strings from "config/strings";
-import TopBanner from "components/TopBanner";
-import FirebaseFunctions from "config/FirebaseFunctions";
-import QcActionButton from "components/QcActionButton";
-import LeftNavPane from "./LeftNavPane";
-import SideMenu from "react-native-side-menu";
-import LoadingSpinner from "components/LoadingSpinner";
-import { TextInput } from "react-native-gesture-handler";
-import QCView from "components/QCView";
-import screenStyle from "config/screenStyle";
-import fontStyles from "config/fontStyles";
-import { CustomPicker } from "react-native-custom-picker";
-import { screenHeight, screenWidth } from "config/dimensions";
-import AudioPlayer from "components/AudioPlayer/AudioPlayer";
+} from 'react-native';
+import { Icon } from 'react-native-elements';
+import studentImages from 'config/studentImages';
+import { Rating } from 'react-native-elements';
+import colors from 'config/colors';
+import strings from 'config/strings';
+import TopBanner from 'components/TopBanner';
+import FirebaseFunctions from 'config/FirebaseFunctions';
+import QcActionButton from 'components/QcActionButton';
+import LeftNavPane from './LeftNavPane';
+import SideMenu from 'react-native-side-menu';
+import LoadingSpinner from 'components/LoadingSpinner';
+import { TextInput } from 'react-native-gesture-handler';
+import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
+import fontStyles from 'config/fontStyles';
+import { CustomPicker } from 'react-native-custom-picker';
+import { screenHeight, screenWidth } from 'config/dimensions';
+import AudioPlayer from 'components/AudioPlayer/AudioPlayer';
 
 const translateY = new Animated.Value(-35);
 const opacity = new Animated.Value(0);
 const opacityInterpolate = opacity.interpolate({
-	inputRange: [0, 0.85, 1],
-	outputRange: [0, 0, 1]
+  inputRange: [0, 0.85, 1],
+  outputRange: [0, 0, 1],
 });
 
 class StudentMainScreen extends QcParentScreen {
   state = {
     isLoading: true,
-    student: "",
-    userID: "",
-    currentClass: "",
-    currentClassID: "",
-    studentClassInfo: "",
+    student: '',
+    userID: '',
+    currentClass: '',
+    currentClassID: '',
+    studentClassInfo: '',
     modalVisible: false,
     recordingUIVisible: false,
     noCurrentClass: false,
-    classCode: "",
-    classes: "",
+    classCode: '',
+    classes: '',
     isRecording: false,
-    currentPosition: "0:00"
+    currentPosition: '0:00'
   };
 
   //-------------- Component lifecycle methods -----------------------------------
@@ -65,23 +64,23 @@ class StudentMainScreen extends QcParentScreen {
 
     //Sets the screen name in firebase analytics
     FirebaseFunctions.setCurrentScreen(
-      "Student Main Screen",
-      "StudentMainScreen"
+      'Student Main Screen',
+      'StudentMainScreen'
     );
 
     const { userID } = this.props.navigation.state.params;
     const student = await FirebaseFunctions.getStudentByID(userID);
     const { currentClassID } = student;
-    
-    if (currentClassID === "") {
-      alert(JSON.stringify(currentClass))
+
+    if (currentClassID === '') {
+      alert(JSON.stringify(currentClass));
       this.setState({
         isLoading: false,
         noCurrentClass: true,
         student,
         userID,
         isOpen: false,
-        classes: []
+        classes: [],
       });
     } else {
       const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
@@ -97,7 +96,7 @@ class StudentMainScreen extends QcParentScreen {
         studentClassInfo,
         isLoading: false,
         isOpen: false,
-        classes
+        classes,
       });
     }
   }
@@ -127,10 +126,10 @@ class StudentMainScreen extends QcParentScreen {
         //Refetches the student object to reflect the updated database
         this.setState({
           isLoading: false,
-          modalVisible: false
+          modalVisible: false,
         });
-        this.props.navigation.push("StudentCurrentClass", {
-          userID
+        this.props.navigation.push('StudentCurrentClass', {
+          userID,
         });
       }
     }
@@ -177,28 +176,28 @@ class StudentMainScreen extends QcParentScreen {
             <TopBanner
               LeftIconName="navicon"
               LeftOnPress={() => this.setState({ isOpen: true })}
-              Title={"Quran Connect"}
+              Title={'Quran Connect'}
             />
           </View>
           <View
             style={{
               flex: 2,
-              justifyContent: "flex-start",
-              alignItems: "center",
-              alignSelf: "center"
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              alignSelf: 'center'
             }}
           >
             <Image
-              source={require("assets/emptyStateIdeas/ghostGif.gif")}
+              source={require('assets/emptyStateIdeas/ghostGif.gif')}
               style={{
                 width: screenWidth * 0.73,
                 height: screenHeight * 0.22,
-                resizeMode: "contain"
+                resizeMode: 'contain'
               }}
             />
 
             <Text
-              style={[fontStyles.bigTextStyleDarkGrey, { alignSelf: "center" }]}
+              style={[fontStyles.bigTextStyleDarkGrey, { alignSelf: 'center' }]}
             >
               {strings.HaventJoinedClassYet}
             </Text>
@@ -210,7 +209,7 @@ class StudentMainScreen extends QcParentScreen {
           </View>
           <Modal
             animationType="fade"
-            style={{ alignItems: "center", justifyContent: "center" }}
+            style={{ alignItems: 'center', justifyContent: 'center' }}
             transparent={true}
             presentationStyle="overFullScreen"
             visible={this.state.modalVisible}
@@ -218,10 +217,10 @@ class StudentMainScreen extends QcParentScreen {
           >
             <View
               style={{
-                justifyContent: "center",
-                alignItems: "center",
-                alignSelf: "center",
-                paddingTop: screenHeight / 3
+                justifyContent: 'center',
+                alignItems: 'center',
+                alignSelf: 'center',
+                paddingTop: screenHeight / 3,
               }}
             >
               <View style={styles.modal}>
@@ -234,8 +233,8 @@ class StudentMainScreen extends QcParentScreen {
                     <View
                       style={{
                         flex: 1,
-                        justifyContent: "center",
-                        alignItems: "center"
+                        justifyContent: 'center',
+                        alignItems: 'center'
                       }}
                     >
                       <Text style={fontStyles.mainTextStyleDarkGrey}>
@@ -245,17 +244,17 @@ class StudentMainScreen extends QcParentScreen {
                     <View
                       style={{
                         flex: 1,
-                        justifyContent: "center",
-                        alignItems: "center"
+                        justifyContent: 'center',
+                        alignItems: 'center'
                       }}
                     >
                       <TextInput
                         style={[
                           {
                             height: screenHeight * 0.07,
-                            paddingLeft: 0.017 * screenWidth
+                            paddingLeft: 0.017 * screenWidth,
                           },
-                          fontStyles.mainTextStyleDarkGrey
+                          fontStyles.mainTextStyleDarkGrey,
                         ]}
                         placeholder={strings.TypeInAClassCode}
                         autoCorrect={false}
@@ -265,9 +264,9 @@ class StudentMainScreen extends QcParentScreen {
                     </View>
                     <View
                       style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        flex: 1
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        flex: 1,
                       }}
                     >
                       <QcActionButton
@@ -300,7 +299,7 @@ class StudentMainScreen extends QcParentScreen {
       <TouchableOpacity
         onPress={() => {
           //To-Do: Navigates to more specific evaluation for this assignment
-          this.props.navigation.push("EvaluationPage", {
+          this.props.navigation.push('EvaluationPage', {
             classID: this.state.currentClassID,
             studentID: this.state.userID,
             studentClassInfo: studentClassInfo,
@@ -314,23 +313,23 @@ class StudentMainScreen extends QcParentScreen {
             isStudentSide: true,
             evaluationID: item.ID,
             readOnly: true,
-            newAssignment: false
+            newAssignment: false,
           });
         }}
       >
         <View style={styles.prevAssignmentCard} key={index}>
           <View
             style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center"
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center'
             }}
           >
             <View
               style={{
                 flex: 3,
-                justifyContent: "center",
-                alignItems: "flex-start"
+                justifyContent: 'center',
+                alignItems: 'flex-start'
               }}
             >
               <Text style={fontStyles.mainTextStylePrimaryDark}>
@@ -339,9 +338,9 @@ class StudentMainScreen extends QcParentScreen {
             </View>
             <View
               style={{
-                alignItems: "center",
-                justifyContent: "center",
-                flex: 3
+                alignItems: 'center',
+                justifyContent: 'center',
+                flex: 3,
               }}
             >
               <Text
@@ -357,8 +356,8 @@ class StudentMainScreen extends QcParentScreen {
                           item.assignmentType === strings.Memorize ||
                           item.assignmentType == null
                         ? colors.darkGreen
-                        : colors.darkishGrey
-                  }
+                        : colors.darkishGrey,
+                  },
                 ]}
               >
                 {item.assignmentType ? item.assignmentType : strings.Memorize}
@@ -367,8 +366,8 @@ class StudentMainScreen extends QcParentScreen {
             <View
               style={{
                 flex: 3,
-                justifyContent: "center",
-                alignItems: "flex-end"
+                justifyContent: 'center',
+                alignItems: 'flex-end'
               }}
             >
               <Rating
@@ -380,8 +379,8 @@ class StudentMainScreen extends QcParentScreen {
           </View>
           <View
             style={{
-              alignItems: "center",
-              justifyContent: "center"
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
           >
             <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>
@@ -390,7 +389,7 @@ class StudentMainScreen extends QcParentScreen {
           </View>
           {item.evaluation.notes ? (
             <Text numberOfLines={2} style={fontStyles.smallTextStyleDarkGrey}>
-              {"Notes: " + item.evaluation.notes}
+              {'Notes: ' + item.evaluation.notes}
             </Text>
           ) : (
             <View />
@@ -399,9 +398,9 @@ class StudentMainScreen extends QcParentScreen {
           item.evaluation.improvementAreas.length > 0 ? (
             <View
               style={{
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                height: screenHeight * 0.03
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                height: screenHeight * 0.03,
               }}
             >
               <Text style={fontStyles.smallTextStyleDarkGrey}>
@@ -410,7 +409,7 @@ class StudentMainScreen extends QcParentScreen {
               {item.evaluation.improvementAreas.map((tag, cnt) => {
                 return (
                   <Text key={tag}>
-                    {cnt > 0 ? ", " : ""}
+                    {cnt > 0 ? ', ' : ''}
                     {tag}
                   </Text>
                 );
@@ -452,8 +451,8 @@ class StudentMainScreen extends QcParentScreen {
               </Text>
               <View
                 style={{
-                  flexDirection: "row",
-                  height: screenHeight * 0.04
+                  flexDirection: 'row',
+                  height: screenHeight * 0.04,
                 }}
               >
                 <Rating
@@ -463,13 +462,13 @@ class StudentMainScreen extends QcParentScreen {
                 />
                 <View
                   style={{
-                    flexDirection: "column",
-                    justifyContent: "center"
+                    flexDirection: 'column',
+                    justifyContent: 'center'
                   }}
                 >
                   <Text style={fontStyles.bigTextStyleDarkGrey}>
                     {studentClassInfo.averageRating === 0
-                      ? ""
+                      ? ''
                       : parseFloat(studentClassInfo.averageRating).toFixed(1)}
                   </Text>
                 </View>
@@ -482,16 +481,16 @@ class StudentMainScreen extends QcParentScreen {
           <View style={styles.profileInfoBottom}>
             <View
               style={{
-                justifyContent: "space-between",
-                flexDirection: "column"
+                justifyContent: 'space-between',
+                flexDirection: 'column'
               }}
             >
-              <View style={{ alignSelf: "flex-start" }}>
+              <View style={{ alignSelf: 'flex-start' }}>
                 <Text style={fontStyles.mainTextStyleDarkGrey}>
                   {strings.TotalAssignments +
-                    ": " +
+                    ': ' +
                     studentClassInfo.totalAssignments +
-                    "  "}
+                    '  '}
                 </Text>
               </View>
             </View>
@@ -514,69 +513,88 @@ class StudentMainScreen extends QcParentScreen {
   }
 
   getCustomPickerTemplate(item) {
-		return (
-			<View
-				style={[
-					styles.currentAssignment,
-					{
-						backgroundColor:
-							item.isReadyEnum === 'WORKING_ON_IT'
-								? colors.workingOnItColorBrown
-								: item.isReadyEnum === 'READY'
-								? colors.green
-								: colors.red
-					}
-				]}>
-				<View style={styles.middleView}>
-					<Text style={fontStyles.bigTextStyleBlack}>
-						{item.type ? item.type : strings.Memorize}
-					</Text>
-					<Text style={[fontStyles.bigTextStyleBlack, { paddingTop: screenHeight * 0.04 }]}>
-						{item.name.toUpperCase()}
-					</Text>
-				</View>
-				<View
-					style={{
-						justifyContent: 'flex-start',
-						alignItems: 'flex-end',
-						flexDirection: 'row',
-						paddingLeft: screenWidth * 0.02
-					}}>
-					<Text style={fontStyles.mainTextStylePrimaryDark}>
-						{item.isReadyEnum === 'READY'
-							? strings.Ready
-							: item.isReadyEnum === 'WORKING_ON_IT'
-							? strings.WorkingOnIt
-							: strings.NeedHelp}
-					</Text>
-				</View>
-			</View>
-		);
+    return (
+      <View
+        style={[
+          styles.currentAssignment,
+          {
+            backgroundColor:
+              item.isReadyEnum === "WORKING_ON_IT"
+                ? colors.workingOnItColorBrown
+                : item.isReadyEnum === "READY"
+                ? colors.green
+                : colors.red,
+          },
+        ]}
+      >
+        <View style={styles.middleView}>
+          <Text style={fontStyles.bigTextStyleBlack}>
+            {item.type ? item.type : strings.Memorize}
+          </Text>
+          <Text
+            style={[
+              fontStyles.bigTextStyleBlack,
+              { paddingTop: screenHeight * 0.04 }
+            ]}
+          >
+            {item.name.toUpperCase()}
+          </Text>
+        </View>
+        <View
+          style={{
+            justifyContent: "flex-start",
+            alignItems: "flex-end",
+            flexDirection: "row",
+            paddingLeft: screenWidth * 0.02,
+          }}
+        >
+          <Text style={fontStyles.mainTextStylePrimaryDark}>
+            {item.isReadyEnum === "READY"
+              ? strings.Ready
+              : item.isReadyEnum === "WORKING_ON_IT"
+              ? strings.WorkingOnIt
+              : strings.NeedHelp}
+          </Text>
+        </View>
+      </View>
+    );
   }
 
   updateCurrentAssignmentStatus(value, index) {
-		const { currentClassID, studentClassInfo, userID } = this.state;
+    const { currentClassID, studentClassInfo, userID } = this.state;
     let updatedAssignments = studentClassInfo.currentAssignments;
     updatedAssignments[index].isReadyEnum = value.value;
-		this.setState({ studentClassInfo: {...studentClassInfo, currentAssignments: updatedAssignments} });
-		FirebaseFunctions.updateStudentAssignmentStatus(currentClassID, userID, value.value, index);
-		 if (value.value === 'READY') {
-			this.setState({ recordingUIVisible: true }, () => this.animateShowAudioUI());
-		} else {
-			if (this.state.recordingUIVisible) {
-				this.animateHideAudioUI();
-			}
-			this.setState({ recordingUIVisible: false });
-		}
+    this.setState({
+      studentClassInfo: {
+        ...studentClassInfo,
+        currentAssignments: updatedAssignments
+      }
+    });
+    FirebaseFunctions.updateStudentAssignmentStatus(
+      currentClassID,
+      userID,
+      value.value,
+      index
+    );
+    if (value.value === "READY") {
+      this.setState({ recordingUIVisible: true }, () =>
+        this.animateShowAudioUI()
+      );
+    } else {
+      if (this.state.recordingUIVisible) {
+        this.animateHideAudioUI();
+      }
+      this.setState({ recordingUIVisible: false });
+    }
   }
 
   animateShowAudioUI() {
     Animated.parallel([
       Animated.timing(translateY, {
         toValue: 0,
-        duration: 1000
+        duration: 1000,
       }),
-      Animated.timing(opacity, { toValue: 1 })
+      Animated.timing(opacity, { toValue: 1 }),
     ]).start();
   }
 
@@ -584,9 +602,9 @@ class StudentMainScreen extends QcParentScreen {
     Animated.parallel([
       Animated.timing(translateY, {
         toValue: -35,
-        duration: 300
+        duration: 300,
       }),
-      Animated.timing(opacity, { toValue: 0 })
+      Animated.timing(opacity, { toValue: 0 }),
     ]).start(() => this.setState({ recordingUIVisible: false }));
   }
 
@@ -596,12 +614,12 @@ class StudentMainScreen extends QcParentScreen {
       studentClassInfo,
       userID,
       currentClassID,
-      recordingUIVisible
+      recordingUIVisible,
     } = this.state;
 
     const transformStyle = {
       transform: [{ translateY }],
-      opacity: opacityInterpolate,
+      opacity: opacityInterpolate
     };
 
     return (
@@ -610,11 +628,11 @@ class StudentMainScreen extends QcParentScreen {
           <Animated.View
             style={[
               {
-                justifyContent: "flex-start",
-                alignItems: "center",
-                alignSelf: "flex-start"
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+                alignSelf: 'flex-start'
               },
-              transformStyle
+              transformStyle,
             ]}
           >
             <AudioPlayer
@@ -649,11 +667,11 @@ class StudentMainScreen extends QcParentScreen {
     return (
       <View
         style={{
-          alignItems: "center",
+          alignItems: 'center',
           marginLeft: screenWidth * 0.017,
-          flexDirection: "row",
+          flexDirection: 'row',
           paddingTop: screenHeight * 0.007,
-          paddingBottom: screenHeight * 0.019
+          paddingBottom: screenHeight * 0.019,
         }}
       >
         <Icon
@@ -664,7 +682,7 @@ class StudentMainScreen extends QcParentScreen {
         <Text
           style={[
             { marginLeft: screenWidth * 0.017 },
-            fontStyles.mainTextStyleDarkGrey
+            fontStyles.mainTextStyleDarkGrey,
           ]}
         >
           {label.toUpperCase()}
@@ -673,68 +691,23 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 
-  renderCurrentAssignmentCards() {
-		const customPickerOptions = [
-			{
-				label: strings.WorkingOnIt,
-				value: 'WORKING_ON_IT',
-				color: colors.workingOnItColorBrown
-			},
-			{
-				label: strings.Ready,
-				value: 'READY',
-				color: colors.green
-			},
-			{
-				label: strings.NeedHelp,
-				value: 'NEED_HELP',
-				color: colors.red
-			}
-		];
-
-		return (
-			<View>
-				{this.renderAssignmentsSectionHeader(strings.CurrentAssignment, 'book-open-outline')}
-				<FlatList
-					data={this.state.studentClassInfo.currentAssignments}
-					keyExtractor={(item, index) => item.name + index}
-					renderItem={({ item, index }) => {
-						return (
-							<View>
-								<CustomPicker
-									options={customPickerOptions}
-									onValueChange={(value) => this.updateCurrentAssignmentStatus(value, index)}
-									getLabel={(item) => item.label}
-									optionTemplate={(settings) => this.getCustomPickerOptionTemplate(settings)}
-									fieldTemplate={() => this.getCustomPickerTemplate(item)}
-								/>
-								{this.renderAudioRecordingUI()}
-							</View>
-						);
-					}}
-				/>
-			</View>
-		);
-  }
-  
-  renderCurrentAssignmentCard() {
-    const {studentClassInfo, currentClassID, userID, student} = this.state;
+  OldRenderCurrentAssignmentCards() {
     const customPickerOptions = [
       {
         label: strings.WorkingOnIt,
         value: "WORKING_ON_IT",
-        color: colors.workingOnItColorBrown
+        color: colors.workingOnItColorBrown,
       },
       {
         label: strings.Ready,
         value: "READY",
-        color: colors.green
+        color: colors.green,
       },
       {
         label: strings.NeedHelp,
         value: "NEED_HELP",
-        color: colors.red
-      }
+        color: colors.red,
+      },
     ];
 
     return (
@@ -743,108 +716,171 @@ class StudentMainScreen extends QcParentScreen {
           strings.CurrentAssignment,
           "book-open-outline"
         )}
+        <FlatList
+          data={this.state.studentClassInfo.currentAssignments}
+          keyExtractor={(item, index) => item.name + index}
+          renderItem={({ item, index }) => {
+            return (
+              <View>
+                <CustomPicker
+                  options={customPickerOptions}
+                  onValueChange={value =>
+                    this.updateCurrentAssignmentStatus(value, index)
+                  }
+                  getLabel={item => item.label}
+                  optionTemplate={settings =>
+                    this.getCustomPickerOptionTemplate(settings)
+                  }
+                  fieldTemplate={() => this.getCustomPickerTemplate(item)}
+                />
+                {this.renderAudioRecordingUI()}
+              </View>
+            );
+          }}
+        />
+      </View>
+    );
+  }
+
+  renderCurrentAssignmentCard(item, index) {
+    const { studentClassInfo, currentClassID, userID, student } = this.state;
+    const customPickerOptions = [
+      {
+        label: strings.WorkingOnIt,
+        value: 'WORKING_ON_IT',
+        color: colors.workingOnItColorBrown,
+      },
+      {
+        label: strings.Ready,
+        value: 'READY',
+        color: colors.green,
+      },
+      {
+        label: strings.NeedHelp,
+        value: 'NEED_HELP',
+        color: colors.red,
+      },
+      {
+        label: strings.NotStarted,
+        value: 'NOT_STARTED',
+        color: colors.primaryVeryLight,
+      },
+    ];
+
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          this.props.navigation.push('MushafReadingScreen', {
+            popOnClose: true,
+            isTeacher: true,
+            assignToAllClass: false,
+            userID: this.props.navigation.state.params.userID,
+            classID: currentClassID,
+            studentID: userID,
+            currentClass: studentClassInfo,
+            assignmentLocation: item.location,
+            assignmentType: item.type,
+            assignmentName: item.name,
+            assignmentIndex: index,
+            imageID: studentClassInfo.profileImageID
+          });
+        }}
+      >
+        <View
+          style={[
+            styles.currentAssignment,
+            {
+              backgroundColor:
+                item.isReadyEnum === "WORKING_ON_IT"
+                  ? colors.workingOnItColorBrown
+                  : item.isReadyEnum === "READY"
+                  ? colors.green
+                  : item.isReadyEnum === "NOT_STARTED"
+                  ? colors.primaryVeryLight
+                  : colors.red
+            }
+          ]}
+        >
+          <View style={styles.middleView}>
+            <Text style={fontStyles.bigTextStyleBlack}>
+              {item.type ? item.type : strings.Memorize}
+            </Text>
+            <Text
+              style={[
+                fontStyles.bigTextStyleBlack,
+                { paddingTop: screenHeight * 0.04 }
+              ]}
+            >
+              {item.name.toUpperCase()}
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              paddingLeft: screenWidth * 0.02,
+              justifyContent: "space-between"
+            }}
+          >
+            <Text style={fontStyles.mainTextStylePrimaryDark}>
+              {item.isReadyEnum === "READY" && strings.Ready}
+              {item.isReadyEnum === "WORKING_ON_IT" && strings.WorkingOnIt}
+              {item.isReadyEnum === "NOT_STARTED" && strings.NotStarted}
+              {item.isReadyEnum === "NEED_HELP" && strings.NeedHelp}
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                paddingRight: screenWidth * 0.02,
+                justifyContent: "space-between"
+              }}
+            >
+              <Text style={fontStyles.mainTextStylePrimaryDark}>
+                {strings.OpenAssignment}
+              </Text>
+            </View>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+  renderCurrentAssignmentCards() {
+    return (
+      <View>
+        {this.renderAssignmentsSectionHeader(
+          strings.CurrentAssignment,
+          'book-open-outline'
+        )}
 
         <FlatList
-            style={{flexGrow: 0}}
-            extraData={this.state.studentClassInfo.currentAssignments}
-            data={this.state.studentClassInfo.currentAssignments}
-            keyExtractor={(item, index) =>
-              item.name + index + Math.random() * 10
-            }
-            renderItem={({ item, index }) => (
-              <View
-                style={[
-                  styles.currentAssignment,
-                  {
-                    backgroundColor:
-                      item.isReadyEnum === 'WORKING_ON_IT'
-                        ? colors.workingOnItColorBrown
-                        : item.isReadyEnum === 'READY'
-                        ? colors.green
-                        : item.isReadyEnum === 'NOT_STARTED'? colors.primaryVeryLight : colors.red
-                  }
-                ]}
-              >
-                <View style={styles.middleView}>
-                  <Text style={fontStyles.bigTextStyleBlack}>
-                    {item.type ? item.type : strings.Memorize}
-                  </Text>
-                  <Text
-                    style={[
-                      fontStyles.bigTextStyleBlack,
-                      { paddingTop: screenHeight * 0.04 },
-                    ]}
-                  >
-                    {item.name.toUpperCase()}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    paddingLeft: screenWidth * 0.02,
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <Text style={fontStyles.mainTextStylePrimaryDark}>
-                    {(item.isReadyEnum === 'READY') && strings.Ready}
-                    {(item.isReadyEnum === 'WORKING_ON_IT') && strings.WorkingOnIt}
-                    {(item.isReadyEnum === 'NOT_STARTED') && strings.NotStarted}
-                    {(item.isReadyEnum === 'NEED_HELP') && strings.NeedHelp}
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      paddingRight: screenWidth * 0.02,
-                      justifyContent: 'space-between'
-                    }}
-                  >
-                    <TouchableHighlight
-                      onPress={() => {
-                        this.props.navigation.push("MushafReadingScreen", {
-                          popOnClose: true,
-                          isTeacher: true,
-                          assignToAllClass: false,
-                          userID: this.props.navigation.state.params.userID,
-                          classID: currentClassID,
-                          studentID: userID,
-                          currentClass: studentClassInfo,
-                          assignmentLocation: item.location,
-                          assignmentType: item.type,
-                          assignmentName: item.name,
-                          assignmentIndex: index,
-                          imageID: studentClassInfo.profileImageID,
-                        });
-                      }}
-                    >
-                      <Text style={fontStyles.mainTextStylePrimaryDark}>
-                        {strings.OpenAssignment}
-                      </Text>
-                    </TouchableHighlight>
-                  </View>
-                </View>
-              </View>
-            )}
-          />
+          style={{ flexGrow: 0 }}
+          extraData={this.state.studentClassInfo.currentAssignments}
+          data={this.state.studentClassInfo.currentAssignments}
+          keyExtractor={(item, index) => item.name + index + Math.random() * 10}
+          renderItem={({ item, index }) =>
+            this.renderCurrentAssignmentCard(item, index)
+          }
+        />
       </View>
     );
   }
 
   renderEmptyAssignmentCard() {
     return (
-       <View
-            style={[
-              styles.currentAssignment,
-              {
-                backgroundColor: colors.primaryVeryLight
-              }
-            ]}
-          >
+      <View
+        style={[
+          styles.currentAssignment,
+          {
+            backgroundColor: colors.primaryVeryLight,
+          },
+        ]}
+      >
         <View
           style={{
             flex: 0.5,
-            justifyContent: "center",
-            alignItems: "center",
-            paddingVertical: screenHeight * 0.04
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingVertical: screenHeight * 0.04,
           }}
         >
           <Text style={fontStyles.bigTextStyleBlack}>
@@ -853,8 +889,10 @@ class StudentMainScreen extends QcParentScreen {
           <Text style={fontStyles.mainTextStyleBlack}>
             {strings.YouDontHaveAssignments}
           </Text>
-          <Text style={fontStyles.bigTextStyleBlack}>{"  "}</Text>
-          <Text style={[fontStyles.mainTextStylePrimaryDark, {paddingBottom: 30}]}>
+          <Text style={fontStyles.bigTextStyleBlack}>{'  '}</Text>
+          <Text
+            style={[fontStyles.mainTextStylePrimaryDark, { paddingBottom: 30 }]}
+          >
             {strings.EnjoyYourTime}
           </Text>
         </View>
@@ -873,12 +911,12 @@ class StudentMainScreen extends QcParentScreen {
       studentClassInfo,
       currentClass,
       classes,
-      isOpen
+      isOpen,
     } = this.state;
     if (isLoading === true) {
       return (
         <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
         >
           <LoadingSpinner isVisible={true} />
         </View>
@@ -914,14 +952,15 @@ class StudentMainScreen extends QcParentScreen {
       >
         <QCView style={screenStyle.container}>
           {this.renderTopView()}
-          {(studentClassInfo.currentAssignments && studentClassInfo.currentAssignments.length !== 0)
-            ? this.renderCurrentAssignmentCard()
+          {studentClassInfo.currentAssignments &&
+          studentClassInfo.currentAssignments.length !== 0
+            ? this.renderCurrentAssignmentCards()
             : this.renderEmptyAssignmentCard()}
           <View>
             <ScrollView>
               {this.renderAssignmentsSectionHeader(
                 strings.PastAssignments,
-                "history"
+                'history'
               )}
               <FlatList
                 data={assignmentHistory}
@@ -941,111 +980,111 @@ class StudentMainScreen extends QcParentScreen {
 //------------------ Component styles ----------------------------
 //Styles for the entire container along with the top banner
 const styles = StyleSheet.create({
-	topView: {
-		flexDirection: 'column',
-		backgroundColor: colors.veryLightGrey
-	},
-	profileInfoTop: {
-		paddingHorizontal: screenWidth * 0.024,
-		paddingTop: screenHeight * 0.015,
-		flexDirection: 'row',
-		height: screenHeight * 0.125,
-		borderBottomColor: colors.lightGrey,
-		borderBottomWidth: 1
-	},
-	profileInfoTopRight: {
-		flexDirection: 'column',
-		alignItems: 'flex-start',
-		paddingLeft: screenWidth * 0.075,
-		paddingBottom: screenHeight * 0.007
-	},
-	innerContainer: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		backgroundColor: colors.grey
-	},
-	optionContainer: {
-		backgroundColor: colors.grey,
-		height: screenHeight * 0.08,
-		justifyContent: 'center',
-		paddingLeft: screenWidth * 0.25
-	},
-	box: {
-		width: screenWidth * 0.049,
-		height: screenHeight * 0.03,
-		marginRight: screenWidth * 0.024
-	},
-	profileInfoBottom: {
-		flexDirection: 'row',
-		paddingHorizontal: screenWidth * 0.024,
-		borderBottomColor: colors.grey,
-		borderBottomWidth: 1
-	},
-	profilePic: {
-		width: screenHeight * 0.1,
-		height: screenHeight * 0.1,
-		borderRadius: (screenHeight * 0.1) / 2
-	},
-	currentAssignment: {
-    justifyContent: 'flex-end',
+  topView: {
+    flexDirection: "column",
+    backgroundColor: colors.veryLightGrey,
+  },
+  profileInfoTop: {
+    paddingHorizontal: screenWidth * 0.024,
+    paddingTop: screenHeight * 0.015,
+    flexDirection: "row",
+    height: screenHeight * 0.125,
+    borderBottomColor: colors.lightGrey,
+    borderBottomWidth: 1,
+  },
+  profileInfoTopRight: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    paddingLeft: screenWidth * 0.075,
+    paddingBottom: screenHeight * 0.007,
+  },
+  innerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.grey,
+  },
+  optionContainer: {
+    backgroundColor: colors.grey,
+    height: screenHeight * 0.08,
+    justifyContent: "center",
+    paddingLeft: screenWidth * 0.25,
+  },
+  box: {
+    width: screenWidth * 0.049,
+    height: screenHeight * 0.03,
+    marginRight: screenWidth * 0.024,
+  },
+  profileInfoBottom: {
+    flexDirection: "row",
+    paddingHorizontal: screenWidth * 0.024,
+    borderBottomColor: colors.grey,
+    borderBottomWidth: 1,
+  },
+  profilePic: {
+    width: screenHeight * 0.1,
+    height: screenHeight * 0.1,
+    borderRadius: (screenHeight * 0.1) / 2,
+  },
+  currentAssignment: {
+    justifyContent: "flex-end",
     height: screenHeight * 0.16,
     borderWidth: 0.5,
     borderColor: colors.grey,
-    marginBottom: 5
+    marginBottom: 5,
   },
   middleView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: screenHeight * 0.0112
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: screenHeight * 0.0112,
   },
-	bottomView: {
-		flex: 3,
-		backgroundColor: colors.veryLightGrey
-	},
-	prevAssignmentCard: {
-		flexDirection: 'column',
-		paddingHorizontal: screenWidth * 0.008,
-		paddingBottom: screenHeight * 0.019,
-		marginBottom: screenHeight * 0.009,
-		borderColor: colors.grey,
-		borderWidth: screenHeight * 0.13 * 0.0066,
-		backgroundColor: colors.white
-	},
-	profileInfo: {
-		flexDirection: 'column',
-		backgroundColor: colors.white
-	},
-	corner: {
-		borderColor: '#D0D0D0',
-		borderWidth: 1,
-		borderRadius: 3,
-		justifyContent: 'center',
-		alignItems: 'center',
-		paddingHorizontal: screenWidth * 0.012,
-		marginRight: screenWidth * 0.015,
-		marginTop: screenHeight * 0.007
-	},
-	prevAssignments: {
-		flexDirection: 'column',
-		backgroundColor: colors.veryLightGrey,
-		flex: 1
-	},
-	modal: {
-		backgroundColor: colors.white,
-		alignItems: 'center',
-		justifyContent: 'center',
-		flexDirection: 'column',
-		height: screenHeight * 0.25,
-		width: screenWidth * 0.75,
-		borderWidth: screenHeight * 0.003,
-		borderRadius: screenHeight * 0.003,
-		borderColor: colors.grey,
-		shadowColor: colors.darkGrey,
-		shadowOffset: { width: 0, height: screenHeight * 0.003 },
-		shadowOpacity: 0.8,
-		shadowRadius: screenHeight * 0.0045,
-		elevation: screenHeight * 0.003
-	}
+  bottomView: {
+    flex: 3,
+    backgroundColor: colors.veryLightGrey,
+  },
+  prevAssignmentCard: {
+    flexDirection: "column",
+    paddingHorizontal: screenWidth * 0.008,
+    paddingBottom: screenHeight * 0.019,
+    marginBottom: screenHeight * 0.009,
+    borderColor: colors.grey,
+    borderWidth: screenHeight * 0.13 * 0.0066,
+    backgroundColor: colors.white,
+  },
+  profileInfo: {
+    flexDirection: "column",
+    backgroundColor: colors.white,
+  },
+  corner: {
+    borderColor: "#D0D0D0",
+    borderWidth: 1,
+    borderRadius: 3,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: screenWidth * 0.012,
+    marginRight: screenWidth * 0.015,
+    marginTop: screenHeight * 0.007,
+  },
+  prevAssignments: {
+    flexDirection: "column",
+    backgroundColor: colors.veryLightGrey,
+    flex: 1,
+  },
+  modal: {
+    backgroundColor: colors.white,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+    height: screenHeight * 0.25,
+    width: screenWidth * 0.75,
+    borderWidth: screenHeight * 0.003,
+    borderRadius: screenHeight * 0.003,
+    borderColor: colors.grey,
+    shadowColor: colors.darkGrey,
+    shadowOffset: { width: 0, height: screenHeight * 0.003 },
+    shadowOpacity: 0.8,
+    shadowRadius: screenHeight * 0.0045,
+    elevation: screenHeight * 0.003,
+  },
 });
 
 export default StudentMainScreen;
