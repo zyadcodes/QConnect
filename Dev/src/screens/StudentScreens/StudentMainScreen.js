@@ -568,16 +568,17 @@ class StudentMainScreen extends QcParentScreen {
 
     this.refs.toast.show(toastMsg, DURATION.LENGTH_LONG);
 
-    if (value.value === "READY") {
-      this.setState({ recordingUIVisible: true }, () =>
-        this.animateShowAudioUI()
-      );
-    } else {
-      if (this.state.recordingUIVisible) {
-        this.animateHideAudioUI();
-      }
-      this.setState({ recordingUIVisible: false });
-    }
+    // for now we disable the recording until fully tested.. we will re-enable in the next pr
+    // if (value.value === "READY") {
+    //   this.setState({ recordingUIVisible: true }, () =>
+    //     this.animateShowAudioUI()
+    //   );
+    // } else {
+    //   if (this.state.recordingUIVisible) {
+    //     this.animateHideAudioUI();
+    //   }
+    //   this.setState({ recordingUIVisible: false });
+    // }
   }
 
   animateShowAudioUI() {
@@ -637,6 +638,7 @@ class StudentMainScreen extends QcParentScreen {
                 this.animateHideAudioUI();
               }}
               onSend={recordedFileUri => {
+                alert("called...")
                 this.setState({ recordedFileUri: recordedFileUri });
                 FirebaseFunctions.submitRecordingAudio(
                   recordedFileUri,
@@ -709,67 +711,70 @@ class StudentMainScreen extends QcParentScreen {
     ];
 
     return (
-      <View
-        style={[
-          styles.currentAssignment,
-          {
-            backgroundColor:
-              item.isReadyEnum === "WORKING_ON_IT"
-                ? colors.workingOnItColorBrown
-                : item.isReadyEnum === "READY"
-                ? colors.green
-                : item.isReadyEnum === "NOT_STARTED"
-                ? colors.primaryVeryLight
-                : colors.red
-          }
-        ]}
-      >
-        <TouchableOpacity
-          onPress={() => {
-            this.props.navigation.push('MushafReadingScreen', {
-              popOnClose: true,
-              isTeacher: true,
-              assignToAllClass: false,
-              userID: this.props.navigation.state.params.userID,
-              classID: currentClassID,
-              studentID: userID,
-              currentClass: studentClassInfo,
-              assignmentLocation: item.location,
-              assignmentType: item.type,
-              assignmentName: item.name,
-              assignmentIndex: index,
-              imageID: studentClassInfo.profileImageID
-            });
-          }}
+      <View>
+        <View
+          style={[
+            styles.currentAssignment,
+            {
+              backgroundColor:
+                item.isReadyEnum === "WORKING_ON_IT"
+                  ? colors.workingOnItColorBrown
+                  : item.isReadyEnum === "READY"
+                  ? colors.green
+                  : item.isReadyEnum === "NOT_STARTED"
+                  ? colors.primaryVeryLight
+                  : colors.red
+            }
+          ]}
         >
-          <View>
-            <View style={styles.middleView}>
-              <Text style={fontStyles.bigTextStyleBlack}>
-                {item.type ? item.type : strings.Memorize}
-              </Text>
-              <Text
-                style={[
-                  fontStyles.bigTextStyleBlack,
-                  { paddingTop: screenHeight * 0.04 }
-                ]}
-              >
-                {item.name.toUpperCase()}
-              </Text>
+          <TouchableOpacity
+            onPress={() => {
+              this.props.navigation.push('MushafReadingScreen', {
+                popOnClose: true,
+                isTeacher: true,
+                assignToAllClass: false,
+                userID: this.props.navigation.state.params.userID,
+                classID: currentClassID,
+                studentID: userID,
+                currentClass: studentClassInfo,
+                assignmentLocation: item.location,
+                assignmentType: item.type,
+                assignmentName: item.name,
+                assignmentIndex: index,
+                imageID: studentClassInfo.profileImageID
+              });
+            }}
+          >
+            <View>
+              <View style={styles.middleView}>
+                <Text style={fontStyles.bigTextStyleBlack}>
+                  {item.type ? item.type : strings.Memorize}
+                </Text>
+                <Text
+                  style={[
+                    fontStyles.bigTextStyleBlack,
+                    { paddingTop: screenHeight * 0.04 }
+                  ]}
+                >
+                  {item.name.toUpperCase()}
+                </Text>
+              </View>
             </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
 
-        <CustomPicker
-          options={customPickerOptions}
-          onValueChange={value =>
-            this.updateCurrentAssignmentStatus(value, index)
-          }
-          getLabel={item => item.label}
-          optionTemplate={settings =>
-            this.getCustomPickerOptionTemplate(settings)
-          }
-          fieldTemplate={() => this.getCustomPickerTemplate(item)}
-        />
+          <CustomPicker
+            options={customPickerOptions}
+            onValueChange={value =>
+              this.updateCurrentAssignmentStatus(value, index)
+            }
+            getLabel={item => item.label}
+            optionTemplate={settings =>
+              this.getCustomPickerOptionTemplate(settings)
+            }
+            fieldTemplate={() => this.getCustomPickerTemplate(item)}
+          />
+        </View>
+        {this.renderAudioRecordingUI()}
       </View>
     );
   }
