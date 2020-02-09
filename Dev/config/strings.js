@@ -107,9 +107,9 @@ export default {
     "It's hard to call a class without a name. Please enter a valid class name",
 
   //--------------------- Student Profile Screen ---------------------
-  EditAssignment: "Edit Assignment",
-  AddAssignment: "Add Assignment",
-  OpenAssignment: "Open Assignment",
+  EditAssignment: "Edit assignment",
+  AddAssignment: "Add assignment",
+  ChangeStatus: "CHANGE STATUS",
   Assignments: "Assignments",
   Memorize: "Memorize",
   Reading: "Reading",
@@ -134,6 +134,8 @@ export default {
   ParenthesisPage: ") p. ",
   PagesWithParenthesis: ") pp. ",
   To: " to ",
+  TeacherIsNotified: "Awesome! Your teacher is notified and she sure will be excited :)",
+  TeacherIsNotifiedNeedHelp: "Oh no! Your teacher is notified and should be happy to help.",
 
   //--------------------- Join Class Screen ---------------------
   JoinClass: "Join Class",

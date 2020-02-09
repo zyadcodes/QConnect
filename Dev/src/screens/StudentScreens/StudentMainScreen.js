@@ -32,6 +32,7 @@ import fontStyles from 'config/fontStyles';
 import { CustomPicker } from 'react-native-custom-picker';
 import { screenHeight, screenWidth } from 'config/dimensions';
 import AudioPlayer from 'components/AudioPlayer/AudioPlayer';
+import Toast, { DURATION } from "react-native-easy-toast";
 
 const translateY = new Animated.Value(-35);
 const opacity = new Animated.Value(0);
@@ -515,45 +516,27 @@ class StudentMainScreen extends QcParentScreen {
   getCustomPickerTemplate(item) {
     return (
       <View
-        style={[
-          styles.currentAssignment,
-          {
-            backgroundColor:
-              item.isReadyEnum === "WORKING_ON_IT"
-                ? colors.workingOnItColorBrown
-                : item.isReadyEnum === "READY"
-                ? colors.green
-                : colors.red,
-          },
-        ]}
+        style={{
+          flexDirection: "row",
+          paddingLeft: screenWidth * 0.02,
+          justifyContent: "space-between"
+        }}
       >
-        <View style={styles.middleView}>
-          <Text style={fontStyles.bigTextStyleBlack}>
-            {item.type ? item.type : strings.Memorize}
-          </Text>
-          <Text
-            style={[
-              fontStyles.bigTextStyleBlack,
-              { paddingTop: screenHeight * 0.04 }
-            ]}
-          >
-            {item.name.toUpperCase()}
-          </Text>
-        </View>
+        <Text style={fontStyles.mainTextStylePrimaryDark}>
+          {item.isReadyEnum === "READY" && strings.Ready}
+          {item.isReadyEnum === "WORKING_ON_IT" && strings.WorkingOnIt}
+          {item.isReadyEnum === "NOT_STARTED" && strings.NotStarted}
+          {item.isReadyEnum === "NEED_HELP" && strings.NeedHelp}
+        </Text>
         <View
           style={{
-            justifyContent: "flex-start",
-            alignItems: "flex-end",
             flexDirection: "row",
-            paddingLeft: screenWidth * 0.02,
+            paddingRight: screenWidth * 0.02,
+            justifyContent: "space-between"
           }}
         >
           <Text style={fontStyles.mainTextStylePrimaryDark}>
-            {item.isReadyEnum === "READY"
-              ? strings.Ready
-              : item.isReadyEnum === "WORKING_ON_IT"
-              ? strings.WorkingOnIt
-              : strings.NeedHelp}
+            {strings.ChangeStatus}
           </Text>
         </View>
       </View>
@@ -570,12 +553,21 @@ class StudentMainScreen extends QcParentScreen {
         currentAssignments: updatedAssignments
       }
     });
+
     FirebaseFunctions.updateStudentAssignmentStatus(
       currentClassID,
       userID,
       value.value,
       index
     );
+
+    let toastMsg =
+      value.value === 'NEED_HELP'
+        ? strings.TeacherIsNotifiedNeedHelp
+        : strings.TeacherIsNotified;
+
+    this.refs.toast.show(toastMsg, DURATION.LENGTH_LONG);
+
     if (value.value === "READY") {
       this.setState({ recordingUIVisible: true }, () =>
         this.animateShowAudioUI()
@@ -691,57 +683,6 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 
-  OldRenderCurrentAssignmentCards() {
-    const customPickerOptions = [
-      {
-        label: strings.WorkingOnIt,
-        value: "WORKING_ON_IT",
-        color: colors.workingOnItColorBrown,
-      },
-      {
-        label: strings.Ready,
-        value: "READY",
-        color: colors.green,
-      },
-      {
-        label: strings.NeedHelp,
-        value: "NEED_HELP",
-        color: colors.red,
-      },
-    ];
-
-    return (
-      <View>
-        {this.renderAssignmentsSectionHeader(
-          strings.CurrentAssignment,
-          "book-open-outline"
-        )}
-        <FlatList
-          data={this.state.studentClassInfo.currentAssignments}
-          keyExtractor={(item, index) => item.name + index}
-          renderItem={({ item, index }) => {
-            return (
-              <View>
-                <CustomPicker
-                  options={customPickerOptions}
-                  onValueChange={value =>
-                    this.updateCurrentAssignmentStatus(value, index)
-                  }
-                  getLabel={item => item.label}
-                  optionTemplate={settings =>
-                    this.getCustomPickerOptionTemplate(settings)
-                  }
-                  fieldTemplate={() => this.getCustomPickerTemplate(item)}
-                />
-                {this.renderAudioRecordingUI()}
-              </View>
-            );
-          }}
-        />
-      </View>
-    );
-  }
-
   renderCurrentAssignmentCard(item, index) {
     const { studentClassInfo, currentClassID, userID, student } = this.state;
     const customPickerOptions = [
@@ -768,83 +709,68 @@ class StudentMainScreen extends QcParentScreen {
     ];
 
     return (
-        <View
-          style={[
-            styles.currentAssignment,
-            {
-              backgroundColor:
-                item.isReadyEnum === "WORKING_ON_IT"
-                  ? colors.workingOnItColorBrown
-                  : item.isReadyEnum === "READY"
-                  ? colors.green
-                  : item.isReadyEnum === "NOT_STARTED"
-                  ? colors.primaryVeryLight
-                  : colors.red
-            }
-          ]}
-        >
-        <TouchableOpacity
-        onPress={() => {
-          this.props.navigation.push('MushafReadingScreen', {
-            popOnClose: true,
-            isTeacher: true,
-            assignToAllClass: false,
-            userID: this.props.navigation.state.params.userID,
-            classID: currentClassID,
-            studentID: userID,
-            currentClass: studentClassInfo,
-            assignmentLocation: item.location,
-            assignmentType: item.type,
-            assignmentName: item.name,
-            assignmentIndex: index,
-            imageID: studentClassInfo.profileImageID
-          });
-        }}
+      <View
+        style={[
+          styles.currentAssignment,
+          {
+            backgroundColor:
+              item.isReadyEnum === "WORKING_ON_IT"
+                ? colors.workingOnItColorBrown
+                : item.isReadyEnum === "READY"
+                ? colors.green
+                : item.isReadyEnum === "NOT_STARTED"
+                ? colors.primaryVeryLight
+                : colors.red
+          }
+        ]}
       >
-        <View>
-          <View style={styles.middleView}>
-            <Text style={fontStyles.bigTextStyleBlack}>
-              {item.type ? item.type : strings.Memorize}
-            </Text>
-            <Text
-              style={[
-                fontStyles.bigTextStyleBlack,
-                { paddingTop: screenHeight * 0.04 }
-              ]}
-            >
-              {item.name.toUpperCase()}
-            </Text>
-          </View>
-          </View>
-          </TouchableOpacity>
-
-          
-          <View
-            style={{
-              flexDirection: "row",
-              paddingLeft: screenWidth * 0.02,
-              justifyContent: "space-between"
-            }}
-          >
-            <Text style={fontStyles.mainTextStylePrimaryDark}>
-              {item.isReadyEnum === "READY" && strings.Ready}
-              {item.isReadyEnum === "WORKING_ON_IT" && strings.WorkingOnIt}
-              {item.isReadyEnum === "NOT_STARTED" && strings.NotStarted}
-              {item.isReadyEnum === "NEED_HELP" && strings.NeedHelp}
-            </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                paddingRight: screenWidth * 0.02,
-                justifyContent: "space-between"
-              }}
-            >
-              <Text style={fontStyles.mainTextStylePrimaryDark}>
-                {strings.OpenAssignment}
+        <TouchableOpacity
+          onPress={() => {
+            this.props.navigation.push('MushafReadingScreen', {
+              popOnClose: true,
+              isTeacher: true,
+              assignToAllClass: false,
+              userID: this.props.navigation.state.params.userID,
+              classID: currentClassID,
+              studentID: userID,
+              currentClass: studentClassInfo,
+              assignmentLocation: item.location,
+              assignmentType: item.type,
+              assignmentName: item.name,
+              assignmentIndex: index,
+              imageID: studentClassInfo.profileImageID
+            });
+          }}
+        >
+          <View>
+            <View style={styles.middleView}>
+              <Text style={fontStyles.bigTextStyleBlack}>
+                {item.type ? item.type : strings.Memorize}
+              </Text>
+              <Text
+                style={[
+                  fontStyles.bigTextStyleBlack,
+                  { paddingTop: screenHeight * 0.04 }
+                ]}
+              >
+                {item.name.toUpperCase()}
               </Text>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
+
+        <CustomPicker
+          options={customPickerOptions}
+          onValueChange={value =>
+            this.updateCurrentAssignmentStatus(value, index)
+          }
+          getLabel={item => item.label}
+          optionTemplate={settings =>
+            this.getCustomPickerOptionTemplate(settings)
+          }
+          fieldTemplate={() => this.getCustomPickerTemplate(item)}
+        />
+      </View>
     );
   }
 
@@ -960,6 +886,7 @@ class StudentMainScreen extends QcParentScreen {
           studentClassInfo.currentAssignments.length !== 0
             ? this.renderCurrentAssignmentCards()
             : this.renderEmptyAssignmentCard()}
+          <Toast position={'bottom'} ref="toast" />
           <View>
             <ScrollView>
               {this.renderAssignmentsSectionHeader(
