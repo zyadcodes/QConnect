@@ -135,29 +135,18 @@ class LeftNavPane extends QcParentScreen {
                 })
               }
             />
-            <QcDrawerItem
-              title="Assignment Mus7af"
-              icon="cogs"
-              onPress={() =>
-                this.props.navigation.push('MushafAssignmentScreen', {
-                  isTeacher: false,
-                  loadScreenOnClose: "StudentCurrentClass",
-                  accountObject: this.state.student,
-                  classID: this.state.classes[0].ID,
-                  userID: this.state.userID,
-                })
-              }
-            />
 
             <QcDrawerItem
-              title="Reading Mus7af"
-              icon="cogs"
+              title="Holy Quran"
+              image={classImages.images[2]}
               onPress={() =>
                 this.props.navigation.push('MushafReadingScreen', {
                   isTeacher: false,
+                  studentID: this.state.userID,
                   accountObject: this.state.student,
                   classID: this.state.classes[0].ID,
                   userID: this.state.userID,
+                  imageID: studentImageId
                 })
               }
             />

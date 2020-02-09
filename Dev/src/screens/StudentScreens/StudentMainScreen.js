@@ -731,7 +731,7 @@ class StudentMainScreen extends QcParentScreen {
             onPress={() => {
               this.props.navigation.push('MushafReadingScreen', {
                 popOnClose: true,
-                isTeacher: true,
+                isTeacher: false,
                 assignToAllClass: false,
                 userID: this.props.navigation.state.params.userID,
                 classID: currentClassID,
