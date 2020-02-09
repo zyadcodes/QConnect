@@ -768,7 +768,22 @@ class StudentMainScreen extends QcParentScreen {
     ];
 
     return (
-      <TouchableOpacity
+        <View
+          style={[
+            styles.currentAssignment,
+            {
+              backgroundColor:
+                item.isReadyEnum === "WORKING_ON_IT"
+                  ? colors.workingOnItColorBrown
+                  : item.isReadyEnum === "READY"
+                  ? colors.green
+                  : item.isReadyEnum === "NOT_STARTED"
+                  ? colors.primaryVeryLight
+                  : colors.red
+            }
+          ]}
+        >
+        <TouchableOpacity
         onPress={() => {
           this.props.navigation.push('MushafReadingScreen', {
             popOnClose: true,
@@ -786,21 +801,7 @@ class StudentMainScreen extends QcParentScreen {
           });
         }}
       >
-        <View
-          style={[
-            styles.currentAssignment,
-            {
-              backgroundColor:
-                item.isReadyEnum === "WORKING_ON_IT"
-                  ? colors.workingOnItColorBrown
-                  : item.isReadyEnum === "READY"
-                  ? colors.green
-                  : item.isReadyEnum === "NOT_STARTED"
-                  ? colors.primaryVeryLight
-                  : colors.red
-            }
-          ]}
-        >
+        <View>
           <View style={styles.middleView}>
             <Text style={fontStyles.bigTextStyleBlack}>
               {item.type ? item.type : strings.Memorize}
@@ -814,6 +815,10 @@ class StudentMainScreen extends QcParentScreen {
               {item.name.toUpperCase()}
             </Text>
           </View>
+          </View>
+          </TouchableOpacity>
+
+          
           <View
             style={{
               flexDirection: "row",
@@ -840,7 +845,6 @@ class StudentMainScreen extends QcParentScreen {
             </View>
           </View>
         </View>
-      </TouchableOpacity>
     );
   }
 
