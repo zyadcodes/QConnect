@@ -568,17 +568,16 @@ class StudentMainScreen extends QcParentScreen {
 
     this.refs.toast.show(toastMsg, DURATION.LENGTH_LONG);
 
-    // for now we disable the recording until fully tested.. we will re-enable in the next pr
-    // if (value.value === "READY") {
-    //   this.setState({ recordingUIVisible: true }, () =>
-    //     this.animateShowAudioUI()
-    //   );
-    // } else {
-    //   if (this.state.recordingUIVisible) {
-    //     this.animateHideAudioUI();
-    //   }
-    //   this.setState({ recordingUIVisible: false });
-    // }
+    if (value.value === "READY") {
+      this.setState({ recordingUIVisible: true }, () =>
+        this.animateShowAudioUI()
+      );
+    } else {
+      if (this.state.recordingUIVisible) {
+        this.animateHideAudioUI();
+      }
+      this.setState({ recordingUIVisible: false });
+    }
   }
 
   animateShowAudioUI() {
@@ -638,7 +637,6 @@ class StudentMainScreen extends QcParentScreen {
                 this.animateHideAudioUI();
               }}
               onSend={recordedFileUri => {
-                alert("called...")
                 this.setState({ recordedFileUri: recordedFileUri });
                 FirebaseFunctions.submitRecordingAudio(
                   recordedFileUri,
@@ -647,9 +645,7 @@ class StudentMainScreen extends QcParentScreen {
                 );
                 this.animateHideAudioUI();
               }}
-              onStopRecording={recordedFileUri => {
-                this.setState({ recordedFileUri: recordedFileUri });
-              }}
+              
             />
           </Animated.View>
         )}
