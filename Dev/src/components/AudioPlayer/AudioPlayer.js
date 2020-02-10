@@ -40,8 +40,9 @@ const AudioPlayer = props => {
   const [toggled, setToggled] = useState(true);
   const [playTime, setPlayTime] = useState(0);
   const [playWidth, setPlayWidth] = useState(0);
-  const [recordingCompleted, setRecordingCompleted] = useState(false);
+  const [showPlayback, setShowPlayback] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [showSendCancel, setShowSendCancel] = useState(false);
   const [recordingPlaybackPlaying, setRecordingPlaybackPlaying] = useState(
     false
   );
@@ -112,7 +113,8 @@ const AudioPlayer = props => {
 
   onStartRecord = async () => {
     setIsRecording(true);
-    setRecordingCompleted(false);
+    setShowPlayback(false);
+    setShowSendCancel(true);
     //Handles permissions for microphone usage
     let isGranted = true;
 
@@ -173,18 +175,23 @@ const AudioPlayer = props => {
     }
   };
 
+  //this function stops recording
+  // if there is a post action requested after stopping the recording, 
+  // it will perform that action. The 2 post actions supported are send the audio 
+  // after stopping or close the dialog.
   onStopRecord = async postAction => {
-    await audioRecorderPlayer.stopRecorder();
-    audioRecorderPlayer.removeRecordBackListener();
-    setPlayWidth(0);
-    setIsRecording(false);
-    setRecordingCompleted(true);
+    if (isRecording) {
+      await audioRecorderPlayer.stopRecorder();
+      audioRecorderPlayer.removeRecordBackListener();
+      setPlayWidth(0);
+      setIsRecording(false);
+      setShowPlayback(true);
+    }
+    //let's perform a post action is requested.
     if (postAction === postStopAction.send) {
       props.onSend("/sdcard/hello.mp4");
     } else if (postAction === postStopAction.close) {
       props.onClose();
-    } else {
-      props.onStopRecording("/sdcard/hello.mp4");
     }
   };
 
@@ -222,7 +229,7 @@ const AudioPlayer = props => {
 
   //handles re-play button after recording an audio
   const onPlayRecording = async () => {
-    if (props.isRecordMode && recordingCompleted) {
+    if (props.isRecordMode && showPlayback) {
       if (!recordingPlaybackPlaying) {
         setRecordingPlaybackPlaying(true);
         return await onStartPlay("/sdcard/hello.mp4");
@@ -267,7 +274,7 @@ const AudioPlayer = props => {
             style={{ transform: [{ scale }, { rotate: spin }] }}
           />
         </TouchableOpacity>
-        {props.isRecordMode && recordingCompleted && (
+        {props.isRecordMode && showPlayback && (
           <TouchableOpacity
             style={{ justifyContent: "center", alignItems: "center" }}
             onPress={onPlayRecording}
@@ -291,7 +298,7 @@ const AudioPlayer = props => {
             <Subtitle>
               {!props.isRecordMode
                 ? strings.Sent + " " + props.sent
-                : recordingCompleted
+                : showPlayback
                 ? strings.TasmeeRecorded
                 : strings.PressToStartRecording}
             </Subtitle>
@@ -315,7 +322,7 @@ const AudioPlayer = props => {
         </AnimatedColumn>
       </AnimatedPlaying>
 
-      {(isRecording || recordingCompleted) && (
+      {showSendCancel && (
         <SendRow>
           <TouchableText
             text={strings.Cancel}
