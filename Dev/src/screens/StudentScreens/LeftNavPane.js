@@ -17,6 +17,7 @@ import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from "config/fontStyles";
+import ShiftingTextInput from '../../components/ShiftingTextInput';
 
 class LeftNavPane extends QcParentScreen {
 
@@ -168,14 +169,14 @@ class LeftNavPane extends QcParentScreen {
                                                         <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.TypeInAClassCode}</Text>
                                                     </View>
                                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                                        <TextInput
+                                                        <ShiftingTextInput
                                                             style={[{
                                                                 height: screenHeight * 0.07,
                                                                 paddingLeft: 0.017 * screenWidth,
                                                             }, fontStyles.mainTextStyleDarkGrey]}
-                                                            placeholder={strings.TypeInAClassCode}
                                                             onChangeText={classCode => this.setState({ classCode })}
                                                             value={this.state.classCode}
+                                                            numInputs={5}
                                                         />
                                                     </View>
                                                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>

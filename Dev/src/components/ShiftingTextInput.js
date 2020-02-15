@@ -1,5 +1,5 @@
-import { Component } from "react";
-import React, { TextInput, View } from 'react-native'
+import React, { Component } from "react";
+import { TextInput, View } from 'react-native'
 export default class ShiftingTextInput extends Component {
     state = {
         arrInputs: [],
@@ -28,7 +28,7 @@ export default class ShiftingTextInput extends Component {
         let arr = [];
         let refs = [];
         for(var i = 0; i < this.props.numInputs; i++){
-            textIns[i] = '';
+            //textIns[i] = '';
             refs[i] = React.createRef();
             arr[i] = <TextInput placeholder={i} autoCorrect={this.props.autoCorrect} key={i} ref={this.state.refs[i]} onChangeText={(text) => this.goForwardOrBack(i, text)} value={this.props.value.substring(i, i+1)} style={[{borderBottomWidth: 2, borderBottomColor: '#000000'}, this.props.style]}/>;
         }
