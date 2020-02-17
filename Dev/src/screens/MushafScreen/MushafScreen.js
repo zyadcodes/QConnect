@@ -22,7 +22,8 @@ import SwitchSelector from 'react-native-switch-selector';
 const noAyahSelected = {
 	surah: 0,
 	page: 0,
-	ayah: 0
+	ayah: 0,
+	length: 0
 };
 
 const noSelection = {
@@ -54,12 +55,14 @@ export default class MushafScreen extends QcParentScreen {
 			start: {
 				surah: 0,
 				page: this.lastPage,
-				ayah: 0
+				ayah: 0,
+				length: 0
 			},
 			end: {
 				surah: 0,
 				page: this.lastPage,
-				ayah: 0
+				ayah: 0,
+				length: 0
 			}
 		},
 		assignmentName: '',
@@ -376,7 +379,11 @@ export default class MushafScreen extends QcParentScreen {
 
 	async saveClassAssignment(newAssignmentName) {
 		const { classID, assignmentType, currentClass, selection } = this.state;
-		let assignmentLocation = { start: selection.start, end: selection.end };
+		let assignmentLocation = {
+			start: selection.start,
+			end: selection.end,
+			length: selection.end.wordNum - selection.start.wordNum
+		};
 
 		await FirebaseFunctions.updateClassAssignment(
 			classID,
@@ -414,13 +421,16 @@ export default class MushafScreen extends QcParentScreen {
 		this.setState({
 			currentClass: updatedClass
 		});
-
 	}
 
 	//method updates the current assignment of the student
 	async saveStudentAssignment(newAssignmentName, isNewAssignment) {
 		const { classID, studentID, assignmentType, selection, currentClass } = this.state;
-		let assignmentLocation = { start: selection.start, end: selection.end };
+		let assignmentLocation = {
+			start: selection.start,
+			end: selection.end,
+			length: selection.end.wordNum - selection.start.wordNum
+		};
 		//update the current class object (so we can pass it to caller without having to re-render fron firebase)
 		let students = currentClass.students.map((student) => {
 			if (student.ID === studentID) {

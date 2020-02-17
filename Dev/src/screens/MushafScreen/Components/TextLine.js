@@ -23,7 +23,7 @@ const TextLine = ({ page,
             {
                 lineText &&
                 lineText.map((word) => {
-                    let curAyah = { ayah: Number(word.aya), surah: Number(word.sura), page: page };
+                    let curAyah = { ayah: Number(word.aya), surah: Number(word.sura), page: page, wordNum: Number(word.id) };
                     if (selectionOn === false) {
                         if (word.char_type === "word") {
                             return (<AyahSelectionWord key={word.id}

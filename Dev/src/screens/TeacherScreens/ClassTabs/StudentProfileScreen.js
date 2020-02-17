@@ -180,6 +180,30 @@ class StudentProfileScreen extends QcParentScreen {
 							</View>				
 						</View>
 					</View>
+					<StackedBarChart
+						data={{
+							labels: ['Test1', 'Test2'],
+							legend: ['L1', 'L2', 'L3'],
+							data: [
+								[60, 60, 60],
+								[30, 30, 60]
+							],
+							barColors: ['#dfe4ea', '#ced6e0', '#a4b0be']
+						}}
+						width={screenWidth}
+						height={220}
+						chartConfig={{
+							backgroundColor: colors.primaryDark,
+							backgroundGradientFrom: colors.lightGrey,
+							backgroundGradientTo: colors.primaryDark,
+							decimalPlaces: 2, // optional, defaults to 2dp
+							color: (opacity = 1) => colors.lightGrey,
+							labelColor: (opacity = 1) => colors.black,
+							style: {
+								borderRadius: 16
+							},
+						}}
+					/>
 					{this.state.classStudent.currentAssignments.length > 0 ? (
 						<View
 							style={{
@@ -197,48 +221,6 @@ class StudentProfileScreen extends QcParentScreen {
 					) : (
 						<View />
 					)}
-					<BarChart
-						data={{
-							labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-							datasets: [
-								{
-									data: [
-										Math.random() * 100,
-										Math.random() * 100,
-										Math.random() * 100,
-										Math.random() * 100,
-										Math.random() * 100,
-										Math.random() * 100
-									]
-								}
-							]
-						}}
-						width={screenWidth}
-						height={220}
-						yAxisLabel='$'
-						yAxisSuffix='k'
-						chartConfig={{
-							backgroundColor: '#e26a00',
-							backgroundGradientFrom: '#fb8c00',
-							backgroundGradientTo: '#ffa726',
-							decimalPlaces: 2, // optional, defaults to 2dp
-							color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-							labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-							style: {
-								borderRadius: 16
-							},
-							propsForDots: {
-								r: '6',
-								strokeWidth: '2',
-								stroke: '#ffa726'
-							}
-						}}
-						bezier
-						style={{
-							marginVertical: 8,
-							borderRadius: 16
-						}}
-					/>
 					<FlatList
 						data={this.state.classStudent.currentAssignments}
 						keyExtractor={(item, index) => item.name + index}
