@@ -45,11 +45,21 @@ class StudentProfileScreen extends QcParentScreen {
 			return eachStudent.ID === studentID;
 		});
 
+		//This constructs an array of the student's past assignments & only includes the "length" field which is how many
+		//words that assignment was. The method returns that array which is then passed to the line graph below as the data
+		const { assignmentHistory } = student;
+		const data = [];
+		for (const assignment of assignmentHistory) {
+			if (assignment.assignmentLength && assignment.assignmentLength > 0) {
+				data.push(assignment);
+			}
+		}
 		this.setState({
 			classStudent: student,
 			currentAssignment:
 				student.currentAssignment === 'None' ? strings.NoAssignmentsYet : student.currentAssignment,
 			isLoading: false,
+			wordsPerAssignmentData: data,
 			hasCurrentAssignment: student.currentAssignment === 'None' ? false : true,
 			classesAttended: student.classesAttended ? student.classesAttended : '0',
 			classesMissed: student.classesMissed ? student.classesMissed : '0'
@@ -82,6 +92,38 @@ class StudentProfileScreen extends QcParentScreen {
 		});
 	}
 
+	//This function is going to return the labels for the graph which will be an array of 5 dates for when the assignments
+	//were completed
+	getDataLabels() {
+		//If the amount of data is 5 or less, then the array returned will just be their completion dates, otherwise,
+		//a label will be collected for each 5th of the data
+		const { wordsPerAssignmentData } = this.state;
+		console.log(wordsPerAssignmentData);
+		if (wordsPerAssignmentData.length <= 5) {
+			return wordsPerAssignmentData.map((data) =>
+				data.completionDate.substring(0, data.completionDate.lastIndexOf('/'))
+			);
+		} else {
+			const increment = wordsPerAssignmentData.length % 5;
+			const labels = [];
+			for (let i = 0; i < wordsPerAssignmentData.length; i += increment) {
+				let index = '';
+				if (i >= wordsPerAssignmentData.length) {
+					index = wordsPerAssignmentData.length - 1;
+				} else {
+					index = i;
+				}
+				labels.push(
+					wordsPerAssignmentData[index].completionDate.substring(
+						0,
+						wordsPerAssignmentData[index].completionDate.lastIndexOf('/')
+					)
+				);
+			}
+			return labels;
+		}
+	}
+
 	//---------- main UI render ===============================
 	render() {
 		const {
@@ -92,7 +134,8 @@ class StudentProfileScreen extends QcParentScreen {
 			hasCurrentAssignment,
 			currentAssignment,
 			classesAttended,
-			classesMissed
+			classesMissed,
+			wordsPerAssignmentData
 		} = this.state;
 		let { assignmentHistory, averageRating, name } = classStudent;
 
@@ -173,49 +216,61 @@ class StudentProfileScreen extends QcParentScreen {
 							</View>
 						</View>
 					</View>
-					<View style={{ justifyContent: 'center', alignItems: 'center' }}>
-						<Text style={fontStyles.bigTextStyleBlack}>{strings.WordsPerAssignment}</Text>
-						<View style={{ height: screenHeight * 0.0075 }}></View>
-						<LineChart
-							data={{
-								labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-								datasets: [
-									{
-										data: [
-											Math.random() * 100,
-											Math.random() * 100,
-											Math.random() * 100,
-											Math.random() * 100,
-											Math.random() * 100,
-											Math.random() * 100,
-											Math.random() * 100,
-											Math.random() * 100,
-											Math.random() * 100,
-											Math.random() * 100,
-											Math.random() * 100,
-											Math.random() * 100,
-										]
+					{wordsPerAssignmentData.length > 0 ? (
+						<View style={{ justifyContent: 'center', alignItems: 'center' }}>
+							<Text style={fontStyles.bigTextStyleBlack}>{strings.WordsPerAssignment}</Text>
+							<View style={{ height: screenHeight * 0.0075 }}></View>
+							<LineChart
+								data={{
+									labels:
+										wordsPerAssignmentData.length > 1
+											? [
+													wordsPerAssignmentData[0].completionDate.substring(
+														0,
+														wordsPerAssignmentData[0].completionDate.lastIndexOf('/')
+													),
+													wordsPerAssignmentData[
+														wordsPerAssignmentData.length - 1
+													].completionDate.substring(
+														0,
+														wordsPerAssignmentData[
+															wordsPerAssignmentData.length - 1
+														].completionDate.lastIndexOf('/')
+													)
+											  ]
+											: [
+													wordsPerAssignmentData[0].completionDate.substring(
+														0,
+														wordsPerAssignmentData[0].completionDate.lastIndexOf('/')
+													)
+											  ],
+									datasets: [
+										{
+											data: wordsPerAssignmentData.map((data) => data.assignmentLength)
+										}
+									]
+								}}
+								fromZero={true}
+								withInnerLines={false}
+								chartConfig={{
+									backgroundColor: colors.primaryDark,
+									backgroundGradientFrom: colors.lightGrey,
+									backgroundGradientTo: colors.primaryDark,
+									decimalPlaces: 0,
+									color: (opacity = 1) => colors.primaryDark,
+									labelColor: (opacity = 1) => colors.black,
+									style: {
+										borderRadius: 16
 									}
-								]
-							}}
-							yAxisLabel='$'
-							withInnerLines={false}
-							yAxisSuffix='k'
-							chartConfig={{
-								backgroundColor: colors.primaryDark,
-								backgroundGradientFrom: colors.lightGrey,
-								backgroundGradientTo: colors.primaryDark,
-								decimalPlaces: 2,
-								color: (opacity = 1) => colors.primaryDark,
-								labelColor: (opacity = 1) => colors.black,
-								style: {
-									borderRadius: 16
-								}
-							}}
-							width={screenWidth}
-							height={220}
-						/>
-					</View>
+								}}
+								width={screenWidth}
+								height={220}
+							/>
+						</View>
+					) : (
+						<View></View>
+					)}
+
 					{this.state.classStudent.currentAssignments.length > 0 ? (
 						<View
 							style={{
