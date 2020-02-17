@@ -295,6 +295,7 @@ class StudentMainScreen extends QcParentScreen {
 						rating: item.evaluation.rating,
 						notes: item.evaluation.notes,
 						improvementAreas: item.evaluation.improvementAreas,
+						assignmentLength: item.length ? item.length : null,
 						userID: this.state.userID,
 						evaluationObject: item.evaluation,
 						isStudentSide: true,

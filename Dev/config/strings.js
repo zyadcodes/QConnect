@@ -108,6 +108,7 @@ export default {
   //--------------------- Student Profile Screen ---------------------
   EditAssignment: "Edit Assignment",
   AddAssignment: "Add Assignment",
+  WordsPerAssignment: 'Words Per Assignment',
   Assignments: "Assignments",
   Memorize: "Memorize",
   Reading: "Reading",

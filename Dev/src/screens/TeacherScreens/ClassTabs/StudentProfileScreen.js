@@ -20,13 +20,7 @@ import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
-import {
-	BarChart,
-	PieChart,
-	ProgressChart,
-	ContributionGraph,
-	StackedBarChart
-} from 'react-native-chart-kit';
+import { LineChart, StackedBarChart } from 'react-native-chart-kit';
 import { Icon } from 'react-native-elements';
 
 class StudentProfileScreen extends QcParentScreen {
@@ -41,7 +35,6 @@ class StudentProfileScreen extends QcParentScreen {
 		hasCurrentAssignment: '',
 		classesAttended: '',
 		classesMissed: ''
-
 	};
 
 	//Sets the screen for firebase analytics & fetches the correct student from this class
@@ -58,10 +51,8 @@ class StudentProfileScreen extends QcParentScreen {
 				student.currentAssignment === 'None' ? strings.NoAssignmentsYet : student.currentAssignment,
 			isLoading: false,
 			hasCurrentAssignment: student.currentAssignment === 'None' ? false : true,
-			classesAttended: 
-				student.classesAttended? student.classesAttended: '0',
-			classesMissed:
-				student.classesMissed? student.classesMissed: '0',
+			classesAttended: student.classesAttended ? student.classesAttended : '0',
+			classesMissed: student.classesMissed ? student.classesMissed : '0'
 		});
 	}
 
@@ -101,7 +92,7 @@ class StudentProfileScreen extends QcParentScreen {
 			hasCurrentAssignment,
 			currentAssignment,
 			classesAttended,
-			classesMissed,
+			classesMissed
 		} = this.state;
 		let { assignmentHistory, averageRating, name } = classStudent;
 
@@ -170,40 +161,61 @@ class StudentProfileScreen extends QcParentScreen {
 									source={studentImages.images[classStudent.profileImageID]}
 								/>
 							</View>
-							<View style={{flexDirection:'row',paddingTop: 20, justifyContent:"space-between"}}>
-							<Text style={fontStyles.smallTextStyleBlack}>
-							Classes attended: {classesAttended}</Text>
-						</View>	
-						<View style={{flexDirection:'row',paddingTop: 5, justifyContent:"space-between"}}>
-						<Text style={fontStyles.smallTextStyleBlack}>
-							Classes missed: {classesMissed}</Text>
-							</View>				
+							<View
+								style={{ flexDirection: 'row', paddingTop: 20, justifyContent: 'space-between' }}>
+								<Text style={fontStyles.smallTextStyleBlack}>
+									Classes attended: {classesAttended}
+								</Text>
+							</View>
+							<View
+								style={{ flexDirection: 'row', paddingTop: 5, justifyContent: 'space-between' }}>
+								<Text style={fontStyles.smallTextStyleBlack}>Classes missed: {classesMissed}</Text>
+							</View>
 						</View>
 					</View>
-					<StackedBarChart
-						data={{
-							labels: ['Test1', 'Test2'],
-							legend: ['L1', 'L2', 'L3'],
-							data: [
-								[60, 60, 60],
-								[30, 30, 60]
-							],
-							barColors: ['#dfe4ea', '#ced6e0', '#a4b0be']
-						}}
-						width={screenWidth}
-						height={220}
-						chartConfig={{
-							backgroundColor: colors.primaryDark,
-							backgroundGradientFrom: colors.lightGrey,
-							backgroundGradientTo: colors.primaryDark,
-							decimalPlaces: 2, // optional, defaults to 2dp
-							color: (opacity = 1) => colors.lightGrey,
-							labelColor: (opacity = 1) => colors.black,
-							style: {
-								borderRadius: 16
-							},
-						}}
-					/>
+					<View style={{ justifyContent: 'center', alignItems: 'center' }}>
+						<Text style={fontStyles.bigTextStyleBlack}>{strings.WordsPerAssignment}</Text>
+						<View style={{ height: screenHeight * 0.0075 }}></View>
+						<LineChart
+							data={{
+								labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+								datasets: [
+									{
+										data: [
+											Math.random() * 100,
+											Math.random() * 100,
+											Math.random() * 100,
+											Math.random() * 100,
+											Math.random() * 100,
+											Math.random() * 100,
+											Math.random() * 100,
+											Math.random() * 100,
+											Math.random() * 100,
+											Math.random() * 100,
+											Math.random() * 100,
+											Math.random() * 100,
+										]
+									}
+								]
+							}}
+							yAxisLabel='$'
+							withInnerLines={false}
+							yAxisSuffix='k'
+							chartConfig={{
+								backgroundColor: colors.primaryDark,
+								backgroundGradientFrom: colors.lightGrey,
+								backgroundGradientTo: colors.primaryDark,
+								decimalPlaces: 2,
+								color: (opacity = 1) => colors.primaryDark,
+								labelColor: (opacity = 1) => colors.black,
+								style: {
+									borderRadius: 16
+								}
+							}}
+							width={screenWidth}
+							height={220}
+						/>
+					</View>
 					{this.state.classStudent.currentAssignments.length > 0 ? (
 						<View
 							style={{
@@ -292,6 +304,7 @@ class StudentProfileScreen extends QcParentScreen {
 													userID: this.props.navigation.state.params.userID,
 													classStudent: classStudent,
 													assignmentLocation: item.location,
+													assignmentLength: item.location.length,
 													assignmentType: item.type,
 													newAssignment: true,
 													readOnly: false
@@ -333,6 +346,7 @@ class StudentProfileScreen extends QcParentScreen {
 											completionDate: item.completionDate,
 											rating: item.evaluation.rating,
 											notes: item.evaluation.notes,
+											assignmentLength: item.length ? item.length : null,
 											improvementAreas: item.evaluation.improvementAreas,
 											userID: this.props.navigation.state.params.userID,
 											evaluationObject: item.evaluation,
