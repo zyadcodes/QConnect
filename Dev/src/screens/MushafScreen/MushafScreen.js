@@ -1,22 +1,14 @@
 //Screen which will provide all of the possible settings for the user to click on
-import React from 'react';
-import { View, Text, StyleSheet, Alert, ScrollView } from 'react-native';
-import LoadingSpinner from 'components/LoadingSpinner';
-import colors from 'config/colors';
+import React from "react";
+import { View, StyleSheet, ScrollView } from "react-native";
+import LoadingSpinner from "components/LoadingSpinner";
+import colors from "config/colors";
 import QcParentScreen from 'screens/QcParentScreen';
-import SelectionPage from './Components/SelectionPage';
-import Swiper from 'react-native-swiper';
-import { Icon } from 'react-native-elements';
-import { compareOrder } from './Helpers/AyahsOrder';
-import QcActionButton from 'components/QcActionButton';
-import surahs from './Data/Surahs.json';
-import strings from 'config/strings';
-import fontStyles from 'config/fontStyles';
-import FirebaseFunctions from 'config/FirebaseFunctions';
-import studentImages from 'config/studentImages';
-import classImages from 'config/classImages';
-import { screenHeight, screenWidth } from 'config/dimensions';
-import SwitchSelector from 'react-native-switch-selector';
+import SelectionPage from "./Components/SelectionPage";
+import Swiper from "react-native-swiper";
+import strings from "config/strings";
+import FirebaseFunctions from "config/FirebaseFunctions";
+import { screenHeight, screenWidth } from "config/dimensions";
 
 //------- constants to indicate the case when there is no ayah selected
 const noAyahSelected = {
@@ -27,10 +19,10 @@ const noAyahSelected = {
 };
 
 const noSelection = {
-	start: noAyahSelected,
-	end: noAyahSelected,
-	started: false,
-	completed: false
+  start: noAyahSelected,
+  end: noAyahSelected,
+  started: false,
+  completed: false,
 };
 
 //-------- MushafScreen: container component for the screen holding Mushaf pages ------
@@ -630,12 +622,12 @@ export default class MushafScreen extends QcParentScreen {
 }
 
 const styles = StyleSheet.create({
-	container: {},
-	ayahText: {
-		padding: 5,
-		textAlign: 'right',
-		fontFamily: 'me_quran',
-		fontSize: 30,
-		color: colors.darkGrey
-	}
+  container: {},
+  ayahText: {
+    padding: 5,
+    textAlign: "right",
+    fontFamily: "me_quran",
+    fontSize: 30,
+    color: colors.darkGrey,
+  },
 });

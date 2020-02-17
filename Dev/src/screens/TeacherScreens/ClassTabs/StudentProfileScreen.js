@@ -1,13 +1,13 @@
 import React from 'react';
 import {
-	View,
-	Image,
-	Text,
-	StyleSheet,
-	ScrollView,
-	FlatList,
-	TouchableHighlight,
-	TouchableOpacity
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  ScrollView,
+  FlatList,
+  TouchableHighlight,
+  TouchableOpacity
 } from 'react-native';
 import colors from 'config/colors';
 import { Rating } from 'react-native-elements';
@@ -37,13 +37,16 @@ class StudentProfileScreen extends QcParentScreen {
 		classesMissed: ''
 	};
 
-	//Sets the screen for firebase analytics & fetches the correct student from this class
-	async componentDidMount() {
-		FirebaseFunctions.setCurrentScreen('Student Profile Screen', 'StudentProfileScreen');
-		const { currentClass, studentID } = this.state;
-		const student = await currentClass.students.find((eachStudent) => {
-			return eachStudent.ID === studentID;
-		});
+  //Sets the screen for firebase analytics & fetches the correct student from this class
+  async componentDidMount() {
+    FirebaseFunctions.setCurrentScreen(
+      'Student Profile Screen',
+      'StudentProfileScreen'
+    );
+    const { currentClass, studentID } = this.state;
+    const student = await currentClass.students.find(eachStudent => {
+      return eachStudent.ID === studentID;
+    });
 
 		//This constructs an array of the student's past assignments & only includes the "length" field which is how many
 		//words that assignment was. The method returns that array which is then passed to the line graph below as the data
@@ -64,33 +67,37 @@ class StudentProfileScreen extends QcParentScreen {
 			classesAttended: student.classesAttended ? student.classesAttended : '0',
 			classesMissed: student.classesMissed ? student.classesMissed : '0'
 		});
-	}
+  }
 
-	setDialogueVisible(visible) {
-		this.setState({ isDialogVisible: visible });
-	}
 
-	getRatingCaption() {
-		let caption = strings.GetStarted;
+  setDialogueVisible(visible) {
+    this.setState({ isDialogVisible: visible });
+  }
 
-		const { averageRating } = this.state.classStudent;
+  getRatingCaption() {
+    let caption = strings.GetStarted;
 
-		if (averageRating > 4) {
-			caption = strings.OutStanding;
-		} else if (averageRating >= 3) {
-			caption = strings.GreatJob;
-		} else if (averageRating > 0) {
-			caption = strings.PracticePerfect;
-		}
+    const { averageRating } = this.state.classStudent;
 
-		return caption;
-	}
+    if (averageRating > 4) {
+      caption = strings.OutStanding;
+    } else if (averageRating >= 3) {
+      caption = strings.GreatJob;
+    } else if (averageRating > 0) {
+      caption = strings.PracticePerfect;
+    }
 
-	editAssignment(assignmentName) {
-		this.setState({
-			currentAssignment: assignmentName
-		});
-	}
+    return caption;
+  }
+
+  updateStateWithNewAssignmentInfo(newAssignment, index, currentClass) {
+    let updatedStudentInfo = this.state.classStudent;
+    updatedStudentInfo.currentAssignments[index] = newAssignment;
+    this.setState({
+      classStudent: updatedStudentInfo,
+      currentClass: currentClass,
+    });
+  }
 
 	//This function is going to return the labels for the graph which will be an array of 5 dates for when the assignments
 	//were completed
@@ -98,7 +105,6 @@ class StudentProfileScreen extends QcParentScreen {
 		//If the amount of data is 5 or less, then the array returned will just be their completion dates, otherwise,
 		//a label will be collected for each 5th of the data
 		const { wordsPerAssignmentData } = this.state;
-		console.log(wordsPerAssignmentData);
 		if (wordsPerAssignmentData.length <= 5) {
 			return wordsPerAssignmentData.map((data) =>
 				data.completionDate.substring(0, data.completionDate.lastIndexOf('/'))
@@ -123,35 +129,24 @@ class StudentProfileScreen extends QcParentScreen {
 			return labels;
 		}
 	}
+  //---------- main UI render ===============================
+  render() {
+    const {
+      classStudent,
+      isLoading,
+      classID,
+      studentID,
+      currentClass,
+      currentAssignments,
+      classesAttended,
+      classesMissed,
+    } = this.state;
+    let { assignmentHistory, averageRating, name } = classStudent;
 
-	//---------- main UI render ===============================
-	render() {
-		const {
-			classStudent,
-			isLoading,
-			classID,
-			studentID,
-			hasCurrentAssignment,
-			currentAssignment,
-			classesAttended,
-			classesMissed,
-			wordsPerAssignmentData
-		} = this.state;
-		let { assignmentHistory, averageRating, name } = classStudent;
-
-		//Sorts the assignments by date completed
-		if (classStudent) {
-			assignmentHistory = assignmentHistory.reverse();
-		}
-
-		//If the screen is loading, a spinner will display
-		if (isLoading === true) {
-			return (
-				<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-					<LoadingSpinner isVisible={true} />
-				</View>
-			);
-		}
+    //Sorts the assignments by date completed
+    if (classStudent) {
+      assignmentHistory = assignmentHistory.reverse();
+    }
 
 		return (
 			<QCView style={screenStyle.container}>
@@ -512,84 +507,85 @@ class StudentProfileScreen extends QcParentScreen {
 
 //styles for the entire page
 const styles = StyleSheet.create({
-	studentInfoContainer: {
-		marginVertical: 0.005 * screenHeight,
-		backgroundColor: colors.white,
-		flex: 1,
-		borderColor: colors.lightGrey,
-		borderWidth: 1,
-		justifyContent: 'flex-end'
-	},
-	currentAssignment: {
-		justifyContent: 'flex-end',
-		height: screenHeight * 0.16,
-		borderWidth: 0.5,
-		borderColor: colors.grey
-	},
-	middleView: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		paddingVertical: screenHeight * 0.0112
-	},
-	profileInfo: {
-		flexDirection: 'column',
-		backgroundColor: colors.white,
-		marginBottom: 0.001 * screenHeight,
-		paddingBottom: screenHeight * 0.01
-	},
-	corner: {
-		borderColor: '#D0D0D0',
-		borderWidth: 1,
-		borderRadius: screenHeight * 0.004,
-		justifyContent: 'center',
-		alignItems: 'center',
-		paddingHorizontal: screenWidth * 0.012,
-		marginRight: screenHeight * 0.012,
-		marginVertical: screenHeight * 0.004
-	},
-	profileInfoTop: {
-		paddingHorizontal: screenWidth * 0.024,
-		paddingTop: screenHeight * 0.015,
-		flexDirection: 'row'
-	},
-	profileInfoTopLeft: {
-		flexDirection: 'column',
-		marginLeft: 0.007 * screenWidth,
-		marginTop: -0.097 * screenHeight,
-		alignItems: 'center',
-		width: 0.24 * screenWidth
-	},
-	profileInfoTopRight: {
-		flexDirection: 'column',
-		alignItems: 'flex-start',
-		paddingLeft: screenWidth * 0.05,
-		paddingBottom: 0.007 * screenHeight
-	},
-	profileInfoBottom: {
-		flexDirection: 'column',
-		paddingHorizontal: 0.024 * screenWidth,
-		paddingBottom: screenHeight * 0.02,
-		borderBottomColor: colors.grey,
-		borderBottomWidth: 1
-	},
-	profilePic: {
-		width: 0.1 * screenHeight,
-		height: 0.1 * screenHeight,
-		borderRadius: 0.075 * screenHeight,
-		paddingBottom: 0.015 * screenHeight
-	},
-	prevAssignments: {
-		flexDirection: 'column',
-		backgroundColor: colors.white,
-		marginHorizontal: 0.017 * screenWidth
-	},
-	prevAssignmentCard: {
-		flexDirection: 'column',
-		borderBottomColor: colors.lightGrey,
-		borderBottomWidth: 1,
-		paddingHorizontal: screenWidth * 0.007,
-		paddingVertical: screenHeight * 0.005
-	}
+  studentInfoContainer: {
+    marginVertical: 0.005 * screenHeight,
+    backgroundColor: colors.white,
+    flex: 1,
+    borderColor: colors.lightGrey,
+    borderWidth: 1,
+    justifyContent: 'flex-end'
+  },
+  currentAssignment: {
+    justifyContent: 'flex-end',
+    height: screenHeight * 0.16,
+    borderWidth: 0.5,
+    borderColor: colors.grey,
+    marginBottom: 5
+  },
+  middleView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: screenHeight * 0.0112
+  },
+  profileInfo: {
+    flexDirection: 'column',
+    backgroundColor: colors.white,
+    marginBottom: 0.001 * screenHeight,
+    paddingBottom: screenHeight * 0.01
+  },
+  corner: {
+    borderColor: '#D0D0D0',
+    borderWidth: 1,
+    borderRadius: screenHeight * 0.004,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: screenWidth * 0.012,
+    marginRight: screenHeight * 0.012,
+    marginVertical: screenHeight * 0.004
+  },
+  profileInfoTop: {
+    paddingHorizontal: screenWidth * 0.024,
+    paddingTop: screenHeight * 0.015,
+    flexDirection: 'row'
+  },
+  profileInfoTopLeft: {
+    flexDirection: 'column',
+    marginLeft: 0.007 * screenWidth,
+    marginTop: -0.097 * screenHeight,
+    alignItems: 'center',
+    width: 0.24 * screenWidth
+  },
+  profileInfoTopRight: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    paddingLeft: screenWidth * 0.05,
+    paddingBottom: 0.007 * screenHeight
+  },
+  profileInfoBottom: {
+    flexDirection: 'column',
+    paddingHorizontal: 0.024 * screenWidth,
+    paddingBottom: screenHeight * 0.02,
+    borderBottomColor: colors.grey,
+    borderBottomWidth: 1
+  },
+  profilePic: {
+    width: 0.1 * screenHeight,
+    height: 0.1 * screenHeight,
+    borderRadius: 0.075 * screenHeight,
+    paddingBottom: 0.015 * screenHeight
+  },
+  prevAssignments: {
+    flexDirection: 'column',
+    backgroundColor: colors.white,
+    marginHorizontal: 0.017 * screenWidth
+  },
+  prevAssignmentCard: {
+    flexDirection: 'column',
+    borderBottomColor: colors.lightGrey,
+    borderBottomWidth: 1,
+    paddingHorizontal: screenWidth * 0.007,
+    paddingVertical: screenHeight * 0.005
+  }
 });
 
 export default StudentProfileScreen;
