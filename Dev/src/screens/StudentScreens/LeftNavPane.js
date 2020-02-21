@@ -1,6 +1,6 @@
 //This will be the actual drawer items that will display from the student side when the click on
 //the hamburger icon
-import React from "react";
+import React, {useState} from "react";
 import { View, FlatList, ScrollView, StyleSheet, Modal, Text, Alert, TextInput } from "react-native";
 import colors from "config/colors";
 import classImages from "config/classImages";
@@ -17,7 +17,8 @@ import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from "config/fontStyles";
-import ShiftingTextInput from '../../components/ShiftingTextInput';
+import CodeInput from 'react-native-confirmation-code-input';
+
 
 class LeftNavPane extends QcParentScreen {
 
@@ -88,6 +89,7 @@ class LeftNavPane extends QcParentScreen {
         const profileCaption = name + strings.sProfile
         const studentImageId = profileImageID;
 
+        const {classCode} = this.state;
         return (
             <QCView style={[screenStyle.container, { alignItems: 'flex-start' }]}>
                 <ScrollView>
@@ -169,14 +171,18 @@ class LeftNavPane extends QcParentScreen {
                                                         <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.TypeInAClassCode}</Text>
                                                     </View>
                                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                                        <ShiftingTextInput
-                                                            style={[{
-                                                                height: screenHeight * 0.07,
-                                                                paddingLeft: 0.017 * screenWidth,
-                                                            }, fontStyles.mainTextStyleDarkGrey]}
-                                                            onChangeText={classCode => this.setState({ classCode })}
-                                                            value={this.state.classCode}
-                                                            numInputs={5}
+                                                        <CodeInput
+                                                         space={2}
+                                                         size={50}
+                                                         codeLength={5}
+                                                         activeColor='rgba(49, 180, 4, 1.3)'
+                                                         inactiveColor={colors.workingOnItColorBrown}
+                                                         autoFocus={true}
+                                                         inputPosition= 'center'
+                                                         className='border-circle'
+                                                         containerStyle={{ marginBottom: 60 }}
+                                                         codeInputStyle={{ borderWidth: 1.5 }}
+                                                         onFulfill={(code) => this.setState({classCode : code})}
                                                         />
                                                     </View>
                                                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
@@ -221,6 +227,18 @@ const styles = StyleSheet.create({
         shadowRadius: screenHeight * 0.0045,
         elevation: screenHeight * 0.003,
     },
+    CodeInputCell: {
+        width: 40,
+        height: 40,
+        lineHeight: 38,
+        fontSize: 24,
+        borderWidth: 2,
+        borderColor: '#00000030',
+        textAlign: 'center',
+    },
+    OnCellFocus: {
+        backgroundColor: '#fff'
+    }
 });
 
 export default LeftNavPane;

@@ -21,7 +21,8 @@ import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import fontStyles from 'config/fontStyles';
 import { CustomPicker } from 'react-native-custom-picker';
 import { screenHeight, screenWidth } from 'config/dimensions';
-import ShiftingTextInput from '../../components/ShiftingTextInput';
+import CodeInput from 'react-native-confirmation-code-input';
+
 
 class StudentMainScreen extends QcParentScreen {
 
@@ -282,15 +283,18 @@ class StudentMainScreen extends QcParentScreen {
                                                         <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.TypeInAClassCode}</Text>
                                                     </View>
                                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                                        <ShiftingTextInput
-                                                            style={[{
-                                                                height: screenHeight * 0.07,
-                                                                paddingLeft: 0.017 * screenWidth,
-                                                            }, fontStyles.mainTextStyleDarkGrey]}
-                                                            autoCorrect={false}
-                                                            numInputs={5}
-                                                            onChangeText={classCode => this.setState({ classCode })}
-                                                            value={this.state.classCode}
+                                                    <CodeInput
+                                                         space={2}
+                                                         size={50}
+                                                         codeLength={5}
+                                                         activeColor='rgba(49, 180, 4, 1.3)'
+                                                         inactiveColor={colors.workingOnItColorBrown}
+                                                         autoFocus={true}
+                                                         inputPosition= 'center'
+                                                         className='border-circle'
+                                                         containerStyle={{ marginBottom: 60 }}
+                                                         codeInputStyle={{ borderWidth: 1.5 }}
+                                                         onFulfill={(code) => this.setState({classCode : code})}
                                                         />
                                                     </View>
                                                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
@@ -356,7 +360,7 @@ class StudentMainScreen extends QcParentScreen {
                             <View style={styles.profileInfoBottom}>
                                 <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'column', height: screenHeight * 0.09 }}>
                                     <View style={{ paddingTop: screenHeight * 0.005, alignSelf: 'center' }}>
-                                        <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{thisClassInfo.currentAssignment !== "None"? thisClassInfo.currentAssignment.toUpperCase() : ""}</Text>
+                                        <Text numberOfLines={1} style={fontStyles.bigTextStyleDarkGrey}>{thisClassInfo.currentAssignment !== "None" || thisClassInfo.currentAssignment !== undefined ? "" : ""}</Text>
                                     </View>
                                     <View style={{ alignSelf: 'flex-start' }}>
                                         <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.TotalAssignments + ": " + thisClassInfo.totalAssignments + "  "}</Text>
