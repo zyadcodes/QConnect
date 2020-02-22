@@ -26,7 +26,7 @@ import screenStyle from "config/screenStyle";
 import { screenHeight, screenWidth } from "config/dimensions";
 import fontStyles from "config/fontStyles";
 
-export class ClassAttendanceScreen extends QcParentScreen {
+class ClassAttendanceScreen extends QcParentScreen {
   state = {
     isLoading: true,
     currentClass: "",

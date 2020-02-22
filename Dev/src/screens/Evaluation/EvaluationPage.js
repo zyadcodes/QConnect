@@ -206,7 +206,7 @@ export class EvaluationPage extends QcParentScreen {
 		}
 	}
 
-	// --------------  Renders Evaluation scree UI --------------
+	// --------------  Renders Evaluation screen UI --------------
 	render() {
 		if (isLoading === true) {
 			return (
@@ -320,7 +320,7 @@ export class EvaluationPage extends QcParentScreen {
 
 							{/**
                   The Things to work on button.
-              */}
+              				*/}
 
 							<View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
 								<Text style={fontStyles.mainTextStyleDarkGrey}>{strings.ImprovementAreas}</Text>

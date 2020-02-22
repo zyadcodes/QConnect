@@ -16,6 +16,8 @@ import screenStyle from 'config/screenStyle';
 import fontStyles from "config/fontStyles";
 import { Icon } from 'react-native-elements';
 import { screenHeight, screenWidth } from 'config/dimensions';
+import MushafNavigatorTemplate from 'components/mushafNav/MushafNavigatorTemplate';
+import surahNames from 'config/surahNames';
 
 export class ClassMainScreen extends QcParentScreen {
 
@@ -28,7 +30,8 @@ export class ClassMainScreen extends QcParentScreen {
     isOpen: false,
     classes: '',
     isEditing: false,
-    titleHasChanged: false
+    titleHasChanged: false,
+    show: true
   }
 
   async componentDidMount() {
@@ -100,6 +103,13 @@ async updatePicture(newPicture){
   this.setState({currentClass: {...this.state.currentClass, classImageID: newPicture}})
   await FirebaseFunctions.updateClassObject(this.state.currentClassID, {classImageID: newPicture})
 }
+
+
+  closeNavigator(){
+    this.setState({
+      show: false
+    })
+  }
 
 
   render() {
@@ -229,235 +239,248 @@ async updatePicture(newPicture){
       const studentsReady = currentClass.students.filter((student) => student.isReadyEnum === "READY" || (!student.isReadyEnum && student.isReady === true));
       const studentsWorkingOnIt = currentClass.students.filter((student) => ((student.isReadyEnum === "WORKING_ON_IT" || (student.isReadyEnum === undefined && student.isReady === false)) && student.currentAssignment !== "None" ));
       const studentsWithNoAssignments = currentClass.students.filter((student) => student.currentAssignment === "None");
-      const { isEditing, currentClassID, userID } = this.state;
+      const { isEditing, currentClassID, userID, show } = this.state;
 
       return (
-        <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
-          teacher={teacher}
-          userID={userID}
-          classes={this.state.classes}
-          edgeHitWidth={0}
-          navigation={this.props.navigation} />}>
-          <ScrollView style={styles.container}>
-            <View>
-              <TopBanner
-                LeftIconName="navicon"
-                LeftOnPress={() => this.setState({ isOpen: true })}
-                Title={this.state.currentClass.name}
-                RightIconName={this.state.isEditing === false ? "edit" : null}
-                RightTextName={this.state.isEditing === true ? strings.Done : null}
-                isEditingTitle={this.state.isEditing}
-                isEditingPicture={this.state.isEditing}
-                onTitleChanged={(newTitle)=> this.updateTitle(newTitle)}
-                onEditingPicture={(newPicture)=> this.updatePicture(newPicture)}
-                profileImageID={currentClass.classImageID}
-                RightOnPress={() => {
-                  const { isEditing, titleHasChanged } = this.state;
-                  //node/todo: setting isOpen is a hack to workaround what seems to be a bug in the SideMenu component
-                  // where flipping isEditing bit seems to flip isOpen as well when isOpen was true earlier
-                  this.setState({ isEditing: !isEditing, isOpen: false })
-                  if(this.state.currentClass.name.trim().length ===0){
-                    Alert.alert(strings.Whoops,strings.AddText)
-                  }
-                  else{
-                    if(isEditing && titleHasChanged){
-                      FirebaseFunctions.updateClassObject(this.state.currentClassID, {name: this.state.currentClass.name})
-                      this.setState({titleHasChanged: false});
-                    }
+
+
+        <View
+          style = {{
+            alignItems: "center",
+          }}
+        >
+          <MushafNavigatorTemplate
+            show = {this.show}
+            pageData = {surahNames}
+            onButtonPress = {() => this.closeNavigator()}
+          />
+        </View>
+        // <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
+        //   teacher={teacher}
+        //   userID={userID}
+        //   classes={this.state.classes}
+        //   edgeHitWidth={0}
+        //   navigation={this.props.navigation} />}>
+        //   <ScrollView style={styles.container}>
+        //     <View>
+        //       <TopBanner
+        //         LeftIconName="navicon"
+        //         LeftOnPress={() => this.setState({ isOpen: true })}
+        //         Title={this.state.currentClass.name}
+        //         RightIconName={this.state.isEditing === false ? "edit" : null}
+        //         RightTextName={this.state.isEditing === true ? strings.Done : null}
+        //         isEditingTitle={this.state.isEditing}
+        //         isEditingPicture={this.state.isEditing}
+        //         onTitleChanged={(newTitle)=> this.updateTitle(newTitle)}
+        //         onEditingPicture={(newPicture)=> this.updatePicture(newPicture)}
+        //         profileImageID={currentClass.classImageID}
+        //         RightOnPress={() => {
+        //           const { isEditing, titleHasChanged } = this.state;
+        //           //node/todo: setting isOpen is a hack to workaround what seems to be a bug in the SideMenu component
+        //           // where flipping isEditing bit seems to flip isOpen as well when isOpen was true earlier
+        //           this.setState({ isEditing: !isEditing, isOpen: false })
+        //           if(this.state.currentClass.name.trim().length ===0){
+        //             Alert.alert(strings.Whoops,strings.AddText)
+        //           }
+        //           else{
+        //             if(isEditing && titleHasChanged){
+        //               FirebaseFunctions.updateClassObject(this.state.currentClassID, {name: this.state.currentClass.name})
+        //               this.setState({titleHasChanged: false});
+        //             }
   
-                    this.setState({ isEditing: !isEditing})
-                  }
+        //             this.setState({ isEditing: !isEditing})
+        //           }
 
-                }}
-              />
-            </View>
-            {
-              isEditing === true ? (
-                <View style={styles.AddStudentButton}>
-                  <TouchableText
-                    text={strings.AddStudents}
-                    onPress={() => {
-                      //Goes to add students screen
-                      this.props.navigation.push("ShareClassCode", {
-                        currentClassID,
-                        userID,
-                        currentClass: this.state.currentClass
-                      });
-                    }}
-                    style={{ ...fontStyles.bigTextStylePrimaryDark, paddingTop: 10 }}
-                  />
-                </View>
-              ) : (
+        //         }}
+        //       />
+        //     </View>
+        //     {
+        //       isEditing === true ? (
+        //         <View style={styles.AddStudentButton}>
+        //           <TouchableText
+        //             text={strings.AddStudents}
+        //             onPress={() => {
+        //               //Goes to add students screen
+        //               this.props.navigation.push("ShareClassCode", {
+        //                 currentClassID,
+        //                 userID,
+        //                 currentClass: this.state.currentClass
+        //               });
+        //             }}
+        //             style={{ ...fontStyles.bigTextStylePrimaryDark, paddingTop: 10 }}
+        //           />
+        //         </View>
+        //       ) : (
 
-                  <View>
-                  </View>
+        //           <View>
+        //           </View>
 
-                )
-            }
-            {
-              studentsNeedHelp.length > 0 ? (
-                <View style={{ alignItems: 'center', marginLeft: screenWidth * 0.017, flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
-                  <Icon
-                    name='issue-opened'
-                    type='octicon'
-                    color={colors.darkRed}
-                  />
-                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkRed]}>{strings.NeedHelp}</Text>
-                </View>
-              ) : (
-                  <View></View>
-                )
-            }
-            <FlatList
-              data={studentsNeedHelp}
-              keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
-              renderItem={({ item }) => (
-                <StudentCard
-                  key={item.ID}
-                  studentName={item.name}
-                  profilePic={studentImages.images[item.profileImageID]}
-                  currentAssignment={item.currentAssignment === "None"? strings.NoAssignmentsYet : item.currentAssignment}
-                  onPress={() =>
-                    this.props.navigation.push("TeacherStudentProfile", {
-                      userID: userID,
-                      studentID: item.ID,
-                      currentClass: currentClass,
-                      classID: currentClassID
-                    })
-                  }
-                  background={colors.red}
-                  comp={isEditing === true ? (
-                    <Icon
-                      name='user-times'
-                      size={PixelRatio.get() * 9}
-                      type='font-awesome'
-                      color={colors.primaryDark} />) : (null)}
-                  compOnPress={() => { this.removeStudent(item.ID) }} />)}
-            />
-            {
-              studentsReady.length > 0 ? (
-                <View style={{ alignItems: 'center', marginLeft: screenWidth * 0.017, flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
-                  <Icon
-                    name='check-circle-outline'
-                    type='material-community'
-                    color={colors.darkGreen}
-                  />
-                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkGreen]}>
-                    {strings.Ready}</Text>
-                </View>
-              ) : (
-                  <View></View>
-                )
-            }
-            <FlatList
-              data={studentsReady}
-              keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
-              renderItem={({ item }) => (
-                <StudentCard
-                  key={item.id}
-                  studentName={item.name}
-                  profilePic={studentImages.images[item.profileImageID]}
-                  currentAssignment={item.currentAssignment === "None"? strings.NoAssignmentsYet : item.currentAssignment}
-                  onPress={() =>
-                    this.props.navigation.push("TeacherStudentProfile", {
-                      userID: userID,
-                      studentID: item.ID,
-                      currentClass: currentClass,
-                      classID: currentClassID
-                    })
-                  }
-                  background={colors.green}
-                  comp={isEditing === true ? (
-                    <Icon
-                      name='user-times'
-                      size={PixelRatio.get() * 9}
-                      type='font-awesome'
-                      color={colors.primaryDark} />) : (null)}
-                  compOnPress={() => { this.removeStudent(item.ID) }} />
-              )} />
-            {
-              studentsWithNoAssignments.length > 0 ? (
-                <View style={{ alignItems: 'center', marginLeft: screenWidth * 0.017, flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
-                  <Icon
-                    name='pencil-plus-outline'
-                    type='material-community'
-                    color={colors.primaryDark}
-                  />
-                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStylePrimaryDark]}>{strings.NeedAssignment}</Text>
-                </View>
-              ) : (
-                  <View></View>
-                )
-            }
-            <FlatList
-              data={studentsWithNoAssignments}
-              keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
-              renderItem={({ item }) => (
-                <StudentCard
-                  key={item.id}
-                  studentName={item.name.toUpperCase()}
-                  profilePic={studentImages.images[item.profileImageID]}
-                  currentAssignment={strings.NoAssignmentsYet}
-                  onPress={() =>
-                    this.props.navigation.push("TeacherStudentProfile", {
-                      userID: userID,
-                      studentID: item.ID,
-                      currentClass: currentClass,
-                      classID: currentClassID
-                    })
-                  }
-                  background={colors.white}
-                  comp={isEditing === true ? (
-                    <Icon
-                      name='user-times'
-                      size={PixelRatio.get() * 9}
-                      type='font-awesome'
-                      color={colors.primaryDark} />) : (null)}
-                  compOnPress={() => { this.removeStudent(item.ID) }} />
-              )} />
+        //         )
+        //     }
+        //     {
+        //       studentsNeedHelp.length > 0 ? (
+        //         <View style={{ alignItems: 'center', marginLeft: screenWidth * 0.017, flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
+        //           <Icon
+        //             name='issue-opened'
+        //             type='octicon'
+        //             color={colors.darkRed}
+        //           />
+        //           <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkRed]}>{strings.NeedHelp}</Text>
+        //         </View>
+        //       ) : (
+        //           <View></View>
+        //         )
+        //     }
+        //     <FlatList
+        //       data={studentsNeedHelp}
+        //       keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
+        //       renderItem={({ item }) => (
+        //         <StudentCard
+        //           key={item.ID}
+        //           studentName={item.name}
+        //           profilePic={studentImages.images[item.profileImageID]}
+        //           currentAssignment={item.currentAssignment === "None"? strings.NoAssignmentsYet : item.currentAssignment}
+        //           onPress={() =>
+        //             this.props.navigation.push("TeacherStudentProfile", {
+        //               userID: userID,
+        //               studentID: item.ID,
+        //               currentClass: currentClass,
+        //               classID: currentClassID
+        //             })
+        //           }
+        //           background={colors.red}
+        //           comp={isEditing === true ? (
+        //             <Icon
+        //               name='user-times'
+        //               size={PixelRatio.get() * 9}
+        //               type='font-awesome'
+        //               color={colors.primaryDark} />) : (null)}
+        //           compOnPress={() => { this.removeStudent(item.ID) }} />)}
+        //     />
+        //     {
+        //       studentsReady.length > 0 ? (
+        //         <View style={{ alignItems: 'center', marginLeft: screenWidth * 0.017, flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
+        //           <Icon
+        //             name='check-circle-outline'
+        //             type='material-community'
+        //             color={colors.darkGreen}
+        //           />
+        //           <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStyleDarkGreen]}>
+        //             {strings.Ready}</Text>
+        //         </View>
+        //       ) : (
+        //           <View></View>
+        //         )
+        //     }
+        //     <FlatList
+        //       data={studentsReady}
+        //       keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
+        //       renderItem={({ item }) => (
+        //         <StudentCard
+        //           key={item.id}
+        //           studentName={item.name}
+        //           profilePic={studentImages.images[item.profileImageID]}
+        //           currentAssignment={item.currentAssignment === "None"? strings.NoAssignmentsYet : item.currentAssignment}
+        //           onPress={() =>
+        //             this.props.navigation.push("TeacherStudentProfile", {
+        //               userID: userID,
+        //               studentID: item.ID,
+        //               currentClass: currentClass,
+        //               classID: currentClassID
+        //             })
+        //           }
+        //           background={colors.green}
+        //           comp={isEditing === true ? (
+        //             <Icon
+        //               name='user-times'
+        //               size={PixelRatio.get() * 9}
+        //               type='font-awesome'
+        //               color={colors.primaryDark} />) : (null)}
+        //           compOnPress={() => { this.removeStudent(item.ID) }} />
+        //       )} />
+        //     {
+        //       studentsWithNoAssignments.length > 0 ? (
+        //         <View style={{ alignItems: 'center', marginLeft: screenWidth * 0.017, flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
+        //           <Icon
+        //             name='pencil-plus-outline'
+        //             type='material-community'
+        //             color={colors.primaryDark}
+        //           />
+        //           <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStylePrimaryDark]}>{strings.NeedAssignment}</Text>
+        //         </View>
+        //       ) : (
+        //           <View></View>
+        //         )
+        //     }
+        //     <FlatList
+        //       data={studentsWithNoAssignments}
+        //       keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
+        //       renderItem={({ item }) => (
+        //         <StudentCard
+        //           key={item.id}
+        //           studentName={item.name.toUpperCase()}
+        //           profilePic={studentImages.images[item.profileImageID]}
+        //           currentAssignment={strings.NoAssignmentsYet}
+        //           onPress={() =>
+        //             this.props.navigation.push("TeacherStudentProfile", {
+        //               userID: userID,
+        //               studentID: item.ID,
+        //               currentClass: currentClass,
+        //               classID: currentClassID
+        //             })
+        //           }
+        //           background={colors.white}
+        //           comp={isEditing === true ? (
+        //             <Icon
+        //               name='user-times'
+        //               size={PixelRatio.get() * 9}
+        //               type='font-awesome'
+        //               color={colors.primaryDark} />) : (null)}
+        //           compOnPress={() => { this.removeStudent(item.ID) }} />
+        //       )} />
 
-            {
-              studentsWorkingOnIt.length > 0 ? (
-                <View style={{ alignItems: 'center', marginLeft: screenWidth * 0.017, flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
-                  <Icon
-                    name='update'
-                    type='material-community'
-                    color={colors.primaryDark}
-                  />
-                  <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStylePrimaryDark]}>{strings.WorkingOnIt}</Text>
-                </View>
-              ) : (
-                  <View></View>
-                )
-            }
-            <FlatList
-              data={studentsWorkingOnIt}
-              keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
-              renderItem={({ item }) => (
-                <StudentCard
-                  key={item.id}
-                  studentName={item.name}
-                  profilePic={studentImages.images[item.profileImageID]}
-                  currentAssignment={item.currentAssignment === "None"? strings.NoAssignmentsYet : item.currentAssignment}
-                  onPress={() =>
-                    this.props.navigation.push("TeacherStudentProfile", {
-                      userID: userID,
-                      studentID: item.ID,
-                      currentClass: currentClass,
-                      classID: currentClassID
-                    })
-                  }
-                  background={colors.white}
-                  comp={isEditing === true ? (
-                    <Icon
-                      name='user-times'
-                      size={PixelRatio.get() * 9}
-                      type='font-awesome'
-                      color={colors.primaryDark} />) : (null)}
-                  compOnPress={() => { this.removeStudent(item.ID) }} />
-              )} />
-          </ScrollView>
-        </SideMenu>
+        //     {
+        //       studentsWorkingOnIt.length > 0 ? (
+        //         <View style={{ alignItems: 'center', marginLeft: screenWidth * 0.017, flexDirection: 'row', paddingTop: screenHeight * 0.025 }}>
+        //           <Icon
+        //             name='update'
+        //             type='material-community'
+        //             color={colors.primaryDark}
+        //           />
+        //           <Text style={[{ marginLeft: screenWidth * 0.017 }, fontStyles.mainTextStylePrimaryDark]}>{strings.WorkingOnIt}</Text>
+        //         </View>
+        //       ) : (
+        //           <View></View>
+        //         )
+        //     }
+        //     <FlatList
+        //       data={studentsWorkingOnIt}
+        //       keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
+        //       renderItem={({ item }) => (
+        //         <StudentCard
+        //           key={item.id}
+        //           studentName={item.name}
+        //           profilePic={studentImages.images[item.profileImageID]}
+        //           currentAssignment={item.currentAssignment === "None"? strings.NoAssignmentsYet : item.currentAssignment}
+        //           onPress={() =>
+        //             this.props.navigation.push("TeacherStudentProfile", {
+        //               userID: userID,
+        //               studentID: item.ID,
+        //               currentClass: currentClass,
+        //               classID: currentClassID
+        //             })
+        //           }
+        //           background={colors.white}
+        //           comp={isEditing === true ? (
+        //             <Icon
+        //               name='user-times'
+        //               size={PixelRatio.get() * 9}
+        //               type='font-awesome'
+        //               color={colors.primaryDark} />) : (null)}
+        //           compOnPress={() => { this.removeStudent(item.ID) }} />
+        //       )} />
+        //   </ScrollView>
+        // </SideMenu>
       );
     }
 
