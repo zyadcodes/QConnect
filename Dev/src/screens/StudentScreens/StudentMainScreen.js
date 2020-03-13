@@ -172,7 +172,7 @@ class StudentMainScreen extends QcParentScreen {
           />
         }
       >
-        <QCView style={screenStyle.container}>
+        <QCView>
           <View style={{ flex: 1 }}>
             <TopBanner
               LeftIconName="navicon"
@@ -752,7 +752,7 @@ class StudentMainScreen extends QcParentScreen {
                     { paddingTop: screenHeight * 0.04 }
                   ]}
                 >
-                  {item.name.toUpperCase()}
+                  {item.name? item.name.toUpperCase() : "No Assignment Yet"}
                 </Text>
               </View>
             </View>
@@ -881,7 +881,7 @@ class StudentMainScreen extends QcParentScreen {
           />
         }
       >
-        <QCView style={screenStyle.container}>
+        <QCView>
           {this.renderTopView()}
           {studentClassInfo.currentAssignments &&
           studentClassInfo.currentAssignments.length !== 0
