@@ -107,6 +107,7 @@ export default {
     "It's hard to call a class without a name. Please enter a valid class name",
 
   //--------------------- Student Profile Screen ---------------------
+  WordsPerAssignment: 'Words Per Assignment',
   EditAssignment: "Edit assignment",
   AddAssignment: "Add assignment",
   ChangeStatus: "CHANGE STATUS",
