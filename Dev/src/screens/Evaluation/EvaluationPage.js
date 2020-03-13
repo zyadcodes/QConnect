@@ -41,6 +41,7 @@ export class EvaluationPage extends QcParentScreen {
 		studentID: this.props.navigation.state.params.studentID,
 		classStudent: this.props.navigation.state.params.classStudent,
 		assignmentName: this.props.navigation.state.params.assignmentName,
+		assignmentLength: this.props.navigation.state.params.assignmentLength,
 		isLoading: true,
 		rating: this.props.navigation.state.params.rating
 			? this.props.navigation.state.params.rating
@@ -111,6 +112,7 @@ export class EvaluationPage extends QcParentScreen {
 			classID,
 			studentID,
 			classStudent,
+			assignmentLength,
 			evaluationID
 		} = this.state;
 		const { assignmentType } = this.props.navigation.state.params.assignmentType;
@@ -118,6 +120,7 @@ export class EvaluationPage extends QcParentScreen {
 		let evaluationDetails = {
 			ID: evaluationID,
 			name: assignmentName,
+			assignmentLength,
 			assignmentType: assignmentType ? assignmentType : 'None',
 			completionDate: new Date().toLocaleDateString('en-US', {
 				year: 'numeric',
@@ -152,6 +155,7 @@ export class EvaluationPage extends QcParentScreen {
 			notes,
 			rating,
 			improvementAreas,
+			assignmentLength,
 			classStudent
 		} = this.state;
 		const { assignmentType } = this.props.navigation.state.params;
@@ -159,6 +163,7 @@ export class EvaluationPage extends QcParentScreen {
 		let evaluationDetails = {
 			rating,
 			notes,
+			assignmentLength,
 			improvementAreas,
 			assignmentType: assignmentType ? assignmentType : 'None'
 		};
