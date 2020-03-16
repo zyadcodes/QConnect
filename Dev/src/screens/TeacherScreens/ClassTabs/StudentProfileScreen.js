@@ -58,16 +58,16 @@ class StudentProfileScreen extends QcParentScreen {
       }
     }
 
-	this.setState({
-		classStudent: student,
-		currentAssignments: student.currentAssignments,
-		isLoading: false,
-		wordsPerAssignmentData: data,
-		hasCurrentAssignment:
-		  student.currentAssignments && student.currentAssignments.length > 0,
-		classesAttended: student.classesAttended ? student.classesAttended : '0',
-		classesMissed: student.classesMissed ? student.classesMissed : '0'
-	  });
+    this.setState({
+      classStudent: student,
+      currentAssignments: student.currentAssignments,
+      isLoading: false,
+      wordsPerAssignmentData: data,
+      hasCurrentAssignment:
+        student.currentAssignments && student.currentAssignments.length > 0,
+      classesAttended: student.classesAttended ? student.classesAttended : '0',
+      classesMissed: student.classesMissed ? student.classesMissed : '0'
+    });
   }
 
   setDialogueVisible(visible) {
@@ -320,8 +320,8 @@ class StudentProfileScreen extends QcParentScreen {
     }
 
     return (
-      <QCView style={screenStyle.container}>
-        <View style={styles.studentInfoContainer}>
+      <View style={{ flex: 1 }}>
+        <ScrollView containerStyle={styles.studentInfoContainer}>
           <View style={styles.profileInfo}>
             <View style={styles.profileInfoTop}>
               <View style={{ width: screenWidth * 0.24 }} />
@@ -419,7 +419,7 @@ class StudentProfileScreen extends QcParentScreen {
               </View>
             </View>
           </View>
-		  {wordsPerAssignmentData.length > 0 ? (
+          {wordsPerAssignmentData.length > 0 ? (
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
               <Text style={fontStyles.bigTextStyleBlack}>
                 {strings.WordsPerAssignment}
@@ -599,7 +599,6 @@ class StudentProfileScreen extends QcParentScreen {
               </View>
             )}
           />
-
           <ScrollView>
             {this.renderAssignmentsSectionHeader(
               strings.PastAssignments,
@@ -613,8 +612,8 @@ class StudentProfileScreen extends QcParentScreen {
               }}
             />
           </ScrollView>
-        </View>
-      </QCView>
+        </ScrollView>
+      </View>
     );
   }
 }
@@ -630,7 +629,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end'
   },
   currentAssignment: {
-    height: 250,
+    height: 150,
     borderWidth: 0.5,
     borderColor: colors.grey,
     marginBottom: 5
