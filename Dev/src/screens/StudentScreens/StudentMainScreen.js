@@ -55,7 +55,9 @@ class StudentMainScreen extends QcParentScreen {
 		classCode: '',
 		classes: '',
 		isRecording: false,
-		currentPosition: '0:00'
+		currentPosition: '0:00',
+		classesMissed: '',
+		classesAttended:''
 	};
 
 	//-------------- Component lifecycle methods -----------------------------------
@@ -76,7 +78,9 @@ class StudentMainScreen extends QcParentScreen {
 				student,
 				userID,
 				isOpen: false,
-				classes: []
+				classes: [],
+				classesAttended:student.classesAttended? student.classesAttended: '0',
+				classesMissed:student.classesMissed? student.classesMissed: '0',
 			});
 		} else {
 			const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
@@ -94,7 +98,9 @@ class StudentMainScreen extends QcParentScreen {
 				isReadyEnum,
 				isLoading: false,
 				isOpen: false,
-				classes
+				classes,
+				classesAttended,
+				classesMissed
 			});
 		}
 	}
@@ -455,6 +461,14 @@ class StudentMainScreen extends QcParentScreen {
 									{strings.TotalAssignments + ': ' + thisClassInfo.totalAssignments + '  '}
 								</Text>
 							</View>
+							<View style={{alignSelf: 'flex-start'}}>
+							<Text style={fontStyles.mainTextStyleDarkGrey}>
+							Classes attended: {classesAttended}</Text>
+						</View>	
+						<View style={{alignSelf: 'flex-start'}}>
+						<Text style={fontStyles.mainTextStyleDarkGrey}>
+							Class missed:{classesMissed}</Text>
+							</View>	
 						</View>
 					</View>
 				</View>
