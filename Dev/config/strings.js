@@ -13,7 +13,7 @@ export default {
   HasJoinedYourClass: " has joined your class",
   AssignmentUpdate: "Assignment Update",
   YourTeacherHasUpdatedYourCurrentAssignment:
-    "Your teacher has updated your current assignment",
+    "You have a new assignment from your teacher",
   AssignmentGraded: "Assignment Graded",
   YourAssignmentHasBeenGraded: "Your assignment has been graded",
 
@@ -26,6 +26,7 @@ export default {
   ClassAlreadyJoined:
     "We know it's exciting to be in this class. But you can only join it once.",
   NeedHelp: "NEED HELP",
+  NotStarted: "NOT STARTED",
   EnableMicPermissions:
     "You need to enable microphone permissions from your settings",
   SubmitAssignment: "Submit Assignment",
@@ -106,8 +107,9 @@ export default {
     "It's hard to call a class without a name. Please enter a valid class name",
 
   //--------------------- Student Profile Screen ---------------------
-  EditAssignment: "Edit Assignment",
-  AddAssignment: "Add Assignment",
+  EditAssignment: "Edit assignment",
+  AddAssignment: "Add assignment",
+  ChangeStatus: "CHANGE STATUS",
   Assignments: "Assignments",
   Memorize: "Memorize",
   Reading: "Reading",
@@ -122,6 +124,7 @@ export default {
   GreatJob: "Great Job!",
   CurrentlyNoAssignment: "You currently don't have an assignment.",
   CurrentAssignment: "Current Assignment",
+  CurrentAssignments: "Current Assignments",
   Grade: "Grade",
   PleaseEnterAnAssignmentName: "Please select an assignment.",
   ImprovementAreas: "Things to work on: ",
@@ -131,6 +134,8 @@ export default {
   ParenthesisPage: ") p. ",
   PagesWithParenthesis: ") pp. ",
   To: " to ",
+  TeacherIsNotified: "Awesome! Your teacher is notified and she sure will be excited :)",
+  TeacherIsNotifiedNeedHelp: "Oh no! Your teacher is notified and should be happy to help.",
 
   //--------------------- Join Class Screen ---------------------
   JoinClass: "Join Class",
