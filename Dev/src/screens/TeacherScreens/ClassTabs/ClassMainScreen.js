@@ -272,24 +272,26 @@ export class ClassMainScreen extends QcParentScreen {
         </SideMenu>
       );
     } else {
-      
       const studentsNeedHelp = currentClass.students.filter(
-        student => student.currentAssignments[0].isReadyEnum === "NEED_HELP"
+        student =>
+          student.currentAssignments[0] &&
+          student.currentAssignments[0].isReadyEnum === "NEED_HELP"
       );
       const studentsReady = currentClass.students.filter(
         student =>
-          student.currentAssignments[0].isReadyEnum === "READY" ||
-          (!student.isReadyEnum && student.isReady === true)
+          student.currentAssignments[0] &&
+          (student.currentAssignments[0].isReadyEnum === "READY" ||
+            (!student.isReadyEnum && student.isReady === true))
       );
       const studentsWorkingOnIt = currentClass.students.filter(
         student =>
+          student.currentAssignments[0] &&
           ((student.currentAssignments[0].isReadyEnum === "WORKING_ON_IT" ||
             student.currentAssignments[0].isReadyEnum === "NOT_STARTED" ||
             (student.currentAssignments[0].isReadyEnum === undefined &&
               student.currentAssignments[0].isReady === false)) &&
             (student.currentAssignments &&
-              student.currentAssignments.length > 0)) ||
-          student.currentAssignments.length === 0
+              student.currentAssignments.length > 0))
       );
       const studentsWithNoAssignments = currentClass.students.filter(
         student =>

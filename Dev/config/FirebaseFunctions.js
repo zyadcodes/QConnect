@@ -2,6 +2,7 @@
 //library
 import firebase from 'react-native-firebase';
 import strings from './strings';
+import { arrayOf } from 'prop-types';
 
 export default class FirebaseFunctions {
   //References that'll be used throughout the class's static functions
@@ -385,37 +386,64 @@ export default class FirebaseFunctions {
       this.logEvent("UpdateClassAssignment_IndexIsUndefined");
       //fallback to update first assignment
       //this is potentially dangerous,.. consider throwing instead.
-      assignmentIndex = 0; 
+      assignmentIndex = 0;
     }
 
     let currentClass = await this.getClassByID(classID);
     let arrayOfStudents = currentClass.students;
+    let updatedAssignment = {
+      name: newAssignmentName,
+      type: assignmentType,
+      location: assignmentLocation,
+      isReadyEnum: "NOT_STARTED"
+    };
+
     arrayOfStudents.forEach(student => {
-      student.currentAssignments[assignmentIndex].name = newAssignmentName;
-      student.currentAssignments[assignmentIndex].type = assignmentType;
-      student.currentAssignments[assignmentIndex].location = assignmentLocation;
+      if (
+        student.currentAssignments === undefined ||
+        student.currentAssignments.length === 0
+      ) {
+        student.currentAssignments = [{ ...updatedAssignment }];
+      } else if (student.currentAssignments[assignmentIndex] === undefined) {
+        this.logEvent('INVALID_ASSIGNMENT_INDEX', { assignmentIndex });
+        student.currentAssignments.push({ ...updatedAssignment });
+      } else {
+        student.currentAssignments[assignmentIndex] = updatedAssignment;
+      }
 
       try {
         //Notifies that student that their assignment has been updated
-        this.functions.httpsCallable('sendNotification')({
+        this.functions.httpsCallable("sendNotification")({
           topic: student.ID,
           title: strings.AssignmentUpdate,
-          body: strings.YourTeacherHasUpdatedYourCurrentAssignment
+          body: strings.YourTeacherHasUpdatedYourCurrentAssignment,
         });
       } catch (error) {
         //todo: log event when this happens
         this.logEvent(
-          "FAILED_TO_SEND_NOTIFICATIONS. Error: " + error.toString()
+          'FAILED_TO_SEND_NOTIFICATIONS. Error: ' + error.toString()
         );
       }
     });
 
     //todo: update the below to support multiple assignments
+    let currentAssignments = currentClass.currentAssignments;
+    if (currentAssignments === undefined || currentAssignments.length === 0) {
+      currentAssignments = [{ ...updatedAssignment }];
+    } else if (currentAssignments[assignmentIndex] === undefined) {
+      //todo: show error here?
+      this.logEvent(
+        'INVALID_ASSIGNMENT_INDEX. Falling back to adding the assignment as new',
+        { assignmentIndex }
+      );
+      currentAssignments.push({ ...updatedAssignment });
+    } else {
+      currentAssignments[assignmentIndex] = updatedAssignment;
+    }
+
     await this.updateClassObject(classID, {
       students: arrayOfStudents,
-      currentAssignment: newAssignmentName,
-      currentAssignmentType: assignmentType,
-      currentAssignmentLocation: assignmentLocation
+      currentAssignments,
     });
     return 0;
   }

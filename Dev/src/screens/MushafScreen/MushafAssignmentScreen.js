@@ -19,7 +19,8 @@ import LoadingSpinner from "components/LoadingSpinner";
 const noAyahSelected = {
   surah: 0,
   page: 0,
-  ayah: 0
+  ayah: 0,
+  length: 0
 };
 
 const noSelection = {
@@ -55,6 +56,7 @@ class MushafAssignmentScreen extends Component {
       ? {
           start: this.props.navigation.state.params.assignmentLocation.start,
           end: this.props.navigation.state.params.assignmentLocation.end,
+          length: this.props.navigation.state.params.assignmentLocation.length,
           started: false,
           completed: true
         }
@@ -86,7 +88,15 @@ class MushafAssignmentScreen extends Component {
       );
 
       if (!assignmentLocation) {
-        assignmentLocation = currentClassInfo.currentAssignmentLocation;
+        if (
+          currentClassInfo.currentAssignments !== undefined &&
+          currentClassInfo.currentAssignments.length > 0
+        ) {
+          assignmentLocation = currentClassInfo.currentAssignments[0].location;
+        } else {
+          //todo: eventually get rid of old schema.. backward compatibility is temporary only
+          assignmentLocation = currentClassInfo.currentAssignmentLocation;
+        }
       }
 
       this.setState(
@@ -99,6 +109,7 @@ class MushafAssignmentScreen extends Component {
             ? {
                 start: assignmentLocation.start,
                 end: assignmentLocation.end,
+                length: assignmentLocation.length,
                 started: false,
                 completed: true
               }
@@ -135,7 +146,7 @@ class MushafAssignmentScreen extends Component {
       name: assignmentName,
       type: assignmentType,
       location,
-      isReadyEnum: "NOT_STARTED",
+      isReadyEnum: "NOT_STARTED"
     };
 
     //go back to student profile screen if invoked from there, otherwise go back to main screen
@@ -217,7 +228,11 @@ class MushafAssignmentScreen extends Component {
     assignmentIndex,
     closeAfterSave
   ) {
-    let assignmentLocation = { start: selection.start, end: selection.end };
+    let assignmentLocation = {
+      start: selection.start,
+      end: selection.end,
+      length: selection.end.wordNum - selection.start.wordNum + 1
+    };
 
     await FirebaseFunctions.updateClassAssignment(
       classID,
@@ -273,7 +288,11 @@ class MushafAssignmentScreen extends Component {
     assignmentIndex,
     closeAfterSave //boolean: whether or not to close the screen after saving the info
   ) {
-    let assignmentLocation = { start: selection.start, end: selection.end };
+    let assignmentLocation = {
+      start: selection.start,
+      end: selection.end,
+      length: selection.end.wordNum - selection.start.wordNum + 1
+    };
 
     //update the current class object (so we can pass it to caller without having to re-render from firebase)
     let students = currentClass.students.map(student => {
@@ -415,7 +434,8 @@ class MushafAssignmentScreen extends Component {
             started: true,
             completed: false,
             start: selectedAyah,
-            end: selectedAyah
+            end: selectedAyah,
+            length: 10 //todo: need to capture actual length of ayah
           }
         },
         () => this.updateAssignmentName()
@@ -433,12 +453,27 @@ class MushafAssignmentScreen extends Component {
           //Set the smallest number as the start, and the larger as the end
           if (compareOrder(selection.start, selectedAyah) > 0) {
             this.setState(
-              { selection: { ...this.state.selection, end: selectedAyah } },
+              {
+                selection: {
+                  ...this.state.selection,
+                  end: selectedAyah,
+                  length:
+                    selectedAyah.wordNum -
+                    this.state.selection.start.wordNum +
+                    1,
+                },
+              },
               () => this.updateAssignmentName()
             );
           } else {
             this.setState(
-              { selection: { ...this.state.selection, start: selectedAyah } },
+              {
+                selection: {
+                  ...this.state.selection,
+                  start: selectedAyah,
+                  length: this.state.end.wordNum - selectedAyah.wordNum + 1,
+                },
+              },
               () => this.updateAssignmentName()
             );
           }
@@ -475,7 +510,8 @@ class MushafAssignmentScreen extends Component {
                 ...prevState2.selection,
                 started: false,
                 completed: true,
-                end: endA
+                end: endA,
+                length: endA.wordNum - prevState2.selection.start.wordNum + 1
               }
             };
           },

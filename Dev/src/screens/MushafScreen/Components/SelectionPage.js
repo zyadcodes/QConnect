@@ -227,7 +227,8 @@ class SelectionPage extends React.Component {
     return {
       ayah: Number(startLine.ayah),
       surah: Number(startLine.surahNumber),
-      page: page
+      page: page,
+      wordNum: Number(startLine.text[0].id)
     };
   }
 
@@ -257,7 +258,7 @@ class SelectionPage extends React.Component {
     //then get the last ayah within the last line
     let lastAyah = this.getLastAyahOfLine(lastLine);
 
-    return { ayah: lastAyah, surah: Number(lastLine.surahNumber), page: page };
+    return { ayah: lastAyah, surah: Number(lastLine.surahNumber), page: page, wordNum: Number(lastLine.text[lastLine.text.length -1].id) };
   }
 
   //------------------------ event handlers ----------------------------------------
@@ -320,8 +321,6 @@ class SelectionPage extends React.Component {
     //select all the ayahs between first and last ayah of the page
     this.props.onSelectAyahs(firstAyah, lastAyah);
   }
-
-  onSelectAyah() {}
 
   //------------------------ render component ----------------------------------------
   render() {
