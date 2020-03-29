@@ -100,7 +100,7 @@ export default {
   PasswordError: "Password must be longer than six characters",
 
   //----------------------- Teacher Main Screen ----------------------
-  EmptyClass: "Uh Oh! No students",
+  EmptyClass: "Let's add your students",
   AddStudentButton: "Click here to add a student",
   AddClassButton: "Click here to add a class",
   AddText:
@@ -129,7 +129,7 @@ export default {
   Grade: "Grade",
   PleaseEnterAnAssignmentName: "Please select an assignment.",
   ImprovementAreas: "Things to work on: ",
-  NoClass: "Uh Oh! No Classes",
+  NoClass: "Let's get you started",
   addClassButton: "Click Here to Add A Class",
   NotesColon: "Notes: ",
   ParenthesisPage: ") p. ",
