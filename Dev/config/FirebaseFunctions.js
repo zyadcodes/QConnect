@@ -182,65 +182,6 @@ export default class FirebaseFunctions {
     return 0;
   }
 
-  // static async updateAssignmentsToNewSchema() {
-  //   let classes = [
-  //     "lJGSTGvhSyLcHqZO1ggf",
-  //     'lN5KIJJKWL82YpiiAdBc',
-  //     "nH0fWL8KkrU0k5nZrcwD",
-  //     "nM3grgV0SZnUcMvAIfhR",
-  //     'nPcNNT6X7JMltqDJozEj',
-  //     "njlyIEqQlxRM3ojRSVNA",
-  //     'psIuUFmmQ0QZMM9v1CNj',
-  //     'qFFPbG2oonNbSzv18Cud',
-  //     'qqntcW4lr9vxHYpvtJrT',
-  //     'rl2EzxbfIvm7zNKGdnCZ',
-  //     'sGgIpoyF7AtOJ080PA3X',
-  //     'tZQVCfAujo2u2jSYOCqd',
-  //     'ugrGy0V8MHdAsIpgr5lu',
-  //     'vfP5ogRoCwf7YpwNh7tE',
-  //     'wcbdwMCfJbheRRDIzYk2'
-  //   ];
-
-  //   //Rewrites all of the versions of this student in all of the classes they are a part of with their
-  //   //new name and profile picture
-  //   classes.forEach(async classID => {
-  //     let currentClass = await this.getClassByID(classID);
-  //     let arrayOfStudents = currentClass.students;
-
-  //     //filter to students with outdated schema
-  //     let studentsToFix = arrayOfStudents.filter(
-  //       student =>
-  //         (student.currentAssignments === undefined ||
-  //           student.currentAssignments.length === 0 ||
-  //           student.currentAssignments[0].name === undefined) &&
-  //         student.currentAssignment !== undefined
-  //     );
-
-  //     //update these students info with new schema
-  //     studentsToFix.forEach(async studToFix => {
-  //       let studentIndex = arrayOfStudents.findIndex(student => {
-  //         return student.ID === studToFix.ID;
-  //       });
-  //       alert(studToFix.ID);
-  //       arrayOfStudents[studentIndex].currentAssignments = [
-  //         {
-  //           name: arrayOfStudents[studentIndex].currentAssignment,
-  //           isReadyEnum: arrayOfStudents[studentIndex].isReadyEnum,
-  //           type: arrayOfStudents[studentIndex].currentAssignmentType,
-  //           location: arrayOfStudents[studentIndex].currentAssignmentLocation,
-  //         }
-  //       ];
-  //       arrayOfStudents[studentIndex].totalAssignments = 1;
-  //     });
-
-  //     await this.updateClassObject(classID, {
-  //       students: arrayOfStudents
-  //     });
-  //   });
-
-  //   return 0;
-  // }
-
   //This function will take in a new class object, and a teacher object and create a new class
   //that belongs to that teacher in the firestore database. It will do this by creating a new document
   //in the "classes" collection, then linking that class to a certain teacher by relating them through

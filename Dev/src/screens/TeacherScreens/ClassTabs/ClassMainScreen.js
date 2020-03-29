@@ -46,8 +46,6 @@ export class ClassMainScreen extends QcParentScreen {
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
     const { currentClassID } = teacher;
 
-    //await FirebaseFunctions.updateAssignmentsToNewSchema();
-
     let { currentClass } = this.props.navigation.state.params;
     if (currentClass === undefined) {
       currentClass = await FirebaseFunctions.getClassByID(currentClassID);
