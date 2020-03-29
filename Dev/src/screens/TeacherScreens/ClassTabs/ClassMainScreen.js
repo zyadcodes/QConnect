@@ -165,7 +165,7 @@ export class ClassMainScreen extends QcParentScreen {
               }}
             >
               <Image
-                source={require("assets/emptyStateIdeas/ghostGif.gif")}
+                source={require("assets/emptyStateIdeas/welcome-girl.png")}
                 style={{
                   width: 0.73 * screenWidth,
                   height: 0.22 * screenHeight,
@@ -246,7 +246,7 @@ export class ClassMainScreen extends QcParentScreen {
               }}
             >
               <Image
-                source={require("assets/emptyStateIdeas/ghostGif.gif")}
+                source={require("assets/emptyStateIdeas/welcome-girl.png")}
                 style={{
                   width: 0.73 * screenWidth,
                   height: 0.22 * screenHeight,

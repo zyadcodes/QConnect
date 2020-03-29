@@ -205,7 +205,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   render() {
 
     return (
-      <QCView style={screenStyle.container}>
+      <View>
         <ScrollView>
           <View>
             <ImageSelectionModal
@@ -272,7 +272,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
             <Toast position={'center'} ref="toast" />
           </View>
         </ScrollView>
-      </QCView>
+      </View>
     );
   }
 }
@@ -307,8 +307,7 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   filler: {
-    flexDirection: "column",
-    flex: 1
+    height: 20
   },
 });
 

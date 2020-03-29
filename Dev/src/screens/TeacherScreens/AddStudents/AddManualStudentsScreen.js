@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
     width: screenWidth * 0.95,
     backgroundColor: colors.veryLightGrey,
     height: screenHeight * 0.06,
-    borderRadius: screenHeight * 0.03
+    borderRadius: 1
   },
   doneButton: {
     alignItems: 'center',
