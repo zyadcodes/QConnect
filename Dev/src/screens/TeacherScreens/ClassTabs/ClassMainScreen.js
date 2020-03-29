@@ -164,6 +164,10 @@ export class ClassMainScreen extends QcParentScreen {
                 flex: 2
               }}
             >
+              <Text style={fontStyles.hugeTextStylePrimaryDark}>
+                {strings.NoClass}
+              </Text>
+
               <Image
                 source={require("assets/emptyStateIdeas/welcome-girl.png")}
                 style={{
@@ -172,9 +176,7 @@ export class ClassMainScreen extends QcParentScreen {
                   resizeMode: "contain"
                 }}
               />
-              <Text style={fontStyles.hugeTextStylePrimaryDark}>
-                {strings.NoClass}
-              </Text>
+
               <QcActionButton
                 text={strings.AddClassButton}
                 onPress={() => {
@@ -245,6 +247,10 @@ export class ClassMainScreen extends QcParentScreen {
                 alignSelf: "center"
               }}
             >
+              <Text style={fontStyles.hugeTextStylePrimaryDark}>
+                {strings.EmptyClass}
+              </Text>
+
               <Image
                 source={require("assets/emptyStateIdeas/welcome-girl.png")}
                 style={{
@@ -254,9 +260,6 @@ export class ClassMainScreen extends QcParentScreen {
                 }}
               />
 
-              <Text style={fontStyles.hugeTextStylePrimaryDark}>
-                {strings.EmptyClass}
-              </Text>
               <QcActionButton
                 text={strings.AddStudentButton}
                 onPress={() =>
@@ -274,17 +277,20 @@ export class ClassMainScreen extends QcParentScreen {
     } else {
       const studentsNeedHelp = currentClass.students.filter(
         student =>
+          student.currentAssignments &&
           student.currentAssignments[0] &&
           student.currentAssignments[0].isReadyEnum === "NEED_HELP"
       );
       const studentsReady = currentClass.students.filter(
         student =>
+          student.currentAssignments &&
           student.currentAssignments[0] &&
           (student.currentAssignments[0].isReadyEnum === "READY" ||
             (!student.isReadyEnum && student.isReady === true))
       );
       const studentsWorkingOnIt = currentClass.students.filter(
         student =>
+          student.currentAssignments &&
           student.currentAssignments[0] &&
           ((student.currentAssignments[0].isReadyEnum === "WORKING_ON_IT" ||
             student.currentAssignments[0].isReadyEnum === "NOT_STARTED" ||

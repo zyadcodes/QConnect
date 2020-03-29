@@ -599,7 +599,7 @@ class StudentMainScreen extends QcParentScreen {
     ]).start(() => this.setState({ recordingUIVisible: false }));
   }
 
-  renderAudioRecordingUI() {
+  renderAudioRecordingUI(assignmentIndex) {
     const {
       student,
       studentClassInfo,
@@ -640,11 +640,11 @@ class StudentMainScreen extends QcParentScreen {
                 FirebaseFunctions.submitRecordingAudio(
                   recordedFileUri,
                   userID,
-                  currentClassID
+                  currentClassID,
+                  assignmentIndex
                 );
                 this.animateHideAudioUI();
               }}
-              
             />
           </Animated.View>
         )}
@@ -751,7 +751,7 @@ class StudentMainScreen extends QcParentScreen {
                     { paddingTop: screenHeight * 0.04 }
                   ]}
                 >
-                  {item.name? item.name.toUpperCase() : "No Assignment Yet"}
+                  {item.name ? item.name.toUpperCase() : "No Assignment Yet"}
                 </Text>
               </View>
             </View>
@@ -769,7 +769,7 @@ class StudentMainScreen extends QcParentScreen {
             fieldTemplate={() => this.getCustomPickerTemplate(item)}
           />
         </View>
-        {this.renderAudioRecordingUI()}
+        {this.renderAudioRecordingUI(index)}
       </View>
     );
   }
@@ -797,34 +797,81 @@ class StudentMainScreen extends QcParentScreen {
 
   renderEmptyAssignmentCard() {
     return (
-      <View
-        style={[
-          styles.currentAssignment,
-          {
-            backgroundColor: colors.primaryVeryLight,
-          },
-        ]}
-      >
+      <View>
+        <View
+          style={[
+            styles.currentAssignment,
+            {
+              backgroundColor: colors.primaryVeryLight,
+            },
+          ]}
+        >
+          <View
+            style={{
+              flex: 0.5,
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingVertical: screenHeight * 0.04,
+            }}
+          >
+            <Text style={fontStyles.bigTextStyleBlack}>
+              {strings.NoAssignmentsYet}
+            </Text>
+            <Text style={fontStyles.mainTextStyleBlack}>
+              {strings.YouDontHaveAssignments}
+            </Text>
+            <Text style={fontStyles.bigTextStyleBlack}>{'  '}</Text>
+            <Text
+              style={[
+                fontStyles.mainTextStylePrimaryDark,
+                { paddingBottom: 30 },
+              ]}
+            >
+              {strings.EnjoyYourTime}
+            </Text>
+          </View>
+        </View>
         <View
           style={{
-            flex: 0.5,
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingVertical: screenHeight * 0.04,
+            alignItems: "center",
+            justifyContent: "flex-start",
+            alignSelf: "center"
           }}
         >
-          <Text style={fontStyles.bigTextStyleBlack}>
-            {strings.NoAssignmentsYet}
-          </Text>
-          <Text style={fontStyles.mainTextStyleBlack}>
-            {strings.YouDontHaveAssignments}
-          </Text>
-          <Text style={fontStyles.bigTextStyleBlack}>{'  '}</Text>
           <Text
-            style={[fontStyles.mainTextStylePrimaryDark, { paddingBottom: 30 }]}
+            style={[
+              fontStyles.hugeTextStylePrimaryDark,
+              {
+                textAlign: 'center'
+              },
+            ]}
           >
-            {strings.EnjoyYourTime}
+            {strings.ReadQuranMotivation}
           </Text>
+
+          <Image
+            source={require("assets/emptyStateIdeas/student-read.png")}
+            style={{
+              height: 0.16 * screenHeight,
+              resizeMode: "contain"
+            }}
+          />
+
+          <QcActionButton
+            text={strings.OpenMushaf}
+            onPress={() => {
+              this.props.navigation.push('MushafReadingScreen', {
+                popOnClose: true,
+                isTeacher: false,
+                assignToAllClass: false,
+                userID: this.props.navigation.state.params.userID,
+                classID: this.state.currentClassID,
+                studentID: this.state.userID,
+                currentClass: this.state.studentClassInfo,
+                imageID: this.state.studentClassInfo.profileImageID
+              });
+            }}
+          />
         </View>
       </View>
     );
@@ -889,10 +936,12 @@ class StudentMainScreen extends QcParentScreen {
           <Toast position={'bottom'} ref="toast" />
           <View>
             <ScrollView>
-              {this.renderAssignmentsSectionHeader(
-                strings.PastAssignments,
-                'history'
-              )}
+              {assignmentHistory &&
+                assignmentHistory.length > 0 &&
+                this.renderAssignmentsSectionHeader(
+                  strings.PastAssignments,
+                  'history'
+                )}
               <FlatList
                 data={assignmentHistory}
                 keyExtractor={(item, index) => item.name + index}

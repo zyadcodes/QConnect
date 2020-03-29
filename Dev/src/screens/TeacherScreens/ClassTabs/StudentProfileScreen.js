@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Image,
@@ -7,21 +7,22 @@ import {
   ScrollView,
   FlatList,
   TouchableHighlight,
-  TouchableOpacity
-} from 'react-native';
-import colors from 'config/colors';
-import { Rating } from 'react-native-elements';
-import strings from 'config/strings';
-import studentImages from 'config/studentImages';
-import QcParentScreen from 'screens/QcParentScreen';
-import FirebaseFunctions from 'config/FirebaseFunctions';
-import LoadingSpinner from 'components/LoadingSpinner';
-import QCView from 'components/QCView';
-import screenStyle from 'config/screenStyle';
-import fontStyles from 'config/fontStyles';
-import { screenHeight, screenWidth } from 'config/dimensions';
-import { LineChart, StackedBarChart } from 'react-native-chart-kit';
-import { Icon } from 'react-native-elements';
+  TouchableOpacity,
+} from "react-native";
+import colors from "config/colors";
+import QcActionButton from "components/QcActionButton";
+import { Rating } from "react-native-elements";
+import strings from "config/strings";
+import studentImages from "config/studentImages";
+import QcParentScreen from "screens/QcParentScreen";
+import FirebaseFunctions from "config/FirebaseFunctions";
+import LoadingSpinner from "components/LoadingSpinner";
+import QCView from "components/QCView";
+import screenStyle from "config/screenStyle";
+import fontStyles from "config/fontStyles";
+import { screenHeight, screenWidth } from "config/dimensions";
+import { LineChart, StackedBarChart } from "react-native-chart-kit";
+import { Icon } from "react-native-elements";
 
 class StudentProfileScreen extends QcParentScreen {
   state = {
@@ -29,19 +30,19 @@ class StudentProfileScreen extends QcParentScreen {
     currentClass: this.props.navigation.state.params.currentClass,
     classID: this.props.navigation.state.params.classID,
     currentAssignments: [],
-    classStudent: '',
+    classStudent: "",
     isDialogVisible: false,
     isLoading: true,
-    hasCurrentAssignment: '',
-    classesAttended: '',
-    classesMissed: ''
+    hasCurrentAssignment: "",
+    classesAttended: "",
+    classesMissed: ""
   };
 
   //Sets the screen for firebase analytics & fetches the correct student from this class
   async componentDidMount() {
     FirebaseFunctions.setCurrentScreen(
-      'Student Profile Screen',
-      'StudentProfileScreen'
+      "Student Profile Screen",
+      "StudentProfileScreen"
     );
     const { currentClass, studentID } = this.state;
     const student = await currentClass.students.find(eachStudent => {
@@ -65,8 +66,8 @@ class StudentProfileScreen extends QcParentScreen {
       wordsPerAssignmentData: data,
       hasCurrentAssignment:
         student.currentAssignments && student.currentAssignments.length > 0,
-      classesAttended: student.classesAttended ? student.classesAttended : '0',
-      classesMissed: student.classesMissed ? student.classesMissed : '0'
+      classesAttended: student.classesAttended ? student.classesAttended : "0",
+      classesMissed: student.classesMissed ? student.classesMissed : "0"
     });
   }
 
@@ -92,14 +93,21 @@ class StudentProfileScreen extends QcParentScreen {
 
   updateStateWithNewAssignmentInfo(newAssignment, index, currentClass) {
     let updatedStudentInfo = this.state.classStudent;
-    updatedStudentInfo.currentAssignments[index] = newAssignment;
-    this.setState(
-      {
-        classStudent: updatedStudentInfo,
-        currentClass: currentClass,
-        currentAssignments: updatedStudentInfo.currentAssignments
-      }
-    );
+    if (
+      !updatedStudentInfo.currentAssignments ||
+      updatedStudentInfo.currentAssignments.length === 0 ||
+      updatedStudentInfo.currentAssignments[index] === undefined
+    ) {
+      updatedStudentInfo = [newAssignment];
+    } else {
+      updatedStudentInfo.currentAssignments[index] = newAssignment;
+    }
+
+    this.setState({
+      classStudent: updatedStudentInfo,
+      currentClass: currentClass,
+      currentAssignments: updatedStudentInfo.currentAssignments,
+    });
   }
 
   //This function is going to return the labels for the graph which will be an array of 5 dates for when the assignments
@@ -110,13 +118,13 @@ class StudentProfileScreen extends QcParentScreen {
     const { wordsPerAssignmentData } = this.state;
     if (wordsPerAssignmentData.length <= 5) {
       return wordsPerAssignmentData.map(data =>
-        data.completionDate.substring(0, data.completionDate.lastIndexOf('/'))
+        data.completionDate.substring(0, data.completionDate.lastIndexOf("/"))
       );
     } else {
       const increment = wordsPerAssignmentData.length % 5;
       const labels = [];
       for (let i = 0; i < wordsPerAssignmentData.length; i += increment) {
-        let index = '';
+        let index = "";
         if (i >= wordsPerAssignmentData.length) {
           index = wordsPerAssignmentData.length - 1;
         } else {
@@ -125,7 +133,7 @@ class StudentProfileScreen extends QcParentScreen {
         labels.push(
           wordsPerAssignmentData[index].completionDate.substring(
             0,
-            wordsPerAssignmentData[index].completionDate.lastIndexOf('/')
+            wordsPerAssignmentData[index].completionDate.lastIndexOf("/")
           )
         );
       }
@@ -137,11 +145,11 @@ class StudentProfileScreen extends QcParentScreen {
     return (
       <View
         style={{
-          alignItems: "center",
+          alignItems: 'center',
           marginLeft: screenWidth * 0.017,
-          flexDirection: "row",
+          flexDirection: 'row',
           paddingTop: screenHeight * 0.007,
-          paddingBottom: screenHeight * 0.019
+          paddingBottom: screenHeight * 0.019,
         }}
       >
         <Icon
@@ -152,7 +160,7 @@ class StudentProfileScreen extends QcParentScreen {
         <Text
           style={[
             { marginLeft: screenWidth * 0.017 },
-            fontStyles.mainTextStyleDarkGrey
+            fontStyles.mainTextStyleDarkGrey,
           ]}
         >
           {label.toUpperCase()}
@@ -167,7 +175,7 @@ class StudentProfileScreen extends QcParentScreen {
       <TouchableOpacity
         onPress={() => {
           //To-Do: Navigates to more specific evaluation for this assignment
-          this.props.navigation.push("EvaluationPage", {
+          this.props.navigation.push('EvaluationPage', {
             classID: this.state.currentClassID,
             studentID: this.state.userID,
             classStudent: thisClassInfo,
@@ -181,23 +189,23 @@ class StudentProfileScreen extends QcParentScreen {
             isStudentSide: true,
             evaluationID: item.ID,
             readOnly: true,
-            newAssignment: false
+            newAssignment: false,
           });
         }}
       >
         <View style={styles.prevAssignmentCard} key={index}>
           <View
             style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center"
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center'
             }}
           >
             <View
               style={{
                 flex: 3,
-                justifyContent: "center",
-                alignItems: "flex-start"
+                justifyContent: 'center',
+                alignItems: 'flex-start'
               }}
             >
               <Text style={fontStyles.mainTextStylePrimaryDark}>
@@ -206,9 +214,9 @@ class StudentProfileScreen extends QcParentScreen {
             </View>
             <View
               style={{
-                alignItems: "center",
-                justifyContent: "center",
-                flex: 3
+                alignItems: 'center',
+                justifyContent: 'center',
+                flex: 3,
               }}
             >
               <Text
@@ -224,8 +232,8 @@ class StudentProfileScreen extends QcParentScreen {
                           item.assignmentType === strings.Memorize ||
                           item.assignmentType == null
                         ? colors.darkGreen
-                        : colors.darkishGrey
-                  }
+                        : colors.darkishGrey,
+                  },
                 ]}
               >
                 {item.assignmentType ? item.assignmentType : strings.Memorize}
@@ -234,8 +242,8 @@ class StudentProfileScreen extends QcParentScreen {
             <View
               style={{
                 flex: 3,
-                justifyContent: "center",
-                alignItems: "flex-end"
+                justifyContent: 'center',
+                alignItems: 'flex-end'
               }}
             >
               <Rating
@@ -247,8 +255,8 @@ class StudentProfileScreen extends QcParentScreen {
           </View>
           <View
             style={{
-              alignItems: "center",
-              justifyContent: "center"
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
           >
             <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>
@@ -257,7 +265,7 @@ class StudentProfileScreen extends QcParentScreen {
           </View>
           {item.evaluation.notes ? (
             <Text numberOfLines={2} style={fontStyles.smallTextStyleDarkGrey}>
-              {"Notes: " + item.evaluation.notes}
+              {'Notes: ' + item.evaluation.notes}
             </Text>
           ) : (
             <View />
@@ -266,9 +274,9 @@ class StudentProfileScreen extends QcParentScreen {
           item.evaluation.improvementAreas.length > 0 ? (
             <View
               style={{
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                height: screenHeight * 0.03
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                height: screenHeight * 0.03,
               }}
             >
               <Text style={fontStyles.smallTextStyleDarkGrey}>
@@ -277,7 +285,7 @@ class StudentProfileScreen extends QcParentScreen {
               {item.evaluation.improvementAreas.map((tag, cnt) => {
                 return (
                   <Text key={tag}>
-                    {cnt > 0 ? ", " : ""}
+                    {cnt > 0 ? ', ' : ''}
                     {tag}
                   </Text>
                 );
@@ -302,7 +310,7 @@ class StudentProfileScreen extends QcParentScreen {
       currentAssignments,
       classesAttended,
       classesMissed,
-      wordsPerAssignmentData,
+      wordsPerAssignmentData
     } = this.state;
     let { assignmentHistory, averageRating, name } = classStudent;
 
@@ -310,7 +318,7 @@ class StudentProfileScreen extends QcParentScreen {
     if (isLoading === true) {
       return (
         <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
           <LoadingSpinner isVisible={true} />
         </View>
@@ -333,7 +341,7 @@ class StudentProfileScreen extends QcParentScreen {
                   {name.toUpperCase()}
                 </Text>
                 <View
-                  style={{ flexDirection: 'row', height: 0.037 * screenHeight }}
+                  style={{ flexDirection: "row", height: 0.037 * screenHeight }}
                 >
                   <Rating
                     readonly={true}
@@ -342,13 +350,13 @@ class StudentProfileScreen extends QcParentScreen {
                   />
                   <View
                     style={{
-                      flexDirection: 'column',
-                      justifyContent: 'center'
+                      flexDirection: "column",
+                      justifyContent: "center"
                     }}
                   >
                     <Text style={fontStyles.bigTextStyleDarkGrey}>
                       {averageRating === 0
-                        ? ''
+                        ? ""
                         : parseFloat(averageRating).toFixed(1)}
                     </Text>
                   </View>
@@ -360,15 +368,15 @@ class StudentProfileScreen extends QcParentScreen {
             </View>
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-end',
+                flexDirection: "row",
+                justifyContent: "flex-end",
                 marginRight: screenWidth * 0.02,
-                marginHorizontal: screenHeight * 0.05
+                marginHorizontal: screenHeight * 0.05,
               }}
             >
               <TouchableHighlight
                 onPress={() => {
-                  this.props.navigation.push("MushafAssignmentScreen", {
+                  this.props.navigation.push('MushafAssignmentScreen', {
                     newAssignment: true,
                     popOnClose: true,
                     isTeacher: true,
@@ -377,11 +385,13 @@ class StudentProfileScreen extends QcParentScreen {
                     classID,
                     studentID,
                     currentClass,
-                    assignmentIndex: classStudent.currentAssignments.length,
+                    assignmentIndex: classStudent.currentAssignments
+                      ? classStudent.currentAssignments.length
+                      : undefined,
                     imageID: classStudent.profileImageID,
                     onSaveAssignment: this.updateStateWithNewAssignmentInfo.bind(
                       this
-                    ),
+                    )
                   });
                 }}
               >
@@ -399,15 +409,15 @@ class StudentProfileScreen extends QcParentScreen {
               </View>
               <View
                 style={{
-                  flexDirection: 'row',
+                  flexDirection: "row",
                   paddingTop: 20,
-                  justifyContent: 'flex-start'
+                  justifyContent: "flex-start"
                 }}
               >
                 <Text
                   style={[
                     fontStyles.smallTextStyleBlack,
-                    { paddingHorizontal: 10 },
+                    { paddingHorizontal: 10 }
                   ]}
                 >
                   Classes attended: {classesAttended}
@@ -418,8 +428,59 @@ class StudentProfileScreen extends QcParentScreen {
               </View>
             </View>
           </View>
+          {(currentAssignments === undefined ||
+            currentAssignments.length === 0) &&
+          (assignmentHistory === undefined ||
+            assignmentHistory.length === 0) ? (
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                alignSelf: 'center',
+                flex: 2,
+              }}
+            >
+             <Text style={fontStyles.hugeTextStylePrimaryDark}>
+                {strings.NoClass}
+              </Text>
+              
+              <Image
+                source={require('assets/emptyStateIdeas/welcome-girl.png')}
+                style={{
+                  width: 0.73 * screenWidth,
+                  height: 0.22 * screenHeight,
+                  resizeMode: 'contain'
+                }}
+              />
+             
+              <QcActionButton
+                text={strings.AddAssignment}
+                onPress={() => {
+                  this.props.navigation.push('MushafAssignmentScreen', {
+                    newAssignment: true,
+                    popOnClose: true,
+                    isTeacher: true,
+                    assignToAllClass: false,
+                    userID: this.props.navigation.state.params.userID,
+                    classID,
+                    studentID,
+                    currentClass,
+                    assignmentIndex: classStudent.currentAssignments
+                      ? classStudent.currentAssignments.length
+                      : undefined,
+                    imageID: classStudent.profileImageID,
+                    onSaveAssignment: this.updateStateWithNewAssignmentInfo.bind(
+                      this
+                    )
+                  });
+                }}
+              />
+            </View>
+          ) : (
+            <View />
+          )}
           {wordsPerAssignmentData.length > 0 ? (
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
               <Text style={fontStyles.bigTextStyleBlack}>
                 {strings.WordsPerAssignment}
               </Text>
@@ -432,7 +493,7 @@ class StudentProfileScreen extends QcParentScreen {
                           wordsPerAssignmentData[0].completionDate.substring(
                             0,
                             wordsPerAssignmentData[0].completionDate.lastIndexOf(
-                              '/'
+                              "/"
                             )
                           ),
                           wordsPerAssignmentData[
@@ -441,24 +502,24 @@ class StudentProfileScreen extends QcParentScreen {
                             0,
                             wordsPerAssignmentData[
                               wordsPerAssignmentData.length - 1
-                            ].completionDate.lastIndexOf('/')
-                          )
+                            ].completionDate.lastIndexOf("/")
+                          ),
                         ]
                       : [
                           wordsPerAssignmentData[0].completionDate.substring(
                             0,
                             wordsPerAssignmentData[0].completionDate.lastIndexOf(
-                              '/'
+                              "/"
                             )
-                          )
+                          ),
                         ],
                   datasets: [
                     {
                       data: wordsPerAssignmentData.map(
                         data => data.assignmentLength
-                      )
-                    }
-                  ]
+                      ),
+                    },
+                  ],
                 }}
                 fromZero={true}
                 withInnerLines={false}
@@ -470,8 +531,8 @@ class StudentProfileScreen extends QcParentScreen {
                   color: (opacity = 1) => colors.primaryDark,
                   labelColor: (opacity = 1) => colors.black,
                   style: {
-                    borderRadius: 16
-                  }
+                    borderRadius: 16,
+                  },
                 }}
                 width={screenWidth}
                 height={220}
@@ -480,17 +541,22 @@ class StudentProfileScreen extends QcParentScreen {
           ) : (
             <View />
           )}
-          {this.state.classStudent.currentAssignments.length > 0 ? (
+          {this.state.classStudent.currentAssignments &&
+          this.state.classStudent.currentAssignments.length > 0 ? (
             this.renderAssignmentsSectionHeader(
               strings.CurrentAssignments,
-              'book-open-outline'
+              "book-open-outline"
             )
           ) : (
             <View />
           )}
           <FlatList
             style={{ flexGrow: 0 }}
-            extraData={currentAssignments.map(value => value.name)}
+            extraData={
+              currentAssignments
+                ? currentAssignments.map(value => value.name)
+                : []
+            }
             data={currentAssignments}
             keyExtractor={(item, index) =>
               item.name + index + Math.random() * 10
@@ -501,14 +567,14 @@ class StudentProfileScreen extends QcParentScreen {
                   styles.currentAssignment,
                   {
                     backgroundColor:
-                      item.isReadyEnum === 'WORKING_ON_IT'
+                      item.isReadyEnum === "WORKING_ON_IT"
                         ? colors.workingOnItColorBrown
-                        : item.isReadyEnum === 'READY'
+                        : item.isReadyEnum === "READY"
                         ? colors.green
-                        : item.isReadyEnum === 'NOT_STARTED'
+                        : item.isReadyEnum === "NOT_STARTED"
                         ? colors.primaryVeryLight
-                        : colors.red
-                  }
+                        : colors.red,
+                  },
                 ]}
               >
                 <View style={styles.middleView}>
@@ -518,7 +584,7 @@ class StudentProfileScreen extends QcParentScreen {
                   <Text
                     style={[
                       fontStyles.bigTextStyleBlack,
-                      { paddingTop: screenHeight * 0.04 },
+                      { paddingTop: screenHeight * 0.04 }
                     ]}
                   >
                     {item.name.toUpperCase()}
@@ -526,28 +592,28 @@ class StudentProfileScreen extends QcParentScreen {
                 </View>
                 <View
                   style={{
-                    flexDirection: 'row',
+                    flexDirection: "row",
                     paddingLeft: screenWidth * 0.02,
-                    justifyContent: 'space-between'
+                    justifyContent: "space-between"
                   }}
                 >
                   <Text style={fontStyles.mainTextStylePrimaryDark}>
-                    {item.isReadyEnum === 'READY' && strings.Ready}
-                    {item.isReadyEnum === 'WORKING_ON_IT' &&
+                    {item.isReadyEnum === "READY" && strings.Ready}
+                    {item.isReadyEnum === "WORKING_ON_IT" &&
                       strings.WorkingOnIt}
-                    {item.isReadyEnum === 'NOT_STARTED' && strings.NotStarted}
-                    {item.isReadyEnum === 'NEED_HELP' && strings.NeedHelp}
+                    {item.isReadyEnum === "NOT_STARTED" && strings.NotStarted}
+                    {item.isReadyEnum === "NEED_HELP" && strings.NeedHelp}
                   </Text>
                   <View
                     style={{
-                      flexDirection: 'row',
+                      flexDirection: "row",
                       paddingRight: screenWidth * 0.02,
-                      justifyContent: 'space-between'
+                      justifyContent: "space-between"
                     }}
                   >
                     <TouchableHighlight
                       onPress={() => {
-                        this.props.navigation.push("MushafAssignmentScreen", {
+                        this.props.navigation.push('MushafAssignmentScreen', {
                           popOnClose: true,
                           isTeacher: true,
                           assignToAllClass: false,
@@ -562,7 +628,7 @@ class StudentProfileScreen extends QcParentScreen {
                           imageID: classStudent.profileImageID,
                           onSaveAssignment: this.updateStateWithNewAssignmentInfo.bind(
                             this
-                          ),
+                          )
                         });
                       }}
                     >
@@ -572,7 +638,7 @@ class StudentProfileScreen extends QcParentScreen {
                     </TouchableHighlight>
                     <TouchableHighlight
                       onPress={() => {
-                        this.props.navigation.push('EvaluationPage', {
+                        this.props.navigation.push("EvaluationPage", {
                           classID: classID,
                           studentID: studentID,
                           assignmentName: item.name,
@@ -582,7 +648,7 @@ class StudentProfileScreen extends QcParentScreen {
                           assignmentLength: item.location.length,
                           assignmentType: item.type,
                           newAssignment: true,
-                          readOnly: false,
+                          readOnly: false
                         });
                       }}
                     >
@@ -598,10 +664,12 @@ class StudentProfileScreen extends QcParentScreen {
             )}
           />
           <ScrollView>
-            {this.renderAssignmentsSectionHeader(
-              strings.PastAssignments,
-              'history'
-            )}
+            {assignmentHistory &&
+              assignmentHistory.length > 0 &&
+              this.renderAssignmentsSectionHeader(
+                strings.PastAssignments,
+                "history"
+              )}
             <FlatList
               data={assignmentHistory}
               keyExtractor={(item, index) => item.name + index}
@@ -624,78 +692,78 @@ const styles = StyleSheet.create({
     flex: 1,
     borderColor: colors.lightGrey,
     borderWidth: 1,
-    justifyContent: 'flex-end'
+    justifyContent: "flex-end"
   },
   currentAssignment: {
     height: 150,
     borderWidth: 0.5,
     borderColor: colors.grey,
-    marginBottom: 5
+    marginBottom: 5,
   },
   middleView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: screenHeight * 0.0112
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: screenHeight * 0.0112,
   },
   profileInfo: {
-    flexDirection: 'column',
+    flexDirection: "column",
     backgroundColor: colors.white,
     marginBottom: 0.001 * screenHeight,
-    paddingBottom: screenHeight * 0.01
+    paddingBottom: screenHeight * 0.01,
   },
   corner: {
-    borderColor: '#D0D0D0',
+    borderColor: "#D0D0D0",
     borderWidth: 1,
     borderRadius: screenHeight * 0.004,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: screenWidth * 0.012,
     marginRight: screenHeight * 0.012,
-    marginVertical: screenHeight * 0.004
+    marginVertical: screenHeight * 0.004,
   },
   profileInfoTop: {
     paddingHorizontal: screenWidth * 0.024,
     paddingTop: screenHeight * 0.015,
-    flexDirection: 'row'
+    flexDirection: "row"
   },
   profileInfoTopLeft: {
-    flexDirection: 'column',
+    flexDirection: "column",
     marginLeft: 0.007 * screenWidth,
     marginTop: -0.097 * screenHeight,
-    alignItems: 'center',
-    width: 0.24 * screenWidth
+    alignItems: "center",
+    width: 0.24 * screenWidth,
   },
   profileInfoTopRight: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
+    flexDirection: "column",
+    alignItems: "flex-start",
     paddingLeft: screenWidth * 0.05,
-    paddingBottom: 0.007 * screenHeight
+    paddingBottom: 0.007 * screenHeight,
   },
   profileInfoBottom: {
-    flexDirection: 'column',
+    flexDirection: "column",
     paddingHorizontal: 0.024 * screenWidth,
     paddingBottom: screenHeight * 0.02,
     borderBottomColor: colors.grey,
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
   },
   profilePic: {
     width: 0.1 * screenHeight,
     height: 0.1 * screenHeight,
     borderRadius: 0.075 * screenHeight,
-    paddingBottom: 0.015 * screenHeight
+    paddingBottom: 0.015 * screenHeight,
   },
   prevAssignments: {
-    flexDirection: 'column',
+    flexDirection: "column",
     backgroundColor: colors.white,
-    marginHorizontal: 0.017 * screenWidth
+    marginHorizontal: 0.017 * screenWidth,
   },
   prevAssignmentCard: {
-    flexDirection: 'column',
+    flexDirection: "column",
     borderBottomColor: colors.lightGrey,
     borderBottomWidth: 1,
     paddingHorizontal: screenWidth * 0.007,
-    paddingVertical: screenHeight * 0.005
-  }
+    paddingVertical: screenHeight * 0.005,
+  },
 });
 
 export default StudentProfileScreen;
