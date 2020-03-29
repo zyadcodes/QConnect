@@ -1,3 +1,5 @@
+/* eslint-disable quotes */
+/* eslint-disable comma-dangle */
 import React from 'react';
 import { StyleSheet, View, Text, TextInput, Image, Alert, ScrollView } from 'react-native';
 import { AirbnbRating } from 'react-native-elements';
@@ -13,8 +15,8 @@ import LoadingSpinner from 'components/LoadingSpinner';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
-import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import { screenWidth, screenHeight } from 'config/dimensions';
+import AudioPlayer from 'components/AudioPlayer/AudioPlayer';
 
 export class EvaluationPage extends QcParentScreen {
 	//Default improvement areas
@@ -45,7 +47,8 @@ export class EvaluationPage extends QcParentScreen {
 			: 0,
 		studentObject: '',
 		isPlaying: 'Stopped',
-		currentPosition: '0:00'
+		currentPosition: '0:00',
+		audioFile: -1
 	};
 
 	//Sets the screen name according to whether this is a new assignment evaluation or an old one
@@ -56,9 +59,6 @@ export class EvaluationPage extends QcParentScreen {
 			FirebaseFunctions.setCurrentScreen('New Evaluation Page', 'EvaluationPage');
 		}
 
-		//Fetches audio file for student if one is present
-		const audioFile = await FirebaseFunctions.downloadAudioFile(this.state.studentID);
-
 		//Refetches the class ID in order to fetch the most up to date of the student object
 		const currentClass = await FirebaseFunctions.getClassByID(this.state.classID);
 		const classStudent = await currentClass.students.find((eachStudent) => {
@@ -67,38 +67,36 @@ export class EvaluationPage extends QcParentScreen {
 
 		const studentObject = await FirebaseFunctions.getStudentByID(this.state.studentID);
 
+		let audioFile = -1;
+		let audioSentDateTime = undefined;
+		if (
+			classStudent.submission !== undefined &&
+			classStudent.submission.audioFileID !== undefined
+		) {
+			//Fetches audio file for student if one is present
+			audioFile = await FirebaseFunctions.downloadAudioFile(classStudent.submission.audioFileID);
+
+			let audioSentDate = this.state.classStudent.submission.sent.toDate();
+			audioSentDateTime =
+				audioSentDate.toLocaleDateString('EN-US') +
+				', ' +
+				audioSentDate.getHours() +
+				':' +
+				audioSentDate.getMinutes();
+		}
+
 		//Fetches the ID for the evaluation (if there is none, it is created)
 		const evaluationID = this.props.navigation.state.params.evaluationID
 			? this.props.navigation.state.params.evaluationID
 			: this.state.studentID + (this.state.classStudent.totalAssignments + 1) + '';
-		this.setState({ studentObject, isLoading: false, evaluationID, classStudent, audioFile });
-	}
-
-	//This method fetches the audio file that was fetched in componentDidMount and plays it, while making sure the correct
-	//state is set to let the rest of the screen
-	async playAudio() {
-		const audioRecorderPlayer = new AudioRecorderPlayer();
-		audioRecorderPlayer.addPlayBackListener((e) => {
-			if (this.state.isPlaying === 'Playing') {
-				this.setState({ currentPosition: audioRecorder.mmssss(Math.floor(e.current_position)) });
-			}
+		this.setState({
+			studentObject,
+			isLoading: false,
+			evaluationID,
+			classStudent,
+			audioFile,
+			audioSentDateTime
 		});
-		if (this.state.isPlaying === 'Playing') {
-			this.setState({
-				isPlaying: 'Paused'
-			});
-			await audioRecorderPlayer.pausePlayer();
-		} else if (this.state.isPlaying === 'Paused') {
-			this.setState({
-				isPlaying: 'Playing'
-			});
-			await audioRecorderPlayer.resumePlayer();
-		} else {
-			this.setState({
-				isPlaying: 'Playing'
-			});
-			await audioRecorderPlayer.startPlayer(this.state.audioFile);
-		}
 	}
 
 	// --------------  Updates state to reflect a change in a category rating --------------
@@ -115,13 +113,12 @@ export class EvaluationPage extends QcParentScreen {
 			classStudent,
 			evaluationID
 		} = this.state;
+		const { assignmentType } = this.props.navigation.state.params.assignmentType;
 		notes = notes.trim();
 		let evaluationDetails = {
 			ID: evaluationID,
 			name: assignmentName,
-			assignmentType: classStudent.currentAssignmentType
-				? classStudent.currentAssignmentType
-				: 'None',
+			assignmentType: assignmentType ? assignmentType : 'None',
 			completionDate: new Date().toLocaleDateString('en-US', {
 				year: 'numeric',
 				month: '2-digit',
@@ -157,15 +154,13 @@ export class EvaluationPage extends QcParentScreen {
 			improvementAreas,
 			classStudent
 		} = this.state;
-
+		const { assignmentType } = this.props.navigation.state.params;
 		this.setState({ isLoading: true });
 		let evaluationDetails = {
 			rating,
 			notes,
 			improvementAreas,
-			assignmentType: classStudent.currentAssignmentType
-				? classStudent.currentAssignmentType
-				: 'None'
+			assignmentType: assignmentType ? assignmentType : 'None'
 		};
 
 		await FirebaseFunctions.overwriteOldEvaluation(
@@ -255,7 +250,10 @@ export class EvaluationPage extends QcParentScreen {
 							Title={strings.Evaluation}
 							RightIconName='edit'
 							RightOnPress={() => {
-								this.setState({ readOnly: false, improvementAreas: this.state.improvementAreas });
+								this.setState({
+									readOnly: false,
+									improvementAreas: this.state.improvementAreas
+								});
 							}}
 						/>
 					) : (
@@ -274,25 +272,17 @@ export class EvaluationPage extends QcParentScreen {
 						{this.state.audioFile !== -1 ? (
 							<View style={{ justifyContent: 'center', alignItems: 'center' }}>
 								<View style={styles.playAudio}>
-									<QcActionButton
-										text={
-											this.state.isPlaying === 'Playing'
-												? strings.Pause
-												: this.state.isPlaying === 'Paused'
-												? strings.Resume
-												: strings.Play
-										}
-										onPress={() => {
-											this.playAudio();
-										}}
+									<AudioPlayer
+										image={studentImages.images[profileImageID]}
+										reciter={classStudent.name}
+										title={assignmentName}
+										audioFilePath={this.state.audioFile}
+										sent={this.state.audioSentDateTime ? this.state.audioSentDateTime : ''}
 									/>
-								</View>
-								<View style={{ marginVertical: screenHeight * 0.01 }}>
-									<Text style={fontStyles.smallTextStyleBlack}>{this.state.currentPosition}</Text>
 								</View>
 							</View>
 						) : (
-							<View></View>
+							<View />
 						)}
 						<View style={styles.section}>
 							<Text style={fontStyles.mainTextStyleDarkGrey}>{headerTitle}</Text>
@@ -363,10 +353,10 @@ export class EvaluationPage extends QcParentScreen {
 							screen={this.name}
 						/>
 					) : (
-						<View></View>
+						<View />
 					)}
 				</View>
-				<View style={styles.filler}></View>
+				<View style={styles.filler} />
 			</QCView>
 		);
 	}

@@ -4,7 +4,6 @@ import firebase from 'react-native-firebase';
 import strings from './strings';
 
 export default class FirebaseFunctions {
-
     //References that'll be used throughout the class's static functions
     static database = firebase.firestore();
     static batch = this.database.batch();
