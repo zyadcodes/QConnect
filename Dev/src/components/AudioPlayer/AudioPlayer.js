@@ -21,11 +21,18 @@ import colors from "config/colors";
 import strings from "config/strings";
 import FirebaseFunctions from "config/FirebaseFunctions";
 import { check, request, PERMISSIONS, RESULTS } from "react-native-permissions";
+import TouchableText from "components/TouchableText";
+import fontStyles from "config/fontStyles";
 
 const translateX = new Animated.Value(0);
 const scale = new Animated.Value(1);
 const rotation = new Animated.Value(0);
 const opacity = new Animated.Value(0);
+const postStopAction = {
+  none: 0,
+  close: 1,
+  send: 2
+};
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
@@ -33,7 +40,9 @@ const AudioPlayer = props => {
   const [toggled, setToggled] = useState(true);
   const [playTime, setPlayTime] = useState(0);
   const [playWidth, setPlayWidth] = useState(0);
-  const [recordingCompleted, setRecordingCompleted] = useState(false);
+  const [showPlayback, setShowPlayback] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [showSendCancel, setShowSendCancel] = useState(false);
   const [recordingPlaybackPlaying, setRecordingPlaybackPlaying] = useState(
     false
   );
@@ -59,9 +68,12 @@ const AudioPlayer = props => {
     ).start();
   };
 
-  onStartPlay = async () => {
+  onStartPlay = async filePath => {
     try {
-      const msg = await audioRecorderPlayer.startPlayer(props.audioFilePath);
+      let audioFileName =
+        filePath !== undefined ? filePath : props.audioFilePath;
+
+      const msg = await audioRecorderPlayer.startPlayer(audioFileName);
       if (msg === undefined) {
         throw "audioRecorderPlayer.startPlayer returned undefined.";
       }
@@ -77,6 +89,7 @@ const AudioPlayer = props => {
         setToggled(true);
         animateStopAudio();
         setPlayWidth(0);
+        setRecordingPlaybackPlaying(false);
       } else {
         setPlayWidth(e.current_position / e.duration);
       }
@@ -99,7 +112,9 @@ const AudioPlayer = props => {
   var uri = "";
 
   onStartRecord = async () => {
-    setRecordingCompleted(false);
+    setIsRecording(true);
+    setShowPlayback(false);
+    setShowSendCancel(true);
     //Handles permissions for microphone usage
     let isGranted = true;
 
@@ -160,12 +175,24 @@ const AudioPlayer = props => {
     }
   };
 
-  onStopRecord = async () => {
-    await audioRecorderPlayer.stopRecorder();
-    audioRecorderPlayer.removeRecordBackListener();
-    setPlayWidth(0);
-    setRecordingCompleted(true);
-    props.onStopRecording("/sdcard/hello.mp4");
+  //this function stops recording
+  // if there is a post action requested after stopping the recording, 
+  // it will perform that action. The 2 post actions supported are send the audio 
+  // after stopping or close the dialog.
+  onStopRecord = async postAction => {
+    if (isRecording) {
+      await audioRecorderPlayer.stopRecorder();
+      audioRecorderPlayer.removeRecordBackListener();
+      setPlayWidth(0);
+      setIsRecording(false);
+      setShowPlayback(true);
+    }
+    //let's perform a post action is requested.
+    if (postAction === postStopAction.send) {
+      props.onSend("/sdcard/hello.mp4");
+    } else if (postAction === postStopAction.close) {
+      props.onClose();
+    }
   };
 
   const onStartAction = async () => {
@@ -176,11 +203,11 @@ const AudioPlayer = props => {
     }
   };
 
-  const onStopAction = async () => {
+  const onStopAction = async postAction => {
     if (props.isRecordMode === true) {
-      await onStopRecord();
+      await onStopRecord(postAction);
     } else {
-      await onPausePlay();
+      await onPausePlay(); //no postAction applicable for now. No need to pass.
     }
     setToggled(true);
   };
@@ -193,7 +220,6 @@ const AudioPlayer = props => {
         animateStartAudio();
       } else {
         setToggled(true);
-        //Alert.alert(strings.Whoops, props.isRecordMode? strings.FailedToRecordAudio : strings.FailedToPlayAudioFile);
       }
     } else {
       animateStopAudio();
@@ -203,10 +229,10 @@ const AudioPlayer = props => {
 
   //handles re-play button after recording an audio
   const onPlayRecording = async () => {
-    if (props.isRecordMode && recordingCompleted) {
+    if (props.isRecordMode && showPlayback) {
       if (!recordingPlaybackPlaying) {
         setRecordingPlaybackPlaying(true);
-        return await onStartPlay();
+        return await onStartPlay("/sdcard/hello.mp4");
       } else {
         setRecordingPlaybackPlaying(false);
         return await onPausePlay();
@@ -248,7 +274,7 @@ const AudioPlayer = props => {
             style={{ transform: [{ scale }, { rotate: spin }] }}
           />
         </TouchableOpacity>
-        {props.isRecordMode && recordingCompleted && (
+        {props.isRecordMode && showPlayback && (
           <TouchableOpacity
             style={{ justifyContent: "center", alignItems: "center" }}
             onPress={onPlayRecording}
@@ -272,7 +298,7 @@ const AudioPlayer = props => {
             <Subtitle>
               {!props.isRecordMode
                 ? strings.Sent + " " + props.sent
-                : recordingCompleted
+                : showPlayback
                 ? strings.TasmeeRecorded
                 : strings.PressToStartRecording}
             </Subtitle>
@@ -295,6 +321,31 @@ const AudioPlayer = props => {
           <Subtitle>{playTime}</Subtitle>
         </AnimatedColumn>
       </AnimatedPlaying>
+
+      {showSendCancel && (
+        <SendRow>
+          <TouchableText
+            text={strings.Cancel}
+            disabled={props.isRecordMode && !toggled}
+            onPress={() => {
+              animateStopAudio();
+              onStopAction(postStopAction.close);
+            }}
+          />
+          <HorizontalSpacer />
+
+          <TouchableText
+            text={strings.Send}
+            style={{
+              ...fontStyles.mainTextStylePrimaryDark,
+            }}
+            onPress={() => {
+              animateStopAudio();
+              onStopAction(postStopAction.send);
+            }}
+          />
+        </SendRow>
+      )}
     </Container>
   );
 };
@@ -303,7 +354,7 @@ export default AudioPlayer;
 
 const Container = styled.View`
   width: 326px;
-  height: 50px;
+  height: 80px;
   border-radius: 14px;
   box-shadow: 0 50px 57px #6f535b;
   justify-content: center;
@@ -334,6 +385,18 @@ const DiskCenter = styled.View`
   top: 5px;
   z-index: 10;
   background: #ffffff;
+`;
+
+const SendRow = styled.View`
+  padding-top: 10px;
+  padding-right: 20px;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-self: flex-end;
+`;
+
+const HorizontalSpacer = styled.View`
+  width: 20;
 `;
 
 const AnimatedDiskCenter = Animated.createAnimatedComponent(DiskCenter);
