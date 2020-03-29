@@ -93,10 +93,13 @@ class StudentProfileScreen extends QcParentScreen {
   updateStateWithNewAssignmentInfo(newAssignment, index, currentClass) {
     let updatedStudentInfo = this.state.classStudent;
     updatedStudentInfo.currentAssignments[index] = newAssignment;
-    this.setState({
-      classStudent: updatedStudentInfo,
-      currentClass: currentClass,
-    });
+    this.setState(
+      {
+        classStudent: updatedStudentInfo,
+        currentClass: currentClass,
+        currentAssignments: updatedStudentInfo.currentAssignments
+      }
+    );
   }
 
   //This function is going to return the labels for the graph which will be an array of 5 dates for when the assignments
@@ -374,10 +377,6 @@ class StudentProfileScreen extends QcParentScreen {
                     classID,
                     studentID,
                     currentClass,
-                    assignmentLocation:
-                      classStudent.currentAssignments[0].location,
-                    assignmentType: classStudent.currentAssignments[0].type,
-                    assignmentName: currentAssignments[0].name,
                     assignmentIndex: classStudent.currentAssignments.length,
                     imageID: classStudent.profileImageID,
                     onSaveAssignment: this.updateStateWithNewAssignmentInfo.bind(
@@ -491,10 +490,8 @@ class StudentProfileScreen extends QcParentScreen {
           )}
           <FlatList
             style={{ flexGrow: 0 }}
-            extraData={this.state.classStudent.currentAssignments.map(
-              value => value.name
-            )}
-            data={this.state.classStudent.currentAssignments}
+            extraData={currentAssignments.map(value => value.name)}
+            data={currentAssignments}
             keyExtractor={(item, index) =>
               item.name + index + Math.random() * 10
             }
@@ -574,7 +571,7 @@ class StudentProfileScreen extends QcParentScreen {
                       </Text>
                     </TouchableHighlight>
                     <TouchableHighlight
-                      onPress={() =>
+                      onPress={() => {
                         this.props.navigation.push('EvaluationPage', {
                           classID: classID,
                           studentID: studentID,
@@ -582,11 +579,12 @@ class StudentProfileScreen extends QcParentScreen {
                           userID: this.props.navigation.state.params.userID,
                           classStudent: classStudent,
                           assignmentLocation: item.location,
+                          assignmentLength: item.location.length,
                           assignmentType: item.type,
                           newAssignment: true,
-                          readOnly: false
-                        })
-                      }
+                          readOnly: false,
+                        });
+                      }}
                     >
                       <View style={{ paddingLeft: screenWidth * 0.02 }}>
                         <Text style={fontStyles.mainTextStylePrimaryDark}>

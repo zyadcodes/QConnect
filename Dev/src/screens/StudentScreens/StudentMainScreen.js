@@ -74,7 +74,6 @@ class StudentMainScreen extends QcParentScreen {
     const { currentClassID } = student;
 
     if (currentClassID === '') {
-      alert(JSON.stringify(currentClass));
       this.setState({
         isLoading: false,
         noCurrentClass: true,

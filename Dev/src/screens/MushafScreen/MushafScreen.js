@@ -6,24 +6,7 @@ import colors from "config/colors";
 import QcParentScreen from 'screens/QcParentScreen';
 import SelectionPage from "./Components/SelectionPage";
 import Swiper from "react-native-swiper";
-import strings from "config/strings";
-import FirebaseFunctions from "config/FirebaseFunctions";
 import { screenHeight, screenWidth } from "config/dimensions";
-
-//------- constants to indicate the case when there is no ayah selected
-const noAyahSelected = {
-	surah: 0,
-	page: 0,
-	ayah: 0,
-	length: 0
-};
-
-const noSelection = {
-  start: noAyahSelected,
-  end: noAyahSelected,
-  started: false,
-  completed: false,
-};
 
 //-------- MushafScreen: container component for the screen holding Mushaf pages ------
 // Implements pagination through a swiper component with a fixed width: 3 screens
@@ -31,594 +14,161 @@ const noSelection = {
 // this way a user can always swipe left and right
 // Todo: currently the first and last screen of the mushhaf have a hack since they deviate from this paradigm. Need to fix later on.
 export default class MushafScreen extends QcParentScreen {
-	//------------------------ initial state ----------------------------
-	lastPage = 604;
-	state = {
-		pages: [],
-		key: 1,
-		index: 3,
-		classID: this.props.navigation.state.params.classID,
-		studentID: this.props.navigation.state.params.studentID,
-		imageID: this.props.navigation.state.params.imageID,
-		assignToAllClass: this.props.navigation.state.params.assignToAllClass,
-		selection: {
-			started: false,
-			completed: false,
-			start: {
-				surah: 0,
-				page: this.lastPage,
-				ayah: 0,
-				length: 0
-			},
-			end: {
-				surah: 0,
-				page: this.lastPage,
-				ayah: 0,
-				length: 0
-			}
-		},
-		assignmentName: '',
-		assignmentType: strings.Memorization,
-		freeFormAssignment: false,
-		invokedFromProfileScreen: false,
-		isLoading: true
-	};
+  //------------------------ initial state ----------------------------
+  lastPage = 604;
+  state = {
+    pages: [],
+    key: 1,
+    index:
+      this.props.selection && this.props.selection.start
+        ? 604 - this.props.selection.start.page
+        : 3,
+    classID: this.props,
+    studentID: this.props.studentID,
+    assignmentType: this.props.assignmentType,
+    loadScreenOnClose: this.props.loadScreenOnClose,
+    popOnClose: this.props.popOnClose,
+    isLoading: true,
+  };
 
-	async componentDidMount() {
-		FirebaseFunctions.setCurrentScreen('MushhafAssignmentScreen', 'MushhafAssignmentScreen');
-		const {
-			studentID,
-			invokedFromProfileScreen,
-			assignmentType,
-			assignmentLocation,
-			assignmentName
-		} = this.props.navigation.state.params;
+  async componentDidMount() {
+    //we mimmic right to left pages scanning by reversing the pages order in the swiper component
+    let allPages = Array.from(Array(604), (e, i) => 604 - i);
 
-		// if the page was invoked from the student profile screen, we need to go back (pop) when done,
-		// otherwise, we need to reload the teacher main screen when done
-		if (invokedFromProfileScreen === true) {
-			this.setState({
-				invokedFromProfileScreen: true
-			});
-		}
+    this.setState({
+      pages: allPages,
+      isLoading: false,
+    });
+  }
 
-		const { userID } = this.props.navigation.state.params;
-		const teacher = await FirebaseFunctions.getTeacherByID(userID);
-		const { currentClassID } = teacher;
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (
+      JSON.stringify(prevState.selection) !==
+      JSON.stringify(nextProps.selection)
+    ) {
+      let index =
+        nextProps.selection && nextProps.selection.start
+          ? 604 - nextProps.selection.start.page
+          : 3;
 
-		const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
-		allPages = [];
-		for (var i = 604; i > 0; i--) {
-			allPages.push(i.toString());
-		}
+      return {
+        selection: nextProps.selection,
+        page: nextProps.selection.start ? nextProps.selection.start.page : 3,
+        index: index,
+        key: index,
+      };
+    }
 
-		if (studentID === undefined) {
-			//assign to all class -----
-			this.setState(
-				{
-					pages: allPages,
-					selection: {
-						start: currentClass.currentAssignmentLocation
-							? currentClass.currentAssignmentLocation.start
-							: noAyahSelected,
-						end: currentClass.currentAssignmentLocation
-							? currentClass.currentAssignmentLocation.end
-							: noAyahSelected,
-						started: false,
-						completed: currentClass.currentAssignmentLocation ? true : false
-					},
-					assignToAllClass: true,
-					userID,
-					imageID: currentClass.classImageID,
-					classID: currentClassID,
-					currentClass: currentClass,
-					assignmentName: currentClass.currentAssignment,
-					assignmentType: currentClass.currentAssignmentType
-				},
-				() => {
-					if (currentClass.currentAssignmentLocation !== undefined) {
-						let newPage = currentClass.currentAssignmentLocation.start.page;
-						this.onChangePage(newPage, true);
-					}
-					this.setState({ isLoading: false });
-				}
-			);
-		} else {
-			// assign to a particular student ----------
-			let indexSection = {};
-			if (assignmentLocation !== undefined) {
-				indexSection = {
-					index: 604 - assignmentLocation.start.page
-				};
-			}
+    return null;
+  }
 
-			this.setState({
-				...indexSection,
-				pages: allPages,
-				isLoading: false,
-				assignToAllClass: false,
-				currentClass: currentClass,
-				studentID: studentID,
-				selection: assignmentLocation
-					? {
-							start: assignmentLocation.start,
-							end: assignmentLocation.end,
-							started: false,
-							completed: true
-					  }
-					: noSelection,
-				assignmentName,
-				assignmentType: assignmentType !== undefined ? assignmentType : strings.Memorization
-			});
-		}
-	}
+  // ------------------------- Event handlers --------------------------------------------
 
-	// ------------------------- Helpers and Getters  --------------------------------------
-	getPagesToLoad(page) {
-		let pageNumber = parseInt(page);
-		let nextPage1 = parseInt(pageNumber) + 1;
-		let nextPage2 = parseInt(pageNumber) + 2;
-		let nextPage3 = parseInt(pageNumber) + 3;
-		let curPage = parseInt(pageNumber);
-		let prevPage1 = parseInt(pageNumber) - 1;
-		let prevPage2 = parseInt(pageNumber) - 2;
-		let prevPage3 = parseInt(pageNumber) - 3;
-		let index = 3;
+  onChangePage(page, keepSelection) {
+    let index = 604 - page;
 
-		//if we are in the first page, change render page 1, 2, and 3, and set current page to index 0 (page 1)
-		//this way, users can't swipe left to previous page since there is no previous page
-		if (pageNumber === 1) {
-			//bug bug: there is a bug in swiper where if I set index to 0 (to indicate end of book),
-			// onIndexChanged is not called on the next swipe.
-			// this is a temporary workaround until swiper bug is fixed or we find a better workaround.
-			prevPage1 = pageNumber;
-			prevPage2 = pageNumber;
-			prevPage3 = pageNumber;
-			curPage = pageNumber;
-			index = 3;
-		}
-		//if we are in the last page, change render page 602, 603, and 604, and set current page to index 2 (page 604)
-		//this way, users can't swipe right to next page, since there is no next page
-		else if (pageNumber === 604) {
-			//bug bug: there is a bug in swiper where if I set index to 0 (to indicate end of book),
-			// onIndexChanged is not called on the next swipe.
-			// this is a temporary workaround until swiper bug is fixed or we find a better workaround.
-			curPage = pageNumber;
-			nextPage1 = pageNumber;
-			nextPage2 = pageNumber;
-			nextPage3 = pageNumber;
-			index = 3;
-		}
+    this.setState({
+      page: page,
+      index: index,
+      key: index,
+    });
 
-		return {
-			pages: [
-				nextPage3.toString(),
-				nextPage2.toString(),
-				nextPage1.toString(),
-				curPage.toString(),
-				prevPage1.toString(),
-				prevPage2.toString(),
-				prevPage3.toString()
-			],
-			index: index
-		};
-	}
+    if (this.props.onChangePage) {
+      this.props.onChangePage(page, keepSelection);
+    }
+  }
 
-	// ------------------------- Event handlers --------------------------------------------
+  // ------------------------ Render the Mushhaf Component ----------------------------------------
+  renderItem(item, idx) {
+    const { assignmentType } = this.state;
+    const {
+      profileImage,
+      assignToID,
+      selection,
+      disableChangingUser,
+    } = this.props;
 
-	//this is to update the assignment text without mapping it to a location in the mus7af
-	// this is to allow teachers to enter free form assignemnts
-	// for example: redo your last 3 assignments
-	setFreeFormAssignmentName(freeFormAssignmentName) {
-		this.setState({
-			assignmentName: freeFormAssignmentName,
-			freeFormAssignment: true
-		});
-	}
+    const itemInt = parseInt(item);
 
-	onSelectAyah(selectedAyah) {
-		const { selection } = this.state;
+    return (
+      <View style={{ width: screenWidth, height: screenHeight }} key={idx}>
+        <SelectionPage
+          page={itemInt}
+          onChangePage={this.onChangePage.bind(this)}
+          selectedAyahsStart={selection.start}
+          selectedAyahsEnd={selection.end}
+          selectionStarted={selection.started}
+          selectionCompleted={selection.completed}
+          selectionOn={
+            itemInt >= selection.start.page && itemInt <= selection.end.page
+          }
+          profileImage={profileImage}
+          currentClass={this.props.currentClass}
+          isLoading={this.state.isLoading}
+          assignmentType={assignmentType}
+          assignToID={assignToID}
+          disableChangingUser={disableChangingUser}
+          onChangeAssignee={(id, imageID, isClassID) => {
+            if (this.props.onChangeAssignee !== undefined) {
+              this.props.onChangeAssignee(id, imageID, isClassID);
+            }
+          }}
+          //callback when user taps on a single ayah to selects
+          //determines whether this would be the start of end of the selection
+          // and select ayahs in between
+          onSelectAyah={selectedAyah => this.props.onSelectAyah(selectedAyah)}
+          //callback when user selects a range of ayahs (line an entire page or surah)
+          onSelectAyahs={(firstAyah, lastAyah) =>
+            this.props.onSelectAyahs(firstAyah, lastAyah)
+          }
+          topRightIconName={this.props.topRightIconName}
+          topRightOnPress={this.props.topRightOnPress}
+          onUpdateAssignmentName={newAssignmentName =>
+            this.props.setFreeFormAssignmentName(newAssignmentName)
+          }
+        />
+      </View>
+    );
+  }
 
-		//if the user taps on the same selected aya again, turn off selection
-		if (
-			compareOrder(selection.start, selection.end) === 0 &&
-			compareOrder(selection.start, selectedAyah) === 0
-		) {
-			this.setState({ selection: noSelection }, () => this.updateAssignmentName());
-		} else if (!selection.started) {
-			this.setState(
-				{
-					selection: {
-						started: true,
-						completed: false,
-						start: selectedAyah,
-						end: selectedAyah
-					}
-				},
-				() => this.updateAssignmentName()
-			);
-		} else if (!selection.completed) {
-			this.setState(
-				{
-					selection: {
-						...this.state.selection,
-						started: false,
-						completed: true
-					}
-				},
-				() => {
-					//Set the smallest number as the start, and the larger as the end
-					if (compareOrder(selection.start, selectedAyah) > 0) {
-						this.setState({ selection: { ...this.state.selection, end: selectedAyah } }, () =>
-							this.updateAssignmentName()
-						);
-					} else {
-						this.setState({ selection: { ...this.state.selection, start: selectedAyah } }, () =>
-							this.updateAssignmentName()
-						);
-					}
-				}
-			);
-		}
-	}
+  render() {
+    const { isLoading } = this.state;
 
-	updateAssignmentName() {
-		const { selection } = this.state;
-		if (selection.start.surah === 0) {
-			//no selection made
-			//todo: make this an explicit flag
-			return '';
-		}
-
-		desc = surahs[selection.start.surah].tname + ' (' + selection.start.ayah;
-
-		if (selection.start.surah === selection.end.surah) {
-			if (selection.start.ayah !== selection.end.ayah) {
-				desc += strings.To + selection.end.ayah;
-			}
-		} else {
-			desc += ')' + strings.To + surahs[selection.end.surah].tname + ' (' + selection.end.ayah;
-		}
-
-		let pageDesc = strings.ParenthesisPage + selection.end.page;
-		if (selection.start.page !== selection.end.page) {
-			pageDesc =
-				strings.PagesWithParenthesis + selection.start.page + strings.To + selection.end.page;
-		}
-		desc += pageDesc;
-
-		this.setState({
-			assignmentName: desc,
-			freeFormAssignment: false
-		});
-	}
-
-	// ---- selects a range of ayahs   -----
-	onSelectAyahs(firstAyah, lastAyah) {
-		let startA = firstAyah;
-		let endA = lastAyah;
-
-		//Set the smallest number as the start, and the larger as the end
-		if (compareOrder(firstAyah, lastAyah) <= 0) {
-			startA = lastAyah;
-			endA = firstAyah;
-		}
-
-		this.setState(
-			(prevState) => {
-				return {
-					selection: {
-						...prevState.selection,
-						start: startA
-					}
-				};
-			},
-			() =>
-				this.setState(
-					(prevState2) => {
-						return {
-							selection: {
-								...prevState2.selection,
-								started: false,
-								completed: true,
-								end: endA
-							}
-						};
-					},
-					() => this.updateAssignmentName()
-				)
-		);
-	}
-
-	onChangePage(page, keepSelection) {
-		//reset the selection state if we are passed a flag to do so
-		let resetSelectionIfApplicable = {};
-		if (keepSelection === false) {
-			resetSelectionIfApplicable = {
-				selection: noSelection
-			};
-		}
-
-		let index = 604 - page;
-		this.setState({
-			...resetSelectionIfApplicable,
-			page: page,
-			index: index,
-			key: index
-		});
-	}
-
-	/**
-     * studentID: this.props.navigation.state.params.studentID,
-        classID: this.props.navigation.state.params.classID,
-        assignToAllClass: this.props.navigation.state.params.assignToAllClass,
-     */
-	onChangeAssignee(id, imageID, isClassID) {
-		if (isClassID === true) {
-			this.setState({
-				classID: id,
-				assignToAllClass: true,
-				imageID: imageID
-			});
-		} else {
-			this.setState({
-				studentID: id,
-				assignToAllClass: false,
-				imageID: imageID
-			});
-		}
-	}
-
-	async saveClassAssignment(newAssignmentName) {
-		const { classID, assignmentType, currentClass, selection } = this.state;
-		let assignmentLocation = {
-			start: selection.start,
-			end: selection.end,
-			length: selection.end.wordNum - selection.start.wordNum
-		};
-
-		await FirebaseFunctions.updateClassAssignment(
-			classID,
-			newAssignmentName,
-			assignmentType,
-			assignmentLocation
-		);
-
-		//since there might be a latency before firebase returns the updated assignments,
-		//let's save them here and later pass them to the calling screen so that it can update its state without
-		//relying on the Firebase async latency
-		let students = currentClass.students.map((student) => {
-			//Temporary solution until we use assignmentIDs.
-			const index = student.currentAssignments.findIndex((element) => {
-				return (
-					element.name === this.props.navigation.state.params.assignmentName &&
-					element.type === this.props.navigation.state.params.assignmentType &&
-					element.location === this.props.navigation.state.params.assignmentLocation
-				);
-			});
-			student.currentAssignments[index] = {
-				name: newAssignmentName,
-				type: assignmentType,
-				location: assignmentLocation,
-				isReadyEnum: 'WORKING_ON_IT'
-			};
-		});
-		let updatedClass = {
-			...currentClass,
-			students
-		};
-
-		await FirebaseFunctions.updateClassObject(updatedClass.ID, updatedClass);
-
-		this.setState({
-			currentClass: updatedClass
-		});
-	}
-
-	//method updates the current assignment of the student
-	async saveStudentAssignment(newAssignmentName, isNewAssignment) {
-		const { classID, studentID, assignmentType, selection, currentClass } = this.state;
-		let assignmentLocation = {
-			start: selection.start,
-			end: selection.end,
-			length: selection.end.wordNum - selection.start.wordNum
-		};
-		//update the current class object (so we can pass it to caller without having to re-render fron firebase)
-		let students = currentClass.students.map((student) => {
-			if (student.ID === studentID) {
-				if (isNewAssignment === true) {
-					student.currentAssignments.push({
-						name: newAssignmentName,
-						type: assignmentType,
-						location: assignmentLocation,
-						isReadyEnum: 'WORKING_ON_IT'
-					});
-				} else {
-					const index = student.currentAssignments.findIndex((element) => {
-						return (
-							element.name === this.props.navigation.state.params.assignmentName &&
-							element.type === this.props.navigation.state.params.assignmentType
-						);
-					});
-					student.currentAssignments[index] = {
-						name: newAssignmentName,
-						type: assignmentType,
-						location: assignmentLocation,
-						isReadyEnum: 'WORKING_ON_IT'
-					};
-				}
-			}
-			return student;
-		});
-
-		let updatedClass = {
-			...currentClass,
-			students
-		};
-
-		this.setState({
-			currentClass: updatedClass
-		});
-
-		await FirebaseFunctions.updateClassObject(updatedClass.ID, updatedClass);
-	}
-
-	onSaveAssignment() {
-		const { assignmentName, assignToAllClass } = this.state;
-		if (assignmentName.trim() === '') {
-			Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
-		} else {
-			if (assignToAllClass) {
-				this.saveClassAssignment(assignmentName);
-			} else if (this.props.navigation.state.params.newAssignment === true) {
-				this.saveStudentAssignment(assignmentName, true);
-			} else {
-				this.saveStudentAssignment(assignmentName, false);
-			}
-
-			this.closeScreen();
-		}
-	}
-
-	closeScreen() {
-		const { invokedFromProfileScreen, userID, assignmentName, currentClass } = this.state;
-
-		//go back to student profile screen if invoked from there, otherwise go back to main screen
-		if (invokedFromProfileScreen) {
-			this.props.navigation.push('TeacherStudentProfile', {
-				userID: userID,
-				studentID: this.state.studentID,
-				currentClass: currentClass,
-				classID: currentClass.ID
-			});
-		} else {
-			this.props.navigation.push('TeacherCurrentClass', { userID, currentClass });
-		}
-	}
-
-	// ------------------------ Render the Mushhaf Component ----------------------------------------
-	renderItem(item, idx) {
-		const { imageID, assignToAllClass, assignmentType, selection, classID, studentID } = this.state;
-
-		const itemInt = parseInt(item);
-		profileImage = isNaN(imageID)
-			? undefined
-			: assignToAllClass
-			? classImages.images[imageID]
-			: studentImages.images[imageID];
-
-		return (
-			<View style={{ width: screenWidth, height: screenHeight }} key={idx}>
-				<SelectionPage
-					page={itemInt}
-					onChangePage={this.onChangePage.bind(this)}
-					selectedAyahsStart={selection.start}
-					selectedAyahsEnd={selection.end}
-					selectionStarted={selection.started}
-					selectionCompleted={selection.completed}
-					selectionOn={itemInt >= selection.start.page && itemInt <= selection.end.page}
-					profileImage={profileImage}
-					currentClass={this.state.currentClass}
-					isLoading={this.state.isLoading}
-					assignmentType={assignmentType}
-					assignToID={assignToAllClass ? classID : studentID}
-					onChangeAssignee={(id, imageID, isClassID) =>
-						this.onChangeAssignee(id, imageID, isClassID)
-					}
-					//callback when user taps on a single ayah to selects
-					//determines whether this would be the start of end of the selection
-					// and select ayahs in between
-					onSelectAyah={this.onSelectAyah.bind(this)}
-					//callback when user selects a range of ayahs (line an entire page or surah)
-					onSelectAyahs={this.onSelectAyahs.bind(this)}
-					onUpdateAssignmentName={(newAssignmentName) =>
-						this.setFreeFormAssignmentName(newAssignmentName)
-					}
-				/>
-			</View>
-		);
-	}
-
-	render() {
-		const { isLoading } = this.state;
-
-		if (isLoading === true) {
-			return (
-				<View
-					id={this.state.page + 'spinner'}
-					style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-					<LoadingSpinner isVisible={true} />
-				</View>
-			);
-		} else {
-			const options = [
-				{ label: strings.Memorization, value: strings.Memorization },
-				{ label: strings.Revision, value: strings.Revision },
-				{ label: strings.Reading, value: strings.Reading }
-			];
-			let selectedAssignmentTypeIndex = 0;
-			if (this.props.assignmentType !== undefined) {
-				if (options.findIndex((option) => option.value === this.props.assignmentType) !== -1) {
-					selectedAssignmentTypeIndex = options.findIndex(
-						(option) => option.value === this.props.assignmentType
-					);
-				}
-			}
-
-			return (
-				<View style={{ width: screenWidth, height: screenHeight }}>
-					<ScrollView style={{ width: screenWidth, height: screenHeight * 0.95 }}>
-						<Swiper
-							index={this.state.index}
-							containerStyle={{ width: screenWidth, height: screenHeight }}
-							key={this.state.key}
-							loop={false}
-							showsButtons={false}
-							loadMinimal={true}
-							loadMinimalSize={1}
-							showsPagination={false}
-							onIndexChanged={(index) => {
-								this.setState({ page: 604 - index });
-							}}>
-							{this.state.pages.map((item, idx) => this.renderItem(item, idx))}
-						</Swiper>
-					</ScrollView>
-					<View style={{ padding: 5 }}>
-						{this.state.selection.start.surah > 0 || this.state.freeFormAssignment ? (
-							<Text style={fontStyles.mainTextStyleDarkGrey}>{this.state.assignmentName}</Text>
-						) : (
-							<View></View>
-						)}
-					</View>
-					<SwitchSelector
-						options={options}
-						initial={selectedAssignmentTypeIndex}
-						height={20}
-						textColor={colors.darkGrey}
-						selectedColor={colors.primaryDark}
-						buttonColor={colors.primaryLight}
-						borderColor={colors.lightGrey}
-						onPress={(value) => this.setState({ assignmentType: value })}
-						style={{ marginTop: 2 }}
-					/>
-					<View
-						style={{
-							flexDirection: 'row',
-							justifyContent: 'center',
-							marginBottom: 15
-						}}>
-						<QcActionButton
-							text={strings.Save}
-							onPress={() => {
-								this.onSaveAssignment();
-							}}
-						/>
-						<QcActionButton text={strings.Cancel} onPress={() => this.props.navigation.goBack()} />
-					</View>
-				</View>
-			);
-		}
-	}
+    if (isLoading === true) {
+      return (
+        <View
+          id={this.state.page + "spinner"}
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <LoadingSpinner isVisible={true} />
+        </View>
+      );
+    } else {
+      return (
+        <View style={{ width: screenWidth, height: screenHeight }}>
+          <ScrollView
+            style={{ width: screenWidth, height: screenHeight * 0.95 }}
+          >
+            <Swiper
+              index={this.state.index}
+              containerStyle={{ width: screenWidth, height: screenHeight }}
+              key={this.state.key}
+              loop={false}
+              showsButtons={false}
+              loadMinimal={true}
+              loadMinimalSize={1}
+              showsPagination={false}
+              onIndexChanged={index => {
+                this.setState({ page: 604 - index });
+              }}
+            >
+              {this.state.pages.map((item, idx) => this.renderItem(item, idx))}
+            </Swiper>
+          </ScrollView>
+        </View>
+      );
+    }
+  }
 }
 
 const styles = StyleSheet.create({
