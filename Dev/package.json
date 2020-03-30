@@ -12,14 +12,11 @@
     "immutability-helper": "^3.0.1",
     "prop-types": "^15.7.2",
     "react": "16.8.6",
-    "react-native": "0.60.5",
+    "react-native": "0.60.1",
     "react-native-audio-recorder-player": "^2.4.4-rc.1",
     "react-native-autocomplete-search": "^1.0.8",
-<<<<<<< HEAD
-    "react-native-confirmation-code-input": "1.0.4",
-=======
     "react-native-chart-kit": "^4.4.1",
->>>>>>> dfefb7ac09fbb5f00a0cb4071ce5042c56a52f9e
+    "react-native-confirmation-code-input": "1.0.4",
     "react-native-custom-picker": "^0.4.0",
     "react-native-datepicker": "^1.7.2",
     "react-native-easy-toast": "^1.2.0",

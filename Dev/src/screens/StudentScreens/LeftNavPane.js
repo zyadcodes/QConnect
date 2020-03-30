@@ -25,6 +25,7 @@ import FirebaseFunctions from "config/FirebaseFunctions";
 import LoadingSpinner from "components/LoadingSpinner";
 import QCView from "components/QCView";
 import screenStyle from "config/screenStyle";
+import CodeInput from 'react-native-confirmation-code-input'
 import fontStyles from 'config/fontStyles';
 
 class LeftNavPane extends QcParentScreen {
