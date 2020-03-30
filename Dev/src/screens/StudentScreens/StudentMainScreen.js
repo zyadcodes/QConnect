@@ -31,6 +31,8 @@ import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
 import { CustomPicker } from 'react-native-custom-picker';
 import { screenHeight, screenWidth } from 'config/dimensions';
+import CodeInput from 'react-native-confirmation-code-input';
+
 import AudioPlayer from 'components/AudioPlayer/AudioPlayer';
 import Toast, { DURATION } from "react-native-easy-toast";
 
@@ -248,19 +250,19 @@ class StudentMainScreen extends QcParentScreen {
                         alignItems: 'center'
                       }}
                     >
-                      <TextInput
-                        style={[
-                          {
-                            height: screenHeight * 0.07,
-                            paddingLeft: 0.017 * screenWidth,
-                          },
-                          fontStyles.mainTextStyleDarkGrey,
-                        ]}
-                        placeholder={strings.TypeInAClassCode}
-                        autoCorrect={false}
-                        onChangeText={classCode => this.setState({ classCode })}
-                        value={this.state.classCode}
-                      />
+                     <CodeInput
+                     space={2}
+                     size={50}
+					 codeLength={5}
+                     activeColor='rgba(49, 180, 4, 1.3)'
+                     inactiveColor={colors.workingOnItColorBrown}
+                     autoFocus={true}
+                     inputPosition= 'center'
+                     className='border-circle'
+					 containerStyle={{ marginBottom: 60 }}
+                     codeInputStyle={{ borderWidth: 1.5 }}
+                     onFulfill={(code) => this.setState({classCode : code})}
+                     />
                     </View>
                     <View
                       style={{
@@ -907,7 +909,6 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 }
-
 //------------------ Component styles ----------------------------
 //Styles for the entire container along with the top banner
 const styles = StyleSheet.create({

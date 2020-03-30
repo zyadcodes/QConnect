@@ -29,10 +29,11 @@ import { screenHeight, screenWidth } from "config/dimensions";
 export class ClassMainScreen extends QcParentScreen {
   state = {
     isLoading: true,
-    teacher: "",
-    userID: "",
-    currentClass: "",
-    currentClassID: "",
+    teacher: '',
+    userID: '',
+    currentClass: '',
+    currentClassID: '',
+    classInviteCode: '',
     isOpen: false,
     classes: "",
     isEditing: false,
@@ -45,17 +46,20 @@ export class ClassMainScreen extends QcParentScreen {
     const { userID } = this.props.navigation.state.params;
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
     const { currentClassID } = teacher;
-
     let { currentClass } = this.props.navigation.state.params;
+
     if (currentClass === undefined) {
       currentClass = await FirebaseFunctions.getClassByID(currentClassID);
     }
 
+    const classInviteCode = currentClass.classInviteCode;
+    console.log(classInviteCode);
     const classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
     this.setState({
       isLoading: false,
       teacher,
       userID,
+      classInviteCode,
       currentClass,
       currentClassID,
       classes,
@@ -116,7 +120,8 @@ export class ClassMainScreen extends QcParentScreen {
       teacher,
       userID,
       currentClass,
-      currentClassID
+      currentClassID,
+      classInviteCode
     } = this.state;
 
     if (isLoading === true) {
@@ -228,13 +233,12 @@ export class ClassMainScreen extends QcParentScreen {
                 onEditingPicture={newPicture => this.updatePicture(newPicture)}
                 profileImageID={currentClass.classImageID}
                 RightIconName="edit"
-                RightOnPress={() =>
-                  this.props.navigation.push('ShareClassCode', {
-                    currentClassID,
-                    userID: this.state.userID,
-                    currentClass,
-                  })
-                }
+                RightOnPress={() => this.props.navigation.push("ShareClassCode", {
+                  classInviteCode,
+                  currentClassID,
+                  userID: this.state.userID,
+                  currentClass
+                })}
               />
             </View>
             <View
@@ -259,45 +263,26 @@ export class ClassMainScreen extends QcParentScreen {
               </Text>
               <QcActionButton
                 text={strings.AddStudentButton}
-                onPress={() =>
-                  this.props.navigation.push('ShareClassCode', {
-                    currentClassID,
-                    userID: this.state.userID,
-                    currentClass,
-                  })
-                }
-              />
+                onPress={() => this.props.navigation.push("ShareClassCode", {
+                  classInviteCode,
+                  currentClassID,
+                  userID: this.state.userID,
+                  currentClass
+                })} />
             </View>
           </QCView>
         </SideMenu>
-      );
-    } else {
-      const studentsNeedHelp = currentClass.students.filter(
-        student =>
-          student.currentAssignments[0] &&
-          student.currentAssignments[0].isReadyEnum === "NEED_HELP"
-      );
-      const studentsReady = currentClass.students.filter(
-        student =>
-          student.currentAssignments[0] &&
-          (student.currentAssignments[0].isReadyEnum === "READY" ||
-            (!student.isReadyEnum && student.isReady === true))
-      );
-      const studentsWorkingOnIt = currentClass.students.filter(
-        student =>
-          student.currentAssignments[0] &&
-          ((student.currentAssignments[0].isReadyEnum === "WORKING_ON_IT" ||
-            student.currentAssignments[0].isReadyEnum === "NOT_STARTED" ||
-            (student.currentAssignments[0].isReadyEnum === undefined &&
-              student.currentAssignments[0].isReady === false)) &&
-            (student.currentAssignments &&
-              student.currentAssignments.length > 0))
-      );
-      const studentsWithNoAssignments = currentClass.students.filter(
-        student =>
-          !student.currentAssignments || student.currentAssignments.length === 0
-      );
-      const { isEditing, currentClassID, userID } = this.state;
+      )
+    }
+
+
+    else {
+
+      const studentsNeedHelp = currentClass.students.filter((student) => student.isReadyEnum === "NEED_HELP");
+      const studentsReady = currentClass.students.filter((student) => student.isReadyEnum === "READY" || (!student.isReadyEnum && student.isReady === true));
+      const studentsWorkingOnIt = currentClass.students.filter((student) => ((student.isReadyEnum === "WORKING_ON_IT" || (student.isReadyEnum === undefined && student.isReady === false)) && student.currentAssignment !== "None" ));
+      const studentsWithNoAssignments = currentClass.students.filter((student) => student.currentAssignment === "None");
+      const { isEditing, currentClassID, userID, classInviteCode } = this.state;
 
       return (
         <SideMenu
@@ -357,6 +342,7 @@ export class ClassMainScreen extends QcParentScreen {
                     this.props.navigation.push('ShareClassCode', {
                       currentClassID,
                       userID,
+                      classInviteCode,
                       currentClass: this.state.currentClass,
                     });
                   }}

@@ -1,7 +1,7 @@
 //Component represents a top banner that will have three components within it,
 //an icon, a title, and another icon that will all be equally seperated
 import FontLoadingComponent from 'components/FontLoadingComponent';
-import React from 'React';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
   StyleSheet,
