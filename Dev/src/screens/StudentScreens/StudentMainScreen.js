@@ -33,6 +33,7 @@ import { CustomPicker } from "react-native-custom-picker";
 import { screenHeight, screenWidth } from "config/dimensions";
 import AudioPlayer from "components/AudioPlayer/AudioPlayer";
 import Toast, { DURATION } from 'react-native-easy-toast';
+import { LineChart } from "react-native-chart-kit";
 
 const translateY = new Animated.Value(-35);
 const opacity = new Animated.Value(0);
@@ -89,6 +90,16 @@ class StudentMainScreen extends QcParentScreen {
       });
       const classes = await FirebaseFunctions.getClassesByIDs(student.classes);
 
+      //This constructs an array of the student's past assignments & only includes the "length" field which is how many
+    //words that assignment was. The method returns that array which is then passed to the line graph below as the data
+    const { assignmentHistory } = studentClassInfo;
+    const data = [];
+    for (const assignment of assignmentHistory) {
+      if (assignment.assignmentLength && assignment.assignmentLength > 0) {
+        data.push(assignment);
+      }
+    }      
+
       //initialize recordingUIVisible array to have the same number of elements
       // as we have assignments, and initialize each flag to false (do not show any recording UI initially)
       //this flag will be used to show option to record audio when students completes an assignment
@@ -102,6 +113,7 @@ class StudentMainScreen extends QcParentScreen {
         student,
         userID,
         currentClass,
+        wordsPerAssignmentData: data,
         currentClassID,
         studentClassInfo,
         isLoading: false,
@@ -165,6 +177,7 @@ class StudentMainScreen extends QcParentScreen {
   //---------- Helper methods to render parts of the screen, or certain cases ------------
   //Renders the screen when student didn't join any class
   renderEmptyState() {
+    const { student, userID } = this.state;
     return (
       <SideMenu
         onChange={isOpen => {
@@ -183,7 +196,7 @@ class StudentMainScreen extends QcParentScreen {
         }
       >
         <QCView>
-          <View style={{ flex: 1 }}>
+          <View>
             <TopBanner
               LeftIconName="navicon"
               LeftOnPress={() => this.setState({ isOpen: true })}
@@ -192,12 +205,21 @@ class StudentMainScreen extends QcParentScreen {
           </View>
           <View
             style={{
-              flex: 2,
-              justifyContent: "flex-start",
+              justifyContent: "center",
               alignItems: "center",
               alignSelf: "center"
             }}
           >
+            <View style={{ height: 100 }} />
+            <Text
+              style={[
+                fontStyles.hugeTextStyleDarkGrey,
+                { textAlign: 'center', alignSelf: 'center' },
+              ]}
+            >
+              {strings.StudentNoClassHeaderMsg}
+            </Text>
+
             <Image
               source={require("assets/emptyStateIdeas/welcome-girl.png")}
               style={{
@@ -208,7 +230,10 @@ class StudentMainScreen extends QcParentScreen {
             />
 
             <Text
-              style={[fontStyles.bigTextStyleDarkGrey, { alignSelf: "center" }]}
+              style={[
+                fontStyles.bigTextStyleDarkGrey,
+                { textAlign: 'center', alignSelf: 'center' },
+              ]}
             >
               {strings.HaventJoinedClassYet}
             </Text>
@@ -919,6 +944,76 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 
+  renderStudentProgressChart() {
+    const { wordsPerAssignmentData } = this.state;
+
+    return (
+      <View>
+      {
+      wordsPerAssignmentData.length > 0 && (
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <Text style={fontStyles.bigTextStyleBlack}>
+            {strings.WordsPerAssignment}
+          </Text>
+          <View style={{ height: screenHeight * 0.0075 }} />
+          <LineChart
+            data={{
+              labels:
+                wordsPerAssignmentData.length > 1
+                  ? [
+                      wordsPerAssignmentData[0].completionDate.substring(
+                        0,
+                        wordsPerAssignmentData[0].completionDate.lastIndexOf(
+                          '/'
+                        )
+                      ),
+                      wordsPerAssignmentData[
+                        wordsPerAssignmentData.length - 1
+                      ].completionDate.substring(
+                        0,
+                        wordsPerAssignmentData[
+                          wordsPerAssignmentData.length - 1
+                        ].completionDate.lastIndexOf("/")
+                      ),
+                    ]
+                  : [
+                      wordsPerAssignmentData[0].completionDate.substring(
+                        0,
+                        wordsPerAssignmentData[0].completionDate.lastIndexOf(
+                          '/'
+                        )
+                      ),
+                    ],
+              datasets: [
+                {
+                  data: wordsPerAssignmentData.map(
+                    data => data.assignmentLength
+                  ),
+                },
+              ],
+            }}
+            fromZero={true}
+            withInnerLines={false}
+            chartConfig={{
+              backgroundColor: colors.primaryDark,
+              backgroundGradientFrom: colors.lightGrey,
+              backgroundGradientTo: colors.primaryDark,
+              decimalPlaces: 0,
+              color: (opacity = 1) => colors.primaryDark,
+              labelColor: (opacity = 1) => colors.black,
+              style: {
+                borderRadius: 16,
+              },
+            }}
+            width={screenWidth}
+            height={220}
+          />
+        </View>
+      )
+    }
+    </View>);
+  }
+
   //-------------------------- render method: Main UI enctry point for the component ------------
   //Renders the screen
   render() {
@@ -978,6 +1073,7 @@ class StudentMainScreen extends QcParentScreen {
           <Toast position={"bottom"} ref="toast" />
           <View>
             <ScrollView>
+              {this.renderStudentProgressChart()}
               {assignmentHistory &&
                 assignmentHistory.length > 0 &&
                 this.renderAssignmentsSectionHeader(

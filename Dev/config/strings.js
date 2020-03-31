@@ -143,6 +143,7 @@ export default {
 
   //--------------------- Join Class Screen ---------------------
   JoinClass: "Join your class",
+  StudentNoClassHeaderMsg: "Your Teacher is Waiting\n",
   HaventJoinedClassYet: "Let's get you started",
   TypeInAClassCode: "Type in a class code...",
   IncorrectClassCode: "There doesn't seem to be a class with this code",

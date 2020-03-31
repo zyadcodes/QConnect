@@ -21,7 +21,7 @@ import QCView from "components/QCView";
 import screenStyle from "config/screenStyle";
 import fontStyles from "config/fontStyles";
 import { screenHeight, screenWidth } from "config/dimensions";
-import { LineChart, StackedBarChart } from "react-native-chart-kit";
+import { LineChart } from "react-native-chart-kit";
 import { Icon } from "react-native-elements";
 
 class StudentProfileScreen extends QcParentScreen {

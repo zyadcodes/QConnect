@@ -125,5 +125,11 @@ export default StyleSheet.create({
         color: colors.black
     },
 
+    hugeTextStyleDarkGrey: {
+        fontFamily,
+        fontSize: titleFont,
+        color: colors.darkGrey
+    },
+
 });
 
