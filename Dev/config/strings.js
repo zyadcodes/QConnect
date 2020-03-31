@@ -109,6 +109,7 @@ export default {
   //--------------------- Student Profile Screen ---------------------
   WordsPerAssignment: 'Words Per Assignment',
   ReadQuranMotivation: "Feeling bored?\nAllah sent you a Message",
+  readInMushaf: "Review assignment",
   OpenMushaf: "Open the Mus'haf to read it",
   EditAssignment: "Edit assignment",
   AddAssignment: "Add assignment",

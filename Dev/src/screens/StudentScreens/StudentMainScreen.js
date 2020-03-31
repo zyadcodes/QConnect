@@ -432,12 +432,13 @@ class StudentMainScreen extends QcParentScreen {
             <View />
           )}
           {item.submission ? (
-            <View style={{ justifyContent: "flex-end", flexDirection: "row"}}>
+            <View style={{ justifyContent: "flex-end", flexDirection: "row" }}>
               <Icon
                 name="microphone"
                 type="material-community"
                 color={colors.darkRed}
-              /></View>
+              />
+            </View>
           ) : (
             <View />
           )}
@@ -789,6 +790,11 @@ class StudentMainScreen extends QcParentScreen {
                 >
                   {item.name ? item.name.toUpperCase() : 'No Assignment Yet'}
                 </Text>
+                {item.name && (
+                  <Text style={fontStyles.smallTextStylePrimaryDark}>
+                    {strings.readInMushaf}
+                  </Text>
+                )}
               </View>
             </View>
           </TouchableOpacity>
@@ -1043,7 +1049,7 @@ const styles = StyleSheet.create({
   },
   currentAssignment: {
     justifyContent: 'flex-end',
-    height: screenHeight * 0.16,
+    height: 150,
     borderWidth: 0.5,
     borderColor: colors.grey,
     marginBottom: 5
