@@ -31,7 +31,7 @@ import screenStyle from "config/screenStyle";
 import fontStyles from "config/fontStyles";
 import { CustomPicker } from "react-native-custom-picker";
 import { screenHeight, screenWidth } from "config/dimensions";
-import AudioPlayer from "components/AudioPlayer/AudioPlayer";
+//import AudioPlayer from "components/AudioPlayer/AudioPlayer";
 import Toast, { DURATION } from 'react-native-easy-toast';
 import { LineChart } from "react-native-chart-kit";
 
@@ -661,58 +661,58 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 
-  renderAudioRecordingUI(assignmentIndex) {
-    const {
-      student,
-      studentClassInfo,
-      userID,
-      currentClassID,
-      recordingUIVisible
-    } = this.state;
+  // renderAudioRecordingUI(assignmentIndex) {
+  //   const {
+  //     student,
+  //     studentClassInfo,
+  //     userID,
+  //     currentClassID,
+  //     recordingUIVisible
+  //   } = this.state;
 
-    const transformStyle = {
-      transform: [{ translateY }],
-      opacity: opacityInterpolate,
-    };
+  //   const transformStyle = {
+  //     transform: [{ translateY }],
+  //     opacity: opacityInterpolate,
+  //   };
 
-    return (
-      <View>
-        {recordingUIVisible[assignmentIndex] && (
-          <Animated.View
-            style={[
-              {
-                justifyContent: "flex-start",
-                alignItems: "center",
-                alignSelf: "flex-start"
-              },
-              transformStyle
-            ]}
-          >
-            <AudioPlayer
-              image={studentImages.images[student.profileImageID]}
-              reciter={student.name}
-              title={studentClassInfo.currentAssignment}
-              isRecordMode={true}
-              showSendCancel={true}
-              onClose={() => {
-                this.animateHideAudioUI(assignmentIndex);
-              }}
-              onSend={recordedFileUri => {
-                this.setState({ recordedFileUri: recordedFileUri });
-                FirebaseFunctions.submitRecordingAudio(
-                  recordedFileUri,
-                  userID,
-                  currentClassID,
-                  assignmentIndex
-                );
-                this.animateHideAudioUI(assignmentIndex);
-              }}
-            />
-          </Animated.View>
-        )}
-      </View>
-    );
-  }
+  //   return (
+  //     <View>
+  //       {recordingUIVisible[assignmentIndex] && (
+  //         <Animated.View
+  //           style={[
+  //             {
+  //               justifyContent: "flex-start",
+  //               alignItems: "center",
+  //               alignSelf: "flex-start"
+  //             },
+  //             transformStyle
+  //           ]}
+  //         >
+  //           <AudioPlayer
+  //             image={studentImages.images[student.profileImageID]}
+  //             reciter={student.name}
+  //             title={studentClassInfo.currentAssignment}
+  //             isRecordMode={true}
+  //             showSendCancel={true}
+  //             onClose={() => {
+  //               this.animateHideAudioUI(assignmentIndex);
+  //             }}
+  //             onSend={recordedFileUri => {
+  //               this.setState({ recordedFileUri: recordedFileUri });
+  //               FirebaseFunctions.submitRecordingAudio(
+  //                 recordedFileUri,
+  //                 userID,
+  //                 currentClassID,
+  //                 assignmentIndex
+  //               );
+  //               this.animateHideAudioUI(assignmentIndex);
+  //             }}
+  //           />
+  //         </Animated.View>
+  //       )}
+  //     </View>
+  //   );
+  // }
 
   renderAssignmentsSectionHeader(label, iconName) {
     return (
@@ -836,7 +836,7 @@ class StudentMainScreen extends QcParentScreen {
             fieldTemplate={() => this.getCustomPickerTemplate(item)}
           />
         </View>
-        {this.renderAudioRecordingUI(index)}
+        {/* {this.renderAudioRecordingUI(index)} */}
       </View>
     );
   }

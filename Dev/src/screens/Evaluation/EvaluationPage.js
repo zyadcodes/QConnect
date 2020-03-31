@@ -24,7 +24,7 @@ import QCView from "components/QCView";
 import screenStyle from "config/screenStyle";
 import fontStyles from "config/fontStyles";
 import { screenWidth, screenHeight } from "config/dimensions";
-import AudioPlayer from "components/AudioPlayer/AudioPlayer";
+//import AudioPlayer from "components/AudioPlayer/AudioPlayer";
 
 export class EvaluationPage extends QcParentScreen {
   //Default improvement areas
@@ -76,6 +76,7 @@ export class EvaluationPage extends QcParentScreen {
         "EvaluationPage"
       );
     }
+    alert(this.state.assignmentLength);
 
     const studentObject = await FirebaseFunctions.getStudentByID(
       this.state.studentID
@@ -83,22 +84,22 @@ export class EvaluationPage extends QcParentScreen {
 
     const { submission } = this.state;
 
-    let audioFile = -1;
-    let audioSentDateTime;
-    if (submission !== undefined && submission.audioFileID !== undefined) {
-      //Fetches audio file for student if one is present
-      audioFile = await FirebaseFunctions.downloadAudioFile(
-        submission.audioFileID
-      );
+    // let audioFile = -1;
+    // let audioSentDateTime;
+    // if (submission !== undefined && submission.audioFileID !== undefined) {
+    //   //Fetches audio file for student if one is present
+    //   audioFile = await FirebaseFunctions.downloadAudioFile(
+    //     submission.audioFileID
+    //   );
 
-      let audioSentDate = submission.sent.toDate();
-      audioSentDateTime =
-        audioSentDate.toLocaleDateString("EN-US") +
-        ", " +
-        audioSentDate.getHours() +
-        ":" +
-        audioSentDate.getMinutes();
-    }
+    //   let audioSentDate = submission.sent.toDate();
+    //   audioSentDateTime =
+    //     audioSentDate.toLocaleDateString("EN-US") +
+    //     ", " +
+    //     audioSentDate.getHours() +
+    //     ":" +
+    //     audioSentDate.getMinutes();
+    // }
 
     //Fetches the ID for the evaluation (if there is none, it is created)
     const evaluationID = this.props.navigation.state.params.evaluationID
@@ -110,8 +111,8 @@ export class EvaluationPage extends QcParentScreen {
       studentObject,
       isLoading: false,
       evaluationID,
-      audioFile,
-      audioSentDateTime
+      // audioFile,
+      // audioSentDateTime
     });
   }
 
@@ -315,7 +316,7 @@ export class EvaluationPage extends QcParentScreen {
                 {assignmentName}
               </Text>
             </View>
-            {this.state.audioFile !== -1 ? (
+            {/* {this.state.audioFile !== -1 ? (
               <View style={{ justifyContent: "center", alignItems: "center" }}>
                 <View style={styles.playAudio}>
                   <AudioPlayer
@@ -333,7 +334,7 @@ export class EvaluationPage extends QcParentScreen {
               </View>
             ) : (
               <View />
-            )}
+            )} */}
             <View style={styles.section}>
               <Text style={fontStyles.mainTextStyleDarkGrey}>
                 {headerTitle}
