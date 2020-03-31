@@ -91,14 +91,14 @@ class StudentMainScreen extends QcParentScreen {
       const classes = await FirebaseFunctions.getClassesByIDs(student.classes);
 
       //This constructs an array of the student's past assignments & only includes the "length" field which is how many
-    //words that assignment was. The method returns that array which is then passed to the line graph below as the data
-    const { assignmentHistory } = studentClassInfo;
-    const data = [];
-    for (const assignment of assignmentHistory) {
-      if (assignment.assignmentLength && assignment.assignmentLength > 0) {
-        data.push(assignment);
+      //words that assignment was. The method returns that array which is then passed to the line graph below as the data
+      const { assignmentHistory } = studentClassInfo;
+      const data = [];
+      for (const assignment of assignmentHistory) {
+        if (assignment.assignmentLength && assignment.assignmentLength > 0) {
+          data.push(assignment);
+        }
       }
-    }      
 
       //initialize recordingUIVisible array to have the same number of elements
       // as we have assignments, and initialize each flag to false (do not show any recording UI initially)
@@ -594,7 +594,7 @@ class StudentMainScreen extends QcParentScreen {
   updateCurrentAssignmentStatus(value, index) {
     const { currentClassID, studentClassInfo, userID } = this.state;
     let updatedAssignments = studentClassInfo.currentAssignments;
-    updatedAssignments[index].isReadyEnum = value.value;
+    updatedAssignments[index].isReadyEnum = value;
     this.setState({
       studentClassInfo: {
         ...studentClassInfo,
@@ -605,18 +605,18 @@ class StudentMainScreen extends QcParentScreen {
     FirebaseFunctions.updateStudentAssignmentStatus(
       currentClassID,
       userID,
-      value.value,
+      value,
       index
     );
 
     let toastMsg =
-      value.value === "NEED_HELP"
+      value === "NEED_HELP"
         ? strings.TeacherIsNotifiedNeedHelp
         : strings.TeacherIsNotified;
 
     this.refs.toast.show(toastMsg, DURATION.LENGTH_LONG);
 
-    if (value.value === 'READY') {
+    if (value === 'READY') {
       this.setState(
         { recordingUIVisible: this.setRecUIForAssignmentIndex(index, true) },
         () => this.animateShowAudioUI()
@@ -786,6 +786,12 @@ class StudentMainScreen extends QcParentScreen {
         >
           <TouchableOpacity
             onPress={() => {
+              //if the current staus is not started and the student open the mus7af @ assignment
+              // change status to "working on it"
+              //if (item.isReadyEnum === "NOT_STARTED") {
+                this.updateCurrentAssignmentStatus("WORKING_ON_IT", index);
+              //}
+
               this.props.navigation.push("MushafReadingScreen", {
                 popOnClose: true,
                 isTeacher: false,
@@ -827,7 +833,7 @@ class StudentMainScreen extends QcParentScreen {
           <CustomPicker
             options={customPickerOptions}
             onValueChange={value =>
-              this.updateCurrentAssignmentStatus(value, index)
+              this.updateCurrentAssignmentStatus(value.value, index)
             }
             getLabel={item => item.label}
             optionTemplate={settings =>
@@ -949,69 +955,68 @@ class StudentMainScreen extends QcParentScreen {
 
     return (
       <View>
-      {
-      wordsPerAssignmentData.length > 0 && (
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <Text style={fontStyles.bigTextStyleBlack}>
-            {strings.WordsPerAssignment}
-          </Text>
-          <View style={{ height: screenHeight * 0.0075 }} />
-          <LineChart
-            data={{
-              labels:
-                wordsPerAssignmentData.length > 1
-                  ? [
-                      wordsPerAssignmentData[0].completionDate.substring(
-                        0,
-                        wordsPerAssignmentData[0].completionDate.lastIndexOf(
-                          '/'
-                        )
-                      ),
-                      wordsPerAssignmentData[
-                        wordsPerAssignmentData.length - 1
-                      ].completionDate.substring(
-                        0,
+        {wordsPerAssignmentData.length > 0 && (
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <Text style={fontStyles.bigTextStyleBlack}>
+              {strings.WordsPerAssignment}
+            </Text>
+            <View style={{ height: screenHeight * 0.0075 }} />
+            <LineChart
+              data={{
+                labels:
+                  wordsPerAssignmentData.length > 1
+                    ? [
+                        wordsPerAssignmentData[0].completionDate.substring(
+                          0,
+                          wordsPerAssignmentData[0].completionDate.lastIndexOf(
+                            '/'
+                          )
+                        ),
                         wordsPerAssignmentData[
                           wordsPerAssignmentData.length - 1
-                        ].completionDate.lastIndexOf("/")
-                      ),
-                    ]
-                  : [
-                      wordsPerAssignmentData[0].completionDate.substring(
-                        0,
-                        wordsPerAssignmentData[0].completionDate.lastIndexOf(
-                          '/'
-                        )
-                      ),
-                    ],
-              datasets: [
-                {
-                  data: wordsPerAssignmentData.map(
-                    data => data.assignmentLength
-                  ),
+                        ].completionDate.substring(
+                          0,
+                          wordsPerAssignmentData[
+                            wordsPerAssignmentData.length - 1
+                          ].completionDate.lastIndexOf("/")
+                        ),
+                      ]
+                    : [
+                        wordsPerAssignmentData[0].completionDate.substring(
+                          0,
+                          wordsPerAssignmentData[0].completionDate.lastIndexOf(
+                            '/'
+                          )
+                        ),
+                      ],
+                datasets: [
+                  {
+                    data: wordsPerAssignmentData.map(
+                      data => data.assignmentLength
+                    ),
+                  },
+                ],
+              }}
+              fromZero={true}
+              withInnerLines={false}
+              chartConfig={{
+                backgroundColor: colors.primaryDark,
+                backgroundGradientFrom: colors.lightGrey,
+                backgroundGradientTo: colors.primaryDark,
+                decimalPlaces: 0,
+                color: (opacity = 1) => colors.primaryDark,
+                labelColor: (opacity = 1) => colors.black,
+                style: {
+                  borderRadius: 16,
                 },
-              ],
-            }}
-            fromZero={true}
-            withInnerLines={false}
-            chartConfig={{
-              backgroundColor: colors.primaryDark,
-              backgroundGradientFrom: colors.lightGrey,
-              backgroundGradientTo: colors.primaryDark,
-              decimalPlaces: 0,
-              color: (opacity = 1) => colors.primaryDark,
-              labelColor: (opacity = 1) => colors.black,
-              style: {
-                borderRadius: 16,
-              },
-            }}
-            width={screenWidth}
-            height={220}
-          />
-        </View>
-      )
-    }
-    </View>);
+              }}
+              width={screenWidth}
+              height={220}
+            />
+          </View>
+        )}
+      </View>
+    );
   }
 
   //-------------------------- render method: Main UI enctry point for the component ------------

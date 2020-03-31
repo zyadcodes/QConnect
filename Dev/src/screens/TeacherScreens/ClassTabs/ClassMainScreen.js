@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -7,40 +7,40 @@ import {
   Text,
   Image,
   PixelRatio,
-  Alert
-} from 'react-native';
-import StudentCard from 'components/StudentCard';
-import colors from 'config/colors';
-import studentImages from 'config/studentImages';
-import LoadingSpinner from "../../../components/LoadingSpinner";
-import strings from "config/strings";
-import QcParentScreen from 'screens/QcParentScreen';
-import QcActionButton from 'components/QcActionButton';
-import FirebaseFunctions from "config/FirebaseFunctions";
-import TopBanner from "components/TopBanner";
-import LeftNavPane from "../LeftNavPane";
-import SideMenu from "react-native-side-menu";
-import QCView from "components/QCView";
-import screenStyle from "config/screenStyle";
-import fontStyles from 'config/fontStyles';
-import { Icon } from "react-native-elements";
-import { screenHeight, screenWidth } from "config/dimensions";
+  Alert,
+} from "react-native";
+import StudentCard from "components/StudentCard";
+import colors from "config/colors";
+import studentImages from "config/studentImages";
+import LoadingSpinner from '../../../components/LoadingSpinner';
+import strings from 'config/strings';
+import QcParentScreen from "screens/QcParentScreen";
+import QcActionButton from "components/QcActionButton";
+import FirebaseFunctions from 'config/FirebaseFunctions';
+import TopBanner from 'components/TopBanner';
+import LeftNavPane from '../LeftNavPane';
+import SideMenu from 'react-native-side-menu';
+import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
+import fontStyles from "config/fontStyles";
+import { Icon } from 'react-native-elements';
+import { screenHeight, screenWidth } from 'config/dimensions';
 
 export class ClassMainScreen extends QcParentScreen {
   state = {
     isLoading: true,
-    teacher: "",
-    userID: "",
-    currentClass: "",
-    currentClassID: "",
+    teacher: '',
+    userID: '',
+    currentClass: '',
+    currentClassID: '',
     isOpen: false,
-    classes: "",
+    classes: '',
     isEditing: false,
-    titleHasChanged: false,
+    titleHasChanged: false
   };
 
   async componentDidMount() {
-    FirebaseFunctions.setCurrentScreen('Class Main Screen', 'ClassMainScreen');
+    FirebaseFunctions.setCurrentScreen("Class Main Screen", "ClassMainScreen");
     this.setState({ isLoading: true });
     const { userID } = this.props.navigation.state.params;
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
@@ -58,7 +58,7 @@ export class ClassMainScreen extends QcParentScreen {
       userID,
       currentClass,
       currentClassID,
-      classes,
+      classes
     });
   }
   setModalVisible(visible) {
@@ -87,9 +87,9 @@ export class ClassMainScreen extends QcParentScreen {
             });
             arrayOfClassStudents.splice(indexOfStudent, 1);
             this.setState({ currentClass });
-          },
+          }
         },
-        { text: strings.Cancel, style: "cancel" }
+        { text: strings.Cancel, style: 'cancel' },
       ]
     );
   }
@@ -97,16 +97,16 @@ export class ClassMainScreen extends QcParentScreen {
   updateTitle(newTitle) {
     this.setState({ titleHasChanged: true });
     this.setState({
-      currentClass: { ...this.state.currentClass, name: newTitle }
+      currentClass: { ...this.state.currentClass, name: newTitle },
     });
   }
   async updatePicture(newPicture) {
     this.setState({ pictureHasChanged: true });
     this.setState({
-      currentClass: { ...this.state.currentClass, classImageID: newPicture }
+      currentClass: { ...this.state.currentClass, classImageID: newPicture },
     });
     await FirebaseFunctions.updateClassObject(this.state.currentClassID, {
-      classImageID: newPicture
+      classImageID: newPicture,
     });
   }
 
@@ -116,20 +116,20 @@ export class ClassMainScreen extends QcParentScreen {
       teacher,
       userID,
       currentClass,
-      currentClassID
+      currentClassID,
     } = this.state;
 
     if (isLoading === true) {
       return (
         <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
         >
           <LoadingSpinner isVisible={true} />
         </View>
       );
     }
     //---------------------------------no class state---------------------------------
-    else if (currentClass === -1 || currentClassID === '') {
+    else if (currentClass === -1 || currentClassID === "") {
       return (
         <SideMenu
           isOpen={this.state.isOpen}
@@ -151,17 +151,17 @@ export class ClassMainScreen extends QcParentScreen {
                 isEditingTitle={this.state.isEditing}
                 isEditingPicture={this.state.isEditing}
                 onEditingPicture={newPicture => this.updatePicture(newPicture)}
-                Title={'Quran Connect'}
+                Title={"Quran Connect"}
                 onTitleChanged={newTitle => this.updateTitle(newTitle)}
                 profileImageID={currentClass.classImageID}
               />
             </View>
             <View
               style={{
-                alignItems: "center",
-                justifyContent: "flex-start",
-                alignSelf: "center",
-                flex: 2
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                alignSelf: 'center',
+                flex: 2,
               }}
             >
               <Text style={fontStyles.hugeTextStylePrimaryDark}>
@@ -169,20 +169,20 @@ export class ClassMainScreen extends QcParentScreen {
               </Text>
 
               <Image
-                source={require("assets/emptyStateIdeas/welcome-girl.png")}
+                source={require('assets/emptyStateIdeas/welcome-girl.png')}
                 style={{
                   width: 0.73 * screenWidth,
                   height: 0.22 * screenHeight,
-                  resizeMode: "contain"
+                  resizeMode: 'contain'
                 }}
               />
 
               <QcActionButton
                 text={strings.AddClassButton}
                 onPress={() => {
-                  this.props.navigation.push('AddClass', {
+                  this.props.navigation.push("AddClass", {
                     userID: this.state.userID,
-                    teacher: this.state.teacher,
+                    teacher: this.state.teacher
                   });
                 }}
               />
@@ -231,10 +231,10 @@ export class ClassMainScreen extends QcParentScreen {
                 profileImageID={currentClass.classImageID}
                 RightIconName="edit"
                 RightOnPress={() =>
-                  this.props.navigation.push('ShareClassCode', {
+                  this.props.navigation.push("ShareClassCode", {
                     currentClassID,
                     userID: this.state.userID,
-                    currentClass,
+                    currentClass
                   })
                 }
               />
@@ -242,9 +242,9 @@ export class ClassMainScreen extends QcParentScreen {
             <View
               style={{
                 flex: 2,
-                justifyContent: "flex-start",
-                alignItems: "center",
-                alignSelf: "center"
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+                alignSelf: 'center'
               }}
             >
               <Text style={fontStyles.hugeTextStylePrimaryDark}>
@@ -252,21 +252,21 @@ export class ClassMainScreen extends QcParentScreen {
               </Text>
 
               <Image
-                source={require("assets/emptyStateIdeas/welcome-girl.png")}
+                source={require('assets/emptyStateIdeas/welcome-girl.png')}
                 style={{
                   width: 0.73 * screenWidth,
                   height: 0.22 * screenHeight,
-                  resizeMode: "contain"
+                  resizeMode: 'contain'
                 }}
               />
 
               <QcActionButton
                 text={strings.AddStudentButton}
                 onPress={() =>
-                  this.props.navigation.push('ShareClassCode', {
+                  this.props.navigation.push("ShareClassCode", {
                     currentClassID,
                     userID: this.state.userID,
-                    currentClass,
+                    currentClass
                   })
                 }
               />
@@ -279,26 +279,30 @@ export class ClassMainScreen extends QcParentScreen {
         student =>
           student.currentAssignments &&
           student.currentAssignments[0] &&
-          student.currentAssignments[0].isReadyEnum === "NEED_HELP"
+          student.currentAssignments[0].isReadyEnum === 'NEED_HELP'
       );
       const studentsReady = currentClass.students.filter(
         student =>
           student.currentAssignments &&
           student.currentAssignments[0] &&
-          (student.currentAssignments[0].isReadyEnum === "READY" ||
+          (student.currentAssignments[0].isReadyEnum === 'READY' ||
             (!student.isReadyEnum && student.isReady === true))
       );
       const studentsWorkingOnIt = currentClass.students.filter(
         student =>
           student.currentAssignments &&
           student.currentAssignments[0] &&
-          ((student.currentAssignments[0].isReadyEnum === "WORKING_ON_IT" ||
-            student.currentAssignments[0].isReadyEnum === "NOT_STARTED" ||
-            (student.currentAssignments[0].isReadyEnum === undefined &&
-              student.currentAssignments[0].isReady === false)) &&
-            (student.currentAssignments &&
-              student.currentAssignments.length > 0))
+          (student.currentAssignments[0].isReadyEnum === 'WORKING_ON_IT' ||
+            student.currentAssignments[0].isReady === false)
       );
+      const studentsNotStarted = currentClass.students.filter(
+        student =>
+          student.currentAssignments &&
+          student.currentAssignments[0] &&
+          (student.currentAssignments[0].isReadyEnum === 'NOT_STARTED' ||
+            student.currentAssignments[0].isReadyEnum === undefined)
+      );
+
       const studentsWithNoAssignments = currentClass.students.filter(
         student =>
           !student.currentAssignments || student.currentAssignments.length === 0
@@ -324,7 +328,7 @@ export class ClassMainScreen extends QcParentScreen {
                 LeftIconName="navicon"
                 LeftOnPress={() => this.setState({ isOpen: true })}
                 Title={this.state.currentClass.name}
-                RightIconName={this.state.isEditing === false ? 'edit' : null}
+                RightIconName={this.state.isEditing === false ? "edit" : null}
                 RightTextName={
                   this.state.isEditing === true ? strings.Done : null
                 }
@@ -360,15 +364,15 @@ export class ClassMainScreen extends QcParentScreen {
                   text={strings.AddStudents}
                   onPress={() => {
                     //Goes to add students screen
-                    this.props.navigation.push('ShareClassCode', {
+                    this.props.navigation.push("ShareClassCode", {
                       currentClassID,
                       userID,
-                      currentClass: this.state.currentClass,
+                      currentClass: this.state.currentClass
                     });
                   }}
                   style={{
                     ...fontStyles.bigTextStylePrimaryDark,
-                    paddingTop: 10
+                    paddingTop: 10,
                   }}
                 />
               </View>
@@ -378,10 +382,10 @@ export class ClassMainScreen extends QcParentScreen {
             {studentsNeedHelp.length > 0 ? (
               <View
                 style={{
-                  alignItems: "center",
+                  alignItems: 'center',
                   marginLeft: screenWidth * 0.017,
-                  flexDirection: "row",
-                  paddingTop: screenHeight * 0.025
+                  flexDirection: 'row',
+                  paddingTop: screenHeight * 0.025,
                 }}
               >
                 <Icon
@@ -392,7 +396,7 @@ export class ClassMainScreen extends QcParentScreen {
                 <Text
                   style={[
                     { marginLeft: screenWidth * 0.017 },
-                    fontStyles.mainTextStyleDarkRed
+                    fontStyles.mainTextStyleDarkRed,
                   ]}
                 >
                   {strings.NeedHelp}
@@ -415,11 +419,11 @@ export class ClassMainScreen extends QcParentScreen {
                       : strings.NoAssignmentsYet
                   }
                   onPress={() =>
-                    this.props.navigation.push('TeacherStudentProfile', {
+                    this.props.navigation.push("TeacherStudentProfile", {
                       userID: userID,
                       studentID: item.ID,
                       currentClass: currentClass,
-                      classID: currentClassID,
+                      classID: currentClassID
                     })
                   }
                   background={colors.red}
@@ -442,10 +446,10 @@ export class ClassMainScreen extends QcParentScreen {
             {studentsReady.length > 0 ? (
               <View
                 style={{
-                  alignItems: "center",
+                  alignItems: 'center',
                   marginLeft: screenWidth * 0.017,
-                  flexDirection: "row",
-                  paddingTop: screenHeight * 0.025
+                  flexDirection: 'row',
+                  paddingTop: screenHeight * 0.025,
                 }}
               >
                 <Icon
@@ -456,7 +460,7 @@ export class ClassMainScreen extends QcParentScreen {
                 <Text
                   style={[
                     { marginLeft: screenWidth * 0.017 },
-                    fontStyles.mainTextStyleDarkGreen
+                    fontStyles.mainTextStyleDarkGreen,
                   ]}
                 >
                   {strings.Ready}
@@ -479,11 +483,11 @@ export class ClassMainScreen extends QcParentScreen {
                       : strings.NoAssignmentsYet
                   }
                   onPress={() =>
-                    this.props.navigation.push('TeacherStudentProfile', {
+                    this.props.navigation.push("TeacherStudentProfile", {
                       userID: userID,
                       studentID: item.ID,
                       currentClass: currentClass,
-                      classID: currentClassID,
+                      classID: currentClassID
                     })
                   }
                   background={colors.green}
@@ -506,10 +510,10 @@ export class ClassMainScreen extends QcParentScreen {
             {studentsWithNoAssignments.length > 0 ? (
               <View
                 style={{
-                  alignItems: "center",
+                  alignItems: 'center',
                   marginLeft: screenWidth * 0.017,
-                  flexDirection: "row",
-                  paddingTop: screenHeight * 0.025
+                  flexDirection: 'row',
+                  paddingTop: screenHeight * 0.025,
                 }}
               >
                 <Icon
@@ -520,7 +524,7 @@ export class ClassMainScreen extends QcParentScreen {
                 <Text
                   style={[
                     { marginLeft: screenWidth * 0.017 },
-                    fontStyles.mainTextStylePrimaryDark
+                    fontStyles.mainTextStylePrimaryDark,
                   ]}
                 >
                   {strings.NeedAssignment}
@@ -539,11 +543,76 @@ export class ClassMainScreen extends QcParentScreen {
                   profilePic={studentImages.images[item.profileImageID]}
                   currentAssignment={strings.NoAssignmentsYet}
                   onPress={() =>
-                    this.props.navigation.push('TeacherStudentProfile', {
+                    this.props.navigation.push("TeacherStudentProfile", {
                       userID: userID,
                       studentID: item.ID,
                       currentClass: currentClass,
-                      classID: currentClassID,
+                      classID: currentClassID
+                    })
+                  }
+                  background={colors.white}
+                  comp={
+                    isEditing === true ? (
+                      <Icon
+                        name="user-times"
+                        size={PixelRatio.get() * 9}
+                        type="font-awesome"
+                        color={colors.primaryDark}
+                      />
+                    ) : null
+                  }
+                  compOnPress={() => {
+                    this.removeStudent(item.ID);
+                  }}
+                />
+              )}
+            />
+
+            {studentsNotStarted.length > 0 ? (
+              <View
+                style={{
+                  alignItems: 'center',
+                  marginLeft: screenWidth * 0.017,
+                  flexDirection: 'row',
+                  paddingTop: screenHeight * 0.025,
+                }}
+              >
+                <Icon
+                  name="bookmark-off-outline"
+                  type="material-community"
+                  color={colors.primaryDark}
+                />
+                <Text
+                  style={[
+                    { marginLeft: screenWidth * 0.017 },
+                    fontStyles.mainTextStylePrimaryDark,
+                  ]}
+                >
+                  {strings.NotStarted}
+                </Text>
+              </View>
+            ) : (
+              <View />
+            )}
+            <FlatList
+              data={studentsNotStarted}
+              keyExtractor={item => item.name} // fix, should be item.id (add id to classes)
+              renderItem={({ item }) => (
+                <StudentCard
+                  key={item.id}
+                  studentName={item.name}
+                  profilePic={studentImages.images[item.profileImageID]}
+                  currentAssignment={
+                    item.currentAssignments && item.currentAssignments[0]
+                      ? item.currentAssignments[0].name
+                      : strings.NoAssignmentsYet
+                  }
+                  onPress={() =>
+                    this.props.navigation.push("TeacherStudentProfile", {
+                      userID: userID,
+                      studentID: item.ID,
+                      currentClass: currentClass,
+                      classID: currentClassID
                     })
                   }
                   background={colors.white}
@@ -567,10 +636,10 @@ export class ClassMainScreen extends QcParentScreen {
             {studentsWorkingOnIt.length > 0 ? (
               <View
                 style={{
-                  alignItems: "center",
+                  alignItems: 'center',
                   marginLeft: screenWidth * 0.017,
-                  flexDirection: "row",
-                  paddingTop: screenHeight * 0.025
+                  flexDirection: 'row',
+                  paddingTop: screenHeight * 0.025,
                 }}
               >
                 <Icon
@@ -581,7 +650,7 @@ export class ClassMainScreen extends QcParentScreen {
                 <Text
                   style={[
                     { marginLeft: screenWidth * 0.017 },
-                    fontStyles.mainTextStylePrimaryDark
+                    fontStyles.mainTextStylePrimaryDark,
                   ]}
                 >
                   {strings.WorkingOnIt}
@@ -604,11 +673,11 @@ export class ClassMainScreen extends QcParentScreen {
                       : strings.NoAssignmentsYet
                   }
                   onPress={() =>
-                    this.props.navigation.push('TeacherStudentProfile', {
+                    this.props.navigation.push("TeacherStudentProfile", {
                       userID: userID,
                       studentID: item.ID,
                       currentClass: currentClass,
-                      classID: currentClassID,
+                      classID: currentClassID
                     })
                   }
                   background={colors.white}
@@ -638,15 +707,15 @@ export class ClassMainScreen extends QcParentScreen {
 //Styles for the entire container along with the top banner
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'column',
+    flexDirection: "column",
     backgroundColor: colors.lightGrey,
-    flex: 3
+    flex: 3,
   },
   AddStudentButton: {
     height: screenHeight * 0.04,
-    alignItems: "flex-end",
-    paddingRight: screenWidth * 0.025,
-  }
+    alignItems: 'flex-end',
+    paddingRight: screenWidth * 0.025
+  },
 });
 
 export default ClassMainScreen;
