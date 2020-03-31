@@ -186,6 +186,7 @@ class StudentProfileScreen extends QcParentScreen {
             improvementAreas: item.evaluation.improvementAreas,
             userID: this.state.userID,
             evaluationObject: item.evaluation,
+            submission: item.submission,
             isStudentSide: true,
             evaluationID: item.ID,
             readOnly: true,
@@ -647,6 +648,7 @@ class StudentProfileScreen extends QcParentScreen {
                           assignmentLocation: item.location,
                           assignmentLength: item.location.length,
                           assignmentType: item.type,
+                          submission: item.submission,
                           newAssignment: true,
                           readOnly: false
                         });

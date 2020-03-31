@@ -52,6 +52,7 @@ export class EvaluationPage extends QcParentScreen {
     classStudent: this.props.navigation.state.params.classStudent,
     assignmentName: this.props.navigation.state.params.assignmentName,
     assignmentLength: this.props.navigation.state.params.assignmentLength,
+    submission: this.props.navigation.state.params.submission,
     isLoading: true,
     rating: this.props.navigation.state.params.rating
       ? this.props.navigation.state.params.rating
@@ -80,18 +81,17 @@ export class EvaluationPage extends QcParentScreen {
       this.state.studentID
     );
 
+    const { submission } = this.state;
+
     let audioFile = -1;
     let audioSentDateTime;
-    if (
-      classStudent.submission !== undefined &&
-      classStudent.submission.audioFileID !== undefined
-    ) {
+    if (submission !== undefined && submission.audioFileID !== undefined) {
       //Fetches audio file for student if one is present
       audioFile = await FirebaseFunctions.downloadAudioFile(
-        classStudent.submission.audioFileID
+        submission.audioFileID
       );
 
-      let audioSentDate = this.state.classStudent.submission.sent.toDate();
+      let audioSentDate = submission.sent.toDate();
       audioSentDateTime =
         audioSentDate.toLocaleDateString("EN-US") +
         ", " +
@@ -110,7 +110,6 @@ export class EvaluationPage extends QcParentScreen {
       studentObject,
       isLoading: false,
       evaluationID,
-      classStudent,
       audioFile,
       audioSentDateTime
     });
@@ -135,11 +134,14 @@ export class EvaluationPage extends QcParentScreen {
       assignmentType
     } = this.props.navigation.state.params.assignmentType;
     notes = notes.trim();
+    const submission = this.state.submission
+      ? { submission: this.state.submission }
+      : {};
     let evaluationDetails = {
       ID: evaluationID,
       name: assignmentName,
       assignmentLength,
-      assignmentType: assignmentType ? assignmentType : "None",
+      assignmentType: assignmentType,
       completionDate: new Date().toLocaleDateString("en-US", {
         year: "numeric",
         month: "2-digit",
@@ -149,7 +151,8 @@ export class EvaluationPage extends QcParentScreen {
         rating,
         notes,
         improvementAreas
-      }
+      },
+      ...submission
     };
     this.setState({ isLoading: true });
     await FirebaseFunctions.completeCurrentAssignment(
