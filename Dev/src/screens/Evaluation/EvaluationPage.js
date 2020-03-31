@@ -50,7 +50,8 @@ export class EvaluationPage extends QcParentScreen {
     classID: this.props.navigation.state.params.classID,
     studentID: this.props.navigation.state.params.studentID,
     classStudent: this.props.navigation.state.params.classStudent,
-    assignment: this.props.navigation.state.params.assignment,
+    assignmentName: this.props.navigation.state.params.assignmentName,
+    assignmentLength: this.props.navigation.state.params.assignmentLength,
     isLoading: true,
     rating: this.props.navigation.state.params.rating
       ? this.props.navigation.state.params.rating
@@ -75,7 +76,6 @@ export class EvaluationPage extends QcParentScreen {
       );
     }
 
-    const { assignment } = this.state;
     const studentObject = await FirebaseFunctions.getStudentByID(
       this.state.studentID
     );
@@ -83,15 +83,15 @@ export class EvaluationPage extends QcParentScreen {
     let audioFile = -1;
     let audioSentDateTime;
     if (
-      assignment.submission !== undefined &&
-      assignment.submission.audioFileID !== undefined
+      classStudent.submission !== undefined &&
+      classStudent.submission.audioFileID !== undefined
     ) {
       //Fetches audio file for student if one is present
       audioFile = await FirebaseFunctions.downloadAudioFile(
-        assignment.submission.audioFileID
+        classStudent.submission.audioFileID
       );
 
-      let audioSentDate = this.state.assignment.submission.sent.toDate();
+      let audioSentDate = this.state.classStudent.submission.sent.toDate();
       audioSentDateTime =
         audioSentDate.toLocaleDateString("EN-US") +
         ", " +
@@ -110,6 +110,7 @@ export class EvaluationPage extends QcParentScreen {
       studentObject,
       isLoading: false,
       evaluationID,
+      classStudent,
       audioFile,
       audioSentDateTime
     });
@@ -123,23 +124,22 @@ export class EvaluationPage extends QcParentScreen {
       rating,
       notes,
       improvementAreas,
-      assignment,
+      assignmentName,
       classID,
       studentID,
+      classStudent,
+      assignmentLength,
       evaluationID
     } = this.state;
-    
+    const {
+      assignmentType
+    } = this.props.navigation.state.params.assignmentType;
     notes = notes.trim();
-    const submission = assignment.submission
-      ? { submission: assignment.submission }
-      : {};
-
     let evaluationDetails = {
       ID: evaluationID,
-      name: assignment.name,
-      assignmentLocation: assignment.location, //todo: eventually just pass assignment object as one prop
-      assignmentLength: assignment.length,
-      assignmentType: assignment.type,
+      name: assignmentName,
+      assignmentLength,
+      assignmentType: assignmentType ? assignmentType : "None",
       completionDate: new Date().toLocaleDateString("en-US", {
         year: "numeric",
         month: "2-digit",
@@ -149,8 +149,7 @@ export class EvaluationPage extends QcParentScreen {
         rating,
         notes,
         improvementAreas
-	  },
-	  ...submission
+      }
     };
     this.setState({ isLoading: true });
     await FirebaseFunctions.completeCurrentAssignment(
@@ -180,16 +179,17 @@ export class EvaluationPage extends QcParentScreen {
       notes,
       rating,
       improvementAreas,
-      assignment
+      assignmentLength,
+      classStudent
     } = this.state;
-	this.setState({ isLoading: true });
-	
+    const { assignmentType } = this.props.navigation.state.params;
+    this.setState({ isLoading: true });
     let evaluationDetails = {
       rating,
       notes,
-      AssignmentLength: assignment.length,
+      assignmentLength,
       improvementAreas,
-      assignmentType: assignment.type
+      assignmentType: assignmentType ? assignmentType : "None"
     };
 
     await FirebaseFunctions.overwriteOldEvaluation(
@@ -253,8 +253,10 @@ export class EvaluationPage extends QcParentScreen {
       improvementAreas,
       readOnly,
       rating,
+      classID,
+      studentID,
       classStudent,
-      assignment,
+      assignmentName,
       isLoading,
       studentObject
     } = this.state;
@@ -307,7 +309,7 @@ export class EvaluationPage extends QcParentScreen {
                 {classStudent.name}
               </Text>
               <Text style={fontStyles.mainTextStylePrimaryDark}>
-                {assignment.name}
+                {assignmentName}
               </Text>
             </View>
             {this.state.audioFile !== -1 ? (
@@ -316,7 +318,7 @@ export class EvaluationPage extends QcParentScreen {
                   <AudioPlayer
                     image={studentImages.images[profileImageID]}
                     reciter={classStudent.name}
-                    title={assignment.name}
+                    title={assignmentName}
                     audioFilePath={this.state.audioFile}
                     sent={
                       this.state.audioSentDateTime

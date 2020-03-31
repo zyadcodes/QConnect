@@ -443,7 +443,7 @@ class StudentProfileScreen extends QcParentScreen {
              <Text style={fontStyles.hugeTextStylePrimaryDark}>
                 {strings.NoClass}
               </Text>
-
+              
               <Image
                 source={require('assets/emptyStateIdeas/welcome-girl.png')}
                 style={{
@@ -641,9 +641,12 @@ class StudentProfileScreen extends QcParentScreen {
                         this.props.navigation.push("EvaluationPage", {
                           classID: classID,
                           studentID: studentID,
-                          assignment: item,
+                          assignmentName: item.name,
                           userID: this.props.navigation.state.params.userID,
                           classStudent: classStudent,
+                          assignmentLocation: item.location,
+                          assignmentLength: item.location.length,
+                          assignmentType: item.type,
                           newAssignment: true,
                           readOnly: false
                         });

@@ -141,8 +141,8 @@ export default {
   TeacherIsNotifiedNeedHelp: "Oh no! Your teacher is notified and should be happy to help.",
 
   //--------------------- Join Class Screen ---------------------
-  JoinClass: "Join your class",
-  HaventJoinedClassYet: "Let's get you started",
+  JoinClass: "Join Class",
+  HaventJoinedClassYet: "You haven't joined a class yet",
   TypeInAClassCode: "Type in a class code...",
   IncorrectClassCode: "There doesn't seem to be a class with this code",
 
