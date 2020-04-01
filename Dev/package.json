@@ -12,7 +12,7 @@
     "immutability-helper": "^3.0.1",
     "prop-types": "^15.7.2",
     "react": "16.8.6",
-    "react-native": "0.60.5",
+    "react-native": "^0.62.0",
     "react-native-audio-recorder-player": "^2.4.4-rc.1",
     "react-native-autocomplete-search": "^1.0.8",
     "react-native-chart-kit": "^4.4.1",

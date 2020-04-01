@@ -107,7 +107,9 @@ export default {
     "It's hard to call a class without a name. Please enter a valid class name",
 
   //--------------------- Student Profile Screen ---------------------
-  WordsPerAssignment: 'Words Per Assignment',
+  WordsPerAssignment: 'Trends',
+  Attended: "Attended",
+  Missed: "Missed",
   ReadQuranMotivation: "Feeling bored?\nAllah sent you a Message",
   readInMushaf: "Review assignment",
   OpenMushaf: "Open the Mus'haf to read it",

@@ -11,14 +11,12 @@ import {
 } from "react-native";
 import colors from "config/colors";
 import QcActionButton from "components/QcActionButton";
-import { Rating } from "react-native-elements";
+import { Rating, ListItem } from "react-native-elements";
 import strings from "config/strings";
 import studentImages from "config/studentImages";
 import QcParentScreen from "screens/QcParentScreen";
 import FirebaseFunctions from "config/FirebaseFunctions";
 import LoadingSpinner from "components/LoadingSpinner";
-import QCView from "components/QCView";
-import screenStyle from "config/screenStyle";
 import fontStyles from "config/fontStyles";
 import { screenHeight, screenWidth } from "config/dimensions";
 import { LineChart } from "react-native-chart-kit";
@@ -410,22 +408,72 @@ class StudentProfileScreen extends QcParentScreen {
               </View>
               <View
                 style={{
-                  flexDirection: "row",
-                  paddingTop: 20,
-                  justifyContent: "flex-start"
+                  paddingTop: 10,
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start'
                 }}
               >
-                <Text
-                  style={[
-                    fontStyles.smallTextStyleBlack,
-                    { paddingHorizontal: 10 }
-                  ]}
-                >
-                  Classes attended: {classesAttended}
-                </Text>
-                <Text style={fontStyles.smallTextStyleBlack}>
-                  Classes missed: {classesMissed}
-                </Text>
+                <View style={styles.classesAttended}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "flex-start"
+                    }}
+                  >
+                    <Icon
+                      name="account-check-outline"
+                      type="material-community"
+                      color={colors.darkGreen}
+                      size={20}
+                    />
+                    <Text
+                      style={[
+                        fontStyles.mainTextStyleDarkGreen,
+                        { paddingLeft: 5, paddingRight: 10 }
+                      ]}
+                    >
+                      {strings.Attended}
+                    </Text>
+                    <Text
+                      style={[
+                        fontStyles.mainTextStyleDarkGreen,
+                      ]}
+                    >
+                      {classesAttended}
+                    </Text>
+                  </View>
+                </View>
+                <View style={{ width: 20 }} />
+                <View style={styles.classesMissed}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "flex-start"
+                    }}
+                  >
+                    <Icon
+                      name="account-remove-outline"
+                      type="material-community"
+                      color={colors.darkRed}
+                      size={20}
+                    />
+                    <Text
+                      style={[
+                        fontStyles.mainTextStyleDarkRed,
+                        { paddingLeft: 5, paddingRight: 10 }
+                      ]}
+                    >
+                      {strings.Missed}
+                    </Text>
+                    <Text
+                      style={[
+                        fontStyles.mainTextStyleDarkRed,
+                      ]}
+                    >
+                      {classesMissed}
+                    </Text>
+                  </View>
+                </View>
               </View>
             </View>
           </View>
@@ -441,10 +489,10 @@ class StudentProfileScreen extends QcParentScreen {
                 flex: 2,
               }}
             >
-             <Text style={fontStyles.hugeTextStylePrimaryDark}>
+              <Text style={fontStyles.hugeTextStylePrimaryDark}>
                 {strings.NoClass}
               </Text>
-              
+
               <Image
                 source={require('assets/emptyStateIdeas/welcome-girl.png')}
                 style={{
@@ -453,7 +501,7 @@ class StudentProfileScreen extends QcParentScreen {
                   resizeMode: 'contain'
                 }}
               />
-             
+
               <QcActionButton
                 text={strings.AddAssignment}
                 onPress={() => {
@@ -475,68 +523,6 @@ class StudentProfileScreen extends QcParentScreen {
                     )
                   });
                 }}
-              />
-            </View>
-          ) : (
-            <View />
-          )}
-          {wordsPerAssignmentData.length > 0 ? (
-            <View style={{ justifyContent: "center", alignItems: "center" }}>
-              <Text style={fontStyles.bigTextStyleBlack}>
-                {strings.WordsPerAssignment}
-              </Text>
-              <View style={{ height: screenHeight * 0.0075 }} />
-              <LineChart
-                data={{
-                  labels:
-                    wordsPerAssignmentData.length > 1
-                      ? [
-                          wordsPerAssignmentData[0].completionDate.substring(
-                            0,
-                            wordsPerAssignmentData[0].completionDate.lastIndexOf(
-                              "/"
-                            )
-                          ),
-                          wordsPerAssignmentData[
-                            wordsPerAssignmentData.length - 1
-                          ].completionDate.substring(
-                            0,
-                            wordsPerAssignmentData[
-                              wordsPerAssignmentData.length - 1
-                            ].completionDate.lastIndexOf("/")
-                          ),
-                        ]
-                      : [
-                          wordsPerAssignmentData[0].completionDate.substring(
-                            0,
-                            wordsPerAssignmentData[0].completionDate.lastIndexOf(
-                              "/"
-                            )
-                          ),
-                        ],
-                  datasets: [
-                    {
-                      data: wordsPerAssignmentData.map(
-                        data => data.assignmentLength
-                      ),
-                    },
-                  ],
-                }}
-                fromZero={true}
-                withInnerLines={false}
-                chartConfig={{
-                  backgroundColor: colors.primaryDark,
-                  backgroundGradientFrom: colors.lightGrey,
-                  backgroundGradientTo: colors.primaryDark,
-                  decimalPlaces: 0,
-                  color: (opacity = 1) => colors.primaryDark,
-                  labelColor: (opacity = 1) => colors.black,
-                  style: {
-                    borderRadius: 16,
-                  },
-                }}
-                width={screenWidth}
-                height={220}
               />
             </View>
           ) : (
@@ -665,6 +651,68 @@ class StudentProfileScreen extends QcParentScreen {
               </View>
             )}
           />
+          {wordsPerAssignmentData.length > 0 ? (
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <Text style={fontStyles.bigTextStyleBlack}>
+                {strings.WordsPerAssignment}
+              </Text>
+              <View style={{ height: screenHeight * 0.0075 }} />
+              <LineChart
+                data={{
+                  labels:
+                    wordsPerAssignmentData.length > 1
+                      ? [
+                          wordsPerAssignmentData[0].completionDate.substring(
+                            0,
+                            wordsPerAssignmentData[0].completionDate.lastIndexOf(
+                              "/"
+                            )
+                          ),
+                          wordsPerAssignmentData[
+                            wordsPerAssignmentData.length - 1
+                          ].completionDate.substring(
+                            0,
+                            wordsPerAssignmentData[
+                              wordsPerAssignmentData.length - 1
+                            ].completionDate.lastIndexOf("/")
+                          ),
+                        ]
+                      : [
+                          wordsPerAssignmentData[0].completionDate.substring(
+                            0,
+                            wordsPerAssignmentData[0].completionDate.lastIndexOf(
+                              "/"
+                            )
+                          ),
+                        ],
+                  datasets: [
+                    {
+                      data: wordsPerAssignmentData.map(
+                        data => data.assignmentLength
+                      ),
+                    },
+                  ],
+                }}
+                fromZero={true}
+                withInnerLines={false}
+                chartConfig={{
+                  backgroundColor: colors.primaryDark,
+                  backgroundGradientFrom: colors.lightGrey,
+                  backgroundGradientTo: colors.primaryDark,
+                  decimalPlaces: 0,
+                  color: (opacity = 1) => colors.primaryDark,
+                  labelColor: (opacity = 1) => colors.black,
+                  style: {
+                    borderRadius: 16,
+                  },
+                }}
+                width={screenWidth}
+                height={220}
+              />
+            </View>
+          ) : (
+            <View />
+          )}
           <ScrollView>
             {assignmentHistory &&
               assignmentHistory.length > 0 &&
@@ -765,6 +813,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingHorizontal: screenWidth * 0.007,
     paddingVertical: screenHeight * 0.005,
+  },
+  classesAttended: {
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+  classesMissed: {
+    paddingRight: 5,
   },
 });
 
