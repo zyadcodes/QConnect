@@ -64,8 +64,8 @@ class StudentProfileScreen extends QcParentScreen {
       wordsPerAssignmentData: data,
       hasCurrentAssignment:
         student.currentAssignments && student.currentAssignments.length > 0,
-      classesAttended: student.classesAttended ? student.classesAttended : "0",
-      classesMissed: student.classesMissed ? student.classesMissed : "0"
+      classesAttended: student.classesAttended ? student.classesAttended : 0,
+      classesMissed: student.classesMissed ? student.classesMissed : 0
     });
   }
 
@@ -413,6 +413,15 @@ class StudentProfileScreen extends QcParentScreen {
                   justifyContent: 'flex-start'
                 }}
               >
+                <Text
+                  style={[
+                    fontStyles.mainTextStyleDarkGrey,
+                    { paddingLeft: 5, paddingRight: 10 }
+                  ]}
+                >
+                  {strings.Attendance}:
+                </Text>
+
                 <View style={styles.classesAttended}>
                   <View
                     style={{
@@ -434,11 +443,7 @@ class StudentProfileScreen extends QcParentScreen {
                     >
                       {strings.Attended}
                     </Text>
-                    <Text
-                      style={[
-                        fontStyles.mainTextStyleDarkGreen,
-                      ]}
-                    >
+                    <Text style={[fontStyles.mainTextStyleDarkGreen]}>
                       {classesAttended}
                     </Text>
                   </View>
@@ -465,11 +470,7 @@ class StudentProfileScreen extends QcParentScreen {
                     >
                       {strings.Missed}
                     </Text>
-                    <Text
-                      style={[
-                        fontStyles.mainTextStyleDarkRed,
-                      ]}
-                    >
+                    <Text style={[fontStyles.mainTextStyleDarkRed]}>
                       {classesMissed}
                     </Text>
                   </View>

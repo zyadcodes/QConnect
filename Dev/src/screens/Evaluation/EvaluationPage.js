@@ -76,13 +76,12 @@ export class EvaluationPage extends QcParentScreen {
         "EvaluationPage"
       );
     }
-    alert(this.state.assignmentLength);
 
     const studentObject = await FirebaseFunctions.getStudentByID(
       this.state.studentID
     );
 
-    const { submission } = this.state;
+    //const { submission } = this.state;
 
     // let audioFile = -1;
     // let audioSentDateTime;

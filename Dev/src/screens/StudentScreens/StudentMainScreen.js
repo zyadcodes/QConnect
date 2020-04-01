@@ -56,7 +56,9 @@ class StudentMainScreen extends QcParentScreen {
     classCode: "",
     classes: "",
     isRecording: false,
-    currentPosition: "0:00"
+    currentPosition: "0:00",
+    classesAttended: 0,
+    classesMissed: 0
   };
 
   //-------------- Component lifecycle methods -----------------------------------
@@ -119,7 +121,13 @@ class StudentMainScreen extends QcParentScreen {
         isLoading: false,
         isOpen: false,
         classes,
-        recordingUIVisible
+        recordingUIVisible,
+        classesAttended: studentClassInfo.classesAttended
+          ? studentClassInfo.classesAttended
+          : 0,
+        classesMissed: studentClassInfo.classesMissed
+          ? studentClassInfo.classesMissed
+          : 0
       });
     }
   }
@@ -483,7 +491,13 @@ class StudentMainScreen extends QcParentScreen {
   }
 
   renderTopView() {
-    const { student, studentClassInfo, currentClass } = this.state;
+    const {
+      student,
+      studentClassInfo,
+      currentClass,
+      classesAttended,
+      classesMissed,
+    } = this.state;
 
     return (
       <View style={styles.topView}>
@@ -530,17 +544,72 @@ class StudentMainScreen extends QcParentScreen {
           <View style={styles.profileInfoBottom}>
             <View
               style={{
-                justifyContent: "space-between",
-                flexDirection: "column"
+                paddingTop: 10,
+                flexDirection: 'row',
+                justifyContent: 'flex-start'
               }}
             >
-              <View style={{ alignSelf: "flex-start" }}>
-                <Text style={fontStyles.mainTextStyleDarkGrey}>
-                  {strings.TotalAssignments +
-                    ": " +
-                    studentClassInfo.totalAssignments +
-                    "  "}
-                </Text>
+              <Text
+                style={[
+                  fontStyles.mainTextStyleDarkGrey,
+                  { paddingLeft: 5, paddingRight: 10 }
+                ]}
+              >
+                {strings.Attendance}:
+              </Text>
+
+              <View style={styles.classesAttended}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "flex-start"
+                  }}
+                >
+                  <Icon
+                    name="account-check-outline"
+                    type="material-community"
+                    color={colors.darkGreen}
+                    size={20}
+                  />
+                  <Text
+                    style={[
+                      fontStyles.mainTextStyleDarkGreen,
+                      { paddingLeft: 5, paddingRight: 10 }
+                    ]}
+                  >
+                    {strings.Attended}
+                  </Text>
+                  <Text style={[fontStyles.mainTextStyleDarkGreen]}>
+                    {classesAttended}
+                  </Text>
+                </View>
+              </View>
+              <View style={{ width: 20 }} />
+              <View style={styles.classesMissed}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "flex-start"
+                  }}
+                >
+                  <Icon
+                    name="account-remove-outline"
+                    type="material-community"
+                    color={colors.darkRed}
+                    size={20}
+                  />
+                  <Text
+                    style={[
+                      fontStyles.mainTextStyleDarkRed,
+                      { paddingLeft: 5, paddingRight: 10 }
+                    ]}
+                  >
+                    {strings.Missed}
+                  </Text>
+                  <Text style={[fontStyles.mainTextStyleDarkRed]}>
+                    {classesMissed}
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -632,33 +701,33 @@ class StudentMainScreen extends QcParentScreen {
   }
 
   setRecUIForAssignmentIndex(assignmentIndex, value) {
-    showRecUI = this.state.recordingUIVisible;
-    showRecUI[assignmentIndex] = value;
-    return showRecUI;
+    // showRecUI = this.state.recordingUIVisible;
+    // showRecUI[assignmentIndex] = value;
+    // return showRecUI;
   }
 
   animateShowAudioUI() {
-    Animated.parallel([
-      Animated.timing(translateY, {
-        toValue: 0,
-        duration: 1000
-      }),
-      Animated.timing(opacity, { toValue: 1 })
-    ]).start();
+    // Animated.parallel([
+    //   Animated.timing(translateY, {
+    //     toValue: 0,
+    //     duration: 1000
+    //   }),
+    //   Animated.timing(opacity, { toValue: 1 })
+    // ]).start();
   }
 
   animateHideAudioUI(index) {
-    Animated.parallel([
-      Animated.timing(translateY, {
-        toValue: -35,
-        duration: 300
-      }),
-      Animated.timing(opacity, { toValue: 0 })
-    ]).start(() =>
-      this.setState({
-        recordingUIVisible: this.setRecUIForAssignmentIndex(index, false),
-      })
-    );
+    // Animated.parallel([
+    //   Animated.timing(translateY, {
+    //     toValue: -35,
+    //     duration: 300
+    //   }),
+    //   Animated.timing(opacity, { toValue: 0 })
+    // ]).start(() =>
+    //   // this.setState({
+    //   //   recordingUIVisible: this.setRecUIForAssignmentIndex(index, false),
+    //   // })
+    // );
   }
 
   // renderAudioRecordingUI(assignmentIndex) {
@@ -789,7 +858,7 @@ class StudentMainScreen extends QcParentScreen {
               //if the current staus is not started and the student open the mus7af @ assignment
               // change status to "working on it"
               //if (item.isReadyEnum === "NOT_STARTED") {
-                this.updateCurrentAssignmentStatus("WORKING_ON_IT", index);
+              this.updateCurrentAssignmentStatus("WORKING_ON_IT", index);
               //}
 
               this.props.navigation.push("MushafReadingScreen", {
@@ -1191,6 +1260,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: colors.veryLightGrey,
     flex: 1
+  },
+  classesAttended: {
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+  classesMissed: {
+    paddingRight: 5,
   },
   modal: {
     backgroundColor: colors.white,
