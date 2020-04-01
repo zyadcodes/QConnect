@@ -52,6 +52,7 @@ export class EvaluationPage extends QcParentScreen {
     classStudent: this.props.navigation.state.params.classStudent,
     assignmentName: this.props.navigation.state.params.assignmentName,
     assignmentLength: this.props.navigation.state.params.assignmentLength,
+    assignmentType: this.props.navigation.state.params.assignmentType,
     submission: this.props.navigation.state.params.submission,
     isLoading: true,
     rating: this.props.navigation.state.params.rating
@@ -126,13 +127,11 @@ export class EvaluationPage extends QcParentScreen {
       assignmentName,
       classID,
       studentID,
-      classStudent,
       assignmentLength,
+      assignmentType,
       evaluationID
     } = this.state;
-    const {
-      assignmentType
-    } = this.props.navigation.state.params.assignmentType;
+    
     notes = notes.trim();
     const submission = this.state.submission
       ? { submission: this.state.submission }
@@ -192,7 +191,7 @@ export class EvaluationPage extends QcParentScreen {
       notes,
       assignmentLength,
       improvementAreas,
-      assignmentType: assignmentType ? assignmentType : "None"
+      assignmentType: assignmentType
     };
 
     await FirebaseFunctions.overwriteOldEvaluation(

@@ -920,7 +920,7 @@ class StudentMainScreen extends QcParentScreen {
     return (
       <View>
         {this.renderAssignmentsSectionHeader(
-          strings.CurrentAssignment,
+          strings.currentAssignments,
           "book-open-outline"
         )}
 
