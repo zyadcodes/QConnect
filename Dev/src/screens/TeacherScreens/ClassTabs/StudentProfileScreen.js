@@ -293,6 +293,17 @@ class StudentProfileScreen extends QcParentScreen {
           ) : (
             <View />
           )}
+          {item.submission ? (
+            <View style={{ justifyContent: "flex-end", flexDirection: "row" }}>
+              <Icon
+                name="microphone"
+                type="material-community"
+                color={colors.darkRed}
+              />
+            </View>
+          ) : (
+            <View />
+          )}
         </View>
       </TouchableOpacity>
     );
@@ -565,6 +576,23 @@ class StudentProfileScreen extends QcParentScreen {
                   },
                 ]}
               >
+                {item.submission ? (
+                  <View
+                    style={{
+                      paddingTop: 5,
+                      justifyContent: 'flex-end',
+                      flexDirection: 'row'
+                    }}
+                  >
+                    <Icon
+                      name="microphone"
+                      type="material-community"
+                      color={colors.darkRed}
+                    />
+                  </View>
+                ) : (
+                  <View />
+                )}
                 <View style={styles.middleView}>
                   <Text style={fontStyles.bigTextStyleBlack}>
                     {item.type ? item.type : strings.Memorize}
@@ -754,7 +782,6 @@ const styles = StyleSheet.create({
   middleView: {
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: screenHeight * 0.0112,
   },
   profileInfo: {
     flexDirection: "column",
