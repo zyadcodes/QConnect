@@ -25,6 +25,7 @@ import FirebaseFunctions from "config/FirebaseFunctions";
 import LoadingSpinner from "components/LoadingSpinner";
 import QCView from "components/QCView";
 import screenStyle from "config/screenStyle";
+import CodeInput from 'react-native-confirmation-code-input'
 import fontStyles from 'config/fontStyles';
 
 class LeftNavPane extends QcParentScreen {
@@ -100,6 +101,7 @@ class LeftNavPane extends QcParentScreen {
 
     const profileCaption = name + strings.sProfile;
     const studentImageId = profileImageID;
+    const {classCode} = this.state;
 
     return (
         <ScrollView >
@@ -222,20 +224,18 @@ class LeftNavPane extends QcParentScreen {
                           alignItems: "center"
                         }}
                       >
-                        <TextInput
-                          style={[
-                            {
-                              height: screenHeight * 0.07,
-                              width: screenWidth * 0.6,
-                              paddingLeft: 0.017 * screenWidth
-                            },
-                            fontStyles.mainTextStyleDarkGrey
-                          ]}
-                          placeholder={strings.TypeInAClassCode}
-                          onChangeText={classCode =>
-                            this.setState({ classCode })
-                          }
-                          value={this.state.classCode}
+                        <CodeInput
+                         space={2}
+                         size={50}
+                         codeLength={5}
+                         activeColor='rgba(49, 180, 4, 1.3)'
+                         inactiveColor={colors.workingOnItColorBrown}
+                         autoFocus={true}
+                         inputPosition= 'center'
+                         className='border-circle'
+                         containerStyle={{ marginBottom: 60 }}
+                         codeInputStyle={{ borderWidth: 1.5 }}
+                         onFulfill={(code) => this.setState({classCode : code})}
                         />
                       </View>
                       <View
@@ -271,22 +271,34 @@ class LeftNavPane extends QcParentScreen {
 }
 
 const styles = StyleSheet.create({
-  modal: {
-    backgroundColor: colors.white,
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "column",
-    height: screenHeight * 0.25,
-    width: screenWidth * 0.75,
-    borderWidth: screenHeight * 0.003,
-    borderRadius: screenHeight * 0.003,
-    borderColor: colors.grey,
-    shadowColor: colors.darkGrey,
-    shadowOffset: { width: 0, height: screenHeight * 0.003 },
-    shadowOpacity: 0.8,
-    shadowRadius: screenHeight * 0.0045,
-    elevation: screenHeight * 0.003
-  }
+    modal: {
+        backgroundColor: colors.white,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        height: screenHeight * 0.25,
+        width: screenWidth * 0.75,
+        borderWidth: screenHeight * 0.003,
+        borderRadius: screenHeight * 0.003,
+        borderColor: colors.grey,
+        shadowColor: colors.darkGrey,
+        shadowOffset: { width: 0, height: screenHeight * 0.003 },
+        shadowOpacity: 0.8,
+        shadowRadius: screenHeight * 0.0045,
+        elevation: screenHeight * 0.003,
+    },
+    CodeInputCell: {
+        width: 40,
+        height: 40,
+        lineHeight: 38,
+        fontSize: 24,
+        borderWidth: 2,
+        borderColor: '#00000030',
+        textAlign: 'center',
+    },
+    OnCellFocus: {
+        backgroundColor: '#fff'
+    }
 });
 
 export default LeftNavPane;

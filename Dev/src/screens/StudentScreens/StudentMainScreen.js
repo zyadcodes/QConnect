@@ -34,6 +34,7 @@ import { screenHeight, screenWidth } from "config/dimensions";
 import AudioPlayer from "components/AudioPlayer/AudioPlayer";
 import Toast, { DURATION } from 'react-native-easy-toast';
 import { LineChart } from "react-native-chart-kit";
+import CodeInput from 'react-native-confirmation-code-input';
 
 const translateY = new Animated.Value(-35);
 const opacity = new Animated.Value(0);
@@ -292,18 +293,18 @@ class StudentMainScreen extends QcParentScreen {
                         alignItems: "center"
                       }}
                     >
-                      <TextInput
-                        style={[
-                          {
-                            height: screenHeight * 0.07,
-                            paddingLeft: 0.017 * screenWidth
-                          },
-                          fontStyles.mainTextStyleDarkGrey
-                        ]}
-                        placeholder={strings.TypeInAClassCode}
-                        autoCorrect={false}
-                        onChangeText={classCode => this.setState({ classCode })}
-                        value={this.state.classCode}
+                      <CodeInput
+                        space={2}
+                        size={50}
+                        codeLength={5}
+                        activeColor="rgba(49, 180, 4, 1.3)"
+                        inactiveColor={colors.workingOnItColorBrown}
+                        autoFocus={true}
+                        inputPosition="center"
+                        className="border-circle"
+                        containerStyle={{ marginBottom: 60 }}
+                        codeInputStyle={{ borderWidth: 1.5 }}
+                        onFulfill={code => this.setState({ classCode: code })}
                       />
                     </View>
                     <View
@@ -1171,7 +1172,6 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 }
-
 //------------------ Component styles ----------------------------
 //Styles for the entire container along with the top banner
 const styles = StyleSheet.create({

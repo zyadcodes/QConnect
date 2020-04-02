@@ -33,6 +33,7 @@ export class ClassMainScreen extends QcParentScreen {
     userID: '',
     currentClass: '',
     currentClassID: '',
+    classInviteCode: '',
     isOpen: false,
     classes: '',
     isEditing: false,
@@ -45,17 +46,20 @@ export class ClassMainScreen extends QcParentScreen {
     const { userID } = this.props.navigation.state.params;
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
     const { currentClassID } = teacher;
-
     let { currentClass } = this.props.navigation.state.params;
+
     if (currentClass === undefined) {
       currentClass = await FirebaseFunctions.getClassByID(currentClassID);
     }
 
+    const classInviteCode = currentClass.classInviteCode;
+    console.log(classInviteCode);
     const classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
     this.setState({
       isLoading: false,
       teacher,
       userID,
+      classInviteCode,
       currentClass,
       currentClassID,
       classes
@@ -117,6 +121,7 @@ export class ClassMainScreen extends QcParentScreen {
       userID,
       currentClass,
       currentClassID,
+      classInviteCode
     } = this.state;
 
     if (isLoading === true) {
@@ -230,13 +235,12 @@ export class ClassMainScreen extends QcParentScreen {
                 onEditingPicture={newPicture => this.updatePicture(newPicture)}
                 profileImageID={currentClass.classImageID}
                 RightIconName="edit"
-                RightOnPress={() =>
-                  this.props.navigation.push("ShareClassCode", {
-                    currentClassID,
-                    userID: this.state.userID,
-                    currentClass
-                  })
-                }
+                RightOnPress={() => this.props.navigation.push("ShareClassCode", {
+                  classInviteCode,
+                  currentClassID,
+                  userID: this.state.userID,
+                  currentClass
+                })}
               />
             </View>
             <View
@@ -262,12 +266,12 @@ export class ClassMainScreen extends QcParentScreen {
 
               <QcActionButton
                 text={strings.AddStudentButton}
-                onPress={() =>
-                  this.props.navigation.push("ShareClassCode", {
-                    currentClassID,
-                    userID: this.state.userID,
-                    currentClass
-                  })
+                onPress={() => this.props.navigation.push("ShareClassCode", {
+                  classInviteCode,
+                  currentClassID,
+                  userID: this.state.userID,
+                  currentClass
+                })} />
                 }
               />
             </View>
@@ -367,7 +371,8 @@ export class ClassMainScreen extends QcParentScreen {
                     this.props.navigation.push("ShareClassCode", {
                       currentClassID,
                       userID,
-                      currentClass: this.state.currentClass
+                      classInviteCode,
+                      currentClass: this.state.currentClass,
                     });
                   }}
                   style={{

@@ -186,22 +186,28 @@ export default class FirebaseFunctions {
   //that belongs to that teacher in the firestore database. It will do this by creating a new document
   //in the "classes" collection, then linking that class to a certain teacher by relating them through
   //IDs. This method returns the new ID of the class
+
   static async addNewClass(newClassObject, teacherID) {
-    //Adds the new class document and makes sure it has a reference to its own ID
-    let newClass = await this.classes.add(newClassObject);
-    const ID = (currentClassID = newClass.id + "");
-    await this.updateClassObject(newClass.id, {
-      ID
-    });
-    //Appends the class ID to the array of classes belonging to this teacher
-    let ref = this.teachers.doc(teacherID);
-    await ref.update({
-      currentClassID,
-      classes: firebase.firestore.FieldValue.arrayUnion(ID)
-    });
-    this.logEvent("ADD_NEW_CLASS");
-    return ID;
-  }
+
+	//Adds the new class document and makes sure it has a reference to its own ID
+	let newClass = await this.classes.add(newClassObject);
+	const ID = currentClassID = newClass.id + "";
+	//Creates a class Invite code and updates it as well as making sure the document has a reference to its own ID
+	const updatedClassIC = ID.substring(0, 5);
+	await this.updateClassObject(newClass.id, {
+		ID,
+		classInviteCode: updatedClassIC
+	});
+	//Appends the class ID to the array of classes belonging to this teacher
+	let ref = this.teachers.doc(teacherID);
+	await ref.update({
+		currentClassID,
+		classes: firebase.firestore.FieldValue.arrayUnion(ID)
+	});
+	this.logEvent("ADD_NEW_CLASS");
+	return ID;
+
+}
 
   //This method will disasociate a class from a specific teacher. It will take in the class ID & the teacher ID and disconnect the
   //two. The class object will be still stored in the firestore.
@@ -633,48 +639,50 @@ export default class FirebaseFunctions {
   //the classID to the array of classes withint the student object. Then it will finally update
   //the "currentClassID" property within the student object. If the class does not exist, the method
   //will return a value of -1, otherwise it will return 0;
-  static async joinClass(student, classID) {
-    const studentID = student.ID;
+  static async joinClass(student, classInviteCode) {
 
-    const classToJoin = await this.classes.doc(classID).get();
-    if (!classToJoin.exists) {
-      return -1;
-    }
+	const studentID = student.ID;
+	const classToJoin = await this.classes.where("classInviteCode", "==", classInviteCode).get();
+	if(classToJoin == undefined || classToJoin.docs == undefined || classToJoin.docs[0] == undefined || !classToJoin.docs[0].exists){
+		return -1;
+	}
+	//alert(classToJoin.docs[0].data().teachers);
 
-    const studentObject = {
-      ID: studentID,
-      assignmentHistory: [],
-      attendanceHistory: {},
-      averageRating: 0,
-      currentAssignments: [],
-      isReadyEnum: "WORKING_ON_IT",
-      profileImageID: student.profileImageID,
-      name: student.name,
-      totalAssignments: 0,
-      classesAttended: 0,
-      classesMissed: 0
-    };
+	const studentObject = {
+		ID: studentID,
+		assignmentHistory: [],
+		attendanceHistory: {},
+		averageRating: 0,
+		currentAssignment: 'None',
+		isReadyEnum: "WORKING_ON_IT",
+		profileImageID: student.profileImageID,
+		name: student.name,
+		totalAssignments: 0
+	}
 
-    await this.updateClassObject(classID, {
-      students: firebase.firestore.FieldValue.arrayUnion(studentObject)
-    });
+	await this.updateClassObject(classToJoin.docs[0].id, {
+		students: firebase.firestore.FieldValue.arrayUnion(studentObject)
+	});
+	//alert(classToJoin.docs[0].data().teachers);
 
-    await this.updateStudentObject(studentID, {
-      classes: firebase.firestore.FieldValue.arrayUnion(classID),
-      currentClassID: classID
-    });
-    this.logEvent("JOIN_CLASS");
+	await this.updateStudentObject(studentID, {
+		classes: firebase.firestore.FieldValue.arrayUnion(classToJoin.docs[0].id),
+		currentClassID: classToJoin.docs[0].id
+	});
+	this.logEvent("JOIN_CLASS");
 
-    //Sends a notification to the teachers of that class saying that a student has joined the class
-    classToJoin.data().teachers.forEach(teacherID => {
-      this.functions.httpsCallable('sendNotification')({
-        topic: teacherID,
-        title: strings.NewStudent,
-        body: student.name + strings.HasJoinedYourClass
-      });
-    });
-    return studentObject;
-  }
+	//Sends a notification to the teachers of that class saying that a student has joined the class
+	//alert(classToJoin.docs[0].data().teachers);
+	classToJoin.docs[0].data().teachers.forEach((teacherID) => {
+		this.functions.httpsCallable('sendNotification', {
+			topic: teacherID,
+			title: strings.NewStudent,
+			body: student.name + strings.HasJoinedYourClass
+		})
+	})
+	return studentObject;
+
+}
 
   //This function will be responsible for adding a student manually from a teacher's side. It will
   //create a student object in the database & link it to the class like it would a normal student.
