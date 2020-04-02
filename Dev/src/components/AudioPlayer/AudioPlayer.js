@@ -8,7 +8,8 @@ import {
   Animated,
   Easing,
   Alert,
-  Platform
+  Platform,
+  View
 } from "react-native";
 import AudioRecorderPlayer, {
   AVEncoderAudioQualityIOSType,
@@ -45,6 +46,7 @@ const AudioPlayer = props => {
   const [recordingPlaybackPlaying, setRecordingPlaybackPlaying] = useState(
     false
   );
+  const [visible, setVisible] = useState(props.visible);
 
   useEffect(() => {
     // returned function will be called on component unmount
@@ -285,100 +287,104 @@ const AudioPlayer = props => {
   };
 
   return (
-    <Container>
-      <Row>
-        <TouchableOpacity onPress={onPress}>
-          <AnimatedImage
-            key={`image_${toggled}`}
-            source={
-              toggled
-                ? props.isRecordMode
-                  ? require("./record.png")
-                  : require("./play-c.png")
-                : require("./pause.png")
-            }
-            style={{ transform: [{ scale }] }}
-          />
-        </TouchableOpacity>
-        {!toggled && (
-          <TouchableOpacity onPress={onStopPlay}>
-            <SmallImage source={require("./stop.png")} />
-          </TouchableOpacity>
-        )}
-        {props.isRecordMode && showPlayback && (
-          <TouchableOpacity
-            style={{ justifyContent: "center", alignItems: "center" }}
-            onPress={onPlayRecording}
-          >
-            <SmallImage
-              source={
-                !recordingPlaybackPlaying
-                  ? require("./play-c.png")
-                  : require("./pause.png")
-              }
-            />
-          </TouchableOpacity>
-        )}
-        {toggled && (
-          <AudioDesc>
-            <AudioStatus>
-              {props.isRecordMode
-                ? strings.SendRecording
-                : strings.AudioRecordingReceived}
-            </AudioStatus>
-            <Subtitle>
-              {!props.isRecordMode
-                ? strings.Sent + " " + props.sent
-                : showPlayback
-                ? strings.TasmeeRecorded
-                : strings.PressToStartRecording}
-            </Subtitle>
-          </AudioDesc>
-        )}
-      </Row>
-      {!toggled && (
-        <AnimatedPlaying style={{ transform: [{ translateX }] }}>
-          <AnimatedColumn style={{ opacity: opacityInterpolate }}>
-            <VerticalSpacer></VerticalSpacer>
-            <Subtitle>
-              {!props.isRecordMode
-                ? strings.Sent + " " + props.sent
-                : strings.Recording}
-            </Subtitle>
-            <ProgressBar
-              progress={playWidth}
-              color={colors.primaryDark}
-              style={{ width: 150 }}
-            />
-            <Subtitle>{playTime}</Subtitle>
-          </AnimatedColumn>
-        </AnimatedPlaying>
-      )}
-      {showSendCancel && (
-        <SendRow>
-          <TouchableText
-            text={strings.Cancel}
-            disabled={props.isRecordMode && !toggled}
-            onPress={() => {
-              animateStopAudio();
-              onStopAction(postStopAction.close);
-            }}
-          />
-          <HorizontalSpacer />
+    <View>
+      {visible && (
+        <Container>
+          <Row>
+            <TouchableOpacity onPress={onPress}>
+              <AnimatedImage
+                key={`image_${toggled}`}
+                source={
+                  toggled
+                    ? props.isRecordMode
+                      ? require("./record.png")
+                      : require("./play-c.png")
+                    : require("./pause.png")
+                }
+                style={{ transform: [{ scale }] }}
+              />
+            </TouchableOpacity>
+            {!toggled && (
+              <TouchableOpacity onPress={onStopPlay}>
+                <SmallImage source={require("./stop.png")} />
+              </TouchableOpacity>
+            )}
+            {props.isRecordMode && showPlayback && (
+              <TouchableOpacity
+                style={{ justifyContent: "center", alignItems: "center" }}
+                onPress={onPlayRecording}
+              >
+                <SmallImage
+                  source={
+                    !recordingPlaybackPlaying
+                      ? require("./play-c.png")
+                      : require("./pause.png")
+                  }
+                />
+              </TouchableOpacity>
+            )}
+            {toggled && (
+              <AudioDesc>
+                <AudioStatus>
+                  {props.isRecordMode
+                    ? strings.SendRecording
+                    : strings.AudioRecordingReceived}
+                </AudioStatus>
+                <Subtitle>
+                  {!props.isRecordMode
+                    ? strings.Sent + " " + props.sent
+                    : showPlayback
+                    ? strings.TasmeeRecorded
+                    : strings.PressToStartRecording}
+                </Subtitle>
+              </AudioDesc>
+            )}
+          </Row>
+          {!toggled && (
+            <AnimatedPlaying style={{ transform: [{ translateX }] }}>
+              <AnimatedColumn style={{ opacity: opacityInterpolate }}>
+                {props.compensateForVerticalMove && <VerticalSpacer />}
+                <Subtitle>
+                  {!props.isRecordMode
+                    ? strings.Sent + " " + props.sent
+                    : strings.Recording}
+                </Subtitle>
+                <ProgressBar
+                  progress={playWidth}
+                  color={colors.primaryDark}
+                  style={{ width: 150 }}
+                />
+                <Subtitle>{playTime}</Subtitle>
+              </AnimatedColumn>
+            </AnimatedPlaying>
+          )}
+          {showSendCancel && (
+            <SendRow>
+              <TouchableText
+                text={strings.Cancel}
+                disabled={props.isRecordMode && !toggled}
+                onPress={() => {
+                  animateStopAudio();
+                  onStopAction(postStopAction.close);
+                }}
+              />
+              <HorizontalSpacer />
 
-          <TouchableText
-            text={strings.Send}
-            style={{
-              ...fontStyles.mainTextStylePrimaryDark,
-            }}
-            onPress={() => {
-              animateStopAudio();
-              onStopAction(postStopAction.send);
-            }}
-          />
-        </SendRow>
+              <TouchableText
+                text={strings.Send}
+                style={{
+                  ...fontStyles.mainTextStylePrimaryDark,
+                }}
+                onPress={() => {
+                  animateStopAudio();
+                  onStopAction(postStopAction.send);
+                }}
+              />
+            </SendRow>
+          )}
+        </Container>
       )}
-    </Container>
+    </View>
   );
 };
 
@@ -400,7 +406,7 @@ const Image = styled.Image`
 `;
 
 const VerticalSpacer = styled.View`
-  height: 10px;
+  height: 40px;
 `;
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);

@@ -711,7 +711,7 @@ class StudentMainScreen extends QcParentScreen {
     Animated.parallel([
       Animated.timing(translateY, {
         toValue: 0,
-        duration: 1000, 
+        duration: 1000,
         useNativeDriver: true
       }),
       Animated.timing(opacity, { toValue: 1, useNativeDriver: true })
@@ -722,7 +722,7 @@ class StudentMainScreen extends QcParentScreen {
     Animated.parallel([
       Animated.timing(translateY, {
         toValue: -35,
-        duration: 300, 
+        duration: 300,
         useNativeDriver: true
       }),
       Animated.timing(opacity, { toValue: 0, useNativeDriver: true })
@@ -749,39 +749,39 @@ class StudentMainScreen extends QcParentScreen {
 
     return (
       <View>
-        {recordingUIVisible[assignmentIndex] && (
-          <Animated.View
-            style={[
-              {
-                justifyContent: "flex-start",
-                alignItems: "center",
-                alignSelf: "flex-start"
-              },
-              transformStyle
-            ]}
-          >
-            <AudioPlayer
-              image={studentImages.images[student.profileImageID]}
-              reciter={student.name}
-              title={studentClassInfo.currentAssignments[assignmentIndex].name}
-              isRecordMode={true}
-              showSendCancel={true}
-              onClose={() => {
-                this.animateHideAudioUI(assignmentIndex);
-              }}
-              onSend={recordedFileUri => {
-                this.setState({ recordedFileUri: recordedFileUri });
-                FirebaseFunctions.submitRecordingAudio(
-                  recordedFileUri,
-                  userID,
-                  currentClassID,
-                  assignmentIndex
-                );
-                this.animateHideAudioUI(assignmentIndex);
-              }}
-            />
-          </Animated.View>
-        )}
+        <Animated.View
+          style={[
+            {
+              justifyContent: "flex-start",
+              alignItems: "center",
+              alignSelf: "flex-start"
+            },
+            transformStyle
+          ]}
+        >
+          <AudioPlayer
+            image={studentImages.images[student.profileImageID]}
+            reciter={student.name}
+            compensateForVerticalMove={true}
+            visible={recordingUIVisible[assignmentIndex]}
+            title={studentClassInfo.currentAssignments[assignmentIndex].name}
+            isRecordMode={true}
+            showSendCancel={true}
+            onClose={() => {
+              this.animateHideAudioUI(assignmentIndex);
+            }}
+            onSend={recordedFileUri => {
+              this.setState({ recordedFileUri: recordedFileUri });
+              FirebaseFunctions.submitRecordingAudio(
+                recordedFileUri,
+                userID,
+                currentClassID,
+                assignmentIndex
+              );
+              this.animateHideAudioUI(assignmentIndex);
+            }}
+          />
+        </Animated.View>
       </View>
     );
   }
@@ -808,7 +808,7 @@ class StudentMainScreen extends QcParentScreen {
             fontStyles.mainTextStyleDarkGrey
           ]}
         >
-          {label? label.toUpperCase() : strings.Assignment}
+          {label ? label.toUpperCase() : strings.Assignment}
         </Text>
       </View>
     );

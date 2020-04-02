@@ -327,6 +327,8 @@ export class EvaluationPage extends QcParentScreen {
               <View style={{ justifyContent: "center", alignItems: "center" }}>
                 <View style={styles.playAudio}>
                   <AudioPlayer
+                    visible={true}
+                    compensateForVerticalMove={false}
                     image={studentImages.images[profileImageID]}
                     reciter={classStudent.name}
                     title={assignmentName}
