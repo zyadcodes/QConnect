@@ -24,7 +24,7 @@ import QCView from "components/QCView";
 import screenStyle from "config/screenStyle";
 import fontStyles from "config/fontStyles";
 import { screenWidth, screenHeight } from "config/dimensions";
-//import AudioPlayer from "components/AudioPlayer/AudioPlayer";
+import AudioPlayer from "components/AudioPlayer/AudioPlayer";
 
 export class EvaluationPage extends QcParentScreen {
   //Default improvement areas
@@ -64,6 +64,12 @@ export class EvaluationPage extends QcParentScreen {
     audioFile: -1
   };
 
+  componentWillUnmount() {
+    this.setState({
+      currentPosition: "0:00",
+      audioFile: -1
+    });
+  }
   //Sets the screen name according to whether this is a new assignment evaluation or an old one
   async componentDidMount() {
     if (this.state.readOnly === true) {
@@ -82,24 +88,24 @@ export class EvaluationPage extends QcParentScreen {
       this.state.studentID
     );
 
-    //const { submission } = this.state;
+    const { submission } = this.state;
 
-    // let audioFile = -1;
-    // let audioSentDateTime;
-    // if (submission !== undefined && submission.audioFileID !== undefined) {
-    //   //Fetches audio file for student if one is present
-    //   audioFile = await FirebaseFunctions.downloadAudioFile(
-    //     submission.audioFileID
-    //   );
+    let audioFile = -1;
+    let audioSentDateTime;
+    if (submission !== undefined && submission.audioFileID !== undefined) {
+      //Fetches audio file for student if one is present
+      audioFile = await FirebaseFunctions.downloadAudioFile(
+        submission.audioFileID
+      );
 
-    //   let audioSentDate = submission.sent.toDate();
-    //   audioSentDateTime =
-    //     audioSentDate.toLocaleDateString("EN-US") +
-    //     ", " +
-    //     audioSentDate.getHours() +
-    //     ":" +
-    //     audioSentDate.getMinutes();
-    // }
+      let audioSentDate = submission.sent.toDate();
+      audioSentDateTime =
+        audioSentDate.toLocaleDateString("EN-US") +
+        ", " +
+        audioSentDate.getHours() +
+        ":" +
+        audioSentDate.getMinutes();
+    }
 
     //Fetches the ID for the evaluation (if there is none, it is created)
     const evaluationID = this.props.navigation.state.params.evaluationID
@@ -111,8 +117,8 @@ export class EvaluationPage extends QcParentScreen {
       studentObject,
       isLoading: false,
       evaluationID,
-      // audioFile,
-      // audioSentDateTime
+      audioFile,
+      audioSentDateTime
     });
   }
 
@@ -131,7 +137,7 @@ export class EvaluationPage extends QcParentScreen {
       assignmentType,
       evaluationID
     } = this.state;
-    
+
     notes = notes.trim();
     const submission = this.state.submission
       ? { submission: this.state.submission }
@@ -162,7 +168,10 @@ export class EvaluationPage extends QcParentScreen {
     const currentClass = await FirebaseFunctions.getClassByID(
       this.state.classID
     );
-    this.setState({ isLoading: false });
+    this.setState({
+      currentPosition: "0:00",
+      audioFile: -1
+    });
 
     this.props.navigation.push("TeacherStudentProfile", {
       studentID: this.state.studentID,
@@ -263,7 +272,7 @@ export class EvaluationPage extends QcParentScreen {
       studentObject
     } = this.state;
     const { profileImageID } = studentObject;
-    headerTitle = readOnly
+    const headerTitle = readOnly
       ? strings.Completed +
         ": " +
         this.props.navigation.state.params.completionDate
@@ -314,7 +323,7 @@ export class EvaluationPage extends QcParentScreen {
                 {assignmentName}
               </Text>
             </View>
-            {/* {this.state.audioFile !== -1 ? (
+            {this.state.audioFile !== -1 ? (
               <View style={{ justifyContent: "center", alignItems: "center" }}>
                 <View style={styles.playAudio}>
                   <AudioPlayer
@@ -332,7 +341,7 @@ export class EvaluationPage extends QcParentScreen {
               </View>
             ) : (
               <View />
-            )} */}
+            )}
             <View style={styles.section}>
               <Text style={fontStyles.mainTextStyleDarkGrey}>
                 {headerTitle}

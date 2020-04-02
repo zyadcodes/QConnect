@@ -16,12 +16,14 @@ export default {
     "You have a new assignment from your teacher",
   AssignmentGraded: "Assignment Graded",
   YourAssignmentHasBeenGraded: "Your assignment has been graded",
+  SomethingWentWrong: "Something went wrong. Please try again. If the problem persists, please report it to quranconnect@outlook.com",
 
   //--------------------- Student Main Screen ---------------------
   TotalAssignments: "Total assignments completed",
   Ready: "READY",
   WorkingOnIt: "WORKING ON IT",
   NeedAssignment: "NEED ASSIGNMENT",
+  Assignment: "ASSIGNMENT",
   PastAssignments: "Past Assignments",
   ClassAlreadyJoined:
     "We know it's exciting to be in this class. But you can only join it once.",

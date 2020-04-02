@@ -1,5 +1,5 @@
 /* eslint-disable quotes */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import styled from "styled-components";
 import { ProgressBar } from "react-native-paper";
@@ -33,7 +33,6 @@ const postStopAction = {
   close: 1,
   send: 2
 };
-
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
 const AudioPlayer = props => {
@@ -47,12 +46,24 @@ const AudioPlayer = props => {
     false
   );
 
+  useEffect(() => {
+    // returned function will be called on component unmount
+    return () => {
+      if (isRecording) {
+        audioRecorderPlayer.stopRecorder();
+        audioRecorderPlayer.removeRecordBackListener();
+      }
+      audioRecorderPlayer.stopPlayer();
+      audioRecorderPlayer.removePlayBackListener();
+    };
+  }, [isRecording]);
+
   audioRecorderPlayer.setSubscriptionDuration(0.09); // optional. Default is 0.1
   const spin = rotation.interpolate({
     inputRange: [0, 1],
     outputRange: ["0deg", "360deg"]
   });
-  ``;
+
   const opacityInterpolate = opacity.interpolate({
     inputRange: [0, 0.85, 1],
     outputRange: [0, 0, 1]
@@ -62,13 +73,14 @@ const AudioPlayer = props => {
     return Animated.loop(
       Animated.timing(rotation, {
         toValue: 1,
+        useNativeDriver: true,
         duration: 2500,
         easing: Easing.linear
       })
     ).start();
   };
 
-  onStartPlay = async filePath => {
+  const onStartPlay = async filePath => {
     try {
       let audioFileName =
         filePath !== undefined ? filePath : props.audioFilePath;
@@ -99,19 +111,19 @@ const AudioPlayer = props => {
     return true;
   };
 
-  onPausePlay = async () => {
+  const onPausePlay = async () => {
     await audioRecorderPlayer.pausePlayer();
-    setToggled(true);
   };
 
-  onStopPlay = async () => {
+  const onStopPlay = async () => {
     audioRecorderPlayer.stopPlayer();
     audioRecorderPlayer.removePlayBackListener();
+    setToggled(true);
   };
 
   var uri = "";
 
-  onStartRecord = async () => {
+  const onStartRecord = async () => {
     setIsRecording(true);
     setShowPlayback(false);
     setShowSendCancel(true);
@@ -176,10 +188,10 @@ const AudioPlayer = props => {
   };
 
   //this function stops recording
-  // if there is a post action requested after stopping the recording, 
-  // it will perform that action. The 2 post actions supported are send the audio 
+  // if there is a post action requested after stopping the recording,
+  // it will perform that action. The 2 post actions supported are send the audio
   // after stopping or close the dialog.
-  onStopRecord = async postAction => {
+  const onStopRecord = async postAction => {
     if (isRecording) {
       await audioRecorderPlayer.stopRecorder();
       audioRecorderPlayer.removeRecordBackListener();
@@ -187,6 +199,7 @@ const AudioPlayer = props => {
       setIsRecording(false);
       setShowPlayback(true);
     }
+
     //let's perform a post action is requested.
     if (postAction === postStopAction.send) {
       props.onSend("/sdcard/hello.mp4");
@@ -196,34 +209,47 @@ const AudioPlayer = props => {
   };
 
   const onStartAction = async () => {
-    if (props.isRecordMode === true) {
-      return await onStartRecord();
-    } else {
-      return await onStartPlay();
+    try {
+      if (props.isRecordMode === true) {
+        return await onStartRecord();
+      } else {
+        return await onStartPlay();
+      }
+    } catch (e) {
+      Alert.alert(strings.Whoops, strings.SomethingWentWrong);
     }
   };
 
   const onStopAction = async postAction => {
-    if (props.isRecordMode === true) {
-      await onStopRecord(postAction);
-    } else {
-      await onPausePlay(); //no postAction applicable for now. No need to pass.
+    try {
+      if (props.isRecordMode === true) {
+        await onStopRecord(postAction);
+      } else {
+        await onPausePlay(); //no postAction applicable for now. No need to pass.
+      }
+    } catch (e) {
+      Alert.alert(strings.Whoops, strings.SomethingWentWrong);
     }
+
     setToggled(true);
   };
 
   const onPress = async () => {
-    if (toggled) {
-      let success = await onStartAction();
-      if (success) {
-        setToggled(false);
-        animateStartAudio();
+    try {
+      if (toggled) {
+        let success = await onStartAction();
+        if (success) {
+          setToggled(false);
+          animateStartAudio();
+        } else {
+          setToggled(true);
+        }
       } else {
-        setToggled(true);
+        animateStopAudio();
+        onStopAction();
       }
-    } else {
-      animateStopAudio();
-      onStopAction();
+    } catch (e) {
+      Alert.alert(strings.Whoops, strings.SomethingWentWrong);
     }
   };
 
@@ -242,19 +268,19 @@ const AudioPlayer = props => {
 
   const animateStartAudio = () => {
     Animated.parallel([
-      Animated.timing(translateX, { toValue: 35 }),
-      Animated.timing(scale, { toValue: 1.2 }),
+      Animated.timing(translateX, { toValue: 35, useNativeDriver: true }),
+      Animated.timing(scale, { toValue: 1.2, useNativeDriver: true }),
       rotationLoop(),
-      Animated.timing(opacity, { toValue: 1 })
+      Animated.timing(opacity, { toValue: 1, useNativeDriver: true })
     ]).start();
   };
 
   const animateStopAudio = () => {
     Animated.parallel([
-      Animated.timing(translateX, { toValue: -60 }),
-      Animated.timing(scale, { toValue: 1 }),
-      Animated.timing(rotation, { toValue: 0 }),
-      Animated.timing(opacity, { toValue: 0 })
+      Animated.timing(translateX, { toValue: -60, useNativeDriver: true }),
+      Animated.timing(scale, { toValue: 1, useNativeDriver: true }),
+      Animated.timing(rotation, { toValue: 0, useNativeDriver: true }),
+      Animated.timing(opacity, { toValue: 0, useNativeDriver: true })
     ]).start();
   };
 
@@ -271,9 +297,14 @@ const AudioPlayer = props => {
                   : require("./play-c.png")
                 : require("./pause.png")
             }
-            style={{ transform: [{ scale }, { rotate: spin }] }}
+            style={{ transform: [{ scale }] }}
           />
         </TouchableOpacity>
+        {!toggled && (
+          <TouchableOpacity onPress={onStopPlay}>
+            <SmallImage source={require("./stop.png")} />
+          </TouchableOpacity>
+        )}
         {props.isRecordMode && showPlayback && (
           <TouchableOpacity
             style={{ justifyContent: "center", alignItems: "center" }}
@@ -305,23 +336,24 @@ const AudioPlayer = props => {
           </AudioDesc>
         )}
       </Row>
-      <AnimatedPlaying style={{ transform: [{ translateX }] }}>
-        <AnimatedColumn style={{ opacity: opacityInterpolate }}>
-          <Reciter>{props.title}</Reciter>
-          <Subtitle>
-            {!props.isRecordMode
-              ? strings.Sent + " " + props.sent
-              : strings.Recording}
-          </Subtitle>
-          <ProgressBar
-            progress={playWidth}
-            color={colors.primaryDark}
-            style={{ width: 150 }}
-          />
-          <Subtitle>{playTime}</Subtitle>
-        </AnimatedColumn>
-      </AnimatedPlaying>
-
+      {!toggled && (
+        <AnimatedPlaying style={{ transform: [{ translateX }] }}>
+          <AnimatedColumn style={{ opacity: opacityInterpolate }}>
+            <VerticalSpacer></VerticalSpacer>
+            <Subtitle>
+              {!props.isRecordMode
+                ? strings.Sent + " " + props.sent
+                : strings.Recording}
+            </Subtitle>
+            <ProgressBar
+              progress={playWidth}
+              color={colors.primaryDark}
+              style={{ width: 150 }}
+            />
+            <Subtitle>{playTime}</Subtitle>
+          </AnimatedColumn>
+        </AnimatedPlaying>
+      )}
       {showSendCancel && (
         <SendRow>
           <TouchableText
@@ -354,7 +386,7 @@ export default AudioPlayer;
 
 const Container = styled.View`
   width: 326px;
-  height: 80px;
+  height: 91px;
   border-radius: 14px;
   box-shadow: 0 50px 57px #6f535b;
   justify-content: center;
@@ -365,6 +397,10 @@ const Image = styled.Image`
   width: 50px;
   height: 50px;
   border-radius: 25px;
+`;
+
+const VerticalSpacer = styled.View`
+  height: 10px;
 `;
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
@@ -388,7 +424,7 @@ const DiskCenter = styled.View`
 `;
 
 const SendRow = styled.View`
-  padding-top: 10px;
+  margin-top: 50px;
   padding-right: 20px;
   flex-direction: row;
   justify-content: flex-end;
@@ -409,7 +445,7 @@ const Row = styled.View`
   flex-direction: row;
   height: 40px;
   width: 280px;
-  justify-content: space-between;
+  justify-content: flex-start;
   position: absolute;
   right: 30px;
 `;

@@ -12,6 +12,7 @@ export default class FadeInView extends React.Component {
       {
         toValue: 1,                   // Animate to opacity: 1 (opaque)
         duration: 6000,              // Make it take a while
+        useNativeDriver: true
       }
     ).start();                        // Starts the animation
   }
@@ -24,6 +25,7 @@ export default class FadeInView extends React.Component {
         style={{
           ...this.props.style,
           opacity: fadeAnim,         // Bind opacity to animated value
+          useNativeDriver: true
         }}
       >
         {this.props.children}

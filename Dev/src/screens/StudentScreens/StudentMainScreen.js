@@ -31,7 +31,7 @@ import screenStyle from "config/screenStyle";
 import fontStyles from "config/fontStyles";
 import { CustomPicker } from "react-native-custom-picker";
 import { screenHeight, screenWidth } from "config/dimensions";
-//import AudioPlayer from "components/AudioPlayer/AudioPlayer";
+import AudioPlayer from "components/AudioPlayer/AudioPlayer";
 import Toast, { DURATION } from 'react-native-easy-toast';
 import { LineChart } from "react-native-chart-kit";
 
@@ -359,7 +359,8 @@ class StudentMainScreen extends QcParentScreen {
             isStudentSide: true,
             evaluationID: item.ID,
             readOnly: true,
-            newAssignment: false
+            newAssignment: false,
+            assignmentName: item.name
           });
         }}
       >
@@ -701,87 +702,89 @@ class StudentMainScreen extends QcParentScreen {
   }
 
   setRecUIForAssignmentIndex(assignmentIndex, value) {
-    // showRecUI = this.state.recordingUIVisible;
-    // showRecUI[assignmentIndex] = value;
-    // return showRecUI;
+    showRecUI = this.state.recordingUIVisible;
+    showRecUI[assignmentIndex] = value;
+    return showRecUI;
   }
 
   animateShowAudioUI() {
-    // Animated.parallel([
-    //   Animated.timing(translateY, {
-    //     toValue: 0,
-    //     duration: 1000
-    //   }),
-    //   Animated.timing(opacity, { toValue: 1 })
-    // ]).start();
+    Animated.parallel([
+      Animated.timing(translateY, {
+        toValue: 0,
+        duration: 1000, 
+        useNativeDriver: true
+      }),
+      Animated.timing(opacity, { toValue: 1, useNativeDriver: true })
+    ]).start();
   }
 
   animateHideAudioUI(index) {
-    // Animated.parallel([
-    //   Animated.timing(translateY, {
-    //     toValue: -35,
-    //     duration: 300
-    //   }),
-    //   Animated.timing(opacity, { toValue: 0 })
-    // ]).start(() =>
-    //   // this.setState({
-    //   //   recordingUIVisible: this.setRecUIForAssignmentIndex(index, false),
-    //   // })
-    // );
+    Animated.parallel([
+      Animated.timing(translateY, {
+        toValue: -35,
+        duration: 300, 
+        useNativeDriver: true
+      }),
+      Animated.timing(opacity, { toValue: 0, useNativeDriver: true })
+    ]).start(() =>
+      this.setState({
+        recordingUIVisible: this.setRecUIForAssignmentIndex(index, false),
+      })
+    );
   }
 
-  // renderAudioRecordingUI(assignmentIndex) {
-  //   const {
-  //     student,
-  //     studentClassInfo,
-  //     userID,
-  //     currentClassID,
-  //     recordingUIVisible
-  //   } = this.state;
+  renderAudioRecordingUI(assignmentIndex) {
+    const {
+      student,
+      studentClassInfo,
+      userID,
+      currentClassID,
+      recordingUIVisible
+    } = this.state;
 
-  //   const transformStyle = {
-  //     transform: [{ translateY }],
-  //     opacity: opacityInterpolate,
-  //   };
+    const transformStyle = {
+      transform: [{ translateY }],
+      opacity: opacityInterpolate,
+    };
 
-  //   return (
-  //     <View>
-  //       {recordingUIVisible[assignmentIndex] && (
-  //         <Animated.View
-  //           style={[
-  //             {
-  //               justifyContent: "flex-start",
-  //               alignItems: "center",
-  //               alignSelf: "flex-start"
-  //             },
-  //             transformStyle
-  //           ]}
-  //         >
-  //           <AudioPlayer
-  //             image={studentImages.images[student.profileImageID]}
-  //             reciter={student.name}
-  //             title={studentClassInfo.currentAssignment}
-  //             isRecordMode={true}
-  //             showSendCancel={true}
-  //             onClose={() => {
-  //               this.animateHideAudioUI(assignmentIndex);
-  //             }}
-  //             onSend={recordedFileUri => {
-  //               this.setState({ recordedFileUri: recordedFileUri });
-  //               FirebaseFunctions.submitRecordingAudio(
-  //                 recordedFileUri,
-  //                 userID,
-  //                 currentClassID,
-  //                 assignmentIndex
-  //               );
-  //               this.animateHideAudioUI(assignmentIndex);
-  //             }}
-  //           />
-  //         </Animated.View>
-  //       )}
-  //     </View>
-  //   );
-  // }
+    return (
+      <View>
+        {recordingUIVisible[assignmentIndex] && (
+          <Animated.View
+            style={[
+              {
+                justifyContent: "flex-start",
+                alignItems: "center",
+                alignSelf: "flex-start"
+              },
+              transformStyle
+            ]}
+          >
+            <AudioPlayer
+              image={studentImages.images[student.profileImageID]}
+              reciter={student.name}
+              title={studentClassInfo.currentAssignments[assignmentIndex].name}
+              isRecordMode={true}
+              showSendCancel={true}
+              onClose={() => {
+                this.animateHideAudioUI(assignmentIndex);
+              }}
+              onSend={recordedFileUri => {
+                this.setState({ recordedFileUri: recordedFileUri });
+                FirebaseFunctions.submitRecordingAudio(
+                  recordedFileUri,
+                  userID,
+                  currentClassID,
+                  assignmentIndex
+                );
+                this.animateHideAudioUI(assignmentIndex);
+              }}
+            />
+          </Animated.View>
+        )}
+      </View>
+    );
+  }
 
   renderAssignmentsSectionHeader(label, iconName) {
     return (
@@ -805,7 +808,7 @@ class StudentMainScreen extends QcParentScreen {
             fontStyles.mainTextStyleDarkGrey
           ]}
         >
-          {label.toUpperCase()}
+          {label? label.toUpperCase() : strings.Assignment}
         </Text>
       </View>
     );
@@ -911,7 +914,7 @@ class StudentMainScreen extends QcParentScreen {
             fieldTemplate={() => this.getCustomPickerTemplate(item)}
           />
         </View>
-        {/* {this.renderAudioRecordingUI(index)} */}
+        {this.renderAudioRecordingUI(index)}
       </View>
     );
   }
