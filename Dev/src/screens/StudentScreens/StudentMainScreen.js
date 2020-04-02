@@ -297,8 +297,8 @@ class StudentMainScreen extends QcParentScreen {
                         space={2}
                         size={50}
                         codeLength={5}
-                        activeColor="rgba(49, 180, 4, 1.3)"
-                        inactiveColor={colors.workingOnItColorBrown}
+                        activeColor={colors.primaryLight}
+                        inactiveColor={colors.grey}
                         autoFocus={true}
                         inputPosition="center"
                         className="border-circle"
