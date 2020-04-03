@@ -42,6 +42,7 @@ export class ClassMainScreen extends QcParentScreen {
 
   async componentDidMount() {
     FirebaseFunctions.setCurrentScreen("Class Main Screen", "ClassMainScreen");
+    
     this.setState({ isLoading: true });
     const { userID } = this.props.navigation.state.params;
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
@@ -53,7 +54,6 @@ export class ClassMainScreen extends QcParentScreen {
     }
 
     const classInviteCode = currentClass.classInviteCode;
-    console.log(classInviteCode);
     const classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
     this.setState({
       isLoading: false,
@@ -272,8 +272,6 @@ export class ClassMainScreen extends QcParentScreen {
                   userID: this.state.userID,
                   currentClass
                 })} />
-                }
-              />
             </View>
           </QCView>
         </SideMenu>
