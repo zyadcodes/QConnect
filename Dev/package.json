@@ -4,14 +4,15 @@
   "private": true,
   "scripts": {
     "start": "react-native start",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
     "test": "jest",
     "lint": "eslint ."
   },
   "dependencies": {
-    "@react-native-community/cli": "^3.0.4",
     "immutability-helper": "^3.0.1",
     "prop-types": "^15.7.2",
-    "react": "16.8.6",
+    "react": "16.11.0",
     "react-native": "^0.62.0",
     "react-native-audio-recorder-player": "^2.4.4-rc.1",
     "react-native-autocomplete-search": "^1.0.8",
@@ -44,14 +45,15 @@
     "styled-components": "^4.4.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/runtime": "^7.5.5",
+    "@babel/core": "^7.6.2",
+    "@babel/runtime": "^7.6.2",
     "@react-native-community/eslint-config": "^0.0.5",
-    "babel-jest": "^24.8.0",
-    "eslint": "^6.1.0",
-    "jest": "^24.8.0",
-    "metro-react-native-babel-preset": "^0.56.0",
-    "react-test-renderer": "16.8.6"
+    "babel-jest": "^24.9.0",
+    "eslint": "^6.5.1",
+    "jest": "^24.9.0",
+    "metro": "^0.59.0",
+    "metro-react-native-babel-preset": "^0.58.0",
+    "react-test-renderer": "16.11.0"
   },
   "jest": {
     "preset": "react-native"
