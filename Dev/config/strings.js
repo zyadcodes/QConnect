@@ -16,12 +16,14 @@ export default {
     "You have a new assignment from your teacher",
   AssignmentGraded: "Assignment Graded",
   YourAssignmentHasBeenGraded: "Your assignment has been graded",
+  SomethingWentWrong: "Something went wrong. Please try again. If the problem persists, please report it to quranconnect@outlook.com",
 
   //--------------------- Student Main Screen ---------------------
   TotalAssignments: "Total assignments completed",
   Ready: "READY",
   WorkingOnIt: "WORKING ON IT",
   NeedAssignment: "NEED ASSIGNMENT",
+  Assignment: "ASSIGNMENT",
   PastAssignments: "Past Assignments",
   ClassAlreadyJoined:
     "We know it's exciting to be in this class. But you can only join it once.",
@@ -107,7 +109,12 @@ export default {
     "It's hard to call a class without a name. Please enter a valid class name",
 
   //--------------------- Student Profile Screen ---------------------
-  WordsPerAssignment: 'Words Per Assignment',
+  WordsPerAssignment: 'Trends',
+  Attended: "Attended",
+  Missed: "Missed",
+  ReadQuranMotivation: "Feeling bored?\nAllah sent you a Message",
+  readInMushaf: "Review assignment",
+  OpenMushaf: "Open the Mus'haf to read it",
   EditAssignment: "Edit assignment",
   AddAssignment: "Add assignment",
   ChangeStatus: "CHANGE STATUS",
@@ -139,8 +146,9 @@ export default {
   TeacherIsNotifiedNeedHelp: "Oh no! Your teacher is notified and should be happy to help.",
 
   //--------------------- Join Class Screen ---------------------
-  JoinClass: "Join Class",
-  HaventJoinedClassYet: "You haven't joined a class yet",
+  JoinClass: "Join your class",
+  StudentNoClassHeaderMsg: "Your Teacher is Waiting\n",
+  HaventJoinedClassYet: "Let's get you started",
   TypeInAClassCode: "Type in a class code...",
   IncorrectClassCode: "There doesn't seem to be a class with this code",
 

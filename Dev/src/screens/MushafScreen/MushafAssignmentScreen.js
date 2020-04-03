@@ -203,7 +203,8 @@ class MushafAssignmentScreen extends Component {
         );
       } else {
         const isNewAssignment =
-          this.props.navigation.state.params.newAssignment === true;
+          this.props.navigation.state.params.newAssignment === true ||
+          assignmentIndex === undefined;
         this.saveStudentAssignment(
           isNewAssignment,
           assignmentName,
@@ -471,7 +472,8 @@ class MushafAssignmentScreen extends Component {
                 selection: {
                   ...this.state.selection,
                   start: selectedAyah,
-                  length: this.state.end.wordNum - selectedAyah.wordNum + 1,
+                  length:
+                    this.state.selection.end.wordNum - selectedAyah.wordNum + 1,
                 },
               },
               () => this.updateAssignmentName()
