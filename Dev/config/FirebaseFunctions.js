@@ -645,16 +645,14 @@ export default class FirebaseFunctions {
 	const classToJoin = await this.classes.where("classInviteCode", "==", classInviteCode).get();
 	if(classToJoin == undefined || classToJoin.docs == undefined || classToJoin.docs[0] == undefined || !classToJoin.docs[0].exists){
 		return -1;
-	}
-	//alert(classToJoin.docs[0].data().teachers);
-
+  }
+  
 	const studentObject = {
 		ID: studentID,
 		assignmentHistory: [],
 		attendanceHistory: {},
 		averageRating: 0,
-		currentAssignment: 'None',
-		isReadyEnum: "WORKING_ON_IT",
+		currentAssignments: [],
 		profileImageID: student.profileImageID,
 		name: student.name,
 		totalAssignments: 0
