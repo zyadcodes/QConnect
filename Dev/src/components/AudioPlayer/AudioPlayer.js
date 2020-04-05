@@ -268,7 +268,7 @@ const AudioPlayer = props => {
     if (props.isRecordMode && showPlayback) {
       if (!recordingPlaybackPlaying) {
         setRecordingPlaybackPlaying(true);
-        return await onStartPlay("/sdcard/hello.mp4");
+        return await onStartPlay(path);
       } else {
         setRecordingPlaybackPlaying(false);
         return await onPausePlay();
@@ -312,7 +312,7 @@ const AudioPlayer = props => {
                 style={{ transform: [{ scale }] }}
               />
             </TouchableOpacity>
-            {!toggled && (
+            {!toggled && !isRecording &&(
               <TouchableOpacity onPress={onStopPlay}>
                 <SmallImage source={require("./stop.png")} />
               </TouchableOpacity>
