@@ -120,10 +120,30 @@ export class TeacherWelcomeScreen extends QcParentScreen {
       isTeacher: true
     }
 
-    const ID = await FirebaseFunctions.signUp(emailAddress, password, true, teacherObject);
-    this.props.navigation.push("TeacherCurrentClass", {
-      userID: ID,
-    });
+    try {
+      const ID = await FirebaseFunctions.signUp(
+        emailAddress,
+        password,
+        true,
+        teacherObject
+      );
+      this.props.navigation.push("TeacherCurrentClass", {
+        userID: ID
+      });
+    } catch (err) {
+      if (err && err.message) {
+        Alert.alert(strings.Whoops, err.message);
+      } else {
+        Alert.alert(strings.Whoops, strings.SomethingWentWrong);
+      }
+
+      FirebaseFunctions.logEvent("CREATE_USER_FAILED", { err });
+      console.log(
+        "\n\n\n\n\n\n\n==========================================\n\n\nCREATE_USER_FAILED: " +
+          JSON.stringify(err) +
+          "\n\n\n\n\n\n\n\n================================"
+      );
+    }
 
   };
 
@@ -237,7 +257,6 @@ export class TeacherWelcomeScreen extends QcParentScreen {
             </View>
             <View style={styles.editInfo} behavior="padding">
               <TeacherInfoEntries 
-              
                 name={this.state.name}
                 phoneNumber={this.state.phoneNumber}
                 emailAddress={this.state.emailAddress}
