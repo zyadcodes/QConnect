@@ -124,6 +124,16 @@ const AudioPlayer = props => {
   };
 
   var uri = "";
+  const path = Platform.select({
+    ios: "/recitationRec.m4a",
+    android: "sdcard/recitationRec.mp4"
+  });
+
+  var RNFS = require("react-native-fs");
+  const fullPath = Platform.select({
+    ios: RNFS.CachesDirectoryPath + path,
+    android: "/" + path
+  });
 
   const onStartRecord = async () => {
     setIsRecording(true);
@@ -164,10 +174,6 @@ const AudioPlayer = props => {
       return false;
     }
 
-    const path = Platform.select({
-      ios: "hello.m4a",
-      android: "sdcard/hello.mp4"
-    });
     const audioSet = {
       AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
       AudioSourceAndroid: AudioSourceAndroidType.MIC,
@@ -178,6 +184,7 @@ const AudioPlayer = props => {
 
     try {
       uri = await audioRecorderPlayer.startRecorder(path, audioSet);
+
       audioRecorderPlayer.addRecordBackListener(e => {
         setPlayTime(audioRecorderPlayer.mmssss(Math.floor(e.current_position)));
       });
@@ -196,7 +203,8 @@ const AudioPlayer = props => {
   const onStopRecord = async postAction => {
     if (isRecording) {
       await audioRecorderPlayer.stopRecorder();
-      audioRecorderPlayer.removeRecordBackListener();
+      await audioRecorderPlayer.removeRecordBackListener();
+
       setPlayWidth(0);
       setIsRecording(false);
       setShowPlayback(true);
@@ -204,7 +212,7 @@ const AudioPlayer = props => {
 
     //let's perform a post action is requested.
     if (postAction === postStopAction.send) {
-      props.onSend("/sdcard/hello.mp4");
+      props.onSend(fullPath);
     } else if (postAction === postStopAction.close) {
       props.onClose();
     }

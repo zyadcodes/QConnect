@@ -441,6 +441,8 @@ PODS:
     - Fabric
     - Firebase/Core
     - React
+  - RNFS (2.16.6):
+    - React
   - RNGestureHandler (1.5.2):
     - React
   - RNPermissions (2.0.8):
@@ -505,6 +507,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNAudioRecorderPlayer (from `../node_modules/react-native-audio-recorder-player`)
   - RNFirebase (from `../node_modules/react-native-firebase/ios`)
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
@@ -608,6 +611,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-audio-recorder-player"
   RNFirebase:
     :path: "../node_modules/react-native-firebase/ios"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNPermissions:
@@ -686,6 +691,7 @@ SPEC CHECKSUMS:
   ReactCommon: d22162ab8f1358c53dfcd0f9c4d82d38facdbc48
   RNAudioRecorderPlayer: e4fb8c4f21a3c4cb5b865f0a72c2c74437ed8734
   RNFirebase: 3c0d26909841ad3c72ca46d85aba333ef49903bc
+  RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: 946a7691e41df61e2c4b1884deab41a4cdc3afff
   RNPermissions: 409e55ed060f7e35d4a3dfc3a336f94a5811dec1
   RNReanimated: b2ab0b693dddd2339bd2f300e770f6302d2e960c
@@ -695,6 +701,6 @@ SPEC CHECKSUMS:
   Yoga: 9db9ff2025ad21d1ac0a8b3c85d5ac4e7c29d525
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: a3908e0400a001598f60b8eeac4f2b4b233b12fe
+PODFILE CHECKSUM: a447448630df8c6b1e65c5230263cbf7b692ed74
 
 COCOAPODS: 1.8.3
