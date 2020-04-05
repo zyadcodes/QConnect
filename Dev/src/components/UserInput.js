@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: colors.lightGrey,
     width: screenWidth * 0.9,
-    height: screenHeight * 0.06,
+    height: 40,
     marginHorizontal: screenWidth * 0.06,
     paddingLeft: screenWidth * 0.11,
     borderRadius: screenWidth * 0.06,
@@ -52,8 +52,8 @@ const styles = StyleSheet.create({
   inlineImg: {
     position: 'absolute',
     zIndex: 99,
-    width: 0.05 * screenHeight,
-    height: 0.05 * screenHeight,
+    width: 30,
+    height: 30,
     left: 0.075 * screenWidth,
     top: 0.005 * screenHeight
   },
