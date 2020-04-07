@@ -1308,13 +1308,13 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.1.15;
+				CURRENT_PROJECT_VERSION = 1.1.16;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = "";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = QuranConnect/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.1.15;
+				MARKETING_VERSION = 1.1.16;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1339,12 +1339,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.1.15;
+				CURRENT_PROJECT_VERSION = 1.1.16;
 				DEVELOPMENT_TEAM = B65Y7865Z9;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = QuranConnect/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.1.15;
+				MARKETING_VERSION = 1.1.16;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
