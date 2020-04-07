@@ -453,7 +453,7 @@ export default class FirebaseFunctions {
     } else if (currentAssignments[assignmentIndex] === undefined) {
       //todo: show error here?
       this.logEvent(
-        'INVALID_ASSIGNMENT_INDEX. Falling back to adding the assignment as new',
+        'FALLBACK_TO_ADD_NEW_ASSIGNMENT',
         { assignmentIndex }
       );
       currentAssignments.push({ ...updatedAssignment });

@@ -64,9 +64,7 @@ class MushafAssignmentScreen extends Component {
         }
       : noSelection,
     freeFormAssignment: false,
-    isNewAssignment:
-      this.props.navigation.state.params.newAssignment === true ||
-      this.props.navigation.state.params.assignmentIndex === undefined,
+    isNewAssignment: this.props.navigation.state.params.newAssignment === true,
     isLoading: true,
   };
 
@@ -81,7 +79,12 @@ class MushafAssignmentScreen extends Component {
   }
 
   async getClassInfoFromDbIfNotPassedIn() {
-    let { isTeacher, classID, userID, assignmentLocation } = this.state;
+    let {
+      isTeacher,
+      classID,
+      userID,
+      assignmentLocation,
+    } = this.state;
     if (
       classID === undefined &&
       isTeacher === true //if isTeacher is not passed, we default to true
@@ -110,6 +113,8 @@ class MushafAssignmentScreen extends Component {
           assignToAllClass: true,
           imageID: currentClassInfo.classImageID,
           currentClass: currentClassInfo,
+          assignmentIndex: assignmentLocation ? 0 : undefined,
+          isNewAssignment: assignmentLocation ? false : true,
           selection: assignmentLocation
             ? {
                 start: assignmentLocation.start,
@@ -120,7 +125,9 @@ class MushafAssignmentScreen extends Component {
               }
             : noSelection,
         },
-        () => {}
+        () => {
+          this.updateAssignmentName();
+        }
       );
     }
 
@@ -151,7 +158,7 @@ class MushafAssignmentScreen extends Component {
       name: assignmentName,
       type: assignmentType,
       location,
-      isReadyEnum: "NOT_STARTED",
+      isReadyEnum: "NOT_STARTED"
     };
 
     //go back to student profile screen if invoked from there, otherwise go back to main screen
@@ -251,14 +258,14 @@ class MushafAssignmentScreen extends Component {
     //since there might be a latency before firebase returns the updated assignments,
     //let's save them here and later pass them to the calling screen so that it can update its state without
     //relying on the Firebase async latency
-    let students = currentClass.students.map((student) => {
+    let students = currentClass.students.map(student => {
       //if currentAssignments is null/undefined, we will create an array of 1 assignment and plug in the value
       let currentAssignments = [
         {
           name: newAssignmentName,
           type: assignmentType,
           location: assignmentLocation,
-          isReadyEnum: "NOT_STARTED",
+          isReadyEnum: "NOT_STARTED"
         },
       ];
 
@@ -301,17 +308,17 @@ class MushafAssignmentScreen extends Component {
     };
 
     //update the current class object (so we can pass it to caller without having to re-render from firebase)
-    let students = currentClass.students.map((student) => {
+    let students = currentClass.students.map(student => {
       if (student.ID === studentID) {
         if (isNewAssignment === true) {
           student.currentAssignments.push({
             name: newAssignmentName,
             type: assignmentType,
             location: assignmentLocation,
-            isReadyEnum: "NOT_STARTED",
+            isReadyEnum: "NOT_STARTED"
           });
         } else {
-          const index = student.currentAssignments.findIndex((element) => {
+          const index = student.currentAssignments.findIndex(element => {
             return (
               element.name ===
                 this.props.navigation.state.params.assignmentName &&
@@ -322,7 +329,7 @@ class MushafAssignmentScreen extends Component {
             name: newAssignmentName,
             type: assignmentType,
             location: assignmentLocation,
-            isReadyEnum: "NOT_STARTED",
+            isReadyEnum: "NOT_STARTED"
           };
         }
       }
@@ -501,7 +508,7 @@ class MushafAssignmentScreen extends Component {
     }
 
     this.setState(
-      (prevState) => {
+      prevState => {
         return {
           selection: {
             ...prevState.selection,
@@ -511,7 +518,7 @@ class MushafAssignmentScreen extends Component {
       },
       () =>
         this.setState(
-          (prevState2) => {
+          prevState2 => {
             return {
               selection: {
                 ...prevState2.selection,
@@ -544,7 +551,7 @@ class MushafAssignmentScreen extends Component {
     try {
       allAssignments = assignToAllClass
         ? currentClass.currentAssignments
-        : currentClass.students.find((student) => student.ID === studentID)
+        : currentClass.students.find(student => student.ID === studentID)
             .currentAssignments;
     } catch (err) {
       FirebaseFunctions.logEvent(
@@ -594,6 +601,8 @@ class MushafAssignmentScreen extends Component {
       </ActionButton.Item>
     ));
 
+    //if we are viewing a particular assignment, offer an option to add another assignment
+    console.log("isnewassignment: " + this.state.isNewAssignment);
     if (!this.state.isNewAssignment) {
       res.push(
         <ActionButton.Item
@@ -610,8 +619,8 @@ class MushafAssignmentScreen extends Component {
               classID: this.state.classID,
               studentID,
               currentClass,
-              assignmentIndex: classStudent.currentAssignments
-                ? classStudent.currentAssignments.length
+              assignmentIndex: allAssignments
+                ? allAssignments.length
                 : undefined,
               imageID: this.state.imageID,
               onSaveAsignment: {},
@@ -657,11 +666,9 @@ class MushafAssignmentScreen extends Component {
     ];
     let selectedAssignmentTypeIndex = 0;
     if (assignmentType !== undefined) {
-      if (
-        options.findIndex((option) => option.value === assignmentType) !== -1
-      ) {
+      if (options.findIndex(option => option.value === assignmentType) !== -1) {
         selectedAssignmentTypeIndex = options.findIndex(
-          (option) => option.value === assignmentType
+          option => option.value === assignmentType
         );
       }
     }
@@ -681,7 +688,7 @@ class MushafAssignmentScreen extends Component {
           style={{
             flex: 1,
             justifyContent: "center",
-            alignItems: "center",
+            alignItems: "center"
           }}
         >
           <LoadingSpinner isVisible={true} />
@@ -731,7 +738,7 @@ class MushafAssignmentScreen extends Component {
               selectedColor={colors.primaryDark}
               buttonColor={colors.primaryLight}
               borderColor={colors.lightGrey}
-              onPress={(value) => this.setState({ assignmentType: value })}
+              onPress={value => this.setState({ assignmentType: value })}
               style={{ marginTop: 2 }}
             />
             <View
