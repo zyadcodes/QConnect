@@ -312,7 +312,7 @@ const AudioPlayer = props => {
                 style={{ transform: [{ scale }] }}
               />
             </TouchableOpacity>
-            {!toggled && !isRecording &&(
+            {!toggled && !isRecording && (
               <TouchableOpacity onPress={onStopPlay}>
                 <SmallImage source={require("./stop.png")} />
               </TouchableOpacity>
@@ -366,18 +366,18 @@ const AudioPlayer = props => {
               </AnimatedColumn>
             </AnimatedPlaying>
           )}
-          {showSendCancel && (
-            <SendRow>
-              <TouchableText
-                text={strings.Cancel}
-                disabled={props.isRecordMode && !toggled}
-                onPress={() => {
-                  animateStopAudio();
-                  onStopAction(postStopAction.close);
-                }}
-              />
-              <HorizontalSpacer />
 
+          <SendRow>
+            <TouchableText
+              text={strings.Cancel}
+              disabled={props.isRecordMode && !toggled}
+              onPress={() => {
+                animateStopAudio();
+                onStopAction(postStopAction.close);
+              }}
+            />
+            <HorizontalSpacer />
+            {showSendCancel && (
               <TouchableText
                 text={strings.Send}
                 style={{
@@ -388,8 +388,8 @@ const AudioPlayer = props => {
                   onStopAction(postStopAction.send);
                 }}
               />
-            </SendRow>
-          )}
+            )}
+          </SendRow>
         </Container>
       )}
     </View>
@@ -439,6 +439,7 @@ const DiskCenter = styled.View`
 
 const SendRow = styled.View`
   margin-top: 50px;
+  padding-top: 5px;
   padding-right: 20px;
   flex-direction: row;
   justify-content: flex-end;
