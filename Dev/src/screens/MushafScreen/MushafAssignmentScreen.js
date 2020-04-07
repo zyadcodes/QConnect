@@ -579,7 +579,7 @@ class MushafAssignmentScreen extends Component {
     } else {
       return (
         <ScrollView
-          containerStyle={{ width: screenWidth, height: screenHeight - 150 }}
+          containerStyle={{ width: screenWidth, height: screenHeight }}
         >
           <MushafScreen
             {...this.props}

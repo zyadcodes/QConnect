@@ -20,66 +20,6 @@ export default class FirebaseFunctions {
   //-----------------------------
   //Methods that can be called from any other class
 
-  //This functions will take in an email and a password & will sign a user up using
-  //firebase authentication (will also sign the user in). Additionally, it will take
-  //in a boolean to determine whether this is a student or a teacher account. Based
-  //on that info, it will call another function to create the designated account object
-  //for this account (with the same ID). The function returns that ID
-  static async signUp(email, password, isTeacher, accountObject) {
-    let account = await this.auth.createUserWithEmailAndPassword(
-      email,
-      password
-    );
-    //Creates the firestore object with an ID that matches this one
-    let ID = account.user.uid;
-    //Suscribes to the topic so that any  notifications sent to this user are recieved to the phone
-    this.fcm.subscribeToTopic(ID);
-    accountObject.ID = ID;
-    if (isTeacher === true) {
-      let ref = this.teachers.doc(ID);
-      this.batch.set(ref, accountObject);
-      await this.batch.commit();
-      this.logEvent('TEACHER_SIGN_UP');
-      return ID;
-    } else {
-      let ref = this.students.doc(ID);
-      this.batch.set(ref, accountObject);
-      await this.batch.commit();
-      this.logEvent('STUDENT_SIGN_UP');
-      return ID;
-    }
-  }
-
-  //This function will take in a user's email & password and then log them in using Firebase
-  //Authentication. It will then return the account user object that can be used to retrieve info like the
-  //student/teacher object, etc. If the info is incorrect, the value -1 will be returned
-  static async logIn(email, password) {
-    try {
-      let account = await this.auth.signInWithEmailAndPassword(email, password);
-      //Subscribes to the notification topic associated with this user
-      this.fcm.subscribeToTopic(account.user.uid);
-      return account.user;
-    } catch (err) {
-      return -1;
-    }
-  }
-
-  //This function takes in a user's email and sends them a code to reset their password
-  static async sendForgotPasswordCode(email) {
-    this.logEvent('SEND_FORGOT_PASSWORD_EMAIL');
-    await firebase.auth().sendPasswordResetEmail(email);
-
-    return 0;
-  }
-
-  //This functions will log out whatever user is currently signed into the device
-  static async logOut(userID) {
-    //Unsubscribes the user from the topic so they no longer recieve notification
-    this.fcm.unsubscribeFromTopic(userID);
-    this.logEvent('LOG_OUT');
-    await this.auth.signOut();
-  }
-
   //This function will take in an ID of a teacher and return that teacher object.
   //Will return -1 if the document does not exist
   static async getTeacherByID(ID) {
@@ -159,6 +99,29 @@ export default class FirebaseFunctions {
     return classIDs;
   }
 
+  static async updateClassCode() {
+    console.log("\n\n\n\n========= migrating class null image ids ========\n")
+    let cls = await this.getClassIdsCollection();
+    cls.forEach(async classID => {
+      let currentClass = await this.getClassByID(classID);
+      // if (cls.classInviteCode === undefined) {
+      //   let classInviteCode = classID.substring(0, 5);
+      //   console.log(`clsinviteCode ${classInviteCode}`);
+
+      //   await this.updateClassObject(classID, {
+      //     classInviteCode
+      //   });
+      // }
+
+      if (currentClass.classImageID === undefined || currentClass.classImageID === null) {
+        console.log(`currentClass ${currentClass.ID}, imgID: ${currentClass.classImageID}`);
+
+        await this.updateClassObject(classID, {
+          classImageID: 1
+        });
+      }
+    });
+  }
   static async updateMe() {
     let cls = await this.getClassIdsCollection();
     //Rewrites all of the versions of this student in all of the classes they are a part of with their

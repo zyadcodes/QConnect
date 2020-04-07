@@ -1,0 +1,6 @@
+module Pods_QuranConnect_QuranConnectTests {
+  umbrella header "Pods-QuranConnect-QuranConnectTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

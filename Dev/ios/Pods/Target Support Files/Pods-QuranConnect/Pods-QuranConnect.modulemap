@@ -1,0 +1,6 @@
+module Pods_QuranConnect {
+  umbrella header "Pods-QuranConnect-umbrella.h"
+
+  export *
+  module * { export * }
+}

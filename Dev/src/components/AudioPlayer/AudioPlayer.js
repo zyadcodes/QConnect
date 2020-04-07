@@ -124,6 +124,16 @@ const AudioPlayer = props => {
   };
 
   var uri = "";
+  const path = Platform.select({
+    ios: "/recitationRec.m4a",
+    android: "sdcard/recitationRec.mp4"
+  });
+
+  var RNFS = require("react-native-fs");
+  const fullPath = Platform.select({
+    ios: RNFS.CachesDirectoryPath + path,
+    android: "/" + path
+  });
 
   const onStartRecord = async () => {
     setIsRecording(true);
@@ -164,10 +174,6 @@ const AudioPlayer = props => {
       return false;
     }
 
-    const path = Platform.select({
-      ios: "hello.m4a",
-      android: "sdcard/hello.mp4"
-    });
     const audioSet = {
       AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
       AudioSourceAndroid: AudioSourceAndroidType.MIC,
@@ -178,6 +184,7 @@ const AudioPlayer = props => {
 
     try {
       uri = await audioRecorderPlayer.startRecorder(path, audioSet);
+
       audioRecorderPlayer.addRecordBackListener(e => {
         setPlayTime(audioRecorderPlayer.mmssss(Math.floor(e.current_position)));
       });
@@ -196,7 +203,8 @@ const AudioPlayer = props => {
   const onStopRecord = async postAction => {
     if (isRecording) {
       await audioRecorderPlayer.stopRecorder();
-      audioRecorderPlayer.removeRecordBackListener();
+      await audioRecorderPlayer.removeRecordBackListener();
+
       setPlayWidth(0);
       setIsRecording(false);
       setShowPlayback(true);
@@ -204,7 +212,7 @@ const AudioPlayer = props => {
 
     //let's perform a post action is requested.
     if (postAction === postStopAction.send) {
-      props.onSend("/sdcard/hello.mp4");
+      props.onSend(fullPath);
     } else if (postAction === postStopAction.close) {
       props.onClose();
     }
@@ -260,7 +268,7 @@ const AudioPlayer = props => {
     if (props.isRecordMode && showPlayback) {
       if (!recordingPlaybackPlaying) {
         setRecordingPlaybackPlaying(true);
-        return await onStartPlay("/sdcard/hello.mp4");
+        return await onStartPlay(path);
       } else {
         setRecordingPlaybackPlaying(false);
         return await onPausePlay();
@@ -304,7 +312,7 @@ const AudioPlayer = props => {
                 style={{ transform: [{ scale }] }}
               />
             </TouchableOpacity>
-            {!toggled && (
+            {!toggled && !isRecording && (
               <TouchableOpacity onPress={onStopPlay}>
                 <SmallImage source={require("./stop.png")} />
               </TouchableOpacity>
@@ -358,18 +366,18 @@ const AudioPlayer = props => {
               </AnimatedColumn>
             </AnimatedPlaying>
           )}
-          {showSendCancel && (
-            <SendRow>
-              <TouchableText
-                text={strings.Cancel}
-                disabled={props.isRecordMode && !toggled}
-                onPress={() => {
-                  animateStopAudio();
-                  onStopAction(postStopAction.close);
-                }}
-              />
-              <HorizontalSpacer />
 
+          <SendRow>
+            <TouchableText
+              text={strings.Cancel}
+              disabled={props.isRecordMode && !toggled}
+              onPress={() => {
+                animateStopAudio();
+                onStopAction(postStopAction.close);
+              }}
+            />
+            <HorizontalSpacer />
+            {showSendCancel && (
               <TouchableText
                 text={strings.Send}
                 style={{
@@ -380,8 +388,8 @@ const AudioPlayer = props => {
                   onStopAction(postStopAction.send);
                 }}
               />
-            </SendRow>
-          )}
+            )}
+          </SendRow>
         </Container>
       )}
     </View>
@@ -431,6 +439,7 @@ const DiskCenter = styled.View`
 
 const SendRow = styled.View`
   margin-top: 50px;
+  padding-top: 5px;
   padding-right: 20px;
   flex-direction: row;
   justify-content: flex-end;
