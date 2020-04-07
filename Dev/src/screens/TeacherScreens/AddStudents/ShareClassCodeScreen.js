@@ -32,11 +32,12 @@ class ShareClassCodeScreen extends Component {
                 </View>
                 <View style={styles.classCode}>
                     <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'flex-start' }}>
-                        <Text style={fontStyles.hugeTextStyleBlack}>{strings.YourClassCode}</Text>
+                        <Text style={[fontStyles.bigTextStyleBlack, {marginBottom: 10}]}>{strings.YourClassCode}</Text>
                     </View>
                     <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'center' }}>
                         <Text style={{...fontStyles.hugeTextStylePrimaryDark, textAlign: 'center'}}>{classInviteCode}</Text>
-                        <Text style={{...fontStyles.bigTextStyleDarkGrey, textAlign: 'center', paddingHorizontal: screenWidth * 0.01}}>{strings.ClassCodeDescription}</Text>
+                        <View style={{height: 10}}></View>
+                        <Text style={{...fontStyles.mainTextStyleDarkGrey, textAlign: 'center', paddingHorizontal: screenWidth * 0.10}}>{strings.ClassCodeDescription}</Text>
                     </View>
                     <View style={{flex: 1, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingHorizontal: screenWidth * 0.01 }}>
                     </View>
