@@ -444,9 +444,9 @@ export class ClassMainScreen extends QcParentScreen {
       teacher,
       currentClass,
       currentClassID,
-      classInviteCode,
+      isEditing,
+      userID,
     } = this.state;
-
     if (isLoading === true) {
       return (
         <View
@@ -462,40 +462,53 @@ export class ClassMainScreen extends QcParentScreen {
       //---------------------------------no students state
       return this.renderEmptyClass();
     } else {
-      //---------------------------------steady state (class has students)
-      const studentsNeedHelp = currentClass.students.filter(
-        (student) =>
-          student.currentAssignments &&
-          student.currentAssignments[0] &&
-          student.currentAssignments[0].isReadyEnum === "NEED_HELP"
-      );
-      const studentsReady = currentClass.students.filter(
-        (student) =>
-          student.currentAssignments &&
-          student.currentAssignments[0] &&
-          (student.currentAssignments[0].isReadyEnum === "READY" ||
-            (!student.isReadyEnum && student.isReady === true))
-      );
-      const studentsWorkingOnIt = currentClass.students.filter(
-        (student) =>
-          student.currentAssignments &&
-          student.currentAssignments[0] &&
-          (student.currentAssignments[0].isReadyEnum === "WORKING_ON_IT" ||
-            student.currentAssignments[0].isReady === false)
-      );
-      const studentsNotStarted = currentClass.students.filter(
-        (student) =>
-          student.currentAssignments &&
-          student.currentAssignments[0] &&
-          (student.currentAssignments[0].isReadyEnum === "NOT_STARTED" ||
-            student.currentAssignments[0].isReadyEnum === undefined)
-      );
+      //---------------------------------steady state (class has students)---------------------------------
+      //studentNeedHelp: students with any assignment with current status === NeedHelp
+      let studentsNeedHelp = [];
 
-      const studentsWithNoAssignments = currentClass.students.filter(
-        (student) =>
-          !student.currentAssignments || student.currentAssignments.length === 0
-      );
-      const { isEditing, currentClassID, userID } = this.state;
+      //studentsReady: students with any assignment with current status === Ready
+      //or for old versions support, student object isReady === true
+      let studentsReady = [];
+
+      //studentsWorkingOnIt: students with any assignment with current status === WorkingOnIt
+      let studentsWorkingOnIt = [];
+      
+      //studentsNotStarted: students with any assignment with current status === NotStarted
+      let studentsNotStarted = [];
+
+      //studentsWithNoAssignments: students with empty currentAssignments 
+      let studentsWithNoAssignments = [];
+
+      currentClass.students.map(student => {
+        if(student.currentAssignments &&
+          student.currentAssignments.some(
+            assignment => assignment.isReadyEnum === "NEED_HELP"
+          )){
+            studentsNeedHelp.push(student);
+          }
+        else if(student.currentAssignments.some(
+          assignment => assignment.isReadyEnum === "READY"
+        ) ||
+        (!student.isReadyEnum && student.isReady === true)){
+          studentsReady.push(student);
+        }
+        else if(student.currentAssignments.some(
+          assignment => assignment.isReadyEnum === "WORKING_ON_IT"
+        ) ||
+        (!student.isReadyEnum && student.isReady === false)){
+          studentsWorkingOnIt.push(student);
+        }
+        else if(student.currentAssignments &&
+          student.currentAssignments.some(
+            assignment => assignment.isReadyEnum === "NOT_STARTED" ||
+              assignment.isReadyEnum === undefined
+          )){
+            studentsNotStarted.push(student);
+          }
+        else if(!student.currentAssignments || student.currentAssignments.length === 0){
+          studentsWithNoAssignments.push(student);
+        }
+      })
 
       return (
         <SideMenu
