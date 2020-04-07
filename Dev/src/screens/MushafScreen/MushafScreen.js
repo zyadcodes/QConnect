@@ -91,7 +91,7 @@ export default class MushafScreen extends QcParentScreen {
     const itemInt = parseInt(item);
 
     return (
-      <View style={{ width: screenWidth, height: screenHeight }} key={idx}>
+      <View style={{ flex: 1}} key={idx}>
         <SelectionPage
           page={itemInt}
           onChangePage={this.onChangePage.bind(this)}
@@ -145,9 +145,9 @@ export default class MushafScreen extends QcParentScreen {
       );
     } else {
       return (
-        <View style={{ width: screenWidth, height: screenHeight }}>
+        <View style={{ flex: 1}}>
           <ScrollView
-            style={{ width: screenWidth, height: screenHeight * 0.95 }}
+            style={{ width: screenWidth, height: screenHeight * 0.85}}
           >
             <Swiper
               index={this.state.index}
