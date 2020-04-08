@@ -557,15 +557,35 @@ class MushafAssignmentScreen extends Component {
     let actionColors = [
       "#3498db",
       colors.darkestGrey,
-      "#f3f3f3",
       colors.primaryDark,
-      colors.darkGreen,
+      "green",
+      colors.darkRed,
       colors.darkBlue,
     ];
+
+    let actionItemConfig = [];
+    actionItemConfig[strings.Memorization] = {
+        color: colors.darkestGrey,
+        iconName: "open-book",
+        iconType: "entypo"
+      };
+
+      actionItemConfig[strings.Reading] = {
+        color: colors.magenta,
+        iconName: "book-open",
+        iconType: "feather"
+      };
+
+      actionItemConfig[strings.Revision] = {
+        color: colors.blue,
+        iconName: "reminder",
+        iconType: "material-community"
+      };
+
     let res = allAssignments.map((assignment, c) => (
       <ActionButton.Item
-        buttonColor={actionColors[c % actionColors.length]}
-        title={assignment.name}
+        buttonColor={actionItemConfig[assignment.type].color}
+        title={assignment.type + ": " + assignment.name}
         onPress={() => {
           this.setState({ isLoading: true });
 
@@ -586,8 +606,8 @@ class MushafAssignmentScreen extends Component {
         }}
       >
         <Icon
-          name="book-open"
-          type="feather"
+          name={actionItemConfig[assignment.type].iconName}
+          type={actionItemConfig[assignment.type].iconType}
           color="#fff"
           style={styles.actionButtonIcon}
         />
@@ -610,8 +630,8 @@ class MushafAssignmentScreen extends Component {
               classID: this.state.classID,
               studentID,
               currentClass,
-              assignmentIndex: classStudent.currentAssignments
-                ? classStudent.currentAssignments.length
+              assignmentIndex: allAssignments
+                ? allAssignments.length
                 : undefined,
               imageID: this.state.imageID,
               onSaveAsignment: {},
