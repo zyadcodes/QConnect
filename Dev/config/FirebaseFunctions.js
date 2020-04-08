@@ -188,26 +188,24 @@ export default class FirebaseFunctions {
   //IDs. This method returns the new ID of the class
 
   static async addNewClass(newClassObject, teacherID) {
-
-	//Adds the new class document and makes sure it has a reference to its own ID
-	let newClass = await this.classes.add(newClassObject);
-	const ID = currentClassID = newClass.id + "";
-	//Creates a class Invite code and updates it as well as making sure the document has a reference to its own ID
-	const updatedClassIC = ID.substring(0, 5);
-	await this.updateClassObject(newClass.id, {
-		ID,
-		classInviteCode: updatedClassIC
-	});
-	//Appends the class ID to the array of classes belonging to this teacher
-	let ref = this.teachers.doc(teacherID);
-	await ref.update({
-		currentClassID,
-		classes: firebase.firestore.FieldValue.arrayUnion(ID)
-	});
-	this.logEvent("ADD_NEW_CLASS");
-	return ID;
-
-}
+    //Adds the new class document and makes sure it has a reference to its own ID
+    let newClass = await this.classes.add(newClassObject);
+    const ID = (currentClassID = newClass.id + '');
+    //Creates a class Invite code and updates it as well as making sure the document has a reference to its own ID
+    const updatedClassIC = ID.substring(0, 5);
+    await this.updateClassObject(newClass.id, {
+      ID,
+      classInviteCode: updatedClassIC
+    });
+    //Appends the class ID to the array of classes belonging to this teacher
+    let ref = this.teachers.doc(teacherID);
+    await ref.update({
+      currentClassID,
+      classes: firebase.firestore.FieldValue.arrayUnion(ID)
+    });
+    this.logEvent("ADD_NEW_CLASS");
+    return ID;
+  }
 
   //This method will disasociate a class from a specific teacher. It will take in the class ID & the teacher ID and disconnect the
   //two. The class object will be still stored in the firestore.
@@ -334,9 +332,6 @@ export default class FirebaseFunctions {
       });
     } catch (error) {
       this.logEvent("SUBMIT_RECORDING_FAILED", { error });
-      console.log(
-        "error siubmitting recording audio: " + JSON.stringify(error)
-      );
       return -1;
     }
 
@@ -400,7 +395,8 @@ export default class FirebaseFunctions {
     newAssignmentName,
     assignmentType,
     assignmentLocation,
-    assignmentIndex
+    assignmentIndex,
+    isNewAssignment
   ) {
     if (assignmentIndex === undefined) {
       this.logEvent("UpdateClassAssignment_IndexIsUndefined");
@@ -424,6 +420,8 @@ export default class FirebaseFunctions {
         student.currentAssignments.length === 0
       ) {
         student.currentAssignments = [{ ...updatedAssignment }];
+      } else if (isNewAssignment === true) {
+        student.currentAssignments.push({ ...updatedAssignment });
       } else if (student.currentAssignments[assignmentIndex] === undefined) {
         this.logEvent('INVALID_ASSIGNMENT_INDEX', { assignmentIndex });
         student.currentAssignments.push({ ...updatedAssignment });
@@ -446,20 +444,29 @@ export default class FirebaseFunctions {
       }
     });
 
-    //todo: update the below to support multiple assignments
-    let currentAssignments = currentClass.currentAssignments;
-    if (currentAssignments === undefined || currentAssignments.length === 0) {
-      currentAssignments = [{ ...updatedAssignment }];
-    } else if (currentAssignments[assignmentIndex] === undefined) {
-      //todo: show error here?
-      this.logEvent(
-        'INVALID_ASSIGNMENT_INDEX. Falling back to adding the assignment as new',
-        { assignmentIndex }
-      );
-      currentAssignments.push({ ...updatedAssignment });
-    } else {
-      currentAssignments[assignmentIndex] = updatedAssignment;
-    }
+    //to-do: we don't support yet saving mutliple assignments on a class level.
+    // for now we will just add these assignments each student's currentAssignments
+    // yet we use the class.currentAssignments[0] to remember what to show when teacher open
+    // mus7af from the class screen. That's it's main function.
+    // Eventually we need a way to maintain the lifecycle of an assignment (when should a class assignment be deleted/closed)?
+    // until then, we will keep this current behavior.
+
+    let currentAssignments = [{ ...updatedAssignment }];
+
+    //let currentAssignments = currentClass.currentAssignments;
+    // if (currentAssignments === undefined || currentAssignments.length === 0) {
+    // }
+    // else if (currentAssignments[assignmentIndex] === undefined) {
+    //   //todo: show error here?
+    //   this.logEvent(
+    //     'INVALID_ASSIGNMENT_INDEX_FALLBACK_TO_NEW',
+    //     { assignmentIndex }
+    //   );
+    //   currentAssignments.push({ ...updatedAssignment });
+    // }
+    // else {
+    //   currentAssignments[assignmentIndex] = updatedAssignment;
+    // }
 
     await this.updateClassObject(classID, {
       students: arrayOfStudents,
@@ -640,47 +647,52 @@ export default class FirebaseFunctions {
   //the "currentClassID" property within the student object. If the class does not exist, the method
   //will return a value of -1, otherwise it will return 0;
   static async joinClass(student, classInviteCode) {
+    const studentID = student.ID;
+    const classToJoin = await this.classes
+      .where('classInviteCode', '==', classInviteCode)
+      .get();
+    if (
+      classToJoin == undefined ||
+      classToJoin.docs == undefined ||
+      classToJoin.docs[0] == undefined ||
+      !classToJoin.docs[0].exists
+    ) {
+      return -1;
+    }
 
-	const studentID = student.ID;
-	const classToJoin = await this.classes.where("classInviteCode", "==", classInviteCode).get();
-	if(classToJoin == undefined || classToJoin.docs == undefined || classToJoin.docs[0] == undefined || !classToJoin.docs[0].exists){
-		return -1;
+    const studentObject = {
+      ID: studentID,
+      assignmentHistory: [],
+      attendanceHistory: {},
+      averageRating: 0,
+      currentAssignments: [],
+      profileImageID: student.profileImageID,
+      name: student.name,
+      totalAssignments: 0
+    };
+
+    await this.updateClassObject(classToJoin.docs[0].id, {
+      students: firebase.firestore.FieldValue.arrayUnion(studentObject)
+    });
+    //alert(classToJoin.docs[0].data().teachers);
+
+    await this.updateStudentObject(studentID, {
+      classes: firebase.firestore.FieldValue.arrayUnion(classToJoin.docs[0].id),
+      currentClassID: classToJoin.docs[0].id
+    });
+    this.logEvent("JOIN_CLASS");
+
+    //Sends a notification to the teachers of that class saying that a student has joined the class
+    //alert(classToJoin.docs[0].data().teachers);
+    classToJoin.docs[0].data().teachers.forEach(teacherID => {
+      this.functions.httpsCallable('sendNotification', {
+        topic: teacherID,
+        title: strings.NewStudent,
+        body: student.name + strings.HasJoinedYourClass
+      });
+    });
+    return studentObject;
   }
-  
-	const studentObject = {
-		ID: studentID,
-		assignmentHistory: [],
-		attendanceHistory: {},
-		averageRating: 0,
-		currentAssignments: [],
-		profileImageID: student.profileImageID,
-		name: student.name,
-		totalAssignments: 0
-	}
-
-	await this.updateClassObject(classToJoin.docs[0].id, {
-		students: firebase.firestore.FieldValue.arrayUnion(studentObject)
-	});
-	//alert(classToJoin.docs[0].data().teachers);
-
-	await this.updateStudentObject(studentID, {
-		classes: firebase.firestore.FieldValue.arrayUnion(classToJoin.docs[0].id),
-		currentClassID: classToJoin.docs[0].id
-	});
-	this.logEvent("JOIN_CLASS");
-
-	//Sends a notification to the teachers of that class saying that a student has joined the class
-	//alert(classToJoin.docs[0].data().teachers);
-	classToJoin.docs[0].data().teachers.forEach((teacherID) => {
-		this.functions.httpsCallable('sendNotification', {
-			topic: teacherID,
-			title: strings.NewStudent,
-			body: student.name + strings.HasJoinedYourClass
-		})
-	})
-	return studentObject;
-
-}
 
   //This function will be responsible for adding a student manually from a teacher's side. It will
   //create a student object in the database & link it to the class like it would a normal student.
