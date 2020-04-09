@@ -35,7 +35,7 @@ class ShareClassCodeScreen extends Component {
                         <Text style={[fontStyles.bigTextStyleBlack, {marginBottom: 10}]}>{strings.YourClassCode}</Text>
                     </View>
                     <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'center' }}>
-                        <Text style={{...fontStyles.hugeTextStylePrimaryDark, textAlign: 'center'}}>{classInviteCode}</Text>
+                        <Text style={{...fontStyles.hugeTextStylePrimaryDark, textAlign: 'center', fontFamily: "Courier-Bold"}}>{classInviteCode.replace("0", "\u00D8")}</Text>
                         <View style={{height: 10}}></View>
                         <Text style={{...fontStyles.mainTextStyleDarkGrey, textAlign: 'center', paddingHorizontal: screenWidth * 0.10}}>{strings.ClassCodeDescription}</Text>
                     </View>
