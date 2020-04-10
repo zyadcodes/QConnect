@@ -282,7 +282,16 @@ class StudentMainScreen extends QcParentScreen {
                         alignItems: "center"
                       }}
                     >
-                      <Text style={fontStyles.mainTextStyleDarkGrey}>
+                      <Image
+                        source={require("assets/emptyStateIdeas/welcome-girl2.png")}
+                        style={{
+                          width: 50,
+                          height: 100,
+                          resizeMode: "contain",
+                          marginTop: 20,
+                        }}
+                      />
+                      <Text style={[fontStyles.mainTextStyleDarkGrey, {marginBottom: 20}]}>
                         {strings.TypeInAClassCode}
                       </Text>
                     </View>
@@ -297,21 +306,22 @@ class StudentMainScreen extends QcParentScreen {
                         space={2}
                         size={50}
                         codeLength={5}
-                        activeColor={colors.primaryLight}
-                        inactiveColor={colors.grey}
+                        activeColor={colors.primaryDark}
+                        inactiveColor={colors.primaryLight}
                         autoFocus={true}
                         inputPosition="center"
                         className="border-circle"
                         containerStyle={{ marginBottom: 60 }}
                         codeInputStyle={{ borderWidth: 1.5 }}
-                        onFulfill={code => this.setState({ classCode: code })}
+                        onFulfill={code =>
+                          this.setState({ classCode: code })
+                        }
                       />
                     </View>
                     <View
                       style={{
                         flexDirection: "row",
-                        justifyContent: "space-between",
-                        flex: 1
+                        justifyContent: "space-between"
                       }}
                     >
                       <QcActionButton
@@ -1276,7 +1286,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
-    height: screenHeight * 0.25,
+    height: 300,
     width: screenWidth * 0.75,
     borderWidth: screenHeight * 0.003,
     borderRadius: screenHeight * 0.003,
