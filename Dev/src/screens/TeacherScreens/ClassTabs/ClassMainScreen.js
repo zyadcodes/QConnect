@@ -9,7 +9,7 @@ import {
   PixelRatio,
   Alert,
 } from "react-native";
-import StudentCard from "components/StudentCard";
+import StudentMultiAssignmentsCard from "components/StudentMultiAssignmentsCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages";
 import LoadingSpinner from "../../../components/LoadingSpinner";
@@ -86,7 +86,7 @@ export class ClassMainScreen extends QcParentScreen {
             let { currentClass, currentClassID } = this.state;
             FirebaseFunctions.removeStudent(currentClassID, studentID);
             let arrayOfClassStudents = currentClass.students;
-            let indexOfStudent = arrayOfClassStudents.findIndex((student) => {
+            let indexOfStudent = arrayOfClassStudents.findIndex(student => {
               return student.ID === studentID;
             });
             arrayOfClassStudents.splice(indexOfStudent, 1);
@@ -162,8 +162,8 @@ export class ClassMainScreen extends QcParentScreen {
               isEditingTitle={this.state.isEditing}
               isEditingPicture={this.state.isEditing}
               Title={currentClass.name}
-              onTitleChanged={(newTitle) => this.updateTitle(newTitle)}
-              onEditingPicture={(newPicture) => this.updatePicture(newPicture)}
+              onTitleChanged={newTitle => this.updateTitle(newTitle)}
+              onEditingPicture={newPicture => this.updatePicture(newPicture)}
               profileImageID={currentClass.classImageID}
               RightIconName="edit"
               RightOnPress={() =>
@@ -181,7 +181,7 @@ export class ClassMainScreen extends QcParentScreen {
               flex: 2,
               justifyContent: "flex-start",
               alignItems: "center",
-              alignSelf: "center",
+              alignSelf: "center"
             }}
           >
             <Text style={fontStyles.hugeTextStylePrimaryDark}>
@@ -193,7 +193,7 @@ export class ClassMainScreen extends QcParentScreen {
               style={{
                 width: 0.73 * screenWidth,
                 height: 0.22 * screenHeight,
-                resizeMode: "contain",
+                resizeMode: "contain"
               }}
             />
 
@@ -250,9 +250,9 @@ export class ClassMainScreen extends QcParentScreen {
               LeftOnPress={() => this.setState({ isOpen: true })}
               isEditingTitle={this.state.isEditing}
               isEditingPicture={this.state.isEditing}
-              onEditingPicture={(newPicture) => this.updatePicture(newPicture)}
+              onEditingPicture={newPicture => this.updatePicture(newPicture)}
               Title={"Quran Connect"}
-              onTitleChanged={(newTitle) => this.updateTitle(newTitle)}
+              onTitleChanged={newTitle => this.updateTitle(newTitle)}
               profileImageID={currentClass.classImageID}
             />
           </View>
@@ -273,7 +273,7 @@ export class ClassMainScreen extends QcParentScreen {
               style={{
                 width: 0.73 * screenWidth,
                 height: 0.22 * screenHeight,
-                resizeMode: "contain",
+                resizeMode: "contain"
               }}
             />
 
@@ -303,8 +303,8 @@ export class ClassMainScreen extends QcParentScreen {
         RightTextName={this.state.isEditing === true ? strings.Done : null}
         isEditingTitle={this.state.isEditing}
         isEditingPicture={this.state.isEditing}
-        onTitleChanged={(newTitle) => this.updateTitle(newTitle)}
-        onEditingPicture={(newPicture) => this.updatePicture(newPicture)}
+        onTitleChanged={newTitle => this.updateTitle(newTitle)}
+        onEditingPicture={newPicture => this.updatePicture(newPicture)}
         profileImageID={currentClass.classImageID}
         RightOnPress={() => {
           const { isEditing, titleHasChanged } = this.state;
@@ -395,17 +395,13 @@ export class ClassMainScreen extends QcParentScreen {
         </View>
         <FlatList
           data={studentsList}
-          keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
+          keyExtractor={item => item.name} // fix, should be item.id (add id to classes)
           renderItem={({ item }) => (
-            <StudentCard
+            <StudentMultiAssignmentsCard
               key={item.ID}
               studentName={item.name}
               profilePic={studentImages.images[item.profileImageID]}
-              currentAssignment={
-                item.currentAssignments && item.currentAssignments[0]
-                  ? item.currentAssignments[0].name
-                  : strings.NoAssignmentsYet
-              }
+              currentAssignments={item.currentAssignments}
               onPress={() =>
                 this.props.navigation.push("TeacherStudentProfile", {
                   userID: userID,
@@ -472,43 +468,51 @@ export class ClassMainScreen extends QcParentScreen {
 
       //studentsWorkingOnIt: students with any assignment with current status === WorkingOnIt
       let studentsWorkingOnIt = [];
-      
+
       //studentsNotStarted: students with any assignment with current status === NotStarted
       let studentsNotStarted = [];
 
-      //studentsWithNoAssignments: students with empty currentAssignments 
+      //studentsWithNoAssignments: students with empty currentAssignments
       let studentsWithNoAssignments = [];
 
       currentClass.students.map(student => {
-        if(student.currentAssignments &&
+        if (
+          student.currentAssignments &&
           student.currentAssignments.some(
             assignment => assignment.isReadyEnum === "NEED_HELP"
-          )){
-            studentsNeedHelp.push(student);
-          }
-        else if(student.currentAssignments.some(
-          assignment => assignment.isReadyEnum === "READY"
-        ) ||
-        (!student.isReadyEnum && student.isReady === true)){
-          studentsReady.push(student);
-        }
-        else if(student.currentAssignments.some(
-          assignment => assignment.isReadyEnum === "WORKING_ON_IT"
-        ) ||
-        (!student.isReadyEnum && student.isReady === false)){
-          studentsWorkingOnIt.push(student);
-        }
-        else if(student.currentAssignments &&
+          )
+        ) {
+          studentsNeedHelp.push(student);
+        } else if (
           student.currentAssignments.some(
-            assignment => assignment.isReadyEnum === "NOT_STARTED" ||
+            assignment => assignment.isReadyEnum === "READY"
+          ) ||
+          (!student.isReadyEnum && student.isReady === true)
+        ) {
+          studentsReady.push(student);
+        } else if (
+          student.currentAssignments.some(
+            assignment => assignment.isReadyEnum === "WORKING_ON_IT"
+          ) ||
+          (!student.isReadyEnum && student.isReady === false)
+        ) {
+          studentsWorkingOnIt.push(student);
+        } else if (
+          student.currentAssignments &&
+          student.currentAssignments.some(
+            assignment =>
+              assignment.isReadyEnum === "NOT_STARTED" ||
               assignment.isReadyEnum === undefined
-          )){
-            studentsNotStarted.push(student);
-          }
-        else if(!student.currentAssignments || student.currentAssignments.length === 0){
+          )
+        ) {
+          studentsNotStarted.push(student);
+        } else if (
+          !student.currentAssignments ||
+          student.currentAssignments.length === 0
+        ) {
           studentsWithNoAssignments.push(student);
         }
-      })
+      });
 
       return (
         <SideMenu

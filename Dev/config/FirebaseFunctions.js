@@ -508,14 +508,16 @@ export default class FirebaseFunctions {
     ].currentAssignments.findIndex(element => {
       return (
         element.name === evaluationDetails.name &&
-        element.type === evaluationDetails.type
+        element.type === evaluationDetails.assignmentType
       );
     });
 
-    arrayOfStudents[studentIndex].currentAssignments.splice(
-      indexOfAssignment,
-      1
-    );
+    if (indexOfAssignment !== -1) {
+      arrayOfStudents[studentIndex].currentAssignments.splice(
+        indexOfAssignment,
+        1
+      );
+    }
 
     await this.updateClassObject(classID, {
       students: arrayOfStudents
@@ -524,7 +526,7 @@ export default class FirebaseFunctions {
       improvementAreas: evaluationDetails.improvementAreas
     });
 
-    //Notifies that student that their assignment has been graded
+    Notifies that student that their assignment has been graded
     this.functions.httpsCallable('sendNotification')({
       topic: studentID,
       title: strings.AssignmentGraded,
