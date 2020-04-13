@@ -996,13 +996,23 @@ class StudentMainScreen extends QcParentScreen {
         >
           <Text
             style={[
-              fontStyles.hugeTextStylePrimaryDark,
+              fontStyles.bigTextStylePrimaryDark,
               {
                 textAlign: "center"
               }
             ]}
           >
             {strings.ReadQuranMotivation}
+          </Text>
+          <Text
+            style={[
+              fontStyles.mainTextStyleDarkGrey,
+              {
+                textAlign: "center"
+              }
+            ]}
+          >
+            {strings.ReadQuranMotivationDesc}
           </Text>
 
           <Image

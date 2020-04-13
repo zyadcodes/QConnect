@@ -71,7 +71,7 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
           <View
             style={{
               marginBottom: screenWidth * 0.004,
-              marginLeft: screenWidth * 0.03,
+              marginLeft: 18,
             }}
           >
             <Text
