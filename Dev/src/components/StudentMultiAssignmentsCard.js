@@ -58,7 +58,7 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
       //The style of the card as a whole. Inside the card, you have the image,
       //student name, and student assignment
       <TouchableOpacity
-        style={[styles.cardStyle, { backgroundColor: background }]}
+        style={[styles.cardStyle, { backgroundColor: colors.white }]}
         borderColor={colors.black}
         //The on press function is for when the teacher clicks the card, the color of it
         //should change depending on the behavior (i.e attendance screen)
@@ -76,7 +76,7 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
           >
             <Text
               numberOfLines={1}
-              style={[fontStyles.bigTextStyleDarkestGrey, {marginTop: 5}]}
+              style={[fontStyles.bigTextStyleDarkestGrey, { marginTop: 5 }]}
             >
               {studentName}
             </Text>
@@ -90,14 +90,49 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
                   fontStyles.mediumTextStyleDarkestGrey,
                   { flex: 1 }
                 ]}
-                containerStyle={{ flex: 1, width: screenWidth * 0.8 }}
-                contentContainerStyle={{ flex: 1 }}
+                subtitle={
+                  assignment.isReadyEnum === 'NEED_HELP'
+                    ? strings.NeedHelpNonCap
+                    : assignment.isReadyEnum === 'READY'
+                    ? strings.ReadyNonCap
+                    : assignment.isReadyEnum === 'WORKING_ON_IT'
+                    ? strings.WorkingOnItNonCap
+                    : strings.NotStartedNonCap
+                }
+                subtitleStyle={[
+                  fontStyles.smallTextStyleDarkGrey,
+                  assignment.isReadyEnum === 'NEED_HELP'
+                    ? { color: colors.darkRed }
+                    : assignment.isReadyEnum === 'READY'
+                    ? { color: colors.darkGreen }
+                    : assignment.isReadyEnum === 'WORKING_ON_IT'
+                    ? { color: colors.primaryDark }
+                    : {},
+                ]}
+                chevron
+                containerStyle={{
+                  flex: 1,
+                  borderRadius: 2,
+                  marginLeft: 3,
+                  width: screenWidth * 0.8,
+                  backgroundColor:
+                    assignment.isReadyEnum === 'NEED_HELP'
+                      ? colors.red
+                      : assignment.isReadyEnum === 'READY'
+                      ? colors.green
+                      : assignment.isReadyEnum === 'WORKING_ON_IT'
+                      ? colors.primaryLight
+                      : 'transparent'
+                }}
+                contentContainerStyle={{
+                  flex: 1,
+                }}
                 rightTitle={assignment.type}
                 rightTitleStyle={fontStyles.smallTextStyleDarkGrey}
                 bottomDivider={
                   index !== currentAssignments.length - 1 ? true : false
                 }
-                
+                onPress={() => this.props.onAssignmentPress(index)}
               />
             ))}
         </View>
