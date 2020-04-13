@@ -129,7 +129,7 @@ export default {
   Reading: "Reading",
   Read: "Read",
   Revision: "Revision",
-  Revise: "Revise",
+  Review: "Review",
   EnterAssignmentHere: "Enter assignment here...",
   OutStanding: "Outstanding!",
   EnterAssignment: "Enter Assignment",

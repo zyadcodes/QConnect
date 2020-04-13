@@ -115,20 +115,24 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
                   borderRadius: 2,
                   marginLeft: 3,
                   width: screenWidth * 0.8,
-                  backgroundColor:
-                    assignment.isReadyEnum === 'NEED_HELP'
-                      ? colors.red
-                      : assignment.isReadyEnum === 'READY'
-                      ? colors.green
-                      : assignment.isReadyEnum === 'WORKING_ON_IT'
-                      ? colors.primaryLight
-                      : 'transparent'
                 }}
                 contentContainerStyle={{
-                  flex: 1,
+                  flex: 2,
                 }}
-                rightTitle={assignment.type}
-                rightTitleStyle={fontStyles.smallTextStyleDarkGrey}
+                //convert status to shorter strings to fit in the single line ListItem
+                rightTitle={
+                  assignment.type === strings.Memorization
+                    ? strings.Memorize
+                    : assignment.type === strings.Revision
+                    ? strings.Review
+                    : assignment.type === strings.Reading
+                    ? strings.Read
+                    : ""
+                }
+                rightTitleStyle={[
+                  fontStyles.smallTextStyleDarkGrey,
+                  { width: 65 },
+                ]}
                 bottomDivider={
                   index !== currentAssignments.length - 1 ? true : false
                 }
