@@ -198,6 +198,7 @@
 		0188158A23349669006806B3 /* Scheherazade-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Scheherazade-Regular.ttf"; path = "../assets/fonts/Scheherazade-Regular.ttf"; sourceTree = "<group>"; };
 		01AE6ED02436D454004E6545 /* QuranConnect-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QuranConnect-Bridging-Header.h"; sourceTree = "<group>"; };
 		01AE6ED12436D454004E6545 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		01B74AB02444FB1500873E2E /* QuranConnect.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = QuranConnect.entitlements; path = QuranConnect/QuranConnect.entitlements; sourceTree = "<group>"; };
 		035EA2B8889C44CFA697AAE7 /* Ubuntu-Light-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Ubuntu-Light-Italic.ttf"; path = "../assets/fonts/Ubuntu-Light-Italic.ttf"; sourceTree = "<group>"; };
 		08A641FA3C1B403CB690DE5F /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		0B1E0D87EEAD4898828F4FA1 /* female1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female1.png; path = "../assets/images/teacher-icons/female1.png"; sourceTree = "<group>"; };
@@ -404,6 +405,7 @@
 		13B07FAE1A68108700A75B9A /* QuranConnect */ = {
 			isa = PBXGroup;
 			children = (
+				01B74AB02444FB1500873E2E /* QuranConnect.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -1306,15 +1308,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = QuranConnect/QuranConnect.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.1.16;
+				CURRENT_PROJECT_VERSION = 1.1.18;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = "";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = QuranConnect/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.1.16;
+				MARKETING_VERSION = 1.1.18;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1337,14 +1340,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = QuranConnect/QuranConnect.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.1.16;
+				CURRENT_PROJECT_VERSION = 1.1.18;
 				DEVELOPMENT_TEAM = B65Y7865Z9;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = QuranConnect/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.1.16;
+				MARKETING_VERSION = 1.1.18;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",

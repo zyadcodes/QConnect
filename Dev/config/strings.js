@@ -16,7 +16,7 @@ export default {
     "You have a new assignment from your teacher",
   AssignmentGraded: "Assignment Graded",
   YourAssignmentHasBeenGraded: "Your assignment has been graded",
-  SomethingWentWrong: "Something went wrong. Please try again. If the problem persists, please report it to quranconnect@outlook.com",
+  SomethingWentWrong: "Bummer. Something went wrong. Please try again. If the problem persists, please report it to quranconnect@outlook.com",
 
   //--------------------- Student Main Screen ---------------------
   TotalAssignments: "Total assignments completed",
@@ -29,11 +29,16 @@ export default {
     "We know it's exciting to be in this class. But you can only join it once.",
   NeedHelp: "NEED HELP",
   NotStarted: "NOT STARTED",
+  NeedHelpNonCap: "Need help",
+  NotStartedNonCap: "Not started",
+  ReadyNonCap: "Ready",
+  WorkingOnItNonCap: "Working on it",
   EnableMicPermissions:
     "You need to enable microphone permissions from your settings",
   SubmitAssignment: "Submit Assignment",
   Record: "Record",
   Stop: "Stop",
+
 
   //--------------------- Forgot Password Screen-------------------
   emailPlaceHolder: "Email",
@@ -112,9 +117,11 @@ export default {
   WordsPerAssignment: 'Trends',
   Attended: "Attended",
   Missed: "Missed",
-  ReadQuranMotivation: "Feeling bored?\nAllah sent you a Message",
+  ReadQuranMotivation: "Feeling bored?",
+  ReadQuranMotivationDesc: "God sent you a beautiful message",
   readInMushaf: "Review assignment",
   OpenMushaf: "Open the Mus'haf to read it",
+  EvaluateAssignment: "Evaluate this assignment",
   EditAssignment: "Edit assignment",
   AddAssignment: "Add assignment",
   ChangeStatus: "CHANGE STATUS",
@@ -123,7 +130,7 @@ export default {
   Reading: "Reading",
   Read: "Read",
   Revision: "Revision",
-  Revise: "Revise",
+  Review: "Review",
   EnterAssignmentHere: "Enter assignment here...",
   OutStanding: "Outstanding!",
   EnterAssignment: "Enter Assignment",

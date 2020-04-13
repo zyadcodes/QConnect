@@ -84,6 +84,13 @@ export class EvaluationPage extends QcParentScreen {
       );
     }
 
+    //temporary logging to investigate sporadic case where trying to evaluate a current assignment
+    // opens an old one.
+    console.log(
+      "Evaluation Screen Params: " +
+        JSON.stringify(this.props.navigation.state.params)
+    );
+
     const studentObject = await FirebaseFunctions.getStudentByID(
       this.state.studentID
     );
@@ -159,26 +166,29 @@ export class EvaluationPage extends QcParentScreen {
       },
       ...submission
     };
-    this.setState({ isLoading: true });
-    await FirebaseFunctions.completeCurrentAssignment(
-      classID,
-      studentID,
-      evaluationDetails
-    );
-    const currentClass = await FirebaseFunctions.getClassByID(
-      this.state.classID
-    );
-    this.setState({
-      currentPosition: "0:00",
-      audioFile: -1
-    });
+    try {
+      await FirebaseFunctions.completeCurrentAssignment(
+        classID,
+        studentID,
+        evaluationDetails
+      );
+      const currentClass = await FirebaseFunctions.getClassByID(
+        this.state.classID
+      );
+      this.setState({
+        currentPosition: "0:00",
+        audioFile: -1
+      });
 
-    this.props.navigation.push("TeacherStudentProfile", {
-      studentID: this.state.studentID,
-      currentClass,
-      userID: this.props.navigation.state.params.userID,
-      classID: this.state.classID
-    });
+      this.props.navigation.push("TeacherStudentProfile", {
+        studentID: this.state.studentID,
+        currentClass,
+        userID: this.props.navigation.state.params.userID,
+        classID: this.state.classID
+      });
+    } catch (err) {
+      Alert.alert(strings.Whoops, strings.SomethingWentWrong);
+    }
   }
 
   //Overwrites a previously saved assignment with the new data
@@ -277,6 +287,11 @@ export class EvaluationPage extends QcParentScreen {
         ": " +
         this.props.navigation.state.params.completionDate
       : strings.HowWas + classStudent.name + strings.sTasmee3;
+
+    //temporary logging to investigate sporadic case where trying to evaluate a current assignment
+    // opens an old one.
+    console.log("Evaluation Screen State: " + JSON.stringify(this.state));
+
     return (
       //----- outer view, gray background ------------------------
       //Makes it so keyboard is dismissed when clicked somewhere else
@@ -286,7 +301,13 @@ export class EvaluationPage extends QcParentScreen {
           {this.props.navigation.state.params.newAssignment === true ? (
             <TopBanner
               LeftIconName="angle-left"
-              LeftOnPress={() => this.props.navigation.goBack()}
+              LeftOnPress={() =>
+                this.props.navigation.state.params.onCloseNavigateTo
+                  ? this.props.navigation.navigate(
+                      this.props.navigation.state.params.onCloseNavigateTo
+                    )
+                  : this.props.navigation.goBack()
+              }
               Title={strings.Evaluation}
             />
           ) : readOnly === true &&

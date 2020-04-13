@@ -14,6 +14,7 @@ const pixelRatio = PixelRatio.get();
 
 const bodyFontSmaller = bodyFont * 0.875;
 const bodyFontBigger = bodyFont * 1.25;
+const bodyFontEvenBigger = bodyFontBigger * 1.25;
 const titleFont = bodyFont * 1.875;
 
 export default StyleSheet.create({
@@ -46,6 +47,12 @@ export default StyleSheet.create({
         fontFamily,
         fontSize: bodyFont,
         color: colors.darkGrey
+    },
+
+    mediumTextStyleDarkestGrey: {
+        fontFamily,
+        fontSize: bodyFont * 1.1,
+        color: colors.darkestGrey
     },
 
     mainTextStyleBlack: {
@@ -126,6 +133,12 @@ export default StyleSheet.create({
         color: colors.primaryDark
     },
 
+    biggerTextStyleDarkestGrey: {
+        fontFamily,
+        fontSize: bodyFontEvenBigger,
+        color: colors.darkestGrey
+    },
+
     hugeTextStylePrimaryDark: {
         fontFamily,
         fontSize: titleFont,
@@ -135,6 +148,11 @@ export default StyleSheet.create({
         fontFamily,
         fontSize: titleFont,
         color: colors.primaryLight
+    },
+    hugeTextStyleDarkestGrey: {
+        fontFamily,
+        fontSize: titleFont,
+        color: colors.darkestGrey
     },
 
     hugeTextStyleBlack: {

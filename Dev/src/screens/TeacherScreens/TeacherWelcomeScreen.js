@@ -138,13 +138,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
       }
 
       FirebaseFunctions.logEvent("CREATE_USER_FAILED", { err });
-      console.log(
-        "\n\n\n\n\n\n\n==========================================\n\n\nCREATE_USER_FAILED: " +
-          JSON.stringify(err) +
-          "\n\n\n\n\n\n\n\n================================"
-      );
     }
-
   };
 
   //Creates new account, or launches confirmation dialog if account was created but not confirmed yet.
