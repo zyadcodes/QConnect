@@ -596,37 +596,41 @@ class MushafAssignmentScreen extends Component {
         );
       }
 
-      res = allAssignments.map((assignment, c) => (
-        <ActionButton.Item
-          buttonColor={actionItemConfig[assignment.type].color}
-          title={assignment.type + ': ' + assignment.name}
-          onPress={() => {
-            this.setState({ isLoading: true });
+      res = allAssignments.map((assignment, c) => {
+        if (c !== assignmentIndex) {
+          return (
+            <ActionButton.Item
+              buttonColor={actionItemConfig[assignment.type].color}
+              title={assignment.type + ': ' + assignment.name}
+              onPress={() => {
+                this.setState({ isLoading: true });
 
-            this.props.navigation.push('MushafAssignmentScreen', {
-              isTeacher: true,
-              assignToAllClass: assignToAllClass,
-              userID: userID,
-              classID: classID,
-              studentID,
-              currentClass,
-              assignmentLocation: assignment.location,
-              assignmentType: assignment.type,
-              assignmentName: assignment.name,
-              assignmentIndex: c,
-              imageID: this.state.imageID,
-              onSaveAsignment: {}
-            });
-          }}
-        >
-          <Icon
-            name={actionItemConfig[assignment.type].iconName}
-            type={actionItemConfig[assignment.type].iconType}
-            color="#fff"
-            style={styles.actionButtonIcon}
-          />
-        </ActionButton.Item>
-      ));
+                this.props.navigation.push('MushafAssignmentScreen', {
+                  isTeacher: true,
+                  assignToAllClass: assignToAllClass,
+                  userID: userID,
+                  classID: classID,
+                  studentID,
+                  currentClass,
+                  assignmentLocation: assignment.location,
+                  assignmentType: assignment.type,
+                  assignmentName: assignment.name,
+                  assignmentIndex: c,
+                  imageID: this.state.imageID,
+                  onSaveAsignment: {}
+                });
+              }}
+            >
+              <Icon
+                name={actionItemConfig[assignment.type].iconName}
+                type={actionItemConfig[assignment.type].iconType}
+                color="#fff"
+                style={styles.actionButtonIcon}
+              />
+            </ActionButton.Item>
+          );
+        }
+      });
     }
 
     //only show add another assignment if the user is not adding a new assignment already
