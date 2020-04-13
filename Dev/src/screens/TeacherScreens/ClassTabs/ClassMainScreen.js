@@ -411,7 +411,7 @@ export class ClassMainScreen extends QcParentScreen {
                 })
               }
               onAssignmentPress={assignmentIndex => {
-                let assignment= item.currentAssignments[assignmentIndex];
+                let assignment = item.currentAssignments[assignmentIndex];
                 this.props.navigation.push('MushafAssignmentScreen', {
                   isTeacher: true,
                   assignToAllClass: false,

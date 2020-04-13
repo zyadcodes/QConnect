@@ -159,26 +159,29 @@ export class EvaluationPage extends QcParentScreen {
       },
       ...submission
     };
-    this.setState({ isLoading: true });
-    await FirebaseFunctions.completeCurrentAssignment(
-      classID,
-      studentID,
-      evaluationDetails
-    );
-    const currentClass = await FirebaseFunctions.getClassByID(
-      this.state.classID
-    );
-    this.setState({
-      currentPosition: "0:00",
-      audioFile: -1
-    });
+    try {
+      await FirebaseFunctions.completeCurrentAssignment(
+        classID,
+        studentID,
+        evaluationDetails
+      );
+      const currentClass = await FirebaseFunctions.getClassByID(
+        this.state.classID
+      );
+      this.setState({
+        currentPosition: "0:00",
+        audioFile: -1
+      });
 
-    this.props.navigation.push("TeacherStudentProfile", {
-      studentID: this.state.studentID,
-      currentClass,
-      userID: this.props.navigation.state.params.userID,
-      classID: this.state.classID
-    });
+      this.props.navigation.push("TeacherStudentProfile", {
+        studentID: this.state.studentID,
+        currentClass,
+        userID: this.props.navigation.state.params.userID,
+        classID: this.state.classID
+      });
+    } catch (err) {
+      Alert.alert(strings.Whoops, strings.SomethingWentWrong);
+    }
   }
 
   //Overwrites a previously saved assignment with the new data
@@ -286,7 +289,13 @@ export class EvaluationPage extends QcParentScreen {
           {this.props.navigation.state.params.newAssignment === true ? (
             <TopBanner
               LeftIconName="angle-left"
-              LeftOnPress={() => this.props.navigation.goBack()}
+              LeftOnPress={() =>
+                this.props.navigation.state.params.onCloseNavigateTo
+                  ? this.props.navigation.navigate(
+                      this.props.navigation.state.params.onCloseNavigateTo
+                    )
+                  : this.props.navigation.goBack()
+              }
               Title={strings.Evaluation}
             />
           ) : readOnly === true &&
