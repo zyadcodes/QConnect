@@ -1,7 +1,4 @@
-
-import {
-  FlatList, View, TextInput, StyleSheet,
-} from 'react-native';
+import { FlatList, View, TextInput, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import * as _ from 'lodash';
@@ -11,14 +8,13 @@ import { screenWidth, screenHeight } from 'config/dimensions';
 import fontStyles from 'config/fontStyles';
 import { colors } from 'react-native-elements';
 
-
 let style;
 
 class InputAutoSuggest extends Component {
   constructor(props) {
     super(props);
     const { staticData, itemFormat } = this.props;
-    
+
     const data = suggest.searchForRelevant('', staticData || [], itemFormat);
     this.state = { data: data.suggest, value: this.props.assignment };
 
@@ -34,21 +30,20 @@ class InputAutoSuggest extends Component {
       value: name,
       id: id
     });
-    this.props.onSurahTap(name, ename, id);
     //this.props.onTextChanged({name, ename, id});
 
     onDataSelectedChange(existingItem);
-    
-    //this.searchList;
-    this.myTextInput.focus();
+    this.props.onSurahTap(name, ename, id);
+
+    this.searchList;
+    //this.myTextInput.focus();
   };
-  
-  keyExtractor = (item, index) => item.id+"";
+
+  keyExtractor = (item, index) => item.id + '';
 
   async searchList(text) {
-
     this.props.onTextChanged(text);
-    
+
     const {
       keyPathRequestResult,
       itemFormat,
@@ -60,7 +55,18 @@ class InputAutoSuggest extends Component {
     let suggestData = null;
     if (staticData != null) {
       try {
-        suggestData = !text ? staticData : suggest.searchForRelevant(text, staticData, itemFormat);
+        suggestData =
+          !text || text.length === 0
+            ? staticData
+            : suggest.searchForRelevant(text, staticData, itemFormat);
+        console.log(
+          "text: " +
+            text +
+            "length: " +
+            text.length +
+            " suggestedData: " +
+            JSON.stringify(suggestData)
+        );
       } catch (e) {
         suggestData = { suggest: [], existingItem: null };
       }
@@ -70,16 +76,25 @@ class InputAutoSuggest extends Component {
           text,
           apiEndpointSuggestData,
           keyPathRequestResult,
-          itemFormat,
+          itemFormat
         );
       } catch (e) {
         suggestData = { suggest: [], existingItem: null };
       }
     }
+    if(suggestData.suggest === undefined) {suggestData = suggest.searchForRelevant('', staticData || [], itemFormat);};
+    console.log(
+      "text2: " +
+        text +
+        "length2: " +
+        text.length +
+        " suggestedData: " +
+        JSON.stringify(suggestData.suggest)
+    );
+
     onDataSelectedChange(suggestData.existingItem);
     this.setState({
       data: suggestData.suggest,
-
     });
   }
 
@@ -108,9 +123,12 @@ class InputAutoSuggest extends Component {
           style={[style.inputDefaultStyle, inputStyle]}
           value={value}
           clearButtonMode="while-editing"
+          selectTextOnFocus
           autoCorrect={false}
           onChangeText={this.searchList}
-          ref={(ref)=>{this.myTextInput = ref}}
+          ref={ref => {
+            this.myTextInput = ref;
+          }}
         />
         <FlatList
           style={[style.flatList, flatListStyle]}
@@ -119,8 +137,8 @@ class InputAutoSuggest extends Component {
           numColumns={4}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
-          initialNumToRender = {10}
-          keyboardShouldPersistTaps = "handled"
+          initialNumToRender={10}
+          keyboardShouldPersistTaps="handled"
         />
       </View>
     );
@@ -132,7 +150,7 @@ InputAutoSuggest.propTypes = {
   itemTextStyle: PropTypes.shape({}),
   itemTagStyle: PropTypes.shape({}),
   apiEndpointSuggestData: PropTypes.func,
-  
+
   staticData: PropTypes.arrayOf(PropTypes.shape({})),
   onDataSelectedChange: PropTypes.func,
   onTextChanged: PropTypes.func,
