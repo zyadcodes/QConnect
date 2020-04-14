@@ -59,14 +59,6 @@ class InputAutoSuggest extends Component {
           !text || text.length === 0
             ? staticData
             : suggest.searchForRelevant(text, staticData, itemFormat);
-        console.log(
-          "text: " +
-            text +
-            "length: " +
-            text.length +
-            " suggestedData: " +
-            JSON.stringify(suggestData)
-        );
       } catch (e) {
         suggestData = { suggest: [], existingItem: null };
       }
@@ -82,16 +74,9 @@ class InputAutoSuggest extends Component {
         suggestData = { suggest: [], existingItem: null };
       }
     }
-    if(suggestData.suggest === undefined) {suggestData = suggest.searchForRelevant('', staticData || [], itemFormat);};
-    console.log(
-      "text2: " +
-        text +
-        "length2: " +
-        text.length +
-        " suggestedData: " +
-        JSON.stringify(suggestData.suggest)
-    );
-
+    if (suggestData.suggest === undefined) {
+      suggestData = suggest.searchForRelevant("", staticData || [], itemFormat);
+    }
     onDataSelectedChange(suggestData.existingItem);
     this.setState({
       data: suggestData.suggest,
@@ -100,7 +85,6 @@ class InputAutoSuggest extends Component {
 
   renderItem = ({ item, index }) => {
     const { itemTextStyle, itemTagStyle } = this.props;
-    console.log("rendeItem: " + JSON.stringify(item));
     return (
       <SuggestionListItem
         textStyle={itemTextStyle}
