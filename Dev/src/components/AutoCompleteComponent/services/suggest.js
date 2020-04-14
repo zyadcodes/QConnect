@@ -67,7 +67,7 @@ function searchForRelevant(
   items.some((element) => {
     const name = _.get(element, itemFormat.name);
     const ename = _.get(element, itemFormat.ename);
-    if (!reg || reg.test(name)) {
+    if (!reg || reg.test(name) || reg.test(ename)) {
       const id = _.get(element, itemFormat.id);
       if (!existingItem && (text === name || text === ename)) {
         existingItem = { id, name, ename };
