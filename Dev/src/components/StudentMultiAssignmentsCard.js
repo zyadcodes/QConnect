@@ -172,7 +172,7 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
 StudentMultiAssignmentsCard.propTypes = {
   studentName: PropTypes.string.isRequired,
   profilePic: PropTypes.number.isRequired,
-  currentAssignments: PropTypes.string,
+  currentAssignments: PropTypes.array,
   onPress: PropTypes.func.isRequired,
 };
 

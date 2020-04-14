@@ -16,7 +16,7 @@ export type SuggestionDescribe = {
 
 export type SuggestData = {
   suggest: Array<SuggestionDescribe>,
-  existingItem: ?{id:string, name:string}
+  existingItem: ?{id:string, name:string, ename: string}
 }
 
 function suggestFormat(
@@ -30,16 +30,17 @@ function suggestFormat(
     (data:{}) => {
       const id = _.get(data, itemFormat.id);
       const name = _.get(data, itemFormat.name);
+      const ename = _.get(data, itemFormat.ename);
       tags = (itemFormat.tags != null) ? itemFormat.tags.map((tag, index) => ({
         item: _.get(data, tag),
         id: String(index),
       })) : null;
       // search text presence
-      if(searching && name.includes(text)) {
+      if(searching && (name.includes(text) || ename.includes(text))) {
         existingItem = { id, name };
         searching = false;
       }
-      return { id, name, tags };
+      return { id, name, ename, tags };
     },
   );
   return { suggest, existingItem };
@@ -65,10 +66,11 @@ function searchForRelevant(
   let tags: ?Array<{item: string, id: string}> = null;
   items.some((element) => {
     const name = _.get(element, itemFormat.name);
+    const ename = _.get(element, itemFormat.ename);
     if (!reg || reg.test(name)) {
       const id = _.get(element, itemFormat.id);
-      if (!existingItem && text === name) {
-        existingItem = { id, name };
+      if (!existingItem && (text === name || text === ename)) {
+        existingItem = { id, name, ename };
       }
       tags = (itemFormat.tags != null)
       ? itemFormat.tags.map(
@@ -77,7 +79,7 @@ function searchForRelevant(
         id: String(index),
       }))
       : null;
-      suggest.push({ id, name, tags });
+      suggest.push({ id, name, ename, tags });
       counter += 1;
     }
     return false;

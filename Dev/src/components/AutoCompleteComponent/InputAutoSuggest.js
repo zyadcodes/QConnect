@@ -26,15 +26,16 @@ class InputAutoSuggest extends Component {
     this.renderItem = this.renderItem.bind(this);
   }
 
-  onPressItem = (id: string, name: string) => {
+  onPressItem = (id: string, name: string, ename: string) => {
     // updater functions are preferred for transactional updates
     const { onDataSelectedChange } = this.props;
-    const existingItem = { id, name };
+    const existingItem = { id, name, ename };
     this.setState({
       value: name,
       id: id
     });
-    this.props.onTextChanged({name, id});
+    this.props.onSurahTap(name, ename, id);
+    //this.props.onTextChanged({name, ename, id});
 
     onDataSelectedChange(existingItem);
     
@@ -84,6 +85,7 @@ class InputAutoSuggest extends Component {
 
   renderItem = ({ item, index }) => {
     const { itemTextStyle, itemTagStyle } = this.props;
+    console.log("rendeItem: " + JSON.stringify(item));
     return (
       <SuggestionListItem
         textStyle={itemTextStyle}
@@ -92,6 +94,7 @@ class InputAutoSuggest extends Component {
         onPressItem={this.onPressItem}
         name={item.name}
         tags={item.tags}
+        ename={item.ename}
       />
     );
   };
@@ -113,6 +116,7 @@ class InputAutoSuggest extends Component {
           style={[style.flatList, flatListStyle]}
           data={data}
           extraData={this.state}
+          numColumns={4}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
           initialNumToRender = {10}
@@ -151,6 +155,7 @@ InputAutoSuggest.defaultProps = {
   itemFormat: {
     id: 'id',
     name: 'name',
+    ename: 'ename',
     tags: [],
   },
 };
@@ -159,8 +164,8 @@ style = StyleSheet.create({
   container: {
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    width: screenWidth * 0.73,
-    height: screenHeight * 0.29
+    width: screenWidth * 0.9,
+    height: screenHeight * 0.9
   },
   input: {
     fontSize: 22,
@@ -174,6 +179,8 @@ style = StyleSheet.create({
     backgroundColor: colors.black,
     borderBottomColor: colors.darkGrey,
     borderBottomWidth: 1,
+    textAlign: "right",
+    paddingTop: 10,
   },
   itemTextStyle: fontStyles.bigTextStylePrimaryDark,
 });

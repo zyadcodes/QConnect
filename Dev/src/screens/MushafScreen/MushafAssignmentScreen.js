@@ -600,6 +600,7 @@ class MushafAssignmentScreen extends Component {
         if (c !== assignmentIndex) {
           return (
             <ActionButton.Item
+              key={"goto_" + c}
               buttonColor={actionItemConfig[assignment.type].color}
               title={assignment.type + ': ' + assignment.name}
               onPress={() => {
@@ -639,6 +640,7 @@ class MushafAssignmentScreen extends Component {
         <ActionButton.Item
           buttonColor={colors.darkGreen}
           title="Add another assignment"
+          key={"add_new"}
           onPress={() => {
             this.setState({ isLoading: true });
 
@@ -671,6 +673,7 @@ class MushafAssignmentScreen extends Component {
       res.push(
         <ActionButton.Item
           buttonColor={colors.primaryDark}
+          key={"evaluate_" + assignmentName}
           title={strings.EvaluateAssignment}
           onPress={async () => {
             this.setState({ isLoading: true });
