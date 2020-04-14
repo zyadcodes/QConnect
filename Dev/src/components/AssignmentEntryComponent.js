@@ -42,8 +42,9 @@ export default class AssignmentEntryComponent extends React.Component {
                             <InputAutoSuggest
                                 staticData={surahNames}
                                 onTextChanged={this.onTextChange.bind(this)}
+                                onSurahTap={(name, ename, id) => this.props.onSubmit({name, ename, id})}
                                 assignment={this.props.assignment === strings.None ? "" : this.props.assignment}
-                                inputStyle={fontStyles.mainTextStyleDarkGrey}
+                                inputStyle={fontStyles.mainTextStyleBlack}
                                 itemTextStyle={fontStyles.mainTextStyleDarkGrey}
                             />
 
@@ -89,7 +90,8 @@ export default class AssignmentEntryComponent extends React.Component {
                                     )
                             }
                             <View style={{
-                                flexDirection: "row-reverse"
+                                flexDirection: "row-reverse",
+                                marginBottom: 30
                             }}>
                                 <QcActionButton
                                     text={strings.Submit}
@@ -116,7 +118,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        marginTop: screenHeight * 0.03,
+        marginVertical: screenHeight * 0.03,
         borderWidth: 1,
         borderRadius: 2,
         borderColor: colors.grey,

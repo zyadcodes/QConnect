@@ -1,4 +1,4 @@
-export default [
+[
   { id: "1", name: "الفاتحة", ename: "Al-Fatihah" },
   { id: "2", name: "البقرة", ename: "Al-Baqarah" },
   { id: "3", name: "آل عمران", ename: "Al-Imran" },
