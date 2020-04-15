@@ -13,23 +13,40 @@ import { Icon } from 'react-native-elements';
 const DailyTracker = props => {
   const [expanded, setExpanded] = useState(false);
 
-  let dates = {};
-  if (props.data && props.data.length > 0) {
-    let keys = Object.keys[props.data];
-    dates.map((date, index) => {
-      dates = {
-        ...dates,
-        [keys[index]]: {
-          ...date,
-          marked: true,
-          selected: true,
-          selectedColor: colors.green,
-        }
-      };
-    });
-  }
+  //Today's date string in the format YYYY-MM-DD
+  const getTodaysDateString = () => {
+    var today = new Date();
+    const todaysDate = `${today.getFullYear()}-${(
+      '0' +
+      (today.getMonth() + 1)
+    ).slice(-2)}-${("0" + today.getDate()).slice(-2)}`;
+  };
+
+  const [currentDate, setCurrentDate] = useState(getTodaysDateString());
+
+  // Takes practice tracking log and add properties to show on the calendar component
+  const initializeDatesFromProps = () => {
+    let dates = {};
+    if (props.data) {
+      Object.entries(props.data).map(entry => {
+        //entry: first element is they key, 2nd is the value
+        dates = {
+          ...dates,
+          [entry[0]]: {
+            ...entry[1],
+            marked: true,
+            selected: true,
+            selectedColor: colors.green,
+          }
+        };
+      });
+    }
+    return dates;
+  };
+  let dates = initializeDatesFromProps();
   const [markedDates, setMarkedDates] = useState(dates);
 
+  // UI theme (colors etc.) of the calendar
   const getTheme = () => {
     const disabledColor = colors.grey;
     return {
@@ -43,6 +60,8 @@ const DailyTracker = props => {
     };
   };
 
+  // handles when user presses on a calendar date
+  // reflects it in component state, and then calls parent to save to firebase
   const onDatePressed = date => {
     setMarkedDates({
       ...markedDates,
@@ -53,17 +72,9 @@ const DailyTracker = props => {
         selectedColor: colors.green
       },
     });
-
-    console.log("newState: " + JSON.stringify(markedDates));
-
+    setCurrentDate(date.dateString);
     props.onDatePressed(date);
   };
-
-  var today = new Date();
-  const todaysDate = `${today.getFullYear()}-${(
-    "0" +
-    (today.getMonth() + 1)
-  ).slice(-2)}-${("0" + today.getDate()).slice(-2)}`;
 
   return (
     <View
@@ -71,12 +82,13 @@ const DailyTracker = props => {
       key={'' + Object.keys(markedDates).length}
     >
       <CalendarProvider
-        date={todaysDate}
+        date={currentDate}
         onDayPress={props.onDatePressed}
         disabledOpacity={0.6}
       >
         {expanded ? (
           <Calendar
+            current={currentDate}
             markedDates={markedDates}
             onDayPress={onDatePressed}
             theme={getTheme()}
@@ -87,6 +99,7 @@ const DailyTracker = props => {
             markedDates={markedDates}
             onDayPress={onDatePressed}
             theme={getTheme()}
+            current={currentDate}
           />
         )}
       </CalendarProvider>

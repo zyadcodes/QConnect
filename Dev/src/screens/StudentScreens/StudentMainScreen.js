@@ -61,7 +61,7 @@ class StudentMainScreen extends QcParentScreen {
     currentPosition: "0:00",
     classesAttended: 0,
     classesMissed: 0,
-    dailyTrackerLog: {
+    dailyPracticeLog: {
       "2020-04-11": {
         type: strings.Memorization,
       },
@@ -107,7 +107,7 @@ class StudentMainScreen extends QcParentScreen {
 
       //This constructs an array of the student's past assignments & only includes the "length" field which is how many
       //words that assignment was. The method returns that array which is then passed to the line graph below as the data
-      const { assignmentHistory } = studentClassInfo;
+      const { assignmentHistory, dailyPracticeLog } = studentClassInfo;
       const data = [];
       for (const assignment of assignmentHistory) {
         if (assignment.assignmentLength && assignment.assignmentLength > 0) {
@@ -130,6 +130,7 @@ class StudentMainScreen extends QcParentScreen {
         currentClass,
         wordsPerAssignmentData: data,
         currentClassID,
+        dailyPracticeLog,
         studentClassInfo,
         isLoading: false,
         isOpen: false,
@@ -1127,17 +1128,24 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 
-  onDatePressed = date => {
-    console.log('studentmain date pressed: ' + JSON.stringify(date));
-    this.setState({
-      dailyTrackerLog: {
-        ...this.state.dailyTrackerLog,
-        [date.dateString]: {
-          type: strings.Reading,
-        },
+  onDatePressed(date) {
+    let dailyPracticeLog = {
+      ...this.state.dailyPracticeLog,
+      [date.dateString]: {
+        type: strings.Reading,
       },
+    };
+
+    this.setState({
+      dailyPracticeLog
     });
-  };
+
+    FirebaseFunctions.updateDailyPracticeTracker(
+      this.state.currentClassID,
+      this.state.userID,
+      dailyPracticeLog
+    );
+  }
   //-------------------------- render method: Main UI enctry point for the component ------------
   //Renders the screen
   render() {
@@ -1150,7 +1158,7 @@ class StudentMainScreen extends QcParentScreen {
       currentClass,
       classes,
       isOpen,
-      dailyTrackerLog
+      dailyPracticeLog
     } = this.state;
     if (isLoading === true) {
       return (
@@ -1192,8 +1200,8 @@ class StudentMainScreen extends QcParentScreen {
         <ScrollView style={screenStyle.container}>
           {this.renderTopView()}
           <DailyTracker
-            data={dailyTrackerLog}
-            onDatePressed={this.onDatePressed}
+            data={dailyPracticeLog}
+            onDatePressed={this.onDatePressed.bind(this)}
           />
           {studentClassInfo.currentAssignments &&
           studentClassInfo.currentAssignments.length !== 0

@@ -3,6 +3,7 @@
 import firebase from "react-native-firebase";
 import strings from "./strings";
 import { arrayOf } from "prop-types";
+import _ from 'lodash';
 
 export default class FirebaseFunctions {
   //References that'll be used throughout the class's static functions
@@ -540,6 +541,35 @@ export default class FirebaseFunctions {
       //rethrow
       throw err;
     }
+    return 0;
+  }
+
+  //This function will take in an assignment details object and overwrite an old evaluation with the new data.
+  //It will take in a classID, a studentID, and an evaluationID in order to locate the correct evaluation object
+  static async updateDailyPracticeTracker(classID, studentID, newPracticeLog) {
+    try {
+
+      let currentClass = await this.getClassByID(classID);
+      let arrayOfStudents = currentClass.students;
+      let studentIndex = arrayOfStudents.findIndex(student => {
+        return student.ID === studentID;
+      });
+
+      arrayOfStudents[studentIndex].dailyPracticeLog = _.merge(
+        arrayOfStudents[studentIndex].dailyPracticeLog,
+        newPracticeLog
+      );
+      
+      await this.updateClassObject(classID, {
+        students: arrayOfStudents
+      });
+      this.analytics.logEvent("DAILY_PRACTICE_LOGGED");
+    } catch (err) {
+      this.analytics.logEvent("ERR_LOGGING_DAILY_PRACTICE", { err });
+      console.log("Error logging daily practice. ", { err });
+      //todo: save locally and retry
+    }
+
     return 0;
   }
 
