@@ -35,6 +35,7 @@ import AudioPlayer from "components/AudioPlayer/AudioPlayer";
 import Toast, { DURATION } from 'react-native-easy-toast';
 import { LineChart } from "react-native-chart-kit";
 import CodeInput from 'react-native-confirmation-code-input';
+import DailyTracker from 'components/DailyTracker';
 
 const translateY = new Animated.Value(-35);
 const opacity = new Animated.Value(0);
@@ -59,7 +60,18 @@ class StudentMainScreen extends QcParentScreen {
     isRecording: false,
     currentPosition: "0:00",
     classesAttended: 0,
-    classesMissed: 0
+    classesMissed: 0,
+    dailyTrackerLog: {
+      "2020-04-11": {
+        type: strings.Memorization,
+      },
+      "2020-04-12": {
+        type: strings.Revision,
+      },
+      "2020-04-13": {
+        type: strings.Reading,
+      }
+    }
   };
 
   //-------------- Component lifecycle methods -----------------------------------
@@ -291,7 +303,12 @@ class StudentMainScreen extends QcParentScreen {
                           marginTop: 20,
                         }}
                       />
-                      <Text style={[fontStyles.mainTextStyleDarkGrey, {marginBottom: 20}]}>
+                      <Text
+                        style={[
+                          fontStyles.mainTextStyleDarkGrey,
+                          { marginBottom: 20 },
+                        ]}
+                      >
                         {strings.TypeInAClassCode}
                       </Text>
                     </View>
@@ -313,9 +330,7 @@ class StudentMainScreen extends QcParentScreen {
                         className="border-circle"
                         containerStyle={{ marginBottom: 60 }}
                         codeInputStyle={{ borderWidth: 1.5 }}
-                        onFulfill={code =>
-                          this.setState({ classCode: code })
-                        }
+                        onFulfill={code => this.setState({ classCode: code })}
                       />
                     </View>
                     <View
@@ -1112,6 +1127,17 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 
+  onDatePressed = date => {
+    console.log('studentmain date pressed: ' + JSON.stringify(date));
+    this.setState({
+      dailyTrackerLog: {
+        ...this.state.dailyTrackerLog,
+        [date.dateString]: {
+          type: strings.Reading,
+        },
+      },
+    });
+  };
   //-------------------------- render method: Main UI enctry point for the component ------------
   //Renders the screen
   render() {
@@ -1123,7 +1149,8 @@ class StudentMainScreen extends QcParentScreen {
       studentClassInfo,
       currentClass,
       classes,
-      isOpen
+      isOpen,
+      dailyTrackerLog
     } = this.state;
     if (isLoading === true) {
       return (
@@ -1164,6 +1191,10 @@ class StudentMainScreen extends QcParentScreen {
       >
         <ScrollView style={screenStyle.container}>
           {this.renderTopView()}
+          <DailyTracker
+            data={dailyTrackerLog}
+            onDatePressed={this.onDatePressed}
+          />
           {studentClassInfo.currentAssignments &&
           studentClassInfo.currentAssignments.length !== 0
             ? this.renderCurrentAssignmentCards()

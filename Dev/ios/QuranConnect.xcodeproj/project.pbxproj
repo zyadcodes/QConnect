@@ -35,6 +35,7 @@
 		0188158C2334966A006806B3 /* Scheherazade-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188158923349669006806B3 /* Scheherazade-Bold.ttf */; };
 		0188158D2334966A006806B3 /* Scheherazade-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188158A23349669006806B3 /* Scheherazade-Regular.ttf */; };
 		01AE6ED22436D454004E6545 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AE6ED12436D454004E6545 /* File.swift */; };
+		01B74AB2244764A000873E2E /* ding.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 01B74AB1244764A000873E2E /* ding.mp3 */; };
 		05A50DDD02074F07BE689CD2 /* is-icon-12.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB615236590451195990F95 /* is-icon-12.png */; };
 		05E9633F17454B3D983D7B89 /* boy11.png in Resources */ = {isa = PBXBuildFile; fileRef = 93AC74C0EF0D4E9A90B7F523 /* boy11.png */; };
 		0668C2EC39AF450D81C0049A /* is-icon-5.png in Resources */ = {isa = PBXBuildFile; fileRef = 64E7AC68B7CB40A4A3E6DBDC /* is-icon-5.png */; };
@@ -199,6 +200,8 @@
 		01AE6ED02436D454004E6545 /* QuranConnect-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QuranConnect-Bridging-Header.h"; sourceTree = "<group>"; };
 		01AE6ED12436D454004E6545 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		01B74AB02444FB1500873E2E /* QuranConnect.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = QuranConnect.entitlements; path = QuranConnect/QuranConnect.entitlements; sourceTree = "<group>"; };
+		01B74AB1244764A000873E2E /* ding.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = ding.mp3; path = ../assets/sounds/ding.mp3; sourceTree = "<group>"; };
+		01B74AB324476F3000873E2E /* ding.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = ding.m4a; path = ../assets/sounds/ding.m4a; sourceTree = "<group>"; };
 		035EA2B8889C44CFA697AAE7 /* Ubuntu-Light-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Ubuntu-Light-Italic.ttf"; path = "../assets/fonts/Ubuntu-Light-Italic.ttf"; sourceTree = "<group>"; };
 		08A641FA3C1B403CB690DE5F /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		0B1E0D87EEAD4898828F4FA1 /* female1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female1.png; path = "../assets/images/teacher-icons/female1.png"; sourceTree = "<group>"; };
@@ -503,8 +506,10 @@
 				016EA16C2328BB8300CD20E2 /* Icon-App-29x29@3x.png */,
 				016EA16A2328BB8300CD20E2 /* Icon-App-40x40@1x.png */,
 				016EA16D2328BB8300CD20E2 /* Icon-App-40x40@3x.png */,
+				01B74AB324476F3000873E2E /* ding.m4a */,
 				0188157C23348C52006806B3 /* ../assets/fonts/MADDINA.ttf */,
 				016EA1702328BB8400CD20E2 /* Icon-App-60x60@2x.png */,
+				01B74AB1244764A000873E2E /* ding.mp3 */,
 				016EA1752328BB8400CD20E2 /* Icon-App-60x60@3x.png */,
 				016EA1712328BB8400CD20E2 /* Icon-App-76x76@1x.png */,
 				016EA1762328BB8400CD20E2 /* Icon-App-76x76@2x.png */,
@@ -791,6 +796,7 @@
 				636F1FDAD1A244C99C0A6CEC /* Montserrat-Bold.ttf in Resources */,
 				77F9433D4A524DDF90143055 /* Montserrat-Light.ttf in Resources */,
 				552DEA3A19AF46A3A3911237 /* Montserrat-Regular.ttf in Resources */,
+				01B74AB2244764A000873E2E /* ding.mp3 in Resources */,
 				25FC4511FC244E0292F09713 /* Ubuntu-Bold.ttf in Resources */,
 				1F2432636015425786437B7C /* Ubuntu-Light-Italic.ttf in Resources */,
 				10CD2E2C3BB6433EA2768DEF /* Ubuntu-Light.ttf in Resources */,
