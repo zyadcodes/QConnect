@@ -21,6 +21,7 @@ import fontStyles from "config/fontStyles";
 import { screenHeight, screenWidth } from "config/dimensions";
 import { LineChart } from "react-native-chart-kit";
 import { Icon } from "react-native-elements";
+import DailyTracker from 'components/DailyTracker';
 
 class StudentProfileScreen extends QcParentScreen {
   state = {
@@ -33,7 +34,8 @@ class StudentProfileScreen extends QcParentScreen {
     isLoading: true,
     hasCurrentAssignment: "",
     classesAttended: "",
-    classesMissed: ""
+    classesMissed: "",
+    dailyPracticeLog: {}
   };
 
   //Sets the screen for firebase analytics & fetches the correct student from this class
@@ -49,7 +51,7 @@ class StudentProfileScreen extends QcParentScreen {
 
     //This constructs an array of the student's past assignments & only includes the "length" field which is how many
     //words that assignment was. The method returns that array which is then passed to the line graph below as the data
-    const { assignmentHistory } = student;
+    const { assignmentHistory, dailyPracticeLog } = student;
     const data = [];
     for (const assignment of assignmentHistory) {
       if (assignment.assignmentLength && assignment.assignmentLength > 0) {
@@ -62,6 +64,7 @@ class StudentProfileScreen extends QcParentScreen {
       currentAssignments: student.currentAssignments,
       isLoading: false,
       wordsPerAssignmentData: data,
+      dailyPracticeLog,
       hasCurrentAssignment:
         student.currentAssignments && student.currentAssignments.length > 0,
       classesAttended: student.classesAttended ? student.classesAttended : 0,
@@ -139,30 +142,36 @@ class StudentProfileScreen extends QcParentScreen {
     }
   }
 
-  renderAssignmentsSectionHeader(label, iconName) {
+  renderAssignmentsSectionHeader(label, iconName, desc) {
     return (
       <View
         style={{
-          alignItems: 'center',
           marginLeft: screenWidth * 0.017,
-          flexDirection: 'row',
-          paddingTop: screenHeight * 0.007,
-          paddingBottom: screenHeight * 0.019,
+          paddingTop: screenHeight * 0.005,
+          paddingBottom: screenHeight * 0.01
         }}
       >
-        <Icon
-          name={iconName}
-          type="material-community"
-          color={colors.darkGrey}
-        />
-        <Text
-          style={[
-            { marginLeft: screenWidth * 0.017 },
-            fontStyles.mainTextStyleDarkGrey,
-          ]}
+        <View
+          style={{
+            alignItems: "center",
+            flexDirection: 'row'
+          }}
         >
-          {label.toUpperCase()}
-        </Text>
+          <Icon
+            name={iconName}
+            type="material-community"
+            color={colors.darkGrey}
+          />
+          <Text
+            style={[
+              { marginLeft: screenWidth * 0.017 },
+              fontStyles.mainTextStyleDarkGrey
+            ]}
+          >
+            {label ? label.toUpperCase() : strings.Assignment}
+          </Text>
+        </View>
+        {desc && <Text style={fontStyles.smallTextStyleDarkGrey}>{desc}</Text>}
       </View>
     );
   }
@@ -320,7 +329,8 @@ class StudentProfileScreen extends QcParentScreen {
       currentAssignments,
       classesAttended,
       classesMissed,
-      wordsPerAssignmentData
+      wordsPerAssignmentData,
+      dailyPracticeLog
     } = this.state;
     let { assignmentHistory, averageRating, name } = classStudent;
 
@@ -540,6 +550,16 @@ class StudentProfileScreen extends QcParentScreen {
           ) : (
             <View />
           )}
+          {this.renderAssignmentsSectionHeader(
+            strings.DailyPracticeLog,
+            'calendar-check-outline',
+            strings.DailyPracticeLogDecTeacherView
+          )}
+
+          <DailyTracker
+            data={dailyPracticeLog}
+            readOnly={true}
+          />
           {this.state.classStudent.currentAssignments &&
           this.state.classStudent.currentAssignments.length > 0 ? (
             this.renderAssignmentsSectionHeader(
@@ -781,7 +801,7 @@ const styles = StyleSheet.create({
   },
   middleView: {
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
   profileInfo: {
     flexDirection: "column",

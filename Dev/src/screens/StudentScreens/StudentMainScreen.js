@@ -35,6 +35,7 @@ import AudioPlayer from "components/AudioPlayer/AudioPlayer";
 import Toast, { DURATION } from 'react-native-easy-toast';
 import { LineChart } from "react-native-chart-kit";
 import CodeInput from 'react-native-confirmation-code-input';
+import DailyTracker from 'components/DailyTracker';
 
 const translateY = new Animated.Value(-35);
 const opacity = new Animated.Value(0);
@@ -59,7 +60,8 @@ class StudentMainScreen extends QcParentScreen {
     isRecording: false,
     currentPosition: "0:00",
     classesAttended: 0,
-    classesMissed: 0
+    classesMissed: 0,
+    dailyPracticeLog: {}
   };
 
   //-------------- Component lifecycle methods -----------------------------------
@@ -95,7 +97,7 @@ class StudentMainScreen extends QcParentScreen {
 
       //This constructs an array of the student's past assignments & only includes the "length" field which is how many
       //words that assignment was. The method returns that array which is then passed to the line graph below as the data
-      const { assignmentHistory } = studentClassInfo;
+      const { assignmentHistory, dailyPracticeLog } = studentClassInfo;
       const data = [];
       for (const assignment of assignmentHistory) {
         if (assignment.assignmentLength && assignment.assignmentLength > 0) {
@@ -118,6 +120,7 @@ class StudentMainScreen extends QcParentScreen {
         currentClass,
         wordsPerAssignmentData: data,
         currentClassID,
+        dailyPracticeLog,
         studentClassInfo,
         isLoading: false,
         isOpen: false,
@@ -291,7 +294,12 @@ class StudentMainScreen extends QcParentScreen {
                           marginTop: 20,
                         }}
                       />
-                      <Text style={[fontStyles.mainTextStyleDarkGrey, {marginBottom: 20}]}>
+                      <Text
+                        style={[
+                          fontStyles.mainTextStyleDarkGrey,
+                          { marginBottom: 20 },
+                        ]}
+                      >
                         {strings.TypeInAClassCode}
                       </Text>
                     </View>
@@ -313,9 +321,7 @@ class StudentMainScreen extends QcParentScreen {
                         className="border-circle"
                         containerStyle={{ marginBottom: 60 }}
                         codeInputStyle={{ borderWidth: 1.5 }}
-                        onFulfill={code =>
-                          this.setState({ classCode: code })
-                        }
+                        onFulfill={code => this.setState({ classCode: code })}
                       />
                     </View>
                     <View
@@ -797,30 +803,36 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 
-  renderAssignmentsSectionHeader(label, iconName) {
+  renderAssignmentsSectionHeader(label, iconName, desc) {
     return (
       <View
         style={{
-          alignItems: "center",
           marginLeft: screenWidth * 0.017,
-          flexDirection: "row",
-          paddingTop: screenHeight * 0.007,
-          paddingBottom: screenHeight * 0.019
+          paddingTop: screenHeight * 0.005,
+          paddingBottom: screenHeight * 0.01
         }}
       >
-        <Icon
-          name={iconName}
-          type="material-community"
-          color={colors.darkGrey}
-        />
-        <Text
-          style={[
-            { marginLeft: screenWidth * 0.017 },
-            fontStyles.mainTextStyleDarkGrey
-          ]}
+        <View
+          style={{
+            alignItems: "center",
+            flexDirection: 'row'
+          }}
         >
-          {label ? label.toUpperCase() : strings.Assignment}
-        </Text>
+          <Icon
+            name={iconName}
+            type="material-community"
+            color={colors.darkGrey}
+          />
+          <Text
+            style={[
+              { marginLeft: screenWidth * 0.017 },
+              fontStyles.mainTextStyleDarkGrey
+            ]}
+          >
+            {label ? label.toUpperCase() : strings.Assignment}
+          </Text>
+        </View>
+        {desc && <Text style={fontStyles.smallTextStyleDarkGrey}>{desc}</Text>}
       </View>
     );
   }
@@ -1112,6 +1124,24 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 
+  onDatePressed(date) {
+    let dailyPracticeLog = {
+      ...this.state.dailyPracticeLog,
+      [date.dateString]: {
+        type: strings.Reading,
+      },
+    };
+
+    this.setState({
+      dailyPracticeLog
+    });
+
+    FirebaseFunctions.updateDailyPracticeTracker(
+      this.state.currentClassID,
+      this.state.userID,
+      dailyPracticeLog
+    );
+  }
   //-------------------------- render method: Main UI enctry point for the component ------------
   //Renders the screen
   render() {
@@ -1123,7 +1153,8 @@ class StudentMainScreen extends QcParentScreen {
       studentClassInfo,
       currentClass,
       classes,
-      isOpen
+      isOpen,
+      dailyPracticeLog
     } = this.state;
     if (isLoading === true) {
       return (
@@ -1164,6 +1195,16 @@ class StudentMainScreen extends QcParentScreen {
       >
         <ScrollView style={screenStyle.container}>
           {this.renderTopView()}
+          {this.renderAssignmentsSectionHeader(
+            strings.DailyPracticeLog,
+            'calendar-check-outline',
+            strings.DailyPracticeLogDec
+          )}
+
+          <DailyTracker
+            data={dailyPracticeLog}
+            onDatePressed={this.onDatePressed.bind(this)}
+          />
           {studentClassInfo.currentAssignments &&
           studentClassInfo.currentAssignments.length !== 0
             ? this.renderCurrentAssignmentCards()
