@@ -548,7 +548,6 @@ export default class FirebaseFunctions {
   //It will take in a classID, a studentID, and an evaluationID in order to locate the correct evaluation object
   static async updateDailyPracticeTracker(classID, studentID, newPracticeLog) {
     try {
-
       let currentClass = await this.getClassByID(classID);
       let arrayOfStudents = currentClass.students;
       let studentIndex = arrayOfStudents.findIndex(student => {
@@ -559,11 +558,26 @@ export default class FirebaseFunctions {
         arrayOfStudents[studentIndex].dailyPracticeLog,
         newPracticeLog
       );
-      
+
       await this.updateClassObject(classID, {
         students: arrayOfStudents
       });
       this.analytics.logEvent("DAILY_PRACTICE_LOGGED");
+
+      //send notification
+      currentClass.teachers.forEach(async teacherID => {
+
+        //todo: this may end up too noisy.
+        // once we implement in-app feed, consider show this there instead.
+        this.functions.httpsCallable("sendNotification")({
+          topic: teacherID,
+          title: strings.StudentUpdate,
+          body:
+            arrayOfStudents[studentIndex].name +
+            ' ' +
+            strings.PracticeLogNotification
+        });
+      });
     } catch (err) {
       this.analytics.logEvent("ERR_LOGGING_DAILY_PRACTICE", { err });
       console.log("Error logging daily practice. ", { err });

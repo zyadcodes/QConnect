@@ -813,15 +813,17 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 
-  renderAssignmentsSectionHeader(label, iconName) {
+  renderAssignmentsSectionHeader(label, iconName, desc) {
     return (
+      <View style={{
+        marginLeft: screenWidth * 0.017,
+        paddingTop: screenHeight * 0.005,
+        paddingBottom: screenHeight * 0.01
+      }}>
       <View
         style={{
           alignItems: "center",
-          marginLeft: screenWidth * 0.017,
           flexDirection: "row",
-          paddingTop: screenHeight * 0.007,
-          paddingBottom: screenHeight * 0.019
         }}
       >
         <Icon
@@ -838,6 +840,7 @@ class StudentMainScreen extends QcParentScreen {
           {label ? label.toUpperCase() : strings.Assignment}
         </Text>
       </View>
+      {desc && <Text style={fontStyles.smallTextStyleDarkGrey}>{desc}</Text>}</View>
     );
   }
 
@@ -1199,6 +1202,12 @@ class StudentMainScreen extends QcParentScreen {
       >
         <ScrollView style={screenStyle.container}>
           {this.renderTopView()}
+          {this.renderAssignmentsSectionHeader(
+            strings.DailyPracticeLog,
+            'book-open-outline',
+            strings.DailyPracticeLogDec
+          )}
+
           <DailyTracker
             data={dailyPracticeLog}
             onDatePressed={this.onDatePressed.bind(this)}

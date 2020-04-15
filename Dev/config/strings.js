@@ -38,6 +38,9 @@ export default {
   SubmitAssignment: "Submit Assignment",
   Record: "Record",
   Stop: "Stop",
+  DailyPracticeLog: "Daily Practice Log",
+  DailyPracticeLogDec: "Log and share your daily Quran practice",
+  PracticeLogNotification: "was working on his assignment.",
 
 
   //--------------------- Forgot Password Screen-------------------
