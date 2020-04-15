@@ -59,21 +59,23 @@ const DailyTracker = props => {
       dotColor: colors.darkGreen
     };
   };
-
+  
   // handles when user presses on a calendar date
   // reflects it in component state, and then calls parent to save to firebase
   const onDatePressed = date => {
-    setMarkedDates({
-      ...markedDates,
-      [date.dateString]: {
-        type: strings.Reading,
-        marked: true,
-        selected: true,
-        selectedColor: colors.green
-      },
-    });
     setCurrentDate(date.dateString);
-    props.onDatePressed(date);
+    if (!props.readOnly) {
+      setMarkedDates({
+        ...markedDates,
+        [date.dateString]: {
+          type: strings.Reading,
+          marked: true,
+          selected: true,
+          selectedColor: colors.green
+        },
+      });
+      props.onDatePressed(date);
+    }
   };
 
   return (
@@ -85,7 +87,7 @@ const DailyTracker = props => {
         date={currentDate}
         onDayPress={props.onDatePressed}
         disabledOpacity={0.6}
-      >
+        >
         {expanded ? (
           <Calendar
             current={currentDate}

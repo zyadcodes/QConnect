@@ -61,17 +61,7 @@ class StudentMainScreen extends QcParentScreen {
     currentPosition: "0:00",
     classesAttended: 0,
     classesMissed: 0,
-    dailyPracticeLog: {
-      "2020-04-11": {
-        type: strings.Memorization,
-      },
-      "2020-04-12": {
-        type: strings.Revision,
-      },
-      "2020-04-13": {
-        type: strings.Reading,
-      }
-    }
+    dailyPracticeLog: {}
   };
 
   //-------------- Component lifecycle methods -----------------------------------
@@ -815,32 +805,35 @@ class StudentMainScreen extends QcParentScreen {
 
   renderAssignmentsSectionHeader(label, iconName, desc) {
     return (
-      <View style={{
-        marginLeft: screenWidth * 0.017,
-        paddingTop: screenHeight * 0.005,
-        paddingBottom: screenHeight * 0.01
-      }}>
       <View
         style={{
-          alignItems: "center",
-          flexDirection: "row",
+          marginLeft: screenWidth * 0.017,
+          paddingTop: screenHeight * 0.005,
+          paddingBottom: screenHeight * 0.01
         }}
       >
-        <Icon
-          name={iconName}
-          type="material-community"
-          color={colors.darkGrey}
-        />
-        <Text
-          style={[
-            { marginLeft: screenWidth * 0.017 },
-            fontStyles.mainTextStyleDarkGrey
-          ]}
+        <View
+          style={{
+            alignItems: "center",
+            flexDirection: 'row'
+          }}
         >
-          {label ? label.toUpperCase() : strings.Assignment}
-        </Text>
+          <Icon
+            name={iconName}
+            type="material-community"
+            color={colors.darkGrey}
+          />
+          <Text
+            style={[
+              { marginLeft: screenWidth * 0.017 },
+              fontStyles.mainTextStyleDarkGrey
+            ]}
+          >
+            {label ? label.toUpperCase() : strings.Assignment}
+          </Text>
+        </View>
+        {desc && <Text style={fontStyles.smallTextStyleDarkGrey}>{desc}</Text>}
       </View>
-      {desc && <Text style={fontStyles.smallTextStyleDarkGrey}>{desc}</Text>}</View>
     );
   }
 
@@ -1204,7 +1197,7 @@ class StudentMainScreen extends QcParentScreen {
           {this.renderTopView()}
           {this.renderAssignmentsSectionHeader(
             strings.DailyPracticeLog,
-            'book-open-outline',
+            'calendar-check-outline',
             strings.DailyPracticeLogDec
           )}
 
