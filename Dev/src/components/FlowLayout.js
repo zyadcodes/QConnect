@@ -354,7 +354,7 @@ export default class FlowLayout extends Component {
                   style={[
                     styles.textInputStyle,
                     {
-                      minWidth: this.state.newImprovementText.length * 4 + 80
+                      minWidth: this.state.newImprovementText.length * 4 + 80,
                     }
                   ]}
                   value={this.state.newImprovementText}

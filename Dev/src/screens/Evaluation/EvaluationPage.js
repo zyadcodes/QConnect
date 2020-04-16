@@ -61,7 +61,8 @@ export class EvaluationPage extends QcParentScreen {
     studentObject: "",
     isPlaying: "Stopped",
     currentPosition: "0:00",
-    audioFile: -1
+    audioFile: -1,
+    notesHeight: 30,
   };
 
   componentWillUnmount() {
@@ -386,7 +387,7 @@ export class EvaluationPage extends QcParentScreen {
               <TextInput
                 style={styles.notesStyle}
                 multiline={true}
-                height={screenHeight * 0.15}
+                height={this.state.notesHeight}
                 onChangeText={teacherNotes =>
                   this.setState({
                     notes: teacherNotes
@@ -399,6 +400,12 @@ export class EvaluationPage extends QcParentScreen {
                 placeholderColor={colors.black}
                 editable={!readOnly}
                 value={notes}
+                onFocus={() =>
+                  this.setState({ notesHeight: screenHeight * 0.10 })
+                }
+                onEndEditing={() =>
+                  this.setState({ notesHeight: 30 })
+                }
               />
 
               {/**
