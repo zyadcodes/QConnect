@@ -285,6 +285,7 @@ export default class FlowLayout extends Component {
                           newImprovementText: ""
                         });
                         this.setState({ isNewAddition: true });
+                        this.props.onImprovementsCustomized(dataValue);
                       }}
                     />
                   ) : (
@@ -426,8 +427,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginRight: 0.024 * screenWidth,
-	marginTop: 0.015 * screenHeight,
-	paddingHorizontal: 2
+    marginTop: 0.015 * screenHeight,
+    paddingHorizontal: 2
   },
   corner: {
     borderColor: colors.grey,

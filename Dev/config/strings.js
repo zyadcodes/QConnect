@@ -17,7 +17,7 @@ export default {
   AssignmentGraded: "Assignment Graded",
   YourAssignmentHasBeenGraded: "Your assignment has been graded",
   SomethingWentWrong: "Bummer. Something went wrong. Please try again. If the problem persists, please report it to quranconnect@outlook.com",
-
+  Retry: "Check again",
   //--------------------- Student Main Screen ---------------------
   TotalAssignments: "Total assignments completed",
   Ready: "READY",
@@ -255,6 +255,8 @@ export default {
 
   //----------------------Error string codes: used to indicate errors in string params -----------
   titleNotPassed: "no_title_code_500",
+  Offline: "Oops, your connection seems off...",
+  OfflineDesc: "Keep calm, read some Quran, and try again.",
 
   //---------------------------Place Holder Text For Teacher Name, PhoneNumber, and Email---------------------------
   namePlaceHolder: "Name",

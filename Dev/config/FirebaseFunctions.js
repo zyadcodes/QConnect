@@ -82,6 +82,22 @@ export default class FirebaseFunctions {
     await this.auth.signOut();
   }
 
+  static async saveTeacherCustomImprovementTags(
+    teacherID,
+    evaluationImprovementTags
+  ) {
+    try {
+      console.log(JSON.stringify(evaluationImprovementTags));
+      let res = await this.updateTeacherObject(teacherID, {
+        evaluationImprovementTags
+      });
+      console.log("done: " + res);
+    } catch (err) {
+      this.logEvent("SAVE_CUSTOM_IMPROVEMENT_TAGS_FAILED", { err });
+      console.log("err: " + JSON.stringify(err.toString()));
+    }
+  }
+
   //This function will take in an ID of a teacher and return that teacher object.
   //Will return -1 if the document does not exist
   static async getTeacherByID(ID) {
@@ -566,7 +582,6 @@ export default class FirebaseFunctions {
 
       //send notification
       currentClass.teachers.forEach(async teacherID => {
-
         //todo: this may end up too noisy.
         // once we implement in-app feed, consider show this there instead.
         this.functions.httpsCallable("sendNotification")({

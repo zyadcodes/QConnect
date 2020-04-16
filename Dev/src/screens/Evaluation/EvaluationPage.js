@@ -62,7 +62,7 @@ export class EvaluationPage extends QcParentScreen {
     isPlaying: "Stopped",
     currentPosition: "0:00",
     audioFile: -1,
-    notesHeight: 30,
+    notesHeight: 30
   };
 
   componentWillUnmount() {
@@ -401,11 +401,9 @@ export class EvaluationPage extends QcParentScreen {
                 editable={!readOnly}
                 value={notes}
                 onFocus={() =>
-                  this.setState({ notesHeight: screenHeight * 0.10 })
+                  this.setState({ notesHeight: screenHeight * 0.1 })
                 }
-                onEndEditing={() =>
-                  this.setState({ notesHeight: 30 })
-                }
+                onEndEditing={() => this.setState({ notesHeight: 30 })}
               />
 
               {/**
@@ -430,9 +428,16 @@ export class EvaluationPage extends QcParentScreen {
                 }
                 title="Improvement Areas"
                 readOnly={readOnly}
-                onSelectionChanged={improvementAreas =>
-                  this.setState({ improvementAreas: improvementAreas })
-                }
+                onSelectionChanged={improvementAreas => {
+                  this.setState({ improvementAreas });
+                }}
+                onImprovementsCustomized={(newAreas) => {
+                  console.log("improvementAreas: " + newAreas)
+                  FirebaseFunctions.saveTeacherCustomImprovementTags(
+                    this.props.navigation.state.params.userID,
+                    newAreas
+                  );
+                }}
               />
             </View>
           </View>
