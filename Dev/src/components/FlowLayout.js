@@ -86,26 +86,25 @@ class FlowView extends Component {
             }
           }}
         >
-
           <View
             style={[
               styles.corner,
               {
-				flexDirection: "row",
+                flexDirection: "row",
                 backgroundColor: this.props.backgroundColor
                   ? this.props.backgroundColor
                   : this._backgoundColor()
               }
             ]}
           >
-		  <Icon
-            name="tag"
-			size={15}
-			containerStyle={{paddingRight: 5}}
-			style={{paddingRight: 5}}
-            type="simple-line-icon"
-            color={colors.darkGrey}
-          />
+            <Icon
+              name="tag"
+              size={15}
+              containerStyle={{ paddingRight: 5 }}
+              style={{ paddingRight: 5 }}
+              type="simple-line-icon"
+              color={colors.darkGrey}
+            />
 
             <Text
               style={[
@@ -163,7 +162,7 @@ export default class FlowLayout extends Component {
           ? new Array(this.props.dataValue.length).fill(false)
           : new Array(this.props.initialSelectedValues.length).fill(true),
       isBadgeVisible: false,
-      isNewAddition: false,
+      isNewAddition: true,
       newImprovementText: ""
     };
   }
@@ -266,7 +265,12 @@ export default class FlowLayout extends Component {
                             this.state.newImprovementText.length * 4 + 80
                         }
                       ]}
-                      value={this.state.newImprovementText}
+                      placeholder={strings.OtherArea}
+                      value={
+                        this.state.newImprovementText.length > 0
+                          ? this.state.newImprovementText
+                          : undefined
+                      }
                       autoCorrect={false}
                       onChangeText={text => {
                         this.setState({ newImprovementText: text });
@@ -344,14 +348,46 @@ export default class FlowLayout extends Component {
           })}
           {//Only shows the ellipses if this is not read only
           !this.props.readOnly ? (
-            <FlowView
-              text={strings.Ellipses}
-              backgroundColor={colors.primaryLight}
-              onClick={() => {
-                this.openCustomImprovements();
-                this.setState({ isNewAddition: true });
-              }}
-            />
+            <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+              {this.state.isNewAddition === true ? (
+                <TextInput
+                  style={[
+                    styles.textInputStyle,
+                    {
+                      minWidth: this.state.newImprovementText.length * 4 + 80
+                    }
+                  ]}
+                  value={this.state.newImprovementText}
+                  placeholder={strings.OtherArea}
+                  value={this.state.newImprovementText}
+                  autoCorrect={false}
+                  onChangeText={text => {
+                    this.setState({ newImprovementText: text });
+                  }}
+                  onEndEditing={() => {
+                    this.state.newImprovementText
+                      ? dataValue.push(this.state.newImprovementText)
+                      : {};
+                    this.setState({
+                      dataValue,
+                      isNewAddition: false,
+                      newImprovementText: ""
+                    });
+                    this.setState({ isNewAddition: true });
+                  }}
+                />
+              ) : (
+                <View />
+              )}
+              <FlowView
+                text={strings.Ellipses}
+                backgroundColor={colors.primaryLight}
+                onClick={() => {
+                  this.openCustomImprovements();
+                  this.setState({ isNewAddition: true });
+                }}
+              />
+            </View>
           ) : (
             <View />
           )}
@@ -381,17 +417,17 @@ const styles = StyleSheet.create({
   },
   textInputStyle: {
     backgroundColor: colors.lightGrey,
-    textAlign: "center",
     alignItems: "center",
     justifyContent: "center",
     borderColor: colors.grey,
     borderWidth: 1 / PixelRatio.get(),
     borderRadius: 5,
-    height: screenHeight * 0.065,
+    height: 30,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 0.024 * screenWidth,
-    marginTop: 0.015 * screenHeight
+	marginTop: 0.015 * screenHeight,
+	paddingHorizontal: 2
   },
   corner: {
     borderColor: colors.grey,

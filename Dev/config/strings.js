@@ -84,6 +84,7 @@ export default {
   Play: "Play",
   FailedToPlayAudioFile: "Failed to play student recording. We know it is a bummer. Please try again later.",
   FailedToRecordAudio: "Failed to record the audio. We know it is a bummer. Please try again later.",
+  OtherArea: "Other...",
   //--------------------- First Run Screen ---------------------
   IAmATeacher: "I am a teacher",
   IAmAStudent: "I am a student",
@@ -91,6 +92,7 @@ export default {
   IncorrectInfo: "Incorrect username or password",
   CreateAccount: "Create Account",
   ForgotPasswordQuestion: "Forgot Password?",
+
 
   //--------------------- Teacher Welcome Screen ---------------------
   YourProfileHasBeenSaved: "Your profile has been saved",
