@@ -1,8 +1,8 @@
 // ------- FlowLayout: Sorts items in a way similar to Android's FlowLayout ------
 // items flowing through the row and then overflowing down to next columns ------
 //--------------------------------------------------------------------------------
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   StyleSheet,
   PixelRatio,
@@ -10,15 +10,16 @@ import {
   View,
   TouchableOpacity,
   Modal,
-  TextInput
-} from "react-native";
-import colors from "config/colors";
-import strings from "config/strings";
-import QcActionButton from "./QcActionButton";
-import { Badge } from "react-native-elements";
-import fontStyles from "config/fontStyles";
-import { screenHeight, screenWidth } from "config/dimensions";
-import { Icon } from "react-native-elements";
+  TextInput,
+} from 'react-native';
+import colors from 'config/colors';
+import strings from 'config/strings';
+import QcActionButton from './QcActionButton';
+import { Badge } from 'react-native-elements';
+import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
+import { Icon } from 'react-native-elements';
+import _ from 'lodash';
 
 class FlowView extends Component {
   static propTypes = {
@@ -27,27 +28,27 @@ class FlowView extends Component {
     text: PropTypes.string,
     isSelected: PropTypes.bool,
     onClick: PropTypes.func,
-    readOnly: PropTypes.bool
+    readOnly: PropTypes.bool,
   };
 
   static defaultProps = {
     backgroundColors: [colors.lightGrey, colors.primaryLight],
     textColors: [colors.darkGrey, colors.primaryDark],
     isSelected: false,
-    readOnly: false
+    readOnly: false,
   };
 
   constructor(props) {
     super(props);
 
     this.state = {
-      isSelected: this.props.isSelected
+      isSelected: this.props.isSelected,
     };
   }
 
   setSelected(bool) {
     this.setState({
-      isSelected: bool
+      isSelected: bool,
     });
   }
 
@@ -90,11 +91,11 @@ class FlowView extends Component {
             style={[
               styles.corner,
               {
-                flexDirection: "row",
+                flexDirection: 'row',
                 backgroundColor: this.props.backgroundColor
                   ? this.props.backgroundColor
-                  : this._backgoundColor()
-              }
+                  : this._backgoundColor(),
+              },
             ]}
           >
             <Icon
@@ -109,7 +110,7 @@ class FlowView extends Component {
             <Text
               style={[
                 fontStyles.mainTextStyleBlack,
-                { textAlign: "center", color: this._textColor() }
+                { textAlign: 'center', color: this._textColor() },
               ]}
             >
               {this.props.text}
@@ -122,10 +123,10 @@ class FlowView extends Component {
                 width: 0.03 * screenHeight,
                 height: 0.03 * screenHeight,
                 borderRadius: 0.015 * screenHeight,
-                backgroundColor: colors.red
+                backgroundColor: colors.red,
               }}
               textStyle={styles.minusText}
-              containerStyle={{ position: "absolute", top: 2, right: 2 }}
+              containerStyle={{ position: 'absolute', top: 2, right: 2 }}
             />
           ) : (
             <View />
@@ -143,32 +144,44 @@ export default class FlowLayout extends Component {
     title: PropTypes.string,
     multiselect: PropTypes.bool,
     onSelectionChanged: PropTypes.func.isRequired,
-    readOnly: PropTypes.bool
+    readOnly: PropTypes.bool,
+    selectedByDefault: PropTypes.bool,
   };
   static defaultProps = {
     style: {},
     dataValue: [],
     multiselect: true,
     title: strings.ImprovementAreas,
-    readOnly: false
+    readOnly: false,
+    selectedByDefault: false
   };
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false,
       dataValue: this.props.dataValue,
-      selectedState:
-        this.props.initialSelectedValues.length === 0
-          ? new Array(this.props.dataValue.length).fill(false)
-          : new Array(this.props.initialSelectedValues.length).fill(true),
+      selectedState: new Array(this.props.dataValue.length).fill(
+        this.props.selectedByDefault === true
+      ),
       isBadgeVisible: false,
       isNewAddition: true,
-      newImprovementText: ""
+      newImprovementText: ''
     };
   }
 
   componentDidMount() {
     this.change();
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    //if improvement areas have changed from the calling screen, let's reflect that here.
+    //this is a quick way to check if the arrays have the same content
+    if (!_.isEmpty(_.xor(props.dataValue, state.dataValue))) {
+      return {
+        dataValue: props.dataValue
+      };
+    }
+    return null;
   }
 
   change() {
@@ -193,7 +206,7 @@ export default class FlowLayout extends Component {
   resetData() {
     this.setState(
       {
-        selectedState: new Array(this.state.dataValue.length).fill(false)
+        selectedState: new Array(this.state.dataValue.length).fill(false),
       },
       () => {
         this.change();
@@ -205,7 +218,7 @@ export default class FlowLayout extends Component {
   }
 
   render() {
-    const { dataValue } = this.state;
+    const { dataValue, selectedState } = this.state;
     //Creates a new array of data values that exclude the ellipses & instead
     //include an addition symbol to add new improvments
     return (
@@ -219,9 +232,9 @@ export default class FlowLayout extends Component {
             <View
               style={{
                 flex: 1,
-                flexDirection: "row",
-                flexWrap: "wrap",
-                justifyContent: "center"
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'center'
               }}
             >
               {this.state.isBadgeVisible === true
@@ -235,6 +248,7 @@ export default class FlowLayout extends Component {
                           readOnly={false}
                           onClick={() => {
                             dataValue.splice(position, 1);
+                            selectedState.splice(position, 1);
                             this.setState({ dataValue });
                           }}
                         />
@@ -255,15 +269,15 @@ export default class FlowLayout extends Component {
                     );
                   })}
               {this.state.isBadgeVisible === true ? (
-                <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                   {this.state.isNewAddition === true ? (
                     <TextInput
                       style={[
                         styles.textInputStyle,
                         {
                           minWidth:
-                            this.state.newImprovementText.length * 4 + 80
-                        }
+                            this.state.newImprovementText.length * 4 + 80,
+                        },
                       ]}
                       placeholder={strings.OtherArea}
                       value={
@@ -276,15 +290,15 @@ export default class FlowLayout extends Component {
                         this.setState({ newImprovementText: text });
                       }}
                       onEndEditing={() => {
-                        this.state.newImprovementText
-                          ? dataValue.push(this.state.newImprovementText)
-                          : {};
+                        if (this.state.newImprovementText) {
+                          dataValue.push(this.state.newImprovementText);
+                          selectedState.push(false);
+                        }
                         this.setState({
                           dataValue,
-                          isNewAddition: false,
-                          newImprovementText: ""
+                          isNewAddition: true,
+                          newImprovementText: ''
                         });
-                        this.setState({ isNewAddition: true });
                         this.props.onImprovementsCustomized(dataValue);
                       }}
                     />
@@ -303,7 +317,7 @@ export default class FlowLayout extends Component {
               )}
             </View>
             <View
-              style={{ justifyContent: "space-between", flexDirection: "row" }}
+              style={{ justifyContent: 'space-between', flexDirection: 'row' }}
             >
               <QcActionButton
                 text={strings.Done}
@@ -349,14 +363,14 @@ export default class FlowLayout extends Component {
           })}
           {//Only shows the ellipses if this is not read only
           !this.props.readOnly ? (
-            <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
               {this.state.isNewAddition === true ? (
                 <TextInput
                   style={[
                     styles.textInputStyle,
                     {
-                      minWidth: this.state.newImprovementText.length * 4 + 80,
-                    }
+                      minWidth: this.state.newImprovementText.length * 4 + 80
+                    },
                   ]}
                   value={this.state.newImprovementText}
                   placeholder={strings.OtherArea}
@@ -371,10 +385,10 @@ export default class FlowLayout extends Component {
                       : {};
                     this.setState({
                       dataValue,
-                      isNewAddition: false,
-                      newImprovementText: ""
+                      isNewAddition: true,
+                      newImprovementText: ''
                     });
-                    this.setState({ isNewAddition: true });
+                    this.props.onImprovementsCustomized(dataValue);
                   }}
                 />
               ) : (
@@ -400,10 +414,10 @@ export default class FlowLayout extends Component {
 const styles = StyleSheet.create({
   modalStyle: {
     backgroundColor: colors.white,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     height: screenHeight * 0.707,
-    flexDirection: "column",
+    flexDirection: 'column',
     marginTop: screenHeight * 0.15,
     borderWidth: 1,
     borderRadius: 2,
@@ -414,45 +428,45 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 3,
     elevation: 0.003 * screenHeight,
-    marginHorizontal: screenWidth * 0.05
+    marginHorizontal: screenWidth * 0.05,
   },
   textInputStyle: {
     backgroundColor: colors.lightGrey,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     borderColor: colors.grey,
     borderWidth: 1 / PixelRatio.get(),
     borderRadius: 5,
     height: 30,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginRight: 0.024 * screenWidth,
     marginTop: 0.015 * screenHeight,
-    paddingHorizontal: 2
+    paddingHorizontal: 2,
   },
   corner: {
     borderColor: colors.grey,
     borderWidth: 1 / PixelRatio.get(),
     borderRadius: 5,
     height: 30,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingHorizontal: 0.024 * screenWidth,
     marginRight: 0.024 * screenWidth,
-    marginTop: 0.015 * screenHeight
+    marginTop: 0.015 * screenHeight,
   },
   container: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     marginHorizontal: 0.036 * screenWidth,
-    width: screenWidth * 0.9
+    width: screenWidth * 0.9,
   },
   text: {
     fontSize: 16,
-    textAlign: "center"
+    textAlign: 'center'
   },
   minusText: {
     fontSize: 10,
-    color: colors.white
-  }
+    color: colors.white,
+  },
 });

@@ -23,11 +23,7 @@ export default class App extends Component {
   };
 
   // Subscribe
-  unsubscribe = NetInfo.addEventListener(state => {
-    console.log('Connection type', state.type);
-    console.log('Is connected?', state.isConnected);
-    this.setState({ isOnline: state.isConnected });
-  });
+  unsubscribe = () => {};
 
   async componentWillUnmount() {
     this.unsubscribe();
@@ -41,6 +37,10 @@ export default class App extends Component {
     } else {
       this.setState({ requestingPermissions: false });
     }
+
+    this.unsubscribe = NetInfo.addEventListener(state => {
+      this.setState({ isOnline: state.isConnected });
+    });
   }
 
   //get called if device connectivity state changes (online/offline)
