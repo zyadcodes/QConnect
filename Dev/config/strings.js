@@ -41,7 +41,7 @@ export default {
   DailyPracticeLog: "Daily Practice Log",
   DailyPracticeLogDec: "Log and share your daily Quran practice",
   DailyPracticeLogDecTeacherView: "Student's log of daily assignment practice",
-  PracticeLogNotification: "was working on his assignment",
+  PracticeLogNotification: "was working on the assignment",
 
 
   //--------------------- Forgot Password Screen-------------------
@@ -222,6 +222,7 @@ export default {
 
   //--------------------- Class Header Navigator ---------------------
   StudentProfile: "Student Profile",
+  GoToProfile: "Go to profile",
   EditClass: "Edit Class",
   StudentEvaluation: "Student Evaluation",
   Completed: "Completed",

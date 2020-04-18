@@ -1,19 +1,19 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 import {
   TouchableOpacity,
   Text,
   StyleSheet,
   Image,
   View,
-  FlatList,
-} from 'react-native';
-import colors from 'config/colors';
-import FontLoadingComponent from './FontLoadingComponent';
-import fontStyles from 'config/fontStyles';
-import { screenHeight, screenWidth } from 'config/dimensions';
-import { ListItem } from 'react-native-elements';
-import strings from "config/strings";
+  FlatList
+} from "react-native";
+import colors from "config/colors";
+import FontLoadingComponent from "./FontLoadingComponent";
+import fontStyles from "config/fontStyles";
+import { screenHeight, screenWidth } from "config/dimensions";
+import { ListItem } from "react-native-elements";
+import strings from 'config/strings';
 
 /*Class represents the student card that will show up in the list of students
  *from the teachers view.
@@ -32,26 +32,26 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
       onPress,
       comp,
       compOnPress,
-      status,
+      status
     } = this.props;
 
     let actionItemConfig = [];
     actionItemConfig[strings.Memorization] = {
       color: colors.darkestGrey,
-      iconName: "open-book",
-      iconType: "entypo"
+      iconName: 'open-book',
+      iconType: 'entypo'
     };
 
     actionItemConfig[strings.Reading] = {
       color: colors.magenta,
-      iconName: "book-open",
-      iconType: "feather"
+      iconName: 'book-open',
+      iconType: 'feather'
     };
 
     actionItemConfig[strings.Revision] = {
       color: colors.blue,
-      iconName: "reminder",
-      iconType: "material-community"
+      iconName: 'reminder',
+      iconType: 'material-community'
     };
 
     return (
@@ -66,21 +66,48 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
           onPress();
         }}
       >
-        <Image style={styles.profilePicStyle} source={profilePic} />
+        <View
+          style={{
+            alignItems: "flex-start",
+            alignSelf: "flex-start",
+            justifyContent: "flex-start",
+            marginTop: 10,
+          }}
+        >
+          <Image style={styles.profilePicStyle} source={profilePic} />
+        </View>
         <View style={styles.infoStyle}>
-          <View
-            style={{
-              marginBottom: screenWidth * 0.004,
-              marginLeft: 18,
+          <ListItem
+            key={studentName}
+            title={studentName}
+            titleStyle={[fontStyles.bigTextStyleDarkestGrey, { flex: 1 }]}
+            chevron
+            containerStyle={{
+              flex: 1,
+              borderRadius: 2,
+              marginLeft: 3,
+              width: screenWidth * 0.8
             }}
-          >
+            contentContainerStyle={{
+              flex: 2
+            }}
+            //convert status to shorter strings to fit in the single line ListItem
+            rightTitle={strings.GoToProfile}
+            rightTitleStyle={[
+              fontStyles.smallTextStylePrimaryDark,
+              { width: 85 }
+            ]}
+            onPress={() => this.props.onAssignmentPress(index)}
+          />
+          {currentAssignments && currentAssignments.length > 0 && (
             <Text
-              numberOfLines={1}
-              style={[fontStyles.bigTextStyleDarkestGrey, { marginTop: 5 }]}
+              style={[fontStyles.mainTextStyleDarkGrey, { paddingLeft: 18, paddingBottom: 10 }]}
             >
-              {studentName}
+              {currentAssignments.length === 1
+                ? strings.CurrentAssignment + ":"
+                : strings.CurrentAssignments + ":"}
             </Text>
-          </View>
+          )}
           {currentAssignments &&
             currentAssignments.map((assignment, index) => (
               <ListItem
@@ -88,36 +115,36 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
                 title={assignment.name}
                 titleStyle={[
                   fontStyles.mediumTextStyleDarkestGrey,
-                  { flex: 1 }
+                  { flex: 1 },
                 ]}
                 subtitle={
-                  assignment.isReadyEnum === 'NEED_HELP'
+                  assignment.isReadyEnum === "NEED_HELP"
                     ? strings.NeedHelpNonCap
-                    : assignment.isReadyEnum === 'READY'
+                    : assignment.isReadyEnum === "READY"
                     ? strings.ReadyNonCap
-                    : assignment.isReadyEnum === 'WORKING_ON_IT'
+                    : assignment.isReadyEnum === "WORKING_ON_IT"
                     ? strings.WorkingOnItNonCap
                     : strings.NotStartedNonCap
                 }
                 subtitleStyle={[
                   fontStyles.smallTextStyleDarkGrey,
-                  assignment.isReadyEnum === 'NEED_HELP'
+                  assignment.isReadyEnum === "NEED_HELP"
                     ? { color: colors.darkRed }
-                    : assignment.isReadyEnum === 'READY'
+                    : assignment.isReadyEnum === "READY"
                     ? { color: colors.darkGreen }
-                    : assignment.isReadyEnum === 'WORKING_ON_IT'
+                    : assignment.isReadyEnum === "WORKING_ON_IT"
                     ? { color: colors.primaryDark }
-                    : {},
+                    : {}
                 ]}
                 chevron
                 containerStyle={{
                   flex: 1,
                   borderRadius: 2,
                   marginLeft: 3,
-                  width: screenWidth * 0.8,
+                  width: screenWidth * 0.8
                 }}
                 contentContainerStyle={{
-                  flex: 2,
+                  flex: 2
                 }}
                 //convert status to shorter strings to fit in the single line ListItem
                 rightTitle={
@@ -127,15 +154,16 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
                     ? strings.Review
                     : assignment.type === strings.Reading
                     ? strings.Read
-                    : ""
+                    : ''
                 }
                 rightTitleStyle={[
                   fontStyles.smallTextStyleDarkGrey,
-                  { width: 65 },
+                  { width: 65 }
                 ]}
                 bottomDivider={
                   index !== currentAssignments.length - 1 ? true : false
                 }
+                topDivider={index === 0? true: false}
                 onPress={() => this.props.onAssignmentPress(index)}
               />
             ))}
@@ -144,10 +172,10 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
           <View style={styles.removeStudentStyle}>
             <TouchableOpacity
               style={{
-                justifyContent: "center",
-                alignItems: "center",
+                justifyContent: 'center',
+                alignItems: 'center',
                 height: screenHeight * 0.2,
-                width: screenWidth * 0.2
+                width: screenWidth * 0.2,
               }}
               onPress={() => {
                 compOnPress();
@@ -173,36 +201,36 @@ StudentMultiAssignmentsCard.propTypes = {
   studentName: PropTypes.string.isRequired,
   profilePic: PropTypes.number.isRequired,
   currentAssignments: PropTypes.array,
-  onPress: PropTypes.func.isRequired,
+  onPress: PropTypes.func.isRequired
 };
 
 //Styles that control the look of the card, and everything within it
 const styles = StyleSheet.create({
   cardStyle: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginRight: screenWidth * 0.017,
     minHeight: screenHeight * 0.112,
-    alignItems: 'center',
+    alignItems: "center",
     marginLeft: screenWidth * 0.017,
     marginTop: screenHeight * 0.01,
-    fontFamily: 'Montserrat-Regular'
+    fontFamily: "Montserrat-Regular"
   },
   removeStudentStyle: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     marginRight: screenWidth * 0.05,
-    flex: 1
+    flex: 1,
   },
   infoStyle: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    fontFamily: 'Montserrat-Regular',
-    flex: 4
+    flexDirection: "column",
+    justifyContent: "center",
+    fontFamily: "Montserrat-Regular",
+    flex: 4,
   },
   profilePicStyle: {
     width: screenWidth * 0.12,
     height: screenWidth * 0.12,
     borderRadius: screenWidth * 0.06,
-    marginLeft: screenWidth * 0.05
-  },
+    marginLeft: screenWidth * 0.05,
+  }
 });
