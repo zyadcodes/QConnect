@@ -14,6 +14,7 @@ import fontStyles from "config/fontStyles";
 import { screenHeight, screenWidth } from "config/dimensions";
 import { ListItem } from "react-native-elements";
 import strings from 'config/strings';
+import { Avatar } from "react-native-elements";
 
 /*Class represents the student card that will show up in the list of students
  *from the teachers view.
@@ -35,23 +36,26 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
       status
     } = this.props;
 
-    let actionItemConfig = [];
-    actionItemConfig[strings.Memorization] = {
-      color: colors.darkestGrey,
-      iconName: 'open-book',
-      iconType: 'entypo'
+    let assignmentTypes = [];
+    assignmentTypes[strings.Memorization] = {
+      color: colors.darkGreen,
+      iconName: 'brain',
+      iconType: 'material-community',
+      name: strings.Memorize
     };
 
-    actionItemConfig[strings.Reading] = {
+    assignmentTypes[strings.Reading] = {
       color: colors.magenta,
       iconName: 'book-open',
-      iconType: 'feather'
+      iconType: 'feather',
+      name: strings.Read
     };
 
-    actionItemConfig[strings.Revision] = {
+    assignmentTypes[strings.Revision] = {
       color: colors.blue,
-      iconName: 'reminder',
-      iconType: 'material-community'
+      iconName: 'redo',
+      iconType: 'evilicon',
+      name: strings.Review
     };
 
     return (
@@ -97,16 +101,27 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
               fontStyles.smallTextStylePrimaryDark,
               { width: 85 }
             ]}
-            onPress={() => this.props.onAssignmentPress(index)}
           />
           {currentAssignments && currentAssignments.length > 0 && (
-            <Text
-              style={[fontStyles.mainTextStyleDarkGrey, { paddingLeft: 18, paddingBottom: 10 }]}
+            <View
+              style={{
+                flexDirection: 'row',
+                paddingLeft: 18,
+                paddingBottom: 10,
+              }}
             >
-              {currentAssignments.length === 1
-                ? strings.CurrentAssignment + ":"
-                : strings.CurrentAssignments + ":"}
-            </Text>
+              {/* <Icon
+                name="book-open-outline"
+                type="material-community"
+                size={15}
+                color={colors.darkGrey}
+              /> */}
+              <Text style={[fontStyles.mainTextStyleDarkGrey]}>
+                {currentAssignments.length === 1
+                  ? strings.CurrentAssignment + ":"
+                  : strings.CurrentAssignments + ":"}
+              </Text>
+            </View>
           )}
           {currentAssignments &&
             currentAssignments.map((assignment, index) => (
@@ -146,24 +161,45 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
                 contentContainerStyle={{
                   flex: 2
                 }}
-                //convert status to shorter strings to fit in the single line ListItem
-                rightTitle={
-                  assignment.type === strings.Memorization
-                    ? strings.Memorize
-                    : assignment.type === strings.Revision
-                    ? strings.Review
-                    : assignment.type === strings.Reading
-                    ? strings.Read
-                    : ''
+                leftElement={
+                  <View
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: 40,
+                    }}
+                  >
+                    <Avatar
+                      rounded
+                      icon={{
+                        name: assignmentTypes[assignment.type].iconName,
+                        type: assignmentTypes[assignment.type].iconType,
+                        color: colors.white,
+                      }}
+                      overlayContainerStyle={{
+                        backgroundColor: assignmentTypes[assignment.type].color,
+                      }}
+                    />
+                    <Text
+                      style={[
+                        fontStyles.smallestTextStyleDarkGrey,
+                        { width: 45, textAlign: "center", paddingTop: 3 },
+                      ]}
+                    >
+                      {assignmentTypes[assignment.type].name}
+                    </Text>
+                  </View>
                 }
+                //convert status to shorter strings to fit in the single line ListItem
+                rightTitle="Open"
                 rightTitleStyle={[
-                  fontStyles.smallTextStyleDarkGrey,
-                  { width: 65 }
+                  fontStyles.smallestTextStyleDarkGrey,
+                  { width: 25 }
                 ]}
                 bottomDivider={
                   index !== currentAssignments.length - 1 ? true : false
                 }
-                topDivider={index === 0? true: false}
+                topDivider={index === 0 ? true : false}
                 onPress={() => this.props.onAssignmentPress(index)}
               />
             ))}
