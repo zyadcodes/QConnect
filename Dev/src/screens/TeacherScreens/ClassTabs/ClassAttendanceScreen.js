@@ -41,8 +41,11 @@ export class ClassAttendanceScreen extends QcParentScreen {
       day: "2-digit"
     }),
     classes: "",
-    isOpen: false
+    isOpen: false,
+    classInviteCode: ""
   };
+
+      
 
   //Sets the screen name for firebase analytics and gets the initial students
   async componentDidMount() {
@@ -62,6 +65,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
       selectedDate,
       currentClassID
     );
+    const classInviteCode = currentClass.classInviteCode;
 
     this.setState({
       isLoading: false,
@@ -69,6 +73,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
       currentClassID,
       students,
       absentStudents,
+      classInviteCode,
       userID,
       teacher,
       classes
@@ -108,6 +113,102 @@ export class ClassAttendanceScreen extends QcParentScreen {
     );
   }
 
+  /**
+   * ------Overview:
+   * The Page will display a message that will redirect the teacher to the
+   * add student page if the class does not contain any students.
+   *
+   * ------Components:
+   * We are using a touchable opacity with a large message telling the
+   * teacher that there are no students in the class, and a smaller message
+   * telling the teacher to click the text to add students.
+   *
+   * ------Conditonal:
+   * The conditional will check to see if the length of the students array is 0,
+   * if it is, then there is no students in the class, and thus the class is empty,
+   * triggering the message. */
+  renderEmptyClass() {
+    const {
+      teacher,
+      userID,
+      currentClass,
+      currentClassID,
+      classInviteCode,
+    } = this.state;
+
+    return (
+      <SideMenu
+        isOpen={this.state.isOpen}
+        menu={
+          <LeftNavPane
+            teacher={teacher}
+            userID={userID}
+            classes={this.state.classes}
+            edgeHitWidth={0}
+            navigation={this.props.navigation}
+          />
+        }
+      >
+        <QCView style={screenStyle.container}>
+          <View style={{ flex: 1, width: screenWidth }}>
+            <TopBanner
+              LeftIconName="navicon"
+              LeftOnPress={() => this.setState({ isOpen: true })}
+              isEditingTitle={this.state.isEditing}
+              isEditingPicture={this.state.isEditing}
+              Title={currentClass.name}
+              onTitleChanged={newTitle => this.updateTitle(newTitle)}
+              onEditingPicture={newPicture => this.updatePicture(newPicture)}
+              profileImageID={currentClass.classImageID}
+              RightIconName="edit"
+              RightOnPress={() =>
+                this.props.navigation.push("ShareClassCode", {
+                  classInviteCode,
+                  currentClassID,
+                  userID: this.state.userID,
+                  currentClass,
+                })
+              }
+            />
+          </View>
+          <View
+            style={{
+              flex: 2,
+              justifyContent: "flex-start",
+              alignItems: "center",
+              alignSelf: "center"
+            }}
+          >
+            <Text style={fontStyles.hugeTextStylePrimaryDark}>
+              {strings.EmptyClass}
+            </Text>
+
+            <Image
+              source={require("assets/emptyStateIdeas/welcome-girl.png")}
+              style={{
+                width: 0.73 * screenWidth,
+                height: 0.22 * screenHeight,
+                resizeMode: "contain"
+              }}
+            />
+
+            <QcActionButton
+              text={strings.AddStudentButton}
+              onPress={() =>
+                this.props.navigation.push("ShareClassCode", {
+                  classInviteCode,
+                  currentClassID,
+                  userID: this.state.userID,
+                  currentClass,
+                })
+              }
+            />
+          </View>
+        </QCView>
+      </SideMenu>
+    );
+  }
+
   render() {
     if (this.state.isLoading === true) {
       return (
@@ -120,63 +221,9 @@ export class ClassAttendanceScreen extends QcParentScreen {
     }
 
     //If the class doesn't currently have students
+    console.log(JSON.stringify(this.state.currentClass.students));
     if (this.state.currentClass.students.length === 0) {
-      return (
-        <SideMenu
-          isOpen={this.state.isOpen}
-          menu={
-            <LeftNavPane
-              teacher={this.state.teacher}
-              userID={this.state.userID}
-              classes={this.state.classes}
-              edgeHitWidth={0}
-              navigation={this.props.navigation}
-            />
-          }
-        >
-          <QCView style={screenStyle.container}>
-            <View style={{ flex: 1, width: screenWidth }}>
-              <TopBanner
-                LeftIconName="navicon"
-                LeftOnPress={() => this.setState({ isOpen: true })}
-                Title={this.state.currentClass.name}
-              />
-            </View>
-            <View
-              style={{
-                flex: 2,
-                justifyContent: "flex-start",
-                alignItems: "center",
-                alignSelf: "center"
-              }}
-            >
-              <Image
-                source={require("assets/emptyStateIdeas/ghostGif.gif")}
-                style={{
-                  width: 0.73 * screenWidth,
-                  height: 0.22 * screenHeight,
-                  resizeMode: "contain"
-                }}
-              />
-
-              <Text style={fontStyles.hugeTextStylePrimaryDark}>
-                {strings.EmptyClass}{" "}
-              </Text>
-
-              <QcActionButton
-                text={strings.AddStudentButton}
-                onPress={() =>
-                  this.props.navigation.push("ShareClassCode", {
-                    currentClassID: this.state.currentClassID,
-                    userID: this.state.userID,
-                    currentClass: this.state.currentClass
-                  })
-                }
-              />
-            </View>
-          </QCView>
-        </SideMenu>
-      );
+      return this.renderEmptyClass();
     }
 
     return (
