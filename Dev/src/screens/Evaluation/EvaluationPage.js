@@ -133,13 +133,11 @@ export class EvaluationPage extends QcParentScreen {
       const teacher = await FirebaseFunctions.getTeacherByID(
         this.props.navigation.state.params.userID
       );
-      console.log("teacher: " + JSON.stringify(teacher));
       //if teacher has customized areas, let's load theirs.
       if (
         teacher.evaluationImprovementTags &&
         teacher.evaluationImprovementTags.length > 0
       ) {
-        console.log("custom");
         improvementAreas = teacher.evaluationImprovementTags;
       }
     }

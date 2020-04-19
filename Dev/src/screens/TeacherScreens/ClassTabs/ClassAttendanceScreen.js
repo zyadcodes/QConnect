@@ -9,7 +9,6 @@ import {
   Alert
 } from "react-native";
 import Toast, { DURATION } from "react-native-easy-toast";
-import DatePicker from "react-native-datepicker";
 import StudentCard from "components/StudentCard";
 import QcActionButton from "components/QcActionButton";
 import colors from "config/colors";
@@ -25,6 +24,9 @@ import QCView from "components/QCView";
 import screenStyle from "config/screenStyle";
 import { screenHeight, screenWidth } from "config/dimensions";
 import fontStyles from "config/fontStyles";
+import DailyTracker from "components/DailyTracker";
+import moment from "moment";
+import { Icon } from "react-native-elements";
 
 export class ClassAttendanceScreen extends QcParentScreen {
   state = {
@@ -45,8 +47,6 @@ export class ClassAttendanceScreen extends QcParentScreen {
     classInviteCode: ""
   };
 
-      
-
   //Sets the screen name for firebase analytics and gets the initial students
   async componentDidMount() {
     FirebaseFunctions.setCurrentScreen(
@@ -61,10 +61,12 @@ export class ClassAttendanceScreen extends QcParentScreen {
     const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
     const { students } = currentClass;
     const { selectedDate } = this.state;
-    const absentStudents = await FirebaseFunctions.getAbsentStudentsByDate(
+
+    const {absentStudents, presentStudents} = await FirebaseFunctions.getStudentsAttendanceStatusByDate(
       selectedDate,
       currentClassID
     );
+
     const classInviteCode = currentClass.classInviteCode;
 
     this.setState({
@@ -73,6 +75,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
       currentClassID,
       students,
       absentStudents,
+      presentStudents,
       classInviteCode,
       userID,
       teacher,
@@ -221,11 +224,19 @@ export class ClassAttendanceScreen extends QcParentScreen {
     }
 
     //If the class doesn't currently have students
-    console.log(JSON.stringify(this.state.currentClass.students));
     if (this.state.currentClass.students.length === 0) {
       return this.renderEmptyClass();
     }
 
+
+    let dateString = moment(this.state.selectedDate).format("YYYY-MM-DD");
+    let absentCnt = this.state.absentStudents
+      ? this.state.absentStudents.length
+      : 0;
+    let presentCnt = this.state.presentStudents
+      ? this.state.presentStudents.length
+      : 0;
+      
     return (
       //The scroll view will have at the top a date picker which will be defaulted to the current
       //date and it will allow the user to view previous day's attendance along with setting
@@ -252,31 +263,24 @@ export class ClassAttendanceScreen extends QcParentScreen {
               />
             </View>
             <View style={styles.saveAttendance}>
-              <DatePicker
-                date={this.state.selectedDate}
-                confirmBtnText={strings.Confirm}
-                cancelBtnText={strings.Cancel}
-                format="MM/DD/YYYY"
-                duration={300}
-                style={{ paddingLeft: 0.036 * screenWidth }}
-                maxDate={new Date().toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit"
-                })}
-                customStyles={{ dateInput: { borderColor: colors.lightGrey } }}
-                onDateChange={async date => {
+              <DailyTracker
+                data={{ [dateString]: { type: 'attendance' } }}
+                selectedDate={dateString}
+                trackingMode={false}
+                onDatePressed={async date => {
+                  let formattedDate = moment(date.dateString).format("MM/DD/YYYY");
                   this.setState({
-                    selectedDate: date,
+                    selectedDate: formattedDate,
                     isLoading: true
                   });
-                  const absentStudents = await FirebaseFunctions.getAbsentStudentsByDate(
-                    date,
+                  const {absentStudents, presentStudents} = await FirebaseFunctions.getStudentsAttendanceStatusByDate(
+                    formattedDate,
                     this.state.currentClassID
                   );
                   this.setState({
                     isLoading: false,
-                    absentStudents
+                    absentStudents,
+                    presentStudents
                   });
                 }}
               />
@@ -287,12 +291,87 @@ export class ClassAttendanceScreen extends QcParentScreen {
                 screen={this.name}
               />
             </View>
+            {(absentCnt !== 0 || presentCnt !== 0) && (<View
+                style={{
+                  paddingTop: 10,
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start'
+                }}
+              >
+                <Text
+                  style={[
+                    fontStyles.mainTextStyleDarkGrey,
+                    { paddingLeft: 5, paddingRight: 10 }
+                  ]}
+                >
+                  {strings.Attendance}:
+                </Text>
+
+                <View style={styles.present}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "flex-start"
+                    }}
+                  >
+                    <Icon
+                      name="account-check-outline"
+                      type="material-community"
+                      color={colors.darkGreen}
+                      size={20}
+                    />
+                    <Text
+                      style={[
+                        fontStyles.mainTextStyleDarkGreen,
+                        { paddingLeft: 5, paddingRight: 10 }
+                      ]}
+                    >
+                      {strings.Attended}
+                    </Text>
+                    <Text style={[fontStyles.mainTextStyleDarkGreen]}>
+                      {presentCnt}
+                    </Text>
+                  </View>
+                </View>
+                <View style={{ width: 20 }} />
+                <View style={styles.absent}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "flex-start"
+                    }}
+                  >
+                    <Icon
+                      name="account-remove-outline"
+                      type="material-community"
+                      color={colors.darkRed}
+                      size={20}
+                    />
+                    <Text
+                      style={[
+                        fontStyles.mainTextStyleDarkRed,
+                        { paddingLeft: 5, paddingRight: 10 }
+                      ]}
+                    >
+                      {strings.Missed}
+                    </Text>
+                    <Text style={[fontStyles.mainTextStyleDarkRed]}>
+                      {absentCnt}
+                    </Text>
+                  </View>
+                </View>
+              </View>)
+            }
+            
             {this.state.students.map(student => {
               let color = this.state.absentStudents.includes(student.ID)
                 ? colors.red
                 : colors.green;
-              let attendanceCaption = this.state.absentStudents.includes(student.ID)
-                ? strings.Absent : strings.Present;
+              let attendanceCaption = this.state.absentStudents.includes(
+                student.ID
+              )
+                ? strings.Absent
+                : strings.Present;
               return (
                 <StudentCard
                   key={student.ID}
@@ -320,13 +399,18 @@ const styles = StyleSheet.create({
     flex: 1
   },
   saveAttendance: {
-    flexDirection: "row",
-    paddingVertical: 0.03 * screenHeight,
     alignItems: "center",
-    justifyContent: "space-between",
     backgroundColor: colors.lightGrey,
-    flex: 1
-  }
+    flex: 1,
+    width: screenWidth,
+  },
+  present: {
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+  absent: {
+    paddingRight: 5,
+  },
 });
 
 export default ClassAttendanceScreen;
