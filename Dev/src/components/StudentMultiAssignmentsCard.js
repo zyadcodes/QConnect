@@ -71,14 +71,24 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
         }}
       >
         <View
-          style={{
-            alignItems: "flex-start",
-            alignSelf: "flex-start",
-            justifyContent: "flex-start",
-            marginTop: 10,
-          }}
+          style={[
+            {
+              marginTop: 10,
+            },
+            currentAssignments && currentAssignments.length > 0
+              ? {
+                  alignItems: "flex-start",
+                  alignSelf: "flex-start",
+                  justifyContent: 'flex-start'
+                }
+              : {
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  alignSelf: 'center'
+                },
+          ]}
         >
-          <Image style={styles.profilePicStyle} source={profilePic} />
+          <Image source={profilePic} style={styles.profilePicStyle} />
         </View>
         <View style={styles.infoStyle}>
           <ListItem
@@ -123,7 +133,7 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
               </Text>
             </View>
           )}
-          {currentAssignments &&
+          {currentAssignments && currentAssignments.length > 0 ? (
             currentAssignments.map((assignment, index) => (
               <ListItem
                 key={assignment.name}
@@ -202,7 +212,28 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
                 topDivider={index === 0 ? true : false}
                 onPress={() => this.props.onAssignmentPress(index)}
               />
-            ))}
+            ))
+          ) : (
+            <ListItem
+              key="NewAssignment"
+              // title={strings.NeedAssignment}
+              // titleStyle={[fontStyles.mediumTextStyleDarkestGrey, { flex: 1 }]}
+              chevron
+              containerStyle={{
+                flex: 1,
+                borderRadius: 2,
+                marginLeft: 3,
+                width: screenWidth * 0.8
+              }}
+              contentContainerStyle={{
+                flex: 2
+              }}
+              //convert status to shorter strings to fit in the single line ListItem
+              title={strings.AddAssignment}
+              titleStyle={fontStyles.smallTextStyleDarkGrey}
+              onPress={() => this.props.onAssignmentPress(-1)}
+            />
+          )}
         </View>
         {comp ? (
           <View style={styles.removeStudentStyle}>

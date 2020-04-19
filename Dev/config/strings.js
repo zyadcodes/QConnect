@@ -120,7 +120,9 @@ export default {
     "It's hard to call a class without a name. Please enter a valid class name",
 
   //--------------------- Student Profile Screen ---------------------
-  WordsPerAssignment: 'Trends',
+  WordsPerAssignment: "Words memorized over time",
+  OpenAssignment: "Open assignment",
+  CompleteAssignment: "Complete assignment",
   Attended: "Attended",
   Missed: "Missed",
   ReadQuranMotivation: "Feeling bored?",
@@ -129,7 +131,7 @@ export default {
   OpenMushaf: "Open the Mus'haf to read it",
   EvaluateAssignment: "Evaluate this assignment",
   EditAssignment: "Edit assignment",
-  AddAssignment: "Add assignment",
+  AddAssignment: "Add a new assignment",
   ChangeStatus: "CHANGE STATUS",
   Assignments: "Assignments",
   Memorize: "Memorize",

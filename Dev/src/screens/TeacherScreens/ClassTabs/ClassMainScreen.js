@@ -411,20 +411,36 @@ export class ClassMainScreen extends QcParentScreen {
                 })
               }
               onAssignmentPress={assignmentIndex => {
-                let assignment = item.currentAssignments[assignmentIndex];
-                this.props.navigation.push('MushafAssignmentScreen', {
-                  isTeacher: true,
-                  assignToAllClass: false,
-                  userID: userID,
-                  classID: currentClassID,
-                  studentID: item.ID,
-                  currentClass,
-                  assignmentLocation: assignment.location,
-                  assignmentType: assignment.type,
-                  assignmentName: assignment.name,
-                  assignmentIndex: assignmentIndex,
-                  imageID: item.profileImageID,
-                });
+                if (assignmentIndex < 0) {
+                  //go to the screen to a new assignment
+                  this.props.navigation.push('MushafAssignmentScreen', {
+                    newAssignment: true,
+                    popOnClose: true,
+                    isTeacher: true,
+                    assignToAllClass: false,
+                    userID: userID,
+                    classID: currentClass,
+                    studentID: item.ID,
+                    currentClass,
+                    imageID: item.profileImageID
+                  });
+                } else {
+                  //go to the passed in assignment
+                  let assignment = item.currentAssignments[assignmentIndex];
+                  this.props.navigation.push('MushafAssignmentScreen', {
+                    isTeacher: true,
+                    assignToAllClass: false,
+                    userID: userID,
+                    classID: currentClassID,
+                    studentID: item.ID,
+                    currentClass,
+                    assignmentLocation: assignment.location,
+                    assignmentType: assignment.type,
+                    assignmentName: assignment.name,
+                    assignmentIndex: assignmentIndex,
+                    imageID: item.profileImageID,
+                  });
+                }
               }}
               background={sectionBackgroundColor}
               comp={

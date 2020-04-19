@@ -12,9 +12,10 @@ import {
   ScrollView,
   Modal,
   Alert,
-  Animated
+  Animated,
+  TouchableHighlight
 } from "react-native";
-import { Icon } from "react-native-elements";
+import { Icon, Avatar } from "react-native-elements";
 import studentImages from "config/studentImages";
 import { Rating } from "react-native-elements";
 import colors from "config/colors";
@@ -803,6 +804,48 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 
+  renderStatusAvatars() {
+    let statusAvatarsConfig = [];
+    statusAvatarsConfig[strings.Ready] = {
+      name: strings.Ready,
+      iconName: "check",
+      iconType: "material-community",
+      innerColor: colors.darkRed,
+      OuterColor: colors.red,
+    };
+
+   // let
+    return (
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: 40,
+        }}
+      >
+        {/* <Avatar
+          rounded
+          icon={{
+            name: statusAvatarsConfig[assignment.type].iconName,
+            type: statusAvatarsConfig[assignment.type].iconType,
+            color: colors.white,
+          }}
+          overlayContainerStyle={{
+            backgroundColor: statusAvatarsConfig[assignment.type].color,
+          }}
+        />
+        <Text
+          style={[
+            fontStyles.smallestTextStyleDarkGrey,
+            { width: 45, textAlign: 'center', paddingTop: 3 },
+          ]}
+        >
+          {statusAvatarsConfig[assignment.type].name}
+        </Text> */}
+      </View>
+    );
+  }
+
   renderAssignmentsSectionHeader(label, iconName, desc) {
     return (
       <View
@@ -925,17 +968,62 @@ class StudentMainScreen extends QcParentScreen {
             </View>
           </TouchableOpacity>
 
-          <CustomPicker
-            options={customPickerOptions}
-            onValueChange={value =>
-              this.updateCurrentAssignmentStatus(value.value, index)
-            }
-            getLabel={item => item.label}
-            optionTemplate={settings =>
-              this.getCustomPickerOptionTemplate(settings)
-            }
-            fieldTemplate={() => this.getCustomPickerTemplate(item)}
-          />
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ flex: 1 }} />
+          </View>
+          <View>
+            <View
+              style={{
+                flexDirection: "row",
+                height: 50,
+                justifyContent: "center",
+                alignContent: "center",
+                flex: 1
+              }}
+            >
+              <TouchableHighlight
+                style={styles.cardButtonStyle}
+                onPress={() => {
+                  //if the current staus is not started and the student open the mus7af @ assignment
+                  // change status to "working on it"
+                  //if (item.isReadyEnum === "NOT_STARTED") {
+                  this.updateCurrentAssignmentStatus("WORKING_ON_IT", index);
+                  //}
+
+                  this.props.navigation.push("MushafReadingScreen", {
+                    popOnClose: true,
+                    isTeacher: false,
+                    assignToAllClass: false,
+                    userID: this.props.navigation.state.params.userID,
+                    classID: currentClassID,
+                    studentID: userID,
+                    currentClass: studentClassInfo,
+                    assignmentLocation: item.location,
+                    assignmentType: item.type,
+                    assignmentName: item.name,
+                    assignmentIndex: index,
+                    imageID: studentClassInfo.profileImageID,
+                  });
+                }}
+              >
+                <Text style={fontStyles.mainTextStylePrimaryDark}>
+                  {strings.OpenAssignment}
+                </Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                style={styles.cardButtonStyle}
+                onPress={() =>
+                  this.updateCurrentAssignmentStatus(strings.Ready, index)
+                }
+              >
+                <View style={{ paddingLeft: screenWidth * 0.02, opacity: 1 }}>
+                  <Text style={fontStyles.mainTextStylePrimaryDark}>
+                    {strings.CompleteAssignment}
+                  </Text>
+                </View>
+              </TouchableHighlight>
+            </View>
+          </View>
         </View>
         {this.renderAudioRecordingUI(index)}
       </View>
@@ -1283,7 +1371,7 @@ const styles = StyleSheet.create({
   },
   currentAssignment: {
     justifyContent: 'flex-end',
-    height: 150,
+    minHeight: 150,
     borderWidth: 0.5,
     borderColor: colors.grey,
     marginBottom: 5
@@ -1347,7 +1435,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: screenHeight * 0.0045,
     elevation: screenHeight * 0.003
-  }
+  },
+  cardButtonStyle: {
+    flex: 1,
+    marginHorizontal: 5,
+    backgroundColor: 'rgba(255,255,255,0.8)',
+    height: 40,
+    borderRadius: 2,
+    justifyContent: "center",
+    alignItems: "center"
+  },
 });
 
 export default StudentMainScreen;
