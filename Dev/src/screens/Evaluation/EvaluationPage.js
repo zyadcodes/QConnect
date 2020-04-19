@@ -379,6 +379,7 @@ export class EvaluationPage extends QcParentScreen {
                     reciter={classStudent.name}
                     title={assignmentName}
                     audioFilePath={this.state.audioFile}
+                    hideCancel={true}
                     sent={
                       this.state.audioSentDateTime
                         ? this.state.audioSentDateTime

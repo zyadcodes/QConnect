@@ -729,7 +729,7 @@ class StudentMainScreen extends QcParentScreen {
     Animated.parallel([
       Animated.timing(translateY, {
         toValue: 0,
-        duration: 1000,
+        duration: 500,
         useNativeDriver: true,
       }),
       Animated.timing(opacity, { toValue: 1, useNativeDriver: true }),
@@ -740,7 +740,7 @@ class StudentMainScreen extends QcParentScreen {
     Animated.parallel([
       Animated.timing(translateY, {
         toValue: -35,
-        duration: 300,
+        duration: 200,
         useNativeDriver: true,
       }),
       Animated.timing(opacity, { toValue: 0, useNativeDriver: true }),
@@ -785,6 +785,7 @@ class StudentMainScreen extends QcParentScreen {
             title={studentClassInfo.currentAssignments[assignmentIndex].name}
             isRecordMode={true}
             showSendCancel={true}
+            hideCancel={false}
             onClose={() => {
               this.animateHideAudioUI(assignmentIndex);
             }}

@@ -13,6 +13,7 @@ const pixelRatio = PixelRatio.get();
 
 const bodyFontSmaller = bodyFont * 0.875;
 const bodyFontBigger = bodyFont * 1.25;
+const bodyFontBig = bodyFont * 1.15;
 const bodyFontEvenBigger = bodyFontBigger * 1.25;
 const titleFont = bodyFont * 1.875;
 
@@ -38,6 +39,12 @@ export default StyleSheet.create({
   mainTextStylePrimaryDark: {
     fontFamily,
     fontSize: bodyFont,
+    color: colors.primaryDark
+  },
+
+  captionTextStylePrimaryDark: {
+    fontFamily,
+    fontSize: bodyFontBig,
     color: colors.primaryDark
   },
 
