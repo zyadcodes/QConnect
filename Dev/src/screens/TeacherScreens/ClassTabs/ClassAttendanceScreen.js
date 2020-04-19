@@ -1,4 +1,5 @@
-import React from "react";
+import React from 'react';
+import _ from 'lodash';
 import {
   ScrollView,
   StyleSheet,
@@ -6,52 +7,53 @@ import {
   Image,
   Text,
   Dimensions,
-  Alert
-} from "react-native";
-import Toast, { DURATION } from "react-native-easy-toast";
-import StudentCard from "components/StudentCard";
-import QcActionButton from "components/QcActionButton";
-import colors from "config/colors";
-import studentImages from "config/studentImages";
-import strings from "config/strings";
-import QcParentScreen from "screens/QcParentScreen";
-import FirebaseFunctions from "config/FirebaseFunctions";
-import LoadingSpinner from "components/LoadingSpinner";
-import LeftNavPane from "../LeftNavPane";
-import TopBanner from "components/TopBanner";
-import SideMenu from "react-native-side-menu";
-import QCView from "components/QCView";
-import screenStyle from "config/screenStyle";
-import { screenHeight, screenWidth } from "config/dimensions";
-import fontStyles from "config/fontStyles";
-import DailyTracker from "components/DailyTracker";
-import moment from "moment";
-import { Icon } from "react-native-elements";
+  Alert,
+} from 'react-native';
+import Toast, { DURATION } from 'react-native-easy-toast';
+import StudentCard from 'components/StudentCard';
+import QcActionButton from 'components/QcActionButton';
+import colors from 'config/colors';
+import studentImages from 'config/studentImages';
+import strings from 'config/strings';
+import QcParentScreen from 'screens/QcParentScreen';
+import FirebaseFunctions from 'config/FirebaseFunctions';
+import LoadingSpinner from 'components/LoadingSpinner';
+import LeftNavPane from '../LeftNavPane';
+import TopBanner from 'components/TopBanner';
+import SideMenu from 'react-native-side-menu';
+import QCView from 'components/QCView';
+import screenStyle from 'config/screenStyle';
+import { screenHeight, screenWidth } from 'config/dimensions';
+import fontStyles from 'config/fontStyles';
+import DailyTracker from 'components/DailyTracker';
+import moment from 'moment';
+import { Icon } from 'react-native-elements';
 
 export class ClassAttendanceScreen extends QcParentScreen {
   state = {
     isLoading: true,
-    currentClass: "",
-    currentClassID: "",
-    students: "",
-    userID: "",
-    teacher: "",
+    currentClass: '',
+    currentClassID: '',
+    students: '',
+    userID: '',
+    teacher: '',
     absentStudents: [],
-    selectedDate: new Date().toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit"
+    selectedDate: new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
     }),
-    classes: "",
+    classes: '',
     isOpen: false,
-    classInviteCode: ""
+    classInviteCode: '',
+    attendanceHistory: {}
   };
 
   //Sets the screen name for firebase analytics and gets the initial students
   async componentDidMount() {
     FirebaseFunctions.setCurrentScreen(
-      "Class Attendance Screen",
-      "ClassAttendanceScreen"
+      'Class Attendance Screen',
+      'ClassAttendanceScreen'
     );
 
     const { userID } = this.props.navigation.state.params;
@@ -62,12 +64,16 @@ export class ClassAttendanceScreen extends QcParentScreen {
     const { students } = currentClass;
     const { selectedDate } = this.state;
 
-    const {absentStudents, presentStudents} = await FirebaseFunctions.getStudentsAttendanceStatusByDate(
+    const {
+      absentStudents,
+      presentStudents,
+    } = await FirebaseFunctions.getStudentsAttendanceStatusByDate(
       selectedDate,
       currentClassID
     );
 
     const classInviteCode = currentClass.classInviteCode;
+    this.populateClassAttendanceHistory(students);
 
     this.setState({
       isLoading: false,
@@ -79,8 +85,46 @@ export class ClassAttendanceScreen extends QcParentScreen {
       classInviteCode,
       userID,
       teacher,
-      classes
+      classes,
     });
+  }
+
+  async populateClassAttendanceHistory(students) {
+    if (students === undefined || students.length === 0) {
+      return;
+    }
+
+    let attendanceHistory = {};
+    students.forEach(student => {
+      if (!attendanceHistory) {
+        return;
+      }
+      Object.entries(student.attendanceHistory).map(entry => {
+        //first element of the entry is the key, which is for us holds the date.
+        //second element is whether the student is present;
+        let date = entry[0];
+        let isPresent = entry[1];
+
+        //format string in the format expected by the date picker
+        let dateString = moment(date).format('YYYY-MM-DD');
+        let path = dateString;
+        if (isPresent) {
+          path += ".present";
+        } else {
+          path += ".absent";
+        }
+
+        _.update(attendanceHistory, path, function(n) {
+          if (n === undefined) {
+            return 1;
+          } else {
+            return n + 1;
+          }
+        });
+      });
+    });
+
+    this.setState({ attendanceHistory });
   }
 
   //This method will set the student selected property to the opposite of whatever it was
@@ -95,16 +139,78 @@ export class ClassAttendanceScreen extends QcParentScreen {
       tmp.push(id);
     }
 
+    let presentStudents = this.state.students
+      .filter(student => !this.state.absentStudents.includes(student.ID))
+      .map(student => student.ID);
+
     this.setState({
       absentStudents: tmp,
-      selectedDate: this.state.selectedDate
+      presentStudents,
+      selectedDate: this.state.selectedDate,
     });
   }
 
+  updateHistoryItem(attendanceHistory, selectedDate) {
+    let updatedHistory = attendanceHistory;
+    let dateString = moment(selectedDate).format('YYYY-MM-DD');
+    let path = dateString;
+    if (isPresent) {
+      path += ".present";
+    } else {
+      path += ".absent";
+    }
+
+    _.update(updatedHistory, path, function(n) {
+      if (n === undefined) {
+        return 1;
+      } else {
+        return n + 1;
+      }
+    });
+    return updatedHistory;
+  }
   //fetches the current selected students and the current selected date and adds the current
   //attendance to the database
   async saveAttendance() {
-    let { absentStudents, selectedDate, currentClassID } = this.state;
+    let { absentStudents, selectedDate, students, currentClassID } = this.state;
+    let updatedHistory = this.state.attendanceHistory;
+
+    let date = selectedDate;
+    let presentStudents = students
+      .filter(student => !absentStudents.includes(student.ID))
+      .map(student => student.ID);
+
+    //format string in the format expected by the date picker
+    let dateString = moment(date).format('YYYY-MM-DD');
+    let path = dateString;
+
+    if (absentStudents.length > 0) {
+      path = dateString;
+      path += ".absent";
+
+      _.update(updatedHistory, path, function(n) {
+        if (n === undefined) {
+          return 1;
+        } else {
+          return n + 1;
+        }
+      });
+    }
+
+    if (presentStudents.length !== 0) {
+      path = dateString;
+      path += ".present";
+      _.update(updatedHistory, path, function(n) {
+        if (n === undefined) {
+          return 1;
+        } else {
+          return n + 1;
+        }
+      });
+    }
+
+    this.setState({ attendanceHistory: updatedHistory, presentStudents });
+
     await FirebaseFunctions.saveAttendanceForClass(
       absentStudents,
       selectedDate,
@@ -165,7 +271,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
               profileImageID={currentClass.classImageID}
               RightIconName="edit"
               RightOnPress={() =>
-                this.props.navigation.push("ShareClassCode", {
+                this.props.navigation.push('ShareClassCode', {
                   classInviteCode,
                   currentClassID,
                   userID: this.state.userID,
@@ -177,9 +283,9 @@ export class ClassAttendanceScreen extends QcParentScreen {
           <View
             style={{
               flex: 2,
-              justifyContent: "flex-start",
-              alignItems: "center",
-              alignSelf: "center"
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              alignSelf: 'center'
             }}
           >
             <Text style={fontStyles.hugeTextStylePrimaryDark}>
@@ -187,18 +293,18 @@ export class ClassAttendanceScreen extends QcParentScreen {
             </Text>
 
             <Image
-              source={require("assets/emptyStateIdeas/welcome-girl.png")}
+              source={require('assets/emptyStateIdeas/welcome-girl.png')}
               style={{
                 width: 0.73 * screenWidth,
                 height: 0.22 * screenHeight,
-                resizeMode: "contain"
+                resizeMode: 'contain'
               }}
             />
 
             <QcActionButton
               text={strings.AddStudentButton}
               onPress={() =>
-                this.props.navigation.push("ShareClassCode", {
+                this.props.navigation.push('ShareClassCode', {
                   classInviteCode,
                   currentClassID,
                   userID: this.state.userID,
@@ -216,7 +322,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
     if (this.state.isLoading === true) {
       return (
         <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
         >
           <LoadingSpinner isVisible={true} />
         </View>
@@ -228,15 +334,14 @@ export class ClassAttendanceScreen extends QcParentScreen {
       return this.renderEmptyClass();
     }
 
-
-    let dateString = moment(this.state.selectedDate).format("YYYY-MM-DD");
+    let dateString = moment(this.state.selectedDate).format('YYYY-MM-DD');
     let absentCnt = this.state.absentStudents
       ? this.state.absentStudents.length
       : 0;
     let presentCnt = this.state.presentStudents
       ? this.state.presentStudents.length
       : 0;
-      
+
     return (
       //The scroll view will have at the top a date picker which will be defaulted to the current
       //date and it will allow the user to view previous day's attendance along with setting
@@ -264,23 +369,31 @@ export class ClassAttendanceScreen extends QcParentScreen {
             </View>
             <View style={styles.saveAttendance}>
               <DailyTracker
-                data={{ [dateString]: { type: 'attendance' } }}
+                data={{
+                  [dateString]: { type: 'attendance' },
+                  ...this.state.attendanceHistory,
+                }}
                 selectedDate={dateString}
                 trackingMode={false}
                 onDatePressed={async date => {
-                  let formattedDate = moment(date.dateString).format("MM/DD/YYYY");
+                  let formattedDate = moment(date.dateString).format(
+                    "MM/DD/YYYY"
+                  );
                   this.setState({
                     selectedDate: formattedDate,
-                    isLoading: true
+                    isLoading: true,
                   });
-                  const {absentStudents, presentStudents} = await FirebaseFunctions.getStudentsAttendanceStatusByDate(
+                  const {
+                    absentStudents,
+                    presentStudents,
+                  } = await FirebaseFunctions.getStudentsAttendanceStatusByDate(
                     formattedDate,
                     this.state.currentClassID
                   );
                   this.setState({
                     isLoading: false,
                     absentStudents,
-                    presentStudents
+                    presentStudents,
                   });
                 }}
               />
@@ -291,7 +404,8 @@ export class ClassAttendanceScreen extends QcParentScreen {
                 screen={this.name}
               />
             </View>
-            {(absentCnt !== 0 || presentCnt !== 0) && (<View
+            {(absentCnt !== 0 || presentCnt !== 0) && (
+              <View
                 style={{
                   paddingTop: 10,
                   flexDirection: 'row',
@@ -301,7 +415,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
                 <Text
                   style={[
                     fontStyles.mainTextStyleDarkGrey,
-                    { paddingLeft: 5, paddingRight: 10 }
+                    { paddingLeft: 5, paddingRight: 10 },
                   ]}
                 >
                   {strings.Attendance}:
@@ -310,8 +424,8 @@ export class ClassAttendanceScreen extends QcParentScreen {
                 <View style={styles.present}>
                   <View
                     style={{
-                      flexDirection: "row",
-                      justifyContent: "flex-start"
+                      flexDirection: 'row',
+                      justifyContent: 'flex-start'
                     }}
                   >
                     <Icon
@@ -323,10 +437,10 @@ export class ClassAttendanceScreen extends QcParentScreen {
                     <Text
                       style={[
                         fontStyles.mainTextStyleDarkGreen,
-                        { paddingLeft: 5, paddingRight: 10 }
+                        { paddingLeft: 5, paddingRight: 10 },
                       ]}
                     >
-                      {strings.Attended}
+                      {strings.Present}
                     </Text>
                     <Text style={[fontStyles.mainTextStyleDarkGreen]}>
                       {presentCnt}
@@ -337,8 +451,8 @@ export class ClassAttendanceScreen extends QcParentScreen {
                 <View style={styles.absent}>
                   <View
                     style={{
-                      flexDirection: "row",
-                      justifyContent: "flex-start"
+                      flexDirection: 'row',
+                      justifyContent: 'flex-start'
                     }}
                   >
                     <Icon
@@ -350,19 +464,19 @@ export class ClassAttendanceScreen extends QcParentScreen {
                     <Text
                       style={[
                         fontStyles.mainTextStyleDarkRed,
-                        { paddingLeft: 5, paddingRight: 10 }
+                        { paddingLeft: 5, paddingRight: 10 },
                       ]}
                     >
-                      {strings.Missed}
+                      {strings.Absent}
                     </Text>
                     <Text style={[fontStyles.mainTextStyleDarkRed]}>
                       {absentCnt}
                     </Text>
                   </View>
                 </View>
-              </View>)
-            }
-            
+              </View>
+            )}
+
             {this.state.students.map(student => {
               let color = this.state.absentStudents.includes(student.ID)
                 ? colors.red
@@ -383,7 +497,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
                 />
               );
             })}
-            <Toast position={"center"} ref="toast" />
+            <Toast position={'center'} ref="toast" />
           </ScrollView>
         </QCView>
       </SideMenu>
@@ -394,12 +508,12 @@ export class ClassAttendanceScreen extends QcParentScreen {
 //Styles for the entire container along with the top banner
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "column",
+    flexDirection: 'column',
     backgroundColor: colors.lightGrey,
-    flex: 1
+    flex: 1,
   },
   saveAttendance: {
-    alignItems: "center",
+    alignItems: 'center',
     backgroundColor: colors.lightGrey,
     flex: 1,
     width: screenWidth,

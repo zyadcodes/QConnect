@@ -33,17 +33,47 @@ const DailyTracker = props => {
 
   // Takes practice tracking log and add properties to show on the calendar component
   const initializeDatesFromProps = () => {
+    const check = {
+      key: 'check',
+      color: colors.primaryDark,
+      selectedDotColor: colors.white
+    };
+    const absent = {
+      key: 'absent',
+      color: colors.darkRed,
+      selectedDotColor: colors.darkRed,
+    };
+    const present = {
+      key: 'present',
+      color: colors.darkGreen,
+      selectedDotColor: colors.darkGreen,
+    };
+
     let dates = {};
     if (props.data) {
       Object.entries(props.data).map(entry => {
         //entry: first element is they key, 2nd is the value
+        let dots = [];
+        if (entry[1].present) {
+          dots.push(present);
+        }
+        if (entry[1].absent) {
+          dots.push(absent);
+        }
+        if (!entry[1].present && !entry[1].absent) {
+          dots.push(check);
+        }
+
         dates = {
           ...dates,
           [entry[0]]: {
             ...entry[1],
             marked: true,
             selected: true,
-            selectedColor: colors.green,
+            selectedColor: entry[1].present
+              ? colors.primaryVeryLight
+              : colors.green,
+            dots
           }
         };
       });
@@ -99,7 +129,10 @@ const DailyTracker = props => {
 
   return (
     <View
-      style={[{ justifyContent: 'center', width:"100%" }, expanded? {height: 330} : {height: 100}]}
+      style={[
+        { justifyContent: 'center', width: '100%' },
+        expanded ? { height: 330 } : { height: 100 },
+      ]}
       key={'' + Object.keys(markedDates).length}
     >
       <CalendarProvider
@@ -113,6 +146,7 @@ const DailyTracker = props => {
             markedDates={markedDates}
             onDayPress={onDatePressed}
             theme={getTheme()}
+            markingType={'multi-dot'}
           />
         ) : (
           <WeekCalendar
@@ -121,6 +155,7 @@ const DailyTracker = props => {
             onDayPress={onDatePressed}
             theme={getTheme()}
             current={currentDate}
+            markingType={'multi-dot'}
           />
         )}
       </CalendarProvider>

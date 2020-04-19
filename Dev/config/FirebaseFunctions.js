@@ -91,7 +91,6 @@ export default class FirebaseFunctions {
       let res = await this.updateTeacherObject(teacherID, {
         evaluationImprovementTags
       });
-      console.log("done: " + res);
     } catch (err) {
       this.logEvent("SAVE_CUSTOM_IMPROVEMENT_TAGS_FAILED", { err });
       console.log("err: " + JSON.stringify(err.toString()));
@@ -691,23 +690,25 @@ export default class FirebaseFunctions {
     return 0;
   }
 
-  //This function takes in a date as a parameter and returns an array of students that were absent for this specifc
-  //date. If a particular student does not have an attendance saved for this date, then they will not be added to the
-  //array of absent students. To locate the particular class to return the attendance to, the classID will also be
+  //This function takes in a date as a parameter and returns an array of students that were either present or absent for this specifc
+  //date. To locate the particular class to return the attendance to, the classID will also be
   //a paremeter
-  static async getAbsentStudentsByDate(date, classID) {
+  static async getStudentsAttendanceStatusByDate(date, classID) {
     let absentStudents = [];
+    let presentStudents = [];
     let currentClass = await this.getClassByID(classID);
 
     currentClass.students.forEach(student => {
       let studentAttendanceHistory = student.attendanceHistory;
       if (studentAttendanceHistory[date] === false) {
         absentStudents.push(student.ID);
+      } else if (studentAttendanceHistory[date] === true) {
+        presentStudents.push(student.ID);
       }
     });
     this.logEvent("GET_ATTENDANCE_BY_DATE");
 
-    return absentStudents;
+    return { presentStudents, absentStudents };
   }
 
   //This method will allow a student to join a class. It will take in a student object and a classID.
