@@ -128,6 +128,7 @@ export default {
   ReadQuranMotivation: "Feeling bored?",
   ReadQuranMotivationDesc: "God sent you a beautiful message",
   readInMushaf: "Review assignment",
+  Status:  "Status: ",
   OpenMushaf: "Open the Mus'haf to read it",
   EvaluateAssignment: "Evaluate this assignment",
   EditAssignment: "Edit assignment",
