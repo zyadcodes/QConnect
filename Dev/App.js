@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import MainStackNavigator from "./src/screens/MainStackNavigator";
-import { YellowBox, Alert, Text, View } from "react-native";
+import { YellowBox, Alert, ScrollView, View } from "react-native";
 import NetInfo from '@react-native-community/netinfo';
 import QCView from "components/QCView";
 import screenStyle from "config/screenStyle";
@@ -59,7 +59,9 @@ export default class App extends Component {
 
   renderMainApp() {
     return (
-      <QCView style={screenStyle.container}>
+      <ScrollView contentContainerStyle={{
+        flex: 1,
+    }}>
         {this.state.isOnline ? (
           this.state.requestingPermissions === false ? (
             <MainStackNavigator />
@@ -69,7 +71,7 @@ export default class App extends Component {
         ) : (
           <OfflineEmptyState retry={this.onRetry.bind(this)} />
         )}
-      </QCView>
+      </ScrollView>
     );
   }
   render() {
@@ -78,6 +80,7 @@ export default class App extends Component {
       "componentWillMount",
       "componentWillReceiveProps"
     ]);
+    console.disableYellowBox = true;
 
     try {
       return this.renderMainApp();
