@@ -420,12 +420,41 @@ class MushafAssignmentScreen extends Component {
         imageID: imageID
       });
     } else {
+      //check if the student has the current assignment already
+      let isNewAssignment = this.state.isNewAssignment;
+
+      //if the student doesn't have the assignment that was marked on the page,
+      // treat this as if the teacher wants to assign a new assignment
+      if (!this.studentHasCurrentAssignment(id)) {
+        isNewAssignment = true;
+      }
       this.setState({
         studentID: id,
         assignToAllClass: false,
-        imageID: imageID
+        imageID: imageID,
+        isNewAssignment
       });
     }
+  }
+
+  studentHasCurrentAssignment(studentID) {
+    if (!this.state.currentClass || !this.state.currentClass.students) {
+      return false;
+    }
+
+    let student = this.state.currentClass.students.find(
+      student => student.ID === studentID
+    );
+
+    if (student === undefined || student.currentAssignments === undefined) {
+      return false;
+    }
+
+    return (
+      student.currentAssignments.find(
+        assignment => assignment.name === this.state.assignmentName
+      ) !== undefined
+    );
   }
 
   //==================== end of assignment methods =================================
@@ -667,8 +696,7 @@ class MushafAssignmentScreen extends Component {
       );
     }
 
-    //only show add another assignment if the user is not adding a new assignment already
-    //submission: item.submission,
+    //only show evaluation if we are showing a current assignment (not new) for a particular student
     if (!this.state.assignToAllClass && !this.state.isNewAssignment) {
       res.push(
         <ActionButton.Item
