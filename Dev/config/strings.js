@@ -5,6 +5,9 @@ export default {
   AppTitle: "QuranConnect",
   AppSubTitle: "Serving your passion for the Quran",
 
+  //--------------------- Mushaf Screen -----------------------
+  AssignTo: "Assign to",
+
   //--------------------- Notifications ---------------------
   NeedsHelp: "Needs help",
   StudentUpdate: "Student Update",
@@ -280,5 +283,6 @@ export default {
 
   //---------------------------  Mushaf ---------------------------------------
   InvalidPageNumber:
-    "Invalid page number. Please enter a page between 1 and 604."
+    "Invalid page number. Please enter a page between 1 and 604.",
+
 };

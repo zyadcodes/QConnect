@@ -8,7 +8,6 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Dimensions,
   ImageBackground,
   Image,
 } from 'react-native';
@@ -19,6 +18,7 @@ import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
 import studentImages from 'config/studentImages';
 import classImages from 'config/classImages';
+import strings from "config/strings";
 
 class PageHeader extends FontLoadingComponent {
   state = {
@@ -86,15 +86,23 @@ class PageHeader extends FontLoadingComponent {
           <TouchableOpacity
             style={{
               flex: 1,
-              flexDirection: 'row',
-              height: screenHeight * 0.1,
+              height: screenHeight * 0.2,
               justifyContent: 'flex-start',
               alignItems: 'center'
             }}
             onPress={() => this.onLeftImagePress()}
           >
+            <Text
+              style={[
+                fontStyles.smallTextStylePrimaryDark,
+                { paddingBottom: 2 },
+              ]}
+            >
+              {strings.AssignTo}
+            </Text>
             {leftImage && (
               <Image
+                size={20}
                 style={styles.profilePic}
                 source={leftImage}
                 ResizeMode="contain"
@@ -224,7 +232,8 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.black,
   },
   topLeftView: {
-    flex: 1.5,
+    flex: 2.5,
+    justifyContent: 'center',
     paddingTop: screenHeight * 0.035,
     paddingBottom: screenHeight * 0.001
   },
@@ -232,21 +241,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     alignItems: 'center',
-    flex: 10,
+    flex: 9,
     paddingTop: screenHeight * 0.035,
     paddingBottom: screenHeight * 0.001
   },
   topRightView: {
     flex: 1.5,
     justifyContent: 'center',
+    alignItems: 'center',
     paddingTop: screenHeight * 0.035,
     paddingBottom: screenHeight * 0.001
   },
   profilePic: {
-    width: 0.05 * screenHeight,
-    height: 0.05 * screenHeight,
-    borderRadius: 0.025 * screenHeight,
-    paddingBottom: 0.001 * screenHeight
+    width: 35,
+    height: 35,
+    borderRadius: 18,
+    paddingBottom: 18
   },
 });
 export default PageHeader;
