@@ -432,7 +432,7 @@ export class ClassMainScreen extends QcParentScreen {
                     isTeacher: true,
                     assignToAllClass: false,
                     userID: userID,
-                    classID: currentClass,
+                    classID: currentClassID,
                     studentID: item.ID,
                     currentClass,
                     imageID: item.profileImageID

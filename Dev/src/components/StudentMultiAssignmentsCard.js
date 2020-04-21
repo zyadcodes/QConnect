@@ -149,7 +149,7 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
                     ? strings.ReadyNonCap
                     : assignment.isReadyEnum === "WORKING_ON_IT"
                     ? strings.WorkingOnItNonCap
-                    : strings.NotStartedNonCap
+                    : undefined
                 }
                 subtitleStyle={[
                   fontStyles.smallTextStyleDarkGrey,

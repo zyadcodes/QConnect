@@ -789,7 +789,7 @@ class MushafAssignmentScreen extends Component {
       : assignToAllClass
       ? classImages.images[imageID]
       : studentImages.images[imageID];
-      
+
     const { isLoading } = this.state;
     let actionItems = this.getActionItems();
 
