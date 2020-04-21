@@ -46,7 +46,12 @@ export class ClassAttendanceScreen extends QcParentScreen {
     classes: '',
     isOpen: false,
     classInviteCode: '',
-    attendanceHistory: {}
+    attendanceHistory: {},
+    //passed in as a key to the calendar view
+    // incremented when attendance record is saved to force
+    // calendar to re-render and reflect the newly saved changes
+    // as the view re-renders when its key changes.
+    calendarRefreshCnt: 0
   };
 
   //Sets the screen name for firebase analytics and gets the initial students
@@ -107,6 +112,8 @@ export class ClassAttendanceScreen extends QcParentScreen {
 
         //format string in the format expected by the date picker
         let dateString = moment(date).format('YYYY-MM-DD');
+
+        //build the sub-object path
         let path = dateString;
         if (isPresent) {
           path += ".present";
@@ -150,25 +157,6 @@ export class ClassAttendanceScreen extends QcParentScreen {
     });
   }
 
-  updateHistoryItem(attendanceHistory, selectedDate) {
-    let updatedHistory = attendanceHistory;
-    let dateString = moment(selectedDate).format('YYYY-MM-DD');
-    let path = dateString;
-    if (isPresent) {
-      path += ".present";
-    } else {
-      path += ".absent";
-    }
-
-    _.update(updatedHistory, path, function(n) {
-      if (n === undefined) {
-        return 1;
-      } else {
-        return n + 1;
-      }
-    });
-    return updatedHistory;
-  }
   //fetches the current selected students and the current selected date and adds the current
   //attendance to the database
   async saveAttendance() {
@@ -183,33 +171,25 @@ export class ClassAttendanceScreen extends QcParentScreen {
     //format string in the format expected by the date picker
     let dateString = moment(date).format('YYYY-MM-DD');
     let path = dateString;
+    path += ".absent";
+    _.update(updatedHistory, path, function(n) {
+      return absentStudents.length;
+    });
 
-    if (absentStudents.length > 0) {
-      path = dateString;
-      path += ".absent";
+    //now update the number of present students
+    path = dateString;
+    path += ".present";
+    _.update(updatedHistory, path, function(n) {
+      return presentStudents.length;
+    });
 
-      _.update(updatedHistory, path, function(n) {
-        if (n === undefined) {
-          return 1;
-        } else {
-          return n + 1;
-        }
-      });
-    }
-
-    if (presentStudents.length !== 0) {
-      path = dateString;
-      path += ".present";
-      _.update(updatedHistory, path, function(n) {
-        if (n === undefined) {
-          return 1;
-        } else {
-          return n + 1;
-        }
-      });
-    }
-
-    this.setState({ attendanceHistory: updatedHistory, presentStudents });
+    this.setState(oldState => {
+      return {
+        attendanceHistory: updatedHistory,
+        presentStudents,
+        calendarRefreshCnt: oldState.calendarRefreshCnt + 1,
+      };
+    });
 
     await FirebaseFunctions.saveAttendanceForClass(
       absentStudents,
@@ -367,7 +347,10 @@ export class ClassAttendanceScreen extends QcParentScreen {
                 Title={this.state.currentClass.name}
               />
             </View>
-            <View style={styles.saveAttendance}>
+            <View
+              style={styles.saveAttendance}
+              key={'' + this.state.calendarRefreshCnt}
+            >
               <DailyTracker
                 data={{
                   [dateString]: { type: 'attendance' },

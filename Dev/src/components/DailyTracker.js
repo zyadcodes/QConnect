@@ -54,10 +54,10 @@ const DailyTracker = props => {
       Object.entries(props.data).map(entry => {
         //entry: first element is they key, 2nd is the value
         let dots = [];
-        if (entry[1].present) {
+        if (entry[1].present && entry[1].present > 0) {
           dots.push(present);
         }
-        if (entry[1].absent) {
+        if (entry[1].absent && entry[1].absent > 0) {
           dots.push(absent);
         }
         if (!entry[1].present && !entry[1].absent) {

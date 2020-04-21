@@ -2,8 +2,8 @@
 //library
 import firebase from "react-native-firebase";
 import strings from "./strings";
-import { arrayOf } from "prop-types";
 import _ from 'lodash';
+import moment from 'moment';
 
 export default class FirebaseFunctions {
   //References that'll be used throughout the class's static functions
@@ -87,8 +87,7 @@ export default class FirebaseFunctions {
     evaluationImprovementTags
   ) {
     try {
-      console.log(JSON.stringify(evaluationImprovementTags));
-      let res = await this.updateTeacherObject(teacherID, {
+      await this.updateTeacherObject(teacherID, {
         evaluationImprovementTags
       });
     } catch (err) {
@@ -696,17 +695,43 @@ export default class FirebaseFunctions {
   static async getStudentsAttendanceStatusByDate(date, classID) {
     let absentStudents = [];
     let presentStudents = [];
-    let currentClass = await this.getClassByID(classID);
 
-    currentClass.students.forEach(student => {
-      let studentAttendanceHistory = student.attendanceHistory;
-      if (studentAttendanceHistory[date] === false) {
-        absentStudents.push(student.ID);
-      } else if (studentAttendanceHistory[date] === true) {
-        presentStudents.push(student.ID);
-      }
-    });
-    this.logEvent("GET_ATTENDANCE_BY_DATE");
+    try {
+      let currentClass = await this.getClassByID(classID);
+
+      //we are converting date to a single format so we can do string compare
+      // to check if the the attendance record of that date exists.
+      const formattedDate = moment(date).format("YYYY-MM-DD");
+
+      //iterate through the students and get their attendance
+      // record for the passed in date
+      currentClass.students.forEach(student => {
+        let studentAttendanceHistory = student.attendanceHistory;
+
+        //record format is [date, true/false], ex: ["30/03/2010", false]
+        let record = Object.entries(studentAttendanceHistory).find(entry => {
+
+          //check if the dates are equal (first convert them into a single date format then compare)
+          let dateRec = moment(entry[0]).format('YYYY-MM-DD');
+          return dateRec === formattedDate;
+        });
+
+        //2nd property of entry returned by Object.values is the value
+        //this will be true (for present) or false (for absent)
+        let attendanceValue = record[1];
+
+        if (attendanceValue === false) {
+          absentStudents.push(student.ID);
+        } else if (attendanceValue === true) {
+          presentStudents.push(student.ID);
+        }
+      });
+
+      this.logEvent("GET_ATTENDANCE_BY_DATE");
+    } catch (err) {
+      console.log("GET_ATTENDANCE_BY_DATE FAILED: " + JSON.stringify(err));
+      this.logEvent("GET_ATTENDANCE_BY_DATE_ERR", { err });
+    }
 
     return { presentStudents, absentStudents };
   }
