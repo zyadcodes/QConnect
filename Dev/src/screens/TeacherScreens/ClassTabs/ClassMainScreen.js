@@ -44,6 +44,10 @@ export class ClassMainScreen extends QcParentScreen {
     FirebaseFunctions.setCurrentScreen("Class Main Screen", "ClassMainScreen");
 
     this.setState({ isLoading: true });
+    await this.initScreen();
+  }
+
+  async initScreen(){
     const { userID } = this.props.navigation.state.params;
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
     const { currentClassID } = teacher;
@@ -65,6 +69,12 @@ export class ClassMainScreen extends QcParentScreen {
       classes,
     });
   }
+
+  updateStateWithNewAssignmentInfo(newAssignment, index, currentClass) {
+    //re-fetch data
+    this.initScreen();
+  }
+
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
@@ -416,6 +426,9 @@ export class ClassMainScreen extends QcParentScreen {
                   this.props.navigation.push('MushafAssignmentScreen', {
                     newAssignment: true,
                     popOnClose: true,
+                    onSaveAssignment: this.updateStateWithNewAssignmentInfo.bind(
+                      this
+                    ),
                     isTeacher: true,
                     assignToAllClass: false,
                     userID: userID,
@@ -430,6 +443,10 @@ export class ClassMainScreen extends QcParentScreen {
                   this.props.navigation.push('MushafAssignmentScreen', {
                     isTeacher: true,
                     assignToAllClass: false,
+                    popOnClose: true,
+                    onSaveAssignment: this.updateStateWithNewAssignmentInfo.bind(
+                      this
+                    ),
                     userID: userID,
                     classID: currentClassID,
                     studentID: item.ID,
@@ -438,6 +455,7 @@ export class ClassMainScreen extends QcParentScreen {
                     assignmentType: assignment.type,
                     assignmentName: assignment.name,
                     assignmentIndex: assignmentIndex,
+                    newAssignment: false,
                     imageID: item.profileImageID,
                   });
                 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import MushafScreen from './MushafScreen';
 import { screenHeight, screenWidth } from 'config/dimensions';
 import FirebaseFunctions from 'config/FirebaseFunctions';
@@ -64,7 +64,7 @@ class MushafAssignmentScreen extends Component {
         }
       : noSelection,
     freeFormAssignment: false,
-    isNewAssignment: this.props.navigation.state.params.newAssignment === true,
+    isNewAssignment: this.props.navigation.state.params.newAssignment !== false,
     isLoading: true
   };
 
@@ -164,7 +164,10 @@ class MushafAssignmentScreen extends Component {
     };
 
     //go back to student profile screen if invoked from there, otherwise go back to main screen
-    if (popOnClose === true) {
+    if (
+      popOnClose === true &&
+      this.props.navigation.state.params.onSaveAssignment !== undefined
+    ) {
       if (assignment && assignment.name && assignment.name.trim().length > 0) {
         //update the caller screen with the new assignment then close
         this.props.navigation.state.params.onSaveAssignment(
@@ -190,6 +193,10 @@ class MushafAssignmentScreen extends Component {
 
   //======= methods handling assignment changes ================
 
+  isNoSelection(selection) {
+    return JSON.stringify(selection) === JSON.stringify(noSelection);
+  }
+
   onSaveAssignment(
     classID,
     studentID,
@@ -202,7 +209,11 @@ class MushafAssignmentScreen extends Component {
     const { assignToAllClass, isNewAssignment } = this.state;
     const closeAfterSave = true;
 
-    if (assignmentName && assignmentName.trim() === '') {
+    if (
+      !assignmentName ||
+      (assignmentName && assignmentName.trim() === "") ||
+      this.isNoSelection(selection)
+    ) {
       Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
     } else {
       if (assignToAllClass) {
@@ -320,14 +331,7 @@ class MushafAssignmentScreen extends Component {
             isReadyEnum: 'NOT_STARTED'
           });
         } else {
-          const index = student.currentAssignments.findIndex(element => {
-            return (
-              element.name ===
-                this.props.navigation.state.params.assignmentName &&
-              element.type === this.props.navigation.state.params.assignmentType
-            );
-          });
-          student.currentAssignments[index] = {
+          student.currentAssignments[assignmentIndex] = {
             name: newAssignmentName,
             type: assignmentType,
             location: assignmentLocation,
@@ -343,7 +347,7 @@ class MushafAssignmentScreen extends Component {
       students
     };
 
-    FirebaseFunctions.updateClassObject(updatedClass.ID, updatedClass);
+    FirebaseFunctions.updateClassObject(classID, updatedClass);
 
     this.setState(
       {
@@ -572,6 +576,11 @@ class MushafAssignmentScreen extends Component {
     }
   }
 
+  updateStateWithNewAssignmentInfo() {
+    //todo
+    //no op is fine for now..
+  }
+
   getActionItems() {
     const {
       studentID,
@@ -642,12 +651,13 @@ class MushafAssignmentScreen extends Component {
                   classID: classID,
                   studentID,
                   currentClass,
+                  newAssignment: false,
                   assignmentLocation: assignment.location,
                   assignmentType: assignment.type,
                   assignmentName: assignment.name,
                   assignmentIndex: c,
                   imageID: this.state.imageID,
-                  onSaveAsignment: {}
+                  onSaveAssignment: this.updateStateWithNewAssignmentInfo.bind(this),
                 });
               }}
             >
@@ -682,7 +692,7 @@ class MushafAssignmentScreen extends Component {
               studentID,
               currentClass,
               imageID: this.state.imageID,
-              onSaveAsignment: {}
+              onSaveAssignment: this.updateStateWithNewAssignmentInfo.bind(this),
             });
           }}
         >
@@ -713,20 +723,18 @@ class MushafAssignmentScreen extends Component {
             const submission = classStudent.currentAssignments[assignmentIndex]
               ? classStudent.currentAssignments[assignmentIndex].submission
               : undefined;
-
-            this.props.navigation.navigate('EvaluationPage', {
+            this.props.navigation.push('EvaluationPage', {
               classID,
               studentID,
-              userID,
               assignmentName,
+              userID,
+              classStudent,
               assignmentLocation,
               assignmentLength: selection.length,
               assignmentType,
-              classStudent,
+              submission,
               newAssignment: true,
               readOnly: false,
-              submission,
-              onCloseNavigateTo: "ClassStudentsTab"
             });
           }}
         >
@@ -781,7 +789,7 @@ class MushafAssignmentScreen extends Component {
       : assignToAllClass
       ? classImages.images[imageID]
       : studentImages.images[imageID];
-
+      
     const { isLoading } = this.state;
     let actionItems = this.getActionItems();
 

@@ -99,13 +99,15 @@ class StudentProfileScreen extends QcParentScreen {
       updatedStudentInfo.currentAssignments.length === 0 ||
       updatedStudentInfo.currentAssignments[index] === undefined
     ) {
-      updatedStudentInfo = [newAssignment];
+      updatedStudentInfo.currentAssignments = [newAssignment];
     } else {
       updatedStudentInfo.currentAssignments[index] = newAssignment;
     }
 
+    let prevClassStudentData =
+      this.state.classStudent !== undefined ? this.state.classStudent : {};
     this.setState({
-      classStudent: updatedStudentInfo,
+      classStudent: { ...prevClassStudentData, ...updatedStudentInfo },
       currentClass: currentClass,
       currentAssignments: updatedStudentInfo.currentAssignments,
     });
@@ -368,7 +370,7 @@ class StudentProfileScreen extends QcParentScreen {
     };
 
     //Sorts the assignments by date completed
-    if (classStudent) {
+    if (classStudent && assignmentHistory) {
       assignmentHistory = assignmentHistory.reverse();
     }
 
@@ -524,9 +526,6 @@ class StudentProfileScreen extends QcParentScreen {
                     classID,
                     studentID,
                     currentClass,
-                    assignmentIndex: classStudent.currentAssignments
-                      ? classStudent.currentAssignments.length
-                      : undefined,
                     imageID: classStudent.profileImageID,
                     onSaveAssignment: this.updateStateWithNewAssignmentInfo.bind(
                       this
@@ -614,7 +613,12 @@ class StudentProfileScreen extends QcParentScreen {
                         size={15}
                       />
                     )}
-                    <Text style={[fontStyles.mainTextStyleBlack, {paddingLeft: 5}]}>
+                    <Text
+                      style={[
+                        fontStyles.mainTextStyleBlack,
+                        { paddingLeft: 5 },
+                      ]}
+                    >
                       {item.type ? item.type : strings.Memorize}
                     </Text>
                   </View>
@@ -659,6 +663,7 @@ class StudentProfileScreen extends QcParentScreen {
                           userID: this.props.navigation.state.params.userID,
                           classID,
                           studentID,
+                          newAssignment: false,
                           currentClass,
                           assignmentLocation: item.location,
                           assignmentType: item.type,
@@ -711,16 +716,13 @@ class StudentProfileScreen extends QcParentScreen {
             onPress={() => {
               this.props.navigation.push('MushafAssignmentScreen', {
                 popOnClose: true,
+                newAssignment: true,
                 isTeacher: true,
                 assignToAllClass: false,
                 userID: this.props.navigation.state.params.userID,
                 classID,
                 studentID,
                 currentClass,
-                assignmentLocation: item.location,
-                assignmentType: item.type,
-                assignmentName: item.name,
-                assignmentIndex: index,
                 imageID: classStudent.profileImageID,
                 onSaveAssignment: this.updateStateWithNewAssignmentInfo.bind(
                   this

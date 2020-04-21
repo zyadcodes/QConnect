@@ -14,7 +14,7 @@ import fontStyles from "config/fontStyles";
 import { screenHeight, screenWidth } from "config/dimensions";
 import { ListItem } from "react-native-elements";
 import strings from 'config/strings';
-import { Avatar } from "react-native-elements";
+import { Avatar, Icon } from "react-native-elements";
 
 /*Class represents the student card that will show up in the list of students
  *from the teachers view.
@@ -161,7 +161,7 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
                     ? { color: colors.primaryDark }
                     : {}
                 ]}
-                chevron
+                chevron={assignment.submission ? false : true}
                 containerStyle={{
                   flex: 1,
                   borderRadius: 2,
@@ -171,6 +171,30 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
                 contentContainerStyle={{
                   flex: 2
                 }}
+                badge={
+                  assignment.submission
+                    ? {
+                        badgeStyle: {backgroundColor: "rgba(255,255,250,0.1)",},
+                        value: (
+                          <View
+                            style={{
+                              position: "absolute",
+                              zIndex: 10,
+                              bottom: 0,
+                              right: 0
+                            }}
+                          >
+                            <Icon
+                              size={15}
+                              name="microphone"
+                              type="material-community"
+                              color={colors.darkRed}
+                            />
+                          </View>
+                        )
+                      }
+                    : undefined
+                }
                 leftElement={
                   <View
                     style={{

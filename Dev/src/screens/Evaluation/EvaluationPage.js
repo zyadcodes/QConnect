@@ -82,13 +82,6 @@ export class EvaluationPage extends QcParentScreen {
       );
     }
 
-    //temporary logging to investigate sporadic case where trying to evaluate a current assignment
-    // opens an old one.
-    console.log(
-      "Evaluation Screen Params: " +
-        JSON.stringify(this.props.navigation.state.params)
-    );
-
     const studentObject = await FirebaseFunctions.getStudentByID(
       this.state.studentID
     );
@@ -310,10 +303,6 @@ export class EvaluationPage extends QcParentScreen {
         ": " +
         this.props.navigation.state.params.completionDate
       : strings.HowWas + classStudent.name + strings.sTasmee3;
-
-    //temporary logging to investigate sporadic case where trying to evaluate a current assignment
-    // opens an old one.
-    console.log("Evaluation Screen State: " + JSON.stringify(this.state));
 
     return (
       //----- outer view, gray background ------------------------
