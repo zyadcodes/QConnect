@@ -441,7 +441,7 @@ class SelectionPage extends React.Component {
               >
                 {!this.state.editPageNumber && (
                   <TouchableText
-                    text={page.toString()}
+                    text={page.toString() + " (Change page)"}
                     style={{
                       ...fontStyles.mainTextStylePrimaryDark,
                       ...fontStyles.textInputStyle
