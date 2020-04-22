@@ -273,6 +273,13 @@ export default class FirebaseFunctions {
       return student.ID === studentID;
     });
 
+    let oldStatus =
+      arrayOfStudents[studentIndex].currentAssignments[index].isReadyEnum;
+    //if the status hasn't changed, just return.
+    if (oldStatus === status) {
+      return 1;
+    }
+
     arrayOfStudents[studentIndex].currentAssignments[
       index
     ].isReadyEnum = status;
@@ -710,7 +717,6 @@ export default class FirebaseFunctions {
 
         //record format is [date, true/false], ex: ["30/03/2010", false]
         let record = Object.entries(studentAttendanceHistory).find(entry => {
-
           //check if the dates are equal (first convert them into a single date format then compare)
           let dateRec = moment(entry[0]).format('YYYY-MM-DD');
           return dateRec === formattedDate;
