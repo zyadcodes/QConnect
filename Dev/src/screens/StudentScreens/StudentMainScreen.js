@@ -1466,6 +1466,14 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: colors.grey,
     marginBottom: 5,
+    shadowColor: colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
   },
   middleView: {
     justifyContent: "center",
@@ -1484,6 +1492,14 @@ const styles = StyleSheet.create({
     borderColor: colors.grey,
     borderWidth: screenHeight * 0.13 * 0.0066,
     backgroundColor: colors.white,
+    shadowColor: colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
   },
   profileInfo: {
     flexDirection: "column",

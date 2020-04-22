@@ -70,48 +70,30 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
           onPress();
         }}
       >
-        <View
-          style={[
-            {
-              marginTop: 10,
-            },
-            currentAssignments && currentAssignments.length > 0
-              ? {
-                  alignItems: "flex-start",
-                  alignSelf: "flex-start",
-                  justifyContent: 'flex-start'
-                }
-              : {
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  alignSelf: 'center'
-                },
-          ]}
-        >
-          <Image source={profilePic} style={styles.profilePicStyle} />
-        </View>
         <View style={styles.infoStyle}>
-          <ListItem
-            key={studentName}
-            title={studentName}
-            titleStyle={[fontStyles.bigTextStyleDarkestGrey, { flex: 1 }]}
-            chevron
-            containerStyle={{
-              flex: 1,
-              borderRadius: 2,
-              marginLeft: 3,
-              width: screenWidth * 0.8
-            }}
-            contentContainerStyle={{
-              flex: 2
-            }}
-            //convert status to shorter strings to fit in the single line ListItem
-            rightTitle={strings.GoToProfile}
-            rightTitleStyle={[
-              fontStyles.smallTextStylePrimaryDark,
-              { width: 85 }
-            ]}
-          />
+          <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 3 }}>
+            <ListItem
+              key={studentName}
+              title={studentName}
+              titleStyle={[fontStyles.mediumTextStyleDarkestGrey, { flex: 1 }]}
+              chevron
+              containerStyle={{
+                flex: 1,
+                borderRadius: 2,
+                marginLeft: 3,
+                width: screenWidth * 0.95
+              }}
+              contentContainerStyle={{
+                flex: 2
+              }}
+              leftAvatar={{ source: profilePic, size: "medium" } }
+              //convert status to shorter strings to fit in the single line ListItem
+              rightTitle={strings.GoToProfile}
+              rightTitleStyle={[
+                fontStyles.smallestTextStyleDarkGrey,
+              ]}
+            />
+          </View>
           {currentAssignments && currentAssignments.length > 0 && (
             <View
               style={{
@@ -120,12 +102,6 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
                 paddingBottom: 10,
               }}
             >
-              {/* <Icon
-                name="book-open-outline"
-                type="material-community"
-                size={15}
-                color={colors.darkGrey}
-              /> */}
               <Text style={[fontStyles.mainTextStyleDarkGrey]}>
                 {currentAssignments.length === 1
                   ? strings.CurrentAssignment + ":"
@@ -164,17 +140,19 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
                 chevron={assignment.submission ? false : true}
                 containerStyle={{
                   flex: 1,
+                  width: screenWidth * 0.95,
                   borderRadius: 2,
                   marginLeft: 3,
-                  width: screenWidth * 0.8
                 }}
                 contentContainerStyle={{
-                  flex: 2
+                  flex: 1
                 }}
                 badge={
                   assignment.submission
                     ? {
-                        badgeStyle: {backgroundColor: "rgba(255,255,250,0.1)",},
+                        badgeStyle: {
+                          backgroundColor: 'rgba(255,255,250,0.1)'
+                        },
                         value: (
                           <View
                             style={{
@@ -304,7 +282,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginLeft: screenWidth * 0.017,
     marginTop: screenHeight * 0.01,
-    fontFamily: "Montserrat-Regular"
+    fontFamily: "Montserrat-Regular",
+    shadowColor: colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
   },
   removeStudentStyle: {
     flexDirection: "row",
