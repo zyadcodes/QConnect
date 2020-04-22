@@ -8,8 +8,12 @@ const fontFamily = "Montserrat-Regular";
 
 //Sets the base font that'll be used throughout the app based on the size of the screen
 //Sets the font size
+
 let bodyFont = 14;
-const pixelRatio = PixelRatio.get();
+if (PixelRatio.get() < 2) {
+  bodyFont = 12;
+  console.log("small font")
+}
 
 const bodyFontSmaller = bodyFont * 0.875;
 const bodyFontBigger = bodyFont * 1.25;
