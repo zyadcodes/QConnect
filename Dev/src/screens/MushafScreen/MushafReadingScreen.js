@@ -63,7 +63,7 @@ class MushafReadingScreen extends Component {
    
 
     return (
-      <View style={{ width: screenWidth, height: screenHeight }}>
+      <View style={{ flex: 1 }}>
         <MushafScreen
           assignToID={studentID}
           classID={classID}

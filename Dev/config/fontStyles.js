@@ -12,14 +12,13 @@ const fontFamily = "Montserrat-Regular";
 let bodyFont = 14;
 if (PixelRatio.get() < 2) {
   bodyFont = 12;
-  console.log("small font")
 }
 
-const bodyFontSmaller = bodyFont * 0.875;
-const bodyFontBigger = bodyFont * 1.25;
-const bodyFontBig = bodyFont * 1.15;
-const bodyFontEvenBigger = bodyFontBigger * 1.25;
-const titleFont = bodyFont * 1.875;
+export const bodyFontSmaller = bodyFont * 0.875;
+export const bodyFontBigger = bodyFont * 1.25;
+export const bodyFontBig = bodyFont * 1.15;
+export const bodyFontEvenBigger = bodyFontBigger * 1.25;
+export const titleFont = bodyFont * 1.875;
 
 export default StyleSheet.create({
   smallTextStyleDarkGrey: {

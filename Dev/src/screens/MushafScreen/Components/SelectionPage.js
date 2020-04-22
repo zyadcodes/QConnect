@@ -5,8 +5,9 @@ import {
   StyleSheet,
   TextInput,
   Alert,
-  Text,
-  KeyboardAvoidingView
+  ScrollView,
+  KeyboardAvoidingView,
+  PixelRatio
 } from "react-native";
 import colors from "config/colors";
 import TouchableText from "components/TouchableText";
@@ -357,12 +358,13 @@ class SelectionPage extends React.Component {
       }
 
       return (
-        <KeyboardAvoidingView behavior="padding">
+        <KeyboardAvoidingView behavior="padding" style={{flex: 1}} >
+        <ScrollView>
           <View
             id={this.state.page + "upperWrapper"}
             style={{
               backgroundColor: colors.white,
-              justifyContent: "flex-end"
+              justifyContent: "flex-end",
             }}
           >
             <AssignmentEntryComponent
@@ -490,6 +492,7 @@ class SelectionPage extends React.Component {
               </ImageBackground>
             </View>
           </View>
+          </ScrollView>
         </KeyboardAvoidingView>
       );
     }
@@ -510,17 +513,15 @@ const styles = StyleSheet.create({
   footer: {
     justifyContent: "center",
     alignSelf: "stretch",
-    height: screenHeight * 0.025,
+    height: 40,
     alignItems: "center"
   },
   textInputStyle: {
     backgroundColor: colors.veryLightGrey,
     borderColor: colors.darkGrey,
     width: screenWidth * 0.3,
-    height: screenHeight * 0.055,
-    borderRadius: screenWidth * 0.028,
-    marginTop: 5,
-    marginBottom: 5,
+    height: 40,
+    borderRadius: 2,
     textAlign: 'center',
     alignItems: 'center',
     justifyContent: 'center'
@@ -532,7 +533,6 @@ const styles = StyleSheet.create({
     flex: 10,
     paddingTop: screenHeight * 0.035,
     paddingBottom: screenHeight * 0.01,
-    height: screenHeight * 0.7,
   },
   entireTopView: {
     height: screenHeight * 0.05,

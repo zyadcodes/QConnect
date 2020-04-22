@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, Alert } from "react-native";
+import { View, Text, StyleSheet, Alert, PixelRatio } from "react-native";
 import MushafScreen from "./MushafScreen";
 import { screenHeight, screenWidth } from "config/dimensions";
 import FirebaseFunctions from "config/FirebaseFunctions";
@@ -31,6 +31,9 @@ const noSelection = {
   started: false,
   completed: false
 };
+
+var actionButtonFont = PixelRatio.get() < 2 ? 16 : 20;
+var actionButtonHeight = PixelRatio.get() < 2 ? 12 : 22;
 
 class MushafAssignmentScreen extends Component {
   //=================== Initialize Component ============================
@@ -638,7 +641,6 @@ class MushafAssignmentScreen extends Component {
       }
 
       res = allAssignments.map((assignment, c) => {
-        console.log(`assignmentName: ${this.state.assignmentName}. currentName: ${assignment.name}`)
         if (
           c !== assignmentIndex &&
           assignment.name !== this.state.assignmentName
@@ -817,12 +819,9 @@ class MushafAssignmentScreen extends Component {
       );
     } else {
       return (
-        <ScrollView
-          containerStyle={{
-            width: screenWidth,
-            height: screenHeight
-          }}
-        >
+        <View style={{
+          flex: 1
+        }}>
           <MushafScreen
             {...this.props}
             userID={userID}
@@ -840,21 +839,26 @@ class MushafAssignmentScreen extends Component {
               this
             )}
           />
-          <View style={{ padding: 5 }}>
-            {this.state.selection.start.surah > 0 ||
-            this.state.freeFormAssignment ? (
-              <Text style={fontStyles.mainTextStyleDarkGrey}>
-                {assignmentName}
-              </Text>
-            ) : (
-              <View />
-            )}
-          </View>
+
           <View
             style={
-              actionItems && actionItems.length > 0 ? { paddingRight: 80 } : {}
+              actionItems && actionItems.length > 0
+                ? PixelRatio.get() < 2
+                  ? { paddingRight: 60, height: 90 }
+                  : { paddingRight: 80, height: 120 }
+                : {}
             }
           >
+            <View style={{ padding: 5 }}>
+              {this.state.selection.start.surah > 0 ||
+              this.state.freeFormAssignment ? (
+                <Text style={fontStyles.mainTextStyleDarkGrey}>
+                  {assignmentName}
+                </Text>
+              ) : (
+                <View />
+              )}
+            </View>
             <SwitchSelector
               options={options}
               initial={selectedAssignmentTypeIndex}
@@ -862,6 +866,7 @@ class MushafAssignmentScreen extends Component {
               textColor={colors.darkGrey}
               selectedColor={colors.primaryDark}
               buttonColor={colors.primaryLight}
+              fontSize={fontStyles.bodyFontSmaller}
               borderColor={colors.lightGrey}
               onPress={value => this.setState({ assignmentType: value })}
               style={{ marginTop: 2 }}
@@ -870,7 +875,7 @@ class MushafAssignmentScreen extends Component {
               style={{
                 flexDirection: "row",
                 justifyContent: "center",
-                marginBottom: 15
+                marginBottom: 5
               }}
             >
               <QcActionButton
@@ -908,7 +913,7 @@ class MushafAssignmentScreen extends Component {
               {actionItems}
             </ActionButton>
           )}
-        </ScrollView>
+        </View>
       );
     }
   }
@@ -919,7 +924,7 @@ export default MushafAssignmentScreen;
 const styles = StyleSheet.create({
   actionButtonIcon: {
     color: "#ffffff",
-    fontSize: 20,
-    height: 22
+    fontSize: actionButtonFont,
+    height: actionButtonHeight
   }
 });

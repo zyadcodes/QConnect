@@ -223,7 +223,7 @@ PageHeader.propTypes = {
 
 const styles = StyleSheet.create({
   entireTopView: {
-    height: screenHeight * 0.1,
+    height: 90,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.black,
   },
   topLeftView: {
-    flex: 2.5,
+    width: 70,
     justifyContent: 'center',
     paddingTop: screenHeight * 0.035,
     paddingBottom: screenHeight * 0.001
