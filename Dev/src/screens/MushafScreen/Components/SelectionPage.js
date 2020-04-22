@@ -276,6 +276,7 @@ class SelectionPage extends React.Component {
     }
 
     this.setState({
+      isLoading: true,
       editPageNumber: false
     });
 
@@ -474,6 +475,7 @@ class SelectionPage extends React.Component {
                       onChangeText={value =>
                         this.setState({ editedPageNumber: Number(value) })
                       }
+                      onEndEditing={() => this.updatePage()}
                       keyboardType="numeric"
                     />
 
