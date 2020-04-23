@@ -211,7 +211,7 @@ class MushafAssignmentScreen extends Component {
     selection,
     classInfoParam
   ) {
-    const { assignmentIndex } = this.props.navigation.state.params;
+    const { assignmentIndex } = this.state;
     const { assignToAllClass, isNewAssignment } = this.state;
     const closeAfterSave = true;
 
@@ -337,21 +337,24 @@ class MushafAssignmentScreen extends Component {
     //update the current class object (so we can pass it to caller without having to re-render from firebase)
     let students = currentClass.students.map(student => {
       if (student.ID === studentID) {
-        if (isNewAssignment === true) {
-          student.currentAssignments.push({
+        let updatedAssignments = student.currentAssignments;
+        if (isNewAssignment === true || assignmentIndex === undefined) {
+          updatedAssignments.push({
             name: newAssignmentName,
             type: assignmentType,
             location: assignmentLocation,
             isReadyEnum: "NOT_STARTED"
           });
         } else {
-          student.currentAssignments[assignmentIndex] = {
+          updatedAssignments[assignmentIndex] = {
             name: newAssignmentName,
             type: assignmentType,
             location: assignmentLocation,
             isReadyEnum: "NOT_STARTED"
           };
         }
+
+        return { ...student, currentAssignments: updatedAssignments };
       }
       return student;
     });
@@ -443,21 +446,23 @@ class MushafAssignmentScreen extends Component {
 
       //if the student doesn't have the assignment that was marked on the page,
       // treat this as if the teacher wants to assign a new assignment
-      if (!this.studentHasCurrentAssignment(id)) {
+      let assignmentIndex = this.getCurrentAssignmentIndex(id);
+      if (assignmentIndex === undefined) {
         isNewAssignment = true;
       }
       this.setState({
         studentID: id,
         assignToAllClass: false,
         imageID: imageID,
-        isNewAssignment
+        isNewAssignment,
+        assignmentIndex
       });
     }
   }
 
-  studentHasCurrentAssignment(studentID) {
+  getCurrentAssignmentIndex(studentID) {
     if (!this.state.currentClass || !this.state.currentClass.students) {
-      return false;
+      return undefined;
     }
 
     let student = this.state.currentClass.students.find(
@@ -465,13 +470,11 @@ class MushafAssignmentScreen extends Component {
     );
 
     if (student === undefined || student.currentAssignments === undefined) {
-      return false;
+      return undefined;
     }
 
-    return (
-      student.currentAssignments.find(
-        assignment => assignment.name === this.state.assignmentName
-      ) !== undefined
+    return student.currentAssignments.findIndex(
+      assignment => assignment.name === this.state.assignmentName
     );
   }
 
