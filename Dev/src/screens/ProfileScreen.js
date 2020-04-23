@@ -12,6 +12,7 @@ import Toast, { DURATION } from 'react-native-easy-toast';
 import QcActionButton from 'components/QcActionButton';
 import TouchableText from 'components/TouchableText';
 import teacherImages from 'config/teacherImages';
+import studentImages from 'config/studentImages';
 import colors from 'config/colors';
 import TopBanner from 'components/TopBanner';
 import ImageSelectionModal from 'components/ImageSelectionModal';
@@ -26,8 +27,6 @@ import QCView from 'components/QCView';
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
 
-//To-Do: All info in this class is static, still needs to be hooked up to data base in order
-//to function dynamically
 export class ProfileScreen extends QcParentScreen {
   //Sets the current screen for firebase analytics
   componentDidMount() {
@@ -195,7 +194,11 @@ export class ProfileScreen extends QcParentScreen {
             <View>
               <ImageSelectionModal
                 visible={this.state.modalVisible}
-                images={teacherImages.images}
+                images={
+                  this.state.isTeacher === true
+                    ? teacherImages.images
+                    : studentImages.images
+                }
                 cancelText={strings.Cancel}
                 setModalVisible={this.setModalVisible.bind(this)}
                 onImageSelected={this.onImageSelected.bind(this)}
@@ -203,7 +206,9 @@ export class ProfileScreen extends QcParentScreen {
               <View style={styles.picContainer}>
                 <Image
                   style={styles.profilePic}
-                  source={teacherImages.images[profileImageID]}
+                  source={this.state.isTeacher === true
+                    ? teacherImages.images[profileImageID]
+                    : studentImages.images[profileImageID]}
                 />
                 <TouchableText
                   text={strings.UpdateProfileImage}
