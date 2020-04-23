@@ -160,10 +160,6 @@ class StudentMainScreen extends QcParentScreen {
         this.setState({ isLoading: false, modalVisible: false });
       } else {
         //Refetches the student object to reflect the updated database
-        this.setState({
-          isLoading: false,
-          modalVisible: false,
-        });
         this.props.navigation.push('StudentCurrentClass', {
           userID,
         });
@@ -232,6 +228,14 @@ class StudentMainScreen extends QcParentScreen {
             >
               {strings.StudentNoClassHeaderMsg}
             </Text>
+            <Text
+              style={[
+                fontStyles.bigTextStyleDarkGrey,
+                { textAlign: "center", alignSelf: "center" }
+              ]}
+            >
+              {strings.HaventJoinedClassYet}
+            </Text>
 
             <Image
               source={require('assets/emptyStateIdeas/welcome-girl.png')}
@@ -242,60 +246,10 @@ class StudentMainScreen extends QcParentScreen {
               }}
             />
 
-            <Text
-              style={[
-                fontStyles.bigTextStyleDarkGrey,
-                { textAlign: "center", alignSelf: "center" }
-              ]}
-            >
-              {strings.HaventJoinedClassYet}
-            </Text>
+            
+            
 
-            <QcActionButton
-              text={strings.JoinClass}
-              onPress={() => this.setState({ modalVisible: true })}
-            />
-          </View>
-          <Modal
-            animationType="fade"
-            style={{ alignItems: 'center', justifyContent: 'center' }}
-            transparent={true}
-            presentationStyle="overFullScreen"
-            visible={this.state.modalVisible}
-            onRequestClose={() => {}}
-          >
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                alignSelf: 'center',
-                paddingTop: screenHeight / 3,
-              }}
-            >
-              <View style={styles.modal}>
-                {this.state.isLoading === true ? (
-                  <View>
-                    <LoadingSpinner isVisible={true} />
-                  </View>
-                ) : (
-                  <View>
-                    <View
-                      style={{
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                    >
-                      <Image
-                        source={require('assets/emptyStateIdeas/welcome-girl2.png')}
-                        style={{
-                          width: 50,
-                          height: 100,
-                          resizeMode: 'contain',
-                          marginTop: 20
-                        }}
-                      />
-                      <Text
+            <Text
                         style={[
                           fontStyles.mainTextStyleDarkGrey,
                           { marginBottom: 20 }
@@ -303,53 +257,28 @@ class StudentMainScreen extends QcParentScreen {
                       >
                         {strings.TypeInAClassCode}
                       </Text>
-                    </View>
-                    <View
-                      style={{
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                    >
+    
+            <View style={{ height: 100}}>
                       <CodeInput
                         space={2}
                         size={50}
                         codeLength={5}
                         activeColor={colors.primaryDark}
                         inactiveColor={colors.primaryLight}
-                        autoFocus={true}
+                        autoFocus={false}
+                        blurOnSubmit={false}
                         inputPosition="center"
                         className="border-circle"
-                        containerStyle={{ marginBottom: 60 }}
                         codeInputStyle={{ borderWidth: 1.5 }}
                         onFulfill={code => this.setState({ classCode: code })}
                       />
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between'
-                      }}
-                    >
-                      <QcActionButton
-                        text={strings.Cancel}
-                        onPress={() => {
-                          this.setState({ modalVisible: false });
-                        }}
-                      />
-                      <QcActionButton
-                        text={strings.Confirm}
-                        onPress={() => {
-                          //Joins the class
-                          this.joinClass();
-                        }}
-                      />
-                    </View>
-                  </View>
-                )}
-              </View>
-            </View>
-          </Modal>
+                      </View>
+
+            <QcActionButton
+              text={strings.JoinClass}
+              onPress={() => this.joinClass()}
+            />
+          </View>
         </QCView>
       </SideMenu>
     );
@@ -863,7 +792,7 @@ class StudentMainScreen extends QcParentScreen {
               { textAlign: "center", textVerticalAlign: "center" }
             ]}
           >
-           {strings.Status}
+            {strings.Status}
           </Text>
         </View>
         {statusKeys.map(statusKey => {
@@ -1217,6 +1146,7 @@ class StudentMainScreen extends QcParentScreen {
           <QcActionButton
             text={strings.OpenMushaf}
             onPress={() => {
+              this.setState({ isLoading: true });
               this.props.navigation.push('MushafReadingScreen', {
                 popOnClose: true,
                 isTeacher: false,
