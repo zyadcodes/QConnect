@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { View } from "react-native";
 import MushafScreen from "./MushafScreen";
-import { screenHeight, screenWidth } from "config/dimensions";
+import LoadingSpinner from "components/LoadingSpinner";
 import studentImages from "config/studentImages";
 
 const noAyahSelected = {
@@ -28,12 +28,15 @@ class MushafReadingScreen extends Component {
           completed: true
         }
       : noSelection,
+    isLoading: true,
+  };
+
+  async componentDidMount() {
+    this.setState({ isLoading: false });
   }
 
   closeScreen() {
-    const {
-      userID
-    } = this.props.navigation.state.params;
+    const { userID } = this.props.navigation.state.params;
 
     //todo: if we need to generalize this, then we can add a props: onClose, and the caller specifies the onClose behavior with
     // the call to push navigation to the proper next screen.
@@ -42,7 +45,7 @@ class MushafReadingScreen extends Component {
     });
   }
 
-  onSelectAyah(selectedAyah){
+  onSelectAyah(selectedAyah) {
     //todo: implement audio playback
   }
 
@@ -58,29 +61,42 @@ class MushafReadingScreen extends Component {
       imageID,
     } = this.props.navigation.state.params;
 
-    const {selection} = this.state;
+    const { selection, isLoading } = this.state;
 
-   
-
-    return (
-      <View style={{ flex: 1 }}>
-        <MushafScreen
-          assignToID={studentID}
-          classID={classID}
-          profileImage={studentImages.images[imageID]}
-          selection={selection}
-          assignmentName={assignmentName}
-          assignmentLocation={assignmentLocation}
-          assignmentType={assignmentType}
-          topRightIconName="close"
-          topRightOnPress={this.closeScreen.bind(this)}
-          onClose={this.closeScreen.bind(this)}
-          currentClass={currentClass}
-          onSelectAyah={this.onSelectAyah.bind(this)}
-          disableChangingUser={true}
-        />
-      </View>
-    );
+    if (isLoading === true) {
+      return (
+        <View
+          id={this.state.page + "spinner"}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <LoadingSpinner isVisible={true} />
+        </View>
+      );
+    } else {
+      return (
+        <View style={{ flex: 1 }}>
+          <MushafScreen
+            assignToID={studentID}
+            classID={classID}
+            profileImage={studentImages.images[imageID]}
+            selection={selection}
+            assignmentName={assignmentName}
+            assignmentLocation={assignmentLocation}
+            assignmentType={assignmentType}
+            topRightIconName="close"
+            topRightOnPress={this.closeScreen.bind(this)}
+            onClose={this.closeScreen.bind(this)}
+            currentClass={currentClass}
+            onSelectAyah={this.onSelectAyah.bind(this)}
+            disableChangingUser={true}
+          />
+        </View>
+      );
+    }
   }
 }
 
