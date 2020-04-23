@@ -274,19 +274,27 @@ class MushafAssignmentScreen extends Component {
       isNewAssignment
     );
 
+    let newAssignment = {
+      name: newAssignmentName,
+      type: assignmentType,
+      location: assignmentLocation,
+      isReadyEnum: 'NOT_STARTED'
+    };
+
     //since there might be a latency before firebase returns the updated assignments,
     //let's save them here and later pass them to the calling screen so that it can update its state without
     //relying on the Firebase async latency
     let students = currentClass.students.map(student => {
       //if currentAssignments is null/undefined, we will create an array of 1 assignment and plug in the value
-      let currentAssignments = [
-        {
-          name: newAssignmentName,
-          type: assignmentType,
-          location: assignmentLocation,
-          isReadyEnum: "NOT_STARTED"
-        }
-      ];
+      let currentAssignments = student.currentAssignments;
+      if (
+        student.currentAssignments === undefined ||
+        student.currentAssignments.length === 0
+      ) {
+        currentAssignments = [{ ...newAssignment }];
+      } else {
+        currentAssignments.push({ ...newAssignment });
+      }
 
       return { ...student, currentAssignments };
     });
@@ -819,9 +827,11 @@ class MushafAssignmentScreen extends Component {
       );
     } else {
       return (
-        <View style={{
-          flex: 1
-        }}>
+        <View
+          style={{
+            flex: 1
+          }}
+        >
           <MushafScreen
             {...this.props}
             userID={userID}
