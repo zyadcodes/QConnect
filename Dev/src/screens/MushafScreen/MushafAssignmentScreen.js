@@ -447,7 +447,10 @@ class MushafAssignmentScreen extends Component {
       //if the student doesn't have the assignment that was marked on the page,
       // treat this as if the teacher wants to assign a new assignment
       let assignmentIndex = this.getCurrentAssignmentIndex(id);
-      if (assignmentIndex === undefined) {
+      if (assignmentIndex === -1) {
+        //we use undefined elsewhere to indicate no existing assignment
+        assignmentIndex = undefined;
+        //and if that's the case, we assume we are adding a new assignment
         isNewAssignment = true;
       }
       this.setState({

@@ -291,22 +291,24 @@ export default class FirebaseFunctions {
 
     //Sends a notification to each of the teachers that are teacher this class,
     //letting them know of the updated assignment status
-    const message =
-      status === "WORKING_ON_IT"
-        ? strings.WorkingOnIt
-        : status === "NEED_HELP"
-        ? strings.NeedsHelp
-        : strings.Ready;
-    currentClass.teachers.forEach(async teacherID => {
-      this.functions.httpsCallable("sendNotification")({
-        topic: teacherID,
-        title: strings.StudentUpdate,
-        body:
-          arrayOfStudents[studentIndex].name +
-          strings.HasChangedAssignmentStatusTo +
-          message
+    if (status !== "NOT_STARTED") {
+      const message =
+        status === "WORKING_ON_IT"
+          ? strings.WorkingOnIt
+          : status === "NEED_HELP"
+          ? strings.NeedsHelp
+          : strings.Ready;
+      currentClass.teachers.forEach(async teacherID => {
+        this.functions.httpsCallable("sendNotification")({
+          topic: teacherID,
+          title: strings.StudentUpdate,
+          body:
+            arrayOfStudents[studentIndex].name +
+            strings.HasChangedAssignmentStatusTo +
+            message
+        });
       });
-    });
+    }
 
     return 0;
   }

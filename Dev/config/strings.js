@@ -125,7 +125,7 @@ export default {
   //--------------------- Student Profile Screen ---------------------
   WordsPerAssignment: "Words memorized over time",
   OpenAssignment: "Open assignment",
-  CompleteAssignment: "Complete assignment",
+  CompleteAssignment: "Ready",
   Attended: "Attended",
   Missed: "Missed",
   ReadQuranMotivation: "Feeling bored?",

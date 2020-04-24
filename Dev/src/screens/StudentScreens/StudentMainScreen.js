@@ -246,33 +246,27 @@ class StudentMainScreen extends QcParentScreen {
               }}
             />
 
-            
-            
-
             <Text
-                        style={[
-                          fontStyles.mainTextStyleDarkGrey,
-                          { marginBottom: 20 }
-                        ]}
-                      >
-                        {strings.TypeInAClassCode}
-                      </Text>
-    
-            <View style={{ height: 100}}>
-                      <CodeInput
-                        space={2}
-                        size={50}
-                        codeLength={5}
-                        activeColor={colors.primaryDark}
-                        inactiveColor={colors.primaryLight}
-                        autoFocus={false}
-                        blurOnSubmit={false}
-                        inputPosition="center"
-                        className="border-circle"
-                        codeInputStyle={{ borderWidth: 1.5 }}
-                        onFulfill={code => this.setState({ classCode: code })}
-                      />
-                      </View>
+              style={[fontStyles.mainTextStyleDarkGrey, { marginBottom: 20 }]}
+            >
+              {strings.TypeInAClassCode}
+            </Text>
+
+            <View style={{ height: 100 }}>
+              <CodeInput
+                space={2}
+                size={50}
+                codeLength={5}
+                activeColor={colors.primaryDark}
+                inactiveColor={colors.primaryLight}
+                autoFocus={false}
+                blurOnSubmit={false}
+                inputPosition="center"
+                className="border-circle"
+                codeInputStyle={{ borderWidth: 1.5 }}
+                onFulfill={code => this.setState({ classCode: code })}
+              />
+            </View>
 
             <QcActionButton
               text={strings.JoinClass}
@@ -631,7 +625,9 @@ class StudentMainScreen extends QcParentScreen {
         ? strings.TeacherIsNotifiedNeedHelp
         : strings.TeacherIsNotified;
 
-    this.refs.toast.show(toastMsg, DURATION.LENGTH_LONG);
+    if (value !== "NOT_STARTED") {
+      this.refs.toast.show(toastMsg, DURATION.LENGTH_LONG);
+    }
 
     if (value === "READY") {
       this.setState(
