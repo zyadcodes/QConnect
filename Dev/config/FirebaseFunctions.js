@@ -2,8 +2,8 @@
 //library
 import firebase from "react-native-firebase";
 import strings from "./strings";
-import { arrayOf } from "prop-types";
 import _ from 'lodash';
+import moment from 'moment';
 
 export default class FirebaseFunctions {
   //References that'll be used throughout the class's static functions
@@ -80,6 +80,20 @@ export default class FirebaseFunctions {
     this.fcm.unsubscribeFromTopic(userID);
     this.logEvent("LOG_OUT");
     await this.auth.signOut();
+  }
+
+  static async saveTeacherCustomImprovementTags(
+    teacherID,
+    evaluationImprovementTags
+  ) {
+    try {
+      await this.updateTeacherObject(teacherID, {
+        evaluationImprovementTags
+      });
+    } catch (err) {
+      this.logEvent("SAVE_CUSTOM_IMPROVEMENT_TAGS_FAILED", { err });
+      console.log("err: " + JSON.stringify(err.toString()));
+    }
   }
 
   //This function will take in an ID of a teacher and return that teacher object.
@@ -259,6 +273,13 @@ export default class FirebaseFunctions {
       return student.ID === studentID;
     });
 
+    let oldStatus =
+      arrayOfStudents[studentIndex].currentAssignments[index].isReadyEnum;
+    //if the status hasn't changed, just return.
+    if (oldStatus === status) {
+      return 1;
+    }
+
     arrayOfStudents[studentIndex].currentAssignments[
       index
     ].isReadyEnum = status;
@@ -270,22 +291,24 @@ export default class FirebaseFunctions {
 
     //Sends a notification to each of the teachers that are teacher this class,
     //letting them know of the updated assignment status
-    const message =
-      status === "WORKING_ON_IT"
-        ? strings.WorkingOnIt
-        : status === "NEED_HELP"
-        ? strings.NeedsHelp
-        : strings.Ready;
-    currentClass.teachers.forEach(async teacherID => {
-      this.functions.httpsCallable("sendNotification")({
-        topic: teacherID,
-        title: strings.StudentUpdate,
-        body:
-          arrayOfStudents[studentIndex].name +
-          strings.HasChangedAssignmentStatusTo +
-          message
+    if (status !== "NOT_STARTED") {
+      const message =
+        status === "WORKING_ON_IT"
+          ? strings.WorkingOnIt
+          : status === "NEED_HELP"
+          ? strings.NeedsHelp
+          : strings.Ready;
+      currentClass.teachers.forEach(async teacherID => {
+        this.functions.httpsCallable("sendNotification")({
+          topic: teacherID,
+          title: strings.StudentUpdate,
+          body:
+            arrayOfStudents[studentIndex].name +
+            strings.HasChangedAssignmentStatusTo +
+            message
+        });
       });
-    });
+    }
 
     return 0;
   }
@@ -566,7 +589,6 @@ export default class FirebaseFunctions {
 
       //send notification
       currentClass.teachers.forEach(async teacherID => {
-
         //todo: this may end up too noisy.
         // once we implement in-app feed, consider show this there instead.
         this.functions.httpsCallable("sendNotification")({
@@ -676,23 +698,50 @@ export default class FirebaseFunctions {
     return 0;
   }
 
-  //This function takes in a date as a parameter and returns an array of students that were absent for this specifc
-  //date. If a particular student does not have an attendance saved for this date, then they will not be added to the
-  //array of absent students. To locate the particular class to return the attendance to, the classID will also be
+  //This function takes in a date as a parameter and returns an array of students that were either present or absent for this specifc
+  //date. To locate the particular class to return the attendance to, the classID will also be
   //a paremeter
-  static async getAbsentStudentsByDate(date, classID) {
+  static async getStudentsAttendanceStatusByDate(date, classID) {
     let absentStudents = [];
-    let currentClass = await this.getClassByID(classID);
+    let presentStudents = [];
 
-    currentClass.students.forEach(student => {
-      let studentAttendanceHistory = student.attendanceHistory;
-      if (studentAttendanceHistory[date] === false) {
-        absentStudents.push(student.ID);
-      }
-    });
-    this.logEvent("GET_ATTENDANCE_BY_DATE");
+    try {
+      let currentClass = await this.getClassByID(classID);
 
-    return absentStudents;
+      //we are converting date to a single format so we can do string compare
+      // to check if the the attendance record of that date exists.
+      const formattedDate = moment(date).format("YYYY-MM-DD");
+
+      //iterate through the students and get their attendance
+      // record for the passed in date
+      currentClass.students.forEach(student => {
+        let studentAttendanceHistory = student.attendanceHistory;
+
+        //record format is [date, true/false], ex: ["30/03/2010", false]
+        let record = Object.entries(studentAttendanceHistory).find(entry => {
+          //check if the dates are equal (first convert them into a single date format then compare)
+          let dateRec = moment(entry[0]).format('YYYY-MM-DD');
+          return dateRec === formattedDate;
+        });
+
+        //2nd property of entry returned by Object.values is the value
+        //this will be true (for present) or false (for absent)
+        let attendanceValue = record[1];
+
+        if (attendanceValue === false) {
+          absentStudents.push(student.ID);
+        } else if (attendanceValue === true) {
+          presentStudents.push(student.ID);
+        }
+      });
+
+      this.logEvent("GET_ATTENDANCE_BY_DATE");
+    } catch (err) {
+      console.log("GET_ATTENDANCE_BY_DATE FAILED: " + JSON.stringify(err));
+      this.logEvent("GET_ATTENDANCE_BY_DATE_ERR", { err });
+    }
+
+    return { presentStudents, absentStudents };
   }
 
   //This method will allow a student to join a class. It will take in a student object and a classID.

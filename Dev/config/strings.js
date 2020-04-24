@@ -5,6 +5,9 @@ export default {
   AppTitle: "QuranConnect",
   AppSubTitle: "Serving your passion for the Quran",
 
+  //--------------------- Mushaf Screen -----------------------
+  AssignTo: "Assign to",
+
   //--------------------- Notifications ---------------------
   NeedsHelp: "Needs help",
   StudentUpdate: "Student Update",
@@ -17,7 +20,7 @@ export default {
   AssignmentGraded: "Assignment Graded",
   YourAssignmentHasBeenGraded: "Your assignment has been graded",
   SomethingWentWrong: "Bummer. Something went wrong. Please try again. If the problem persists, please report it to quranconnect@outlook.com",
-
+  Retry: "Check again",
   //--------------------- Student Main Screen ---------------------
   TotalAssignments: "Total assignments completed",
   Ready: "READY",
@@ -41,7 +44,7 @@ export default {
   DailyPracticeLog: "Daily Practice Log",
   DailyPracticeLogDec: "Log and share your daily Quran practice",
   DailyPracticeLogDecTeacherView: "Student's log of daily assignment practice",
-  PracticeLogNotification: "was working on his assignment",
+  PracticeLogNotification: "was working on the assignment",
 
 
   //--------------------- Forgot Password Screen-------------------
@@ -84,6 +87,7 @@ export default {
   Play: "Play",
   FailedToPlayAudioFile: "Failed to play student recording. We know it is a bummer. Please try again later.",
   FailedToRecordAudio: "Failed to record the audio. We know it is a bummer. Please try again later.",
+  OtherArea: "Other...",
   //--------------------- First Run Screen ---------------------
   IAmATeacher: "I am a teacher",
   IAmAStudent: "I am a student",
@@ -91,6 +95,7 @@ export default {
   IncorrectInfo: "Incorrect username or password",
   CreateAccount: "Create Account",
   ForgotPasswordQuestion: "Forgot Password?",
+
 
   //--------------------- Teacher Welcome Screen ---------------------
   YourProfileHasBeenSaved: "Your profile has been saved",
@@ -118,16 +123,19 @@ export default {
     "It's hard to call a class without a name. Please enter a valid class name",
 
   //--------------------- Student Profile Screen ---------------------
-  WordsPerAssignment: 'Trends',
+  WordsPerAssignment: "Words memorized over time",
+  OpenAssignment: "Open assignment",
+  CompleteAssignment: "Ready",
   Attended: "Attended",
   Missed: "Missed",
   ReadQuranMotivation: "Feeling bored?",
   ReadQuranMotivationDesc: "God sent you a beautiful message",
   readInMushaf: "Review assignment",
+  Status:  "Status: ",
   OpenMushaf: "Open the Mus'haf to read it",
   EvaluateAssignment: "Evaluate this assignment",
   EditAssignment: "Edit assignment",
-  AddAssignment: "Add assignment",
+  AddAssignment: "Add a new assignment",
   ChangeStatus: "CHANGE STATUS",
   Assignments: "Assignments",
   Memorize: "Memorize",
@@ -220,6 +228,7 @@ export default {
 
   //--------------------- Class Header Navigator ---------------------
   StudentProfile: "Student Profile",
+  GoToProfile: "Go to profile",
   EditClass: "Edit Class",
   StudentEvaluation: "Student Evaluation",
   Completed: "Completed",
@@ -253,6 +262,8 @@ export default {
 
   //----------------------Error string codes: used to indicate errors in string params -----------
   titleNotPassed: "no_title_code_500",
+  Offline: "Oops, your connection seems off...",
+  OfflineDesc: "Keep calm, read some Quran, and try again.",
 
   //---------------------------Place Holder Text For Teacher Name, PhoneNumber, and Email---------------------------
   namePlaceHolder: "Name",
@@ -272,5 +283,6 @@ export default {
 
   //---------------------------  Mushaf ---------------------------------------
   InvalidPageNumber:
-    "Invalid page number. Please enter a page between 1 and 604."
+    "Invalid page number. Please enter a page between 1 and 604.",
+
 };

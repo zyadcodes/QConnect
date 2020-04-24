@@ -15,6 +15,7 @@ export default {
   darkestGrey: '#494949',
   darkBlue: "#065cf1",
   blue: "#3498db",
+  lightBlue: "#77aaff",
   workingOnItColorBrown: "#EFDECC",
   primaryVeryLight: "#F8FCF0",
   actionButtonColor: "rgba(231,76,60,1)",

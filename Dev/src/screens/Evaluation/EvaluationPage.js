@@ -42,10 +42,6 @@ export class EvaluationPage extends QcParentScreen {
     notes: this.props.navigation.state.params.notes
       ? this.props.navigation.state.params.notes
       : "",
-    improvementAreas:
-      this.props.navigation.state.params.readOnly === true
-        ? this.props.navigation.state.params.improvementAreas
-        : this.areas,
     readOnly: this.props.navigation.state.params.readOnly,
     classID: this.props.navigation.state.params.classID,
     studentID: this.props.navigation.state.params.studentID,
@@ -61,7 +57,9 @@ export class EvaluationPage extends QcParentScreen {
     studentObject: "",
     isPlaying: "Stopped",
     currentPosition: "0:00",
-    audioFile: -1
+    audioFile: -1,
+    notesHeight: 30,
+    selectedImprovementAreas: []
   };
 
   componentWillUnmount() {
@@ -83,13 +81,6 @@ export class EvaluationPage extends QcParentScreen {
         "EvaluationPage"
       );
     }
-
-    //temporary logging to investigate sporadic case where trying to evaluate a current assignment
-    // opens an old one.
-    console.log(
-      "Evaluation Screen Params: " +
-        JSON.stringify(this.props.navigation.state.params)
-    );
 
     const studentObject = await FirebaseFunctions.getStudentByID(
       this.state.studentID
@@ -120,12 +111,37 @@ export class EvaluationPage extends QcParentScreen {
       : this.state.studentID +
         (this.state.classStudent.totalAssignments + 1) +
         "";
+
+    //what improvement area buttons to show
+    //logic: if this is a read only version (of a past evaluation from history), we will show
+    // the tags that teacher pressed on during evaluation (if any). Those gets passed as a navigation param
+    // Otherwise, if it is a new evaluation, we'll check if the teacher has custom tags, we'll use them,
+    // otherwise, we'll use the default areas
+    //-----------------------------------------------------------
+    let improvementAreas = this.areas;
+    if (this.props.navigation.state.params.readOnly === true) {
+      //show areas pressed when evaluating this history item (passed from calling screen)
+      improvementAreas = this.props.navigation.state.params.improvementAreas;
+    } else {
+      const teacher = await FirebaseFunctions.getTeacherByID(
+        this.props.navigation.state.params.userID
+      );
+      //if teacher has customized areas, let's load theirs.
+      if (
+        teacher.evaluationImprovementTags &&
+        teacher.evaluationImprovementTags.length > 0
+      ) {
+        improvementAreas = teacher.evaluationImprovementTags;
+      }
+    }
+
     this.setState({
       studentObject,
       isLoading: false,
       evaluationID,
       audioFile,
-      audioSentDateTime
+      audioSentDateTime,
+      improvementAreas
     });
   }
 
@@ -136,7 +152,7 @@ export class EvaluationPage extends QcParentScreen {
     let {
       rating,
       notes,
-      improvementAreas,
+      selectedImprovementAreas,
       assignmentName,
       classID,
       studentID,
@@ -162,7 +178,7 @@ export class EvaluationPage extends QcParentScreen {
       evaluation: {
         rating,
         notes,
-        improvementAreas
+        improvementAreas: selectedImprovementAreas
       },
       ...submission
     };
@@ -199,7 +215,7 @@ export class EvaluationPage extends QcParentScreen {
       evaluationID,
       notes,
       rating,
-      improvementAreas,
+      selectedImprovementAreas,
       assignmentLength,
       classStudent
     } = this.state;
@@ -209,7 +225,7 @@ export class EvaluationPage extends QcParentScreen {
       rating,
       notes,
       assignmentLength,
-      improvementAreas,
+      improvementAreas: selectedImprovementAreas,
       assignmentType: assignmentType
     };
 
@@ -288,10 +304,6 @@ export class EvaluationPage extends QcParentScreen {
         this.props.navigation.state.params.completionDate
       : strings.HowWas + classStudent.name + strings.sTasmee3;
 
-    //temporary logging to investigate sporadic case where trying to evaluate a current assignment
-    // opens an old one.
-    console.log("Evaluation Screen State: " + JSON.stringify(this.state));
-
     return (
       //----- outer view, gray background ------------------------
       //Makes it so keyboard is dismissed when clicked somewhere else
@@ -354,6 +366,7 @@ export class EvaluationPage extends QcParentScreen {
                     reciter={classStudent.name}
                     title={assignmentName}
                     audioFilePath={this.state.audioFile}
+                    hideCancel={true}
                     sent={
                       this.state.audioSentDateTime
                         ? this.state.audioSentDateTime
@@ -386,7 +399,7 @@ export class EvaluationPage extends QcParentScreen {
               <TextInput
                 style={styles.notesStyle}
                 multiline={true}
-                height={screenHeight * 0.15}
+                height={this.state.notesHeight}
                 onChangeText={teacherNotes =>
                   this.setState({
                     notes: teacherNotes
@@ -399,6 +412,10 @@ export class EvaluationPage extends QcParentScreen {
                 placeholderColor={colors.black}
                 editable={!readOnly}
                 value={notes}
+                onFocus={() =>
+                  this.setState({ notesHeight: screenHeight * 0.1 })
+                }
+                onEndEditing={() => this.setState({ notesHeight: 30 })}
               />
 
               {/**
@@ -415,17 +432,19 @@ export class EvaluationPage extends QcParentScreen {
               <FlowLayout
                 ref="flow"
                 dataValue={improvementAreas}
-                initialSelectedValues={
-                  this.props.navigation.state.params.newAssignment === false
-                    ? this.props.navigation.state.params.evaluationObject
-                        .improvementAreas
-                    : []
-                }
-                title="Improvement Areas"
+                title={strings.ImprovementAreas}
                 readOnly={readOnly}
-                onSelectionChanged={improvementAreas =>
-                  this.setState({ improvementAreas: improvementAreas })
-                }
+                selectedByDefault={readOnly ? true : false}
+                onSelectionChanged={selectedImprovementAreas => {
+                  this.setState({ selectedImprovementAreas });
+                }}
+                onImprovementsCustomized={newAreas => {
+                  this.setState({ improvementAreas: newAreas });
+                  FirebaseFunctions.saveTeacherCustomImprovementTags(
+                    this.props.navigation.state.params.userID,
+                    newAreas
+                  );
+                }}
               />
             </View>
           </View>

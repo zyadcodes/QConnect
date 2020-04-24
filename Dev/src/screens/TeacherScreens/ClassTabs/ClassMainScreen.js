@@ -44,6 +44,10 @@ export class ClassMainScreen extends QcParentScreen {
     FirebaseFunctions.setCurrentScreen("Class Main Screen", "ClassMainScreen");
 
     this.setState({ isLoading: true });
+    await this.initScreen();
+  }
+
+  async initScreen(){
     const { userID } = this.props.navigation.state.params;
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
     const { currentClassID } = teacher;
@@ -65,6 +69,12 @@ export class ClassMainScreen extends QcParentScreen {
       classes,
     });
   }
+
+  updateStateWithNewAssignmentInfo(newAssignment, index, currentClass) {
+    //re-fetch data
+    this.initScreen();
+  }
+
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
@@ -411,20 +421,44 @@ export class ClassMainScreen extends QcParentScreen {
                 })
               }
               onAssignmentPress={assignmentIndex => {
-                let assignment = item.currentAssignments[assignmentIndex];
-                this.props.navigation.push('MushafAssignmentScreen', {
-                  isTeacher: true,
-                  assignToAllClass: false,
-                  userID: userID,
-                  classID: currentClassID,
-                  studentID: item.ID,
-                  currentClass,
-                  assignmentLocation: assignment.location,
-                  assignmentType: assignment.type,
-                  assignmentName: assignment.name,
-                  assignmentIndex: assignmentIndex,
-                  imageID: item.profileImageID,
-                });
+                if (assignmentIndex < 0) {
+                  //go to the screen to a new assignment
+                  this.props.navigation.push('MushafAssignmentScreen', {
+                    newAssignment: true,
+                    popOnClose: true,
+                    onSaveAssignment: this.updateStateWithNewAssignmentInfo.bind(
+                      this
+                    ),
+                    isTeacher: true,
+                    assignToAllClass: false,
+                    userID: userID,
+                    classID: currentClassID,
+                    studentID: item.ID,
+                    currentClass,
+                    imageID: item.profileImageID
+                  });
+                } else {
+                  //go to the passed in assignment
+                  let assignment = item.currentAssignments[assignmentIndex];
+                  this.props.navigation.push('MushafAssignmentScreen', {
+                    isTeacher: true,
+                    assignToAllClass: false,
+                    popOnClose: true,
+                    onSaveAssignment: this.updateStateWithNewAssignmentInfo.bind(
+                      this
+                    ),
+                    userID: userID,
+                    classID: currentClassID,
+                    studentID: item.ID,
+                    currentClass,
+                    assignmentLocation: assignment.location,
+                    assignmentType: assignment.type,
+                    assignmentName: assignment.name,
+                    assignmentIndex: assignmentIndex,
+                    newAssignment: false,
+                    imageID: item.profileImageID,
+                  });
+                }
               }}
               background={sectionBackgroundColor}
               comp={

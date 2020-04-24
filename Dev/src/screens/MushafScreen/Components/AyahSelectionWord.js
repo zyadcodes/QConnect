@@ -1,6 +1,7 @@
 import React from "react";
 import { Text, StyleSheet, View, TouchableWithoutFeedback } from "react-native";
 import colors from "config/colors";
+import fontStyles from "config/fontStyles";
 
 //Creates the higher order component
 class Word extends React.Component {
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
   wordText: {
     textAlign: "right",
     fontFamily: "me_quran",
-    fontSize: 15,
+    fontSize: fontStyles.bodyFont,
     color: colors.darkGrey,
   },
   container: {

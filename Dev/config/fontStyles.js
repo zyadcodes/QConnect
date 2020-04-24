@@ -6,166 +6,178 @@ import { PixelRatio, Platform, StyleSheet } from 'react-native';
 //The default font family that'll be used throughout the app
 const fontFamily = "Montserrat-Regular";
 
-
 //Sets the base font that'll be used throughout the app based on the size of the screen
 //Sets the font size
-let bodyFont = 14;
-const pixelRatio = PixelRatio.get();
 
-const bodyFontSmaller = bodyFont * 0.875;
-const bodyFontBigger = bodyFont * 1.25;
-const bodyFontEvenBigger = bodyFontBigger * 1.25;
-const titleFont = bodyFont * 1.875;
+let bodyFont = 14;
+if (PixelRatio.get() < 2) {
+  bodyFont = 12;
+}
+
+export const bodyFontSmaller = bodyFont * 0.875;
+export const bodyFontBigger = bodyFont * 1.25;
+export const bodyFontBig = bodyFont * 1.15;
+export const bodyFontEvenBigger = bodyFontBigger * 1.25;
+export const titleFont = bodyFont * 1.875;
 
 export default StyleSheet.create({
+  smallTextStyleDarkGrey: {
+    fontFamily,
+    fontSize: bodyFontSmaller,
+    color: colors.darkGrey
+  },
 
-    smallTextStyleDarkGrey: {
-        fontFamily,
-        fontSize: bodyFontSmaller,
-        color: colors.darkGrey
-    },
+  smallestTextStyleDarkGrey: {
+    fontFamily,
+    fontSize: bodyFontSmaller * 0.7,
+    color: colors.darkGrey
+  },
 
-    smallTextStylePrimaryDark: {
-        fontFamily,
-        fontSize: bodyFontSmaller,
-        color: colors.primaryDark
-    },
+  smallTextStylePrimaryDark: {
+    fontFamily,
+    fontSize: bodyFontSmaller,
+    color: colors.primaryDark
+  },
 
-    mainTextStylePrimaryDark: {
-        fontFamily,
-        fontSize: bodyFont,
-        color: colors.primaryDark
-    },
+  mainTextStylePrimaryDark: {
+    fontFamily,
+    fontSize: bodyFont,
+    color: colors.primaryDark
+  },
 
-    mainTextStylePrimaryLight: {
-        fontFamily,
-        fontSize: bodyFont,
-        color: colors.primaryLight
-    },
+  captionTextStylePrimaryDark: {
+    fontFamily,
+    fontSize: bodyFontBig,
+    color: colors.primaryDark
+  },
 
-    mainTextStyleDarkGrey: {
-        fontFamily,
-        fontSize: bodyFont,
-        color: colors.darkGrey
-    },
+  mainTextStylePrimaryLight: {
+    fontFamily,
+    fontSize: bodyFont,
+    color: colors.primaryLight
+  },
 
-    mediumTextStyleDarkestGrey: {
-        fontFamily,
-        fontSize: bodyFont * 1.1,
-        color: colors.darkestGrey
-    },
+  mainTextStyleDarkGrey: {
+    fontFamily,
+    fontSize: bodyFont,
+    color: colors.darkGrey
+  },
 
-    mainTextStyleBlack: {
-        fontFamily,
-        fontSize: bodyFont,
-        color: colors.darkGrey
-    },
+  mediumTextStyleDarkestGrey: {
+    fontFamily,
+    fontSize: bodyFont * 1.1,
+    color: colors.darkestGrey
+  },
 
-    mainTextStyleGrey: {
-        fontFamily,
-        fontSize: bodyFont,
-        color: colors.grey
-    },
+  mainTextStyleBlack: {
+    fontFamily,
+    fontSize: bodyFont,
+    color: colors.darkGrey
+  },
 
-    mainTextStyleDarkGreen: {
-        fontFamily,
-        fontSize: bodyFont,
-        color: colors.darkGreen
-    },
+  mainTextStyleGrey: {
+    fontFamily,
+    fontSize: bodyFont,
+    color: colors.grey
+  },
 
-    mainTextStyleDarkRed: {
-        fontFamily,
-        fontSize: bodyFont,
-        color: colors.darkRed
-    },
+  mainTextStyleDarkGreen: {
+    fontFamily,
+    fontSize: bodyFont,
+    color: colors.darkGreen
+  },
 
-    bigTextStyleBlack: {
-        fontFamily,
-        fontSize: bodyFontBigger,
-        color: colors.darkGrey
-    },
+  mainTextStyleDarkRed: {
+    fontFamily,
+    fontSize: bodyFont,
+    color: colors.darkRed
+  },
 
-    bigTextStyleGreen: {
-        fontFamily,
-        fontSize: bodyFontBigger,
-        color: colors.darkGreen
-    },
+  bigTextStyleBlack: {
+    fontFamily,
+    fontSize: bodyFontBigger,
+    color: colors.darkGrey
+  },
 
-    bigTextStyleDarkRed: {
-        fontFamily,
-        fontSize: bodyFontBigger,
-        color: colors.darkRed
-    },
+  bigTextStyleGreen: {
+    fontFamily,
+    fontSize: bodyFontBigger,
+    color: colors.darkGreen
+  },
 
-    bigTextStyleDarkGrey: {
-        fontFamily,
-        fontSize: bodyFontBigger,
-        color: colors.darkGrey
-    },
+  bigTextStyleDarkRed: {
+    fontFamily,
+    fontSize: bodyFontBigger,
+    color: colors.darkRed
+  },
 
-    bigTextStyleDarkestGrey: {
-        fontFamily,
-        fontSize: bodyFontBigger,
-        color: colors.darkestGrey
-    },
+  bigTextStyleDarkGrey: {
+    fontFamily,
+    fontSize: bodyFontBigger,
+    color: colors.darkGrey
+  },
 
-    bigTextStyleWhite: {
-        fontFamily,
-        fontSize: bodyFontBigger,
-        color: colors.white
-    },
+  bigTextStyleDarkestGrey: {
+    fontFamily,
+    fontSize: bodyFontBigger,
+    color: colors.darkestGrey
+  },
 
-    smallTextStyleDarkGreen: {
-        fontFamily,
-        fontSize: bodyFont,
-        color: colors.darkGreen
-    },
+  bigTextStyleWhite: {
+    fontFamily,
+    fontSize: bodyFontBigger,
+    color: colors.white
+  },
 
-    smallTextStyleDarkRed: {
-        fontFamily,
-        fontSize: bodyFont,
-        color: colors.darkRed
-    },
+  smallTextStyleDarkGreen: {
+    fontFamily,
+    fontSize: bodyFont,
+    color: colors.darkGreen
+  },
 
-    bigTextStylePrimaryDark: {
-        fontFamily,
-        fontSize: bodyFontBigger,
-        color: colors.primaryDark
-    },
+  smallTextStyleDarkRed: {
+    fontFamily,
+    fontSize: bodyFont,
+    color: colors.darkRed
+  },
 
-    biggerTextStyleDarkestGrey: {
-        fontFamily,
-        fontSize: bodyFontEvenBigger,
-        color: colors.darkestGrey
-    },
+  bigTextStylePrimaryDark: {
+    fontFamily,
+    fontSize: bodyFontBigger,
+    color: colors.primaryDark
+  },
 
-    hugeTextStylePrimaryDark: {
-        fontFamily,
-        fontSize: titleFont,
-        color: colors.primaryDark
-    },
-    hugeTextStylePrimaryLight: {
-        fontFamily,
-        fontSize: titleFont,
-        color: colors.primaryLight
-    },
-    hugeTextStyleDarkestGrey: {
-        fontFamily,
-        fontSize: titleFont,
-        color: colors.darkestGrey
-    },
+  biggerTextStyleDarkestGrey: {
+    fontFamily,
+    fontSize: bodyFontEvenBigger,
+    color: colors.darkestGrey
+  },
 
-    hugeTextStyleBlack: {
-        fontFamily,
-        fontSize: titleFont,
-        color: colors.black
-    },
+  hugeTextStylePrimaryDark: {
+    fontFamily,
+    fontSize: titleFont,
+    color: colors.primaryDark
+  },
+  hugeTextStylePrimaryLight: {
+    fontFamily,
+    fontSize: titleFont,
+    color: colors.primaryLight
+  },
+  hugeTextStyleDarkestGrey: {
+    fontFamily,
+    fontSize: titleFont,
+    color: colors.darkestGrey
+  },
 
-    hugeTextStyleDarkGrey: {
-        fontFamily,
-        fontSize: titleFont,
-        color: colors.darkGrey
-    },
+  hugeTextStyleBlack: {
+    fontFamily,
+    fontSize: titleFont,
+    color: colors.black
+  },
 
+  hugeTextStyleDarkGrey: {
+    fontFamily,
+    fontSize: titleFont,
+    color: colors.darkGrey
+  },
 });
-
