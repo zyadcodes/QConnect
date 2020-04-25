@@ -6,23 +6,7 @@ import colors from "config/colors";
 import QcParentScreen from 'screens/QcParentScreen';
 import SelectionPage from "./Components/SelectionPage";
 import Swiper from "react-native-swiper";
-import strings from "config/strings";
-import FirebaseFunctions from "config/FirebaseFunctions";
 import { screenHeight, screenWidth } from "config/dimensions";
-
-//------- constants to indicate the case when there is no ayah selected
-const noAyahSelected = {
-  surah: 0,
-  page: 0,
-  ayah: 0,
-};
-
-const noSelection = {
-  start: noAyahSelected,
-  end: noAyahSelected,
-  started: false,
-  completed: false,
-};
 
 //-------- MushafScreen: container component for the screen holding Mushaf pages ------
 // Implements pagination through a swiper component with a fixed width: 3 screens
@@ -62,15 +46,16 @@ export default class MushafScreen extends QcParentScreen {
       JSON.stringify(prevState.selection) !==
       JSON.stringify(nextProps.selection)
     ) {
-      let index = nextProps.selection && nextProps.selection.start
-      ? 604 - nextProps.selection.start.page
-      : 3;
+      let index =
+        nextProps.selection && nextProps.selection.start
+          ? 604 - nextProps.selection.start.page
+          : 3;
 
       return {
         selection: nextProps.selection,
-        page: nextProps.selection.start? nextProps.selection.start.page : 3,
+        page: nextProps.selection.start ? nextProps.selection.start.page : 3,
         index: index,
-        key: index,        
+        key: index,
       };
     }
 
@@ -96,12 +81,17 @@ export default class MushafScreen extends QcParentScreen {
   // ------------------------ Render the Mushhaf Component ----------------------------------------
   renderItem(item, idx) {
     const { assignmentType } = this.state;
-    const { profileImage, assignToID, selection, disableChangingUser } = this.props;
+    const {
+      profileImage,
+      assignToID,
+      selection,
+      disableChangingUser,
+    } = this.props;
 
     const itemInt = parseInt(item);
 
     return (
-      <View style={{ width: screenWidth, height: screenHeight }} key={idx}>
+      <View style={{ flex: 1}} key={idx}>
         <SelectionPage
           page={itemInt}
           onChangePage={this.onChangePage.bind(this)}
@@ -155,9 +145,9 @@ export default class MushafScreen extends QcParentScreen {
       );
     } else {
       return (
-        <View style={{ width: screenWidth, height: screenHeight }}>
+        <View style={{ flex: 1}}>
           <ScrollView
-            style={{ width: screenWidth, height: screenHeight * 0.95 }}
+            style={{ width: screenWidth, height: screenHeight * 0.85}}
           >
             <Swiper
               index={this.state.index}

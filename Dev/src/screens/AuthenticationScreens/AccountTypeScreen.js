@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Dimensions, ImageBackground } from "react-native";
+import { View, StyleSheet, ScrollView, ImageBackground } from "react-native";
 import QcActionButton from "components/QcActionButton";
 import QcAppBanner from "components/QcAppBanner";
 import strings from "../../../config/strings";
@@ -30,7 +30,8 @@ class AccountTypeScreen extends QcParentScreen {
   render() {
     const { navigation } = this.props;
     return (
-      <QCView style={screenStyle.container}>
+      <View style={screenStyle.container}>
+      <ScrollView>
         <ImageBackground source={BG_IMAGE} style={styles.bgImage}>
           <View style={{ flex: 3 }} />
           <QcAppBanner />
@@ -52,7 +53,8 @@ class AccountTypeScreen extends QcParentScreen {
           </View>
           <View style={{ flex: 1 }} />
         </ImageBackground>
-      </QCView>
+        </ScrollView>
+      </View>
     );
   }
 }

@@ -1,32 +1,35 @@
-import React, { Component } from "react";
-import { View, Text } from "react-native";
-import MushafScreen from "./MushafScreen";
-import { screenHeight, screenWidth } from "config/dimensions";
-import FirebaseFunctions from "config/FirebaseFunctions";
-import QcActionButton from "components/QcActionButton";
-import strings from "config/strings";
-import { ScrollView } from "react-native-gesture-handler";
-import surahs from "./Data/Surahs.json";
-import { compareOrder } from "./Helpers/AyahsOrder";
-import colors from "config/colors";
-import SwitchSelector from "react-native-switch-selector";
-import fontStyles from "config/fontStyles";
-import studentImages from "config/studentImages";
-import classImages from "config/classImages";
-import LoadingSpinner from "components/LoadingSpinner";
+import React, { Component } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import MushafScreen from './MushafScreen';
+import { screenHeight, screenWidth } from 'config/dimensions';
+import FirebaseFunctions from 'config/FirebaseFunctions';
+import QcActionButton from 'components/QcActionButton';
+import strings from 'config/strings';
+import { ScrollView } from 'react-native-gesture-handler';
+import surahs from './Data/Surahs.json';
+import { compareOrder } from './Helpers/AyahsOrder';
+import colors from 'config/colors';
+import SwitchSelector from 'react-native-switch-selector';
+import fontStyles from 'config/fontStyles';
+import studentImages from 'config/studentImages';
+import classImages from 'config/classImages';
+import LoadingSpinner from 'components/LoadingSpinner';
+import ActionButton from "react-native-action-button";
+import { Icon } from "react-native-elements";
 
 //------- constants to indicate the case when there is no ayah selected
 const noAyahSelected = {
   surah: 0,
   page: 0,
-  ayah: 0
+  ayah: 0,
+  length: 0,
 };
 
 const noSelection = {
   start: noAyahSelected,
   end: noAyahSelected,
   started: false,
-  completed: false
+  completed: false,
 };
 
 class MushafAssignmentScreen extends Component {
@@ -55,18 +58,20 @@ class MushafAssignmentScreen extends Component {
       ? {
           start: this.props.navigation.state.params.assignmentLocation.start,
           end: this.props.navigation.state.params.assignmentLocation.end,
+          length: this.props.navigation.state.params.assignmentLocation.length,
           started: false,
           completed: true
         }
       : noSelection,
     freeFormAssignment: false,
+    isNewAssignment: this.props.navigation.state.params.newAssignment === true,
     isLoading: true
   };
 
   async componentDidMount() {
     FirebaseFunctions.setCurrentScreen(
-      "MushhafAssignmentScreen",
-      "MushhafAssignmentScreen"
+      'MushhafAssignmentScreen',
+      'MushhafAssignmentScreen'
     );
 
     //getClassInfoFromDbIfNotPassedIn
@@ -74,7 +79,13 @@ class MushafAssignmentScreen extends Component {
   }
 
   async getClassInfoFromDbIfNotPassedIn() {
-    let { isTeacher, classID, userID, assignmentLocation } = this.state;
+    let {
+      isTeacher,
+      classID,
+      userID,
+      assignmentLocation,
+      assignmentType
+    } = this.state;
     if (
       classID === undefined &&
       isTeacher === true //if isTeacher is not passed, we default to true
@@ -86,7 +97,16 @@ class MushafAssignmentScreen extends Component {
       );
 
       if (!assignmentLocation) {
-        assignmentLocation = currentClassInfo.currentAssignmentLocation;
+        if (
+          currentClassInfo.currentAssignments !== undefined &&
+          currentClassInfo.currentAssignments.length > 0
+        ) {
+          assignmentLocation = currentClassInfo.currentAssignments[0].location;
+          assignmentType = currentClassInfo.currentAssignments[0].type;
+        } else {
+          //todo: eventually get rid of old schema.. backward compatibility is temporary only
+          assignmentLocation = currentClassInfo.currentAssignmentLocation;
+        }
       }
 
       this.setState(
@@ -95,10 +115,15 @@ class MushafAssignmentScreen extends Component {
           assignToAllClass: true,
           imageID: currentClassInfo.classImageID,
           currentClass: currentClassInfo,
+          assignmentType,
+          isNewAssignment:
+            assignmentLocation === undefined ||
+            this.props.navigation.state.params.newAssignment === true,
           selection: assignmentLocation
             ? {
                 start: assignmentLocation.start,
                 end: assignmentLocation.end,
+                length: assignmentLocation.length,
                 started: false,
                 completed: true
               }
@@ -135,7 +160,7 @@ class MushafAssignmentScreen extends Component {
       name: assignmentName,
       type: assignmentType,
       location,
-      isReadyEnum: "NOT_STARTED",
+      isReadyEnum: 'NOT_STARTED'
     };
 
     //go back to student profile screen if invoked from there, otherwise go back to main screen
@@ -153,7 +178,7 @@ class MushafAssignmentScreen extends Component {
       let screenName =
         loadScreenOnClose !== undefined
           ? loadScreenOnClose
-          : "TeacherCurrentClass";
+          : 'TeacherCurrentClass';
       this.props.navigation.push(screenName, {
         userID,
         currentClass
@@ -174,14 +199,15 @@ class MushafAssignmentScreen extends Component {
     classInfoParam
   ) {
     const { assignmentIndex } = this.props.navigation.state.params;
-    const { assignToAllClass } = this.state;
+    const { assignToAllClass, isNewAssignment } = this.state;
     const closeAfterSave = true;
 
-    if (assignmentName && assignmentName.trim() === "") {
+    if (assignmentName && assignmentName.trim() === '') {
       Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
     } else {
       if (assignToAllClass) {
         this.saveClassAssignment(
+          isNewAssignment,
           assignmentName,
           classID,
           assignmentType,
@@ -191,8 +217,6 @@ class MushafAssignmentScreen extends Component {
           closeAfterSave
         );
       } else {
-        const isNewAssignment =
-          this.props.navigation.state.params.newAssignment === true;
         this.saveStudentAssignment(
           isNewAssignment,
           assignmentName,
@@ -209,6 +233,7 @@ class MushafAssignmentScreen extends Component {
   }
 
   async saveClassAssignment(
+    isNewAssignment,
     newAssignmentName,
     classID,
     assignmentType,
@@ -217,14 +242,19 @@ class MushafAssignmentScreen extends Component {
     assignmentIndex,
     closeAfterSave
   ) {
-    let assignmentLocation = { start: selection.start, end: selection.end };
+    let assignmentLocation = {
+      start: selection.start,
+      end: selection.end,
+      length: selection.end.wordNum - selection.start.wordNum + 1
+    };
 
     await FirebaseFunctions.updateClassAssignment(
       classID,
       newAssignmentName,
       assignmentType,
       assignmentLocation,
-      assignmentIndex
+      assignmentIndex,
+      isNewAssignment
     );
 
     //since there might be a latency before firebase returns the updated assignments,
@@ -237,7 +267,7 @@ class MushafAssignmentScreen extends Component {
           name: newAssignmentName,
           type: assignmentType,
           location: assignmentLocation,
-          isReadyEnum: "NOT_STARTED"
+          isReadyEnum: 'NOT_STARTED'
         }
       ];
 
@@ -273,7 +303,11 @@ class MushafAssignmentScreen extends Component {
     assignmentIndex,
     closeAfterSave //boolean: whether or not to close the screen after saving the info
   ) {
-    let assignmentLocation = { start: selection.start, end: selection.end };
+    let assignmentLocation = {
+      start: selection.start,
+      end: selection.end,
+      length: selection.end.wordNum - selection.start.wordNum + 1
+    };
 
     //update the current class object (so we can pass it to caller without having to re-render from firebase)
     let students = currentClass.students.map(student => {
@@ -328,11 +362,11 @@ class MushafAssignmentScreen extends Component {
     if (selection.start.surah === 0) {
       //no selection made
       //todo: make this an explicit flag
-      return "";
+      return '';
     }
 
     let desc =
-      surahs[selection.start.surah].tname + " (" + selection.start.ayah;
+      surahs[selection.start.surah].tname + ' (' + selection.start.ayah;
 
     if (selection.start.surah === selection.end.surah) {
       if (selection.start.ayah !== selection.end.ayah) {
@@ -340,10 +374,10 @@ class MushafAssignmentScreen extends Component {
       }
     } else {
       desc +=
-        ")" +
+        ')' +
         strings.To +
         surahs[selection.end.surah].tname +
-        " (" +
+        ' (' +
         selection.end.ayah;
     }
 
@@ -415,7 +449,8 @@ class MushafAssignmentScreen extends Component {
             started: true,
             completed: false,
             start: selectedAyah,
-            end: selectedAyah
+            end: selectedAyah,
+            length: 10 //todo: need to capture actual length of ayah
           }
         },
         () => this.updateAssignmentName()
@@ -433,12 +468,28 @@ class MushafAssignmentScreen extends Component {
           //Set the smallest number as the start, and the larger as the end
           if (compareOrder(selection.start, selectedAyah) > 0) {
             this.setState(
-              { selection: { ...this.state.selection, end: selectedAyah } },
+              {
+                selection: {
+                  ...this.state.selection,
+                  end: selectedAyah,
+                  length:
+                    selectedAyah.wordNum -
+                    this.state.selection.start.wordNum +
+                    1
+                }
+              },
               () => this.updateAssignmentName()
             );
           } else {
             this.setState(
-              { selection: { ...this.state.selection, start: selectedAyah } },
+              {
+                selection: {
+                  ...this.state.selection,
+                  start: selectedAyah,
+                  length:
+                    this.state.selection.end.wordNum - selectedAyah.wordNum + 1
+                }
+              },
               () => this.updateAssignmentName()
             );
           }
@@ -475,7 +526,8 @@ class MushafAssignmentScreen extends Component {
                 ...prevState2.selection,
                 started: false,
                 completed: true,
-                end: endA
+                end: endA,
+                length: endA.wordNum - prevState2.selection.start.wordNum + 1
               }
             };
           },
@@ -489,6 +541,178 @@ class MushafAssignmentScreen extends Component {
     if (keepSelection === false) {
       this.setState({ selection: noSelection });
     }
+  }
+
+  getActionItems() {
+    const {
+      studentID,
+      currentClass,
+      assignToAllClass,
+      assignmentName,
+      assignmentIndex,
+      assignmentLocation,
+      selection,
+      assignmentType,
+      classID,
+      userID
+    } = this.state;
+
+    let actionItemConfig = [];
+    actionItemConfig[strings.Memorization] = {
+      color: colors.darkestGrey,
+      iconName: 'open-book',
+      iconType: 'entypo'
+    };
+
+    actionItemConfig[strings.Reading] = {
+      color: colors.magenta,
+      iconName: 'book-open',
+      iconType: 'feather'
+    };
+
+    actionItemConfig[strings.Revision] = {
+      color: colors.blue,
+      iconName: 'reminder',
+      iconType: 'material-community'
+    };
+
+    let res = [];
+    //If this is a particular student, show their other assignments
+    // to allow teacher to switch to them.
+    // this is not supported for all-class assignment
+    if (!assignToAllClass) {
+      //allAssignments will hold the list of the other assignments
+      // if the screen has class assignment, then AllAssignments will have the rest of class assignments
+      // if it shows assignments of a particular student, then AllAssignments will show rest of that student assignments
+      let allAssignments = [];
+      try {
+        allAssignments = currentClass.students.find(
+          student => student.ID === studentID
+        ).currentAssignments;
+      } catch (err) {
+        FirebaseFunctions.logEvent(
+          'EXCEPTION_CURRENT_ASSIGNMENTS_FROM_MUSHAF_SCREEN',
+          { err }
+        );
+      }
+
+      res = allAssignments.map((assignment, c) => {
+        if (c !== assignmentIndex) {
+          return (
+            <ActionButton.Item
+              key={"goto_" + c}
+              buttonColor={actionItemConfig[assignment.type].color}
+              title={assignment.type + ': ' + assignment.name}
+              onPress={() => {
+                this.setState({ isLoading: true });
+
+                this.props.navigation.push('MushafAssignmentScreen', {
+                  isTeacher: true,
+                  assignToAllClass: assignToAllClass,
+                  userID: userID,
+                  classID: classID,
+                  studentID,
+                  currentClass,
+                  assignmentLocation: assignment.location,
+                  assignmentType: assignment.type,
+                  assignmentName: assignment.name,
+                  assignmentIndex: c,
+                  imageID: this.state.imageID,
+                  onSaveAsignment: {}
+                });
+              }}
+            >
+              <Icon
+                name={actionItemConfig[assignment.type].iconName}
+                type={actionItemConfig[assignment.type].iconType}
+                color="#fff"
+                style={styles.actionButtonIcon}
+              />
+            </ActionButton.Item>
+          );
+        }
+      });
+    }
+
+    //only show add another assignment if the user is not adding a new assignment already
+    if (!this.state.isNewAssignment) {
+      res.push(
+        <ActionButton.Item
+          buttonColor={colors.darkGreen}
+          title="Add another assignment"
+          key={"add_new"}
+          onPress={() => {
+            this.setState({ isLoading: true });
+
+            this.props.navigation.push('MushafAssignmentScreen', {
+              isTeacher: true,
+              newAssignment: true,
+              assignToAllClass: this.state.assignToAllClass,
+              userID: userID,
+              classID: classID,
+              studentID,
+              currentClass,
+              imageID: this.state.imageID,
+              onSaveAsignment: {}
+            });
+          }}
+        >
+          <Icon
+            name="plus"
+            type="feather"
+            color="#fff"
+            style={styles.actionButtonIcon}
+          />
+        </ActionButton.Item>
+      );
+    }
+
+    //only show add another assignment if the user is not adding a new assignment already
+    //submission: item.submission,
+    if (!this.state.assignToAllClass && !this.state.isNewAssignment) {
+      res.push(
+        <ActionButton.Item
+          buttonColor={colors.primaryDark}
+          key={"evaluate_" + assignmentName}
+          title={strings.EvaluateAssignment}
+          onPress={async () => {
+            this.setState({ isLoading: true });
+            const classStudent = await currentClass.students.find(
+              eachStudent => {
+                return eachStudent.ID === studentID;
+              }
+            );
+            const submission = classStudent.currentAssignments[assignmentIndex]
+              ? classStudent.currentAssignments[assignmentIndex].submission
+              : undefined;
+
+            this.props.navigation.navigate('EvaluationPage', {
+              classID,
+              studentID,
+              userID,
+              assignmentName,
+              assignmentLocation,
+              assignmentLength: selection.length,
+              assignmentType,
+              classStudent,
+              newAssignment: true,
+              readOnly: false,
+              submission,
+              onCloseNavigateTo: "ClassStudentsTab"
+            });
+          }}
+        >
+          <Icon
+            name="clipboard-check-outline"
+            type="material-community"
+            color="#fff"
+            style={styles.actionButtonIcon}
+          />
+        </ActionButton.Item>
+      );
+    }
+
+    return res;
   }
 
   //============= end of selection methods =============================
@@ -508,7 +732,10 @@ class MushafAssignmentScreen extends Component {
     } = this.state;
 
     const options = [
-      { label: strings.Memorization, value: strings.Memorization },
+      {
+        label: strings.Memorization,
+        value: strings.Memorization
+      },
       { label: strings.Revision, value: strings.Revision },
       { label: strings.Reading, value: strings.Reading }
     ];
@@ -528,12 +755,17 @@ class MushafAssignmentScreen extends Component {
       : studentImages.images[imageID];
 
     const { isLoading } = this.state;
+    let actionItems = this.getActionItems();
 
     if (isLoading === true) {
       return (
         <View
-          id={this.state.page + "spinner"}
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          id={this.state.page + 'spinner'}
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
         >
           <LoadingSpinner isVisible={true} />
         </View>
@@ -541,7 +773,10 @@ class MushafAssignmentScreen extends Component {
     } else {
       return (
         <ScrollView
-          containerStyle={{ width: screenWidth, height: screenHeight - 150 }}
+          containerStyle={{
+            width: screenWidth,
+            height: screenHeight
+          }}
         >
           <MushafScreen
             {...this.props}
@@ -570,42 +805,64 @@ class MushafAssignmentScreen extends Component {
               <View />
             )}
           </View>
-          <SwitchSelector
-            options={options}
-            initial={selectedAssignmentTypeIndex}
-            height={20}
-            textColor={colors.darkGrey}
-            selectedColor={colors.primaryDark}
-            buttonColor={colors.primaryLight}
-            borderColor={colors.lightGrey}
-            onPress={value => this.setState({ assignmentType: value })}
-            style={{ marginTop: 2 }}
-          />
           <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              marginBottom: 15
-            }}
+            style={
+              actionItems && actionItems.length > 0 ? { paddingRight: 80 } : {}
+            }
           >
-            <QcActionButton
-              text={strings.Save}
-              onPress={() => {
-                this.onSaveAssignment(
-                  classID,
-                  studentID,
-                  assignmentName,
-                  assignmentType,
-                  selection,
-                  currentClass
-                );
+            <SwitchSelector
+              options={options}
+              initial={selectedAssignmentTypeIndex}
+              height={20}
+              textColor={colors.darkGrey}
+              selectedColor={colors.primaryDark}
+              buttonColor={colors.primaryLight}
+              borderColor={colors.lightGrey}
+              onPress={value => this.setState({ assignmentType: value })}
+              style={{ marginTop: 2 }}
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                marginBottom: 15
               }}
-            />
-            <QcActionButton
-              text={strings.Cancel}
-              onPress={() => this.closeScreen()}
-            />
+            >
+              <QcActionButton
+                text={strings.Save}
+                onPress={() => {
+                  this.onSaveAssignment(
+                    classID,
+                    studentID,
+                    assignmentName,
+                    assignmentType,
+                    selection,
+                    currentClass
+                  );
+                }}
+              />
+              <QcActionButton
+                text={strings.Cancel}
+                onPress={() => this.closeScreen()}
+              />
+            </View>
           </View>
+
+          {actionItems && actionItems.length > 0 && (
+            <ActionButton
+              buttonColor={colors.actionButtonColor}
+              renderIcon={() => (
+                <Icon
+                  name="ellipsis1"
+                  color="#fff"
+                  type="antdesign"
+                  style={styles.actionButtonIcon}
+                />
+              )}
+            >
+              {actionItems}
+            </ActionButton>
+          )}
         </ScrollView>
       );
     }
@@ -613,3 +870,11 @@ class MushafAssignmentScreen extends Component {
 }
 
 export default MushafAssignmentScreen;
+
+const styles = StyleSheet.create({
+  actionButtonIcon: {
+    color: '#ffffff',
+    fontSize: 20,
+    height: 22
+  }
+});

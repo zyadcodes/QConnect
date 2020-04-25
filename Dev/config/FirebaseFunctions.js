@@ -1,7 +1,8 @@
 //This class will contain all the functions that interact with the react native firebase
 //library
-import firebase from 'react-native-firebase';
-import strings from './strings';
+import firebase from "react-native-firebase";
+import strings from "./strings";
+import { arrayOf } from "prop-types";
 
 export default class FirebaseFunctions {
   //References that'll be used throughout the class's static functions
@@ -59,6 +60,7 @@ export default class FirebaseFunctions {
       this.fcm.subscribeToTopic(account.user.uid);
       return account.user;
     } catch (err) {
+      this.logEvent("FAILED_TO_SIGN_IN", { err });
       return -1;
     }
   }
@@ -185,12 +187,16 @@ export default class FirebaseFunctions {
   //that belongs to that teacher in the firestore database. It will do this by creating a new document
   //in the "classes" collection, then linking that class to a certain teacher by relating them through
   //IDs. This method returns the new ID of the class
+
   static async addNewClass(newClassObject, teacherID) {
     //Adds the new class document and makes sure it has a reference to its own ID
     let newClass = await this.classes.add(newClassObject);
     const ID = (currentClassID = newClass.id + "");
+    //Creates a class Invite code and updates it as well as making sure the document has a reference to its own ID
+    const updatedClassIC = ID.substring(0, 5);
     await this.updateClassObject(newClass.id, {
-      ID
+      ID,
+      classInviteCode: updatedClassIC
     });
     //Appends the class ID to the array of classes belonging to this teacher
     let ref = this.teachers.doc(teacherID);
@@ -270,7 +276,7 @@ export default class FirebaseFunctions {
         ? strings.NeedsHelp
         : strings.Ready;
     currentClass.teachers.forEach(async teacherID => {
-      this.functions.httpsCallable('sendNotification')({
+      this.functions.httpsCallable("sendNotification")({
         topic: teacherID,
         title: strings.StudentUpdate,
         body:
@@ -289,9 +295,9 @@ export default class FirebaseFunctions {
     return 0;
   }
 
-  static async submitRecordingAudio(file, studentID, classID) {
+  static async submitRecordingAudio(file, studentID, classID, assignmentIndex) {
     try {
-      const uuidv4 = require('uuid/v4');
+      const uuidv4 = require("uuid/v4");
       const audioFileID = uuidv4().substring(0, 13);
 
       await this.uploadAudio(file, audioFileID);
@@ -303,9 +309,23 @@ export default class FirebaseFunctions {
       });
       let sent = new Date();
 
-      arrayOfStudents[studentIndex].submission = {
+      if (
+        arrayOfStudents[studentIndex].currentAssignments === undefined ||
+        arrayOfStudents[studentIndex].currentAssignments.length === 0 ||
+        arrayOfStudents[studentIndex].currentAssignments[assignmentIndex] ===
+          undefined
+      ) {
+        this.logEvent("SUBMIT_RECORDING_FAILED", {
+          error: "ASSIGNMENT_NOT_FOUND"
+        });
+        return -1;
+      }
+
+      arrayOfStudents[studentIndex].currentAssignments[
+        assignmentIndex
+      ].submission = {
         audioFileID,
-        sent,
+        sent
       };
 
       await this.updateClassObject(classID, {
@@ -313,9 +333,6 @@ export default class FirebaseFunctions {
       });
     } catch (error) {
       this.logEvent("SUBMIT_RECORDING_FAILED", { error });
-      console.log(
-        "error siubmitting recording audio: " + JSON.stringify(error)
-      );
       return -1;
     }
 
@@ -357,7 +374,7 @@ export default class FirebaseFunctions {
       name: newAssignmentName,
       type: assignmentType,
       location: assignmentLocation,
-      isReadyEnum: 'NOT_STARTED'
+      isReadyEnum: "NOT_STARTED"
     };
 
     await this.updateClassObject(classID, {
@@ -366,7 +383,7 @@ export default class FirebaseFunctions {
     this.logEvent("UPDATE_CURRENT_ASSIGNMENT");
 
     //Notifies that student that their assignment has been updated
-    this.functions.httpsCallable('sendNotification')({
+    this.functions.httpsCallable("sendNotification")({
       topic: studentID,
       title: strings.AssignmentUpdate,
       body: strings.YourTeacherHasUpdatedYourCurrentAssignment
@@ -379,25 +396,43 @@ export default class FirebaseFunctions {
     newAssignmentName,
     assignmentType,
     assignmentLocation,
-    assignmentIndex
+    assignmentIndex,
+    isNewAssignment
   ) {
     if (assignmentIndex === undefined) {
       this.logEvent("UpdateClassAssignment_IndexIsUndefined");
       //fallback to update first assignment
       //this is potentially dangerous,.. consider throwing instead.
-      assignmentIndex = 0; 
+      assignmentIndex = 0;
     }
 
     let currentClass = await this.getClassByID(classID);
     let arrayOfStudents = currentClass.students;
+    let updatedAssignment = {
+      name: newAssignmentName,
+      type: assignmentType,
+      location: assignmentLocation,
+      isReadyEnum: "NOT_STARTED"
+    };
+
     arrayOfStudents.forEach(student => {
-      student.currentAssignments[assignmentIndex].name = newAssignmentName;
-      student.currentAssignments[assignmentIndex].type = assignmentType;
-      student.currentAssignments[assignmentIndex].location = assignmentLocation;
+      if (
+        student.currentAssignments === undefined ||
+        student.currentAssignments.length === 0
+      ) {
+        student.currentAssignments = [{ ...updatedAssignment }];
+      } else if (isNewAssignment === true) {
+        student.currentAssignments.push({ ...updatedAssignment });
+      } else if (student.currentAssignments[assignmentIndex] === undefined) {
+        this.logEvent("INVALID_ASSIGNMENT_INDEX", { assignmentIndex });
+        student.currentAssignments.push({ ...updatedAssignment });
+      } else {
+        student.currentAssignments[assignmentIndex] = updatedAssignment;
+      }
 
       try {
         //Notifies that student that their assignment has been updated
-        this.functions.httpsCallable('sendNotification')({
+        this.functions.httpsCallable("sendNotification")({
           topic: student.ID,
           title: strings.AssignmentUpdate,
           body: strings.YourTeacherHasUpdatedYourCurrentAssignment
@@ -410,12 +445,33 @@ export default class FirebaseFunctions {
       }
     });
 
-    //todo: update the below to support multiple assignments
+    //to-do: we don't support yet saving mutliple assignments on a class level.
+    // for now we will just add these assignments each student's currentAssignments
+    // yet we use the class.currentAssignments[0] to remember what to show when teacher open
+    // mus7af from the class screen. That's it's main function.
+    // Eventually we need a way to maintain the lifecycle of an assignment (when should a class assignment be deleted/closed)?
+    // until then, we will keep this current behavior.
+
+    let currentAssignments = [{ ...updatedAssignment }];
+
+    //let currentAssignments = currentClass.currentAssignments;
+    // if (currentAssignments === undefined || currentAssignments.length === 0) {
+    // }
+    // else if (currentAssignments[assignmentIndex] === undefined) {
+    //   //todo: show error here?
+    //   this.logEvent(
+    //     'INVALID_ASSIGNMENT_INDEX_FALLBACK_TO_NEW',
+    //     { assignmentIndex }
+    //   );
+    //   currentAssignments.push({ ...updatedAssignment });
+    // }
+    // else {
+    //   currentAssignments[assignmentIndex] = updatedAssignment;
+    // }
+
     await this.updateClassObject(classID, {
       students: arrayOfStudents,
-      currentAssignment: newAssignmentName,
-      currentAssignmentType: assignmentType,
-      currentAssignmentLocation: assignmentLocation
+      currentAssignments
     });
     return 0;
   }
@@ -429,52 +485,61 @@ export default class FirebaseFunctions {
     studentID,
     evaluationDetails
   ) {
-    let currentClass = await this.getClassByID(classID);
+    try {
+      let currentClass = await this.getClassByID(classID);
 
-    let arrayOfStudents = currentClass.students;
-    let studentIndex = arrayOfStudents.findIndex(student => {
-      return student.ID === studentID;
-    });
+      let arrayOfStudents = currentClass.students;
+      let studentIndex = arrayOfStudents.findIndex(student => {
+        return student.ID === studentID;
+      });
 
-    arrayOfStudents[studentIndex].totalAssignments =
-      arrayOfStudents[studentIndex].totalAssignments + 1;
-    arrayOfStudents[studentIndex].assignmentHistory.push(evaluationDetails);
+      arrayOfStudents[studentIndex].totalAssignments =
+        arrayOfStudents[studentIndex].totalAssignments + 1;
+      arrayOfStudents[studentIndex].assignmentHistory.push(evaluationDetails);
 
-    let avgGrade = 0;
-    arrayOfStudents[studentIndex].assignmentHistory.forEach(assignment => {
-      avgGrade += assignment.evaluation.rating;
-    });
-    avgGrade /= arrayOfStudents[studentIndex].totalAssignments;
-    arrayOfStudents[studentIndex].averageRating = avgGrade;
-    arrayOfStudents[studentIndex].isReadyEnum = "WORKING_ON_IT";
+      let avgGrade = 0;
+      arrayOfStudents[studentIndex].assignmentHistory.forEach(assignment => {
+        avgGrade += assignment.evaluation.rating;
+      });
+      avgGrade /= arrayOfStudents[studentIndex].totalAssignments;
+      arrayOfStudents[studentIndex].averageRating = avgGrade;
+      arrayOfStudents[studentIndex].isReadyEnum = "WORKING_ON_IT";
 
-    let indexOfAssignment = arrayOfStudents[
-      studentIndex
-    ].currentAssignments.findIndex(element => {
-      return (
-        element.name === evaluationDetails.name &&
-        element.type === evaluationDetails.type
-      );
-    });
+      let indexOfAssignment = arrayOfStudents[
+        studentIndex
+      ].currentAssignments.findIndex(element => {
+        return (
+          element.name === evaluationDetails.name &&
+          element.type === evaluationDetails.assignmentType
+        );
+      });
 
-    arrayOfStudents[studentIndex].currentAssignments.splice(
-      indexOfAssignment,
-      1
-    );
+      if (indexOfAssignment !== -1) {
+        arrayOfStudents[studentIndex].currentAssignments.splice(
+          indexOfAssignment,
+          1
+        );
+      }
 
-    await this.updateClassObject(classID, {
-      students: arrayOfStudents
-    });
-    this.analytics.logEvent("COMPLETE_CURRENT_ASSIGNMENT", {
-      improvementAreas: evaluationDetails.improvementAreas
-    });
+      await this.updateClassObject(classID, {
+        students: arrayOfStudents
+      });
+      this.analytics.logEvent("COMPLETE_CURRENT_ASSIGNMENT", {
+        improvementAreas: evaluationDetails.improvementAreas
+      });
 
-    //Notifies that student that their assignment has been graded
-    this.functions.httpsCallable('sendNotification')({
-      topic: studentID,
-      title: strings.AssignmentGraded,
-      body: strings.YourAssignmentHasBeenGraded
-    });
+      //Notifies that student that their assignment has been graded
+      this.functions.httpsCallable("sendNotification")({
+        topic: studentID,
+        title: strings.AssignmentGraded,
+        body: strings.YourAssignmentHasBeenGraded
+      });
+    } catch (err) {
+      this.logEvent("EVALUATE_ASSIGNMENT_FAILED", { err });
+      console.log(JSON.stringify(err.toString()));
+      //rethrow
+      throw err;
+    }
     return 0;
   }
 
@@ -523,19 +588,39 @@ export default class FirebaseFunctions {
       //the old attendance with this one
       let copyOfStudent = student;
       let { attendanceHistory } = copyOfStudent;
-      attendanceHistory[selectedDate] = absentStudents.includes(student.ID)
-        ? false
-        : true;
-      copyOfStudent.attendanceHistory = attendanceHistory;
-      arrayOfStudents[index] = copyOfStudent;
-      if (absentStudents.includes(student.ID)) {
-        copyOfStudent.classesMissed
-          ? (copyOfStudent.classesMissed += 1)
-          : (copyOfStudent.classesMissed = 1);
-      } else {
-        copyOfStudent.classesAttended
-          ? (copyOfStudent.classesAttended += 1)
-          : (copyOfStudent.classesAttended = 1);
+
+      //if the student attendance status changes, then updates their attendance tally
+      let oldState = attendanceHistory[selectedDate];
+      let newState = !absentStudents.includes(student.ID);
+
+      //only update attendance tally if attendance indeed changed
+      if (oldState !== newState) {
+        if (newState === true) {
+          copyOfStudent.classesAttended
+            ? (copyOfStudent.classesAttended += 1)
+            : (copyOfStudent.classesAttended = 1);
+          if (oldState === false) {
+            //if the student was marked as absent before and now is present, decrement (correct) classes missed
+            copyOfStudent.classesMissed && copyOfStudent.classesMissed > 0
+              ? (copyOfStudent.classesMissed -= 1)
+              : (copyOfStudent.classesMissed = 0);
+          }
+        } else if (newState === false) {
+          copyOfStudent.classesMissed
+            ? (copyOfStudent.classesMissed += 1)
+            : (copyOfStudent.classesMissed = 1);
+          if (oldState === true) {
+            //if the student was marked as absent before and now is present, decrement (correct) classes missed
+            copyOfStudent.classesAttended && copyOfStudent.classesAttended > 0
+              ? (copyOfStudent.classesAttended -= 1)
+              : (copyOfStudent.classesAttended = 0);
+          }
+        }
+        attendanceHistory[selectedDate] = absentStudents.includes(student.ID)
+          ? false
+          : true;
+        copyOfStudent.attendanceHistory = attendanceHistory;
+        arrayOfStudents[index] = copyOfStudent;
       }
     });
 
@@ -571,11 +656,17 @@ export default class FirebaseFunctions {
   //the classID to the array of classes withint the student object. Then it will finally update
   //the "currentClassID" property within the student object. If the class does not exist, the method
   //will return a value of -1, otherwise it will return 0;
-  static async joinClass(student, classID) {
+  static async joinClass(student, classInviteCode) {
     const studentID = student.ID;
-
-    const classToJoin = await this.classes.doc(classID).get();
-    if (!classToJoin.exists) {
+    const classToJoin = await this.classes
+      .where("classInviteCode", "==", classInviteCode)
+      .get();
+    if (
+      classToJoin == undefined ||
+      classToJoin.docs == undefined ||
+      classToJoin.docs[0] == undefined ||
+      !classToJoin.docs[0].exists
+    ) {
       return -1;
     }
 
@@ -585,27 +676,26 @@ export default class FirebaseFunctions {
       attendanceHistory: {},
       averageRating: 0,
       currentAssignments: [],
-      isReadyEnum: "WORKING_ON_IT",
       profileImageID: student.profileImageID,
       name: student.name,
-      totalAssignments: 0,
-      classesAttended: 0,
-      classesMissed: 0
+      totalAssignments: 0
     };
 
-    await this.updateClassObject(classID, {
+    await this.updateClassObject(classToJoin.docs[0].id, {
       students: firebase.firestore.FieldValue.arrayUnion(studentObject)
     });
+    //alert(classToJoin.docs[0].data().teachers);
 
     await this.updateStudentObject(studentID, {
-      classes: firebase.firestore.FieldValue.arrayUnion(classID),
-      currentClassID: classID
+      classes: firebase.firestore.FieldValue.arrayUnion(classToJoin.docs[0].id),
+      currentClassID: classToJoin.docs[0].id
     });
     this.logEvent("JOIN_CLASS");
 
     //Sends a notification to the teachers of that class saying that a student has joined the class
-    classToJoin.data().teachers.forEach(teacherID => {
-      this.functions.httpsCallable('sendNotification')({
+    //alert(classToJoin.docs[0].data().teachers);
+    classToJoin.docs[0].data().teachers.forEach(teacherID => {
+      this.functions.httpsCallable("sendNotification", {
         topic: teacherID,
         title: strings.NewStudent,
         body: student.name + strings.HasJoinedYourClass

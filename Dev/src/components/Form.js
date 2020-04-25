@@ -5,6 +5,7 @@ import usernameImg from '../screens/images/username.png';
 import passwordImg from '../screens/images/password.png';
 import eyeImg from '../screens/images/eye_black.png';
 import { screenHeight, screenWidth } from 'config/dimensions';
+import strings from "config/strings";
 
 export default class Form extends Component {
   constructor(props) {
@@ -28,7 +29,7 @@ export default class Form extends Component {
         <View style={{ flex: 1 }}>
           <UserInput
             source={usernameImg}
-            placeholder="Username"
+            placeholder={strings.emailPlaceHolder}
             autoCapitalize={'none'}
             returnKeyType={'done'}
             autoCorrect={false}
@@ -48,8 +49,13 @@ export default class Form extends Component {
           <TouchableOpacity
             activeOpacity={0.7}
             style={styles.btnEye}
-            onPress={this.showPass}>
-            <Image source={eyeImg} style={styles.iconEye} />
+            onPress={this.showPass}
+          >
+            <Image
+              source={eyeImg}
+              resizeMode="contain"
+              style={styles.iconEye}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -59,7 +65,7 @@ export default class Form extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    alignItems: 'center'
   },
   btnEye: {
     top: 0.009 * screenHeight,
@@ -67,8 +73,8 @@ const styles = StyleSheet.create({
     right: 0.07 * screenWidth,
   },
   iconEye: {
-    width: screenWidth * 0.06,
-    height: screenHeight * 0.04,
-    tintColor: 'rgba(0,0,0,0.2)',
+    width: 30,
+    height: 25,
+    tintColor: 'rgba(0,0,0,0.2)'
   },
 });

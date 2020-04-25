@@ -16,7 +16,7 @@ const routeConfig = {
       tabBarIcon: ({ tintColor, focused }) => (
         <Icon
           name="calendar-check-o"
-          size={20}
+          size={focused ? 25 : 20}
           type="font-awesome"
           color={tintColor}
         />
@@ -28,7 +28,12 @@ const routeConfig = {
     navigationOptions: {
       tabBarLabel: strings.Class,
       tabBarIcon: ({ tintColor, focused }) => (
-        <Icon name="group" size={20} type="font-awesome" color={tintColor} />
+        <Icon
+          name="group"
+          size={focused ? 25 : 20}
+          type="font-awesome"
+          color={tintColor}
+        />
       ),
     },
   },
@@ -44,7 +49,7 @@ const routeConfig = {
         tabBarIcon: ({ tintColor, focused }) => (
           <Icon
             name="feather"
-            size={20}
+            size={focused ? 25 : 20}
             type="material-community"
             color={tintColor}
           />

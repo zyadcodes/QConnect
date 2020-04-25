@@ -1,9 +1,9 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import { compareOrder, isAyahSelected } from "../Helpers/AyahsOrder";
-import AyahSelectionWord from "./AyahSelectionWord";
-import EndOfAyah from "./EndOfAyah";
-import { screenHeight } from "config/dimensions";
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { compareOrder, isAyahSelected } from '../Helpers/AyahsOrder';
+import AyahSelectionWord from './AyahSelectionWord';
+import EndOfAyah from './EndOfAyah';
+import { screenHeight } from 'config/dimensions';
 
 //Creates the higher order component
 const TextLine = ({
@@ -25,8 +25,9 @@ const TextLine = ({
           let curAyah = {
             ayah: Number(word.aya),
             surah: Number(word.sura),
-            page: page
-          }
+            page: page,
+            wordNum: Number(word.id)
+          };
           if (selectionOn === false) {
             if (word.char_type === 'word') {
               return (
@@ -62,7 +63,7 @@ const TextLine = ({
             if (word.char_type === 'word') {
               let isFirstSelectedWord = isAyaSelected && isFirstWord;
               if (isFirstSelectedWord) {
-                isFirstWord = false
+                isFirstWord = false;
               }
               return (
                 <AyahSelectionWord
@@ -94,26 +95,26 @@ const TextLine = ({
         })}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   line: {
-    flexDirection: "row-reverse",
-    backgroundColor: "transparent",
-    justifyContent: "space-between"
+    flexDirection: 'row-reverse',
+    backgroundColor: 'transparent',
+    justifyContent: 'space-between'
   },
   footer: {
-    justifyContent: "center",
-    alignSelf: "stretch",
+    justifyContent: 'center',
+    alignSelf: 'stretch',
     height: screenHeight * 0.25,
-    alignItems: "center"
+    alignItems: 'center'
   },
   imageContainer: {
-    width: "100%",
-    justifyContent: "center",
-    alignSelf: "center",
-    alignItems: "center"
-  },
+    width: '100%',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    alignItems: 'center'
+  }
 });
 
 export default TextLine;

@@ -21,13 +21,10 @@ export default TeacherInfoEntries = (props) => {
                 //Teacher Name box ------------------------------------------------------
             }
             <View style={styles.infoRow}>
-                <View style={{ paddingRight: screenWidth * 0.015 }}>
-                    <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.namePlaceHolder}</Text>
-                </View>
-
                 <TextInput
                     style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
                     textContentType='name'
+                    placeholder={strings.namePlaceHolder}
                     autoCorrect={false}
                     onChangeText={props.onNameChanged}
                     value={props.name} />
@@ -37,13 +34,11 @@ export default TeacherInfoEntries = (props) => {
                 //Teacher Phone box -----------------------------------------------------
             }
             <View style={styles.infoRow}>
-                <View style={{ paddingRight: screenWidth * 0.015 }}>
-                    <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.phoneNumberPlaceHolder}</Text>
-                </View>
                 <PhoneInput style={styles.textInput}
                     ref={ref => {
                         this.phone = ref;
                     }}
+                    textProps={{placeholder: strings.phoneNumberPlaceHolder}}
                     value={props.phoneNumber}
                     onChangePhoneNumber={() => props.onPhoneNumberChanged(this.phone)}
                 />
@@ -55,12 +50,10 @@ export default TeacherInfoEntries = (props) => {
             {
                 !props.noEmailField ? (
                     <View style={styles.infoRow}>
-                        <View style={{ paddingRight: screenWidth * 0.015 }}>
-                            <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.emailPlaceHolder}</Text>
-                        </View>
                         <TextInput
                             style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
                             keyboardType='email-address'
+                            placeholder={strings.emailPlaceHolder}
                             autoCorrect={false}
                             autoCapitalize='none'
                             textContentType='emailAddress'
@@ -84,12 +77,11 @@ export default TeacherInfoEntries = (props) => {
                  * make both password input boxes the same length.
                  */
                 <View style={styles.infoRow}>
-                    <Text style={fontStyles.smallTextStyleDarkGrey}>{"     " + strings.password + "      "}</Text>
-
                     <TextInput
                         style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
                         textContentType='password'
                         autoCompleteType='password'
+                        placeholder={strings.password}
                         autoCorrect={false}
                         onChangeText={props.onPasswordChanged}
                         secureTextEntry={true}
@@ -104,11 +96,11 @@ export default TeacherInfoEntries = (props) => {
                  * Password field two
                  */
                 <View style={styles.infoRow}>
-                    <Text style={fontStyles.smallTextStyleDarkGrey}>{strings.ConfirmPasswordPlaceholder}</Text>
                     <TextInput
                         style={[fontStyles.smallTextStyleDarkGrey, styles.textInput]}
                         textContentType='password'
                         autoCorrect={false}
+                        placeholder={strings.ConfirmPasswordPlaceholder}
                         autoCompleteType='password'
                         onChangeText={props.onPasswordTwoChanged}
                         secureTextEntry={true}
@@ -141,10 +133,10 @@ const styles = StyleSheet.create({
     },
     textInput: {
         flex: 1,
-        paddingLeft: 0.049 * screenWidth,
+        paddingLeft: 5,
         backgroundColor: colors.veryLightGrey,
-        height: screenHeight * 0.08 * 0.6,
-        borderRadius: screenWidth * 0.05
+        height: 40,
+        borderRadius: 1
     },
     infoRow: {
         flexDirection: "row",
