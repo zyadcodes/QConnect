@@ -4,6 +4,7 @@ import { View } from "react-native";
 import MushafScreen from "./MushafScreen";
 import LoadingSpinner from "components/LoadingSpinner";
 import studentImages from "config/studentImages";
+import Sound from 'react-native-sound';
 
 const noAyahSelected = {
   surah: 0,
@@ -47,7 +48,35 @@ class MushafReadingScreen extends Component {
 
   onSelectAyah(selectedAyah) {
     //todo: implement audio playback
+    console.log(JSON.stringify(selectedAyah));
+    let location =
+      ('00' + selectedAyah.surah).slice(-3) +
+      ('00' + selectedAyah.ayah).slice(-3);
+    let url =
+      'https://dl.salamquran.com/ayat/afasy-murattal-192/' +
+      location +
+      ".mp3";
+    console.log(url);
+    this.playTrack(url);
   }
+
+  playTrack = url => {
+    const track = new Sound(url, null, e => {
+      if (e) {
+        console.log("e: " + JSON.stringify(e))
+      } else {
+        track.play(success => {
+          console.log(JSON.stringify(success))
+          if (success) {
+            console.log("awesome!")
+          } else {
+            console.log("ahhhhggg")
+          }
+          this.setState({ highlighted: false });
+        });
+      }
+    });
+  };
 
   render() {
     const {
