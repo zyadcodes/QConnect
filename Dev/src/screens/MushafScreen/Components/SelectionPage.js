@@ -137,6 +137,10 @@ class SelectionPage extends React.Component {
       return true;
     }
 
+    if(nextProps.highlightedAyah !== this.props.highlightedAyah){
+      return true;
+    }
+
     //if the sele.getDerivedStateFromPropsr
     if (
       nextProps.selectionOn != this.state.selectionOn ||
@@ -424,6 +428,7 @@ class SelectionPage extends React.Component {
                           key={page + '_' + line.line}
                           lineText={line.text}
                           selectionOn={selectionOn}
+                          highlightedAyah={this.props.highlightedAyah}
                           selectedAyahsEnd={selectedAyahsEnd}
                           selectedAyahsStart={selectedAyahsStart}
                           selectionStarted={selectionStarted}

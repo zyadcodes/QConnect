@@ -16,7 +16,8 @@ const TextLine = ({
   isFirstWord,
   onSelectAyah,
   lineAlign,
-  selectionOn
+  selectionOn,
+  highlightedAyah
 }) => {
   return (
     <View style={{ ...styles.line, alignItems: lineAlign }}>
@@ -28,12 +29,16 @@ const TextLine = ({
             page: page,
             wordNum: Number(word.id)
           };
+          let highlighted =
+            highlightedAyah !== undefined &&
+            compareOrder(curAyah, highlightedAyah) === 0;
           if (selectionOn === false) {
             if (word.char_type === 'word') {
               return (
                 <AyahSelectionWord
                   key={word.id}
                   text={word.text}
+                  highlighted={highlighted}
                   selected={false}
                   onPress={() => onSelectAyah(curAyah)}
                   isFirstSelectedWord={false}
@@ -69,6 +74,7 @@ const TextLine = ({
                 <AyahSelectionWord
                   key={word.id}
                   text={word.text}
+                  highlighted={highlighted}
                   selected={isAyaSelected}
                   onPress={() => onSelectAyah(curAyah)}
                   isFirstSelectedWord={isFirstSelectedWord}

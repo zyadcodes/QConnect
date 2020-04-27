@@ -100,7 +100,7 @@ export default class FirebaseFunctions {
   }
 
   static async updateClassCode() {
-    console.log("\n\n\n\n========= migrating class null image ids ========\n")
+    console.log("\n\n\n\n========= migrating class null image ids ========\n");
     let cls = await this.getClassIdsCollection();
     cls.forEach(async classID => {
       let currentClass = await this.getClassByID(classID);
@@ -113,8 +113,13 @@ export default class FirebaseFunctions {
       //   });
       // }
 
-      if (currentClass.classImageID === undefined || currentClass.classImageID === null) {
-        console.log(`currentClass ${currentClass.ID}, imgID: ${currentClass.classImageID}`);
+      if (
+        currentClass.classImageID === undefined ||
+        currentClass.classImageID === null
+      ) {
+        console.log(
+          `currentClass ${currentClass.ID}, imgID: ${currentClass.classImageID}`
+        );
 
         await this.updateClassObject(classID, {
           classImageID: 1
@@ -165,6 +170,75 @@ export default class FirebaseFunctions {
     });
 
     return 0;
+  }
+
+  static async fixNullAssignmentLocationsAndTypes() {
+    let cls = await this.getClassIdsCollection();
+    //Rewrites all of the versions of this student in all of the classes they are a part of with their
+    //new name and profile picture
+    cls.forEach(async classID => {
+      let currentClass = await this.getClassByID(classID);
+      //      console.log("---- id: " + classID);
+
+      let arrayOfStudents = currentClass.students;
+      if (!arrayOfStudents) {
+        return;
+      }
+
+      //filter to students with attendance records
+      let studentsToFix = arrayOfStudents.filter(
+        student =>
+          student.currentAssignments !== undefined &&
+          student.currentAssignments.find(
+            assignment =>
+              assignment.type === null || assignment.location === null
+          )
+      );
+
+      if(studentsToFix.length === 0){
+        console.log("this class doesn't need fix: " + classID);
+        return;
+      }
+
+      let fixedStudents = studentsToFix.map(stud => {
+        console.log(
+          "found: className" +
+            currentClass.name +
+            ".\n student name " +
+            stud.name +
+            ".\n assignment: " +
+            JSON.stringify(stud.currentAssignments)
+        );
+
+        let fixed = stud.currentAssignments.map(assignment => {
+          if (
+            assignment === undefined ||
+            assignment.type === null ||
+            assignment.location === null
+          ) {
+            if (assignment.type === null) {
+              assignment.type = "Memorization";
+            }
+          }
+          return assignment;
+        });
+
+        console.log("fixed: " + JSON.stringify(fixed));
+        let filtered = fixed.filter(as => as.name !== "None");
+        console.log("filtered: " + JSON.stringify(filtered));
+
+        stud.currentAssignments = filtered;
+
+        return stud;
+      });
+
+      console.log("\n--------------------------------\nnew Students Array: \n" + JSON.stringify(fixedStudents))
+      await this.updateClassObject(classID, {
+        students: fixedStudents
+      });
+
+      return 0;
+    });
   }
 
   static async updateAttendance() {

@@ -26,7 +26,6 @@ class FirstScreenLoader extends Component {
     await FirebaseFunctions.auth.onAuthStateChanged(async user => {
       try {
         if (this.state.alreadyCalled === false) {
-          console.log('retrying ....');
           this.setState({ alreadyCalled: true });
           if (!user) {
             this.props.navigation.push("LoginScreen");
@@ -47,21 +46,12 @@ class FirstScreenLoader extends Component {
           return;
         }
       } catch (err) {
-        console.log(JSON.stringify(err.toString()))
+        console.log(JSON.stringify(err.toString()));
         ret = false;
       }
     });
     return ret;
   }
-
-  // async componentDidUpdate(){
-  //   if (!this.state.alreadyCalled && this.state.showOfflineError) {
-  //     let succeeded = await this.tryInitUser();
-  //     if (succeeded) {
-  //       this.setState({ showOfflineError: false });
-  //     }
-  //   }
-  // }
 
   // Placeholder loading in case async fetch takes too long
   render() {
@@ -72,20 +62,12 @@ class FirstScreenLoader extends Component {
     if (this.state.showOfflineError) {
       return (
         <OfflineEmptyState
-          retry={
-            async () => {
-              let succeeded = await this.tryInitUser();
-              if (succeeded) {
-                this.setState({ showOfflineError: false });
-              }
+          retry={async () => {
+            let succeeded = await this.tryInitUser();
+            if (succeeded) {
+              this.setState({ showOfflineError: false });
             }
-            // this.setState({
-            //   showOfflineError: false,
-            //   alreadyCalled: false,
-            //   retry: this.state.retry + 1
-            //
-            //})
-          }
+          }}
         />
       );
     }

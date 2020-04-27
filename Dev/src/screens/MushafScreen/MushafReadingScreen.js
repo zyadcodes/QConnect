@@ -48,7 +48,7 @@ class MushafReadingScreen extends Component {
 
   onSelectAyah(selectedAyah) {
     //todo: implement audio playback
-    console.log(JSON.stringify(selectedAyah));
+    this.setState({ highlightedAyah: selectedAyah });
     let location =
       ('00' + selectedAyah.surah).slice(-3) +
       ('00' + selectedAyah.ayah).slice(-3);
@@ -56,7 +56,6 @@ class MushafReadingScreen extends Component {
       'https://dl.salamquran.com/ayat/afasy-murattal-192/' +
       location +
       ".mp3";
-    console.log(url);
     this.playTrack(url);
   }
 
@@ -67,12 +66,7 @@ class MushafReadingScreen extends Component {
       } else {
         track.play(success => {
           console.log(JSON.stringify(success))
-          if (success) {
-            console.log("awesome!")
-          } else {
-            console.log("ahhhhggg")
-          }
-          this.setState({ highlighted: false });
+          this.setState({ highlightedAyah: undefined });
         });
       }
     });
@@ -113,6 +107,7 @@ class MushafReadingScreen extends Component {
             classID={classID}
             profileImage={studentImages.images[imageID]}
             selection={selection}
+            highlightedAyah={this.state.highlightedAyah}
             assignmentName={assignmentName}
             assignmentLocation={assignmentLocation}
             assignmentType={assignmentType}
