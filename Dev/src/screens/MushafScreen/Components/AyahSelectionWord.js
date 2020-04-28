@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
   },
   highlightedStyle: {
     backgroundColor: "rgba(107,107,107,0.8)",
+    borderRadius: 20
   },
   firstSelectedWordText: {
     borderTopRightRadius: 15,

@@ -17,7 +17,7 @@ const TextLine = ({
   onSelectAyah,
   lineAlign,
   selectionOn,
-  highlightedAyah
+  highlightedWord
 }) => {
   return (
     <View style={{ ...styles.line, alignItems: lineAlign }}>
@@ -30,8 +30,8 @@ const TextLine = ({
             wordNum: Number(word.id)
           };
           let highlighted =
-            highlightedAyah !== undefined &&
-            compareOrder(curAyah, highlightedAyah) === 0;
+            highlightedWord !== undefined &&
+            word.id === highlightedWord;
           if (selectionOn === false) {
             if (word.char_type === 'word') {
               return (

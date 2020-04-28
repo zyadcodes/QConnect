@@ -47,26 +47,32 @@ class MushafReadingScreen extends Component {
   }
 
   onSelectAyah(selectedAyah, selectedWord) {
+    console.log(JSON.stringify(selectedWord));
     //todo: implement audio playback
-    this.setState({ highlightedAyah: selectedAyah });
-    let location =
-      ('00' + selectedAyah.surah).slice(-3) +
-      ('00' + selectedAyah.ayah).slice(-3);
-    let url =
-      'https://dl.salamquran.com/ayat/afasy-murattal-192/' +
-      location +
-      ".mp3";
-    this.playTrack(url);
+    if (selectedWord) {
+      this.setState({ highlightedWord: selectedWord.id });
+      let location =
+        ('00' + selectedAyah.surah).slice(-3) +
+        ('00' + selectedAyah.ayah).slice(-3);
+
+      if (selectedWord.audio) {
+        let url = `https://dl.salamquran.com/wbw/${selectedWord.audio}`;
+        // 'https://dl.salamquran.com/ayat/afasy-murattal-192/' +
+        // location +
+        // ".mp3";
+        this.playTrack(url);
+      }
+    }
   }
 
   playTrack = url => {
     const track = new Sound(url, null, e => {
       if (e) {
-        console.log("e: " + JSON.stringify(e))
+        console.log("e: " + JSON.stringify(e));
       } else {
         track.play(success => {
-          console.log(JSON.stringify(success))
-          this.setState({ highlightedAyah: undefined });
+          console.log(JSON.stringify(success));
+          this.setState({ highlightedWord: undefined });
         });
       }
     });
@@ -107,7 +113,7 @@ class MushafReadingScreen extends Component {
             classID={classID}
             profileImage={studentImages.images[imageID]}
             selection={selection}
-            highlightedAyah={this.state.highlightedAyah}
+            highlightedWord={this.state.highlightedWord}
             assignmentName={assignmentName}
             assignmentLocation={assignmentLocation}
             assignmentType={assignmentType}

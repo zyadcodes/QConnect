@@ -137,7 +137,7 @@ class SelectionPage extends React.Component {
       return true;
     }
 
-    if(nextProps.highlightedAyah !== this.props.highlightedAyah){
+    if (nextProps.highlightedWord !== this.props.highlightedWord) {
       return true;
     }
 
@@ -428,13 +428,15 @@ class SelectionPage extends React.Component {
                           key={page + '_' + line.line}
                           lineText={line.text}
                           selectionOn={selectionOn}
-                          highlightedAyah={this.props.highlightedAyah}
+                          highlightedWord={this.props.highlightedWord}
                           selectedAyahsEnd={selectedAyahsEnd}
                           selectedAyahsStart={selectedAyahsStart}
                           selectionStarted={selectionStarted}
                           selectionCompleted={selectionCompleted}
                           isFirstWord={isFirstWord}
-                          onSelectAyah={(ayah, word) => this.props.onSelectAyah(ayah, word)}
+                          onSelectAyah={(ayah, word) =>
+                            this.props.onSelectAyah(ayah, word)
+                          }
                           page={this.state.page}
                           lineAlign={lineAlign}
                         />

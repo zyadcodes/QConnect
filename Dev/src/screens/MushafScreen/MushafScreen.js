@@ -86,7 +86,7 @@ export default class MushafScreen extends QcParentScreen {
       assignToID,
       selection,
       disableChangingUser,
-      highlightedAyah
+      highlightedWord
     } = this.props;
 
     const itemInt = parseInt(item);
@@ -96,7 +96,7 @@ export default class MushafScreen extends QcParentScreen {
         <SelectionPage
           page={itemInt}
           onChangePage={this.onChangePage.bind(this)}
-          highlightedAyah={highlightedAyah}
+          highlightedWord={highlightedWord}
           selectedAyahsStart={selection.start}
           selectedAyahsEnd={selection.end}
           selectionStarted={selection.started}
