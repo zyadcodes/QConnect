@@ -4,6 +4,7 @@ import { View } from "react-native";
 import MushafScreen from "./MushafScreen";
 import LoadingSpinner from "components/LoadingSpinner";
 import studentImages from "config/studentImages";
+import Sound from 'react-native-sound';
 
 const noAyahSelected = {
   surah: 0,
@@ -45,9 +46,37 @@ class MushafReadingScreen extends Component {
     });
   }
 
-  onSelectAyah(selectedAyah) {
+  onSelectAyah(selectedAyah, selectedWord) {
+    console.log(JSON.stringify(selectedWord));
     //todo: implement audio playback
+    if (selectedWord) {
+      this.setState({ highlightedWord: selectedWord.id });
+      let location =
+        ('00' + selectedAyah.surah).slice(-3) +
+        ('00' + selectedAyah.ayah).slice(-3);
+
+      if (selectedWord.audio) {
+        let url = `https://dl.salamquran.com/wbw/${selectedWord.audio}`;
+        // 'https://dl.salamquran.com/ayat/afasy-murattal-192/' +
+        // location +
+        // ".mp3";
+        this.playTrack(url);
+      }
+    }
   }
+
+  playTrack = url => {
+    const track = new Sound(url, null, e => {
+      if (e) {
+        console.log("e: " + JSON.stringify(e));
+      } else {
+        track.play(success => {
+          console.log(JSON.stringify(success));
+          this.setState({ highlightedWord: undefined });
+        });
+      }
+    });
+  };
 
   render() {
     const {
@@ -84,6 +113,7 @@ class MushafReadingScreen extends Component {
             classID={classID}
             profileImage={studentImages.images[imageID]}
             selection={selection}
+            highlightedWord={this.state.highlightedWord}
             assignmentName={assignmentName}
             assignmentLocation={assignmentLocation}
             assignmentType={assignmentType}

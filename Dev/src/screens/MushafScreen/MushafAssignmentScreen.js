@@ -484,7 +484,7 @@ class MushafAssignmentScreen extends Component {
   //==================== end of assignment methods =================================
 
   //======== selection changes methods: which verses are selected in the page ======
-  onSelectAyah(selectedAyah) {
+  onSelectAyah(selectedAyah, selectedWord) {
     const { selection } = this.state;
 
     //if the user taps on the same selected aya again, turn off selection

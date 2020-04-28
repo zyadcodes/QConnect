@@ -275,20 +275,50 @@ class StudentProfileScreen extends QcParentScreen {
           item.evaluation.improvementAreas.length > 0 ? (
             <View
               style={{
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                height: screenHeight * 0.03
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                alignItems: "center",
+                height: screenHeight * 0.03,
               }}
             >
-              <Text style={fontStyles.smallTextStyleDarkGrey}>
+              <Text
+                style={[
+                  fontStyles.smallTextStyleDarkGrey,
+                  {textVerticalAlign: "center", paddingTop: 5},
+                ]}
+              >
                 {strings.ImprovementAreas}
               </Text>
               {item.evaluation.improvementAreas.map((tag, cnt) => {
                 return (
-                  <Text key={tag}>
-                    {cnt > 0 ? ", " : ""}
-                    {tag}
-                  </Text>
+                  <View
+                    style={[
+                      styles.corner,
+                      {
+                        flexDirection: 'row',
+                        backgroundColor: colors.primaryVeryLight,
+                      },
+                    ]}
+                  >
+                    <Icon
+                      name="tag"
+                      size={10}
+                      containerStyle={{ paddingRight: 5 }}
+                      style={{ paddingRight: 3 }}
+                      type="simple-line-icon"
+                      color={colors.darkGrey}
+                    />
+
+                    <Text
+                      key={tag}
+                      style={[
+                        fontStyles.smallTextStyleDarkGrey,
+                        { textAlign: 'center' },
+                      ]}
+                    >
+                      {tag}
+                    </Text>
+                  </View>
                 );
               })}
             </View>
