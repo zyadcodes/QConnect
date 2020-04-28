@@ -118,7 +118,7 @@ export default class MushafScreen extends QcParentScreen {
           //callback when user taps on a single ayah to selects
           //determines whether this would be the start of end of the selection
           // and select ayahs in between
-          onSelectAyah={selectedAyah => this.props.onSelectAyah(selectedAyah)}
+          onSelectAyah={(selectedAyah, selectedWord) => this.props.onSelectAyah(selectedAyah, selectedWord)}
           //callback when user selects a range of ayahs (line an entire page or surah)
           onSelectAyahs={(firstAyah, lastAyah) =>
             this.props.onSelectAyahs(firstAyah, lastAyah)

@@ -434,7 +434,7 @@ class SelectionPage extends React.Component {
                           selectionStarted={selectionStarted}
                           selectionCompleted={selectionCompleted}
                           isFirstWord={isFirstWord}
-                          onSelectAyah={ayah => this.props.onSelectAyah(ayah)}
+                          onSelectAyah={(ayah, word) => this.props.onSelectAyah(ayah, word)}
                           page={this.state.page}
                           lineAlign={lineAlign}
                         />

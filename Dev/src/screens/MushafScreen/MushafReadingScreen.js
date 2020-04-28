@@ -46,7 +46,7 @@ class MushafReadingScreen extends Component {
     });
   }
 
-  onSelectAyah(selectedAyah) {
+  onSelectAyah(selectedAyah, selectedWord) {
     //todo: implement audio playback
     this.setState({ highlightedAyah: selectedAyah });
     let location =
