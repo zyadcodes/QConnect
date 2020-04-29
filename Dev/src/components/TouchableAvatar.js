@@ -20,7 +20,7 @@ export default TouchableAvatar = (props) => {
     <TouchableHighlight
       style={{
         backgroundColor: backColor,
-        borderRadius: length /2 
+        borderRadius: length /2 + 5
       }}
       onPress={onPress}>
       <Image
