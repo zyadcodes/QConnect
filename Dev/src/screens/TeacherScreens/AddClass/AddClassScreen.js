@@ -18,7 +18,7 @@ export class AddClassScreen extends QcParentScreen {
   //----------------------- state -------------------------------------
   state = {
     className: "",
-    classImageId: Math.floor(Math.random() * 10),
+    classImageID: Math.floor(Math.random() * 10),
     modalVisible: false,
     isLoading: true,
     userID: "",
@@ -59,7 +59,7 @@ export class AddClassScreen extends QcParentScreen {
   }
 
   onImageSelected(imageId) {
-    this.setState({ classImageId: imageId })
+    this.setState({ classImageID: imageId })
     this.setModalVisible(false);
   }
 
@@ -96,11 +96,12 @@ export class AddClassScreen extends QcParentScreen {
     //End of check for bad input--------------------------------------------
     
     this.disableAddClassButton();
-
+    
     let classInfo = {
       name: this.state.className,
       classImageID: this.state.classImageID,
       students: [],
+      classInviteCode: '',
       teachers: [this.state.userID]
     };
 
@@ -109,6 +110,7 @@ export class AddClassScreen extends QcParentScreen {
 
     //Navigates to the class
     this.props.navigation.push("ShareClassCode", {
+      classInviteCode: newClass.classInviteCode,
       currentClassID: newClassID,
       userID: this.state.userID,
       currentClass: newClass
@@ -146,7 +148,7 @@ export class AddClassScreen extends QcParentScreen {
           <View style={styles.picContainer}>
             <Image
               style={styles.profilePic}
-              source={classImages.images[this.state.classImageId]}
+              source={classImages.images[this.state.classImageID]}
               ResizeMode="contain" />
             <TouchableText
               text={strings.EditClassImage}
@@ -208,7 +210,7 @@ const styles = StyleSheet.create({
     paddingLeft: screenWidth * 0.03,
     width: screenWidth * 0.95,
     backgroundColor: colors.veryLightGrey,
-    borderRadius: screenWidth * 0.05
+    borderRadius: 1
   },
 });
 

@@ -1,13 +1,17 @@
 import React from 'react';
 import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
+import { PixelRatio } from 'react-native';
 import colors from 'config/colors';
 import { Icon } from 'react-native-elements';
 import ClassMainScreen from './ClassMainScreen';
 import ClassAttendanceScreen from './ClassAttendanceScreen';
 import strings from '../../../../config/strings';
-import MushafScreen from '../../MushafScreen/MushafScreen';
+import MushafAssignmentScreen from '../../MushafScreen/MushafAssignmentScreen';
 import { screenHeight } from 'config/dimensions';
 
+var iconSizeSelected = PixelRatio.get() < 2 ? 18 : 25;
+var iconSizeNotSelected = PixelRatio.get() < 2 ? 14 : 20;
+var fontSize = PixelRatio.get() < 2 ? 12 : 14;
 
 const routeConfig = {
   AttendanceTab: {
@@ -17,7 +21,7 @@ const routeConfig = {
       tabBarIcon: ({ tintColor, focused }) => (
         <Icon
           name="calendar-check-o"
-          size={20}
+          size={focused ? iconSizeSelected : iconSizeNotSelected}
           type="font-awesome"
           color={tintColor}
         />
@@ -31,7 +35,7 @@ const routeConfig = {
       tabBarIcon: ({ tintColor, focused }) => (
         <Icon
           name="group"
-          size={20}
+          size={focused ? iconSizeSelected : iconSizeNotSelected}
           type="font-awesome"
           color={tintColor}
         />
@@ -39,21 +43,26 @@ const routeConfig = {
     },
   },
   AssignmentsTab: {
-    screen: MushafScreen,
-    navigationOptions: {
-      tabBarVisible: false,
-      tabBarLabel: strings.Assignments,
-      tabBarIcon: ({ tintColor, focused }) => (
-        <Icon
-          name="feather"
-          size={20}
-          type="material-community"
-          color={tintColor}
+    screen: MushafAssignmentScreen,
+    navigationOptions: ({ navigation }) => {
+      return {
+        isTeacher: true,
+        assignToAllClass: true,
+        userID: navigation.getParam("userID"),
+        tabBarVisible: false,
+        tabBarLabel: strings.Assignments,
+        tabBarIcon: ({ tintColor, focused }) => (
+          <Icon
+            name="feather"
+            size={focused ? iconSizeSelected : iconSizeNotSelected}
+            type="material-community"
+            color={tintColor}
           />
-      ),
-    }
-  },
-}
+        ),
+      };
+    },
+  }
+};
 
 const navigatorConfig = {
   initialRouteName: 'ClassStudentsTab',
@@ -70,7 +79,7 @@ const navigatorConfig = {
       padding: 10,
     },
     labelStyle: {
-      fontSize: 14
+      fontSize
     },
     // Android's default showing of icons is false whereas iOS is true
     showIcon: true,
@@ -80,11 +89,7 @@ const navigatorConfig = {
     drawerIcon: ({ tintColor }) => (
       <Icon
         name="group"
-        size={30}
-        iconStyle={{
-          width: 30,
-          height: 30,
-        }}
+        size={iconSizeSelected}
         type="material"
         color={tintColor}
       />
@@ -92,7 +97,10 @@ const navigatorConfig = {
   }
 };
 
-const TeacherBottomTabNavigator = createBottomTabNavigator(routeConfig, navigatorConfig);
+const TeacherBottomTabNavigator = createBottomTabNavigator(
+  routeConfig,
+  navigatorConfig
+);
 
 const ClassTabsNavigator = createAppContainer(TeacherBottomTabNavigator);
 

@@ -1,33 +1,42 @@
-import {
-  View, Text, TouchableOpacity,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import fontStyles from 'config/fontStyles';
 
 class SuggestionListItem extends PureComponent {
   onPress = () => {
-    const { name, id, onPressItem } = this.props;
-    onPressItem(id, name);
+    const { name, id, ename, onPressItem } = this.props;
+    onPressItem(id, name, ename);
   };
 
   render() {
-    const {
-      name, tags, textStyle, tagStyle,
-    } = this.props;
+    const { name, ename, textStyle, enameStyle } = this.props;
     return (
-      <TouchableOpacity onPress={this.onPress}>
-        <View style={{ flex: 1, flexDirection: 'row'}}>
-          <Text style={fontStyles.mainTextStyleBlack}>
-            { name }
+      <TouchableOpacity style={styles.card} onPress={this.onPress}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <Text
+            style={[
+              fontStyles.mainTextStylePrimaryDark,
+              { textAlign: 'center', textAlignVertical: 'center' },
+            ]}
+          >
+            {name}
           </Text>
-          {
-            tags && tags.map(tag => (
-              <Text key={tag.id} style={fontStyles.mainTextStyleGrey}>
-                { tag.item }
-              </Text>
-            ))
-          }
+          <Text
+            key={ename}
+            style={[
+              fontStyles.smallTextStyleDarkGrey,
+              { textAlign: 'center', textAlignVertical: 'center' },
+            ]}
+          >
+            {ename}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -35,16 +44,42 @@ class SuggestionListItem extends PureComponent {
 }
 SuggestionListItem.propTypes = {
   textStyle: PropTypes.shape({}),
-  tagStyle: PropTypes.shape({}),
+  enameStyle: PropTypes.shape({}),
   name: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
-  tags: PropTypes.arrayOf(PropTypes.string),
+  ename: PropTypes.string.isRequired,
   onPressItem: PropTypes.func.isRequired,
 };
 SuggestionListItem.defaultProps = {
-  tags: [],
   textStyle: {},
-  tagStyle: {},
+  enameStyle: {},
 };
 
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    flex: 1,
+    alignItems: 'center',
+    height: 40,
+    margin: 5,
+  },
+  card: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: 'black',
+    shadowOpacity: 0.26,
+    shadowOffset: { width: 0, height: 0.1 },
+    shadowRadius: 1,
+    elevation: 1,
+    flex: 1,
+    height: 50,
+    margin: 5,
+    borderRadius: 2,
+    backgroundColor: 'white'
+  }
+});
+
+/**
+ *
+ */
 export default SuggestionListItem;

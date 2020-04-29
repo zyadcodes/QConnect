@@ -1,5 +1,5 @@
 /* eslint-disable quotes */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import styled from "styled-components";
 import { ProgressBar } from "react-native-paper";
@@ -8,7 +8,8 @@ import {
   Animated,
   Easing,
   Alert,
-  Platform
+  Platform,
+  View
 } from "react-native";
 import AudioRecorderPlayer, {
   AVEncoderAudioQualityIOSType,
@@ -21,29 +22,50 @@ import colors from "config/colors";
 import strings from "config/strings";
 import FirebaseFunctions from "config/FirebaseFunctions";
 import { check, request, PERMISSIONS, RESULTS } from "react-native-permissions";
+import TouchableText from "components/TouchableText";
+import fontStyles from "config/fontStyles";
 
 const translateX = new Animated.Value(0);
 const scale = new Animated.Value(1);
 const rotation = new Animated.Value(0);
 const opacity = new Animated.Value(0);
-
+const postStopAction = {
+  none: 0,
+  close: 1,
+  send: 2
+};
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
 const AudioPlayer = props => {
   const [toggled, setToggled] = useState(true);
   const [playTime, setPlayTime] = useState(0);
   const [playWidth, setPlayWidth] = useState(0);
-  const [recordingCompleted, setRecordingCompleted] = useState(false);
+  const [showPlayback, setShowPlayback] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [showSendCancel, setShowSendCancel] = useState(false);
   const [recordingPlaybackPlaying, setRecordingPlaybackPlaying] = useState(
     false
   );
+  const [visible, setVisible] = useState(props.visible);
+
+  useEffect(() => {
+    // returned function will be called on component unmount
+    return () => {
+      if (isRecording) {
+        audioRecorderPlayer.stopRecorder();
+        audioRecorderPlayer.removeRecordBackListener();
+      }
+      audioRecorderPlayer.stopPlayer();
+      audioRecorderPlayer.removePlayBackListener();
+    };
+  }, [isRecording]);
 
   audioRecorderPlayer.setSubscriptionDuration(0.09); // optional. Default is 0.1
   const spin = rotation.interpolate({
     inputRange: [0, 1],
     outputRange: ["0deg", "360deg"]
   });
-  ``;
+
   const opacityInterpolate = opacity.interpolate({
     inputRange: [0, 0.85, 1],
     outputRange: [0, 0, 1]
@@ -53,15 +75,19 @@ const AudioPlayer = props => {
     return Animated.loop(
       Animated.timing(rotation, {
         toValue: 1,
+        useNativeDriver: true,
         duration: 2500,
         easing: Easing.linear
       })
     ).start();
   };
 
-  onStartPlay = async () => {
+  const onStartPlay = async filePath => {
     try {
-      const msg = await audioRecorderPlayer.startPlayer(props.audioFilePath);
+      let audioFileName =
+        filePath !== undefined ? filePath : props.audioFilePath;
+
+      const msg = await audioRecorderPlayer.startPlayer(audioFileName);
       if (msg === undefined) {
         throw "audioRecorderPlayer.startPlayer returned undefined.";
       }
@@ -77,6 +103,7 @@ const AudioPlayer = props => {
         setToggled(true);
         animateStopAudio();
         setPlayWidth(0);
+        setRecordingPlaybackPlaying(false);
       } else {
         setPlayWidth(e.current_position / e.duration);
       }
@@ -86,20 +113,32 @@ const AudioPlayer = props => {
     return true;
   };
 
-  onPausePlay = async () => {
+  const onPausePlay = async () => {
     await audioRecorderPlayer.pausePlayer();
+  };
+
+  const onStopPlay = async () => {
+    audioRecorderPlayer.stopPlayer();
+    audioRecorderPlayer.removePlayBackListener();
     setToggled(true);
   };
 
-  onStopPlay = async () => {
-    audioRecorderPlayer.stopPlayer();
-    audioRecorderPlayer.removePlayBackListener();
-  };
-
   var uri = "";
+  const path = Platform.select({
+    ios: "/recitationRec.m4a",
+    android: "sdcard/recitationRec.mp4"
+  });
 
-  onStartRecord = async () => {
-    setRecordingCompleted(false);
+  var RNFS = require("react-native-fs");
+  const fullPath = Platform.select({
+    ios: RNFS.CachesDirectoryPath + path,
+    android: "/" + path
+  });
+
+  const onStartRecord = async () => {
+    setIsRecording(true);
+    setShowPlayback(false);
+    setShowSendCancel(true);
     //Handles permissions for microphone usage
     let isGranted = true;
 
@@ -135,10 +174,6 @@ const AudioPlayer = props => {
       return false;
     }
 
-    const path = Platform.select({
-      ios: "hello.m4a",
-      android: "sdcard/hello.mp4"
-    });
     const audioSet = {
       AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
       AudioSourceAndroid: AudioSourceAndroidType.MIC,
@@ -149,6 +184,7 @@ const AudioPlayer = props => {
 
     try {
       uri = await audioRecorderPlayer.startRecorder(path, audioSet);
+
       audioRecorderPlayer.addRecordBackListener(e => {
         setPlayTime(audioRecorderPlayer.mmssss(Math.floor(e.current_position)));
       });
@@ -160,53 +196,79 @@ const AudioPlayer = props => {
     }
   };
 
-  onStopRecord = async () => {
-    await audioRecorderPlayer.stopRecorder();
-    audioRecorderPlayer.removeRecordBackListener();
-    setPlayWidth(0);
-    setRecordingCompleted(true);
-    props.onStopRecording("/sdcard/hello.mp4");
+  //this function stops recording
+  // if there is a post action requested after stopping the recording,
+  // it will perform that action. The 2 post actions supported are send the audio
+  // after stopping or close the dialog.
+  const onStopRecord = async postAction => {
+    if (isRecording) {
+      await audioRecorderPlayer.stopRecorder();
+      await audioRecorderPlayer.removeRecordBackListener();
+
+      setPlayWidth(0);
+      setIsRecording(false);
+      setShowPlayback(true);
+    }
+
+    //let's perform a post action is requested.
+    if (postAction === postStopAction.send) {
+      props.onSend(fullPath);
+    } else if (postAction === postStopAction.close) {
+      props.onClose();
+    }
   };
 
   const onStartAction = async () => {
-    if (props.isRecordMode === true) {
-      return await onStartRecord();
-    } else {
-      return await onStartPlay();
+    try {
+      if (props.isRecordMode === true) {
+        return await onStartRecord();
+      } else {
+        return await onStartPlay();
+      }
+    } catch (e) {
+      Alert.alert(strings.Whoops, strings.SomethingWentWrong);
     }
   };
 
-  const onStopAction = async () => {
-    if (props.isRecordMode === true) {
-      await onStopRecord();
-    } else {
-      await onPausePlay();
+  const onStopAction = async postAction => {
+    try {
+      if (props.isRecordMode === true) {
+        await onStopRecord(postAction);
+      } else {
+        await onPausePlay(); //no postAction applicable for now. No need to pass.
+      }
+    } catch (e) {
+      Alert.alert(strings.Whoops, strings.SomethingWentWrong);
     }
+
     setToggled(true);
   };
 
   const onPress = async () => {
-    if (toggled) {
-      let success = await onStartAction();
-      if (success) {
-        setToggled(false);
-        animateStartAudio();
+    try {
+      if (toggled) {
+        let success = await onStartAction();
+        if (success) {
+          setToggled(false);
+          animateStartAudio();
+        } else {
+          setToggled(true);
+        }
       } else {
-        setToggled(true);
-        //Alert.alert(strings.Whoops, props.isRecordMode? strings.FailedToRecordAudio : strings.FailedToPlayAudioFile);
+        animateStopAudio();
+        onStopAction();
       }
-    } else {
-      animateStopAudio();
-      onStopAction();
+    } catch (e) {
+      Alert.alert(strings.Whoops, strings.SomethingWentWrong);
     }
   };
 
   //handles re-play button after recording an audio
   const onPlayRecording = async () => {
-    if (props.isRecordMode && recordingCompleted) {
+    if (props.isRecordMode && showPlayback) {
       if (!recordingPlaybackPlaying) {
         setRecordingPlaybackPlaying(true);
-        return await onStartPlay();
+        return await onStartPlay(path);
       } else {
         setRecordingPlaybackPlaying(false);
         return await onPausePlay();
@@ -216,97 +278,140 @@ const AudioPlayer = props => {
 
   const animateStartAudio = () => {
     Animated.parallel([
-      Animated.timing(translateX, { toValue: 35 }),
-      Animated.timing(scale, { toValue: 1.2 }),
+      Animated.timing(translateX, { toValue: 0, useNativeDriver: true }),
+      Animated.timing(scale, { toValue: 1.2, useNativeDriver: true }),
       rotationLoop(),
-      Animated.timing(opacity, { toValue: 1 })
+      Animated.timing(opacity, { toValue: 1, useNativeDriver: true })
     ]).start();
   };
 
   const animateStopAudio = () => {
     Animated.parallel([
-      Animated.timing(translateX, { toValue: -60 }),
-      Animated.timing(scale, { toValue: 1 }),
-      Animated.timing(rotation, { toValue: 0 }),
-      Animated.timing(opacity, { toValue: 0 })
+      Animated.timing(translateX, { toValue: 0, useNativeDriver: true }),
+      Animated.timing(scale, { toValue: 1, useNativeDriver: true }),
+      Animated.timing(rotation, { toValue: 0, useNativeDriver: true }),
+      Animated.timing(opacity, { toValue: 0, useNativeDriver: true })
     ]).start();
   };
 
   return (
-    <Container>
-      <Row>
-        <TouchableOpacity onPress={onPress}>
-          <AnimatedImage
-            key={`image_${toggled}`}
-            source={
-              toggled
-                ? props.isRecordMode
-                  ? require("./record.png")
-                  : require("./play-c.png")
-                : require("./pause.png")
-            }
-            style={{ transform: [{ scale }, { rotate: spin }] }}
-          />
-        </TouchableOpacity>
-        {props.isRecordMode && recordingCompleted && (
-          <TouchableOpacity
-            style={{ justifyContent: "center", alignItems: "center" }}
-            onPress={onPlayRecording}
-          >
-            <SmallImage
-              source={
-                !recordingPlaybackPlaying
-                  ? require("./play-c.png")
-                  : require("./pause.png")
-              }
-            />
-          </TouchableOpacity>
-        )}
-        {toggled && (
-          <AudioDesc>
-            <AudioStatus>
-              {props.isRecordMode
-                ? strings.SendRecording
-                : strings.AudioRecordingReceived}
-            </AudioStatus>
-            <Subtitle>
-              {!props.isRecordMode
-                ? strings.Sent + " " + props.sent
-                : recordingCompleted
-                ? strings.TasmeeRecorded
-                : strings.PressToStartRecording}
-            </Subtitle>
-          </AudioDesc>
-        )}
-      </Row>
-      <AnimatedPlaying style={{ transform: [{ translateX }] }}>
-        <AnimatedColumn style={{ opacity: opacityInterpolate }}>
-          <Reciter>{props.title}</Reciter>
-          <Subtitle>
-            {!props.isRecordMode
-              ? strings.Sent + " " + props.sent
-              : strings.Recording}
-          </Subtitle>
-          <ProgressBar
-            progress={playWidth}
-            color={colors.primaryDark}
-            style={{ width: 150 }}
-          />
-          <Subtitle>{playTime}</Subtitle>
-        </AnimatedColumn>
-      </AnimatedPlaying>
-    </Container>
+    <View>
+      {visible && (
+        <Container>
+          <Row>
+            <TouchableOpacity onPress={onPress}>
+              <AnimatedImage
+                key={`image_${toggled}`}
+                source={
+                  toggled
+                    ? props.isRecordMode
+                      ? require("./record.png")
+                      : require("./play-c.png")
+                    : require("./pause.png")
+                }
+                style={{ transform: [{ scale }] }}
+              />
+            </TouchableOpacity>
+            {!toggled && !isRecording && (
+              <TouchableOpacity onPress={onStopPlay}>
+                <SmallImage source={require("./stop.png")} />
+              </TouchableOpacity>
+            )}
+            {props.isRecordMode && showPlayback && (
+              <TouchableOpacity
+                style={{ justifyContent: "center", alignItems: "center" }}
+                onPress={onPlayRecording}
+              >
+                <SmallImage
+                  source={
+                    !recordingPlaybackPlaying
+                      ? require("./play-c.png")
+                      : require("./pause.png")
+                  }
+                />
+              </TouchableOpacity>
+            )}
+            {toggled && (
+              <AudioDesc>
+                <AudioStatus>
+                  {props.isRecordMode
+                    ? strings.SendRecording
+                    : strings.AudioRecordingReceived}
+                </AudioStatus>
+                <Subtitle>
+                  {!props.isRecordMode
+                    ? strings.Sent + " " + props.sent
+                    : showPlayback
+                    ? strings.TasmeeRecorded
+                    : strings.PressToStartRecording}
+                </Subtitle>
+              </AudioDesc>
+            )}
+            {!toggled && (
+              <AnimatedPlaying>
+                <AnimatedColumn style={{ opacity: opacityInterpolate }}>
+                  <Subtitle>
+                    {!props.isRecordMode
+                      ? strings.Sent + " " + props.sent
+                      : strings.Recording}
+                  </Subtitle>
+                  <ProgressBar
+                    progress={playWidth}
+                    color={colors.primaryDark}
+                    style={{ width: 150 }}
+                  />
+                  <Subtitle>{playTime}</Subtitle>
+                </AnimatedColumn>
+              </AnimatedPlaying>
+            )}
+          </Row>
+
+          <SendRow>
+            {!props.hideCancel &&
+              (!(props.isRecordMode && !toggled) && (
+                <TouchableText
+                  text={strings.Cancel}
+                  onPress={() => {
+                    animateStopAudio();
+                    onStopAction(postStopAction.close);
+                  }}
+                  style={{
+                    ...fontStyles.captionTextStylePrimaryDark,
+                    paddingHorizontal: 15,
+                    paddingBottom: 5,
+                  }}
+                />
+              ))}
+            <HorizontalSpacer />
+            {showSendCancel && (
+              <TouchableText
+                text={strings.Send}
+                style={{
+                  ...fontStyles.captionTextStylePrimaryDark,
+                  paddingHorizontal: 15,
+                  paddingBottom: 5,
+                }}
+                onPress={() => {
+                  animateStopAudio();
+                  onStopAction(postStopAction.send);
+                }}
+              />
+            )}
+          </SendRow>
+        </Container>
+      )}
+    </View>
   );
 };
 
 export default AudioPlayer;
 
 const Container = styled.View`
-  width: 326px;
-  height: 50px;
+  min-width: 95%;
+  min-height: 80px;
   border-radius: 14px;
   box-shadow: 0 50px 57px #6f535b;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 `;
 
@@ -314,6 +419,10 @@ const Image = styled.Image`
   width: 50px;
   height: 50px;
   border-radius: 25px;
+`;
+
+const VerticalSpacer = styled.View`
+  height: 40px;
 `;
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
@@ -329,11 +438,22 @@ const DiskCenter = styled.View`
   width: 10px;
   height: 10px;
   border-radius: 5px;
-  position: absolute;
   left: 20px;
   top: 5px;
-  z-index: 10;
   background: #ffffff;
+`;
+
+const SendRow = styled.View`
+  margin-top: 5px;
+  padding-top: 5px;
+  padding-right: 20px;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-self: flex-end;
+`;
+
+const HorizontalSpacer = styled.View`
+  width: 20;
 `;
 
 const AnimatedDiskCenter = Animated.createAnimatedComponent(DiskCenter);
@@ -344,26 +464,23 @@ const AudioDesc = styled.View`
 
 const Row = styled.View`
   flex-direction: row;
-  height: 40px;
-  width: 280px;
-  justify-content: space-between;
-  position: absolute;
-  right: 30px;
+  min-height: 40px;
+  min-width: 280px;
+  margin-top: 5px;
+  justify-content: flex-start;
 `;
 
 const Playing = styled.View`
-  width: 300px;
   height: 50px;
   border-radius: 14px;
-  z-index: -1;
-  align-items: center;
+  align-items: flex-start;
+  margin-left: 10px;
 `;
 
 const AnimatedPlaying = Animated.createAnimatedComponent(Playing);
 
 const Column = styled.View`
   flex-direction: column;
-  height: 100%;
 `;
 
 const AnimatedColumn = Animated.createAnimatedComponent(Column);

@@ -5,6 +5,9 @@ export default {
   AppTitle: "QuranConnect",
   AppSubTitle: "Serving your passion for the Quran",
 
+  //--------------------- Mushaf Screen -----------------------
+  AssignTo: "Assign to",
+
   //--------------------- Notifications ---------------------
   NeedsHelp: "Needs help",
   StudentUpdate: "Student Update",
@@ -13,24 +16,36 @@ export default {
   HasJoinedYourClass: " has joined your class",
   AssignmentUpdate: "Assignment Update",
   YourTeacherHasUpdatedYourCurrentAssignment:
-    "Your teacher has updated your current assignment",
+    "You have a new assignment from your teacher",
   AssignmentGraded: "Assignment Graded",
   YourAssignmentHasBeenGraded: "Your assignment has been graded",
-
+  SomethingWentWrong: "Bummer. Something went wrong. Please try again. If the problem persists, please report it to quranconnect@outlook.com",
+  Retry: "Check again",
   //--------------------- Student Main Screen ---------------------
   TotalAssignments: "Total assignments completed",
   Ready: "READY",
   WorkingOnIt: "WORKING ON IT",
   NeedAssignment: "NEED ASSIGNMENT",
+  Assignment: "ASSIGNMENT",
   PastAssignments: "Past Assignments",
   ClassAlreadyJoined:
     "We know it's exciting to be in this class. But you can only join it once.",
   NeedHelp: "NEED HELP",
+  NotStarted: "NOT STARTED",
+  NeedHelpNonCap: "Need help",
+  NotStartedNonCap: "Not started",
+  ReadyNonCap: "Ready",
+  WorkingOnItNonCap: "Working on it",
   EnableMicPermissions:
     "You need to enable microphone permissions from your settings",
   SubmitAssignment: "Submit Assignment",
   Record: "Record",
   Stop: "Stop",
+  DailyPracticeLog: "Daily Practice Log",
+  DailyPracticeLogDec: "Log and share your daily Quran practice",
+  DailyPracticeLogDecTeacherView: "Student's log of daily assignment practice",
+  PracticeLogNotification: "was working on the assignment",
+
 
   //--------------------- Forgot Password Screen-------------------
   emailPlaceHolder: "Email",
@@ -72,6 +87,7 @@ export default {
   Play: "Play",
   FailedToPlayAudioFile: "Failed to play student recording. We know it is a bummer. Please try again later.",
   FailedToRecordAudio: "Failed to record the audio. We know it is a bummer. Please try again later.",
+  OtherArea: "Other...",
   //--------------------- First Run Screen ---------------------
   IAmATeacher: "I am a teacher",
   IAmAStudent: "I am a student",
@@ -79,6 +95,7 @@ export default {
   IncorrectInfo: "Incorrect username or password",
   CreateAccount: "Create Account",
   ForgotPasswordQuestion: "Forgot Password?",
+
 
   //--------------------- Teacher Welcome Screen ---------------------
   YourProfileHasBeenSaved: "Your profile has been saved",
@@ -99,21 +116,33 @@ export default {
   PasswordError: "Password must be longer than six characters",
 
   //----------------------- Teacher Main Screen ----------------------
-  EmptyClass: "Uh Oh! No students",
+  EmptyClass: "Let's add your students",
   AddStudentButton: "Click here to add a student",
   AddClassButton: "Click here to add a class",
   AddText:
     "It's hard to call a class without a name. Please enter a valid class name",
 
   //--------------------- Student Profile Screen ---------------------
-  EditAssignment: "Edit Assignment",
-  AddAssignment: "Add Assignment",
+  WordsPerAssignment: "Words memorized over time",
+  OpenAssignment: "Open assignment",
+  CompleteAssignment: "Ready",
+  Attended: "Attended",
+  Missed: "Missed",
+  ReadQuranMotivation: "Feeling bored?",
+  ReadQuranMotivationDesc: "God sent you a beautiful message",
+  readInMushaf: "Review assignment",
+  Status:  "Status: ",
+  OpenMushaf: "Open the Mus'haf to read it",
+  EvaluateAssignment: "Evaluate this assignment",
+  EditAssignment: "Edit assignment",
+  AddAssignment: "Add a new assignment",
+  ChangeStatus: "CHANGE STATUS",
   Assignments: "Assignments",
   Memorize: "Memorize",
   Reading: "Reading",
   Read: "Read",
   Revision: "Revision",
-  Revise: "Revise",
+  Review: "Review",
   EnterAssignmentHere: "Enter assignment here...",
   OutStanding: "Outstanding!",
   EnterAssignment: "Enter Assignment",
@@ -122,19 +151,23 @@ export default {
   GreatJob: "Great Job!",
   CurrentlyNoAssignment: "You currently don't have an assignment.",
   CurrentAssignment: "Current Assignment",
+  CurrentAssignments: "Current Assignments",
   Grade: "Grade",
   PleaseEnterAnAssignmentName: "Please select an assignment.",
   ImprovementAreas: "Things to work on: ",
-  NoClass: "Uh Oh! No Classes",
+  NoClass: "Let's get you started",
   addClassButton: "Click Here to Add A Class",
   NotesColon: "Notes: ",
   ParenthesisPage: ") p. ",
   PagesWithParenthesis: ") pp. ",
   To: " to ",
+  TeacherIsNotified: "Awesome! Your teacher is notified and she sure will be excited :)",
+  TeacherIsNotifiedNeedHelp: "Oh no! Your teacher is notified and should be happy to help.",
 
   //--------------------- Join Class Screen ---------------------
-  JoinClass: "Join Class",
-  HaventJoinedClassYet: "You haven't joined a class yet",
+  JoinClass: "Join your class",
+  StudentNoClassHeaderMsg: "Your Teacher is Waiting\n",
+  HaventJoinedClassYet: "Let's get you started",
   TypeInAClassCode: "Type in a class code...",
   IncorrectClassCode: "There doesn't seem to be a class with this code",
 
@@ -195,6 +228,7 @@ export default {
 
   //--------------------- Class Header Navigator ---------------------
   StudentProfile: "Student Profile",
+  GoToProfile: "Go to profile",
   EditClass: "Edit Class",
   StudentEvaluation: "Student Evaluation",
   Completed: "Completed",
@@ -228,6 +262,8 @@ export default {
 
   //----------------------Error string codes: used to indicate errors in string params -----------
   titleNotPassed: "no_title_code_500",
+  Offline: "Oops, your connection seems off...",
+  OfflineDesc: "Keep calm, read some Quran, and try again.",
 
   //---------------------------Place Holder Text For Teacher Name, PhoneNumber, and Email---------------------------
   namePlaceHolder: "Name",
@@ -247,5 +283,6 @@ export default {
 
   //---------------------------  Mushaf ---------------------------------------
   InvalidPageNumber:
-    "Invalid page number. Please enter a page between 1 and 604."
+    "Invalid page number. Please enter a page between 1 and 604.",
+
 };
