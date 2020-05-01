@@ -8,6 +8,8 @@ import ClassAttendanceScreen from './ClassAttendanceScreen';
 import strings from '../../../../config/strings';
 import MushafAssignmentScreen from '../../MushafScreen/MushafAssignmentScreen';
 import { screenHeight } from 'config/dimensions';
+import FeedsScreen from '../../UniversalClassScreens/FeedsScreen';
+import { string } from 'prop-types';
 
 var iconSizeSelected = PixelRatio.get() < 2 ? 18 : 25;
 var iconSizeNotSelected = PixelRatio.get() < 2 ? 14 : 20;
@@ -41,6 +43,15 @@ const routeConfig = {
         />
       ),
     },
+  },
+  FeedsScreen: {
+    screen: FeedsScreen,
+    navigationOptions: {
+      tabBarLabel: strings.Feed,
+      tabBarIcon: ({tintColor, focused}) => (
+        <Icons type="material" name="chat" size={20} color={tintColor}/>
+      )
+    }
   },
   AssignmentsTab: {
     screen: MushafAssignmentScreen,
