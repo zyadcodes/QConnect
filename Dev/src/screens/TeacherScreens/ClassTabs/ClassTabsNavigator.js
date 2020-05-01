@@ -7,6 +7,8 @@ import ClassAttendanceScreen from './ClassAttendanceScreen';
 import strings from '../../../../config/strings';
 import MushafAssignmentScreen from '../../MushafScreen/MushafAssignmentScreen';
 import { screenHeight } from 'config/dimensions';
+import FeedsScreen from '../../UniversalClassScreens/FeedsScreen';
+import { string } from 'prop-types';
 
 const routeConfig = {
   AttendanceTab: {
@@ -31,6 +33,15 @@ const routeConfig = {
         <Icon name="group" size={20} type="font-awesome" color={tintColor} />
       ),
     },
+  },
+  FeedsScreen: {
+    screen: FeedsScreen,
+    navigationOptions: {
+      tabBarLabel: strings.Feed,
+      tabBarIcon: ({tintColor, focused}) => (
+        <Icons type="material" name="chat" size={20} color={tintColor}/>
+      )
+    }
   },
   AssignmentsTab: {
     screen: MushafAssignmentScreen,
