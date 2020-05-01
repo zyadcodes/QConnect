@@ -16,7 +16,8 @@ const TextLine = ({
   isFirstWord,
   onSelectAyah,
   lineAlign,
-  selectionOn
+  selectionOn,
+  highlightedWord
 }) => {
   return (
     <View style={{ ...styles.line, alignItems: lineAlign }}>
@@ -28,14 +29,18 @@ const TextLine = ({
             page: page,
             wordNum: Number(word.id)
           };
+          let highlighted =
+            highlightedWord !== undefined &&
+            word.id === highlightedWord;
           if (selectionOn === false) {
             if (word.char_type === 'word') {
               return (
                 <AyahSelectionWord
                   key={word.id}
                   text={word.text}
+                  highlighted={highlighted}
                   selected={false}
-                  onPress={() => onSelectAyah(curAyah)}
+                  onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={false}
                 />
               );
@@ -44,7 +49,7 @@ const TextLine = ({
                 <EndOfAyah
                   key={word.id}
                   ayahNumber={word.aya}
-                  onPress={() => onSelectAyah(curAyah)}
+                  onPress={() => onSelectAyah(curAyah, word)}
                   selected={false}
                   isLastSelectedAyah={false}
                 />
@@ -69,8 +74,9 @@ const TextLine = ({
                 <AyahSelectionWord
                   key={word.id}
                   text={word.text}
+                  highlighted={highlighted}
                   selected={isAyaSelected}
-                  onPress={() => onSelectAyah(curAyah)}
+                  onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={isFirstSelectedWord}
                 />
               );
@@ -79,7 +85,7 @@ const TextLine = ({
                 <EndOfAyah
                   key={word.id}
                   ayahNumber={word.aya}
-                  onPress={() => onSelectAyah(curAyah)}
+                  onPress={() => onSelectAyah(curAyah, word)}
                   selected={isAyahSelected(
                     curAyah,
                     selectionStarted,

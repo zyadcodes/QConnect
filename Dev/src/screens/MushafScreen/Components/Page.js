@@ -49,7 +49,6 @@ class Page extends React.Component {
 	}
 
 	onSelectAyah(ayaNumber) {
-		console.log(ayaNumber);
 		//if the user taps on the same selected aya again, turn off selection
 		if (
 			this.state.selectedAyahsStart === this.state.selectedAyahsEnd &&

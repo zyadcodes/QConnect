@@ -1,6 +1,6 @@
 //Screen which will provide all of the possible settings for the user to click on
 import React from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView, PixelRatio } from "react-native";
 import LoadingSpinner from "components/LoadingSpinner";
 import colors from "config/colors";
 import QcParentScreen from 'screens/QcParentScreen';
@@ -86,15 +86,17 @@ export default class MushafScreen extends QcParentScreen {
       assignToID,
       selection,
       disableChangingUser,
+      highlightedWord
     } = this.props;
 
     const itemInt = parseInt(item);
 
     return (
-      <View style={{ width: screenWidth, height: screenHeight }} key={idx}>
+      <View style={{ flex: 1 }} key={idx}>
         <SelectionPage
           page={itemInt}
           onChangePage={this.onChangePage.bind(this)}
+          highlightedWord={highlightedWord}
           selectedAyahsStart={selection.start}
           selectedAyahsEnd={selection.end}
           selectionStarted={selection.started}
@@ -116,7 +118,7 @@ export default class MushafScreen extends QcParentScreen {
           //callback when user taps on a single ayah to selects
           //determines whether this would be the start of end of the selection
           // and select ayahs in between
-          onSelectAyah={selectedAyah => this.props.onSelectAyah(selectedAyah)}
+          onSelectAyah={(selectedAyah, selectedWord) => this.props.onSelectAyah(selectedAyah, selectedWord)}
           //callback when user selects a range of ayahs (line an entire page or surah)
           onSelectAyahs={(firstAyah, lastAyah) =>
             this.props.onSelectAyahs(firstAyah, lastAyah)
@@ -145,26 +147,22 @@ export default class MushafScreen extends QcParentScreen {
       );
     } else {
       return (
-        <View style={{ width: screenWidth, height: screenHeight }}>
-          <ScrollView
-            style={{ width: screenWidth, height: screenHeight * 0.95 }}
+        <View style={{ flex: 1 }}>
+          <Swiper
+            index={this.state.index}
+            containerStyle={[{ width: screenWidth, height: screenHeight }]}
+            key={this.state.key}
+            loop={false}
+            showsButtons={false}
+            loadMinimal={true}
+            loadMinimalSize={1}
+            showsPagination={false}
+            onIndexChanged={index => {
+              this.setState({ page: 604 - index });
+            }}
           >
-            <Swiper
-              index={this.state.index}
-              containerStyle={{ width: screenWidth, height: screenHeight }}
-              key={this.state.key}
-              loop={false}
-              showsButtons={false}
-              loadMinimal={true}
-              loadMinimalSize={1}
-              showsPagination={false}
-              onIndexChanged={index => {
-                this.setState({ page: 604 - index });
-              }}
-            >
-              {this.state.pages.map((item, idx) => this.renderItem(item, idx))}
-            </Swiper>
-          </ScrollView>
+            {this.state.pages.map((item, idx) => this.renderItem(item, idx))}
+          </Swiper>
         </View>
       );
     }

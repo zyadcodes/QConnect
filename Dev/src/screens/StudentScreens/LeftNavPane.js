@@ -9,7 +9,7 @@ import {
   Modal,
   Text,
   Alert,
-  TextInput
+  Image
 } from 'react-native';
 import colors from 'config/colors';
 import classImages from 'config/classImages';
@@ -25,7 +25,7 @@ import FirebaseFunctions from "config/FirebaseFunctions";
 import LoadingSpinner from "components/LoadingSpinner";
 import QCView from "components/QCView";
 import screenStyle from "config/screenStyle";
-import CodeInput from 'react-native-confirmation-code-input'
+import CodeInput from 'react-native-confirmation-code-input';
 import fontStyles from 'config/fontStyles';
 
 class LeftNavPane extends QcParentScreen {
@@ -101,204 +101,220 @@ class LeftNavPane extends QcParentScreen {
 
     const profileCaption = name + strings.sProfile;
     const studentImageId = profileImageID;
-    const {classCode} = this.state;
+    const { classCode } = this.state;
 
     return (
-        <ScrollView >
-          <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
+      <ScrollView>
+        <SafeAreaView forceInset={{ top: "always", horizontal: "never" }}>
+          <View
+            style={{
+              paddingTop: 0.015 * screenHeight,
+              paddingBottom: 0.015 * screenHeight,
+              paddingLeft: screenWidth * 0.025,
+              paddingRight: screenWidth * 0.025,
+              alignContent: "center",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            <View style={{ flexDirection: "row" }}>
+              <Text style={fontStyles.hugeTextStylePrimaryDark}>
+                {strings.AppTitle}
+              </Text>
+            </View>
+          </View>
+
+          <QcDrawerItem
+            title={profileCaption}
+            image={studentImages.images[studentImageId]}
+            onPress={() =>
+              this.props.navigation.push("Profile", {
+                isTeacher: false,
+                accountObject: this.state.student,
+                classes: this.state.classes,
+                userID: this.state.userID
+              })
+            }
+          />
+
+          <QcDrawerItem
+            title="Holy Quran"
+            image={classImages.images[2]}
+            onPress={() =>
+              this.props.navigation.push("MushafReadingScreen", {
+                isTeacher: false,
+                studentID: this.state.userID,
+                accountObject: this.state.student,
+                classID:
+                  this.state.classes && this.state.classes.length > 0
+                    ? this.state.classes[0].ID
+                    : undefined,
+                userID: this.state.userID,
+                imageID: studentImageId
+              })
+            }
+          />
+
+          <FlatList
+            data={classes}
+            keyExtractor={(item, index) => item.name}
+            renderItem={({ item, index }) => (
+              <QcDrawerItem
+                title={item.name}
+                image={classImages.images[item.classImageID]}
+                onPress={() => this.openClass(item.ID)}
+              />
+            )}
+          />
+
+          <QcDrawerItem
+            title={strings.JoinClass}
+            icon="plus"
+            onPress={() => {
+              this.setState({ modalVisible: true });
+            }}
+          />
+          <QcDrawerItem
+            title={strings.Settings}
+            icon="cogs"
+            onPress={() =>
+              this.props.navigation.push("Settings", {
+                isStudent: true,
+                userID: this.state.userID,
+                student: this.state.student,
+                classes: this.state.classes
+              })
+            }
+          />
+          <Modal
+            animationType="fade"
+            style={{ alignItems: "center", justifyContent: "center" }}
+            transparent={true}
+            presentationStyle="overFullScreen"
+            visible={this.state.modalVisible}
+            onRequestClose={() => {}}
+          >
             <View
               style={{
-                paddingTop: 0.015 * screenHeight,
-                paddingBottom: 0.015 * screenHeight,
-                paddingLeft: screenWidth * 0.025,
-                paddingRight: screenWidth * 0.025,
-                alignContent: 'center',
-                alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: "center",
+                alignItems: "center",
+                alignSelf: "center",
+                paddingTop: screenHeight / 3
               }}
             >
-              <View style={{ flexDirection: "row" }}>
-                <Text style={fontStyles.hugeTextStylePrimaryDark}>
-                  {strings.AppTitle}
-                </Text>
+              <View style={styles.modal}>
+                {this.state.isLoading === true ? (
+                  <View>
+                    <LoadingSpinner isVisible={true} />
+                  </View>
+                ) : (
+                  <View>
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center"
+                      }}
+                    >
+                      <Image
+                        source={require("assets/emptyStateIdeas/welcome-girl.png")}
+                        style={{
+                          width: 50,
+                          height: 100,
+                          resizeMode: "contain",
+                          marginTop: 20,
+                        }}
+                      />
+                      <Text
+                        style={[
+                          fontStyles.mainTextStyleDarkGrey,
+                          { marginBottom: 20 },
+                        ]}
+                      >
+                        {strings.TypeInAClassCode}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center"
+                      }}
+                    >
+                      <CodeInput
+                        space={2}
+                        size={50}
+                        codeLength={5}
+                        activeColor={colors.primaryDark}
+                        inactiveColor={colors.primaryLight}
+                        autoFocus={true}
+                        inputPosition="center"
+                        className="border-circle"
+                        containerStyle={{ marginBottom: 60 }}
+                        codeInputStyle={{ borderWidth: 1.5 }}
+                        onFulfill={code => this.setState({ classCode: code })}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between"
+                      }}
+                    >
+                      <QcActionButton
+                        text={strings.Cancel}
+                        onPress={() => {
+                          this.setState({ modalVisible: false });
+                        }}
+                      />
+                      <QcActionButton
+                        text={strings.Confirm}
+                        onPress={() => {
+                          //Joins the class
+                          this.joinClass();
+                        }}
+                      />
+                    </View>
+                  </View>
+                )}
               </View>
             </View>
-
-            <QcDrawerItem
-              title={profileCaption}
-              image={studentImages.images[studentImageId]}
-              onPress={() =>
-                this.props.navigation.push('Profile', {
-                  isTeacher: false,
-                  accountObject: this.state.student,
-                  classes: this.state.classes,
-                  userID: this.state.userID,
-                })
-              }
-            />
-
-            <QcDrawerItem
-              title="Holy Quran"
-              image={classImages.images[2]}
-              onPress={() =>
-                this.props.navigation.push('MushafReadingScreen', {
-                  isTeacher: false,
-                  studentID: this.state.userID,
-                  accountObject: this.state.student,
-                  classID: this.state.classes[0].ID,
-                  userID: this.state.userID,
-                  imageID: studentImageId
-                })
-              }
-            />
-
-            <FlatList
-              data={classes}
-              keyExtractor={(item, index) => item.name}
-              renderItem={({ item, index }) => (
-                <QcDrawerItem
-                  title={item.name}
-                  image={classImages.images[item.classImageID]}
-                  onPress={() => this.openClass(item.ID)}
-                />
-              )}
-            />
-
-            <QcDrawerItem
-              title={strings.JoinClass}
-              icon="plus"
-              onPress={() => {
-                this.setState({ modalVisible: true });
-              }}
-            />
-            <QcDrawerItem
-              title={strings.Settings}
-              icon="cogs"
-              onPress={() =>
-                this.props.navigation.push('Settings', {
-                  isStudent: true,
-                  userID: this.state.userID,
-                  student: this.state.student,
-                  classes: this.state.classes,
-                })
-              }
-            />
-            <Modal
-              animationType="fade"
-              style={{ alignItems: "center", justifyContent: "center" }}
-              transparent={true}
-              presentationStyle="overFullScreen"
-              visible={this.state.modalVisible}
-              onRequestClose={() => {}}
-            >
-              <View
-                style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                  alignSelf: "center",
-                  paddingTop: screenHeight / 3,
-                }}
-              >
-                <View style={styles.modal}>
-                  {this.state.isLoading === true ? (
-                    <View>
-                      <LoadingSpinner isVisible={true} />
-                    </View>
-                  ) : (
-                    <View>
-                      <View
-                        style={{
-                          flex: 1,
-                          justifyContent: "center",
-                          alignItems: "center"
-                        }}
-                      >
-                        <Text style={fontStyles.mainTextStyleDarkGrey}>
-                          {strings.TypeInAClassCode}
-                        </Text>
-                      </View>
-                      <View
-                        style={{
-                          flex: 1,
-                          justifyContent: "center",
-                          alignItems: "center"
-                        }}
-                      >
-                        <CodeInput
-                         space={2}
-                         size={50}
-                         codeLength={5}
-                         activeColor={colors.primaryDark}
-                        inactiveColor={colors.primaryLight}
-                         autoFocus={true}
-                         inputPosition= 'center'
-                         className='border-circle'
-                         containerStyle={{ marginBottom: 60 }}
-                         codeInputStyle={{ borderWidth: 1.5 }}
-                         onFulfill={(code) => this.setState({classCode : code})}
-                        />
-                      </View>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          flex: 1
-                        }}
-                      >
-                        <QcActionButton
-                          text={strings.Cancel}
-                          onPress={() => {
-                            this.setState({ modalVisible: false });
-                          }}
-                        />
-                        <QcActionButton
-                          text={strings.Confirm}
-                          onPress={() => {
-                            //Joins the class
-                            this.joinClass();
-                          }}
-                        />
-                      </View>
-                    </View>
-                  )}
-                </View>
-              </View>
-            </Modal>
-          </SafeAreaView>
-        </ScrollView>
+          </Modal>
+        </SafeAreaView>
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-    modal: {
-        backgroundColor: colors.white,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        height: screenHeight * 0.25,
-        width: screenWidth * 0.75,
-        borderWidth: screenHeight * 0.003,
-        borderRadius: screenHeight * 0.003,
-        borderColor: colors.grey,
-        shadowColor: colors.darkGrey,
-        shadowOffset: { width: 0, height: screenHeight * 0.003 },
-        shadowOpacity: 0.8,
-        shadowRadius: screenHeight * 0.0045,
-        elevation: screenHeight * 0.003,
-    },
-    CodeInputCell: {
-        width: 40,
-        height: 40,
-        lineHeight: 38,
-        fontSize: 24,
-        borderWidth: 2,
-        borderColor: '#00000030',
-        textAlign: 'center',
-    },
-    OnCellFocus: {
-        backgroundColor: '#fff'
-    }
+  modal: {
+    backgroundColor: colors.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    height: 300,
+    width: screenWidth * 0.75,
+    borderWidth: screenHeight * 0.003,
+    borderRadius: screenHeight * 0.003,
+    borderColor: colors.grey,
+    shadowColor: colors.darkGrey,
+    shadowOffset: { width: 0, height: screenHeight * 0.003 },
+    shadowOpacity: 0.8,
+    shadowRadius: screenHeight * 0.0045,
+    elevation: screenHeight * 0.003,
+  },
+  CodeInputCell: {
+    width: 40,
+    height: 40,
+    lineHeight: 38,
+    fontSize: 24,
+    borderWidth: 2,
+    borderColor: '#00000030',
+    textAlign: 'center'
+  },
+  OnCellFocus: {
+    backgroundColor: '#fff'
+  }
 });
 
 export default LeftNavPane;

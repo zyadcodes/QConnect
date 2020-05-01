@@ -5,8 +5,9 @@ import {
   StyleSheet,
   TextInput,
   Alert,
-  Text,
-  KeyboardAvoidingView
+  ScrollView,
+  KeyboardAvoidingView,
+  PixelRatio
 } from "react-native";
 import colors from "config/colors";
 import TouchableText from "components/TouchableText";
@@ -111,7 +112,6 @@ class SelectionPage extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-
     //if there are no lines initialized yet, skip rendering.
     if (!nextState.lines || nextState.lines.length === 0) {
       return false;
@@ -134,6 +134,10 @@ class SelectionPage extends React.Component {
           this.state.selectedAyahsEnd
         ) !== 0)
     ) {
+      return true;
+    }
+
+    if (nextProps.highlightedWord !== this.props.highlightedWord) {
       return true;
     }
 
@@ -258,12 +262,17 @@ class SelectionPage extends React.Component {
     //then get the last ayah within the last line
     let lastAyah = this.getLastAyahOfLine(lastLine);
 
-    return { ayah: lastAyah, surah: Number(lastLine.surahNumber), page: page, wordNum: Number(lastLine.text[lastLine.text.length -1].id) };
+    return {
+      ayah: lastAyah,
+      surah: Number(lastLine.surahNumber),
+      page: page,
+      wordNum: Number(lastLine.text[lastLine.text.length - 1].id),
+    };
   }
 
   //------------------------ event handlers ----------------------------------------
   updatePage() {
-    const { editedPageNumber } = this.state;
+    const { editedPageNumber, page } = this.state;
 
     if (
       isNaN(editedPageNumber) ||
@@ -275,6 +284,7 @@ class SelectionPage extends React.Component {
     }
 
     this.setState({
+      isLoading: editedPageNumber !== page ? true : false,
       editPageNumber: false
     });
 
@@ -357,139 +367,147 @@ class SelectionPage extends React.Component {
       }
 
       return (
-        <KeyboardAvoidingView behavior="padding">
-          <View
-            id={this.state.page + "upperWrapper"}
-            style={{
-              backgroundColor: colors.white,
-              justifyContent: "flex-end"
-            }}
-          >
-            <AssignmentEntryComponent
-              visible={this.state.isSurahSelectionVisible}
-              onSubmit={surah => this.updateSurah(surah)}
-              assignment={surahName}
-              onCancel={() => this.setState({ isSurahSelectionVisible: false })}
-            />
-
-            <PageHeader
-              Title={surahName}
-              TitleOnPress={() => {
-                const { isSurahSelectionVisible } = this.state;
-                this.setState({
-                  isSurahSelectionVisible: !isSurahSelectionVisible
-                });
+        <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+          <ScrollView>
+            <View
+              id={this.state.page + "upperWrapper"}
+              style={{
+                backgroundColor: colors.white,
+                justifyContent: 'flex-end'
               }}
-              RightIconName={
-                this.props.topRightIconName
-                  ? this.props.topRightIconName
-                  : "check-all"
-              }
-              RightOnPress={() => {
-                this.props.topRightOnPress
-                  ? this.props.topRightOnPress()
-                  : this.onSelectPage();
-              }}
-              LeftImage={this.props.profileImage}
-              currentClass={this.props.currentClass}
-              assignToID={this.props.assignToID}
-              onSelect={this.props.onChangeAssignee}
-              disableChangingUser={this.props.disableChangingUser}
-            />
+            >
+              <AssignmentEntryComponent
+                visible={this.state.isSurahSelectionVisible}
+                onSubmit={surah => this.updateSurah(surah)}
+                assignment={surahName}
+                onCancel={() =>
+                  this.setState({ isSurahSelectionVisible: false })
+                }
+              />
 
-            <View id={this.state.page} style={styles.pageContent}>
-              {lines !== undefined &&
-                lines.map((line, index) => {
-                  if (line.type === 'start_sura') {
-                    return (
-                      <SurahHeader
-                        surahName={line.name}
-                        key={line.line + "_" + index}
-                      />
-                    );
-                  } else if (line.type === 'besmellah') {
-                    return <Basmalah key={line.line + "_basmalah"} />;
-                  } else {
-                    return (
-                      <TextLine
-                        key={page + '_' + line.line}
-                        lineText={line.text}
-                        selectionOn={selectionOn}
-                        selectedAyahsEnd={selectedAyahsEnd}
-                        selectedAyahsStart={selectedAyahsStart}
-                        selectionStarted={selectionStarted}
-                        selectionCompleted={selectionCompleted}
-                        isFirstWord={isFirstWord}
-                        onSelectAyah={ayah => this.props.onSelectAyah(ayah)}
-                        page={this.state.page}
-                        lineAlign={lineAlign}
-                      />
-                    );
-                  }
-                })}
-            </View>
-            <View style={styles.footer}>
-              <ImageBackground
-                source={require("assets/images/quran/title-frame.png")}
-                style={{
-                  width: "100%",
-                  justifyContent: "center",
-                  alignSelf: "center",
-                  alignItems: "center"
+              <PageHeader
+                Title={surahName}
+                TitleOnPress={() => {
+                  const { isSurahSelectionVisible } = this.state;
+                  this.setState({
+                    isSurahSelectionVisible: !isSurahSelectionVisible
+                  });
                 }}
-                resizeMethod="scale"
-              >
-                {!this.state.editPageNumber && (
-                  <TouchableText
-                    text={page.toString()}
-                    style={{
-                      ...fontStyles.mainTextStylePrimaryDark,
-                      ...fontStyles.textInputStyle
-                    }}
-                    onPress={() => {
-                      this.setState({ editPageNumber: true });
-                    }}
-                  />
-                )}
-                {this.state.editPageNumber && (
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignSelf: "stretch",
-                      alignItems: "center",
-                      justifyContent: "center"
-                    }}
-                  >
-                    <TextInput
-                      style={[
-                        styles.textInputStyle,
-                        fontStyles.mainTextStyleDarkGrey
-                      ]}
-                      autoFocus={true}
-                      selectTextOnFocus={true}
-                      autoCorrect={false}
-                      value={this.state.editedPageNumber.toString()}
-                      onChangeText={value =>
-                        this.setState({ editedPageNumber: Number(value) })
-                      }
-                      keyboardType="numeric"
-                    />
+                RightIconName={
+                  this.props.topRightIconName
+                    ? this.props.topRightIconName
+                    : "check-all"
+                }
+                RightOnPress={() => {
+                  this.props.topRightOnPress
+                    ? this.props.topRightOnPress()
+                    : this.onSelectPage();
+                }}
+                LeftImage={this.props.profileImage}
+                currentClass={this.props.currentClass}
+                assignToID={this.props.assignToID}
+                onSelect={this.props.onChangeAssignee}
+                disableChangingUser={this.props.disableChangingUser}
+              />
 
+              <View id={this.state.page} style={styles.pageContent}>
+                {lines !== undefined &&
+                  lines.map((line, index) => {
+                    if (line.type === 'start_sura') {
+                      return (
+                        <SurahHeader
+                          surahName={line.name}
+                          key={line.line + "_" + index}
+                        />
+                      );
+                    } else if (line.type === 'besmellah') {
+                      return <Basmalah key={line.line + "_basmalah"} />;
+                    } else {
+                      return (
+                        <TextLine
+                          key={page + '_' + line.line}
+                          lineText={line.text}
+                          selectionOn={selectionOn}
+                          highlightedWord={this.props.highlightedWord}
+                          selectedAyahsEnd={selectedAyahsEnd}
+                          selectedAyahsStart={selectedAyahsStart}
+                          selectionStarted={selectionStarted}
+                          selectionCompleted={selectionCompleted}
+                          isFirstWord={isFirstWord}
+                          onSelectAyah={(ayah, word) =>
+                            this.props.onSelectAyah(ayah, word)
+                          }
+                          page={this.state.page}
+                          lineAlign={lineAlign}
+                        />
+                      );
+                    }
+                  })}
+              </View>
+              <View style={styles.footer}>
+                <ImageBackground
+                  source={require("assets/images/quran/title-frame.png")}
+                  style={{
+                    width: "100%",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    alignItems: "center"
+                  }}
+                  resizeMethod="scale"
+                >
+                  {!this.state.editPageNumber && (
                     <TouchableText
-                      text={strings.Go}
+                      text={page.toString() + " (Change page)"}
                       style={{
                         ...fontStyles.mainTextStylePrimaryDark,
-                        marginLeft: screenWidth * 0.01
+                        ...fontStyles.textInputStyle
                       }}
                       onPress={() => {
-                        this.updatePage();
+                        this.setState({ editPageNumber: true });
                       }}
                     />
-                  </View>
-                )}
-              </ImageBackground>
+                  )}
+                  {this.state.editPageNumber && (
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignSelf: "stretch",
+                        alignItems: "center",
+                        justifyContent: "center"
+                      }}
+                    >
+                      <TextInput
+                        style={[
+                          styles.textInputStyle,
+                          fontStyles.mainTextStyleDarkGrey
+                        ]}
+                        autoFocus={true}
+                        selectTextOnFocus={true}
+                        autoCorrect={false}
+                        value={this.state.editedPageNumber.toString()}
+                        onChangeText={value =>
+                          this.setState({ editedPageNumber: Number(value) })
+                        }
+                        onEndEditing={() => this.updatePage()}
+                        keyboardType="numeric"
+                      />
+
+                      <TouchableText
+                        text={strings.Go}
+                        style={{
+                          ...fontStyles.mainTextStylePrimaryDark,
+                          marginLeft: screenWidth * 0.01
+                        }}
+                        onPress={() => {
+                          this.updatePage();
+                        }}
+                      />
+                    </View>
+                  )}
+                </ImageBackground>
+              </View>
             </View>
-          </View>
+          </ScrollView>
         </KeyboardAvoidingView>
       );
     }
@@ -510,17 +528,15 @@ const styles = StyleSheet.create({
   footer: {
     justifyContent: "center",
     alignSelf: "stretch",
-    height: screenHeight * 0.025,
+    height: 40,
     alignItems: "center"
   },
   textInputStyle: {
     backgroundColor: colors.veryLightGrey,
     borderColor: colors.darkGrey,
     width: screenWidth * 0.3,
-    height: screenHeight * 0.055,
-    borderRadius: screenWidth * 0.028,
-    marginTop: 5,
-    marginBottom: 5,
+    height: 40,
+    borderRadius: 2,
     textAlign: 'center',
     alignItems: 'center',
     justifyContent: 'center'
@@ -532,7 +548,6 @@ const styles = StyleSheet.create({
     flex: 10,
     paddingTop: screenHeight * 0.035,
     paddingBottom: screenHeight * 0.01,
-    height: screenHeight * 0.7,
   },
   entireTopView: {
     height: screenHeight * 0.05,

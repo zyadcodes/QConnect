@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { View } from "react-native";
 import MushafScreen from "./MushafScreen";
-import { screenHeight, screenWidth } from "config/dimensions";
+import LoadingSpinner from "components/LoadingSpinner";
 import studentImages from "config/studentImages";
+import Sound from 'react-native-sound';
 
 const noAyahSelected = {
   surah: 0,
@@ -28,12 +29,15 @@ class MushafReadingScreen extends Component {
           completed: true
         }
       : noSelection,
+    isLoading: true,
+  };
+
+  async componentDidMount() {
+    this.setState({ isLoading: false });
   }
 
   closeScreen() {
-    const {
-      userID
-    } = this.props.navigation.state.params;
+    const { userID } = this.props.navigation.state.params;
 
     //todo: if we need to generalize this, then we can add a props: onClose, and the caller specifies the onClose behavior with
     // the call to push navigation to the proper next screen.
@@ -42,9 +46,37 @@ class MushafReadingScreen extends Component {
     });
   }
 
-  onSelectAyah(selectedAyah){
+  onSelectAyah(selectedAyah, selectedWord) {
+    console.log(JSON.stringify(selectedWord));
     //todo: implement audio playback
+    if (selectedWord) {
+      this.setState({ highlightedWord: selectedWord.id });
+      let location =
+        ('00' + selectedAyah.surah).slice(-3) +
+        ('00' + selectedAyah.ayah).slice(-3);
+
+      if (selectedWord.audio) {
+        let url = `https://dl.salamquran.com/wbw/${selectedWord.audio}`;
+        // 'https://dl.salamquran.com/ayat/afasy-murattal-192/' +
+        // location +
+        // ".mp3";
+        this.playTrack(url);
+      }
+    }
   }
+
+  playTrack = url => {
+    const track = new Sound(url, null, e => {
+      if (e) {
+        console.log("e: " + JSON.stringify(e));
+      } else {
+        track.play(success => {
+          console.log(JSON.stringify(success));
+          this.setState({ highlightedWord: undefined });
+        });
+      }
+    });
+  };
 
   render() {
     const {
@@ -58,29 +90,43 @@ class MushafReadingScreen extends Component {
       imageID,
     } = this.props.navigation.state.params;
 
-    const {selection} = this.state;
+    const { selection, isLoading } = this.state;
 
-   
-
-    return (
-      <View style={{ width: screenWidth, height: screenHeight }}>
-        <MushafScreen
-          assignToID={studentID}
-          classID={classID}
-          profileImage={studentImages.images[imageID]}
-          selection={selection}
-          assignmentName={assignmentName}
-          assignmentLocation={assignmentLocation}
-          assignmentType={assignmentType}
-          topRightIconName="close"
-          topRightOnPress={this.closeScreen.bind(this)}
-          onClose={this.closeScreen.bind(this)}
-          currentClass={currentClass}
-          onSelectAyah={this.onSelectAyah.bind(this)}
-          disableChangingUser={true}
-        />
-      </View>
-    );
+    if (isLoading === true) {
+      return (
+        <View
+          id={this.state.page + "spinner"}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <LoadingSpinner isVisible={true} />
+        </View>
+      );
+    } else {
+      return (
+        <View style={{ flex: 1 }}>
+          <MushafScreen
+            assignToID={studentID}
+            classID={classID}
+            profileImage={studentImages.images[imageID]}
+            selection={selection}
+            highlightedWord={this.state.highlightedWord}
+            assignmentName={assignmentName}
+            assignmentLocation={assignmentLocation}
+            assignmentType={assignmentType}
+            topRightIconName="close"
+            topRightOnPress={this.closeScreen.bind(this)}
+            onClose={this.closeScreen.bind(this)}
+            currentClass={currentClass}
+            onSelectAyah={this.onSelectAyah.bind(this)}
+            disableChangingUser={true}
+          />
+        </View>
+      );
+    }
   }
 }
 
