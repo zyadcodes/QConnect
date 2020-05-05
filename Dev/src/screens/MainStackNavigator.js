@@ -16,8 +16,8 @@ import allSettingsScreen from './SettingsScreen/allSettingsScreen';
 import creditsScreen from './SettingsScreen/creditsScreen';
 import ProfileScreen from './ProfileScreen';
 import AddManualStudentsScreen from './TeacherScreens/AddStudents/AddManualStudentsScreen';
-import StudentMainScreen from './StudentScreens/StudentMainScreen';
-import ClassTabsNavigator from './TeacherScreens/ClassTabs/ClassTabsNavigator';
+import TeacherClassTabsNavigator from './TeacherScreens/ClassTabs/TeacherClassTabsNavigator';
+import StudentClassTabsNavigator from './StudentScreens/ClassTabs/StudentClassTabsNavigator';
 import StudentProfileScreen from './TeacherScreens/ClassTabs/StudentProfileScreen';
 import EvaluationPage from './Evaluation/EvaluationPage';
 import ShareClassCodeScreen from './TeacherScreens/AddStudents/ShareClassCodeScreen';
@@ -66,7 +66,7 @@ routeConfig = {
     },
 
     StudentCurrentClass: {
-        screen: StudentMainScreen,
+        screen: StudentClassTabsNavigator,
         navigationOptions: ({ navigation }) => ({
             header: null,
             gesturesEnabled: false,
@@ -146,7 +146,7 @@ routeConfig = {
     },
 
     TeacherCurrentClass: {
-        screen: ClassTabsNavigator,
+        screen: TeacherClassTabsNavigator,
         navigationOptions: ({ navigation }) => ({
             gesturesEnabled: false,
             header: null
