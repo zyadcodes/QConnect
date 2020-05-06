@@ -177,7 +177,7 @@ class StudentProfileScreen extends QcParentScreen {
           //To-Do: Navigates to more specific evaluation for this assignment
           this.props.navigation.push("EvaluationPage", {
             classID: this.state.currentClassID,
-            studentID: this.state.userID,
+            studentID: this.state.studentID,
             classStudent: thisClassInfo,
             assignmentName: item.name,
             completionDate: item.completionDate,
