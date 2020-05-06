@@ -759,7 +759,8 @@ class MushafAssignmentScreen extends Component {
               assignmentType,
               submission,
               newAssignment: true,
-              readOnly: false
+              readOnly: false,
+              onCloseNavigateTo: "TeacherCurrentClass"
             });
           }}
         >

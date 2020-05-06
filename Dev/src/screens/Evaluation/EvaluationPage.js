@@ -326,7 +326,19 @@ export class EvaluationPage extends QcParentScreen {
             !this.props.navigation.state.params.isStudentSide ? (
             <TopBanner
               LeftIconName="angle-left"
-              LeftOnPress={() => this.props.navigation.goBack()}
+              LeftOnPress={() => {
+                let index = this.props.navigation.dangerouslyGetParent().state
+                  .index;
+                // go back to previous page if we have one
+                if (index > 0) {
+                  this.props.navigation.goBack();
+                } else {
+                  //if navigation stack is empty (no previous page), go to main screen
+                  this.props.navigation.push("TeacherCurrentClass", {
+                    userID: this.state.userID
+                  });
+                }
+              }}
               Title={strings.Evaluation}
               RightIconName="edit"
               RightOnPress={() => {
