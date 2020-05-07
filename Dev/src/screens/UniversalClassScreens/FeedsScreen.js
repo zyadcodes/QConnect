@@ -9,6 +9,8 @@ import StudentLeftNavPane from '../StudentScreens/LeftNavPane';
 import TeacherLeftNavPane from '../TeacherScreens/LeftNavPane';
 import LoadingSpinner from '../../components/LoadingSpinner'
 import TopBanner from 'components/TopBanner';
+import FeedsObject from '../../components/FeedObject'
+import { screenHeight } from '../../../config/dimensions'
 
 export default class FeedsScreen extends React.Component { 
     state = {
@@ -43,7 +45,7 @@ export default class FeedsScreen extends React.Component {
         }else{
             currentClassID = teacher.currentClassID;
             LeftNavPane = TeacherLeftNavPane;
-            classes = teacher.classes;
+            classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
             await FirebaseFunctions.getClassesByIDs(teacher.classes);
             this.setState({teacher, isTeacher: true})
         }
@@ -79,20 +81,25 @@ export default class FeedsScreen extends React.Component {
                     edgeHitWidth={0}
                     navigation={this.props.navigation}
                 />}>
-                <QCView>
+                <View style={localStyles.containerView}>
                     <TopBanner
                         LeftIconName="navicon"
                         LeftOnPress={() => this.setState({ isOpen: true })}
                         Title={this.state.currentClass.name+' Feed'}/>  
                     <ScrollView style={localStyles.scrollViewStyle}>
-
+                        <FeedsObject Content='Emad gained 50 points!' number={0} key={0} type='notification' imageRequire={require('../../../assets/images/student-icons/boy1.png')}/>
+                        <FeedsObject Content={{}} number={1} key={1} type='assignment' imageRequire={require('../../../assets/images/student-icons/boy1.png')}/>
+                        <FeedsObject Content='Emad gained 50 points!' number={2} key={2} type='notification' imageRequire={require('../../../assets/images/student-icons/boy1.png')}/>
                     </ScrollView>
-                </QCView>
+                </View>
             </SideMenu>
         )
     }
 }
 const localStyles = StyleSheet.create({
+    containerView: {
+        height: screenHeight
+    },
     scrollViewStyle: {
       backgroundColor: colors.lightGrey 
     },
