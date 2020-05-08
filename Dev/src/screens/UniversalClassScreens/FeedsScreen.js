@@ -88,7 +88,11 @@ export default class FeedsScreen extends React.Component {
                         Title={this.state.currentClass.name+' Feed'}/>  
                     <ScrollView style={localStyles.scrollViewStyle}>
                         <FeedsObject Content='Emad gained 50 points!' number={0} key={0} type='notification' imageRequire={require('../../../assets/images/student-icons/boy1.png')}/>
-                        <FeedsObject Content={{}} number={1} key={1} type='assignment' imageRequire={require('../../../assets/images/student-icons/boy1.png')}/>
+                        <FeedsObject isTeacher={this.state.isTeacher} Content={{
+                            assignmentType: 'Memorization', 
+                            start: {ayah: 1, surah: 77, page: 580},
+                            end: {ayah: 11, page: 580, surah: 77}
+                        }} number={1} key={1} type='assignment' imageRequire={require('../../../assets/images/student-icons/boy1.png')}/>
                         <FeedsObject Content='Emad gained 50 points!' number={2} key={2} type='notification' imageRequire={require('../../../assets/images/student-icons/boy1.png')}/>
                     </ScrollView>
                 </View>
