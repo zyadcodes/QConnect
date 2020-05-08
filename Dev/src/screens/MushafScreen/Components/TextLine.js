@@ -40,6 +40,7 @@ const TextLine = ({
 
           let showLoading =
             showLoadingOnHighlightedAyah === true &&
+            highlightedAyah !== undefined &&
             compareOrder(highlightedAyah, curAyah) === 0;
 
           if (selectionOn === false) {

@@ -148,7 +148,10 @@ class MushafReadingScreen extends Component {
             classID={classID}
             profileImage={studentImages.images[imageID]}
             selection={selection}
-            showLoadingOnHighlightedAyah={this.state.isAudioLoading}
+            showLoadingOnHighlightedAyah={
+              this.state.isAudioLoading === true &&
+              this.state.highlightedAyah !== undefined
+            }
             highlightedWord={this.state.highlightedWord}
             highlightedAyah={this.state.highlightedAyah}
             assignmentName={assignmentName}
