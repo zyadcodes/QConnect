@@ -34,7 +34,7 @@ class MushafReadingScreen extends Component {
     isPlaying: false,
   };
 
-  track = undefined;
+  static track = undefined;
 
   async componentDidMount() {
     this.setState({ isLoading: false });
@@ -58,6 +58,7 @@ class MushafReadingScreen extends Component {
           highlightedWord: undefined,
           highlightedAyah: undefined,
           isPlaying: false,
+          isAudioLoading: false,
         });
       }
       return;
@@ -89,16 +90,18 @@ class MushafReadingScreen extends Component {
   }
 
   playTrack = url => {
-    this.setState({ isPlaying: true });
+    this.setState({ isPlaying: true, isAudioLoading: true });
     this.track = new Sound(url, null, e => {
       if (e) {
         console.log("e: " + JSON.stringify(e));
         this.setState({
           highlightedWord: undefined,
           highlightedAyah: undefined,
+          isAudioLoading: false,
           isPlaying: false,
         });
       } else {
+        this.setState({ isAudioLoading: false });
         this.track.play(success => {
           this.setState({
             highlightedWord: undefined,
@@ -145,6 +148,7 @@ class MushafReadingScreen extends Component {
             classID={classID}
             profileImage={studentImages.images[imageID]}
             selection={selection}
+            showLoadingOnHighlightedAyah={this.state.isAudioLoading}
             highlightedWord={this.state.highlightedWord}
             highlightedAyah={this.state.highlightedAyah}
             assignmentName={assignmentName}

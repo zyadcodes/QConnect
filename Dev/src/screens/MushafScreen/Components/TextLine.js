@@ -4,6 +4,7 @@ import { compareOrder, isAyahSelected } from '../Helpers/AyahsOrder';
 import AyahSelectionWord from './AyahSelectionWord';
 import EndOfAyah from './EndOfAyah';
 import { screenHeight } from 'config/dimensions';
+import LoadingSpinner from "components/LoadingSpinner";
 
 //Creates the higher order component
 const TextLine = ({
@@ -18,7 +19,8 @@ const TextLine = ({
   lineAlign,
   selectionOn,
   highlightedWord,
-  highlightedAyah
+  highlightedAyah,
+  showLoadingOnHighlightedAyah
 }) => {
   return (
     <View style={{ ...styles.line, alignItems: lineAlign }}>
@@ -33,7 +35,12 @@ const TextLine = ({
 
           let highlighted =
             (highlightedWord !== undefined && word.id === highlightedWord) ||
-            (highlightedAyah !== undefined && compareOrder(highlightedAyah, curAyah) === 0);
+            (highlightedAyah !== undefined &&
+              compareOrder(highlightedAyah, curAyah) === 0);
+
+          let showLoading =
+            showLoadingOnHighlightedAyah === true &&
+            compareOrder(highlightedAyah, curAyah) === 0;
 
           if (selectionOn === false) {
             if (word.char_type === 'word') {
@@ -54,6 +61,8 @@ const TextLine = ({
                   ayahNumber={word.aya}
                   onPress={() => onSelectAyah(curAyah, word)}
                   selected={false}
+                  highlighted={highlighted}
+                  showLoading={showLoading}
                   isLastSelectedAyah={false}
                 />
               );
@@ -89,6 +98,8 @@ const TextLine = ({
                   key={word.id}
                   ayahNumber={word.aya}
                   onPress={() => onSelectAyah(curAyah, word)}
+                  highlighted={highlighted}
+                  showLoading={showLoading}
                   selected={isAyahSelected(
                     curAyah,
                     selectionStarted,

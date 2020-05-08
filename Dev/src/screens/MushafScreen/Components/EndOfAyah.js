@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet, View } from 'react-native';
+import { Text, StyleSheet, View, ActivityIndicator } from 'react-native';
 import colors from 'config/colors';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 
@@ -10,6 +10,7 @@ const EndOfAyah = ({
   selected,
   highlighted,
   isLastSelectedAyah,
+  showLoading
 }) => {
   const rightBracket = '  \uFD3F';
   const leftBracket = '\uFD3E';
@@ -26,13 +27,35 @@ const EndOfAyah = ({
 
   return (
     <View style={containerStyle}>
-      <TouchableHighlight onPress={() => onPress()}>
-        <Text style={styles.ayahSeparator}>
-          {leftBracket}
-          <Text style={styles.ayahNumber}>{ayahNumber}</Text>
-          {rightBracket}
-        </Text>
-      </TouchableHighlight>
+      {showLoading === true ? (
+        <View style={{ justifyContent: 'center', alignItems: "center", paddingTop: 3 }}>
+          <ActivityIndicator
+            size="small"
+            color={highlighted ? colors.white : colors.primaryDark}
+            animating={showLoading}
+          />
+        </View>
+      ) : (
+        <TouchableHighlight onPress={() => onPress()}>
+          <Text
+            style={[
+              styles.ayahSeparator,
+              highlighted ? { color: colors.white } : {},
+            ]}
+          >
+            {leftBracket}
+            <Text
+              style={[
+                styles.ayahNumber,
+                highlighted ? { color: colors.white } : {},
+              ]}
+            >
+              {ayahNumber}
+            </Text>
+            {rightBracket}
+          </Text>
+        </TouchableHighlight>
+      )}
     </View>
   );
 };
@@ -63,8 +86,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.green
   },
   highlightedStyle: {
-    backgroundColor: colors.lightBlue,
-    opacity: 0.6,
+    backgroundColor: "rgba(107,107,107,0.8)",
+    borderTopLeftRadius: 15,
+    borderBottomLeftRadius: 15
   },
   lastSelectedAyah: {
     borderTopLeftRadius: 15,

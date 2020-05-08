@@ -139,7 +139,9 @@ class SelectionPage extends React.Component {
 
     if (
       nextProps.highlightedWord !== this.props.highlightedWord ||
-      nextProps.highlightedAyah !== this.props.highlightedAyah
+      nextProps.highlightedAyah !== this.props.highlightedAyah ||
+      nextProps.showLoadingOnHighlightedAyah !==
+        this.props.showLoadingOnHighlightedAyah
     ) {
       return true;
     }
@@ -433,6 +435,9 @@ class SelectionPage extends React.Component {
                           selectionOn={selectionOn}
                           highlightedWord={this.props.highlightedWord}
                           highlightedAyah={this.props.highlightedAyah}
+                          showLoadingOnHighlightedAyah={
+                            this.props.showLoadingOnHighlightedAyah
+                          }
                           selectedAyahsEnd={selectedAyahsEnd}
                           selectedAyahsStart={selectedAyahsStart}
                           selectionStarted={selectionStarted}
