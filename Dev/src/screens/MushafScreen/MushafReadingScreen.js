@@ -5,6 +5,7 @@ import MushafScreen from "./MushafScreen";
 import LoadingSpinner from "components/LoadingSpinner";
 import studentImages from "config/studentImages";
 import Sound from 'react-native-sound';
+import { isAyahSelected } from "./Helpers/AyahsOrder";
 
 const noAyahSelected = {
   surah: 0,
@@ -30,7 +31,10 @@ class MushafReadingScreen extends Component {
         }
       : noSelection,
     isLoading: true,
+    isPlaying: false,
   };
+
+  static track = undefined;
 
   async componentDidMount() {
     this.setState({ isLoading: false });
@@ -47,32 +51,63 @@ class MushafReadingScreen extends Component {
   }
 
   onSelectAyah(selectedAyah, selectedWord) {
-    console.log(JSON.stringify(selectedWord));
+    if (this.state.isPlaying) {
+      if (this.track !== undefined) {
+        this.track.stop();
+        this.setState({
+          highlightedWord: undefined,
+          highlightedAyah: undefined,
+          isPlaying: false,
+          isAudioLoading: false,
+        });
+      }
+      return;
+    }
     //todo: implement audio playback
     if (selectedWord) {
-      this.setState({ highlightedWord: selectedWord.id });
       let location =
         ('00' + selectedAyah.surah).slice(-3) +
         ('00' + selectedAyah.ayah).slice(-3);
 
+      // 'https://dl.salamquran.com/ayat/afasy-murattal-192/' +
+      // location +
+      // ".mp3";
+
       if (selectedWord.audio) {
-        let url = `https://dl.salamquran.com/wbw/${selectedWord.audio}`;
-        // 'https://dl.salamquran.com/ayat/afasy-murattal-192/' +
-        // location +
-        // ".mp3";
+        let url = "";
+        if (selectedWord.char_type == "word") {
+          this.setState({ highlightedWord: selectedWord.id });
+          url = `https://dl.salamquran.com/wbw/${selectedWord.audio}`;
+        } else if (selectedWord.char_type === "end") {
+          this.setState({ highlightedAyah: selectedAyah });
+          url = `https://dl.salamquran.com/ayat/afasy-murattal-192/${
+            selectedWord.audio
+          }`;
+        }
         this.playTrack(url);
       }
     }
   }
 
   playTrack = url => {
-    const track = new Sound(url, null, e => {
+    this.setState({ isPlaying: true, isAudioLoading: true });
+    this.track = new Sound(url, null, e => {
       if (e) {
         console.log("e: " + JSON.stringify(e));
+        this.setState({
+          highlightedWord: undefined,
+          highlightedAyah: undefined,
+          isAudioLoading: false,
+          isPlaying: false,
+        });
       } else {
-        track.play(success => {
-          console.log(JSON.stringify(success));
-          this.setState({ highlightedWord: undefined });
+        this.setState({ isAudioLoading: false });
+        this.track.play(success => {
+          this.setState({
+            highlightedWord: undefined,
+            highlightedAyah: undefined,
+            isPlaying: false,
+          });
         });
       }
     });
@@ -113,7 +148,12 @@ class MushafReadingScreen extends Component {
             classID={classID}
             profileImage={studentImages.images[imageID]}
             selection={selection}
+            showLoadingOnHighlightedAyah={
+              this.state.isAudioLoading === true &&
+              this.state.highlightedAyah !== undefined
+            }
             highlightedWord={this.state.highlightedWord}
+            highlightedAyah={this.state.highlightedAyah}
             assignmentName={assignmentName}
             assignmentLocation={assignmentLocation}
             assignmentType={assignmentType}
