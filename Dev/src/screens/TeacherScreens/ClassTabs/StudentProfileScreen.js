@@ -67,6 +67,10 @@ class StudentProfileScreen extends QcParentScreen {
           data.push(assignment);
         }
       }
+      data.sort(function(a, b) {
+        var dateA = new Date(a.completionDate), dateB = new Date(b.completionDate);
+        return dateA - dateB;
+      });
 
       this.setState({
         classStudent: student,
