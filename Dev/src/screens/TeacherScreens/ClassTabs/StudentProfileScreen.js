@@ -79,8 +79,10 @@ class StudentProfileScreen extends QcParentScreen {
         classesAttended: student.classesAttended ? student.classesAttended : 0,
         classesMissed: student.classesMissed ? student.classesMissed : 0,
       });
-    } catch (err){
-      console.log('Failed to get student info: ' + JSON.stringify(err.toString()));
+    } catch (err) {
+      console.log(
+        'Failed to get student info: ' + JSON.stringify(err.toString())
+      );
     }
   }
 
@@ -284,7 +286,7 @@ class StudentProfileScreen extends QcParentScreen {
               <Text
                 style={[
                   fontStyles.smallTextStyleDarkGrey,
-                  {textVerticalAlign: "center", paddingTop: 5},
+                  { textVerticalAlign: 'center', paddingTop: 5 },
                 ]}
               >
                 {strings.ImprovementAreas}
@@ -394,6 +396,8 @@ class StudentProfileScreen extends QcParentScreen {
     if (classStudent && assignmentHistory) {
       assignmentHistory = assignmentHistory.reverse();
     }
+
+    let sumWordsWorkedOn = 0;
 
     return (
       <View style={{ flex: 1 }}>
@@ -808,9 +812,10 @@ class StudentProfileScreen extends QcParentScreen {
                         ],
                   datasets: [
                     {
-                      data: wordsPerAssignmentData.map(
-                        data => data.assignmentLength
-                      )
+                      data: wordsPerAssignmentData.map(data => {
+                        sumWordsWorkedOn += data.assignmentLength;
+                        return sumWordsWorkedOn;
+                      })
                     }
                   ]
                 }}

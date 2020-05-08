@@ -1192,7 +1192,7 @@ class StudentMainScreen extends QcParentScreen {
 
   renderStudentProgressChart() {
     const { wordsPerAssignmentData } = this.state;
-
+    let sum = 0;
     return (
       <View>
         {wordsPerAssignmentData.length > 0 && (
@@ -1232,7 +1232,7 @@ class StudentMainScreen extends QcParentScreen {
                 datasets: [
                   {
                     data: wordsPerAssignmentData.map(
-                      data => data.assignmentLength
+                      data => { sum +=data.assignmentLength; return sum}
                     )
                   }
                 ]
