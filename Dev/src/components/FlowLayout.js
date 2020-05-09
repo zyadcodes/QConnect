@@ -100,7 +100,7 @@ class FlowView extends Component {
           >
             <Icon
               name="tag"
-              size={15}
+              size={10}
               containerStyle={{ paddingRight: 5 }}
               style={{ paddingRight: 5 }}
               type="simple-line-icon"
@@ -109,7 +109,7 @@ class FlowView extends Component {
 
             <Text
               style={[
-                fontStyles.mainTextStyleBlack,
+                fontStyles.smallTextStyleDarkGrey,
                 { textAlign: 'center', color: this._textColor() },
               ]}
             >
@@ -278,6 +278,7 @@ export default class FlowLayout extends Component {
                           minWidth:
                             this.state.newImprovementText.length * 4 + 80,
                         },
+                        fontStyles.smallTextStyleDarkGrey,
                       ]}
                       placeholder={strings.OtherArea}
                       value={
@@ -367,6 +368,7 @@ export default class FlowLayout extends Component {
               {this.state.isNewAddition === true ? (
                 <TextInput
                   style={[
+                    fontStyles.smallTextStyleDarkGrey,
                     styles.textInputStyle,
                     {
                       minWidth: this.state.newImprovementText.length * 4 + 80
@@ -438,8 +440,6 @@ const styles = StyleSheet.create({
     borderWidth: 1 / PixelRatio.get(),
     borderRadius: 5,
     height: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
     marginRight: 0.024 * screenWidth,
     marginTop: 0.015 * screenHeight,
     paddingHorizontal: 2,

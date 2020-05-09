@@ -308,7 +308,6 @@ export class EvaluationPage extends QcParentScreen {
       //----- outer view, gray background ------------------------
       //Makes it so keyboard is dismissed when clicked somewhere else
 
-      <QCView style={screenStyle.container}>
         <ScrollView>
           {this.props.navigation.state.params.newAssignment === true ? (
             <TopBanner
@@ -427,7 +426,7 @@ export class EvaluationPage extends QcParentScreen {
                 onFocus={() =>
                   this.setState({ notesHeight: screenHeight * 0.1 })
                 }
-                onEndEditing={() => this.setState({ notesHeight: 30 })}
+                onEndEditing={() => this.setState({ notesHeight: 40 })}
               />
 
               {/**
@@ -460,8 +459,7 @@ export class EvaluationPage extends QcParentScreen {
               />
             </View>
           </View>
-        </ScrollView>
-        <View style={styles.buttonsContainer}>
+          <View style={styles.buttonsContainer}>
           {!readOnly ? (
             <QcActionButton
               text={strings.Submit}
@@ -476,7 +474,8 @@ export class EvaluationPage extends QcParentScreen {
           )}
         </View>
         <View style={styles.filler} />
-      </QCView>
+        </ScrollView>
+        
     );
   }
 }
