@@ -443,6 +443,7 @@ const styles = StyleSheet.create({
     marginRight: 0.024 * screenWidth,
     marginTop: 0.015 * screenHeight,
     paddingHorizontal: 2,
+    paddingVertical: 0
   },
   corner: {
     borderColor: colors.grey,
