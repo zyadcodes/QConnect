@@ -100,18 +100,26 @@ const DailyTracker = props => {
   // handles when user presses on a calendar date
   // reflects it in component state, and then calls parent to save to firebase
   const onDatePressed = date => {
+    // whether user has untoggled (cleared) previously selected dates
+    // in this case, we don't send a notification (for example)
+    let untoggleAction = false;
     setCurrentDate(date.dateString);
     if (!props.readOnly) {
       if (trackingMode) {
-        setMarkedDates({
-          ...markedDates,
-          [date.dateString]: {
-            type: strings.Reading,
-            marked: true,
-            selected: true,
-            selectedColor: colors.green
-          },
-        });
+        if (Object.keys(markedDates).includes(date.dateString)) {
+          untoggleAction = true;
+          delete markedDates[date.dateString];
+        } else {
+          setMarkedDates({
+            ...markedDates,
+            [date.dateString]: {
+              type: strings.Reading,
+              marked: true,
+              selected: true,
+              selectedColor: colors.green
+            },
+          });
+        }
       } else {
         setMarkedDates({
           [date.dateString]: {
@@ -123,7 +131,7 @@ const DailyTracker = props => {
         });
       }
 
-      props.onDatePressed(date);
+      props.onDatePressed(date, untoggleAction);
     }
   };
 

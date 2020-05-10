@@ -395,7 +395,7 @@ class StudentMainScreen extends QcParentScreen {
               <Text
                 style={[
                   fontStyles.smallTextStyleDarkGrey,
-                  {textVerticalAlign: "center", paddingTop: 5},
+                  { textVerticalAlign: 'center', paddingTop: 5 },
                 ]}
               >
                 {strings.ImprovementAreas}
@@ -1231,9 +1231,10 @@ class StudentMainScreen extends QcParentScreen {
                       ],
                 datasets: [
                   {
-                    data: wordsPerAssignmentData.map(
-                      data => { sum +=data.assignmentLength; return sum}
-                    )
+                    data: wordsPerAssignmentData.map(data => {
+                      sum += data.assignmentLength;
+                      return sum;
+                    })
                   }
                 ]
               }}
@@ -1259,25 +1260,35 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 
-  onDatePressed(date) {
-    let dailyPracticeLog = {
-      ...this.state.dailyPracticeLog,
-      [date.dateString]: {
-        type: strings.Reading
-      }
-    };
+  onDatePressed(date, untoggleAction) {
+    let dailyPracticeLog = this.state.dailyPracticeLog;
+
+    if (untoggleAction) {
+      delete dailyPracticeLog[date.dateString];
+    } else {
+      dailyPracticeLog = {
+        ...this.state.dailyPracticeLog,
+        [date.dateString]: {
+          type: strings.Reading
+        }
+      };
+    }
+
+    console.log(`dailyPracticeLog ${JSON.stringify(dailyPracticeLog)}`)
+    //we only send notification if user toggled a new day
+    let sendNotifications = !untoggleAction;
+    FirebaseFunctions.updateDailyPracticeTracker(
+      this.state.currentClassID,
+      this.state.userID,
+      dailyPracticeLog,
+      sendNotifications
+    );
 
     this.setState({
       dailyPracticeLog,
     });
-
-    FirebaseFunctions.updateDailyPracticeTracker(
-      this.state.currentClassID,
-      this.state.userID,
-      dailyPracticeLog
-    );
   }
-  //-------------------------- render method: Main UI enctry point for the component ------------
+  //-------------------------- render method: Main UI entry point for the component ------------
   //Renders the screen
   render() {
     const {
