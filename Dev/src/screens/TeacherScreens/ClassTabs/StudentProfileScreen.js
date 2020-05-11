@@ -61,18 +61,27 @@ class StudentProfileScreen extends QcParentScreen {
 
       //This constructs an array of the student's past assignments & only includes the "length" field which is how many
       //words that assignment was. The method returns that array which is then passed to the line graph below as the data
-      const { assignmentHistory, dailyPracticeLog } = student;
+      let { assignmentHistory, dailyPracticeLog } = student;
       const data = [];
       for (const assignment of assignmentHistory) {
         if (assignment.assignmentLength && assignment.assignmentLength > 0) {
           data.push(assignment);
         }
       }
+
+      //sort chart data from oldest to newest
       data.sort(function(a, b) {
         var dateA = new Date(a.completionDate),
           dateB = new Date(b.completionDate);
         return dateA - dateB;
       });
+
+      //sort assignment history from newest to oldest
+      assignmentHistory.sort(function(a,b) {
+        var dateA = new Date(a.completionDate),
+          dateB = new Date(b.completionDate);
+        return dateB - dateA;
+      })
 
       this.setState({
         classStudent: student,
@@ -407,11 +416,6 @@ class StudentProfileScreen extends QcParentScreen {
       iconType: "evilicon",
       name: strings.Review,
     };
-
-    //Sorts the assignments by date completed
-    if (classStudent && assignmentHistory) {
-      assignmentHistory = assignmentHistory.reverse();
-    }
 
     let sumWordsWorkedOn = 0;
 
