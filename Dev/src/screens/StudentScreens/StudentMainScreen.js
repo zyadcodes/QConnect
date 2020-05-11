@@ -1339,6 +1339,12 @@ class StudentMainScreen extends QcParentScreen {
           />
         }
       >
+      <Toast
+          position={'bottom'}
+          ref="toast"
+          fadeInDuration={3000}
+          positionValue={200}
+        />
         <ScrollView style={screenStyle.container}>
           {this.renderTopView()}
           {this.renderAssignmentsSectionHeader(
@@ -1355,7 +1361,6 @@ class StudentMainScreen extends QcParentScreen {
           studentClassInfo.currentAssignments.length !== 0
             ? this.renderCurrentAssignmentCards()
             : this.renderEmptyAssignmentCard()}
-          <Toast position={'bottom'} ref="toast" />
           <View>
             <ScrollView>
               {this.renderStudentProgressChart()}

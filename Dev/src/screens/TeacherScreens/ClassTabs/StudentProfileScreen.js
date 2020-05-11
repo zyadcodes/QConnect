@@ -22,6 +22,7 @@ import { screenHeight, screenWidth } from 'config/dimensions';
 import { LineChart } from 'react-native-chart-kit';
 import { Icon } from 'react-native-elements';
 import DailyTracker from "components/DailyTracker";
+import Toast, { DURATION } from "react-native-easy-toast";
 
 class StudentProfileScreen extends QcParentScreen {
   state = {
@@ -68,7 +69,8 @@ class StudentProfileScreen extends QcParentScreen {
         }
       }
       data.sort(function(a, b) {
-        var dateA = new Date(a.completionDate), dateB = new Date(b.completionDate);
+        var dateA = new Date(a.completionDate),
+          dateB = new Date(b.completionDate);
         return dateA - dateB;
       });
 
@@ -90,6 +92,13 @@ class StudentProfileScreen extends QcParentScreen {
     }
   }
 
+  showToast(assignedToAllClass){
+    let toastMsg = assignedToAllClass
+        ? strings.ClassAssignmentSent
+        : strings.AssignmentSent;
+      this.refs.toast.show(toastMsg, DURATION.LENGTH_LONG);
+  }
+
   getRatingCaption() {
     let caption = strings.GetStarted;
 
@@ -106,7 +115,10 @@ class StudentProfileScreen extends QcParentScreen {
     return caption;
   }
 
-  async updateStateWithNewAssignmentInfo(newAssignment, index, currentClass) {
+  async updateStateWithNewAssignmentInfo(newAssignment, index, currentClass, showToast, assignedToAllClass) {
+    if(showToast === true){
+      this.showToast(assignedToAllClass)
+    }
     await this.fetchStudentInfo();
   }
 
@@ -405,6 +417,12 @@ class StudentProfileScreen extends QcParentScreen {
 
     return (
       <View style={{ flex: 1 }}>
+      <Toast
+          position={'bottom'}
+          ref="toast"
+          fadeInDuration={3000}
+          positionValue={200}
+        />
         <ScrollView containerStyle={styles.studentInfoContainer}>
           <View style={styles.profileInfo}>
             <View style={styles.profileInfoTop}>

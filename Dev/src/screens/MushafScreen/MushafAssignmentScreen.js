@@ -145,7 +145,7 @@ class MushafAssignmentScreen extends Component {
   //======== end of Initialize Component ========================
 
   //======== action methods to handle user interation actions ===
-  closeScreen() {
+  closeScreen(showNotifications) {
     const {
       popOnClose,
       loadScreenOnClose,
@@ -157,7 +157,8 @@ class MushafAssignmentScreen extends Component {
       assignmentName,
       assignmentType,
       selection,
-      currentClass
+      currentClass,
+      assignToAllClass
     } = this.state;
 
     const { started, completed, ...location } = selection;
@@ -179,7 +180,9 @@ class MushafAssignmentScreen extends Component {
         this.props.navigation.state.params.onSaveAssignment(
           assignment,
           assignmentIndex,
-          currentClass
+          currentClass,
+          showNotifications,
+          assignToAllClass
         );
       }
       this.props.navigation.pop();
@@ -190,7 +193,9 @@ class MushafAssignmentScreen extends Component {
           : "TeacherCurrentClass";
       this.props.navigation.push(screenName, {
         userID,
-        currentClass
+        currentClass,
+        showAssignmentSentNotification: showNotifications,
+        assignedToAllClass: assignToAllClass //tell target screen whether updated assignment was for all class. (used for notification strings)
       });
     }
   }
@@ -310,7 +315,7 @@ class MushafAssignmentScreen extends Component {
       },
       () => {
         if (closeAfterSave) {
-          this.closeScreen();
+          this.closeScreen(true); //true sends a param to next screen to show a toast notification that assignment is updated.
         }
       }
     );
@@ -372,7 +377,7 @@ class MushafAssignmentScreen extends Component {
       },
       () => {
         if (closeAfterSave) {
-          this.closeScreen();
+          this.closeScreen(true); //true sends a param to next screen to show a toast notification that assignment is updated.
         }
       }
     );
@@ -910,7 +915,7 @@ class MushafAssignmentScreen extends Component {
               />
               <QcActionButton
                 text={strings.Cancel}
-                onPress={() => this.closeScreen()}
+                onPress={() => this.closeScreen(false)}
               />
             </View>
           </View>
