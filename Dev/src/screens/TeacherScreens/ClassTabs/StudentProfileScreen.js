@@ -23,6 +23,8 @@ import { LineChart } from 'react-native-chart-kit';
 import { Icon } from 'react-native-elements';
 import DailyTracker from "components/DailyTracker";
 import Toast, { DURATION } from "react-native-easy-toast";
+import themeStyles from 'config/themeStyles'
+
 
 class StudentProfileScreen extends QcParentScreen {
   state = {
@@ -77,11 +79,11 @@ class StudentProfileScreen extends QcParentScreen {
       });
 
       //sort assignment history from newest to oldest
-      assignmentHistory.sort(function(a,b) {
+      assignmentHistory.sort(function(a, b) {
         var dateA = new Date(a.completionDate),
           dateB = new Date(b.completionDate);
         return dateB - dateA;
-      })
+      });
 
       this.setState({
         classStudent: student,
@@ -101,11 +103,11 @@ class StudentProfileScreen extends QcParentScreen {
     }
   }
 
-  showToast(assignedToAllClass){
+  showToast(assignedToAllClass) {
     let toastMsg = assignedToAllClass
-        ? strings.ClassAssignmentSent
-        : strings.AssignmentSent;
-      this.refs.toast.show(toastMsg, DURATION.LENGTH_LONG);
+      ? strings.ClassAssignmentSent
+      : strings.AssignmentSent;
+    this.refs.toast.show(toastMsg, DURATION.LENGTH_LONG);
   }
 
   getRatingCaption() {
@@ -124,9 +126,15 @@ class StudentProfileScreen extends QcParentScreen {
     return caption;
   }
 
-  async updateStateWithNewAssignmentInfo(newAssignment, index, currentClass, showToast, assignedToAllClass) {
-    if(showToast === true){
-      this.showToast(assignedToAllClass)
+  async updateStateWithNewAssignmentInfo(
+    newAssignment,
+    index,
+    currentClass,
+    showToast,
+    assignedToAllClass
+  ) {
+    if (showToast === true) {
+      this.showToast(assignedToAllClass);
     }
     await this.fetchStudentInfo();
   }
@@ -421,11 +429,12 @@ class StudentProfileScreen extends QcParentScreen {
 
     return (
       <View style={{ flex: 1 }}>
-      <Toast
+        <Toast
           position={'bottom'}
           ref="toast"
           fadeInDuration={3000}
           positionValue={200}
+          style={themeStyles.toastStyle}
         />
         <ScrollView containerStyle={styles.studentInfoContainer}>
           <View style={styles.profileInfo}>

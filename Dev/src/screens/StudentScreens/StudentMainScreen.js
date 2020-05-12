@@ -37,6 +37,8 @@ import Toast, { DURATION } from "react-native-easy-toast";
 import { LineChart } from 'react-native-chart-kit';
 import CodeInput from "react-native-confirmation-code-input";
 import DailyTracker from "components/DailyTracker";
+import themeStyles from 'config/themeStyles'
+
 
 const translateY = new Animated.Value(-35);
 const opacity = new Animated.Value(0);
@@ -1343,7 +1345,8 @@ class StudentMainScreen extends QcParentScreen {
           position={'bottom'}
           ref="toast"
           fadeInDuration={3000}
-          positionValue={200}
+          positionValue={100}
+          style={themeStyles.toastStyle}
         />
         <ScrollView style={screenStyle.container}>
           {this.renderTopView()}
