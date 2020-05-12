@@ -107,15 +107,7 @@ class LeftNavPane extends QcParentScreen {
       <ScrollView>
         <SafeAreaView forceInset={{ top: "always", horizontal: "never" }}>
           <View
-            style={{
-              paddingTop: 0.015 * screenHeight,
-              paddingBottom: 0.015 * screenHeight,
-              paddingLeft: screenWidth * 0.025,
-              paddingRight: screenWidth * 0.025,
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center"
-            }}
+            style={styles.headerStyle}
           >
             <View style={{ flexDirection: "row" }}>
               <Text style={fontStyles.hugeTextStylePrimaryDark}>
@@ -133,24 +125,6 @@ class LeftNavPane extends QcParentScreen {
                 accountObject: this.state.student,
                 classes: this.state.classes,
                 userID: this.state.userID
-              })
-            }
-          />
-
-          <QcDrawerItem
-            title="Holy Quran"
-            image={classImages.images[2]}
-            onPress={() =>
-              this.props.navigation.push("MushafReadingScreen", {
-                isTeacher: false,
-                studentID: this.state.userID,
-                accountObject: this.state.student,
-                classID:
-                  this.state.classes && this.state.classes.length > 0
-                    ? this.state.classes[0].ID
-                    : undefined,
-                userID: this.state.userID,
-                imageID: studentImageId
               })
             }
           />
@@ -186,13 +160,33 @@ class LeftNavPane extends QcParentScreen {
               })
             }
           />
+            <View style={styles.mushafPositionStyle}>
+              <QcDrawerItem
+                style={styles.mushafTagStyle}
+                title="Holy Quran"
+                image={classImages.images[2]}
+                onPress={() =>
+                  this.props.navigation.push("MushafReadingScreen", {
+                    isTeacher: false,
+                    studentID: this.state.userID,
+                    accountObject: this.state.student,
+                    classID:
+                      this.state.classes && this.state.classes.length > 0
+                        ? this.state.classes[0].ID
+                        : undefined,
+                    userID: this.state.userID,
+                    imageID: studentImageId
+                  })
+                }
+              />
+            </View>
           <Modal
             animationType="fade"
             style={{ alignItems: "center", justifyContent: "center" }}
             transparent={true}
             presentationStyle="overFullScreen"
             visible={this.state.modalVisible}
-            onRequestClose={() => {}}
+            onRequestClose={() => { }}
           >
             <View
               style={{
@@ -208,75 +202,75 @@ class LeftNavPane extends QcParentScreen {
                     <LoadingSpinner isVisible={true} />
                   </View>
                 ) : (
-                  <View>
-                    <View
-                      style={{
-                        flex: 1,
-                        justifyContent: "center",
-                        alignItems: "center"
-                      }}
-                    >
-                      <Image
-                        source={require("assets/emptyStateIdeas/welcome-girl.png")}
+                    <View>
+                      <View
                         style={{
-                          width: 50,
-                          height: 100,
-                          resizeMode: "contain",
-                          marginTop: 20,
+                          flex: 1,
+                          justifyContent: "center",
+                          alignItems: "center"
                         }}
-                      />
-                      <Text
-                        style={[
-                          fontStyles.mainTextStyleDarkGrey,
-                          { marginBottom: 20 },
-                        ]}
                       >
-                        {strings.TypeInAClassCode}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flex: 1,
-                        justifyContent: "center",
-                        alignItems: "center"
-                      }}
-                    >
-                      <CodeInput
-                        space={2}
-                        size={50}
-                        codeLength={5}
-                        activeColor={colors.primaryDark}
-                        inactiveColor={colors.primaryLight}
-                        autoFocus={true}
-                        inputPosition="center"
-                        className="border-circle"
-                        containerStyle={{ marginBottom: 60 }}
-                        codeInputStyle={{ borderWidth: 1.5 }}
-                        onFulfill={code => this.setState({ classCode: code })}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between"
-                      }}
-                    >
-                      <QcActionButton
-                        text={strings.Cancel}
-                        onPress={() => {
-                          this.setState({ modalVisible: false });
+                        <Image
+                          source={require("assets/emptyStateIdeas/welcome-girl.png")}
+                          style={{
+                            width: 50,
+                            height: 100,
+                            resizeMode: "contain",
+                            marginTop: 20,
+                          }}
+                        />
+                        <Text
+                          style={[
+                            fontStyles.mainTextStyleDarkGrey,
+                            { marginBottom: 20 },
+                          ]}
+                        >
+                          {strings.TypeInAClassCode}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flex: 1,
+                          justifyContent: "center",
+                          alignItems: "center"
                         }}
-                      />
-                      <QcActionButton
-                        text={strings.Confirm}
-                        onPress={() => {
-                          //Joins the class
-                          this.joinClass();
+                      >
+                        <CodeInput
+                          space={2}
+                          size={50}
+                          codeLength={5}
+                          activeColor={colors.primaryDark}
+                          inactiveColor={colors.primaryLight}
+                          autoFocus={true}
+                          inputPosition="center"
+                          className="border-circle"
+                          containerStyle={{ marginBottom: 60 }}
+                          codeInputStyle={{ borderWidth: 1.5 }}
+                          onFulfill={code => this.setState({ classCode: code })}
+                        />
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between"
                         }}
-                      />
+                      >
+                        <QcActionButton
+                          text={strings.Cancel}
+                          onPress={() => {
+                            this.setState({ modalVisible: false });
+                          }}
+                        />
+                        <QcActionButton
+                          text={strings.Confirm}
+                          onPress={() => {
+                            //Joins the class
+                            this.joinClass();
+                          }}
+                        />
+                      </View>
                     </View>
-                  </View>
-                )}
+                  )}
               </View>
             </View>
           </Modal>
@@ -287,6 +281,16 @@ class LeftNavPane extends QcParentScreen {
 }
 
 const styles = StyleSheet.create({
+  headerStyle: {
+    paddingTop: 0.015 * screenHeight,
+    paddingBottom: 0.015 * screenHeight,
+    paddingLeft: screenWidth * 0.025,
+    paddingRight: screenWidth * 0.025,
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+
   modal: {
     backgroundColor: colors.white,
     alignItems: 'center',
@@ -314,7 +318,16 @@ const styles = StyleSheet.create({
   },
   OnCellFocus: {
     backgroundColor: '#fff'
+  },
+
+  mushafTagStyle: {
+
+  },
+
+  mushafPositionStyle: {
+    alignSelf: "flex-end"
   }
+
 });
 
 export default LeftNavPane;
