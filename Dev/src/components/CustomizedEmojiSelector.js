@@ -13,7 +13,7 @@ import {
 import emoji from "emoji-datasource";
 import colors from '../../config/colors';
 import Modal from 'react-native-modal';
-import { screenHeight } from '../../config/dimensions';
+import { screenHeight, fontScale } from '../../config/dimensions';
 
 export const Categories = {
   all: {
@@ -94,7 +94,7 @@ const TabBar = ({ theme, activeCategory, onPress, width }) => {
             style={{
               textAlign: 'center',
               paddingBottom: 8,
-              fontSize: tabSize - 24,
+              fontSize: fontScale*20,
             }}
           >
             {category.symbol}

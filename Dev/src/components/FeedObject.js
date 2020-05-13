@@ -21,7 +21,6 @@ import Basmalah from '../screens/MushafScreen/Components/Basmalah';
 import TextLine from '../screens/MushafScreen/Components/TextLine';
 import LoadingSpinner from './LoadingSpinner';
 import { Icon } from 'react-native-elements';
-import Modal from 'react-native-modal';
 
 export default class FeedsObject extends Component {
   static propTypes = {
@@ -104,55 +103,15 @@ export default class FeedsObject extends Component {
           ) : null}
           <View style={this.localStyles.contentContainerView}>
             {this.props.type === 'assignment' ? (
-              <View>
-                <Text
-                  style={[
-                    this.localStyles.newAssignmentText,
-                    {
-                      marginLeft:
-                        this.props.madeByUser == this.props.currentUser.ID
-                          ? 0
-                          : screenWidth / 86,
-                      marginRight:
-                        this.props.madeByUser == this.props.currentUser.ID
-                          ? screenWidth / 86
-                          : 0,
-                    },
-                  ]}
-                >
-                  {this.props.Content.assignmentType} from ayah{' '}
-                  {this.props.Content.start.ayah} to ayah{' '}
-                  {this.props.Content.end.ayah}
-                </Text>
-                {this.state.isLoading ? (
-                  <TouchableOpacity
-                    disabled={this.props.isTeacher}
-                    style={this.localStyles.assignmentContainer}
-                  >
-                    <View style={this.localStyles.spinnerContainerStyle}>
-                      <LoadingSpinner />
-                    </View>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    disabled={this.props.isTeacher}
-                    style={this.localStyles.assignmentContainer}
-                  >
-                    <SurahHeader surahName={this.state.surahName} />
-                    {this.state.page}
-                  </TouchableOpacity>
-                )}
-                {this.props.isTeacher ? null : (
-                  <Text
-                    style={[
-                      this.localStyles.newAssignmentText,
-                      { alignSelf: 'flex-end', marginRight: screenWidth / 86 },
-                    ]}
-                  >
-                    Click To Open
-                  </Text>
-                )}
-              </View>
+              <QuranAssignmentView
+                surahName={this.state.surahName}
+                page={this.state.page}
+                isLoading={this.state.isLoading}
+                isTeacher={this.props.isTeacher}
+                Content={this.props.Content}
+                madeByUser={this.props.madeByUser}
+                currentUser={this.props.currentUser}
+              />
             ) : (
               <Text style={this.localStyles.contentText}>
                 {this.props.Content}
@@ -162,9 +121,15 @@ export default class FeedsObject extends Component {
           <View style={{ flexDirection: 'row', alignSelf: 'flex-end' }}>
             <FlatList
               data={this.props.Reactions}
+              style={{ flexDirection: 'row' }}
               renderItem={({ item, index, seperators }) => (
                 <TouchableOpacity
-                  onPress={() => {}}
+                  onPress={() => {
+                    if(this.props.Reactions.reactedBy.includes(currentUser.ID)){
+                      
+                    }
+                  }}
+                  key={index}
                   style={this.localStyles.Reaction}
                 >
                   <Text>{item.reactedBy.length}</Text>
@@ -277,6 +242,8 @@ export default class FeedsObject extends Component {
       position: 'relative',
       bottom: screenScale * 4,
       left: screenScale * 4,
+      paddingLeft: screenWidth / 200,
+      paddingRight: screenWidth / 200,
       marginRight: screenWidth / 86
     },
     contentContainerView: {
@@ -290,5 +257,81 @@ export default class FeedsObject extends Component {
       borderColor: colors.lightBrown,
       backgroundColor: colors.white,
     }
+  });
+}
+
+class QuranAssignmentView extends Component {
+  render() {
+    return (
+      <View>
+        <Text
+          style={[
+            this.localStyles.newAssignmentText,
+            {
+              marginLeft:
+                this.props.madeByUser == this.props.currentUser.ID
+                  ? 0
+                  : screenWidth / 86,
+              marginRight:
+                this.props.madeByUser == this.props.currentUser.ID
+                  ? screenWidth / 86
+                  : 0,
+            },
+          ]}
+        >
+          {this.props.Content.assignmentType} from ayah{' '}
+          {this.props.Content.start.ayah} to ayah {this.props.Content.end.ayah}
+        </Text>
+        {this.props.isLoading ? (
+          <TouchableOpacity
+            disabled={this.props.isTeacher}
+            style={this.localStyles.assignmentContainer}
+          >
+            <View style={this.localStyles.spinnerContainerStyle}>
+              <LoadingSpinner />
+            </View>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            disabled={this.props.isTeacher}
+            style={this.localStyles.assignmentContainer}
+          >
+            <SurahHeader surahName={this.props.surahName} />
+            {this.props.page}
+          </TouchableOpacity>
+        )}
+        {this.props.madeByUser === this.props.currentUser.ID ? null : (
+          <Text
+            style={[
+              this.localStyles.newAssignmentText,
+              { alignSelf: 'flex-end', marginRight: screenWidth / 86 },
+            ]}
+          >
+            Click To Open
+          </Text>
+        )}
+      </View>
+    );
+  }
+  localStyles = StyleSheet.create({
+    assignmentContainer: {
+      alignSelf: 'center',
+      flex: 3,
+      overflow: 'hidden',
+      borderColor: colors.lightBrown,
+      borderWidth: 2,
+      marginTop: screenHeight / 163.2,
+      width: screenWidth / 1.6
+    },
+    spinnerContainerStyle: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    newAssignmentText: {
+      fontSize: fontScale * 16,
+      color: colors.lightBrown,
+      fontWeight: 'bold'
+    },
   });
 }
