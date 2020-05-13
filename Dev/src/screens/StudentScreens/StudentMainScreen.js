@@ -37,8 +37,7 @@ import Toast, { DURATION } from "react-native-easy-toast";
 import { LineChart } from 'react-native-chart-kit';
 import CodeInput from "react-native-confirmation-code-input";
 import DailyTracker from "components/DailyTracker";
-import themeStyles from 'config/themeStyles'
-
+import themeStyles from 'config/themeStyles';
 
 const translateY = new Animated.Value(-35);
 const opacity = new Animated.Value(0);
@@ -911,6 +910,17 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 
+  assignmentHasAudioSubmission(assignmentIndex) {
+    const { submittedRecordings } = this.state;
+
+    return (
+      submittedRecordings &&
+      submittedRecordings.length > 0 &&
+      submittedRecordings[assignmentIndex] &&
+      submittedRecordings[assignmentIndex].audioFile !== undefined
+    );
+  }
+
   renderCurrentAssignmentCard(item, index) {
     const { studentClassInfo, currentClassID, userID, student } = this.state;
     const customPickerOptions = [
@@ -953,41 +963,49 @@ class StudentMainScreen extends QcParentScreen {
             }
           ]}
         >
-          <TouchableOpacity
-            onPress={() => {
-              //if the current staus is not started and the student open the mus7af @ assignment
-              // change status to "working on it"
-              //if (item.isReadyEnum === "NOT_STARTED") {
-              this.updateCurrentAssignmentStatus('WORKING_ON_IT', index);
-              //}
-
-              this.props.navigation.push('MushafReadingScreen', {
-                popOnClose: true,
-                isTeacher: false,
-                assignToAllClass: false,
-                userID: this.props.navigation.state.params.userID,
-                classID: currentClassID,
-                studentID: userID,
-                currentClass: studentClassInfo,
-                assignmentLocation: item.location,
-                assignmentType: item.type,
-                assignmentName: item.name,
-                assignmentIndex: index,
-                imageID: studentClassInfo.profileImageID
-              });
-            }}
-          >
-            <View>
-              <View style={styles.middleView}>
-                <Text style={fontStyles.mainTextStyleBlack}>
-                  {item.type ? item.type : strings.Memorize}
-                </Text>
-                <Text style={[fontStyles.bigTextStyleBlack]}>
-                  {item.name ? item.name.toUpperCase() : "No Assignment Yet"}
-                </Text>
+          <View>
+            {this.assignmentHasAudioSubmission(index) ? (
+              <View
+                style={{
+                  top: 5,
+                  left: screenWidth * 0.9,
+                  zIndex: 1,
+                  position: 'absolute' // add if dont work with above
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setState(
+                      {
+                        recordingUIVisible: this.setRecUIForAssignmentIndex(
+                          index,
+                          true
+                        )
+                      },
+                      () => this.animateShowAudioUI()
+                    );
+                  }}
+                >
+                  <Icon
+                    name="microphone"
+                    type="material-community"
+                    color={colors.darkRed}
+                  />
+                </TouchableOpacity>
               </View>
+            ) : (
+              <View />
+            )}
+
+            <View style={styles.middleView}>
+              <Text style={fontStyles.mainTextStyleBlack}>
+                {item.type ? item.type : strings.Memorize}
+              </Text>
+              <Text style={[fontStyles.bigTextStyleBlack]}>
+                {item.name ? item.name.toUpperCase() : "No Assignment Yet"}
+              </Text>
             </View>
-          </TouchableOpacity>
+          </View>
 
           <View style={{ flexDirection: "row", marginBottom: 5 }}>
             <View style={{ flex: 1 }}>
@@ -1276,7 +1294,7 @@ class StudentMainScreen extends QcParentScreen {
       };
     }
 
-    console.log(`dailyPracticeLog ${JSON.stringify(dailyPracticeLog)}`)
+    console.log(`dailyPracticeLog ${JSON.stringify(dailyPracticeLog)}`);
     //we only send notification if user toggled a new day
     let sendNotifications = !untoggleAction;
     FirebaseFunctions.updateDailyPracticeTracker(
@@ -1341,7 +1359,7 @@ class StudentMainScreen extends QcParentScreen {
           />
         }
       >
-      <Toast
+        <Toast
           position={'bottom'}
           ref="toast"
           fadeInDuration={3000}
