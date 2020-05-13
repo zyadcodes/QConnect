@@ -16,7 +16,7 @@ import TeacherLeftNavPane from '../TeacherScreens/LeftNavPane';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import TopBanner from 'components/TopBanner';
 import FeedsObject from '../../components/FeedObject';
-import { screenHeight } from '../../../config/dimensions';
+import { screenHeight, screenWidth } from '../../../config/dimensions';
 import EmojiSelector from '../../components/CustomizedEmojiSelector';
 import { FlatList } from 'react-native-gesture-handler';
 
@@ -32,6 +32,7 @@ export default class FeedsScreen extends React.Component {
     currentClassID: '',
     teacher: null,
     student: null,
+    currentlySelectingIndex: -1,
     feedsData: [
       {
         madeByUser: 'jiewfjeo',
@@ -46,6 +47,16 @@ export default class FeedsScreen extends React.Component {
       },
       {
         madeByUser: 'Gx6OAwlilxV9OBB7v63wesjpal22',
+        Content: {
+          assignmentType: 'Memorization',
+          start: { ayah: 1, surah: 2, page: 2 },
+          end: { ayah: 11, page: 2, surah: 2 }
+        },
+        type: 'assignment',
+        Reactions: []
+      },
+      {
+        madeByUser: 'feijwowe',
         Content: {
           assignmentType: 'Memorization',
           start: { ayah: 1, surah: 2, page: 2 },
@@ -101,7 +112,10 @@ export default class FeedsScreen extends React.Component {
       classes,
     });
   }
-  toggleSelectingEmoji() {
+  toggleSelectingEmoji(index) {
+    if (!this.state.isSelectingEmoji) {
+      this.setState({ currentlySelectingIndex: index });
+    }
     this.setState({ isSelectingEmoji: !this.state.isSelectingEmoji });
   }
   render() {
@@ -109,7 +123,7 @@ export default class FeedsScreen extends React.Component {
     if (this.state.isLoading) {
       return (
         <View style={localStyles.spinnerContainerStyle}>
-          <LoadingSpinner />
+          <LoadingSpinner isVisible={true} />
         </View>
       );
     }
@@ -117,7 +131,19 @@ export default class FeedsScreen extends React.Component {
       return (
         <EmojiSelector
           theme={colors.primaryLight}
-          onEmojiSelected={emoji => {}}
+          onEmojiSelected={emoji => {
+            //console.warn('waht the hell')
+            let temp = this.state.feedsData;
+            let currentIndex = this.state.currentlySelectingIndex;
+            temp[currentIndex].Reactions[
+              temp[currentIndex].Reactions.length
+            ] = {
+              emoji,
+              reactedBy: [this.state.userID]
+            };
+            this.setState({ currentlySelectingIndex: -1, feedsData: temp });
+            this.toggleSelectingEmoji();
+          }}
           onBackdropPress={() => this.toggleSelectingEmoji()}
         />
       );
@@ -147,7 +173,7 @@ export default class FeedsScreen extends React.Component {
               data={this.state.feedsData}
               renderItem={({ index, item, separators }) => (
                 <FeedsObject
-                  onPressSelectEmoji={() => this.toggleSelectingEmoji()}
+                  onPressSelectEmoji={() => this.toggleSelectingEmoji(index)}
                   madeByUser={item.madeByUser}
                   currentUser={
                     this.state.isTeacher
@@ -172,7 +198,7 @@ export default class FeedsScreen extends React.Component {
 }
 const localStyles = StyleSheet.create({
   containerView: {
-    height: screenHeight
+    flex: 1
   },
   scrollViewStyle: {
     backgroundColor: colors.lightGrey,

@@ -80,7 +80,7 @@ export default class App extends Component {
       "componentWillMount",
       "componentWillReceiveProps"
     ]);
-    console.disableYellowBox = true;
+    console.disableYellowBox = false;
 
     try {
       return this.renderMainApp();
