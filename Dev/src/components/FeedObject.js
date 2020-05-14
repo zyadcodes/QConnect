@@ -21,6 +21,7 @@ import Basmalah from '../screens/MushafScreen/Components/Basmalah';
 import TextLine from '../screens/MushafScreen/Components/TextLine';
 import LoadingSpinner from './LoadingSpinner';
 import { Icon } from 'react-native-elements';
+import ThreadComponent from './ThreadComponent'
 
 export default class FeedsObject extends Component {
   static propTypes = {
@@ -125,15 +126,19 @@ export default class FeedsObject extends Component {
               renderItem={({ item, index, seperators }) => (
                 <TouchableOpacity
                   onPress={() => {
-                    if(this.props.Reactions.reactedBy.includes(currentUser.ID)){
+                    if(this.props.Reactions.length > 0 &&
+                      this.props.Reactions[index].reactedBy.includes(this.props.currentUser.ID)){
                       
                     }
                   }}
                   key={index}
+                  activeOpacity={0.6}
                   style={this.localStyles.Reaction}
                 >
-                  <Text>{item.reactedBy.length}</Text>
-                  <Text>{item.emoji}</Text>
+                  <View style={this.localStyles.reactionView}>
+                    <Text>{item.reactedBy.length}</Text>
+                    <Text>{item.emoji}</Text>
+                  </View>
                 </TouchableOpacity>
               )}
             />
@@ -141,6 +146,7 @@ export default class FeedsObject extends Component {
               <TouchableOpacity
                 onPress={() => this.props.onPressSelectEmoji()}
                 style={this.localStyles.addReaction}
+                activeOpacity={0.6}
               >
                 <Icon
                   name="plus"
@@ -152,6 +158,7 @@ export default class FeedsObject extends Component {
             )}
           </View>
         </View>
+        {this.props.Comments.length === 0 ? null : <ThreadComponent Comments={this.props.Comments}/>}
       </View>
     );
   }
@@ -159,7 +166,7 @@ export default class FeedsObject extends Component {
     containerView: {
       width:
         this.props.type == 'assignment'
-          ? (2.4 * screenWidth) / 3
+          ? (2.4 * screenWidth) / 3 
           : (2 * screenWidth) / 3,
       height:
         this.props.type == 'assignment' ? screenHeight / 3 : screenHeight / 7,
@@ -199,10 +206,10 @@ export default class FeedsObject extends Component {
       marginLeft:
         this.props.madeByUser == this.props.currentUser.ID
           ? 0
-          : screenWidth / 25,
+          : screenWidth / 45,
       marginRight:
         this.props.madeByUser == this.props.currentUser.ID
-          ? screenWidth / 25
+          ? screenWidth / 45
           : 0,
       resizeMode: 'contain'
     },
@@ -228,10 +235,14 @@ export default class FeedsObject extends Component {
       bottom: screenScale * 4,
       left: screenScale * 4
     },
-    Reaction: {
+    reactionView: {
       alignItems: 'center',
       justifyContent: 'space-around',
       flexDirection: 'row',
+      flex: 1,
+    },
+    Reaction: {
+      alignItems: 'center',
       width: screenScale * 16,
       height: screenScale * 8,
       borderWidth: 1,
