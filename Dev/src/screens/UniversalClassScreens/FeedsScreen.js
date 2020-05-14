@@ -43,6 +43,16 @@ export default class FeedsScreen extends React.Component {
             emoji: "😋",
             reactedBy: ['Gx6OAwlilxV9OBB7v63wesjpal22']
           }
+        ],
+        Comments: [
+          {
+            user: {
+              imageID: '2',
+              Name: 'Ahmed Mohammad',
+              isTeacher: false
+            },
+            Content: 'Hey Everyone'
+          }
         ]
       },
       {
@@ -53,7 +63,17 @@ export default class FeedsScreen extends React.Component {
           end: { ayah: 11, page: 2, surah: 2 }
         },
         type: 'assignment',
-        Reactions: []
+        Reactions: [],
+        Comments: [
+          {
+            user: {
+              imageID: '2',
+              Name: 'Ahmed Mohammad',
+              isTeacher: false
+            },
+            Content: 'Hey Everyone'
+          }
+        ]
       },
       {
         madeByUser: 'feijwowe',
@@ -63,7 +83,17 @@ export default class FeedsScreen extends React.Component {
           end: { ayah: 11, page: 2, surah: 2 }
         },
         type: 'assignment',
-        Reactions: []
+        Reactions: [],
+        Comments: [
+          {
+            user: {
+              imageID: '2',
+              Name: 'Ahmed Mohammad',
+              isTeacher: false
+            },
+            Content: 'Hey Everyone'
+          }
+        ]
       },
       {
         madeByUser: 'jiewfjeo',
@@ -73,6 +103,16 @@ export default class FeedsScreen extends React.Component {
           {
             emoji: "😋",
             reactedBy: ['Gx6OAwlilxV9OBB7v63wesjpal22']
+          }
+        ],
+        Comments: [
+          {
+            user: {
+              imageID: '2',
+              Name: 'Ahmed Mohammad',
+              isTeacher: false
+            },
+            Content: 'Hey Everyone'
           }
         ]
       }
@@ -173,6 +213,7 @@ export default class FeedsScreen extends React.Component {
               data={this.state.feedsData}
               renderItem={({ index, item, separators }) => (
                 <FeedsObject
+                  Comments={[]}
                   onPressSelectEmoji={() => this.toggleSelectingEmoji(index)}
                   madeByUser={item.madeByUser}
                   currentUser={
@@ -185,6 +226,7 @@ export default class FeedsScreen extends React.Component {
                   number={index}
                   key={index}
                   type={item.type}
+                  Comments={item.Comments}
                   Reactions={item.Reactions}
                   imageRequire={require('../../../assets/images/student-icons/boy1.png')}
                 />
