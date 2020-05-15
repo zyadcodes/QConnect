@@ -35,6 +35,7 @@ import { LineChart } from "react-native-chart-kit";
 import CodeInput from 'react-native-confirmation-code-input';
 import DailyTracker from 'components/DailyTracker';
 import themeStyles from "config/themeStyles";
+import TouchableText from "components/TouchableText"
 
 const translateY = new Animated.Value(-35);
 const opacity = new Animated.Value(0);
@@ -143,7 +144,9 @@ class StudentMainScreen extends QcParentScreen {
   //------------------- end of component lifecycle methods ---------------------------
 
   getFormattedDateTimeString(date) {
-    return `${date.toLocaleDateString("EN-US")}, ${date.getHours()}:${date.getMinutes()}`;
+    return `${date.toLocaleDateString(
+      'EN-US'
+    )}, ${date.getHours()}:${date.getMinutes()}`;
   }
   async getSubmissionFromAssignment(assignment) {
     let { submission } = assignment;
@@ -871,7 +874,7 @@ class StudentMainScreen extends QcParentScreen {
       <Overlay
         isVisible={audioPlaybackVisible}
         onBackdropPress={this.toggleOverlay.bind(this)}
-        overlayStyle={{ width: screenWidth * 0.9, height: 120 }}
+        overlayStyle={{ width: screenWidth * 0.9, height: 150 }}
       >
         <View
           style={{
@@ -895,6 +898,23 @@ class StudentMainScreen extends QcParentScreen {
           hideCancel={true}
           sent={submittedAudio.sent}
         />
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', height: 15 }}>
+          <TouchableText
+            text="Re-send a new recording"
+            onPress={() => {
+              this.toggleOverlay();
+              this.setState(
+                {
+                  recordingUIVisible: this.setRecUIForAssignmentIndex(
+                    assignmentIndex,
+                    true
+                  ),
+                },
+                () => this.animateShowAudioUI()
+              );
+            }}
+          />
+        </View>
       </Overlay>
     );
   }
