@@ -34,7 +34,6 @@ const postStopAction = {
   close: 1,
   send: 2
 };
-const audioRecorderPlayer = new AudioRecorderPlayer();
 
 const AudioPlayer = props => {
   const [toggled, setToggled] = useState(true);
@@ -47,6 +46,9 @@ const AudioPlayer = props => {
     false
   );
   const [visible, setVisible] = useState(props.visible);
+  const [audioRecorderPlayer, setAudioPlayer] = useState(
+    new AudioRecorderPlayer()
+  );
 
   useEffect(() => {
     // returned function will be called on component unmount
@@ -58,7 +60,7 @@ const AudioPlayer = props => {
       audioRecorderPlayer.stopPlayer();
       audioRecorderPlayer.removePlayBackListener();
     };
-  }, [isRecording]);
+  }, [audioRecorderPlayer, isRecording]);
 
   audioRecorderPlayer.setSubscriptionDuration(0.09); // optional. Default is 0.1
   const spin = rotation.interpolate({
@@ -204,6 +206,7 @@ const AudioPlayer = props => {
     if (isRecording) {
       await audioRecorderPlayer.stopRecorder();
       await audioRecorderPlayer.removeRecordBackListener();
+      await onStopPlay();
 
       setPlayWidth(0);
       setIsRecording(false);
@@ -212,7 +215,7 @@ const AudioPlayer = props => {
 
     //let's perform a post action is requested.
     if (postAction === postStopAction.send) {
-      props.onSend(fullPath);
+      props.onSend(fullPath, path);
     } else if (postAction === postStopAction.close) {
       props.onClose();
     }
