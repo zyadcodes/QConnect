@@ -830,6 +830,7 @@ class StudentMainScreen extends QcParentScreen {
                 currentClassID,
                 assignmentIndex
               );
+              this.refs.toast.show(strings.RecordingSent, DURATION.LENGTH_LONG);
               this.animateHideAudioUI(assignmentIndex);
             }}
           />

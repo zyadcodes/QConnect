@@ -24,6 +24,7 @@ export default {
   SomethingWentWrong:
     "Bummer. Something went wrong. Please try again. If the problem persists, please report it to quranconnect@outlook.com",
   Retry: "Check again",
+  RecordingSent: "Congrats! Your recording is sent to the teacher.",
   //--------------------- Student Main Screen ---------------------
   TotalAssignments: "Total assignments completed",
   Ready: "READY",
@@ -165,7 +166,7 @@ export default {
   PagesWithParenthesis: ") pp. ",
   To: " to ",
   TeacherIsNotified:
-    "Awesome! Your teacher is notified and she sure will be excited :)",
+    "Wonderful masha'Allah! We've let your teacher know.",
   TeacherIsNotifiedNeedHelp:
     "Oh no! Your teacher is notified and should be happy to help.",
 
