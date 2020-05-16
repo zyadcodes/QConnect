@@ -9,7 +9,8 @@ import {
   Easing,
   Alert,
   Platform,
-  View
+  View,
+  PixelRatio
 } from "react-native";
 import AudioRecorderPlayer, {
   AVEncoderAudioQualityIOSType,
@@ -339,6 +340,8 @@ const AudioPlayer = props => {
                 <AudioStatus>
                   {props.isRecordMode
                     ? strings.SendRecording
+                    : props.title
+                    ? props.title
                     : strings.AudioRecordingReceived}
                 </AudioStatus>
                 <Subtitle>
@@ -409,6 +412,9 @@ const AudioPlayer = props => {
 
 export default AudioPlayer;
 
+const mainTextSize = PixelRatio.get() < 2 ? 12 : 15;
+const imageDiameter = PixelRatio.get() < 2 ? 35 : 50;
+
 const Container = styled.View`
   min-width: 95%;
   min-height: 80px;
@@ -419,9 +425,9 @@ const Container = styled.View`
 `;
 
 const Image = styled.Image`
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
+  width: ${imageDiameter};
+  height: ${imageDiameter};
+  border-radius: ${imageDiameter / 2};
 `;
 
 const VerticalSpacer = styled.View`
@@ -489,19 +495,19 @@ const Column = styled.View`
 const AnimatedColumn = Animated.createAnimatedComponent(Column);
 
 const AudioStatus = styled.Text`
-  font-size: 15px;
+  font-size: ${mainTextSize};
   font-family: "Montserrat-Regular";
   color: rgba(0, 0, 0, 0.7);
 `;
 
 const Subtitle = styled.Text`
-  font-size: 12px;
+  font-size: ${mainTextSize * 0.8};
   font-family: "Montserrat-Light";
   color: rgba(0, 0, 0, 0.7);
 `;
 
 const Reciter = styled.Text`
-  font-size: 15px;
+  font-size: ${mainTextSize};
   font-family: "Montserrat-Bold";
   color: rgba(0, 0, 0, 0.7);
 `;
