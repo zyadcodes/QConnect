@@ -98,17 +98,30 @@ class StudentMainScreen extends QcParentScreen {
 
       //This constructs an array of the student's past assignments & only includes the "length" field which is how many
       //words that assignment was. The method returns that array which is then passed to the line graph below as the data
-      const {
-        assignmentHistory,
-        dailyPracticeLog,
-        currentAssignments,
-      } = studentClassInfo;
+      const { dailyPracticeLog, currentAssignments } = studentClassInfo;
+
+      let { assignmentHistory } = studentClassInfo;
+
       const data = [];
       for (const assignment of assignmentHistory) {
         if (assignment.assignmentLength && assignment.assignmentLength > 0) {
           data.push(assignment);
         }
       }
+
+      //sort chart data from oldest to newest
+      data.sort(function(a, b) {
+        var dateA = new Date(a.completionDate),
+          dateB = new Date(b.completionDate);
+        return dateA - dateB;
+      });
+
+      //sort assignment history from newest to oldest
+      assignmentHistory.sort(function(a, b) {
+        var dateA = new Date(a.completionDate),
+          dateB = new Date(b.completionDate);
+        return dateB - dateA;
+      });
 
       //initialize recordingUIVisible array to have the same number of elements
       // as we have assignments, and initialize each flag to false (do not show any recording UI initially)
@@ -126,6 +139,7 @@ class StudentMainScreen extends QcParentScreen {
           currentClass,
           wordsPerAssignmentData: data,
           currentClassID,
+          assignmentHistory,
           dailyPracticeLog,
           studentClassInfo,
           isLoading: false,
@@ -1095,29 +1109,7 @@ class StudentMainScreen extends QcParentScreen {
   }
 
   renderCurrentAssignmentCard(item, index) {
-    const { studentClassInfo, currentClassID, userID, student } = this.state;
-    const customPickerOptions = [
-      {
-        label: strings.WorkingOnIt,
-        value: "WORKING_ON_IT",
-        color: colors.workingOnItColorBrown,
-      },
-      {
-        label: strings.Ready,
-        value: "READY",
-        color: colors.green,
-      },
-      {
-        label: strings.NeedHelp,
-        value: "NEED_HELP",
-        color: colors.red,
-      },
-      {
-        label: strings.NotStarted,
-        value: "NOT_STARTED",
-        color: colors.primaryVeryLight,
-      },
-    ];
+    const { studentClassInfo, currentClassID, userID } = this.state;
 
     return (
       <View>
@@ -1445,7 +1437,7 @@ class StudentMainScreen extends QcParentScreen {
 
   onDatePressed(date, untoggleAction) {
     let dailyPracticeLog = this.state.dailyPracticeLog;
-    
+
     if (untoggleAction) {
       delete dailyPracticeLog[date.dateString];
     } else {
@@ -1483,6 +1475,7 @@ class StudentMainScreen extends QcParentScreen {
       classes,
       isOpen,
       dailyPracticeLog,
+      assignmentHistory
     } = this.state;
     if (isLoading === true) {
       return (
@@ -1497,12 +1490,6 @@ class StudentMainScreen extends QcParentScreen {
     if (this.state.noCurrentClass) {
       return this.renderEmptyState();
     }
-
-    // show history from oldest to newest
-    // todo: this should be managed at db to avoid cost of reversing the list every time we render the screen
-    let assignmentHistory = studentClassInfo.assignmentHistory
-      ? studentClassInfo.assignmentHistory.reverse()
-      : null;
 
     // UI to show
     return (

@@ -1,7 +1,14 @@
 import React from 'react';
-import { Text, StyleSheet, View, ActivityIndicator } from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  PixelRatio,
+} from 'react-native';
 import colors from 'config/colors';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import { screenWidth } from "config/dimensions";
 
 //Creates the higher order component
 const EndOfAyah = ({
@@ -14,6 +21,7 @@ const EndOfAyah = ({
 }) => {
   const rightBracket = '  \uFD3F';
   const leftBracket = '\uFD3E';
+  const endOfAyahSymbol = '\u06DD';
   let containerStyle = [styles.container];
   if (selected) {
     containerStyle.push(styles.selectionStyle);
@@ -28,7 +36,13 @@ const EndOfAyah = ({
   return (
     <View style={containerStyle}>
       {showLoading === true ? (
-        <View style={{ justifyContent: 'center', alignItems: "center", paddingTop: 3 }}>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingTop: 10,
+          }}
+        >
           <ActivityIndicator
             size="small"
             color={highlighted ? colors.white : colors.primaryDark}
@@ -37,28 +51,40 @@ const EndOfAyah = ({
         </View>
       ) : (
         <TouchableHighlight onPress={() => onPress()}>
-          <Text
-            style={[
-              styles.ayahSeparator,
-              highlighted ? { color: colors.white } : {},
-            ]}
-          >
-            {leftBracket}
+          <View>
             <Text
               style={[
-                styles.ayahNumber,
+                styles.ayahSeparator,
                 highlighted ? { color: colors.white } : {},
               ]}
             >
-              {ayahNumber}
+              {endOfAyahSymbol}
             </Text>
-            {rightBracket}
-          </Text>
+            <View style={styles.ayahNumberContainer}>
+              <Text
+                style={[
+                  styles.ayahNumber,
+                  highlighted ? { color: colors.white } : {},
+                ]}
+              >
+                {ayahNumber}
+              </Text>
+            </View>
+          </View>
         </TouchableHighlight>
       )}
     </View>
   );
 };
+
+const mushafFontSize =
+  PixelRatio.get() <= 1.5
+    ? 16
+    : PixelRatio.get() < 2
+    ? 18
+    : screenWidth >= 400
+    ? 22
+    : 20;
 
 const styles = StyleSheet.create({
   container: {
@@ -66,20 +92,27 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     marginVertical: 1
   },
+  ayahNumberContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center', 
+    alignItems: 'center',
+  },
   ayahNumber: {
     textAlign: 'right',
     fontFamily: 'me_quran',
-    alignItems: 'center',
-    alignSelf: 'center',
-    fontSize: 9,
-    color: colors.darkGrey
+    fontSize: mushafFontSize * 0.6,
+    color: colors.darkGrey,
   },
   ayahSeparator: {
     textAlign: 'right',
     fontFamily: 'me_quran',
     alignItems: 'center',
     alignSelf: 'center',
-    fontSize: 12,
+    fontSize: mushafFontSize,
     color: colors.darkGrey,
   },
   selectionStyle: {
@@ -87,12 +120,12 @@ const styles = StyleSheet.create({
   },
   highlightedStyle: {
     backgroundColor: "rgba(107,107,107,0.8)",
-    borderTopLeftRadius: 15,
-    borderBottomLeftRadius: 15
+    borderTopLeftRadius: 25,
+    borderBottomLeftRadius: 25
   },
   lastSelectedAyah: {
-    borderTopLeftRadius: 15,
-    borderBottomLeftRadius: 15
+    borderTopLeftRadius: 25,
+    borderBottomLeftRadius: 25
   }
 });
 

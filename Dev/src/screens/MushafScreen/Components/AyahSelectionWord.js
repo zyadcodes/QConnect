@@ -1,7 +1,14 @@
 import React from "react";
-import { Text, StyleSheet, View, TouchableWithoutFeedback } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+  PixelRatio,
+} from "react-native";
 import colors from "config/colors";
-import fontStyles from "config/fontStyles";
+import { screenWidth } from "config/dimensions";
+
 
 //Creates the higher order component
 class Word extends React.Component {
@@ -53,18 +60,28 @@ class Word extends React.Component {
     );
   }
 }
+const mushafFontSize =
+  PixelRatio.get() <= 1.5
+    ? 15
+    : PixelRatio.get() < 2
+    ? 17
+    : screenWidth >= 400
+    ? 20
+    : 19;
+
 
 const styles = StyleSheet.create({
   wordText: {
     textAlign: "right",
     fontFamily: "me_quran",
-    fontSize: fontStyles.bodyFont,
+    fontSize: mushafFontSize,
     color: colors.darkGrey,
   },
   highlightedWordText: {
     textAlign: "right",
     fontFamily: "me_quran",
-    fontSize: fontStyles.bodyFont,
+    fontWeight: "bold",
+    fontSize: mushafFontSize,
     color: colors.white,
   },
   container: {
@@ -76,11 +93,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.green
   },
   highlightedStyle: {
-    backgroundColor: "rgba(107,107,107,0.8)",
+    backgroundColor: "rgba(107,107,107,0.8)"
   },
   firstSelectedWordText: {
-    borderTopRightRadius: 15,
-    borderBottomRightRadius: 15,
+    borderTopRightRadius: 25,
+    borderBottomRightRadius: 25,
   },
 });
 
