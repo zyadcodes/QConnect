@@ -66,8 +66,8 @@ const mushafFontSize =
     : PixelRatio.get() < 2
     ? 15
     : screenWidth >= 400
-    ? 17.5
-    : 16;
+    ? 16
+    : 14;
 
 
 const styles = StyleSheet.create({

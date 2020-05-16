@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     fontFamily: 'me_quran',
     fontSize: mushafFontSize * 0.55,
-    color: colors.darkGrey,
+    color: colors.primaryDark,
   },
   ayahSeparator: {
     textAlign: 'right',
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     fontSize: mushafFontSize,
-    color: colors.darkGrey,
+    color: colors.primaryDark,
   },
   selectionStyle: {
     backgroundColor: colors.green
