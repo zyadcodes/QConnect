@@ -62,12 +62,12 @@ class Word extends React.Component {
 }
 const mushafFontSize =
   PixelRatio.get() <= 1.5
-    ? 15
+    ? 14
     : PixelRatio.get() < 2
-    ? 17
+    ? 15
     : screenWidth >= 400
-    ? 20
-    : 19;
+    ? 17.5
+    : 16;
 
 
 const styles = StyleSheet.create({

@@ -577,7 +577,7 @@ const styles = StyleSheet.create({
   },
   pageContent: {
     marginVertical: 5,
-    marginHorizontal: 5,
+    marginHorizontal: 2,
     backgroundColor: colors.white,
   },
 });

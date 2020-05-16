@@ -40,7 +40,7 @@ const EndOfAyah = ({
           style={{
             justifyContent: 'center',
             alignItems: 'center',
-            paddingTop: 10,
+            paddingTop: 3,
           }}
         >
           <ActivityIndicator
@@ -79,12 +79,12 @@ const EndOfAyah = ({
 
 const mushafFontSize =
   PixelRatio.get() <= 1.5
-    ? 16
+    ? 14
     : PixelRatio.get() < 2
-    ? 18
+    ? 16
     : screenWidth >= 400
-    ? 22
-    : 20;
+    ? 20
+    : 18;
 
 const styles = StyleSheet.create({
   container: {
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   ayahNumber: {
     textAlign: 'right',
     fontFamily: 'me_quran',
-    fontSize: mushafFontSize * 0.6,
+    fontSize: mushafFontSize * 0.55,
     color: colors.darkGrey,
   },
   ayahSeparator: {
