@@ -58,7 +58,7 @@ export class EvaluationPage extends QcParentScreen {
     isPlaying: "Stopped",
     currentPosition: "0:00",
     audioFile: -1,
-    notesHeight: 30,
+    notesHeight: 40,
     selectedImprovementAreas: []
   };
 
@@ -308,159 +308,153 @@ export class EvaluationPage extends QcParentScreen {
       //----- outer view, gray background ------------------------
       //Makes it so keyboard is dismissed when clicked somewhere else
 
-      <QCView style={screenStyle.container}>
-        <ScrollView>
-          {this.props.navigation.state.params.newAssignment === true ? (
-            <TopBanner
-              LeftIconName="angle-left"
-              LeftOnPress={() =>
-                this.props.navigation.state.params.onCloseNavigateTo
-                  ? this.props.navigation.navigate(
-                      this.props.navigation.state.params.onCloseNavigateTo
-                    )
-                  : this.props.navigation.goBack()
-              }
-              Title={strings.Evaluation}
-            />
-          ) : readOnly === true &&
-            !this.props.navigation.state.params.isStudentSide ? (
-            <TopBanner
-              LeftIconName="angle-left"
-              LeftOnPress={() => {
-                let index = this.props.navigation.dangerouslyGetParent().state
-                  .index;
-                // go back to previous page if we have one
-                if (index > 0) {
-                  this.props.navigation.goBack();
-                } else {
-                  //if navigation stack is empty (no previous page), go to main screen
-                  this.props.navigation.push("TeacherCurrentClass", {
-                    userID: this.state.userID
-                  });
-                }
-              }}
-              Title={strings.Evaluation}
-              RightIconName="edit"
-              RightOnPress={() => {
-                this.setState({
-                  readOnly: false,
-                  improvementAreas: this.state.improvementAreas
+      <ScrollView>
+        {this.props.navigation.state.params.newAssignment === true ? (
+          <TopBanner
+            LeftIconName="angle-left"
+            LeftOnPress={() =>
+              this.props.navigation.state.params.onCloseNavigateTo
+                ? this.props.navigation.navigate(
+                    this.props.navigation.state.params.onCloseNavigateTo
+                  )
+                : this.props.navigation.goBack()
+            }
+            Title={strings.Evaluation}
+          />
+        ) : readOnly === true &&
+          !this.props.navigation.state.params.isStudentSide ? (
+          <TopBanner
+            LeftIconName="angle-left"
+            LeftOnPress={() => {
+              let index = this.props.navigation.dangerouslyGetParent().state
+                .index;
+              // go back to previous page if we have one
+              if (index > 0) {
+                this.props.navigation.goBack();
+              } else {
+                //if navigation stack is empty (no previous page), go to main screen
+                this.props.navigation.push("TeacherCurrentClass", {
+                  userID: this.state.userID
                 });
-              }}
+              }
+            }}
+            Title={strings.Evaluation}
+            RightIconName="edit"
+            RightOnPress={() => {
+              this.setState({
+                readOnly: false,
+                improvementAreas: this.state.improvementAreas
+              });
+            }}
+          />
+        ) : (
+          <TopBanner
+            LeftIconName="angle-left"
+            LeftOnPress={() => this.props.navigation.goBack()}
+            Title={strings.Evaluation}
+          />
+        )}
+        <View style={styles.evaluationContainer}>
+          <View style={styles.section}>
+            <Image
+              source={studentImages.images[profileImageID]}
+              style={styles.profilePic}
             />
-          ) : (
-            <TopBanner
-              LeftIconName="angle-left"
-              LeftOnPress={() => this.props.navigation.goBack()}
-              Title={strings.Evaluation}
-            />
-          )}
-          <View style={styles.evaluationContainer}>
-            <View style={styles.section}>
-              <Image
-                source={studentImages.images[profileImageID]}
-                style={styles.profilePic}
-              />
-              <Text style={fontStyles.bigTextStyleDarkGrey}>
-                {classStudent.name}
-              </Text>
-              <Text style={fontStyles.mainTextStylePrimaryDark}>
-                {assignmentName}
-              </Text>
-            </View>
-            {this.state.audioFile !== -1 ? (
-              <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <View style={styles.playAudio}>
-                  <AudioPlayer
-                    visible={true}
-                    compensateForVerticalMove={false}
-                    image={studentImages.images[profileImageID]}
-                    reciter={classStudent.name}
-                    title={assignmentName}
-                    audioFilePath={this.state.audioFile}
-                    hideCancel={true}
-                    sent={
-                      this.state.audioSentDateTime
-                        ? this.state.audioSentDateTime
-                        : ""
-                    }
-                  />
-                </View>
-              </View>
-            ) : (
-              <View />
-            )}
-            <View style={styles.section}>
-              <Text style={fontStyles.mainTextStyleDarkGrey}>
-                {headerTitle}
-              </Text>
-              <View style={{ paddingVertical: 15 }}>
-                <AirbnbRating
-                  defaultRating={rating}
-                  size={30}
-                  showRating={false}
-                  onFinishRating={value =>
-                    this.setState({
-                      rating: value
-                    })
+            <Text style={fontStyles.bigTextStyleDarkGrey}>
+              {classStudent.name}
+            </Text>
+            <Text style={fontStyles.mainTextStylePrimaryDark}>
+              {assignmentName}
+            </Text>
+          </View>
+          {this.state.audioFile !== -1 ? (
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <View style={styles.playAudio}>
+                <AudioPlayer
+                  visible={true}
+                  compensateForVerticalMove={false}
+                  image={studentImages.images[profileImageID]}
+                  reciter={classStudent.name}
+                  title={assignmentName}
+                  audioFilePath={this.state.audioFile}
+                  hideCancel={true}
+                  sent={
+                    this.state.audioSentDateTime
+                      ? this.state.audioSentDateTime
+                      : ""
                   }
-                  isDisabled={readOnly}
                 />
               </View>
-
-              <TextInput
-                style={styles.notesStyle}
-                multiline={true}
-                height={this.state.notesHeight}
-                onChangeText={teacherNotes =>
+            </View>
+          ) : (
+            <View />
+          )}
+          <View style={styles.section}>
+            <Text style={fontStyles.mainTextStyleDarkGrey}>{headerTitle}</Text>
+            <View style={{ paddingVertical: 15 }}>
+              <AirbnbRating
+                defaultRating={rating}
+                size={30}
+                showRating={false}
+                onFinishRating={value =>
                   this.setState({
-                    notes: teacherNotes
+                    rating: value
                   })
                 }
-                returnKeyType={"done"}
-                autoCorrect={false}
-                blurOnSubmit={true}
-                placeholder={strings.WriteANote}
-                placeholderColor={colors.black}
-                editable={!readOnly}
-                value={notes}
-                onFocus={() =>
-                  this.setState({ notesHeight: screenHeight * 0.1 })
-                }
-                onEndEditing={() => this.setState({ notesHeight: 30 })}
+                isDisabled={readOnly}
               />
+            </View>
 
-              {/**
+            <TextInput
+              style={styles.notesStyle}
+              multiline={true}
+              height={this.state.notesHeight}
+              onChangeText={teacherNotes =>
+                this.setState({
+                  notes: teacherNotes
+                })
+              }
+              returnKeyType={"done"}
+              autoCorrect={false}
+              blurOnSubmit={true}
+              placeholder={strings.WriteANote}
+              placeholderColor={colors.black}
+              editable={!readOnly}
+              value={notes}
+              onFocus={() => this.setState({ notesHeight: screenHeight * 0.1 })}
+              onEndEditing={() => this.setState({ notesHeight: 40 })}
+            />
+
+            {/**
                   The Things to work on button.
               */}
 
-              <View
-                style={{ flexDirection: "row", justifyContent: "flex-start" }}
-              >
-                <Text style={fontStyles.mainTextStyleDarkGrey}>
-                  {strings.ImprovementAreas}
-                </Text>
-              </View>
-              <FlowLayout
-                ref="flow"
-                dataValue={improvementAreas}
-                title={strings.ImprovementAreas}
-                readOnly={readOnly}
-                selectedByDefault={readOnly ? true : false}
-                onSelectionChanged={selectedImprovementAreas => {
-                  this.setState({ selectedImprovementAreas });
-                }}
-                onImprovementsCustomized={newAreas => {
-                  this.setState({ improvementAreas: newAreas });
-                  FirebaseFunctions.saveTeacherCustomImprovementTags(
-                    this.props.navigation.state.params.userID,
-                    newAreas
-                  );
-                }}
-              />
+            <View
+              style={{ flexDirection: "row", justifyContent: "flex-start" }}
+            >
+              <Text style={fontStyles.mainTextStyleDarkGrey}>
+                {strings.ImprovementAreas}
+              </Text>
             </View>
+            <FlowLayout
+              ref="flow"
+              dataValue={improvementAreas}
+              title={strings.ImprovementAreas}
+              readOnly={readOnly}
+              selectedByDefault={readOnly ? true : false}
+              onSelectionChanged={selectedImprovementAreas => {
+                this.setState({ selectedImprovementAreas });
+              }}
+              onImprovementsCustomized={newAreas => {
+                this.setState({ improvementAreas: newAreas });
+                FirebaseFunctions.saveTeacherCustomImprovementTags(
+                  this.props.navigation.state.params.userID,
+                  newAreas
+                );
+              }}
+            />
           </View>
-        </ScrollView>
+        </View>
         <View style={styles.buttonsContainer}>
           {!readOnly ? (
             <QcActionButton
@@ -476,7 +470,7 @@ export class EvaluationPage extends QcParentScreen {
           )}
         </View>
         <View style={styles.filler} />
-      </QCView>
+      </ScrollView>
     );
   }
 }

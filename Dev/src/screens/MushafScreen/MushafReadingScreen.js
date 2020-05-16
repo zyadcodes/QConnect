@@ -5,7 +5,7 @@ import MushafScreen from "./MushafScreen";
 import LoadingSpinner from "components/LoadingSpinner";
 import studentImages from "config/studentImages";
 import Sound from 'react-native-sound';
-import { isAyahSelected } from "./Helpers/AyahsOrder";
+import KeepAwake from 'react-native-keep-awake';
 
 const noAyahSelected = {
   surah: 0,
@@ -46,7 +46,8 @@ class MushafReadingScreen extends Component {
     //todo: if we need to generalize this, then we can add a props: onClose, and the caller specifies the onClose behavior with
     // the call to push navigation to the proper next screen.
     this.props.navigation.push("StudentCurrentClass", {
-      userID
+      userID,
+      logAsPractice: true
     });
   }
 
@@ -143,6 +144,7 @@ class MushafReadingScreen extends Component {
     } else {
       return (
         <View style={{ flex: 1 }}>
+          <KeepAwake />
           <MushafScreen
             assignToID={studentID}
             classID={classID}

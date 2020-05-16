@@ -25,6 +25,8 @@ import screenStyle from "config/screenStyle";
 import fontStyles from "config/fontStyles";
 import { Icon } from "react-native-elements";
 import { screenHeight, screenWidth } from "config/dimensions";
+import Toast, { DURATION } from "react-native-easy-toast";
+import themeStyles from 'config/themeStyles'
 
 export class ClassMainScreen extends QcParentScreen {
   state = {
@@ -47,11 +49,15 @@ export class ClassMainScreen extends QcParentScreen {
     await this.initScreen();
   }
 
-  async initScreen(){
+  async initScreen() {
     const { userID } = this.props.navigation.state.params;
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
     const { currentClassID } = teacher;
-    let { currentClass } = this.props.navigation.state.params;
+    let {
+      currentClass,
+      showAssignmentSentNotification,
+      assignedToAllClass,
+    } = this.props.navigation.state.params;
 
     if (currentClass === undefined) {
       currentClass = await FirebaseFunctions.getClassByID(currentClassID);
@@ -68,9 +74,24 @@ export class ClassMainScreen extends QcParentScreen {
       currentClassID,
       classes,
     });
+
+    if (showAssignmentSentNotification) {
+      this.showToast(assignedToAllClass);
+    }
   }
 
-  updateStateWithNewAssignmentInfo(newAssignment, index, currentClass) {
+  showToast(assignedToAllClass){
+    let toastMsg = assignedToAllClass
+        ? strings.ClassAssignmentSent
+        : strings.AssignmentSent;
+      this.refs.toast.show(toastMsg, DURATION.LENGTH_LONG);
+  }
+
+  updateStateWithNewAssignmentInfo(newAssignment, index, currentClass, showToast, assignedToAllClass) {
+    if(showToast === true){
+      this.showToast(assignedToAllClass);
+    }
+    
     //re-fetch data
     this.initScreen();
   }
@@ -577,6 +598,13 @@ export class ClassMainScreen extends QcParentScreen {
             />
           }
         >
+          <Toast
+            position={'bottom'}
+            ref="toast"
+            fadeInDuration={3000}
+            positionValue={200}
+            style={themeStyles.toastStyle}
+          />
           <ScrollView style={styles.container}>
             <View>{this.renderTopBanner()}</View>
             {isEditing && this.showClassEditHeader()}

@@ -195,6 +195,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-keep-awake')
     implementation project(':react-native-firebase')
     implementation project(':react-native-sound')
     implementation project(':react-native-reanimated')
