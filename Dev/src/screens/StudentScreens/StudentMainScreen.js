@@ -723,7 +723,7 @@ class StudentMainScreen extends QcParentScreen {
   }
 
   setRecUIForAssignmentIndex(assignmentIndex, value) {
-    showRecUI = this.state.recordingUIVisible;
+    let showRecUI = this.state.recordingUIVisible;
     showRecUI[assignmentIndex] = value;
     return showRecUI;
   }
