@@ -88,6 +88,7 @@ class StudentProfileScreen extends QcParentScreen {
       this.setState({
         classStudent: student,
         currentAssignments: student.currentAssignments,
+        assignmentHistory,
         isLoading: false,
         wordsPerAssignmentData: data,
         dailyPracticeLog,
@@ -389,8 +390,9 @@ class StudentProfileScreen extends QcParentScreen {
       classesMissed,
       wordsPerAssignmentData,
       dailyPracticeLog,
+      assignmentHistory,
     } = this.state;
-    let { assignmentHistory, averageRating, name } = classStudent;
+    let { averageRating, name } = classStudent;
 
     //If the screen is loading, a spinner will display
     if (isLoading === true) {
