@@ -375,7 +375,6 @@ export class EvaluationPage extends QcParentScreen {
                   compensateForVerticalMove={false}
                   image={studentImages.images[profileImageID]}
                   reciter={classStudent.name}
-                  title={assignmentName}
                   audioFilePath={this.state.audioFile}
                   hideCancel={true}
                   sent={
