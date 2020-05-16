@@ -33,9 +33,9 @@ import AudioPlayer from "components/AudioPlayer/AudioPlayer";
 import Toast, { DURATION } from 'react-native-easy-toast';
 import { LineChart } from "react-native-chart-kit";
 import CodeInput from 'react-native-confirmation-code-input';
-import DailyTracker from 'components/DailyTracker';
+import DailyTracker, { getTodaysDateString } from 'components/DailyTracker';
 import themeStyles from "config/themeStyles";
-import TouchableText from "components/TouchableText"
+import TouchableText from "components/TouchableText";
 
 const translateY = new Animated.Value(-35);
 const opacity = new Animated.Value(0);
@@ -76,7 +76,7 @@ class StudentMainScreen extends QcParentScreen {
       "StudentMainScreen"
     );
 
-    const { userID } = this.props.navigation.state.params;
+    const { userID, logAsPractice } = this.props.navigation.state.params;
     const student = await FirebaseFunctions.getStudentByID(userID);
     const { currentClassID } = student;
 
@@ -119,25 +119,33 @@ class StudentMainScreen extends QcParentScreen {
 
       this.getAudioSubmissions(currentAssignments);
 
-      this.setState({
-        student,
-        userID,
-        currentClass,
-        wordsPerAssignmentData: data,
-        currentClassID,
-        dailyPracticeLog,
-        studentClassInfo,
-        isLoading: false,
-        isOpen: false,
-        classes,
-        recordingUIVisible,
-        classesAttended: studentClassInfo.classesAttended
-          ? studentClassInfo.classesAttended
-          : 0,
-        classesMissed: studentClassInfo.classesMissed
-          ? studentClassInfo.classesMissed
-          : 0,
-      });
+      this.setState(
+        {
+          student,
+          userID,
+          currentClass,
+          wordsPerAssignmentData: data,
+          currentClassID,
+          dailyPracticeLog,
+          studentClassInfo,
+          isLoading: false,
+          isOpen: false,
+          classes,
+          recordingUIVisible,
+          classesAttended: studentClassInfo.classesAttended
+            ? studentClassInfo.classesAttended
+            : 0,
+          classesMissed: studentClassInfo.classesMissed
+            ? studentClassInfo.classesMissed
+            : 0,
+        },
+        () => {
+          if (logAsPractice === true) {
+            let todaysDate = getTodaysDateString();
+            this.onDatePressed({ dateString: todaysDate }, false);
+          }
+        }
+      );
     }
   }
 
@@ -899,7 +907,13 @@ class StudentMainScreen extends QcParentScreen {
           hideCancel={true}
           sent={submittedAudio.sent}
         />
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', height: 15 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            height: 15,
+          }}
+        >
           <TouchableText
             text="Re-send a new recording"
             onPress={() => {
@@ -1339,8 +1353,9 @@ class StudentMainScreen extends QcParentScreen {
 
           <QcActionButton
             text={strings.OpenMushaf}
-            onPress={() => {
+            onPress={async () => {
               this.setState({ isLoading: true });
+
               this.props.navigation.push("MushafReadingScreen", {
                 popOnClose: true,
                 isTeacher: false,
@@ -1430,7 +1445,7 @@ class StudentMainScreen extends QcParentScreen {
 
   onDatePressed(date, untoggleAction) {
     let dailyPracticeLog = this.state.dailyPracticeLog;
-
+    
     if (untoggleAction) {
       delete dailyPracticeLog[date.dateString];
     } else {

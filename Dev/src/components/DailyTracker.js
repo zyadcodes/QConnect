@@ -5,10 +5,20 @@ import {
   CalendarProvider,
   WeekCalendar
 } from "react-native-calendars";
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from "react-native";
 import colors from "config/colors";
 import strings from "config/strings";
-import { Icon } from 'react-native-elements';
+import { Icon } from "react-native-elements";
+
+//Today's date string in the format YYYY-MM-DD
+export const getTodaysDateString = () => {
+  var today = new Date();
+  const todaysDate = `${today.getFullYear()}-${(
+    "0" +
+    (today.getMonth() + 1)
+  ).slice(-2)}-${("0" + today.getDate()).slice(-2)}`;
+  return todaysDate;
+};
 
 const DailyTracker = props => {
   const [expanded, setExpanded] = useState(false);
@@ -18,15 +28,6 @@ const DailyTracker = props => {
     props.trackingMode !== undefined ? props.trackingMode : true
   );
 
-  //Today's date string in the format YYYY-MM-DD
-  const getTodaysDateString = () => {
-    var today = new Date();
-    const todaysDate = `${today.getFullYear()}-${(
-      '0' +
-      (today.getMonth() + 1)
-    ).slice(-2)}-${("0" + today.getDate()).slice(-2)}`;
-  };
-
   const [currentDate, setCurrentDate] = useState(
     props.selectedDate ? props.selectedDate : getTodaysDateString()
   );
@@ -34,19 +35,19 @@ const DailyTracker = props => {
   // Takes practice tracking log and add properties to show on the calendar component
   const initializeDatesFromProps = () => {
     const check = {
-      key: 'check',
+      key: "check",
       color: colors.primaryDark,
       selectedDotColor: colors.white
     };
     const absent = {
-      key: 'absent',
+      key: "absent",
       color: colors.darkRed,
-      selectedDotColor: colors.darkRed,
+      selectedDotColor: colors.darkRed
     };
     const present = {
-      key: 'present',
+      key: "present",
       color: colors.darkGreen,
-      selectedDotColor: colors.darkGreen,
+      selectedDotColor: colors.darkGreen
     };
 
     let dates = {};
@@ -117,7 +118,7 @@ const DailyTracker = props => {
               marked: true,
               selected: true,
               selectedColor: colors.green
-            },
+            }
           });
         }
       } else {
@@ -127,7 +128,7 @@ const DailyTracker = props => {
             marked: true,
             selected: true,
             selectedColor: colors.green
-          },
+          }
         });
       }
 
@@ -138,10 +139,10 @@ const DailyTracker = props => {
   return (
     <View
       style={[
-        { justifyContent: 'center', width: '100%' },
-        expanded ? { height: 330 } : { height: 100 },
+        { justifyContent: "center", width: "100%" },
+        expanded ? { height: 330 } : { height: 100 }
       ]}
-      key={'' + Object.keys(markedDates).length}
+      key={"" + Object.keys(markedDates).length}
     >
       <CalendarProvider
         date={currentDate}
@@ -154,7 +155,7 @@ const DailyTracker = props => {
             markedDates={markedDates}
             onDayPress={onDatePressed}
             theme={getTheme()}
-            markingType={'multi-dot'}
+            markingType={"multi-dot"}
           />
         ) : (
           <WeekCalendar
@@ -163,7 +164,7 @@ const DailyTracker = props => {
             onDayPress={onDatePressed}
             theme={getTheme()}
             current={currentDate}
-            markingType={'multi-dot'}
+            markingType={"multi-dot"}
           />
         )}
       </CalendarProvider>
