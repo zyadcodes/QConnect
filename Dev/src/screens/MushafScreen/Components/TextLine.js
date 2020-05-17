@@ -14,7 +14,7 @@ const TextLine = ({
   selectedAyahsStart,
   selectionStarted,
   selectionCompleted,
-  isFirstWord,
+  noSelectionInPreviousLines,
   onSelectAyah,
   lineAlign,
   selectionOn,
@@ -22,6 +22,7 @@ const TextLine = ({
   highlightedAyah,
   showLoadingOnHighlightedAyah
 }) => {
+  let isFirstWord = noSelectionInPreviousLines;
   return (
     <View style={{ ...styles.line, alignItems: lineAlign }}>
       {lineText &&
