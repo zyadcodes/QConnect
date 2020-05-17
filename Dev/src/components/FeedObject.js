@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
   View,
   TouchableOpacity,
-  Text,
   FlatList,
   Image,
   StyleSheet,
@@ -13,6 +12,7 @@ import {
   screenScale,
   fontScale,
 } from '../../config/dimensions';
+import { Text } from 'react-native';
 import PropTypes from 'prop-types';
 import colors from '../../config/colors';
 import { getPageTextWbW } from '../screens/MushafScreen/ServiceActions/getQuranContent';
@@ -21,7 +21,7 @@ import Basmalah from '../screens/MushafScreen/Components/Basmalah';
 import TextLine from '../screens/MushafScreen/Components/TextLine';
 import LoadingSpinner from './LoadingSpinner';
 import { Icon } from 'react-native-elements';
-import ThreadComponent from './ThreadComponent'
+import ThreadComponent from './ThreadComponent';
 
 export default class FeedsObject extends Component {
   static propTypes = {
@@ -91,74 +91,88 @@ export default class FeedsObject extends Component {
           source={this.props.imageRequire}
           style={this.localStyles.userImage}
         />
-        <View style={{ flex: 5, marginTop: screenScale * 18 }}>
-          {this.props.type === 'assignment' ? (
-            <Text
-              style={[
-                this.localStyles.newAssignmentText,
-                { fontSize: fontScale * 18 },
-              ]}
-            >
-              New Assignment:{' '}
-            </Text>
-          ) : null}
-          <View style={this.localStyles.contentContainerView}>
+        <View style={{ flex: 2, marginTop: screenScale * 18 }}>
+          <View style={{ flex: 5 }}>
             {this.props.type === 'assignment' ? (
-              <QuranAssignmentView
-                surahName={this.state.surahName}
-                page={this.state.page}
-                isLoading={this.state.isLoading}
-                isTeacher={this.props.isTeacher}
-                Content={this.props.Content}
-                madeByUser={this.props.madeByUser}
-                currentUser={this.props.currentUser}
-              />
-            ) : (
-              <Text style={this.localStyles.contentText}>
-                {this.props.Content}
+              <Text
+                style={[
+                  this.localStyles.newAssignmentText,
+                  { fontSize: fontScale * 18 },
+                ]}
+              >
+                New Assignment:{' '}
               </Text>
-            )}
-          </View>
-          <View style={{ flexDirection: 'row', alignSelf: 'flex-end' }}>
-            <FlatList
-              data={this.props.Reactions}
-              style={{ flexDirection: 'row' }}
-              renderItem={({ item, index, seperators }) => (
+            ) : null}
+            <View style={this.localStyles.contentContainerView}>
+              {this.props.type === 'assignment' ? (
+                <QuranAssignmentView
+                  surahName={this.state.surahName}
+                  page={this.state.page}
+                  isLoading={this.state.isLoading}
+                  isTeacher={this.props.isTeacher}
+                  Content={this.props.Content}
+                  madeByUser={this.props.madeByUser}
+                  currentUser={this.props.currentUser}
+                />
+              ) : (
+                <Text style={this.localStyles.contentText}>
+                  {this.props.Content}
+                </Text>
+              )}
+            </View>
+            <View style={{ flexDirection: 'row', alignSelf: 'flex-end' }}>
+              <FlatList
+                data={this.props.Reactions}
+                style={{ flexDirection: 'row' }}
+                renderItem={({ item, index, seperators }) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (
+                        this.props.Reactions.length > 0 &&
+                        this.props.Reactions[index].reactedBy.includes(
+                          this.props.currentUser.ID
+                        )
+                      ) {
+                      }
+                    }}
+                    key={index}
+                    activeOpacity={0.6}
+                    style={this.localStyles.Reaction}
+                  >
+                    <View style={this.localStyles.reactionView}>
+                      <Text>{item.reactedBy.length}</Text>
+                      <Text>{item.emoji}</Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
+              />
+              {this.props.madeByUser == this.props.currentUser.ID ? null : (
                 <TouchableOpacity
-                  onPress={() => {
-                    if(this.props.Reactions.length > 0 &&
-                      this.props.Reactions[index].reactedBy.includes(this.props.currentUser.ID)){
-                      
-                    }
-                  }}
-                  key={index}
+                  onPress={() => this.props.onPressSelectEmoji()}
+                  style={this.localStyles.addReaction}
                   activeOpacity={0.6}
-                  style={this.localStyles.Reaction}
                 >
-                  <View style={this.localStyles.reactionView}>
-                    <Text>{item.reactedBy.length}</Text>
-                    <Text>{item.emoji}</Text>
-                  </View>
+                  <Icon
+                    name="plus"
+                    type="entypo"
+                    size={fontScale * 16}
+                    color={colors.primaryDark}
+                  />
                 </TouchableOpacity>
               )}
-            />
-            {this.props.madeByUser == this.props.currentUser.ID ? null : (
-              <TouchableOpacity
-                onPress={() => this.props.onPressSelectEmoji()}
-                style={this.localStyles.addReaction}
-                activeOpacity={0.6}
-              >
-                <Icon
-                  name="plus"
-                  type="entypo"
-                  size={fontScale * 16}
-                  color={colors.primaryDark}
-                />
-              </TouchableOpacity>
-            )}
+            </View>
           </View>
+          {this.props.Comments.length === 0 ? null : (
+            <ThreadComponent
+              isCurrentUser={
+                this.props.madeByUser === this.props.currentUser.ID
+              }
+              listKey={this.props.number}
+              isAssignment={this.props.type === 'assignment'}
+              Comments={this.props.Comments}
+            />
+          )}
         </View>
-        {this.props.Comments.length === 0 ? null : <ThreadComponent Comments={this.props.Comments}/>}
       </View>
     );
   }
@@ -166,10 +180,8 @@ export default class FeedsObject extends Component {
     containerView: {
       width:
         this.props.type == 'assignment'
-          ? (2.4 * screenWidth) / 3 
+          ? (2.4 * screenWidth) / 3
           : (2 * screenWidth) / 3,
-      height:
-        this.props.type == 'assignment' ? screenHeight / 3 : screenHeight / 7,
       alignSelf:
         this.props.madeByUser == this.props.currentUser.ID
           ? 'flex-end'
@@ -198,6 +210,7 @@ export default class FeedsObject extends Component {
     contentText: {
       color: colors.lightBrown,
       fontWeight: 'bold',
+      padding: screenScale * 2,
       fontSize: fontScale * 15
     },
     userImage: {
@@ -327,7 +340,7 @@ class QuranAssignmentView extends Component {
   localStyles = StyleSheet.create({
     assignmentContainer: {
       alignSelf: 'center',
-      flex: 3,
+      height: screenHeight / 6,
       overflow: 'hidden',
       borderColor: colors.lightBrown,
       borderWidth: 2,
@@ -342,6 +355,7 @@ class QuranAssignmentView extends Component {
     newAssignmentText: {
       fontSize: fontScale * 16,
       color: colors.lightBrown,
+      flexWrap: 'nowrap',
       fontWeight: 'bold'
     },
   });
