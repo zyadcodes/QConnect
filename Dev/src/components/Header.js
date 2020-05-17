@@ -17,19 +17,27 @@ const Header = props => {
     <Container>
       <LeftAvatarContainer>
         <Avatar rounded source={props.avatarImage} />
-        <AvatarFooterContainer>
+        <HorizontalContainer>
           <AvatarSubTitle numberOfLines={1}>{props.avatarName}</AvatarSubTitle>
           <Icon
             name={showPeoplePicker === false ? 'angle-down' : 'angle-up'}
             type="font-awesome"
             color={colors.primaryDark}
-            size={14}
+            size={15}
           />
-        </AvatarFooterContainer>
+        </HorizontalContainer>
       </LeftAvatarContainer>
       <MiddleContainer>
         <Title>{props.title}</Title>
-        <Subtitle>{props.subtitle}</Subtitle>
+        <SubtitleContainer>
+          <Subtitle>{props.subtitle}</Subtitle>
+          <Icon
+            name={showPeoplePicker === false ? 'angle-down' : 'angle-up'}
+            type="font-awesome"
+            color={colors.primaryDark}
+            size={15}
+          />
+        </SubtitleContainer>
       </MiddleContainer>
       <RightContainer />
     </Container>
@@ -38,12 +46,11 @@ const Header = props => {
 
 export default Header;
 
-const mainTextSize = PixelRatio.get() < 2 ? 10 : 12;
-// const imageDiameter = PixelRatio.get() < 2 ? 35 : 50;
+export const headerHeight = 130;
 
 const Container = styled.View`
   width: 100%;
-  min-height: 130px;
+  min-height: ${headerHeight};
   box-shadow: 0 50px 57px #000000;
   flex-direction: row;
   justify-content: flex-start;
@@ -56,8 +63,13 @@ const LeftAvatarContainer = styled.View`
   align-items: center;
 `;
 
-const AvatarFooterContainer = styled.View`
+const HorizontalContainer = styled.View`
   flex-direction: row;
+`;
+
+const SubtitleContainer = styled.View`
+  flex-direction: row;
+  padding-top: 5px;
 `;
 
 const MiddleContainer = styled.View`
@@ -67,7 +79,7 @@ const MiddleContainer = styled.View`
 `;
 
 const Title = styled.Text`
-  padding-top: 5px;
+  padding-top: 3px;
   text-align: center;
   font-size: ${bodyFontBig};
   font-family: ${fontFamily};
@@ -75,8 +87,8 @@ const Title = styled.Text`
 `;
 
 const Subtitle = styled.Text`
-  padding-top: 5px;
   text-align: center;
+  padding-right: 5px;
   font-size: ${mainFont};
   font-family: ${fontFamily};
   color: ${colors.primaryDark};

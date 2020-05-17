@@ -6,19 +6,8 @@ import LoadingSpinner from "components/LoadingSpinner";
 import studentImages from "config/studentImages";
 import Sound from 'react-native-sound';
 import KeepAwake from 'react-native-keep-awake';
+import { noAyahSelected, noSelection } from 'screens/MushafScreen/Helpers/consts';
 
-const noAyahSelected = {
-  surah: 0,
-  page: 0,
-  ayah: 0
-};
-
-const noSelection = {
-  start: noAyahSelected,
-  end: noAyahSelected,
-  started: false,
-  completed: false
-};
 
 class MushafReadingScreen extends Component {
   state = {

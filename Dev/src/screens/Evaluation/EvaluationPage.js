@@ -26,7 +26,11 @@ import screenStyle from "config/screenStyle";
 import fontStyles from "config/fontStyles";
 import { screenWidth, screenHeight } from "config/dimensions";
 import AudioPlayer from "components/AudioPlayer/AudioPlayer";
-import Header from "components/Header";
+import Header, {headerHeight} from "components/Header";
+import MushafScreen from "screens/MushafScreen/MushafScreen";
+import KeepAwake from 'react-native-keep-awake';
+import { noAyahSelected, noSelection } from 'screens/MushafScreen/Helpers/consts';
+
 
 export class EvaluationPage extends QcParentScreen {
   //Default improvement areas
@@ -63,7 +67,15 @@ export class EvaluationPage extends QcParentScreen {
     notesHeight: 40,
     selectedImprovementAreas: [],
     audioPlaybackVisible: true,
-    evaluationCollapsed: false
+    evaluationCollapsed: false,
+    selection: this.props.navigation.state.params.assignmentLocation
+      ? {
+          start: this.props.navigation.state.params.assignmentLocation.start,
+          end: this.props.navigation.state.params.assignmentLocation.end,
+          started: false,
+          completed: true
+        }
+      : noSelection,
   };
 
   componentWillUnmount() {
@@ -277,6 +289,13 @@ export class EvaluationPage extends QcParentScreen {
       }
     }
   }
+  onSelectAyah(selectedAyah, selectedWord) {
+    console.log(JSON.stringify(selectedWord));
+  }
+
+  closeScreen(){
+    console.log("close screen");
+  }
 
   // --------------  Renders Evaluation scree UI --------------
   render() {
@@ -297,7 +316,10 @@ export class EvaluationPage extends QcParentScreen {
       classStudent,
       assignmentName,
       isLoading,
-      studentObject
+      studentObject,
+      studentID,
+      classID,
+      assignmentType
     } = this.state;
     const { profileImageID } = studentObject;
     const headerTitle = readOnly
@@ -312,7 +334,6 @@ export class EvaluationPage extends QcParentScreen {
       <View
         style={{
           flex: 1,
-          justifyContent: "flex-end"
         }}
       >
         {this.props.navigation.state.params.newAssignment === true ? (
@@ -355,10 +376,34 @@ export class EvaluationPage extends QcParentScreen {
             avatarImage={studentImages.images[profileImageID]}
           />
         )}
-        <View style={{ flex: 4 }} />
+        <View style={{ height: screenHeight - headerHeight }}>
+          <KeepAwake />
+          <MushafScreen
+            assignToID={studentID}
+            hideHeader={true}
+            showSelectedLinesOnly={true}
+            classID={classID}
+            profileImage={studentImages.images[profileImageID]}
+            showLoadingOnHighlightedAyah={
+              this.state.isAudioLoading === true &&
+              this.state.highlightedAyah !== undefined
+            }
+            selection={this.state.selection}
+            highlightedWord={this.state.highlightedWord}
+            highlightedAyah={this.state.highlightedAyah}
+            assignmentName={assignmentName}
+            assignmentType={assignmentType}
+            topRightIconName="close"
+            onClose={this.closeScreen.bind(this)}
+            currentClass={classStudent}
+            onSelectAyah={this.onSelectAyah.bind(this)}
+            disableChangingUser={true}
+          />
+        </View>
 
-        <ScrollView>
           <View style={styles.evaluationContainer}>
+          <ScrollView>
+
             <View
               style={{
                 top: 5,
@@ -482,8 +527,8 @@ export class EvaluationPage extends QcParentScreen {
                 </View>
               )}
             </View>
+            </ScrollView>
           </View>
-        </ScrollView>
         <ActionButton
           buttonColor={colors.darkGreen}
           onPress={() => {
@@ -491,7 +536,7 @@ export class EvaluationPage extends QcParentScreen {
           }}
           renderIcon={() => (
             <Icon
-              name="clipboard-check"
+              name="check-bold"
               color="#fff"
               type="material-community"
               style={styles.actionButtonIcon}
@@ -509,7 +554,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     backgroundColor: colors.lightGrey,
     flex: 1,
-    justifyContent: "flex-end"
   },
   playAudio: {
     height: screenHeight * 0.1,
@@ -521,7 +565,6 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 5,
     alignItems: "center",
-    alignSelf: "flex-end",
     marginTop: 5,
     marginBottom: 5,
     marginHorizontal: 5,
@@ -533,7 +576,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
     elevation: 3,
-    borderRadius: 3
+    borderRadius: 3,
+    position: 'absolute', left: 0, right: 0, bottom: 0
   },
   section: {
     alignItems: "center",
