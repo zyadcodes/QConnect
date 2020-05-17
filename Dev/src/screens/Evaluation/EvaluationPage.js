@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable quotes */
 /* eslint-disable comma-dangle */
 import React from "react";
@@ -25,6 +26,7 @@ import screenStyle from "config/screenStyle";
 import fontStyles from "config/fontStyles";
 import { screenWidth, screenHeight } from "config/dimensions";
 import AudioPlayer from "components/AudioPlayer/AudioPlayer";
+import Header from "components/Header";
 
 export class EvaluationPage extends QcParentScreen {
   //Default improvement areas
@@ -59,7 +61,8 @@ export class EvaluationPage extends QcParentScreen {
     currentPosition: "0:00",
     audioFile: -1,
     notesHeight: 40,
-    selectedImprovementAreas: []
+    selectedImprovementAreas: [],
+    audioPlaybackVisible: true
   };
 
   componentWillUnmount() {
@@ -290,8 +293,6 @@ export class EvaluationPage extends QcParentScreen {
       improvementAreas,
       readOnly,
       rating,
-      classID,
-      studentID,
       classStudent,
       assignmentName,
       isLoading,
@@ -310,16 +311,11 @@ export class EvaluationPage extends QcParentScreen {
 
       <ScrollView>
         {this.props.navigation.state.params.newAssignment === true ? (
-          <TopBanner
-            LeftIconName="angle-left"
-            LeftOnPress={() =>
-              this.props.navigation.state.params.onCloseNavigateTo
-                ? this.props.navigation.navigate(
-                    this.props.navigation.state.params.onCloseNavigateTo
-                  )
-                : this.props.navigation.goBack()
-            }
-            Title={strings.Evaluation}
+          <Header
+            title={strings.Evaluation}
+            subtitle={assignmentName}
+            avatarName={classStudent.name}
+            avatarImage={studentImages.images[profileImageID]}
           />
         ) : readOnly === true &&
           !this.props.navigation.state.params.isStudentSide ? (
@@ -348,25 +344,14 @@ export class EvaluationPage extends QcParentScreen {
             }}
           />
         ) : (
-          <TopBanner
-            LeftIconName="angle-left"
-            LeftOnPress={() => this.props.navigation.goBack()}
-            Title={strings.Evaluation}
+          <Header
+            title={strings.Evaluation}
+            avatarName={classStudent.name}
+            avatarImage={studentImages.images[profileImageID]}
           />
         )}
+
         <View style={styles.evaluationContainer}>
-          <View style={styles.section}>
-            <Image
-              source={studentImages.images[profileImageID]}
-              style={styles.profilePic}
-            />
-            <Text style={fontStyles.bigTextStyleDarkGrey}>
-              {classStudent.name}
-            </Text>
-            <Text style={fontStyles.mainTextStylePrimaryDark}>
-              {assignmentName}
-            </Text>
-          </View>
           {this.state.audioFile !== -1 ? (
             <View style={{ justifyContent: "center", alignItems: "center" }}>
               <View style={styles.playAudio}>
@@ -489,15 +474,15 @@ const styles = StyleSheet.create({
   },
   evaluationContainer: {
     flexDirection: "column",
-    paddingTop: screenHeight * 0.048,
-    paddingBottom: screenHeight * 0.037,
+    paddingTop: 5,
+    paddingBottom: 5,
     alignItems: "center",
-    marginTop: screenHeight * 0.044,
-    marginBottom: screenHeight * 0.015,
-    marginHorizontal: screenWidth * 0.024,
+    marginTop: 5,
+    marginBottom: 5,
+    marginHorizontal: 5,
     backgroundColor: colors.white,
     borderColor: colors.lightGrey,
-    borderWidth: screenWidth * 0.0025
+    borderWidth: 1
   },
   section: {
     alignItems: "center",
