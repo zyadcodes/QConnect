@@ -47,7 +47,7 @@ export default class FeedsScreen extends React.Component {
         Comments: [
           {
             user: {
-              imageID: '2',
+              imageID: 2,
               Name: 'Ahmed Mohammad',
               isTeacher: false
             },
@@ -67,7 +67,7 @@ export default class FeedsScreen extends React.Component {
         Comments: [
           {
             user: {
-              imageID: '2',
+              imageID: 2,
               Name: 'Ahmed Mohammad',
               isTeacher: false
             },
@@ -87,7 +87,7 @@ export default class FeedsScreen extends React.Component {
         Comments: [
           {
             user: {
-              imageID: '2',
+              imageID: 2,
               Name: 'Ahmed Mohammad',
               isTeacher: false
             },
@@ -108,12 +108,28 @@ export default class FeedsScreen extends React.Component {
         Comments: [
           {
             user: {
-              imageID: '2',
+              imageID: 2,
               Name: 'Ahmed Mohammad',
               isTeacher: false
             },
             Content: 'Hey Everyone'
-          }
+          },
+          {
+            user: {
+              imageID: 2,
+              Name: 'Ahmed Mohammad',
+              isTeacher: false
+            },
+            Content: 'Hey Everyone'
+          },
+          {
+            user: {
+              imageID: 2,
+              Name: 'Ahmed Mohammad',
+              isTeacher: false
+            },
+            Content: 'Hey Everyone'
+          },
         ]
       }
     ],
@@ -210,6 +226,7 @@ export default class FeedsScreen extends React.Component {
           />
           <ScrollView style={localStyles.scrollViewStyle}>
             <FlatList
+              listKey={0}
               data={this.state.feedsData}
               renderItem={({ index, item, separators }) => (
                 <FeedsObject
