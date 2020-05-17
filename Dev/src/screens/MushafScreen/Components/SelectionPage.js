@@ -357,8 +357,12 @@ class SelectionPage extends React.Component {
         </View>
       );
     } else {
-      let isFirstWord = true;
       let lineAlign = "stretch";
+
+      // We show an arc shading with borderRadius to mark the beginning of a selection
+      // we use this to remember that we did it already so we don't
+      // do that in the next lines that belong to the same ayah.
+      let noSelectionInPreviousLines;
 
       const surahName =
         lines[0] && lines[0].surah
@@ -428,6 +432,22 @@ class SelectionPage extends React.Component {
                     } else if (line.type === 'besmellah') {
                       return <Basmalah key={line.line + "_basmalah"} />;
                     } else {
+                      let word = line.text[line.text.length - 1];
+                      let curAyah = {
+                        ayah: Number(word.aya),
+                        surah: Number(word.sura),
+                        page: page,
+                        wordNum: Number(word.id)
+                      };
+                      if (compareOrder(selectedAyahsStart, curAyah) >= 0) {
+                        //if we are passed the ayah for the first time, set noSelectionInPreviousLines to true
+                        if (noSelectionInPreviousLines === undefined) {
+                          noSelectionInPreviousLines = true;
+                        } else {
+                          //if we passed it but the beginning of the ayah was in a prior line, don't mark it as the first line.
+                          noSelectionInPreviousLines = false;
+                        }
+                      }
                       return (
                         <TextLine
                           key={page + '_' + line.line}
@@ -442,7 +462,9 @@ class SelectionPage extends React.Component {
                           selectedAyahsStart={selectedAyahsStart}
                           selectionStarted={selectionStarted}
                           selectionCompleted={selectionCompleted}
-                          isFirstWord={isFirstWord}
+                          noSelectionInPreviousLines={
+                            noSelectionInPreviousLines
+                          }
                           onSelectAyah={(ayah, word) =>
                             this.props.onSelectAyah(ayah, word)
                           }
@@ -577,7 +599,7 @@ const styles = StyleSheet.create({
   },
   pageContent: {
     marginVertical: 5,
-    marginHorizontal: 5,
+    marginHorizontal: 2,
     backgroundColor: colors.white,
   },
 });
