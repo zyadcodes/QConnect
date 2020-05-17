@@ -7,13 +7,13 @@ import {
   View,
   Text,
   TextInput,
-  Image,
   Alert,
-  ScrollView
+  ScrollView,
+  TouchableOpacity
 } from "react-native";
-import { AirbnbRating } from "react-native-elements";
+import { AirbnbRating, Icon } from "react-native-elements";
 import colors from "config/colors";
-import QcActionButton from "components/QcActionButton";
+import ActionButton from "react-native-action-button";
 import strings from "config/strings";
 import studentImages from "config/studentImages";
 import QcParentScreen from "screens/QcParentScreen";
@@ -62,7 +62,8 @@ export class EvaluationPage extends QcParentScreen {
     audioFile: -1,
     notesHeight: 40,
     selectedImprovementAreas: [],
-    audioPlaybackVisible: true
+    audioPlaybackVisible: true,
+    evaluationCollapsed: false
   };
 
   componentWillUnmount() {
@@ -308,8 +309,12 @@ export class EvaluationPage extends QcParentScreen {
     return (
       //----- outer view, gray background ------------------------
       //Makes it so keyboard is dismissed when clicked somewhere else
-
-      <ScrollView>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "flex-end"
+        }}
+      >
         {this.props.navigation.state.params.newAssignment === true ? (
           <Header
             title={strings.Evaluation}
@@ -350,111 +355,150 @@ export class EvaluationPage extends QcParentScreen {
             avatarImage={studentImages.images[profileImageID]}
           />
         )}
+        <View style={{ flex: 4 }} />
 
-        <View style={styles.evaluationContainer}>
-          {this.state.audioFile !== -1 ? (
-            <View style={{ justifyContent: "center", alignItems: "center" }}>
-              <View style={styles.playAudio}>
-                <AudioPlayer
-                  visible={true}
-                  compensateForVerticalMove={false}
-                  image={studentImages.images[profileImageID]}
-                  reciter={classStudent.name}
-                  audioFilePath={this.state.audioFile}
-                  hideCancel={true}
-                  sent={
-                    this.state.audioSentDateTime
-                      ? this.state.audioSentDateTime
-                      : ""
-                  }
-                />
-              </View>
-            </View>
-          ) : (
-            <View />
-          )}
-          <View style={styles.section}>
-            <Text style={fontStyles.mainTextStyleDarkGrey}>{headerTitle}</Text>
-            <View style={{ paddingVertical: 15 }}>
-              <AirbnbRating
-                defaultRating={rating}
-                size={30}
-                showRating={false}
-                onFinishRating={value =>
+        <ScrollView>
+          <View style={styles.evaluationContainer}>
+            <View
+              style={{
+                top: 5,
+                left: screenWidth * 0.9,
+                zIndex: 1,
+                position: "absolute" // add if dont work with above
+              }}
+            >
+              <TouchableOpacity
+                onPress={() =>
                   this.setState({
-                    rating: value
+                    evaluationCollapsed: !this.state.evaluationCollapsed
                   })
                 }
-                isDisabled={readOnly}
-              />
+              >
+                <Icon
+                  name={
+                    this.state.evaluationCollapsed
+                      ? "angle-double-up"
+                      : "angle-double-down"
+                  }
+                  type="font-awesome"
+                  color={colors.primaryDark}
+                />
+              </TouchableOpacity>
             </View>
+            {this.state.audioFile !== -1 ? (
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <View style={styles.playAudio}>
+                  <AudioPlayer
+                    visible={true}
+                    compensateForVerticalMove={false}
+                    image={studentImages.images[profileImageID]}
+                    reciter={classStudent.name}
+                    audioFilePath={this.state.audioFile}
+                    hideCancel={true}
+                    sent={
+                      this.state.audioSentDateTime
+                        ? this.state.audioSentDateTime
+                        : ""
+                    }
+                  />
+                </View>
+              </View>
+            ) : (
+              <View />
+            )}
+            <View style={styles.section}>
+              <Text style={fontStyles.mainTextStyleDarkGrey}>
+                {headerTitle}
+              </Text>
+              <View style={{ paddingVertical: 15 }}>
+                <AirbnbRating
+                  defaultRating={rating}
+                  size={30}
+                  showRating={false}
+                  onFinishRating={value =>
+                    this.setState({
+                      rating: value
+                    })
+                  }
+                  isDisabled={readOnly}
+                />
+              </View>
 
-            <TextInput
-              style={styles.notesStyle}
-              multiline={true}
-              height={this.state.notesHeight}
-              onChangeText={teacherNotes =>
-                this.setState({
-                  notes: teacherNotes
-                })
-              }
-              returnKeyType={"done"}
-              autoCorrect={false}
-              blurOnSubmit={true}
-              placeholder={strings.WriteANote}
-              placeholderColor={colors.black}
-              editable={!readOnly}
-              value={notes}
-              onFocus={() => this.setState({ notesHeight: screenHeight * 0.1 })}
-              onEndEditing={() => this.setState({ notesHeight: 40 })}
-            />
+              {this.state.evaluationCollapsed === false && (
+                <View>
+                  <TextInput
+                    style={styles.notesStyle}
+                    multiline={true}
+                    height={this.state.notesHeight}
+                    onChangeText={teacherNotes =>
+                      this.setState({
+                        notes: teacherNotes
+                      })
+                    }
+                    returnKeyType={"done"}
+                    autoCorrect={false}
+                    blurOnSubmit={true}
+                    placeholder={strings.WriteANote}
+                    placeholderColor={colors.black}
+                    editable={!readOnly}
+                    value={notes}
+                    onFocus={() =>
+                      this.setState({ notesHeight: screenHeight * 0.1 })
+                    }
+                    onEndEditing={() => this.setState({ notesHeight: 40 })}
+                  />
 
-            {/**
+                  {/**
                   The Things to work on button.
               */}
 
-            <View
-              style={{ flexDirection: "row", justifyContent: "flex-start" }}
-            >
-              <Text style={fontStyles.mainTextStyleDarkGrey}>
-                {strings.ImprovementAreas}
-              </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "flex-start"
+                    }}
+                  >
+                    <Text style={fontStyles.mainTextStyleDarkGrey}>
+                      {strings.ImprovementAreas}
+                    </Text>
+                  </View>
+                  <FlowLayout
+                    ref="flow"
+                    dataValue={improvementAreas}
+                    title={strings.ImprovementAreas}
+                    readOnly={readOnly}
+                    selectedByDefault={readOnly ? true : false}
+                    onSelectionChanged={selectedImprovementAreas => {
+                      this.setState({ selectedImprovementAreas });
+                    }}
+                    onImprovementsCustomized={newAreas => {
+                      this.setState({ improvementAreas: newAreas });
+                      FirebaseFunctions.saveTeacherCustomImprovementTags(
+                        this.props.navigation.state.params.userID,
+                        newAreas
+                      );
+                    }}
+                  />
+                </View>
+              )}
             </View>
-            <FlowLayout
-              ref="flow"
-              dataValue={improvementAreas}
-              title={strings.ImprovementAreas}
-              readOnly={readOnly}
-              selectedByDefault={readOnly ? true : false}
-              onSelectionChanged={selectedImprovementAreas => {
-                this.setState({ selectedImprovementAreas });
-              }}
-              onImprovementsCustomized={newAreas => {
-                this.setState({ improvementAreas: newAreas });
-                FirebaseFunctions.saveTeacherCustomImprovementTags(
-                  this.props.navigation.state.params.userID,
-                  newAreas
-                );
-              }}
-            />
           </View>
-        </View>
-        <View style={styles.buttonsContainer}>
-          {!readOnly ? (
-            <QcActionButton
-              text={strings.Submit}
-              onPress={() => {
-                this.submitRating();
-              }}
-              disabled={this.state.isLoading}
-              screen={this.name}
+        </ScrollView>
+        <ActionButton
+          buttonColor={colors.darkGreen}
+          onPress={() => {
+            this.doSubmitRating()
+          }}
+          renderIcon={() => (
+            <Icon
+              name="clipboard-check"
+              color="#fff"
+              type="material-community"
+              style={styles.actionButtonIcon}
             />
-          ) : (
-            <View />
           )}
-        </View>
-        <View style={styles.filler} />
-      </ScrollView>
+        />
+      </View>
     );
   }
 }
@@ -477,20 +521,24 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 5,
     alignItems: "center",
+    alignSelf: "flex-end",
     marginTop: 5,
     marginBottom: 5,
     marginHorizontal: 5,
     backgroundColor: colors.white,
     borderColor: colors.lightGrey,
-    borderWidth: 1
+    borderWidth: 1,
+    shadowColor: colors.black,
+    shadowOpacity: 0.26,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
+    elevation: 3,
+    borderRadius: 3
   },
   section: {
     alignItems: "center",
-    alignSelf: "stretch",
-    paddingTop: screenHeight * 0.015,
-    paddingBottom: screenHeight * 0.015,
-    paddingLeft: screenWidth * 0.024,
-    paddingRight: screenWidth * 0.024
+    padding: 5,
+    width: screenWidth * 0.99
   },
   profilePic: {
     width: screenHeight * 0.1,
@@ -518,6 +566,7 @@ const styles = StyleSheet.create({
   },
   filler: {
     flexDirection: "column",
+    backgroundColor: colors.blue,
     flex: 1
   }
 });

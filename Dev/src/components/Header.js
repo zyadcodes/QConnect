@@ -43,7 +43,7 @@ const mainTextSize = PixelRatio.get() < 2 ? 10 : 12;
 
 const Container = styled.View`
   width: 100%;
-  min-height: 100px;
+  min-height: 130px;
   box-shadow: 0 50px 57px #000000;
   flex-direction: row;
   justify-content: flex-start;
