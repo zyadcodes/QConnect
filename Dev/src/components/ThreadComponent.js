@@ -6,6 +6,8 @@ import {
   FlatList,
   Image,
   Text,
+  TextInput,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import colors from '../../config/colors';
@@ -22,6 +24,7 @@ export default class ThreadComponent extends Component {
   state = {
     threadAction: 'Extend',
     isExtended: false,
+    isCommenting: false,
     arrowDirection: 'md-arrow-dropright'
   };
   toggleThread() {
@@ -37,33 +40,53 @@ export default class ThreadComponent extends Component {
       arrowDirection,
     });
   }
+  addingComment(){
+    this.props.beginCommenting();
+    if(!this.state.isExtended){  
+      this.toggleThread();
+    }
+  }
   render() {
     return (
       <View
         style={{
+          position: 'relative',
+          bottom: screenScale*3,
           width: this.props.isAssignment ? '60%' : '75%',
           marginTop: this.props.isCurrentUser ? screenScale * 8 : 0,
         }}
       >
-        <TouchableOpacity
-          onPress={() => this.toggleThread()}
-          style={this.localStyles.threadActionBtn}
-        >
-          <Text style={this.localStyles.btnTxt}>
-            {this.state.threadAction} Thread
-          </Text>
-          <Icon
-            style={{ paddingRight: screenWidth / 40 }}
-            type="ionicon"
-            name={this.state.arrowDirection}
-          />
-        </TouchableOpacity>
+      <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            key={this.props.listKey + 1}
+            onPress={() => this.addingComment()}
+            style={[this.localStyles.threadActionBtn, {marginRight: screenWidth/50}]}
+          >
+            <Text style={this.localStyles.btnTxt}>
+              + Comment
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            key={this.props.listKey + 2}
+            onPress={() => this.toggleThread()}
+            style={this.localStyles.threadActionBtn}
+          >
+            <Text style={this.localStyles.btnTxt}>
+              {this.state.threadAction} Thread
+            </Text>
+            <Icon
+              style={{ paddingRight: screenWidth / 40 }}
+              type="ionicon"
+              name={this.state.arrowDirection}
+            />
+          </TouchableOpacity>
+      </View>
         {this.state.isExtended ? (
           <FlatList
             listKey={this.props.listKey + 1}
             data={this.props.Comments}
             renderItem={({ index, item, separators }) => (
-              <View style={this.localStyles.commentContainer}>
+              <View key={index} style={this.localStyles.commentContainer}>
                 <Image
                   style={this.localStyles.userImage}
                   source={
@@ -94,6 +117,13 @@ export default class ThreadComponent extends Component {
       justifyContent: 'space-around',
       paddingLeft: screenWidth / 150,
       paddingRight: screenWidth / 150,
+    },
+    commentingTextInput: {
+      width: 100,
+      height: 30
+    },
+    commentingContainer: {
+      backgroundColor: '#0000ff'
     },
     btnTxt: {
       paddingLeft: screenWidth / 40,
