@@ -24,14 +24,6 @@ import { Icon } from 'react-native-elements';
 import ThreadComponent from './ThreadComponent';
 
 export default class FeedsObject extends Component {
-  static propTypes = {
-    type: PropTypes.string.isRequired,
-    Content: PropTypes.object.isRequired,
-    userID: PropTypes.string.isRequired,
-    reactions: PropTypes.array.isRequired,
-    imageRequire: PropTypes.object.isRequired,
-    onPressSelectEmoji: PropTypes.func.isRequired
-  };
   state = {
     surahName: '',
     page: [],
@@ -86,7 +78,7 @@ export default class FeedsObject extends Component {
   }
   render() {
     return (
-      <View style={this.localStyles.containerView}>
+      <View key={this.props.number} style={this.localStyles.containerView}>
         <Image
           source={this.props.imageRequire}
           style={this.localStyles.userImage}
@@ -167,6 +159,7 @@ export default class FeedsObject extends Component {
               isCurrentUser={
                 this.props.madeByUser === this.props.currentUser.ID
               }
+              beginCommenting={() => this.props.beginCommenting()}
               listKey={this.props.number}
               isAssignment={this.props.type === 'assignment'}
               Comments={this.props.Comments}
@@ -312,7 +305,7 @@ class QuranAssignmentView extends Component {
             style={this.localStyles.assignmentContainer}
           >
             <View style={this.localStyles.spinnerContainerStyle}>
-              <LoadingSpinner />
+              <LoadingSpinner isVisible={true}/>
             </View>
           </TouchableOpacity>
         ) : (

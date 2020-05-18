@@ -4,7 +4,9 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
-  Image,
+  Text,
+  TextInput,
+  KeyboardAvoidingView,
 } from 'react-native';
 import FirebaseFunctions from '../../../config/FirebaseFunctions';
 import colors from '../../../config/colors';
@@ -134,6 +136,7 @@ export default class FeedsScreen extends React.Component {
       }
     ],
     isSelectingEmoji: false,
+    isCommenting: false
   };
   async componentDidMount() {
     FirebaseFunctions.setCurrentScreen('Class Feed Screen', 'ClassFeedScreen');
@@ -218,7 +221,7 @@ export default class FeedsScreen extends React.Component {
           />
         }
       >
-        <View style={localStyles.containerView}>
+        <KeyboardAvoidingView style={[localStyles.containerView, {paddingTop: (this.state.isCommenting ? screenHeight/10 : 0)}]}>
           <TopBanner
             LeftIconName="navicon"
             LeftOnPress={() => this.setState({ isOpen: true })}
@@ -241,6 +244,7 @@ export default class FeedsScreen extends React.Component {
                   isTeacher={this.state.isTeacher}
                   Content={item.Content}
                   number={index}
+                  beginCommenting={() => {this.setState({isCommenting: true})}}
                   key={index}
                   type={item.type}
                   Comments={item.Comments}
@@ -250,7 +254,18 @@ export default class FeedsScreen extends React.Component {
               )}
             />
           </ScrollView>
-        </View>
+          {this.state.isCommenting ? 
+            <View style={localStyles.commentingContainer}>
+              <TextInput multiline onBlur={() => this.setState({isCommenting: false})} autoFocus style={localStyles.commentingTextInput}/>
+              <TouchableOpacity style={[localStyles.sendBtn]}>
+                <Text style={{color: colors.primaryDark}}>
+                  Send
+                </Text>
+              </TouchableOpacity>
+            </View>
+          :
+          null}
+        </KeyboardAvoidingView>
       </SideMenu>
     );
   }
@@ -258,6 +273,35 @@ export default class FeedsScreen extends React.Component {
 const localStyles = StyleSheet.create({
   containerView: {
     flex: 1
+  },
+  sendBtn: {
+    paddingVertical: 2.5,
+    paddingHorizontal: 5,
+    borderWidth: 5,
+    backgroundColor: colors.primaryLight,
+    borderColor: colors.primaryLight,
+    marginBottom: screenHeight/700,
+    borderRadius: 10,
+  },
+  commentingContainer: {
+    width: screenWidth,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    paddingBottom: 10,
+    position: 'relative',
+    bottom: 10,
+    justifyContent: 'space-around',
+    backgroundColor: colors.veryLightGrey
+  },
+  commentingTextInput: {
+    borderWidth: 2,
+    borderRadius: 10,
+    height: '70%',
+    flexWrap: 'wrap',
+    marginLeft: screenWidth/15,
+    marginBottom: screenHeight/700,
+    borderColor: colors.primaryDark,
+    width: screenWidth/2
   },
   scrollViewStyle: {
     backgroundColor: colors.lightGrey,
