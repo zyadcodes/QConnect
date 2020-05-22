@@ -1,6 +1,6 @@
-import React from 'react';
-import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
-import { PixelRatio } from 'react-native';
+import React, { Component } from 'react';
+import { createBottomTabNavigator, createAppContainer, BottomTabBar } from 'react-navigation';
+import { PixelRatio, Platform, Keyboard } from 'react-native';
 import colors from 'config/colors';
 import { Icon } from 'react-native-elements';
 import ClassMainScreen from './ClassMainScreen';
@@ -75,13 +75,14 @@ const routeConfig = {
         ),
       };
     },
-  }
+  },
 };
 
 const navigatorConfig = {
   initialRouteName: 'ClassStudentsTab',
   animationEnabled: false,
   swipeEnabled: true,
+  tabBarComponent: props => <ClassTabsNavigator {...props}/>, 
   // Android's default option displays tabBars on top, but iOS is bottom
   tabBarPosition: 'bottom',
   tabBarOptions: {
@@ -116,6 +117,26 @@ const TeacherBottomTabNavigator = createBottomTabNavigator(
   navigatorConfig
 );
 
-const ClassTabsNavigator = createAppContainer(TeacherBottomTabNavigator);
+class ClassTabsNavigator extends Component {
+  state = {
+    isVisible: true,
+    ...TeacherBottomTabNavigator.state
+  }
+  componentDidMount(){
+    if(Platform.OS === 'android'){
+      this.keyboardEventListeners = [
+        Keyboard.addListener('keyboardWillShow', this.setState({isVisible: false})),
+        Keyboard.addListener('keyboardWillHide', this.setState({isVisible: true}))
+      ];
+    }
+  }
+  componentWillUnmount(){
+    this.keyboardEventListeners.forEach(eventListener => eventListener.remove());
+  }
+  render(){
+    return (this.state.isVisible ? <BottomTabBar {...this.props}/> : null);
+  }
+}
+const TabNavigator = createAppContainer(TeacherBottomTabNavigator);
 
-export default ClassTabsNavigator;
+export default TabNavigator;

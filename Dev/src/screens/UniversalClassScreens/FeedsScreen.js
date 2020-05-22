@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  KeyboardAvoidingView,
+  Keyboard,
 } from 'react-native';
 import FirebaseFunctions from '../../../config/FirebaseFunctions';
 import colors from '../../../config/colors';
@@ -33,11 +33,12 @@ export default class FeedsScreen extends React.Component {
     isTeacher: false,
     currentClassID: '',
     teacher: null,
+    keyboardAvoidingMargin: 0,
     student: null,
     currentlySelectingIndex: -1,
     feedsData: [
       {
-        madeByUser: 'jiewfjeo',
+        madeByUser: '123456e83jicw',
         Content: 'Emad gained 50 points!',
         type: 'notification',
         Reactions: [
@@ -136,11 +137,15 @@ export default class FeedsScreen extends React.Component {
       }
     ],
     isSelectingEmoji: false,
-    isCommenting: false
+    isCommenting: false,
+    keyboardAvoidingMargin: 0
   };
+  componentWillMount(){
+   this.keyboardDidShowListener = null;
+  }
   async componentDidMount() {
     FirebaseFunctions.setCurrentScreen('Class Feed Screen', 'ClassFeedScreen');
-
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', e => this.setState({keyboardAvoidingMargin: e.endCoordinates.height-70}))
     const { userID } = this.props.navigation.state.params;
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
     let currentClassID;
@@ -186,87 +191,86 @@ export default class FeedsScreen extends React.Component {
         </View>
       );
     }
-    if (this.state.isSelectingEmoji) {
-      return (
-        <EmojiSelector
-          theme={colors.primaryLight}
-          onEmojiSelected={emoji => {
-            //console.warn('waht the hell')
-            let temp = this.state.feedsData;
-            let currentIndex = this.state.currentlySelectingIndex;
-            temp[currentIndex].Reactions[
-              temp[currentIndex].Reactions.length
-            ] = {
-              emoji,
-              reactedBy: [this.state.userID]
-            };
-            this.setState({ currentlySelectingIndex: -1, feedsData: temp });
-            this.toggleSelectingEmoji();
-          }}
-          onBackdropPress={() => this.toggleSelectingEmoji()}
-        />
-      );
-    }
     return (
       <SideMenu
-        isOpen={this.state.isOpen}
-        menu={
-          <LeftNavPane
-            teacher={this.state.teacher}
-            student={this.state.student}
-            userID={this.state.userID}
-            classes={this.state.classes}
-            edgeHitWidth={0}
-            navigation={this.props.navigation}
+      isOpen={this.state.isOpen}
+      menu={
+        <LeftNavPane
+          teacher={this.state.teacher}
+          student={this.state.student}
+          userID={this.state.userID}
+          classes={this.state.classes}
+          edgeHitWidth={0}
+          navigation={this.props.navigation}
+        />
+      }
+    >
+      <View style={[localStyles.containerView, {paddingTop: 0}]}>
+        <TopBanner
+          LeftIconName="navicon"
+          LeftOnPress={() => this.setState({ isOpen: true })}
+          Title={this.state.currentClass.name + ' Feed'}
+        />
+        <ScrollView style={localStyles.scrollViewStyle}>
+          <FlatList
+            listKey={0}
+            data={this.state.feedsData}
+            renderItem={({ index, item, separators }) => (
+              <FeedsObject
+                Comments={[]}
+                onPressSelectEmoji={() => this.toggleSelectingEmoji(index)}
+                madeByUser={item.madeByUser}
+                currentUser={
+                  this.state.isTeacher
+                    ? this.state.teacher
+                    : this.state.student
+                }
+                isTeacher={this.state.isTeacher}
+                Content={item.Content}
+                number={index}
+                beginCommenting={() => {this.setState({isCommenting: true})}}
+                key={index}
+                type={item.type}
+                Comments={item.Comments}
+                Reactions={item.Reactions}
+                imageRequire={require('../../../assets/images/student-icons/boy1.png')}
+              />
+            )}
           />
-        }
-      >
-        <KeyboardAvoidingView style={[localStyles.containerView, {paddingTop: (this.state.isCommenting ? screenHeight/10 : 0)}]}>
-          <TopBanner
-            LeftIconName="navicon"
-            LeftOnPress={() => this.setState({ isOpen: true })}
-            Title={this.state.currentClass.name + ' Feed'}
-          />
-          <ScrollView style={localStyles.scrollViewStyle}>
-            <FlatList
-              listKey={0}
-              data={this.state.feedsData}
-              renderItem={({ index, item, separators }) => (
-                <FeedsObject
-                  Comments={[]}
-                  onPressSelectEmoji={() => this.toggleSelectingEmoji(index)}
-                  madeByUser={item.madeByUser}
-                  currentUser={
-                    this.state.isTeacher
-                      ? this.state.teacher
-                      : this.state.student
-                  }
-                  isTeacher={this.state.isTeacher}
-                  Content={item.Content}
-                  number={index}
-                  beginCommenting={() => {this.setState({isCommenting: true})}}
-                  key={index}
-                  type={item.type}
-                  Comments={item.Comments}
-                  Reactions={item.Reactions}
-                  imageRequire={require('../../../assets/images/student-icons/boy1.png')}
-                />
-              )}
-            />
-          </ScrollView>
-          {this.state.isCommenting ? 
-            <View style={localStyles.commentingContainer}>
+        </ScrollView>
+      </View>
+      {this.state.isSelectingEmoji ?
+          <EmojiSelector
+            theme={colors.primaryLight}
+            onEmojiSelected={emoji => {
+              let temp = this.state.feedsData;
+              let currentIndex = this.state.currentlySelectingIndex;
+              temp[currentIndex].Reactions[
+              temp[currentIndex].Reactions.length
+              ] = {
+                emoji,
+                reactedBy: [this.state.userID]
+              };
+              this.setState({ currentlySelectingIndex: -1, feedsData: temp });
+              this.toggleSelectingEmoji();
+            }}
+            onBackdropPress={() => this.toggleSelectingEmoji()}
+           />
+        :
+        null
+      }
+      {this.state.isCommenting ?
+            <View style={[localStyles.commentingContainer, {paddingBottom: this.state.keyboardAvoidingMargin}]}>
               <TextInput multiline onBlur={() => this.setState({isCommenting: false})} autoFocus style={localStyles.commentingTextInput}/>
-              <TouchableOpacity style={[localStyles.sendBtn]}>
+                <TouchableOpacity style={[localStyles.sendBtn]}>
                 <Text style={{color: colors.primaryDark}}>
                   Send
-                </Text>
-              </TouchableOpacity>
+                  </Text>
+                </TouchableOpacity>
             </View>
-          :
-          null}
-        </KeyboardAvoidingView>
-      </SideMenu>
+      :
+      null}
+    </SideMenu>
     );
   }
 }
@@ -275,9 +279,11 @@ const localStyles = StyleSheet.create({
     flex: 1
   },
   sendBtn: {
-    paddingVertical: 2.5,
+    paddingVertical: 1,
     paddingHorizontal: 5,
     borderWidth: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: colors.primaryLight,
     borderColor: colors.primaryLight,
     marginBottom: screenHeight/700,
@@ -285,11 +291,8 @@ const localStyles = StyleSheet.create({
   },
   commentingContainer: {
     width: screenWidth,
-    flexDirection: 'row',
     alignItems: 'flex-end',
-    paddingBottom: 10,
-    position: 'relative',
-    bottom: 10,
+    flexDirection: 'row',
     justifyContent: 'space-around',
     backgroundColor: colors.veryLightGrey
   },
