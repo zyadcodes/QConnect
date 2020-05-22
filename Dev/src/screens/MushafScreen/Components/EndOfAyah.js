@@ -5,9 +5,9 @@ import {
   View,
   ActivityIndicator,
   PixelRatio,
+  TouchableHighlight
 } from 'react-native';
 import colors from 'config/colors';
-import { TouchableHighlight } from 'react-native-gesture-handler';
 import { screenWidth } from "config/dimensions";
 
 //Creates the higher order component
