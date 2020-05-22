@@ -22,18 +22,14 @@ import FlowLayout from "components/FlowLayout";
 import TopBanner from "components/TopBanner";
 import FirebaseFunctions from "config/FirebaseFunctions";
 import LoadingSpinner from "components/LoadingSpinner";
-import QCView from "components/QCView";
-import screenStyle from "config/screenStyle";
 import fontStyles from "config/fontStyles";
 import { screenWidth, screenHeight } from "config/dimensions";
 import AudioPlayer from "components/AudioPlayer/AudioPlayer";
 import Header, { headerHeight } from "components/Header";
 import MushafScreen from "screens/MushafScreen/MushafScreen";
 import KeepAwake from "react-native-keep-awake";
-import {
-  noAyahSelected,
-  noSelection
-} from "screens/MushafScreen/Helpers/consts";
+import { noSelection } from "screens/MushafScreen/Helpers/consts";
+import * as _ from "lodash";
 
 export class EvaluationPage extends QcParentScreen {
   //Default improvement areas
@@ -69,6 +65,7 @@ export class EvaluationPage extends QcParentScreen {
     audioFile: -1,
     notesHeight: 40,
     selectedImprovementAreas: [],
+    highlightedWords: [],
     audioPlaybackVisible: true,
     evaluationCollapsed: false,
     selection: this.props.navigation.state.params.assignmentLocation
@@ -293,7 +290,17 @@ export class EvaluationPage extends QcParentScreen {
     }
   }
   onSelectAyah(selectedAyah, selectedWord) {
-    console.log(JSON.stringify(selectedWord));
+    let highlightedWords = this.state.highlightedWords;
+    if (!highlightedWords.includes(Number(selectedWord.id))) {
+      highlightedWords.push(Number(selectedWord.id));
+    } else {
+      //if the same highlighted word is pressed again, un-highlight it (toggle off)
+      _.remove(highlightedWords, function(id) {
+        return Number(id) === Number(selectedWord.id);
+      });
+    }
+    this.setState({ highlightedWords });
+
   }
 
   closeScreen() {
@@ -392,8 +399,9 @@ export class EvaluationPage extends QcParentScreen {
               this.state.highlightedAyah !== undefined
             }
             selection={this.state.selection}
-            highlightedWord={this.state.highlightedWord}
+            highlightedWords={this.state.highlightedWords}
             highlightedAyah={this.state.highlightedAyah}
+            highlightedColor={colors.darkRed}
             assignmentName={assignmentName}
             assignmentType={assignmentType}
             topRightIconName="close"

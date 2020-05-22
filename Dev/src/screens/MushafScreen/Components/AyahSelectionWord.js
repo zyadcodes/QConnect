@@ -9,7 +9,6 @@ import {
 import colors from "config/colors";
 import { screenWidth } from "config/dimensions";
 
-
 //Creates the higher order component
 class Word extends React.Component {
   state = {
@@ -35,6 +34,7 @@ class Word extends React.Component {
       selected,
       highlighted,
       isFirstSelectedWord,
+      highlightedColor
     } = this.props;
     let containerStyle = [styles.container];
     if (selected) {
@@ -45,6 +45,13 @@ class Word extends React.Component {
     }
     if (highlighted === true) {
       containerStyle.push(styles.highlightedStyle);
+      if (highlightedColor !== undefined) {
+        containerStyle.push({
+          backgroundColor: highlightedColor,
+          borderRadius: 4,
+          marginHorizontal: 1,
+        });
+      }
     }
 
     return (
@@ -68,7 +75,6 @@ const mushafFontSize =
     : screenWidth >= 400
     ? 16
     : 14;
-
 
 const styles = StyleSheet.create({
   wordText: {

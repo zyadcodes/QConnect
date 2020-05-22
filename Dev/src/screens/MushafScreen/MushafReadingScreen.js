@@ -45,7 +45,7 @@ class MushafReadingScreen extends Component {
       if (this.track !== undefined) {
         this.track.stop();
         this.setState({
-          highlightedWord: undefined,
+          highlightedWords: undefined,
           highlightedAyah: undefined,
           isPlaying: false,
           isAudioLoading: false,
@@ -66,7 +66,7 @@ class MushafReadingScreen extends Component {
       if (selectedWord.audio) {
         let url = "";
         if (selectedWord.char_type == "word") {
-          this.setState({ highlightedWord: selectedWord.id });
+          this.setState({ highlightedWords: [Number(selectedWord.id)] });
           url = `https://dl.salamquran.com/wbw/${selectedWord.audio}`;
         } else if (selectedWord.char_type === "end") {
           this.setState({ highlightedAyah: selectedAyah });
@@ -85,7 +85,7 @@ class MushafReadingScreen extends Component {
       if (e) {
         console.log("e: " + JSON.stringify(e));
         this.setState({
-          highlightedWord: undefined,
+          highlightedWords: undefined,
           highlightedAyah: undefined,
           isAudioLoading: false,
           isPlaying: false,
@@ -94,7 +94,7 @@ class MushafReadingScreen extends Component {
         this.setState({ isAudioLoading: false });
         this.track.play(success => {
           this.setState({
-            highlightedWord: undefined,
+            highlightedWords: undefined,
             highlightedAyah: undefined,
             isPlaying: false,
           });
@@ -143,7 +143,7 @@ class MushafReadingScreen extends Component {
               this.state.isAudioLoading === true &&
               this.state.highlightedAyah !== undefined
             }
-            highlightedWord={this.state.highlightedWord}
+            highlightedWords={this.state.highlightedWords}
             highlightedAyah={this.state.highlightedAyah}
             assignmentName={assignmentName}
             assignmentLocation={assignmentLocation}

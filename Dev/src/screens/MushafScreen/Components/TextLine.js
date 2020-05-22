@@ -18,8 +18,9 @@ const TextLine = ({
   onSelectAyah,
   lineAlign,
   selectionOn,
-  highlightedWord,
+  highlightedWords,
   highlightedAyah,
+  highlightedColor,
   showLoadingOnHighlightedAyah
 }) => {
   let isFirstWord = noSelectionInPreviousLines;
@@ -35,7 +36,8 @@ const TextLine = ({
           };
 
           let highlighted =
-            (highlightedWord !== undefined && word.id === highlightedWord) ||
+            (highlightedWords !== undefined &&
+              highlightedWords.includes(Number(word.id))) ||
             (highlightedAyah !== undefined &&
               compareOrder(highlightedAyah, curAyah) === 0);
 
@@ -51,6 +53,7 @@ const TextLine = ({
                   key={word.id}
                   text={word.text}
                   highlighted={highlighted}
+                  highlightedColor={highlightedColor}
                   selected={false}
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={false}
@@ -64,6 +67,7 @@ const TextLine = ({
                   onPress={() => onSelectAyah(curAyah, word)}
                   selected={false}
                   highlighted={highlighted}
+                  highlightedColor={highlightedColor}
                   showLoading={showLoading}
                   isLastSelectedAyah={false}
                 />
@@ -89,6 +93,7 @@ const TextLine = ({
                   key={word.id}
                   text={word.text}
                   highlighted={highlighted}
+                  highlightedColor={highlightedColor}
                   selected={isAyaSelected}
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={isFirstSelectedWord}

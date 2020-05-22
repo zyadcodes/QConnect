@@ -86,11 +86,12 @@ export default class MushafScreen extends QcParentScreen {
       assignToID,
       selection,
       disableChangingUser,
-      highlightedWord,
+      highlightedWords,
       highlightedAyah,
       showLoadingOnHighlightedAyah,
       hideHeader,
-      showSelectedLinesOnly
+      showSelectedLinesOnly,
+      highlightedColor,
     } = this.props;
 
     const itemInt = parseInt(item);
@@ -102,8 +103,9 @@ export default class MushafScreen extends QcParentScreen {
           hideHeader={hideHeader}
           showSelectedLinesOnly={showSelectedLinesOnly}
           onChangePage={this.onChangePage.bind(this)}
-          highlightedWord={highlightedWord}
+          highlightedWords={highlightedWords}
           highlightedAyah={highlightedAyah}
+          highlightedColor={highlightedColor}
           showLoadingOnHighlightedAyah={showLoadingOnHighlightedAyah}
           selectedAyahsStart={selection.start}
           selectedAyahsEnd={selection.end}
@@ -143,7 +145,6 @@ export default class MushafScreen extends QcParentScreen {
 
   render() {
     const { isLoading } = this.state;
-
     if (isLoading === true) {
       return (
         <View

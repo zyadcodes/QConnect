@@ -24,7 +24,7 @@ import surahs from "../Data/Surahs.json";
 import pages from "../Data/mushaf-wbw.json";
 import SurahHeader from "./SurahHeader";
 import { compareOrder, isLineSelected } from "../Helpers/AyahsOrder";
-import { noAyahSelected } from 'screens/MushafScreen/Helpers/consts';
+import * as _ from "lodash";
 
 //Creates the higher order component
 class SelectionPage extends React.Component {
@@ -139,7 +139,7 @@ class SelectionPage extends React.Component {
     }
 
     if (
-      nextProps.highlightedWord !== this.props.highlightedWord ||
+      _.isEqual(_.sortBy(nextProps.highlightedWords), _.sortBy(this.props.highlightedWords)) ||
       nextProps.highlightedAyah !== this.props.highlightedAyah ||
       nextProps.showLoadingOnHighlightedAyah !==
         this.props.showLoadingOnHighlightedAyah
@@ -470,8 +470,9 @@ class SelectionPage extends React.Component {
                           key={page + '_' + line.line}
                           lineText={line.text}
                           selectionOn={selectionOn}
-                          highlightedWord={this.props.highlightedWord}
+                          highlightedWords={this.props.highlightedWords}
                           highlightedAyah={this.props.highlightedAyah}
+                          highlightedColor={this.props.highlightedColor}
                           showLoadingOnHighlightedAyah={
                             this.props.showLoadingOnHighlightedAyah
                           }
