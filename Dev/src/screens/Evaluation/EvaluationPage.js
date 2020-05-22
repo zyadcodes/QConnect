@@ -9,7 +9,8 @@ import {
   TextInput,
   Alert,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  KeyboardAvoidingView
 } from "react-native";
 import { AirbnbRating, Icon } from "react-native-elements";
 import colors from "config/colors";
@@ -26,11 +27,13 @@ import screenStyle from "config/screenStyle";
 import fontStyles from "config/fontStyles";
 import { screenWidth, screenHeight } from "config/dimensions";
 import AudioPlayer from "components/AudioPlayer/AudioPlayer";
-import Header, {headerHeight} from "components/Header";
+import Header, { headerHeight } from "components/Header";
 import MushafScreen from "screens/MushafScreen/MushafScreen";
-import KeepAwake from 'react-native-keep-awake';
-import { noAyahSelected, noSelection } from 'screens/MushafScreen/Helpers/consts';
-
+import KeepAwake from "react-native-keep-awake";
+import {
+  noAyahSelected,
+  noSelection
+} from "screens/MushafScreen/Helpers/consts";
 
 export class EvaluationPage extends QcParentScreen {
   //Default improvement areas
@@ -75,7 +78,7 @@ export class EvaluationPage extends QcParentScreen {
           started: false,
           completed: true
         }
-      : noSelection,
+      : noSelection
   };
 
   componentWillUnmount() {
@@ -293,7 +296,7 @@ export class EvaluationPage extends QcParentScreen {
     console.log(JSON.stringify(selectedWord));
   }
 
-  closeScreen(){
+  closeScreen() {
     console.log("close screen");
   }
 
@@ -333,7 +336,7 @@ export class EvaluationPage extends QcParentScreen {
       //Makes it so keyboard is dismissed when clicked somewhere else
       <View
         style={{
-          flex: 1,
+          flex: 1
         }}
       >
         {this.props.navigation.state.params.newAssignment === true ? (
@@ -381,7 +384,7 @@ export class EvaluationPage extends QcParentScreen {
           <MushafScreen
             assignToID={studentID}
             hideHeader={true}
-            showSelectedLinesOnly={true}
+            showSelectedLinesOnly={false}
             classID={classID}
             profileImage={studentImages.images[profileImageID]}
             showLoadingOnHighlightedAyah={
@@ -401,9 +404,11 @@ export class EvaluationPage extends QcParentScreen {
           />
         </View>
 
-          <View style={styles.evaluationContainer}>
+        <KeyboardAvoidingView
+          behavior="padding"
+          style={styles.evaluationContainer}
+        >
           <ScrollView>
-
             <View
               style={{
                 top: 5,
@@ -527,12 +532,12 @@ export class EvaluationPage extends QcParentScreen {
                 </View>
               )}
             </View>
-            </ScrollView>
-          </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
         <ActionButton
           buttonColor={colors.darkGreen}
           onPress={() => {
-            this.doSubmitRating()
+            this.doSubmitRating();
           }}
           renderIcon={() => (
             <Icon
@@ -553,7 +558,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
     backgroundColor: colors.lightGrey,
-    flex: 1,
+    flex: 1
   },
   playAudio: {
     height: screenHeight * 0.1,
@@ -577,7 +582,10 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 3,
     borderRadius: 3,
-    position: 'absolute', left: 0, right: 0, bottom: 0
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0
   },
   section: {
     alignItems: "center",
