@@ -86,7 +86,6 @@ const styles = StyleSheet.create({
   highlightedWordText: {
     textAlign: "right",
     fontFamily: "me_quran",
-    fontWeight: "bold",
     fontSize: mushafFontSize,
     color: colors.white,
   },

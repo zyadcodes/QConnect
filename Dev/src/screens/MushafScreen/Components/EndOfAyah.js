@@ -81,10 +81,10 @@ const mushafFontSize =
   PixelRatio.get() <= 1.5
     ? 14
     : PixelRatio.get() < 2
-    ? 16
+    ? 15
     : screenWidth >= 400
-    ? 20
-    : 18;
+    ? 16
+    : 14;
 
 const styles = StyleSheet.create({
   container: {
@@ -98,8 +98,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    justifyContent: 'center', 
-    alignItems: 'center',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   ayahNumber: {
     textAlign: 'right',
