@@ -17,7 +17,8 @@ const EndOfAyah = ({
   selected,
   highlighted,
   isLastSelectedAyah,
-  showLoading
+  showLoading,
+  highlightedColor
 }) => {
   const rightBracket = '  \uFD3F';
   const leftBracket = '\uFD3E';
@@ -31,6 +32,9 @@ const EndOfAyah = ({
   }
   if (highlighted === true) {
     containerStyle.push(styles.highlightedStyle);
+    if (highlightedColor) {
+      containerStyle.push({ backgroundColor: highlightedColor });
+    }
   }
 
   return (

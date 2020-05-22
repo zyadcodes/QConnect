@@ -20,7 +20,8 @@ class Word extends React.Component {
     if (
       nextProps.selected === this.props.selected &&
       nextProps.isFirstSelectedWord === this.props.isFirstSelectedWord &&
-      nextProps.highlighted === this.props.highlighted
+      nextProps.isWordHighlighted === this.props.isWordHighlighted &&
+      nextProps.isAyahHighlighted === this.props.isAyahHighlighted
     ) {
       return false;
     }
@@ -32,9 +33,10 @@ class Word extends React.Component {
       text,
       onPress,
       selected,
-      highlighted,
+      isWordHighlighted,
       isFirstSelectedWord,
-      highlightedColor
+      highlightedColor,
+      isAyahHighlighted
     } = this.props;
     let containerStyle = [styles.container];
     if (selected) {
@@ -43,22 +45,30 @@ class Word extends React.Component {
     if (isFirstSelectedWord) {
       containerStyle.push(styles.firstSelectedWordText);
     }
-    if (highlighted === true) {
-      containerStyle.push(styles.highlightedStyle);
-      if (highlightedColor !== undefined) {
-        containerStyle.push({
-          backgroundColor: highlightedColor,
-          borderRadius: 4,
-          marginHorizontal: 1,
-        });
-      }
+    if (isWordHighlighted === true) {
+      containerStyle.push(styles.wordHighlightedStyle);
+    }
+    if (isAyahHighlighted === true) {
+      containerStyle.push(styles.ayahHighlightedStyle);
     }
 
+    if (
+      highlightedColor !== undefined &&
+      (isAyahHighlighted === true || isWordHighlighted === true)
+    ) {
+      containerStyle.push({
+        backgroundColor: highlightedColor,
+      });
+    }
     return (
       <View style={containerStyle}>
         <TouchableWithoutFeedback onPress={() => onPress()}>
           <Text
-            style={highlighted ? styles.highlightedWordText : styles.wordText}
+            style={
+              isWordHighlighted || isAyahHighlighted
+                ? styles.highlightedWordText
+                : styles.wordText
+            }
           >
             {text}
           </Text>
@@ -97,7 +107,12 @@ const styles = StyleSheet.create({
   selectionStyle: {
     backgroundColor: colors.green
   },
-  highlightedStyle: {
+  wordHighlightedStyle: {
+    backgroundColor: "rgba(107,107,107,0.8)",
+    borderRadius: 3,
+    marginHorizontal: 1
+  },
+  ayahHighlightedStyle: {
     backgroundColor: "rgba(107,107,107,0.8)"
   },
   firstSelectedWordText: {

@@ -46,7 +46,7 @@ class MushafReadingScreen extends Component {
         this.track.stop();
         this.setState({
           highlightedWords: undefined,
-          highlightedAyah: undefined,
+          highlightedAyahs: undefined,
           isPlaying: false,
           isAudioLoading: false,
         });
@@ -65,11 +65,11 @@ class MushafReadingScreen extends Component {
 
       if (selectedWord.audio) {
         let url = "";
-        if (selectedWord.char_type == "word") {
+        if (selectedWord.char_type === "word") {
           this.setState({ highlightedWords: [Number(selectedWord.id)] });
           url = `https://dl.salamquran.com/wbw/${selectedWord.audio}`;
         } else if (selectedWord.char_type === "end") {
-          this.setState({ highlightedAyah: selectedAyah });
+          this.setState({ highlightedAyahs: selectedAyah });
           url = `https://dl.salamquran.com/ayat/afasy-murattal-192/${
             selectedWord.audio
           }`;
@@ -86,7 +86,7 @@ class MushafReadingScreen extends Component {
         console.log("e: " + JSON.stringify(e));
         this.setState({
           highlightedWords: undefined,
-          highlightedAyah: undefined,
+          highlightedAyahs: undefined,
           isAudioLoading: false,
           isPlaying: false,
         });
@@ -95,7 +95,7 @@ class MushafReadingScreen extends Component {
         this.track.play(success => {
           this.setState({
             highlightedWords: undefined,
-            highlightedAyah: undefined,
+            highlightedAyahs: undefined,
             isPlaying: false,
           });
         });
@@ -141,10 +141,10 @@ class MushafReadingScreen extends Component {
             selection={selection}
             showLoadingOnHighlightedAyah={
               this.state.isAudioLoading === true &&
-              this.state.highlightedAyah !== undefined
+              this.state.highlightedAyahs !== undefined
             }
             highlightedWords={this.state.highlightedWords}
-            highlightedAyah={this.state.highlightedAyah}
+            highlightedAyahs={this.state.highlightedAyahs}
             assignmentName={assignmentName}
             assignmentLocation={assignmentLocation}
             assignmentType={assignmentType}

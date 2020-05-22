@@ -87,7 +87,7 @@ export default class MushafScreen extends QcParentScreen {
       selection,
       disableChangingUser,
       highlightedWords,
-      highlightedAyah,
+      highlightedAyahs,
       showLoadingOnHighlightedAyah,
       hideHeader,
       showSelectedLinesOnly,
@@ -104,7 +104,7 @@ export default class MushafScreen extends QcParentScreen {
           showSelectedLinesOnly={showSelectedLinesOnly}
           onChangePage={this.onChangePage.bind(this)}
           highlightedWords={highlightedWords}
-          highlightedAyah={highlightedAyah}
+          highlightedAyahs={highlightedAyahs}
           highlightedColor={highlightedColor}
           showLoadingOnHighlightedAyah={showLoadingOnHighlightedAyah}
           selectedAyahsStart={selection.start}

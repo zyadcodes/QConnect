@@ -140,7 +140,7 @@ class SelectionPage extends React.Component {
 
     if (
       _.isEqual(_.sortBy(nextProps.highlightedWords), _.sortBy(this.props.highlightedWords)) ||
-      nextProps.highlightedAyah !== this.props.highlightedAyah ||
+      nextProps.highlightedAyahs !== this.props.highlightedAyahs ||
       nextProps.showLoadingOnHighlightedAyah !==
         this.props.showLoadingOnHighlightedAyah
     ) {
@@ -471,7 +471,7 @@ class SelectionPage extends React.Component {
                           lineText={line.text}
                           selectionOn={selectionOn}
                           highlightedWords={this.props.highlightedWords}
-                          highlightedAyah={this.props.highlightedAyah}
+                          highlightedAyahs={this.props.highlightedAyahs}
                           highlightedColor={this.props.highlightedColor}
                           showLoadingOnHighlightedAyah={
                             this.props.showLoadingOnHighlightedAyah
