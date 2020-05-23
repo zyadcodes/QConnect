@@ -33,35 +33,35 @@ export default class FeedsObject extends Component {
     console.log(screenHeight);
     if (this.props.type === 'assignment') {
       this.setState({ isLoading: true });
-      const pageLines = await getPageTextWbW(this.props.Content.start.page);
+      const pageLines = await getPageTextWbW(this.props.content.start.page);
       let allAyat = (
         <View>
           {pageLines !== undefined &&
             pageLines.map((line, index) => {
               if (
                 line.type === 'besmellah' &&
-                this.props.Content.start.ayah === 1
+                this.props.content.start.ayah === 1
               ) {
                 return <Basmalah key={line.line + "_basmalah"} />;
               } else if (
-                line.ayah >= this.props.Content.start.ayah &&
-                line.ayah <= this.props.Content.end.ayah
+                line.ayah >= this.props.content.start.ayah &&
+                line.ayah <= this.props.content.end.ayah
               ) {
                 return (
                   <TextLine
-                    key={this.props.Content.start.page + '_' + line.line}
+                    key={this.props.content.start.page + '_' + line.line}
                     lineText={line.text}
                     selectionOn={false}
                     highlightedWord={undefined}
-                    selectedAyahsEnd={this.props.Content.end}
-                    selectedAyahsStart={this.props.Content.start}
+                    selectedAyahsEnd={this.props.content.end}
+                    selectedAyahsStart={this.props.content.start}
                     selectionStarted={false}
                     selectionCompleted={false}
                     isFirstWord={false}
                     onSelectAyah={(ayah, word) => {}}
-                    page={this.props.Content.start.page}
+                    page={this.props.content.start.page}
                     lineAlign={
-                      this.props.Content.start.page === 1 ? 'center' : 'stretch'
+                      this.props.content.start.page === 1 ? 'center' : 'stretch'
                     }
                   />
                 );
@@ -101,27 +101,27 @@ export default class FeedsObject extends Component {
                   surahName={this.state.surahName}
                   page={this.state.page}
                   isLoading={this.state.isLoading}
-                  isTeacher={this.props.isTeacher}
-                  Content={this.props.Content}
+                  role={this.props.role}
+                  content={this.props.content}
                   madeByUser={this.props.madeByUser}
                   currentUser={this.props.currentUser}
                 />
               ) : (
                 <Text style={this.localStyles.contentText}>
-                  {this.props.Content}
+                  {this.props.content}
                 </Text>
               )}
             </View>
             <View style={{ flexDirection: 'row', alignSelf: 'flex-end' }}>
               <FlatList
-                data={this.props.Reactions}
+                data={this.props.reactions}
                 style={{ flexDirection: 'row' }}
                 renderItem={({ item, index, seperators }) => (
                   <TouchableOpacity
                     onPress={() => {
                       if (
-                        this.props.Reactions.length > 0 &&
-                        this.props.Reactions[index].reactedBy.includes(
+                        this.props.reactions.length > 0 &&
+                        this.props.reactions[index].reactedBy.includes(
                           this.props.currentUser.ID
                         )
                       ) {
@@ -154,7 +154,7 @@ export default class FeedsObject extends Component {
               )}
             </View>
           </View>
-          {this.props.Comments.length === 0 ? null : (
+          {this.props.comments.length === 0 ? null : (
             <ThreadComponent
               isCurrentUser={
                 this.props.madeByUser === this.props.currentUser.ID
@@ -162,7 +162,7 @@ export default class FeedsObject extends Component {
               beginCommenting={() => this.props.beginCommenting()}
               listKey={this.props.number}
               isAssignment={this.props.type === 'assignment'}
-              Comments={this.props.Comments}
+              comments={this.props.comments}
             />
           )}
         </View>
@@ -296,12 +296,12 @@ class QuranAssignmentView extends Component {
             },
           ]}
         >
-          {this.props.Content.assignmentType} from ayah{' '}
-          {this.props.Content.start.ayah} to ayah {this.props.Content.end.ayah}
+          {this.props.content.assignmentType} from ayah{' '}
+          {this.props.content.start.ayah} to ayah {this.props.content.end.ayah}
         </Text>
         {this.props.isLoading ? (
           <TouchableOpacity
-            disabled={this.props.isTeacher}
+            disabled={this.props.role === 'teacher'}
             style={this.localStyles.assignmentContainer}
           >
             <View style={this.localStyles.spinnerContainerStyle}>
@@ -310,7 +310,7 @@ class QuranAssignmentView extends Component {
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
-            disabled={this.props.isTeacher}
+            disabled={this.props.role === 'teacher'}
             style={this.localStyles.assignmentContainer}
           >
             <SurahHeader surahName={this.props.surahName} />
