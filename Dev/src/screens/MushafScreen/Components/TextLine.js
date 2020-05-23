@@ -4,7 +4,7 @@ import { compareOrder, isAyahSelected } from '../Helpers/AyahsOrder';
 import AyahSelectionWord from './AyahSelectionWord';
 import EndOfAyah from './EndOfAyah';
 import { screenHeight } from 'config/dimensions';
-import LoadingSpinner from "components/LoadingSpinner";
+import { toNumberString } from '../Helpers/AyahsOrder';
 
 //Creates the higher order component
 const TextLine = ({
@@ -35,14 +35,15 @@ const TextLine = ({
             wordNum: Number(word.id)
           };
 
+          const curAyahId = toNumberString(curAyah);
           let isCurAyahHighlighted =
             highlightedAyahs !== undefined &&
-            highlightedAyahs.find(ayah => compareOrder(ayah, curAyah) === 0) !==
-              undefined;
+            highlightedAyahs[curAyahId] !== undefined;
 
+          const curWordId = '' + word.id;
           let isCurWordHighlighted =
             highlightedWords !== undefined &&
-            highlightedWords.includes(Number(word.id));
+            highlightedWords[curWordId] !== undefined;
 
           let highlighted = isCurWordHighlighted || isCurAyahHighlighted;
 

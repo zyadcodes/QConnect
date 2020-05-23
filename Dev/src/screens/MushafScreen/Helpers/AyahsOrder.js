@@ -77,5 +77,5 @@ export function isLineSelected(
 }
 
 export function toNumberString(ayah){
-  console.log(`00${ayah.surah}`.slice(-3) + `00${ayah.ayah}`.slice(-3))
+  return `00${ayah.surah}`.slice(-3) + `00${ayah.ayah}`.slice(-3);
 }

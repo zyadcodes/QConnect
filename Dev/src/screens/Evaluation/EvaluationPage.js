@@ -30,7 +30,9 @@ import MushafScreen from "screens/MushafScreen/MushafScreen";
 import KeepAwake from "react-native-keep-awake";
 import { noSelection } from "screens/MushafScreen/Helpers/consts";
 import * as _ from "lodash";
-import { compareOrder } from "../MushafScreen/Helpers/AyahsOrder";
+import {
+  toNumberString
+} from "../MushafScreen/Helpers/AyahsOrder";
 
 export class EvaluationPage extends QcParentScreen {
   //Default improvement areas
@@ -295,33 +297,38 @@ export class EvaluationPage extends QcParentScreen {
       }
     }
   }
+
+  //--------------------------------------------------
+  // add the element to the array if it doesn't exist
+  // or removes it if it exists already.
+  toggleElementInArray(array, element, elementId) {
+    if (array[elementId] === undefined) {
+      array[elementId] = element;
+    } else {
+      //if the same highlighted word is pressed again, un-highlight it (toggle off)
+      delete array[elementId];
+    }
+    return array;
+  }
+
   onSelectAyah(selectedAyah, selectedWord) {
+    let wordIdString = "" + selectedWord.id;
     //if users press on a word, we highlight that word
     if (selectedWord.char_type === "word") {
-      let highlightedWords = this.state.highlightedWords;
-      if (!highlightedWords.includes(Number(selectedWord.id))) {
-        highlightedWords.push(Number(selectedWord.id));
-      } else {
-        //if the same highlighted word is pressed again, un-highlight it (toggle off)
-        _.remove(highlightedWords, function(id) {
-          return Number(id) === Number(selectedWord.id);
-        });
-      }
+      let highlightedWords = this.toggleElementInArray(
+        this.state.highlightedWords,
+        {},
+        wordIdString
+      );
       this.setState({ highlightedWords });
     } else if (selectedWord.char_type === "end") {
       //if user presses on an end of ayah, we highlight that entire ayah
-      let highlightedAyahs = this.state.highlightedAyahs;
-
-      if (
-        !highlightedAyahs.find(ayah => compareOrder(ayah, selectedAyah) === 0)
-      ) {
-        highlightedAyahs.push(selectedAyah);
-      } else {
-        //if the same highlighted word is pressed again, un-highlight it (toggle off)
-        _.remove(highlightedAyahs, function(ayah) {
-          return compareOrder(selectedAyah, ayah) === 0;
-        });
-      }
+      let ayahIdString = toNumberString(selectedAyah);
+      let highlightedAyahs = this.toggleElementInArray(
+        this.state.highlightedAyahs,
+        selectedAyah,
+        ayahIdString
+      );
       this.setState({ highlightedAyahs });
     }
   }
