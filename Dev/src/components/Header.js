@@ -39,7 +39,15 @@ const Header = props => {
           />
         </SubtitleContainer>
       </MiddleContainer>
-      <RightContainer />
+      <RightContainer>
+        <Icon
+          name="close"
+          type="material-community"
+          color={colors.darkGrey}
+          size={30}
+          onPress={props.onClose}
+        />
+      </RightContainer>
     </Container>
   );
 };

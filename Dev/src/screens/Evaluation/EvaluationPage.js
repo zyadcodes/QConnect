@@ -30,9 +30,7 @@ import MushafScreen from "screens/MushafScreen/MushafScreen";
 import KeepAwake from "react-native-keep-awake";
 import { noSelection } from "screens/MushafScreen/Helpers/consts";
 import * as _ from "lodash";
-import {
-  toNumberString
-} from "../MushafScreen/Helpers/AyahsOrder";
+import { toNumberString } from "../MushafScreen/Helpers/AyahsOrder";
 
 export class EvaluationPage extends QcParentScreen {
   //Default improvement areas
@@ -334,7 +332,11 @@ export class EvaluationPage extends QcParentScreen {
   }
 
   closeScreen() {
-    console.log("close screen");
+    this.props.navigation.state.params.onCloseNavigateTo
+      ? this.props.navigation.navigate(
+          this.props.navigation.state.params.onCloseNavigateTo
+        )
+      : this.props.navigation.goBack();
   }
 
   // --------------  Renders Evaluation scree UI --------------
@@ -382,24 +384,13 @@ export class EvaluationPage extends QcParentScreen {
             subtitle={assignmentName}
             avatarName={classStudent.name}
             avatarImage={studentImages.images[profileImageID]}
+            onClose={this.closeScreen.bind(this)}
           />
         ) : readOnly === true &&
           !this.props.navigation.state.params.isStudentSide ? (
           <TopBanner
             LeftIconName="angle-left"
-            LeftOnPress={() => {
-              let index = this.props.navigation.dangerouslyGetParent().state
-                .index;
-              // go back to previous page if we have one
-              if (index > 0) {
-                this.props.navigation.goBack();
-              } else {
-                //if navigation stack is empty (no previous page), go to main screen
-                this.props.navigation.push("TeacherCurrentClass", {
-                  userID: this.state.userID
-                });
-              }
-            }}
+            LeftOnPress={this.closeScreen.bind(this)}
             Title={strings.Evaluation}
             RightIconName="edit"
             RightOnPress={() => {
@@ -414,6 +405,7 @@ export class EvaluationPage extends QcParentScreen {
             title={strings.Evaluation}
             avatarName={classStudent.name}
             avatarImage={studentImages.images[profileImageID]}
+            onClose={this.closeScreen.bind()}
           />
         )}
         <View style={{ height: screenHeight - headerHeight }}>
