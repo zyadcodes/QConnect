@@ -10,6 +10,7 @@ export default class FirebaseFunctions {
   static database = firebase.firestore();
   static batch = this.database.batch();
   static storage = firebase.storage();
+  static feeds = this.database.collection("feeds");
   static teachers = this.database.collection("teachers");
   static students = this.database.collection("students");
   static classes = this.database.collection("classes");
@@ -891,6 +892,13 @@ export default class FirebaseFunctions {
     return 0;
   }
 
+  static async createFeedDocument(dataArr, classID){
+    let ref = this.feeds.doc(classID).collection("content").doc('0');
+    this.batch.set(ref);
+    await this.batch.commit();
+    ref.update({data: dataArr})
+  }
+
   //This function will take a name of an event and log it to firebase analytics (not async)
   static logEvent(eventName, eventArgs) {
     if (eventArgs !== undefined) {
@@ -904,5 +912,22 @@ export default class FirebaseFunctions {
   //current screen to those inputs in firebase analytics (not async)
   static setCurrentScreen(screenName, screenClass) {
     this.analytics.setCurrentScreen(screenName, screenClass);
+  }
+
+  static async getLatestFeed(classID){
+    let data;
+    let lastIndex = (await this.feeds.doc(classID).get()).data().lastIndex;
+    let refData = (await this.feeds.doc(classID).collection("content").doc(lastIndex).get()).data();
+    data = refData.data;
+    if(data.length < 7 && lastIndex > 1){
+      let refData2 = (await this.feeds.doc(classID).collection("content").doc(lastIndex-1).get()).data();
+      data = refData2.data.concat(data);
+    }
+    this.logEvent('FETCHING_FEED');
+    return data;
+  }
+
+  static async updateFeed(changedData){
+    
   }
 }
