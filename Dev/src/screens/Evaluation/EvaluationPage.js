@@ -176,7 +176,9 @@ export class EvaluationPage extends QcParentScreen {
       studentID,
       assignmentLength,
       assignmentType,
-      evaluationID
+      evaluationID,
+      highlightedWords,
+      highlightedAyahs
     } = this.state;
 
     notes = notes.trim();
@@ -196,6 +198,8 @@ export class EvaluationPage extends QcParentScreen {
       evaluation: {
         rating,
         notes,
+        highlightedWords,
+        highlightedAyahs,
         improvementAreas: selectedImprovementAreas
       },
       ...submission
