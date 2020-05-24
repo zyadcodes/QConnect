@@ -36,114 +36,16 @@ export default class FeedsScreen extends React.Component {
     keyboardAvoidingMargin: 0,
     student: null,
     currentlySelectingIndex: -1,
-    feedsData: [
-      {
-        madeByUser: {ID: '123456e83jicw', imageID: 21},
-        content: 'Emad gained 50 points!',
-        type: 'notification',
-        reactions: [
-          {
-            emoji: "😋",
-            reactedBy: ['Gx6OAwlilxV9OBB7v63wesjpal22']
-          }
-        ],
-        comments: [
-          {
-            user: {
-              imageID: 2,
-              name: 'Ahmed Mohammad',
-              role: 'student'
-            },
-            content: 'Hey Everyone'
-          }
-        ]
-      },
-      {
-        madeByUser: {ID: 'Gx6OAwlilxV9OBB7v63wesjpal22', imageID: 21},
-        content: {
-          assignmentType: 'Memorization',
-          start: { ayah: 1, surah: 2, page: 2 },
-          end: { ayah: 11, page: 2, surah: 2 }
-        },
-        type: 'assignment',
-        reactions: [],
-        comments: [
-          {
-            user: {
-              imageID: 2,
-              name: 'Ahmed Mohammad',
-              role: 'student'
-            },
-            content: 'Hey Everyone'
-          }
-        ]
-      },
-      {
-        madeByUser: {ID: 'feijwowe', imageID: 21},
-        content: {
-          assignmentType: 'Memorization',
-          start: { ayah: 1, surah: 2, page: 2 },
-          end: { ayah: 11, page: 2, surah: 2 }
-        },
-        type: 'assignment',
-        reactions: [],
-        comments: [
-          {
-            user: {
-              imageID: 2,
-              name: 'Ahmed Mohammad',
-              role: 'student'
-            },
-            content: 'Hey Everyone'
-          }
-        ]
-      },
-      {
-        madeByUser: {ID: 'jiewfjeo', imageID: 21},
-        content: 'Emad gained 50 points!',
-        type: 'notification',
-        reactions: [
-          {
-            emoji: "😋",
-            reactedBy: ['Gx6OAwlilxV9OBB7v63wesjpal22']
-          }
-        ],
-        comments: [
-          {
-            user: {
-              imageID: 2,
-              name: 'Ahmed Mohammad',
-              role: 'student'
-            },
-            content: 'Hey Everyone'
-          },
-          {
-            user: {
-              imageID: 2,
-              name: 'Ahmed Mohammad',
-              role: 'student'
-            },
-            content: 'Hey Everyone'
-          },
-          {
-            user: {
-              imageID: 2,
-              name: 'Ahmed Mohammad',
-              role: 'student'
-            },
-            content: 'Hey Everyone'
-          },
-        ]
-      }
-    ],
+    feedsData: [],
     isSelectingEmoji: false,
     isCommenting: false,
+    newCommentTxt: '',
     keyboardAvoidingMargin: 0,
     inputHeight: screenHeight/12
   };
-  componentWillUnmount(){
-   this.keyboardDidShowListener = null;
-  }
+
+  _isMounted = false;
+
   async componentDidMount() {
     console.warn(screenHeight/12)
     FirebaseFunctions.setCurrentScreen('Class Feed Screen', 'ClassFeedScreen');
@@ -168,7 +70,7 @@ export default class FeedsScreen extends React.Component {
     classes = await FirebaseFunctions.getClassesByIDs(userType.classes);
     const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
     const { classInviteCode } = currentClass;
-    const feedsData = await FirebaseFunctions.getLatestFeed(currentClassID);
+    const feedsData = await FirebaseFunctions.getLatestFeed(currentClassID,  (changedData) => this.refresh(changedData));
     this.setState({
       isLoading: false,
       currentClass,
@@ -179,6 +81,29 @@ export default class FeedsScreen extends React.Component {
       userID,
       classes,
     });
+    this._isMounted = true;
+  }
+  refresh(newData){
+    if(this._isMounted){  
+      this.setState({feedsData: newData});
+    }
+  }
+  async sendMessage(text){
+    const newObj = {
+      madeByUser: {
+        ID: this.state.userID,
+        imageID: this.state.role === 'teacher' ?
+          this.state.teacher.profileImageID
+          : this.state.student.profileImageID
+      },
+      type: 'text',
+      content: text,
+      comments: [],
+      reactions: []
+    }
+    let temp = this.state.feedsData;
+    temp[temp.length] = newObj;
+    await FirebaseFunctions.updateFeed(temp, this.state.currentClassID);
   }
   toggleSelectingEmoji(index) {
     if (!this.state.isSelectingEmoji) {
@@ -215,7 +140,7 @@ export default class FeedsScreen extends React.Component {
           LeftOnPress={() => this.setState({ isOpen: true })}
           Title={this.state.currentClass.name + ' Feed'}
         />
-        <ScrollView style={localStyles.scrollViewStyle}>
+        <ScrollView onTouchStart={() => this.setState({isCommenting: false})} style={localStyles.scrollViewStyle}>
           <FlatList
             listKey={0}
             data={this.state.feedsData}
@@ -265,8 +190,13 @@ export default class FeedsScreen extends React.Component {
       }
       {this.state.isCommenting ?
         <View style={[localStyles.commentingContainer, {paddingBottom: this.state.keyboardAvoidingMargin}]}>
-            <TextInput multiline onContentSizeChange={(event) => this.setState({inputHeight: event.nativeEvent.contentSize.height+5})} onBlur={() => this.setState({isCommenting: false})} autoFocus style={localStyles.commentingTextInput}/>
-            <TouchableOpacity style={[localStyles.sendBtn]}>
+            <TextInput 
+            value={this.state.newCommentTxt}
+            onChangeText={text => this.setState({newCommentTxt: text})} 
+            multiline 
+            onContentSizeChange={(event) => this.setState({inputHeight: event.nativeEvent.contentSize.height+5})} 
+            autoFocus style={localStyles.commentingTextInput}/>
+            <TouchableOpacity onPress={async () => await this.sendMessage(this.state.newCommentTxt)} style={[localStyles.sendBtn]}>
               <Text style={{color: colors.primaryDark}}>
                 Send
               </Text>
