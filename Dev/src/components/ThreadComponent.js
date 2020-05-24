@@ -84,7 +84,7 @@ export default class ThreadComponent extends Component {
         {this.state.isExtended ? (
           <FlatList
             listKey={this.props.listKey + 1}
-            data={this.props.Comments}
+            data={this.props.comments}
             renderItem={({ index, item, separators }) => (
               <View key={index} style={this.localStyles.commentContainer}>
                 <Image

@@ -4,6 +4,7 @@ import firebase from "react-native-firebase";
 import strings from "./strings";
 import _ from 'lodash';
 import moment from 'moment';
+import FeedsScreen from "../src/screens/UniversalClassScreens/FeedsScreen";
 
 export default class FirebaseFunctions {
   //References that'll be used throughout the class's static functions
@@ -892,11 +893,12 @@ export default class FirebaseFunctions {
     return 0;
   }
 
-  static async createFeedDocument(dataArr, classID){
-    let ref = this.feeds.doc(classID).collection("content").doc('0');
+  static async createFeedDocument(dataArr, classID, index){
+    let ref = this.feeds.doc(classID).collection("content").doc(''+index);
     this.batch.set(ref);
     await this.batch.commit();
-    ref.update({data: dataArr})
+    await ref.update({data: dataArr});
+    await this.feeds.doc(classID).update({lastIndex: index});
   }
 
   //This function will take a name of an event and log it to firebase analytics (not async)
@@ -914,20 +916,46 @@ export default class FirebaseFunctions {
     this.analytics.setCurrentScreen(screenName, screenClass);
   }
 
-  static async getLatestFeed(classID){
+  static async getLatestFeed(classID, refreshFunction){
     let data;
     let lastIndex = (await this.feeds.doc(classID).get()).data().lastIndex;
     let refData = (await this.feeds.doc(classID).collection("content").doc(lastIndex).get()).data();
     data = refData.data;
-    if(data.length < 7 && lastIndex > 1){
+    if(data.length < 14 && lastIndex > 1){
       let refData2 = (await this.feeds.doc(classID).collection("content").doc(lastIndex-1).get()).data();
       data = refData2.data.concat(data);
     }
+    this.listenForFeedChanges(lastIndex, classID, (changedData) => refreshFunction(changedData));
     this.logEvent('FETCHING_FEED');
     return data;
   }
 
-  static async updateFeed(changedData){
-    
+  static async updateFeed(changedData, classID){
+    let lastIndex = (await this.feeds.doc(classID).get()).data().lastIndex;
+    if(changedData.length > 20){
+      let temp = [];
+      let temp2 = [];
+      var j = 0;
+      for(var i = 0; i < changedData.length; i ++){
+        if(i < 12){  
+          temp[i] = changedData[i];
+        }else{
+          temp2[j] = changedData[i];
+          j++;
+        }
+      }
+      await this.feeds.doc(classID).collection("content").doc(lastIndex).update({data: temp});
+      await this.createFeedDocument(temp2, classID, lastIndex+1);
+    }else{
+      await this.feeds.doc(classID).collection("content").doc(lastIndex).update({data: changedData});
+    }
+  }
+  static async listenForFeedChanges(docID, classID, refreshFunction){
+    this.feeds.doc(classID)
+    .collection("content")
+    .doc(docID)
+    .onSnapshot(querySnap =>  {
+      refreshFunction(querySnap.data().data);
+    })
   }
 }
