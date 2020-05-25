@@ -139,8 +139,8 @@ class SelectionPage extends React.Component {
     }
 
     if (
-      _.isEqual(_.sortBy(nextProps.highlightedWords), _.sortBy(this.props.highlightedWords)) ||
-      nextProps.highlightedAyahs !== this.props.highlightedAyahs ||
+      !_.isEqual(nextProps.highlightedWords, this.props.highlightedWords) ||
+      !_.isEqual(nextProps.highlightedAyahs, this.props.highlightedAyahs) ||
       nextProps.showLoadingOnHighlightedAyah !==
         this.props.showLoadingOnHighlightedAyah
     ) {

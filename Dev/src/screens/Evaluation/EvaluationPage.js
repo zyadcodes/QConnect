@@ -30,7 +30,10 @@ import MushafScreen from "screens/MushafScreen/MushafScreen";
 import KeepAwake from "react-native-keep-awake";
 import { noSelection } from "screens/MushafScreen/Helpers/consts";
 import * as _ from "lodash";
-import { toNumberString } from "../MushafScreen/Helpers/AyahsOrder";
+import {
+  compareOrder,
+  toNumberString
+} from "../MushafScreen/Helpers/AyahsOrder";
 
 export class EvaluationPage extends QcParentScreen {
   //Default improvement areas
@@ -66,8 +69,8 @@ export class EvaluationPage extends QcParentScreen {
     audioFile: -1,
     notesHeight: 40,
     selectedImprovementAreas: [],
-    highlightedWords: [],
-    highlightedAyahs: [],
+    highlightedWords: {},
+    highlightedAyahs: {},
     audioPlaybackVisible: true,
     evaluationCollapsed: false,
     selection: this.props.navigation.state.params.assignmentLocation
@@ -295,38 +298,34 @@ export class EvaluationPage extends QcParentScreen {
       }
     }
   }
-
-  //--------------------------------------------------
-  // add the element to the array if it doesn't exist
-  // or removes it if it exists already.
-  toggleElementInArray(array, element, elementId) {
-    if (array[elementId] === undefined) {
-      array[elementId] = element;
-    } else {
-      //if the same highlighted word is pressed again, un-highlight it (toggle off)
-      delete array[elementId];
-    }
-    return array;
-  }
-
   onSelectAyah(selectedAyah, selectedWord) {
-    let wordIdString = "" + selectedWord.id;
     //if users press on a word, we highlight that word
     if (selectedWord.char_type === "word") {
-      let highlightedWords = this.toggleElementInArray(
-        this.state.highlightedWords,
-        {},
-        wordIdString
-      );
+      let highlightedWords = this.state.highlightedWords;
+      if (!Object.keys(highlightedWords).includes(selectedWord.id)) {
+        highlightedWords = {
+          ...highlightedWords,
+          [selectedWord.id]: {}
+        };
+      } else {
+        //if the same highlighted word is pressed again, un-highlight it (toggle off)
+        delete highlightedWords[selectedWord.id];
+      }
       this.setState({ highlightedWords });
     } else if (selectedWord.char_type === "end") {
       //if user presses on an end of ayah, we highlight that entire ayah
-      let ayahIdString = toNumberString(selectedAyah);
-      let highlightedAyahs = this.toggleElementInArray(
-        this.state.highlightedAyahs,
-        selectedAyah,
-        ayahIdString
-      );
+      let highlightedAyahs = this.state.highlightedAyahs;
+      let ayahKey = toNumberString(selectedAyah);
+
+      if (!Object.keys(highlightedAyahs).includes(ayahKey)) {
+        highlightedAyahs = {
+          ...highlightedAyahs,
+          [ayahKey]: { ...selectedAyah }
+        };
+      } else {
+        //if the same highlighted word is pressed again, un-highlight it (toggle off)
+        delete highlightedAyahs[ayahKey];
+      }
       this.setState({ highlightedAyahs });
     }
   }
@@ -418,7 +417,8 @@ export class EvaluationPage extends QcParentScreen {
             profileImage={studentImages.images[profileImageID]}
             showLoadingOnHighlightedAyah={
               this.state.isAudioLoading === true &&
-              this.state.highlightedAyahs !== undefined
+              (this.state.highlightedAyahs !== undefined ||
+                _.isEqual(this.state.highlightedAyahs, {}))
             }
             selection={this.state.selection}
             highlightedWords={this.state.highlightedWords}

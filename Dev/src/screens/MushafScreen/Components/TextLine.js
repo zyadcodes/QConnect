@@ -1,10 +1,14 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { compareOrder, isAyahSelected } from '../Helpers/AyahsOrder';
+import {
+  compareOrder,
+  isAyahSelected,
+  toNumberString
+} from "../Helpers/AyahsOrder";
 import AyahSelectionWord from './AyahSelectionWord';
 import EndOfAyah from './EndOfAyah';
 import { screenHeight } from 'config/dimensions';
-import { toNumberString } from '../Helpers/AyahsOrder';
+import LoadingSpinner from "components/LoadingSpinner";
 
 //Creates the higher order component
 const TextLine = ({
@@ -35,15 +39,13 @@ const TextLine = ({
             wordNum: Number(word.id)
           };
 
-          const curAyahId = toNumberString(curAyah);
           let isCurAyahHighlighted =
             highlightedAyahs !== undefined &&
-            highlightedAyahs[curAyahId] !== undefined;
+            Object.keys(highlightedAyahs).includes(toNumberString(curAyah));
 
-          const curWordId = '' + word.id;
           let isCurWordHighlighted =
             highlightedWords !== undefined &&
-            highlightedWords[curWordId] !== undefined;
+            Object.keys(highlightedWords).includes(word.id);
 
           let highlighted = isCurWordHighlighted || isCurAyahHighlighted;
 
