@@ -58,6 +58,12 @@ export class EvaluationPage extends QcParentScreen {
     assignmentName: this.props.navigation.state.params.assignmentName,
     assignmentLength: this.props.navigation.state.params.assignmentLength,
     assignmentType: this.props.navigation.state.params.assignmentType,
+    assignmentLocation: this.props.navigation.state.params.assignmentLocation,
+    // we show Mushaf in evaluation page only if the assignment location was passed in
+    showMushaf:
+      this.props.navigation.state.params.assignmentLocation === undefined
+        ? false
+        : true,
     submission: this.props.navigation.state.params.submission,
     isLoading: true,
     rating: this.props.navigation.state.params.rating
@@ -69,8 +75,14 @@ export class EvaluationPage extends QcParentScreen {
     audioFile: -1,
     notesHeight: 40,
     selectedImprovementAreas: [],
-    highlightedWords: {},
-    highlightedAyahs: {},
+    highlightedWords:
+      this.props.navigation.state.params.highlightedWords !== undefined
+        ? this.props.navigation.state.params.highlightedWords
+        : {},
+    highlightedAyahs:
+      this.props.navigation.state.params.highlightedAyahs !== undefined
+        ? this.props.navigation.state.params.highlightedAyahs
+        : {},
     audioPlaybackVisible: true,
     evaluationCollapsed: false,
     selection: this.props.navigation.state.params.assignmentLocation
@@ -102,7 +114,7 @@ export class EvaluationPage extends QcParentScreen {
         "EvaluationPage"
       );
     }
-
+    
     const studentObject = await FirebaseFunctions.getStudentByID(
       this.state.studentID
     );
@@ -179,6 +191,7 @@ export class EvaluationPage extends QcParentScreen {
       studentID,
       assignmentLength,
       assignmentType,
+      assignmentLocation,
       evaluationID,
       highlightedWords,
       highlightedAyahs
@@ -193,6 +206,7 @@ export class EvaluationPage extends QcParentScreen {
       name: assignmentName,
       assignmentLength,
       assignmentType: assignmentType,
+      location: assignmentLocation,
       completionDate: new Date().toLocaleDateString("en-US", {
         year: "numeric",
         month: "2-digit",
@@ -299,6 +313,10 @@ export class EvaluationPage extends QcParentScreen {
     }
   }
   onSelectAyah(selectedAyah, selectedWord) {
+    if(this.state.readOnly){
+      // don't change highlighted words/ayahs on read-only mode.
+      return;
+    }
     //if users press on a word, we highlight that word
     if (selectedWord.char_type === "word") {
       let highlightedWords = this.state.highlightedWords;
@@ -360,7 +378,10 @@ export class EvaluationPage extends QcParentScreen {
       studentObject,
       studentID,
       classID,
-      assignmentType
+      assignmentType,
+      showMushaf,
+      highlightedAyahs,
+      highlightedWords
     } = this.state;
     const { profileImageID } = studentObject;
     const headerTitle = readOnly
@@ -403,68 +424,78 @@ export class EvaluationPage extends QcParentScreen {
           <Header
             title={strings.Evaluation}
             avatarName={classStudent.name}
+            subtitle={assignmentName}
             avatarImage={studentImages.images[profileImageID]}
-            onClose={this.closeScreen.bind()}
+            onClose={this.closeScreen.bind(this)}
           />
         )}
-        <View style={{ height: screenHeight - headerHeight }}>
-          <KeepAwake />
-          <MushafScreen
-            assignToID={studentID}
-            hideHeader={true}
-            showSelectedLinesOnly={false}
-            classID={classID}
-            profileImage={studentImages.images[profileImageID]}
-            showLoadingOnHighlightedAyah={
-              this.state.isAudioLoading === true &&
-              (this.state.highlightedAyahs !== undefined ||
-                _.isEqual(this.state.highlightedAyahs, {}))
-            }
-            selection={this.state.selection}
-            highlightedWords={this.state.highlightedWords}
-            highlightedAyahs={this.state.highlightedAyahs}
-            highlightedColor={colors.darkRed}
-            assignmentName={assignmentName}
-            assignmentType={assignmentType}
-            topRightIconName="close"
-            onClose={this.closeScreen.bind(this)}
-            currentClass={classStudent}
-            onSelectAyah={this.onSelectAyah.bind(this)}
-            disableChangingUser={true}
-          />
-        </View>
+        {showMushaf && (
+          <View style={{ height: screenHeight - headerHeight }}>
+            <KeepAwake />
+            <MushafScreen
+              assignToID={studentID}
+              hideHeader={true}
+              showSelectedLinesOnly={false}
+              classID={classID}
+              profileImage={studentImages.images[profileImageID]}
+              showLoadingOnHighlightedAyah={
+                this.state.isAudioLoading === true &&
+                (this.state.highlightedAyahs !== undefined ||
+                  _.isEqual(this.state.highlightedAyahs, {}))
+              }
+              selection={this.state.selection}
+              highlightedWords={highlightedWords}
+              highlightedAyahs={highlightedAyahs}
+              highlightedColor={colors.darkRed}
+              assignmentName={assignmentName}
+              assignmentType={assignmentType}
+              topRightIconName="close"
+              onClose={this.closeScreen.bind(this)}
+              currentClass={classStudent}
+              onSelectAyah={this.onSelectAyah.bind(this)}
+              disableChangingUser={true}
+            />
+          </View>
+        )}
 
         <KeyboardAvoidingView
           behavior="padding"
-          style={styles.evaluationContainer}
+          style={
+            showMushaf
+              ? styles.evaluationContainer
+              : { justifyContent: "center", alignItems: "center" }
+          }
         >
           <ScrollView>
-            <View
-              style={{
-                top: 5,
-                left: screenWidth * 0.9,
-                zIndex: 1,
-                position: "absolute" // add if dont work with above
-              }}
-            >
-              <TouchableOpacity
-                onPress={() =>
-                  this.setState({
-                    evaluationCollapsed: !this.state.evaluationCollapsed
-                  })
-                }
+            {showMushaf && (
+              <View
+                style={{
+                  top: 5,
+                  left: screenWidth * 0.9,
+                  zIndex: 1,
+                  position: "absolute" // add if dont work with above
+                }}
               >
-                <Icon
-                  name={
-                    this.state.evaluationCollapsed
-                      ? "angle-double-up"
-                      : "angle-double-down"
+                <TouchableOpacity
+                  onPress={() =>
+                    this.setState({
+                      evaluationCollapsed: !this.state.evaluationCollapsed
+                    })
                   }
-                  type="font-awesome"
-                  color={colors.primaryDark}
-                />
-              </TouchableOpacity>
-            </View>
+                >
+                  <Icon
+                    name={
+                      this.state.evaluationCollapsed
+                        ? "angle-double-up"
+                        : "angle-double-down"
+                    }
+                    type="font-awesome"
+                    color={colors.primaryDark}
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+
             {this.state.audioFile !== -1 ? (
               <View style={{ justifyContent: "center", alignItems: "center" }}>
                 <View style={styles.playAudio}>
@@ -559,25 +590,28 @@ export class EvaluationPage extends QcParentScreen {
                       );
                     }}
                   />
+                  <View style={{ height: 30 }} />
                 </View>
               )}
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
-        <ActionButton
-          buttonColor={colors.darkGreen}
-          onPress={() => {
-            this.doSubmitRating();
-          }}
-          renderIcon={() => (
-            <Icon
-              name="check-bold"
-              color="#fff"
-              type="material-community"
-              style={styles.actionButtonIcon}
-            />
-          )}
-        />
+        {!readOnly && (
+          <ActionButton
+            buttonColor={colors.darkGreen}
+            onPress={() => {
+              this.submitRating();
+            }}
+            renderIcon={() => (
+              <Icon
+                name="check-bold"
+                color="#fff"
+                type="material-community"
+                style={styles.actionButtonIcon}
+              />
+            )}
+          />
+        )}
       </View>
     );
   }

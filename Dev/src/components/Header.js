@@ -19,24 +19,28 @@ const Header = props => {
         <Avatar rounded source={props.avatarImage} />
         <HorizontalContainer>
           <AvatarSubTitle numberOfLines={1}>{props.avatarName}</AvatarSubTitle>
-          <Icon
-            name={showPeoplePicker === false ? 'angle-down' : 'angle-up'}
-            type="font-awesome"
-            color={colors.primaryDark}
-            size={15}
-          />
+          {props.allowSwitchStudents && (
+            <Icon
+              name={showPeoplePicker === false ? 'angle-down' : 'angle-up'}
+              type="font-awesome"
+              color={colors.primaryDark}
+              size={15}
+            />
+          )}
         </HorizontalContainer>
       </LeftAvatarContainer>
       <MiddleContainer>
         <Title>{props.title}</Title>
         <SubtitleContainer>
           <Subtitle>{props.subtitle}</Subtitle>
-          <Icon
-            name={showPeoplePicker === false ? 'angle-down' : 'angle-up'}
-            type="font-awesome"
-            color={colors.primaryDark}
-            size={15}
-          />
+          {props.allowSwitchAssignments && (
+            <Icon
+              name={showPeoplePicker === false ? 'angle-down' : 'angle-up'}
+              type="font-awesome"
+              color={colors.primaryDark}
+              size={15}
+            />
+          )}
         </SubtitleContainer>
       </MiddleContainer>
       <RightContainer>
