@@ -21,6 +21,7 @@ import EmojiSelector from '../../components/CustomizedEmojiSelector';
 import { FlatList } from 'react-native-gesture-handler';
 import teacherImages from '../../../config/teacherImages';
 import studentImages from '../../../config/studentImages';
+import FeedList from '../../components/FeedList';
 
 export default class FeedsScreen extends React.Component {
   state = {
@@ -70,7 +71,8 @@ export default class FeedsScreen extends React.Component {
     classes = await FirebaseFunctions.getClassesByIDs(userType.classes);
     const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
     const { classInviteCode } = currentClass;
-    const feedsData = await FirebaseFunctions.getLatestFeed(currentClassID,  (changedData) => this.refresh(changedData));
+    const feedsData = await FirebaseFunctions.getLatestFeed(currentClassID,  (index, changedData) => this.refresh(index, changedData));
+    console.warn(feedsData)
     this.setState({
       isLoading: false,
       currentClass,
@@ -80,12 +82,14 @@ export default class FeedsScreen extends React.Component {
       feedsData,
       userID,
       classes,
-    });
-    this._isMounted = true;
+    }, () => setTimeout(() => this._isMounted = true, 1000));
   }
-  refresh(newData){
+  refresh(index, newData){
     if(this._isMounted){  
-      this.setState({feedsData: newData});
+      console.warn(this.state.feedsData)
+      let temp = this.state.feedsData;
+      temp[index] = newData
+      this.setState({feedsData: temp});
     }
   }
   async sendMessage(text){
@@ -102,8 +106,9 @@ export default class FeedsScreen extends React.Component {
       reactions: []
     }
     let temp = this.state.feedsData;
-    temp[temp.length] = newObj;
-    await FirebaseFunctions.updateFeed(temp, this.state.currentClassID);
+    temp[temp.length-1].data.push(newObj);
+    this.setState({feedsData: temp}, async () =>
+      await FirebaseFunctions.updateFeed(this.state.feedsData, this.state.currentClassID, (index, changedData) => this.refresh(index, changedData)));
   }
   toggleSelectingEmoji(index) {
     if (!this.state.isSelectingEmoji) {
@@ -145,25 +150,26 @@ export default class FeedsScreen extends React.Component {
             listKey={0}
             data={this.state.feedsData}
             renderItem={({ index, item, separators }) => (
-              <FeedsObject
-                comments={[]}
-                onPressSelectEmoji={() => this.toggleSelectingEmoji(index)}
-                madeByUser={item.madeByUser.ID}
-                currentUser={
-                  this.state.role === 'teacher'
-                    ? this.state.teacher
-                    : this.state.student
-                }
-                role={this.state.role}
-                content={item.content}
-                number={index}
-                beginCommenting={() => {this.setState({isCommenting: true})}}
-                key={index}
-                type={item.type}
-                comments={item.comments}
-                reactions={item.reactions}
-                imageRequire={this.state.role === 'teacher' ? teacherImages.images[item.madeByUser.imageID] : studentImages.images[item.madeByUser.imageID]}
-              />
+              <FlatList listKey={index+1} data={item.data} renderItem={({item, index, separators}) =>
+                <FeedsObject
+                  onPressSelectEmoji={() => this.setState({isSelectingEmoji: true})}
+                  madeByUser={item.madeByUser.ID}
+                  currentUser={
+                    this.state.role === 'teacher'
+                      ? this.state.teacher
+                      : this.state.student
+                  }
+                  role={this.props.role}
+                  content={item.content}
+                  number={index}
+                  beginCommenting={() => this.setState({isCommenting: true})}
+                  key={index}
+                  type={item.type}
+                  comments={item.comments}
+                  reactions={item.reactions}
+                  imageRequire={this.state.role === 'teacher' ? teacherImages.images[item.madeByUser.imageID] : studentImages.images[item.madeByUser.imageID]}
+                />}
+            />
             )}
           />
         </ScrollView>
