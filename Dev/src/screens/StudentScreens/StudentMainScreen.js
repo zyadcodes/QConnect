@@ -36,6 +36,8 @@ import CodeInput from 'react-native-confirmation-code-input';
 import DailyTracker, { getTodaysDateString } from 'components/DailyTracker';
 import themeStyles from "config/themeStyles";
 import TouchableText from "components/TouchableText";
+import QCView from "components/QCView";
+
 
 const translateY = new Animated.Value(-35);
 const opacity = new Animated.Value(0);
