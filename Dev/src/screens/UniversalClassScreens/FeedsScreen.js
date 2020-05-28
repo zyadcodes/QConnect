@@ -41,7 +41,7 @@ export default class FeedsScreen extends React.Component {
     isSelectingEmoji: false,
     isCommenting: false,
     newCommentTxt: '',
-    keyboardAvoidingMargin: 0,
+    keyboardAvoidingMargin: 10,
     inputHeight: screenHeight/12
   };
 
@@ -50,7 +50,8 @@ export default class FeedsScreen extends React.Component {
   async componentDidMount() {
     console.warn(screenHeight/12)
     FirebaseFunctions.setCurrentScreen('Class Feed Screen', 'ClassFeedScreen');
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', e => this.setState({keyboardAvoidingMargin: e.endCoordinates.height-65}))
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', e => this.setState({keyboardAvoidingMargin: 10}))
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', e => this.setState({keyboardAvoidingMargin: 20}))
     const { userID } = this.props.navigation.state.params;
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
     let currentClassID;
@@ -88,7 +89,7 @@ export default class FeedsScreen extends React.Component {
     if(this._isMounted){  
       console.warn(this.state.feedsData)
       let temp = this.state.feedsData;
-      temp[index] = newData
+      temp[index] = {data: newData};
       this.setState({feedsData: temp});
     }
   }
@@ -106,9 +107,9 @@ export default class FeedsScreen extends React.Component {
       reactions: []
     }
     let temp = this.state.feedsData;
+    console.warn(temp)
     temp[temp.length-1].data.push(newObj);
-    this.setState({feedsData: temp}, async () =>
-      await FirebaseFunctions.updateFeed(this.state.feedsData, this.state.currentClassID, (index, changedData) => this.refresh(index, changedData)));
+    await FirebaseFunctions.updateFeed(temp, this.state.currentClassID, (index, changedData) => this.refresh(index, changedData));
   }
   toggleSelectingEmoji(index) {
     if (!this.state.isSelectingEmoji) {
@@ -145,31 +146,19 @@ export default class FeedsScreen extends React.Component {
           LeftOnPress={() => this.setState({ isOpen: true })}
           Title={this.state.currentClass.name + ' Feed'}
         />
-        <ScrollView onTouchStart={() => this.setState({isCommenting: false})} style={localStyles.scrollViewStyle}>
+        <ScrollView keyboardShouldPersistTaps="always" onTouchStart={() => this.setState({isCommenting: false})} style={localStyles.scrollViewStyle}>
           <FlatList
             listKey={0}
             data={this.state.feedsData}
             renderItem={({ index, item, separators }) => (
-              <FlatList listKey={index+1} data={item.data} renderItem={({item, index, separators}) =>
-                <FeedsObject
-                  onPressSelectEmoji={() => this.setState({isSelectingEmoji: true})}
-                  madeByUser={item.madeByUser.ID}
-                  currentUser={
-                    this.state.role === 'teacher'
-                      ? this.state.teacher
-                      : this.state.student
-                  }
-                  role={this.props.role}
-                  content={item.content}
-                  number={index}
-                  beginCommenting={() => this.setState({isCommenting: true})}
-                  key={index}
-                  type={item.type}
-                  comments={item.comments}
-                  reactions={item.reactions}
-                  imageRequire={this.state.role === 'teacher' ? teacherImages.images[item.madeByUser.imageID] : studentImages.images[item.madeByUser.imageID]}
-                />}
-            />
+              <FeedList 
+                role={this.state.role}
+                teacher={this.state.teacher}
+                student={this.state.student}
+                item={item}
+                index={index}
+                onPressSelectEmoji={() => this.setState({isSelectingEmoji: true})}
+                beginCommenting={() => this.setState({isCommenting: true})}/>
             )}
           />
         </ScrollView>
@@ -194,22 +183,21 @@ export default class FeedsScreen extends React.Component {
         :
         null
       }
-      {this.state.isCommenting ?
         <View style={[localStyles.commentingContainer, {paddingBottom: this.state.keyboardAvoidingMargin}]}>
             <TextInput 
+            onFocus={() => this.setState({isCommenting: true})}
             value={this.state.newCommentTxt}
             onChangeText={text => this.setState({newCommentTxt: text})} 
             multiline 
+            blurOnSubmit={false}
             onContentSizeChange={(event) => this.setState({inputHeight: event.nativeEvent.contentSize.height+5})} 
-            autoFocus style={localStyles.commentingTextInput}/>
-            <TouchableOpacity onPress={async () => await this.sendMessage(this.state.newCommentTxt)} style={[localStyles.sendBtn]}>
+            style={localStyles.commentingTextInput}/>
+            <TouchableOpacity disabled={this.state.newCommentTxt === ''} onPress={async () => await this.sendMessage(this.state.newCommentTxt).then(this.setState({isCommenting: false}))} style={[localStyles.sendBtn]}>
               <Text style={{color: colors.primaryDark}}>
                 Send
               </Text>
             </TouchableOpacity>
         </View>
-      :
-      null}
     </SideMenu>
     );
   }

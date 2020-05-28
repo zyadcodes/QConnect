@@ -898,7 +898,7 @@ export default class FirebaseFunctions {
     this.batch.set(ref);
     await this.batch.commit();
     await ref.update({data: dataArr});
-    await this.feeds.doc(classID).update({lastIndex: ''+index});
+    await this.feeds.doc(classID).update({lastIndex: ''+docIdInt});
     this.listenForFeedChanges(index+'', classID, dataIndex, (index, changedData) => refreshFunction(index, changedData))
   }
 
@@ -921,7 +921,7 @@ export default class FirebaseFunctions {
     let lastIndex = (await this.feeds.doc(classID).get()).data().lastIndex;
     let allData = [];
     allData[0] = (await this.feeds.doc(classID).collection("content").doc(lastIndex).get()).data();
-    if(allData[0].length < 14 && parseInt(lastIndex) > 1){
+    if(allData[0].data.length < 14 && parseInt(lastIndex) >= 1){
       let swapVal = allData[0];
       allData[0] = (await this.feeds.doc(classID).collection("content").doc(parseInt(lastIndex)-1+'').get()).data();
       allData[1] = swapVal;
@@ -937,12 +937,14 @@ export default class FirebaseFunctions {
   static async updateFeed(changedData, classID, refreshFunction){
     let lastIndex = (await this.feeds.doc(classID).get()).data().lastIndex;
     if(changedData[changedData.length-1].data.length > 20){
-      let newDocData = changedData[changedData.length-1].data;
+      let oldDocData = changedData[changedData.length-1].data;
       let temp = [];
-      temp[0] = newDocData[newDocData.length-1];
-      await this.createFeedDocument(temp2, classID, parseInt(lastIndex)+1, changedData.length, (index, changedData) => refreshFunction(index, changedData));
+      temp[0] = oldDocData[oldDocData.length-1];
+      await this.createFeedDocument(temp, classID, parseInt(lastIndex)+1, changedData.length, (index, changedData) => refreshFunction(index, changedData));
+      return temp;
     }else{
-      await this.feeds.doc(classID).collection("content").doc(lastIndex).update({data: changedData});
+      await this.feeds.doc(classID).collection("content").doc(lastIndex).update({data: changedData[changedData.length-1].data});
+      return 0;
     }
   }
   static async listenForFeedChanges(docID, classID, dataIndex, refreshFunction){
