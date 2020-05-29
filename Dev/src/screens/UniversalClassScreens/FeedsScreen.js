@@ -7,6 +7,7 @@ import {
   Text,
   TextInput,
   Keyboard,
+  KeyboardAvoidingView,
 } from 'react-native';
 import FirebaseFunctions from '../../../config/FirebaseFunctions';
 import colors from '../../../config/colors';
@@ -24,6 +25,9 @@ import studentImages from '../../../config/studentImages';
 import FeedList from '../../components/FeedList';
 
 export default class FeedsScreen extends React.Component {
+  
+  dismissKeyboard = require('dismissKeyboard');
+
   state = {
     currentClass: {},
     isOpen: false,
@@ -41,7 +45,9 @@ export default class FeedsScreen extends React.Component {
     isSelectingEmoji: false,
     isCommenting: false,
     newCommentTxt: '',
+    isScrolling: false,
     keyboardAvoidingMargin: 10,
+    keyboardHeight: 0,
     inputHeight: screenHeight/12
   };
 
@@ -51,7 +57,7 @@ export default class FeedsScreen extends React.Component {
     console.warn(screenHeight/12)
     FirebaseFunctions.setCurrentScreen('Class Feed Screen', 'ClassFeedScreen');
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', e => this.setState({keyboardAvoidingMargin: 10}))
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', e => this.setState({keyboardAvoidingMargin: 20}))
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', e => this.setState({keyboardAvoidingMargin: 20, keyboardHeight: e.endCoordinates.height-65}))
     const { userID } = this.props.navigation.state.params;
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
     let currentClassID;
@@ -83,7 +89,10 @@ export default class FeedsScreen extends React.Component {
       feedsData,
       userID,
       classes,
-    }, () => setTimeout(() => this._isMounted = true, 1000));
+    }, () => setTimeout(() => {
+      this._isMounted = true;     
+      this.scrollViewRef.scrollToEnd({animated: true})
+    }, 1000));
   }
   refresh(index, newData){
     if(this._isMounted){  
@@ -91,6 +100,9 @@ export default class FeedsScreen extends React.Component {
       let temp = this.state.feedsData;
       temp[index] = {data: newData};
       this.setState({feedsData: temp});
+      if(!this.state.isScrolling){
+        this.scrollViewRef.scrollToEnd({animated: true});
+      }
     }
   }
   async sendMessage(text){
@@ -110,6 +122,8 @@ export default class FeedsScreen extends React.Component {
     console.warn(temp)
     temp[temp.length-1].data.push(newObj);
     await FirebaseFunctions.updateFeed(temp, this.state.currentClassID, (index, changedData) => this.refresh(index, changedData));
+    this.scrollViewRef.scrollToEnd({animated: true});
+    this.setState({newCommentTxt: ''})
   }
   toggleSelectingEmoji(index) {
     if (!this.state.isSelectingEmoji) {
@@ -140,13 +154,13 @@ export default class FeedsScreen extends React.Component {
         />
       }
     >
-      <View style={[localStyles.containerView, {paddingTop: 0}]}>
+      <View per style={[localStyles.containerView, {paddingTop: 0}]}>
         <TopBanner
           LeftIconName="navicon"
           LeftOnPress={() => this.setState({ isOpen: true })}
           Title={this.state.currentClass.name + ' Feed'}
         />
-        <ScrollView keyboardShouldPersistTaps="always" onTouchStart={() => this.setState({isCommenting: false})} style={localStyles.scrollViewStyle}>
+        <ScrollView onScrollBeginDrag={() => this.setState({isScrolling: true})} onScrollEndDrag={() => this.setState({isScrolling: false})} ref={ref => this.scrollViewRef = ref} keyboardShouldPersistTaps="always" onTouchStart={() => this.setState({isCommenting: false})} style={localStyles.scrollViewStyle}>
           <FlatList
             listKey={0}
             data={this.state.feedsData}
@@ -183,11 +197,12 @@ export default class FeedsScreen extends React.Component {
         :
         null
       }
-        <View style={[localStyles.commentingContainer, {paddingBottom: this.state.keyboardAvoidingMargin}]}>
+        <KeyboardAvoidingView style={[localStyles.commentingContainer, {paddingBottom: this.state.keyboardAvoidingMargin}]}>
             <TextInput 
+            ref={ref => this.commentInputRef =ref}
             onFocus={() => this.setState({isCommenting: true})}
             value={this.state.newCommentTxt}
-            onChangeText={text => this.setState({newCommentTxt: text})} 
+            onChangeText={text => this.setState({newCommentTxt: text, keyboardAvoidingMargin: this.state.keyboardHeight})} 
             multiline 
             blurOnSubmit={false}
             onContentSizeChange={(event) => this.setState({inputHeight: event.nativeEvent.contentSize.height+5})} 
@@ -197,7 +212,7 @@ export default class FeedsScreen extends React.Component {
                 Send
               </Text>
             </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
     </SideMenu>
     );
   }
