@@ -8,24 +8,24 @@ export default class FeedList extends Component {
     render(){
         return (
             <FlatList listKey={this.props.index+1} data={this.props.item.data} renderItem={({item, index, separators}) =>
-                        <FeedsObject
-                            onPressSelectEmoji={() => this.props.onPressSelectEmoji()}
-                            madeByUser={item.madeByUser.ID}
-                            currentUser={
-                            this.props.role === 'teacher'
-                                ? this.props.teacher
-                                : this.props.student
-                            }
-                            role={this.props.role}
-                            content={item.content}
-                            number={index}
-                            beginCommenting={() => this.props.beginCommenting()}
-                            onPressSelectEmoji={() => this.props.onPressSelectEmoji()}
-                            key={index}
-                            type={item.type}
-                            comments={item.comments}
-                            reactions={item.reactions}
-                            imageRequire={this.props.role === 'teacher' ? teacherImages.images[item.madeByUser.imageID] : studentImages.images[item.madeByUser.imageID]}
+                <FeedsObject
+                    onPressSelectEmoji={() => this.props.onPressSelectEmoji()}
+                    madeByUser={item.madeByUser.ID}
+                    currentUser={
+                    this.props.role === 'teacher'
+                        ? this.props.teacher
+                        : this.props.student
+                    }
+                    role={this.props.role}
+                    content={item.content}
+                    number={index}
+                    beginCommenting={() => this.props.beginCommenting()}
+                    onPressSelectEmoji={() => this.props.onPressSelectEmoji()}
+                    key={index}
+                    type={item.type}
+                    comments={item.comments}
+                    reactions={item.reactions}
+                    imageRequire={this.props.role === 'teacher' ? teacherImages.images[item.madeByUser.imageID] : studentImages.images[item.madeByUser.imageID]}
                 />}
             />
         )
