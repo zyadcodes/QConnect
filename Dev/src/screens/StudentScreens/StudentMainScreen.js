@@ -38,7 +38,6 @@ import themeStyles from "config/themeStyles";
 import TouchableText from "components/TouchableText";
 import QCView from "components/QCView";
 
-
 const translateY = new Animated.Value(-35);
 const opacity = new Animated.Value(0);
 const opacityInterpolate = opacity.interpolate({
