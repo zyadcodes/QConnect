@@ -46,14 +46,16 @@ const routeConfig = {
   },
   FeedsScreen: {
     screen: FeedsScreen,
-    navigationOptions: {
-      tabBarLabel: strings.Feed,
-      tabBarIcon: ({tintColor, focused}) => (
-        <Icon 
-          type="material" 
-          name="chat" size={focused ? iconSizeSelected : iconSizeSelected}
-          color={tintColor}/>
-      )
+    navigationOptions: ({ navigation }) => {
+      return {
+        tabBarLabel: strings.Feed, 
+        tabBarIcon: ({tintColor, focused}) => (
+          <Icon 
+            type="material" 
+            name="chat" size={focused ? iconSizeSelected : iconSizeSelected}
+            color={tintColor}/>
+        )
+      }
     }
   },
   AssignmentsTab: {
@@ -82,23 +84,9 @@ const navigatorConfig = {
   initialRouteName: 'ClassStudentsTab',
   animationEnabled: false,
   swipeEnabled: true,
-  tabBarComponent: props => <ClassTabsNavigator {...props}/>, 
+  tabBarComponent: props => <ClassTabsNavigator {...props}/>,
   // Android's default option displays tabBars on top, but iOS is bottom
   tabBarPosition: 'bottom',
-  tabBarOptions: {
-    activeTintColor: colors.primaryDark,
-    inactiveTintColor: colors.darkGrey,
-    style: {
-      backgroundColor: colors.white,
-      height: screenHeight * 0.1,
-      padding: 10,
-    },
-    labelStyle: {
-      fontSize
-    },
-    // Android's default showing of icons is false whereas iOS is true
-    showIcon: true,
-  },
   defaultNavigationOptions: {
     drawerLabel: 'ClassStudentsTab',
     drawerIcon: ({ tintColor }) => (
@@ -123,18 +111,27 @@ class ClassTabsNavigator extends Component {
     ...TeacherBottomTabNavigator.state
   }
   componentDidMount(){
-    if(Platform.OS === 'android'){
-      this.keyboardEventListeners = [
-        Keyboard.addListener('keyboardWillShow', this.setState({isVisible: false})),
-        Keyboard.addListener('keyboardWillHide', this.setState({isVisible: true}))
-      ];
-    }
+    setTimeout(() => {
+      FeedsScreen.doThisWhenKeyboardHides(() => this.setState({isVisible: true})); 
+      FeedsScreen.doThisWhenKeyboardShows(() => this.setState({isVisible: false}))}, 2000)
   }
   componentWillUnmount(){
-    this.keyboardEventListeners.forEach(eventListener => eventListener.remove());
+
   }
   render(){
-    return (this.state.isVisible ? <BottomTabBar {...this.props}/> : null);
+    return (this.state.isVisible ? 
+      <BottomTabBar style={{
+        backgroundColor: colors.white,
+        height: screenHeight * 0.1,
+        padding: 10,
+      }}
+      showIcon={true}
+      activeTintColor={colors.primaryDark}
+      inactiveTintColor={colors.darkGrey}
+      labelStyle={{fontSize}}
+      {...this.props}/> 
+      : 
+      null);
   }
 }
 const TabNavigator = createAppContainer(TeacherBottomTabNavigator);

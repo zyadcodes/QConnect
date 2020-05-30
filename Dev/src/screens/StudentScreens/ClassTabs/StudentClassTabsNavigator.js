@@ -89,8 +89,8 @@ class ClassTabsNavigator extends Component {
   componentDidMount(){
     if(Platform.OS === 'android'){
       this.keyboardEventListeners = [
-        Keyboard.addListener('keyboardWillShow', this.setState({isVisible: false})),
-        Keyboard.addListener('keyboardWillHide', this.setState({isVisible: true}))
+        Keyboard.addListener('keyboardDidShow', this.setState({isVisible: false})),
+        Keyboard.addListener('keyboardDidHide', this.setState({isVisible: true}))
       ];
     }
   }
