@@ -93,7 +93,7 @@ const MiddleContainer = styled.View`
 const Title = styled.Text`
   padding-top: 3px;
   text-align: center;
-  font-size: ${bodyFontBig};
+  font-size: ${mainFont};
   font-family: ${fontFamily};
   color: ${colors.darkGrey};
 `;
@@ -101,7 +101,7 @@ const Title = styled.Text`
 const Subtitle = styled.Text`
   text-align: center;
   padding-right: 5px;
-  font-size: ${mainFont};
+  font-size: ${bodyFontBig};
   font-family: ${fontFamily};
   color: ${colors.primaryDark};
 `;

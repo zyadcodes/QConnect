@@ -34,6 +34,7 @@ import {
   compareOrder,
   toNumberString
 } from "../MushafScreen/Helpers/AyahsOrder";
+import DailyTracker, { getTodaysDateString } from 'components/DailyTracker';
 
 export class EvaluationPage extends QcParentScreen {
   //Default improvement areas
@@ -430,7 +431,7 @@ export class EvaluationPage extends QcParentScreen {
           />
         )}
         {showMushaf && (
-          <View style={{ height: screenHeight - headerHeight }}>
+          <View style={{ height: screenHeight - headerHeight, paddingBottom: 150 }}>
             <KeepAwake />
             <MushafScreen
               assignToID={studentID}
@@ -497,7 +498,7 @@ export class EvaluationPage extends QcParentScreen {
             )}
 
             {this.state.audioFile !== -1 ? (
-              <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <View style={{ justifyContent: "center", alignItems: "center", margin: 10 }}>
                 <View style={styles.playAudio}>
                   <AudioPlayer
                     visible={true}

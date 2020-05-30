@@ -52,7 +52,7 @@ const TextLine = ({
           let showLoading =
             showLoadingOnHighlightedAyah === true &&
             highlightedAyahs !== undefined &&
-            compareOrder(highlightedAyahs, curAyah) === 0;
+            Object.keys(highlightedAyahs).includes(toNumberString(curAyah));
 
           if (selectionOn === false) {
             if (word.char_type === 'word') {

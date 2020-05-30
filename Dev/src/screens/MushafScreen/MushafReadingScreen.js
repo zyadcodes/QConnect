@@ -6,8 +6,8 @@ import LoadingSpinner from "components/LoadingSpinner";
 import studentImages from "config/studentImages";
 import Sound from 'react-native-sound';
 import KeepAwake from 'react-native-keep-awake';
-import { noAyahSelected, noSelection } from 'screens/MushafScreen/Helpers/consts';
-
+import { noSelection } from 'screens/MushafScreen/Helpers/consts';
+import { toNumberString } from "../MushafScreen/Helpers/AyahsOrder";
 
 class MushafReadingScreen extends Component {
   state = {
@@ -59,22 +59,27 @@ class MushafReadingScreen extends Component {
         ('00' + selectedAyah.surah).slice(-3) +
         ('00' + selectedAyah.ayah).slice(-3);
 
-      // 'https://dl.salamquran.com/ayat/afasy-murattal-192/' +
-      // location +
-      // ".mp3";
-
       if (selectedWord.audio) {
         let url = "";
         if (selectedWord.char_type === "word") {
-          this.setState({ highlightedWords: [Number(selectedWord.id)] });
+          let highlightedWords = {
+            [selectedWord.id]: {}
+          };
           url = `https://dl.salamquran.com/wbw/${selectedWord.audio}`;
+          this.setState({ highlightedWords });
+          this.playTrack(url);
         } else if (selectedWord.char_type === "end") {
-          this.setState({ highlightedAyahs: selectedAyah });
+          //if user presses on an end of ayah, we highlight that entire ayah
+          let ayahKey = toNumberString(selectedAyah);
+          let highlightedAyahs = {
+            [ayahKey]: { ...selectedAyah }
+          };
           url = `https://dl.salamquran.com/ayat/afasy-murattal-192/${
             selectedWord.audio
           }`;
+          this.setState({ highlightedAyahs });
+          this.playTrack(url);
         }
-        this.playTrack(url);
       }
     }
   }
