@@ -1,12 +1,21 @@
-import { FlatList, View, TextInput, StyleSheet } from 'react-native';
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import * as _ from 'lodash';
-import SuggestionListItem from './SuggestionListItem';
-import suggest from './services/suggest';
-import { screenWidth, screenHeight } from 'config/dimensions';
-import fontStyles from 'config/fontStyles';
-import { colors } from 'react-native-elements';
+import {
+  FlatList,
+  View,
+  TextInput,
+  StyleSheet,
+  Text,
+  Switch,
+} from "react-native";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
+import * as _ from "lodash";
+import SuggestionListItem from "./SuggestionListItem";
+import suggest from "./services/suggest";
+import { screenWidth, screenHeight } from "config/dimensions";
+import fontStyles from "config/fontStyles";
+import ourColors from "config/colors";
+import { colors } from "react-native-elements";
+import strings from "config/strings";
 
 let style;
 
@@ -14,12 +23,28 @@ class InputAutoSuggest extends Component {
   constructor(props) {
     super(props);
     const { staticData, itemFormat } = this.props;
-
-    const data = suggest.searchForRelevant('', staticData || [], itemFormat);
-    this.state = { data: data.suggest, value: this.props.assignment };
-
+    const data = suggest.searchForRelevant("", staticData || [], itemFormat);
+    this.state = {
+      data: data.suggest,
+      value: this.props.assignment,
+      staticData,
+      ascending: true,
+    };
     this.searchList = this.searchList.bind(this);
     this.renderItem = this.renderItem.bind(this);
+  }
+  static getDerivedStateFromProps(props, state) {
+    const { staticData, itemFormat } = props;
+    //if improvement areas have changed from the calling screen, let's reflect that here.
+    //this is a quick way to check if the arrays have the same content
+    // if (!_.isEmpty(_.xor(staticData, state.staticData))) {
+    let data = suggest.searchForRelevant("", staticData || [], itemFormat);
+    return {
+      data: data.suggest,
+      staticData,
+    };
+    // }
+    return null;
   }
 
   onPressItem = (id: string, name: string, ename: string) => {
@@ -28,7 +53,7 @@ class InputAutoSuggest extends Component {
     const existingItem = { id, name, ename };
     this.setState({
       value: name,
-      id: id
+      id: id,
     });
     //this.props.onTextChanged({name, ename, id});
 
@@ -39,7 +64,7 @@ class InputAutoSuggest extends Component {
     //this.myTextInput.focus();
   };
 
-  keyExtractor = (item, index) => item.id + '';
+  keyExtractor = (item, index) => item.id + "";
 
   async searchList(text) {
     this.props.onTextChanged(text);
@@ -97,7 +122,18 @@ class InputAutoSuggest extends Component {
       />
     );
   };
-
+  toggleOrder = () => {
+    const reverseData = this.state.staticData.reverse();
+    let data = suggest.searchForRelevant(
+      "",
+      reverseData || [],
+      this.props.itemFormat
+    );
+    this.setState({
+      data: data.suggest,
+      ascending: !this.state.ascending,
+    });
+  };
   render() {
     const { value, data } = this.state;
     const { inputStyle, flatListStyle } = this.props;
@@ -110,10 +146,31 @@ class InputAutoSuggest extends Component {
           selectTextOnFocus
           autoCorrect={false}
           onChangeText={this.searchList}
-          ref={ref => {
+          ref={(ref) => {
             this.myTextInput = ref;
           }}
         />
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            onPress={() => this.toggleOrder()}
+            style={fontStyles.smallTextStylePrimaryDark}
+          >
+            {this.state.ascending ? strings.Ascending : strings.Descending}
+          </Text>
+
+          <Switch
+            onValueChange={() => this.toggleOrder()}
+            value={this.state.ascending}
+            style={{ transform: [{ scaleX: 0.5 }, { scaleY: 0.5 }] }}
+            trackColor={{ true: ourColors.darkGreen, false: ourColors.darkRed }}
+          />
+        </View>
         <FlatList
           style={[style.flatList, flatListStyle]}
           data={data}
@@ -153,21 +210,21 @@ InputAutoSuggest.defaultProps = {
   staticData: null,
   apiEndpointSuggestData: () => _.noop,
   onDataSelectedChange: () => _.noop,
-  keyPathRequestResult: 'suggest.city[0].options',
+  keyPathRequestResult: "suggest.city[0].options",
   itemFormat: {
-    id: 'id',
-    name: 'name',
-    ename: 'ename',
+    id: "id",
+    name: "name",
+    ename: "ename",
     tags: [],
   },
 };
 
 style = StyleSheet.create({
   container: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
+    flexDirection: "column",
+    justifyContent: "flex-start",
     width: screenWidth * 0.9,
-    height: screenHeight * 0.9
+    height: screenHeight * 0.9,
   },
   input: {
     fontSize: 22,

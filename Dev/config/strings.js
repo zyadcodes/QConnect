@@ -285,4 +285,8 @@ export default {
   InvalidPageNumber:
     "Invalid page number. Please enter a page between 1 and 604.",
 
+    //-------------------------  Input Auto Suggest  ----------------------------
+    Ascending: "Ascending",
+    Descending: "Descending",
+
 };
