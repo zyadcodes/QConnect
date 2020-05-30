@@ -19,8 +19,9 @@ export default class FeedList extends Component {
                     role={this.props.role}
                     content={item.content}
                     number={index}
+                    onPressChangeEmojiVote={(changedReactions) => this.props.onPressChangeEmojiVote(index, changedReactions)}
                     beginCommenting={() => this.props.beginCommenting()}
-                    onPressSelectEmoji={() => this.props.onPressSelectEmoji()}
+                    onPressSelectEmoji={() => this.props.onPressSelectEmoji(index)}
                     key={index}
                     type={item.type}
                     comments={item.comments}
