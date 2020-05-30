@@ -25,7 +25,6 @@ import studentImages from '../../../config/studentImages';
 import FeedList from '../../components/FeedList';
 
 export default class FeedsScreen extends React.Component {
-  
   dismissKeyboard = require('dismissKeyboard');
 
   state = {
@@ -46,18 +45,22 @@ export default class FeedsScreen extends React.Component {
     isCommenting: false,
     newCommentTxt: '',
     isScrolling: false,
-    keyboardAvoidingMargin: 10,
-    keyboardHeight: 0,
     inputHeight: screenHeight/12
   };
 
   _isMounted = false;
+  static whenKeyboardShows;
+  static whenKeyboardHides;
 
+  static doThisWhenKeyboardShows(func){
+    FeedsScreen.whenKeyboardShows = func;  
+  }
+  static doThisWhenKeyboardHides(func){
+    FeedsScreen.whenKeyboardHides = func;  
+  }
   async componentDidMount() {
     console.warn(screenHeight/12)
     FirebaseFunctions.setCurrentScreen('Class Feed Screen', 'ClassFeedScreen');
-    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', e => this.setState({keyboardAvoidingMargin: 10}))
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', e => this.setState({keyboardAvoidingMargin: 20, keyboardHeight: e.endCoordinates.height-65}))
     const { userID } = this.props.navigation.state.params;
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
     let currentClassID;
@@ -197,13 +200,14 @@ export default class FeedsScreen extends React.Component {
         :
         null
       }
-        <KeyboardAvoidingView style={[localStyles.commentingContainer, {paddingBottom: this.state.keyboardAvoidingMargin}]}>
+        <KeyboardAvoidingView style={[localStyles.commentingContainer, {paddingBottom: screenHeight/70}]}>
             <TextInput 
             ref={ref => this.commentInputRef =ref}
-            onFocus={() => this.setState({isCommenting: true})}
+            onTouchEnd={() => {FeedsScreen.whenKeyboardShows(); this.setState({isCommenting: true})}}
             value={this.state.newCommentTxt}
-            onChangeText={text => this.setState({newCommentTxt: text, keyboardAvoidingMargin: this.state.keyboardHeight})} 
+            onChangeText={text => this.setState({newCommentTxt: text})} 
             multiline 
+            onBlur={() => FeedsScreen.whenKeyboardHides()}
             blurOnSubmit={false}
             onContentSizeChange={(event) => this.setState({inputHeight: event.nativeEvent.contentSize.height+5})} 
             style={localStyles.commentingTextInput}/>
@@ -229,7 +233,6 @@ const localStyles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: colors.primaryLight,
     borderColor: colors.primaryLight,
-    marginBottom: screenHeight/700,
     borderRadius: 10,
   },
   commentingContainer: {
@@ -245,7 +248,6 @@ const localStyles = StyleSheet.create({
     height: '70%',
     flexWrap: 'wrap',
     marginLeft: screenWidth/15,
-    marginBottom: screenHeight/700,
     borderColor: colors.primaryDark,
     width: screenWidth/2
   },
