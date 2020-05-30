@@ -76,6 +76,18 @@ export default class FeedsObject extends Component {
       });
     }
   }
+  changeEmojiVote(reactionIndex){  
+    let temp = this.props.reactions;
+    if(temp[reactionIndex].reactedBy.includes(this.props.currentUser.ID)){
+      temp[reactionIndex].reactedBy.splice(temp[reactionIndex].reactedBy.indexOf(this.props.currentUser.ID), 1);
+    }else{
+      temp[reactionIndex].reactedBy.push(this.props.currentUser.ID);
+    }
+    if(temp[reactionIndex].reactedBy.length === 0){
+      temp.splice(reactionIndex, 1);
+    }
+    return temp;
+  }
   render() {
     return (
       <View key={this.props.number} style={this.localStyles.containerView}>
@@ -118,15 +130,7 @@ export default class FeedsObject extends Component {
                 style={{ flexDirection: 'row' }}
                 renderItem={({ item, index, seperators }) => (
                   <TouchableOpacity
-                    onPress={() => {
-                      if (
-                        this.props.reactions.length > 0 &&
-                        this.props.reactions[index].reactedBy.includes(
-                          this.props.currentUser.ID
-                        )
-                      ) {
-                      }
-                    }}
+                    onPress={() => this.props.onPressChangeEmojiVote(this.changeEmojiVote(index))}
                     key={index}
                     activeOpacity={0.6}
                     style={this.localStyles.Reaction}
