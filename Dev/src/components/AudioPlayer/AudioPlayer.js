@@ -230,7 +230,7 @@ const AudioPlayer = props => {
         return await onStartPlay();
       }
     } catch (e) {
-      Alert.alert(strings.Whoops, strings.SomethingWentWrong);
+      Alert.alert(strings.SomethingWentWrong, strings.SomethingWentWrongDesc);
     }
   };
 
@@ -242,7 +242,7 @@ const AudioPlayer = props => {
         await onPausePlay(); //no postAction applicable for now. No need to pass.
       }
     } catch (e) {
-      Alert.alert(strings.Whoops, strings.SomethingWentWrong);
+      Alert.alert(strings.SomethingWentWrong, strings.SomethingWentWrongDesc);
     }
 
     setToggled(true);
@@ -263,7 +263,7 @@ const AudioPlayer = props => {
         onStopAction();
       }
     } catch (e) {
-      Alert.alert(strings.Whoops, strings.SomethingWentWrong);
+      Alert.alert(strings.SomethingWentWrong, strings.SomethingWentWrongDesc);
     }
   };
 

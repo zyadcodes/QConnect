@@ -243,7 +243,7 @@ export class EvaluationPage extends QcParentScreen {
         classID: this.state.classID
       });
     } catch (err) {
-      Alert.alert(strings.Whoops, strings.SomethingWentWrong);
+      Alert.alert(strings.SomethingWentWrong, strings.SomethingWentWrongDesc);
     }
   }
 

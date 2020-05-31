@@ -46,6 +46,12 @@ export default StyleSheet.create({
     color: colors.primaryDark
   },
 
+  bigTextStyleWhite: {
+    fontFamily,
+    fontSize: bodyFontBig,
+    color: colors.white
+  },
+
   captionTextStylePrimaryDark: {
     fontFamily,
     fontSize: bodyFontBig,
@@ -174,6 +180,12 @@ export default StyleSheet.create({
     fontFamily,
     fontSize: titleFont,
     color: colors.black
+  },
+
+  hugeTextStyleWhite: {
+    fontFamily,
+    fontSize: titleFont,
+    color: colors.white
   },
 
   hugeTextStyleDarkGrey: {
