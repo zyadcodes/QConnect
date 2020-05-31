@@ -26,7 +26,7 @@ export default class FeedList extends Component {
                     type={item.type}
                     comments={item.comments}
                     reactions={item.reactions}
-                    imageRequire={this.props.role === 'teacher' ? teacherImages.images[item.madeByUser.imageID] : studentImages.images[item.madeByUser.imageID]}
+                    imageRequire={item.madeByUser.role === 'teacher' ? teacherImages.images[item.madeByUser.imageID] : studentImages.images[item.madeByUser.imageID]}
                 />}
             />
         )

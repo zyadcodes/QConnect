@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { View, Text, StyleSheet, Alert, PixelRatio } from "react-native";
 import MushafScreen from "./MushafScreen";
 import { screenHeight, screenWidth } from "config/dimensions";
-import FirebaseFunctions from "config/FirebaseFunctions";
+import FirebaseFunctions from "../../../config/FirebaseFunctions";
 import QcActionButton from "components/QcActionButton";
 import strings from "config/strings";
 import { ScrollView } from "react-native-gesture-handler";
@@ -259,6 +259,7 @@ class MushafAssignmentScreen extends Component {
     assignmentIndex,
     closeAfterSave
   ) {
+    console.warn(classID)
     let assignmentLocation = {
       start: selection.start,
       end: selection.end,
@@ -272,6 +273,26 @@ class MushafAssignmentScreen extends Component {
       assignmentLocation,
       assignmentIndex,
       isNewAssignment
+    );
+    console.warn(classID)
+    let newFeedObj =  {
+      madeByUser: {
+        ID: this.state.userID,
+        imageID: this.state.imageID,
+        role: 'teacher'
+      },
+      type: 'assignment',
+      content: {
+        assignmentType: assignmentType,
+        start: assignmentLocation.start,
+        end: assignmentLocation.end
+      },
+      comments: [],
+      reactions: []
+    };
+    await FirebaseFunctions.onNotificationUpdateFeed(
+      classID,
+      newFeedObj
     );
 
     let newAssignment = {
