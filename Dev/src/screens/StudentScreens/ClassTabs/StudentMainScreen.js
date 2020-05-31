@@ -960,6 +960,7 @@ class StudentMainScreen extends QcParentScreen {
               //}
 
               this.props.navigation.push('MushafReadingScreen', {
+                origin: 'StudentClassScreen',
                 popOnClose: true,
                 isTeacher: false,
                 assignToAllClass: false,
@@ -1036,6 +1037,7 @@ class StudentMainScreen extends QcParentScreen {
                   //}
 
                   this.props.navigation.push('MushafReadingScreen', {
+                    origin: 'StudentClassScreen',
                     popOnClose: true,
                     isTeacher: false,
                     assignToAllClass: false,
@@ -1174,6 +1176,7 @@ class StudentMainScreen extends QcParentScreen {
             onPress={() => {
               this.setState({ isLoading: true });
               this.props.navigation.push('MushafReadingScreen', {
+                origin: 'StudentClassScreen',
                 popOnClose: true,
                 isTeacher: false,
                 assignToAllClass: false,

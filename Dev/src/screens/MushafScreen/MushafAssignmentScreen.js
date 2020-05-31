@@ -287,6 +287,10 @@ class MushafAssignmentScreen extends Component {
         start: assignmentLocation.start,
         end: assignmentLocation.end
       },
+      hiddenContent: {
+        assignmentIndex,
+        assignmentName: newAssignmentName
+      },
       comments: [],
       reactions: []
     };

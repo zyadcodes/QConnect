@@ -13,15 +13,21 @@ import {
   fontScale,
 } from '../../config/dimensions';
 import { Text } from 'react-native';
+import strings from '../../config/strings';
 import PropTypes from 'prop-types';
 import colors from '../../config/colors';
-import { getPageTextWbW, getPageTextWbWLimitedLines } from '../screens/MushafScreen/ServiceActions/getQuranContent';
+import FirebaseFunctions from '../../config/FirebaseFunctions';
+import {
+  getPageTextWbW,
+  getPageTextWbWLimitedLines,
+} from '../screens/MushafScreen/ServiceActions/getQuranContent';
 import SurahHeader from '../screens/MushafScreen/Components/SurahHeader';
 import Basmalah from '../screens/MushafScreen/Components/Basmalah';
 import TextLine from '../screens/MushafScreen/Components/TextLine';
 import LoadingSpinner from './LoadingSpinner';
 import { Icon } from 'react-native-elements';
 import ThreadComponent from './ThreadComponent';
+import StudentMainScreen from '../screens/StudentScreens/ClassTabs/StudentMainScreen';
 
 export default class FeedsObject extends Component {
   state = {
@@ -33,7 +39,10 @@ export default class FeedsObject extends Component {
     console.log(screenHeight);
     if (this.props.type === 'assignment') {
       this.setState({ isLoading: true });
-      const pageLines = await getPageTextWbWLimitedLines(this.props.content.start.page, 5);
+      const pageLines = await getPageTextWbWLimitedLines(
+        this.props.content.start.page,
+        5
+      );
       let allAyat = (
         <View>
           {pageLines !== undefined &&
@@ -73,14 +82,17 @@ export default class FeedsObject extends Component {
       });
     }
   }
-  changeEmojiVote(reactionIndex){  
+  changeEmojiVote(reactionIndex) {
     let temp = this.props.reactions;
-    if(temp[reactionIndex].reactedBy.includes(this.props.currentUser.ID)){
-      temp[reactionIndex].reactedBy.splice(temp[reactionIndex].reactedBy.indexOf(this.props.currentUser.ID), 1);
-    }else{
+    if (temp[reactionIndex].reactedBy.includes(this.props.currentUser.ID)) {
+      temp[reactionIndex].reactedBy.splice(
+        temp[reactionIndex].reactedBy.indexOf(this.props.currentUser.ID),
+        1
+      );
+    } else {
       temp[reactionIndex].reactedBy.push(this.props.currentUser.ID);
     }
-    if(temp[reactionIndex].reactedBy.length === 0){
+    if (temp[reactionIndex].reactedBy.length === 0) {
       temp.splice(reactionIndex, 1);
     }
     return temp;
@@ -107,10 +119,20 @@ export default class FeedsObject extends Component {
             <View style={this.localStyles.contentContainerView}>
               {this.props.type === 'assignment' ? (
                 <QuranAssignmentView
+                  setScreenToLoading={() => this.setState({ isLoading: true })}
                   surahName={this.state.surahName}
                   page={this.state.page}
+                  onPushToOtherScreen={(pushParamScreen, pushParamObj) =>
+                    this.props.onPushToOtherScreen(
+                      pushParamScreen,
+                      pushParamObj
+                    )
+                  }
                   isLoading={this.state.isLoading}
                   role={this.props.role}
+                  classID={this.props.classID}
+                  studentClassInfo={this.props.studentClassInfo}
+                  hiddenContent={this.props.hiddenContent}
                   content={this.props.content}
                   madeByUser={this.props.madeByUser}
                   currentUser={this.props.currentUser}
@@ -127,7 +149,11 @@ export default class FeedsObject extends Component {
                 style={{ flexDirection: 'row' }}
                 renderItem={({ item, index, seperators }) => (
                   <TouchableOpacity
-                    onPress={() => this.props.onPressChangeEmojiVote(this.changeEmojiVote(index))}
+                    onPress={() =>
+                      this.props.onPressChangeEmojiVote(
+                        this.changeEmojiVote(index)
+                      )
+                    }
                     key={index}
                     activeOpacity={0.6}
                     style={this.localStyles.Reaction}
@@ -272,13 +298,14 @@ export default class FeedsObject extends Component {
         this.props.type === 'assignment' ? screenHeight / 163.5 : 0,
       alignItems: 'center',
       justifyContent: 'center',
+      borderRadius: 4,
       borderColor: colors.lightBrown,
       backgroundColor: colors.white,
     }
   });
 }
 
-class QuranAssignmentView extends Component {
+class QuranAssignmentView extends StudentMainScreen {
   render() {
     return (
       <View>
@@ -300,24 +327,43 @@ class QuranAssignmentView extends Component {
           {this.props.content.assignmentType} from ayah{' '}
           {this.props.content.start.ayah} to ayah {this.props.content.end.ayah}
         </Text>
-        {this.props.isLoading ? (
-          <TouchableOpacity
-            disabled={this.props.role === 'teacher'}
-            style={this.localStyles.assignmentContainer}
-          >
+        <TouchableOpacity
+          onPress={() => {
+            // console.warn('Hello World Before')
+            // this.updateCurrentAssignmentStatus('WORKING_ON_IT', this.props.assignmentIndex);
+            this.props.onPushToOtherScreen('MushafReadingScreen', {
+              origin: 'FeedObject',
+              popOnClose: true,
+              isTeacher: false,
+              assignToAllClass: false,
+              userID: this.props.currentUser.ID,
+              classID: this.props.classID,
+              studentID: this.props.currentUser.ID,
+              currentClass: this.props.studentClassInfo,
+              assignmentLocation: {
+                end: this.props.content.end,
+                start: this.props.content.start,
+              },
+              assignmentType: this.props.content.type,
+              assignmentName: this.props.hiddenContent.assignmentName,
+              assignmentIndex: this.props.hiddenContent.assignmentIndex,
+              imageID: this.props.studentClassInfo.profileImageID
+            });
+          }}
+          disabled={this.props.role === 'teacher'}
+          style={this.localStyles.assignmentContainer}
+        >
+          {this.props.isLoading ? (
             <View style={this.localStyles.spinnerContainerStyle}>
-              <LoadingSpinner isVisible={true}/>
+              <LoadingSpinner isVisible={true} />
             </View>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            disabled={this.props.role === 'teacher'}
-            style={this.localStyles.assignmentContainer}
-          >
-            <SurahHeader surahName={this.props.surahName} />
-            {this.props.page}
-          </TouchableOpacity>
-        )}
+          ) : (
+            <View>
+              <SurahHeader surahName={this.props.surahName} />
+              {this.props.page}
+            </View>
+          )}
+        </TouchableOpacity>
         {this.props.madeByUser === this.props.currentUser.ID ? null : (
           <Text
             style={[
