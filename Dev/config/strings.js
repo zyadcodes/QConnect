@@ -25,6 +25,10 @@ export default {
   SomethingWentWrongDesc:
     "Please try again. If the problem persists, please report it to quranconnect@outlook.com",
   Retry: "Check again",
+  SendBugToSupport: "To get help on this issue, please send the error info the support team at: quranconnect@outlook.com",
+  BugReport: "QuranConnect: Bug report",
+  InfoSentTitle: "Thanks for your feedback",
+  InfoSentToSupport: "The support team has received the error info and is working to resolve it as soon as possible",
   WeAreWorkingOnIt: "Please try again.\nIf the problem persists, please contact us.",
   RecordingSent: "Congrats! Your recording is sent to the teacher.",
   //--------------------- Student Main Screen ---------------------
