@@ -4,7 +4,7 @@ import colors from './colors';
 import { PixelRatio, StyleSheet } from 'react-native';
 
 //The default font family that'll be used throughout the app
-const fontFamily = "Montserrat-Regular";
+export const fontFamily = "Montserrat-Regular";
 
 //Sets the base font that'll be used throughout the app based on the size of the screen
 //Sets the font size
@@ -19,6 +19,7 @@ export const bodyFontBigger = bodyFont * 1.25;
 export const bodyFontBig = bodyFont * 1.15;
 export const bodyFontEvenBigger = bodyFontBigger * 1.25;
 export const titleFont = bodyFont * 1.875;
+export const mainFont = bodyFont;
 
 export default StyleSheet.create({
   smallTextStyleDarkGrey: {

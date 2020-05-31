@@ -16,21 +16,9 @@ import classImages from "config/classImages";
 import LoadingSpinner from "components/LoadingSpinner";
 import ActionButton from "react-native-action-button";
 import { Icon } from "react-native-elements";
+import { noAyahSelected, noSelection } from 'screens/MushafScreen/Helpers/consts';
 
 //------- constants to indicate the case when there is no ayah selected
-const noAyahSelected = {
-  surah: 0,
-  page: 0,
-  ayah: 0,
-  length: 0
-};
-
-const noSelection = {
-  start: noAyahSelected,
-  end: noAyahSelected,
-  started: false,
-  completed: false
-};
 
 var actionButtonFont = PixelRatio.get() < 2 ? 16 : 20;
 var actionButtonHeight = PixelRatio.get() < 2 ? 12 : 22;

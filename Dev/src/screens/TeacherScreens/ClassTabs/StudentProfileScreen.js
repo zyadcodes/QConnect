@@ -217,6 +217,7 @@ class StudentProfileScreen extends QcParentScreen {
             classStudent: thisClassInfo,
             assignmentName: item.name,
             completionDate: item.completionDate,
+            assignmentLocation: item.location,
             rating: item.evaluation.rating,
             notes: item.evaluation.notes,
             improvementAreas: item.evaluation.improvementAreas,

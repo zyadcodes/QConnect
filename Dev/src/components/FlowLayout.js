@@ -440,9 +440,9 @@ const styles = StyleSheet.create({
     borderWidth: 1 / PixelRatio.get(),
     borderRadius: 5,
     height: 30,
-    marginRight: 0.024 * screenWidth,
-    marginTop: 0.015 * screenHeight,
-    paddingHorizontal: 2,
+    paddingHorizontal: 3,
+    marginRight: 5,
+    marginTop: 5,
     paddingVertical: 0
   },
   corner: {
@@ -452,9 +452,9 @@ const styles = StyleSheet.create({
     height: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 0.024 * screenWidth,
-    marginRight: 0.024 * screenWidth,
-    marginTop: 0.015 * screenHeight,
+    paddingHorizontal: 3,
+    marginRight: 5,
+    marginTop: 5,
   },
   container: {
     flexDirection: 'row',

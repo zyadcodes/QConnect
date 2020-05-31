@@ -1,6 +1,10 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { compareOrder, isAyahSelected } from '../Helpers/AyahsOrder';
+import {
+  compareOrder,
+  isAyahSelected,
+  toNumberString
+} from "../Helpers/AyahsOrder";
 import AyahSelectionWord from './AyahSelectionWord';
 import EndOfAyah from './EndOfAyah';
 import { screenHeight } from 'config/dimensions';
@@ -18,8 +22,9 @@ const TextLine = ({
   onSelectAyah,
   lineAlign,
   selectionOn,
-  highlightedWord,
-  highlightedAyah,
+  highlightedWords,
+  highlightedAyahs,
+  highlightedColor,
   showLoadingOnHighlightedAyah
 }) => {
   let isFirstWord = noSelectionInPreviousLines;
@@ -34,15 +39,20 @@ const TextLine = ({
             wordNum: Number(word.id)
           };
 
-          let highlighted =
-            (highlightedWord !== undefined && word.id === highlightedWord) ||
-            (highlightedAyah !== undefined &&
-              compareOrder(highlightedAyah, curAyah) === 0);
+          let isCurAyahHighlighted =
+            highlightedAyahs !== undefined &&
+            Object.keys(highlightedAyahs).includes(toNumberString(curAyah));
+
+          let isCurWordHighlighted =
+            highlightedWords !== undefined &&
+            Object.keys(highlightedWords).includes(word.id);
+
+          let highlighted = isCurWordHighlighted || isCurAyahHighlighted;
 
           let showLoading =
             showLoadingOnHighlightedAyah === true &&
-            highlightedAyah !== undefined &&
-            compareOrder(highlightedAyah, curAyah) === 0;
+            highlightedAyahs !== undefined &&
+            Object.keys(highlightedAyahs).includes(toNumberString(curAyah));
 
           if (selectionOn === false) {
             if (word.char_type === 'word') {
@@ -51,6 +61,7 @@ const TextLine = ({
                   key={word.id}
                   text={word.text}
                   highlighted={highlighted}
+                  highlightedColor={highlightedColor}
                   selected={false}
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={false}
@@ -64,6 +75,7 @@ const TextLine = ({
                   onPress={() => onSelectAyah(curAyah, word)}
                   selected={false}
                   highlighted={highlighted}
+                  highlightedColor={highlightedColor}
                   showLoading={showLoading}
                   isLastSelectedAyah={false}
                 />
@@ -88,7 +100,13 @@ const TextLine = ({
                 <AyahSelectionWord
                   key={word.id}
                   text={word.text}
-                  highlighted={highlighted}
+                  // the margins and border radius are different between the cases
+                  //  of when a word is selected separately or the entire ayah is selected
+                  // together. That's why we are passing these as different props
+                  // to know which styling to apply
+                  isWordHighlighted={isCurWordHighlighted}
+                  isAyahHighlighted={isCurAyahHighlighted}
+                  highlightedColor={highlightedColor}
                   selected={isAyaSelected}
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={isFirstSelectedWord}
@@ -102,6 +120,7 @@ const TextLine = ({
                   onPress={() => onSelectAyah(curAyah, word)}
                   highlighted={highlighted}
                   showLoading={showLoading}
+                  highlightedColor={highlightedColor}
                   selected={isAyahSelected(
                     curAyah,
                     selectionStarted,

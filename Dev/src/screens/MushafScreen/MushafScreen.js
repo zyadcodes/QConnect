@@ -79,16 +79,17 @@ export default class MushafScreen extends QcParentScreen {
   }
 
   // ------------------------ Render the Mushhaf Component ----------------------------------------
-  renderItem(item, idx) {
+  renderItem(item, idx, highlightedWords, highlightedAyahs) {
     const { assignmentType } = this.state;
     const {
       profileImage,
       assignToID,
       selection,
       disableChangingUser,
-      highlightedWord,
-      highlightedAyah,
-      showLoadingOnHighlightedAyah
+      showLoadingOnHighlightedAyah,
+      hideHeader,
+      showSelectedLinesOnly,
+      highlightedColor,
     } = this.props;
 
     const itemInt = parseInt(item);
@@ -97,9 +98,12 @@ export default class MushafScreen extends QcParentScreen {
       <View style={{ flex: 1 }} key={idx}>
         <SelectionPage
           page={itemInt}
+          hideHeader={hideHeader}
+          showSelectedLinesOnly={showSelectedLinesOnly}
           onChangePage={this.onChangePage.bind(this)}
-          highlightedWord={highlightedWord}
-          highlightedAyah={highlightedAyah}
+          highlightedWords={highlightedWords}
+          highlightedAyahs={highlightedAyahs}
+          highlightedColor={highlightedColor}
           showLoadingOnHighlightedAyah={showLoadingOnHighlightedAyah}
           selectedAyahsStart={selection.start}
           selectedAyahsEnd={selection.end}
@@ -122,7 +126,9 @@ export default class MushafScreen extends QcParentScreen {
           //callback when user taps on a single ayah to selects
           //determines whether this would be the start of end of the selection
           // and select ayahs in between
-          onSelectAyah={(selectedAyah, selectedWord) => this.props.onSelectAyah(selectedAyah, selectedWord)}
+          onSelectAyah={(selectedAyah, selectedWord) =>
+            this.props.onSelectAyah(selectedAyah, selectedWord)
+          }
           //callback when user selects a range of ayahs (line an entire page or surah)
           onSelectAyahs={(firstAyah, lastAyah) =>
             this.props.onSelectAyahs(firstAyah, lastAyah)
@@ -139,6 +145,8 @@ export default class MushafScreen extends QcParentScreen {
 
   render() {
     const { isLoading } = this.state;
+    const highlightedWords = Object.assign({}, this.props.highlightedWords);
+    const highlightedAyahs = Object.assign({}, this.props.highlightedAyahs);
 
     if (isLoading === true) {
       return (
@@ -165,7 +173,9 @@ export default class MushafScreen extends QcParentScreen {
               this.setState({ page: 604 - index });
             }}
           >
-            {this.state.pages.map((item, idx) => this.renderItem(item, idx))}
+            {this.state.pages.map((item, idx) =>
+              this.renderItem(item, idx, highlightedWords, highlightedAyahs)
+            )}
           </Swiper>
         </View>
       );

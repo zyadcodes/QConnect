@@ -6,19 +6,8 @@ import LoadingSpinner from "components/LoadingSpinner";
 import studentImages from "config/studentImages";
 import Sound from 'react-native-sound';
 import KeepAwake from 'react-native-keep-awake';
-
-const noAyahSelected = {
-  surah: 0,
-  page: 0,
-  ayah: 0
-};
-
-const noSelection = {
-  start: noAyahSelected,
-  end: noAyahSelected,
-  started: false,
-  completed: false
-};
+import { noSelection } from 'screens/MushafScreen/Helpers/consts';
+import { toNumberString } from "../MushafScreen/Helpers/AyahsOrder";
 
 class MushafReadingScreen extends Component {
   state = {
@@ -56,8 +45,8 @@ class MushafReadingScreen extends Component {
       if (this.track !== undefined) {
         this.track.stop();
         this.setState({
-          highlightedWord: undefined,
-          highlightedAyah: undefined,
+          highlightedWords: undefined,
+          highlightedAyahs: undefined,
           isPlaying: false,
           isAudioLoading: false,
         });
@@ -70,22 +59,27 @@ class MushafReadingScreen extends Component {
         ('00' + selectedAyah.surah).slice(-3) +
         ('00' + selectedAyah.ayah).slice(-3);
 
-      // 'https://dl.salamquran.com/ayat/afasy-murattal-192/' +
-      // location +
-      // ".mp3";
-
       if (selectedWord.audio) {
         let url = "";
-        if (selectedWord.char_type == "word") {
-          this.setState({ highlightedWord: selectedWord.id });
+        if (selectedWord.char_type === "word") {
+          let highlightedWords = {
+            [selectedWord.id]: {}
+          };
           url = `https://dl.salamquran.com/wbw/${selectedWord.audio}`;
+          this.setState({ highlightedWords });
+          this.playTrack(url);
         } else if (selectedWord.char_type === "end") {
-          this.setState({ highlightedAyah: selectedAyah });
+          //if user presses on an end of ayah, we highlight that entire ayah
+          let ayahKey = toNumberString(selectedAyah);
+          let highlightedAyahs = {
+            [ayahKey]: { ...selectedAyah }
+          };
           url = `https://dl.salamquran.com/ayat/afasy-murattal-192/${
             selectedWord.audio
           }`;
+          this.setState({ highlightedAyahs });
+          this.playTrack(url);
         }
-        this.playTrack(url);
       }
     }
   }
@@ -96,8 +90,8 @@ class MushafReadingScreen extends Component {
       if (e) {
         console.log("e: " + JSON.stringify(e));
         this.setState({
-          highlightedWord: undefined,
-          highlightedAyah: undefined,
+          highlightedWords: undefined,
+          highlightedAyahs: undefined,
           isAudioLoading: false,
           isPlaying: false,
         });
@@ -105,8 +99,8 @@ class MushafReadingScreen extends Component {
         this.setState({ isAudioLoading: false });
         this.track.play(success => {
           this.setState({
-            highlightedWord: undefined,
-            highlightedAyah: undefined,
+            highlightedWords: undefined,
+            highlightedAyahs: undefined,
             isPlaying: false,
           });
         });
@@ -152,10 +146,10 @@ class MushafReadingScreen extends Component {
             selection={selection}
             showLoadingOnHighlightedAyah={
               this.state.isAudioLoading === true &&
-              this.state.highlightedAyah !== undefined
+              this.state.highlightedAyahs !== undefined
             }
-            highlightedWord={this.state.highlightedWord}
-            highlightedAyah={this.state.highlightedAyah}
+            highlightedWords={this.state.highlightedWords}
+            highlightedAyahs={this.state.highlightedAyahs}
             assignmentName={assignmentName}
             assignmentLocation={assignmentLocation}
             assignmentType={assignmentType}

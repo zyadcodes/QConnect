@@ -23,7 +23,8 @@ import AssignmentEntryComponent from "components/AssignmentEntryComponent";
 import surahs from "../Data/Surahs.json";
 import pages from "../Data/mushaf-wbw.json";
 import SurahHeader from "./SurahHeader";
-import { compareOrder } from "../Helpers/AyahsOrder";
+import { compareOrder, isLineSelected } from "../Helpers/AyahsOrder";
+import * as _ from "lodash";
 
 //Creates the higher order component
 class SelectionPage extends React.Component {
@@ -138,8 +139,8 @@ class SelectionPage extends React.Component {
     }
 
     if (
-      nextProps.highlightedWord !== this.props.highlightedWord ||
-      nextProps.highlightedAyah !== this.props.highlightedAyah ||
+      !_.isEqual(nextProps.highlightedWords, this.props.highlightedWords) ||
+      !_.isEqual(nextProps.highlightedAyahs, this.props.highlightedAyahs) ||
       nextProps.showLoadingOnHighlightedAyah !==
         this.props.showLoadingOnHighlightedAyah
     ) {
@@ -394,30 +395,32 @@ class SelectionPage extends React.Component {
                 }
               />
 
-              <PageHeader
-                Title={surahName}
-                TitleOnPress={() => {
-                  const { isSurahSelectionVisible } = this.state;
-                  this.setState({
-                    isSurahSelectionVisible: !isSurahSelectionVisible
-                  });
-                }}
-                RightIconName={
-                  this.props.topRightIconName
-                    ? this.props.topRightIconName
-                    : "check-all"
-                }
-                RightOnPress={() => {
-                  this.props.topRightOnPress
-                    ? this.props.topRightOnPress()
-                    : this.onSelectPage();
-                }}
-                LeftImage={this.props.profileImage}
-                currentClass={this.props.currentClass}
-                assignToID={this.props.assignToID}
-                onSelect={this.props.onChangeAssignee}
-                disableChangingUser={this.props.disableChangingUser}
-              />
+              {!this.props.hideHeader && (
+                <PageHeader
+                  Title={surahName}
+                  TitleOnPress={() => {
+                    const { isSurahSelectionVisible } = this.state;
+                    this.setState({
+                      isSurahSelectionVisible: !isSurahSelectionVisible
+                    });
+                  }}
+                  RightIconName={
+                    this.props.topRightIconName
+                      ? this.props.topRightIconName
+                      : "check-all"
+                  }
+                  RightOnPress={() => {
+                    this.props.topRightOnPress
+                      ? this.props.topRightOnPress()
+                      : this.onSelectPage();
+                  }}
+                  LeftImage={this.props.profileImage}
+                  currentClass={this.props.currentClass}
+                  assignToID={this.props.assignToID}
+                  onSelect={this.props.onChangeAssignee}
+                  disableChangingUser={this.props.disableChangingUser}
+                />
+              )}
 
               <View id={this.state.page} style={styles.pageContent}>
                 {lines !== undefined &&
@@ -448,13 +451,28 @@ class SelectionPage extends React.Component {
                           noSelectionInPreviousLines = false;
                         }
                       }
+
+                      if (selectionOn && selectedAyahsStart.ayah !== 0) {
+                        let lineSelected = isLineSelected(
+                          line,
+                          selectedAyahsStart,
+                          selectedAyahsEnd,
+                          page
+                        );
+
+                        if (this.props.showSelectedLinesOnly && !lineSelected) {
+                          return undefined;
+                        }
+                      }
+
                       return (
                         <TextLine
                           key={page + '_' + line.line}
                           lineText={line.text}
                           selectionOn={selectionOn}
-                          highlightedWord={this.props.highlightedWord}
-                          highlightedAyah={this.props.highlightedAyah}
+                          highlightedWords={this.props.highlightedWords}
+                          highlightedAyahs={this.props.highlightedAyahs}
+                          highlightedColor={this.props.highlightedColor}
                           showLoadingOnHighlightedAyah={
                             this.props.showLoadingOnHighlightedAyah
                           }
