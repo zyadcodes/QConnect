@@ -43,6 +43,14 @@ function getPageByLines(pageJson){
     });
     return lines;
 }
+export async function getPageTextWbWLimitedLines(pageNumber, numLineLimit){
+    let lines = await getPageTextWbW(pageNumber);
+    let limitedLines = [];
+    for(var i = 0; i < numLineLimit; i++){
+        limitedLines[i] = lines[i];
+    }
+    return limitedLines;
+}
 export async function getPageTextWbW (pageNumber) {
     try {
         let response = await fetch(

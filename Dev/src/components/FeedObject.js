@@ -15,7 +15,7 @@ import {
 import { Text } from 'react-native';
 import PropTypes from 'prop-types';
 import colors from '../../config/colors';
-import { getPageTextWbW } from '../screens/MushafScreen/ServiceActions/getQuranContent';
+import { getPageTextWbW, getPageTextWbWLimitedLines } from '../screens/MushafScreen/ServiceActions/getQuranContent';
 import SurahHeader from '../screens/MushafScreen/Components/SurahHeader';
 import Basmalah from '../screens/MushafScreen/Components/Basmalah';
 import TextLine from '../screens/MushafScreen/Components/TextLine';
@@ -33,7 +33,7 @@ export default class FeedsObject extends Component {
     console.log(screenHeight);
     if (this.props.type === 'assignment') {
       this.setState({ isLoading: true });
-      const pageLines = await getPageTextWbW(this.props.content.start.page);
+      const pageLines = await getPageTextWbWLimitedLines(this.props.content.start.page, 5);
       let allAyat = (
         <View>
           {pageLines !== undefined &&
@@ -43,10 +43,7 @@ export default class FeedsObject extends Component {
                 this.props.content.start.ayah === 1
               ) {
                 return <Basmalah key={line.line + "_basmalah"} />;
-              } else if (
-                line.ayah >= this.props.content.start.ayah &&
-                line.ayah <= this.props.content.end.ayah
-              ) {
+              } else {
                 return (
                   <TextLine
                     key={this.props.content.start.page + '_' + line.line}

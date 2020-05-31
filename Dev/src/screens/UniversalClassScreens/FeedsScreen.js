@@ -104,10 +104,17 @@ export default class FeedsScreen extends React.Component {
       }
     );
   }
-  refresh(index, docID, newData) {
+  refresh(docID, newData) {
     if (this._isMounted) {
-       let temp = this.state.feedsData;
-      temp[index] = { docID, data: newData };
+      let temp = this.state.feedsData;
+      for(var i = 0; i < temp.length; i++){
+        if(temp[i].docID === docID){
+          temp[i].data = newData;
+          this.setState({ feedsData: temp });
+          return;
+        }
+      }
+      temp.push({docID, data: newData})
       this.setState({ feedsData: temp });
     }
   }
@@ -118,7 +125,8 @@ export default class FeedsScreen extends React.Component {
         imageID:
           this.state.role === 'teacher'
             ? this.state.teacher.profileImageID
-            : this.state.student.profileImageID
+            : this.state.student.profileImageID,
+        role: this.state.role
       },
       type: 'text',
       content: text,
@@ -128,11 +136,10 @@ export default class FeedsScreen extends React.Component {
     let temp = this.state.feedsData;
     temp[temp.length - 1].data.push(newObj);
     await FirebaseFunctions.updateFeedDoc(
-      temp,
+      temp[temp.length - 1],
       temp[temp.length - 1].docID,
-      temp.length - 1,
       this.state.currentClassID,
-      (index, docID, changedData) => this.refresh(index, docID, changedData)
+      true
     );
     this.setState({ newCommentTxt: '' });
   }
@@ -141,11 +148,10 @@ export default class FeedsScreen extends React.Component {
     console.warn(changedReactions)
     temp[listIndex].data[objectIndex].reactions = changedReactions;
     await FirebaseFunctions.updateFeedDoc(
-      temp, 
+      temp[listIndex], 
       temp[listIndex].docID,
-      listIndex,
       this.state.currentClassID, 
-      (index, docID, changedData) => this.refresh(index, docID, changedData)
+      false //this doesn't matter, we're not adding another Feed Object anyways
     );
   }
   toggleSelectingEmoji(listIndex, objectIndex) {
@@ -223,11 +229,10 @@ export default class FeedsScreen extends React.Component {
                 reactedBy: [this.state.userID]
               };
               await FirebaseFunctions.updateFeedDoc(
-                temp, 
+                temp[currentIndex.listIndex], 
                 temp[currentIndex.listIndex].docID,
-                currentIndex.listIndex,
                 this.state.currentClassID, 
-                (index, docID, changedData) => this.refresh(index, docID, changedData)
+                false, //Same here, this also doesn't matter
               );
               this.setState({ currentlySelectingIndex: {listIndex: -1, objectIndex: -1}});
               this.toggleSelectingEmoji(currentIndex.listIndex, currentIndex.objectIndex);
