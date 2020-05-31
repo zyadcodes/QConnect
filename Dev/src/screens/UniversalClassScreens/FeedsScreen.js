@@ -26,6 +26,9 @@ import FeedList from '../../components/FeedList';
 import FastResponseTouchableOpacity from '../../components/FastResponseTouchableOpacity';
 
 export default class FeedsScreen extends React.Component {
+  //*IMPORTANT* Make sure to clean up my Firebase calls here
+  //when we implement a cleaner database and cleaner front-end
+  //code.
   state = {
     currentClass: {},
     isOpen: false,
@@ -38,6 +41,7 @@ export default class FeedsScreen extends React.Component {
     teacher: null,
     keyboardAvoidingMargin: 0,
     student: null,
+    studentClassInfo: null,
     currentlySelectingIndex: {
       listIndex: -1,
       objectIndex: -1
@@ -81,6 +85,12 @@ export default class FeedsScreen extends React.Component {
     currentClassID = userType.currentClassID;
     classes = await FirebaseFunctions.getClassesByIDs(userType.classes);
     const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
+    if (teacher === -1) {
+      const studentClassInfo = currentClass.students.find(student => {
+        return student.ID === userID;
+      });
+      this.setState({ studentClassInfo });
+    }
     const { classInviteCode } = currentClass;
     await FirebaseFunctions.getLatestFeed(
       currentClassID,
@@ -100,21 +110,21 @@ export default class FeedsScreen extends React.Component {
         this._isMounted = true;
         setTimeout(() => {
           this.flatListRef.scrollToEnd();
-        }, 1000)
+        }, 1000);
       }
     );
   }
   refresh(docID, newData) {
     if (this._isMounted) {
       let temp = this.state.feedsData;
-      for(var i = 0; i < temp.length; i++){
-        if(temp[i].docID === docID){
+      for (var i = 0; i < temp.length; i++) {
+        if (temp[i].docID === docID) {
           temp[i].data = newData;
           this.setState({ feedsData: temp });
           return;
         }
       }
-      temp.push({docID, data: newData})
+      temp.push({ docID, data: newData });
       this.setState({ feedsData: temp });
     }
   }
@@ -143,20 +153,20 @@ export default class FeedsScreen extends React.Component {
     );
     this.setState({ newCommentTxt: '' });
   }
-  async changeEmojiVote(listIndex, objectIndex, changedReactions){
+  async changeEmojiVote(listIndex, objectIndex, changedReactions) {
     let temp = this.state.feedsData;
-    console.warn(changedReactions)
+    console.warn(changedReactions);
     temp[listIndex].data[objectIndex].reactions = changedReactions;
     await FirebaseFunctions.updateFeedDoc(
-      temp[listIndex], 
+      temp[listIndex],
       temp[listIndex].docID,
-      this.state.currentClassID, 
+      this.state.currentClassID,
       false //this doesn't matter, we're not adding another Feed Object anyways
     );
   }
   toggleSelectingEmoji(listIndex, objectIndex) {
     if (!this.state.isSelectingEmoji) {
-      this.setState({ currentlySelectingIndex: {listIndex, objectIndex} });
+      this.setState({ currentlySelectingIndex: { listIndex, objectIndex } });
     }
     this.setState({ isSelectingEmoji: !this.state.isSelectingEmoji });
   }
@@ -189,32 +199,46 @@ export default class FeedsScreen extends React.Component {
             LeftOnPress={() => this.setState({ isOpen: true })}
             Title={this.state.currentClass.name + ' Feed'}
           />
-            <FlatList
-              scrollEnabled
-              onScrollBeginDrag={() => this.setState({ isScrolling: true })}
-              onScrollEndDrag={() => this.setState({ isScrolling: false })}
-              keyboardShouldPersistTaps="always"
-              onTouchStart={() => this.setState({ isCommenting: false })}
-              style={localStyles.scrollViewStyle}
-              ref={ref => (this.flatListRef = ref)}
-              listKey={0}
-              onContentSizeChange={() => (this.state.isScrolling ? null : this.flatListRef.scrollToEnd({animated: true}))}
-              data={this.state.feedsData}
-              renderItem={({ index, item, separators }) => (
-                <FeedList
-                  role={this.state.role}
-                  teacher={this.state.teacher}
-                  student={this.state.student}
-                  item={item}
-                  index={index}
-                  onPressChangeEmojiVote={(objectIndex, changedObj) => this.changeEmojiVote(index, objectIndex, changedObj)}
-                  onPressSelectEmoji={(objectIndex) =>
-                    this.setState({ isSelectingEmoji: true, currentlySelectingIndex: {listIndex: index, objectIndex}})
-                  }
-                  beginCommenting={() => this.setState({ isCommenting: true })}
-                />
-              )}
-            />
+          <FlatList
+            scrollEnabled
+            onScrollBeginDrag={() => this.setState({ isScrolling: true })}
+            onScrollEndDrag={() => this.setState({ isScrolling: false })}
+            keyboardShouldPersistTaps="always"
+            onTouchStart={() => this.setState({ isCommenting: false })}
+            style={localStyles.scrollViewStyle}
+            ref={ref => (this.flatListRef = ref)}
+            listKey={0}
+            onContentSizeChange={() =>
+              this.state.isScrolling
+                ? null
+                : this.flatListRef.scrollToEnd({ animated: true })
+            }
+            data={this.state.feedsData}
+            renderItem={({ index, item, separators }) => (
+              <FeedList
+                role={this.state.role}
+                teacher={this.state.teacher}
+                student={this.state.student}
+                item={item}
+                onPushToOtherScreen={(pushParamScreen, pushParamObj) => {
+                  this.setState({ isLoading: true });
+                  this.props.navigation.push(pushParamScreen, pushParamObj);
+                  this.setState({ isLoading: false });
+                }}
+                classID={this.state.currentClassID}
+                studentClassInfo={this.state.studentClassInfo}
+                index={index}
+                onPressChangeEmojiVote={this.changeEmojiVote.bind(this)}
+                onPressSelectEmoji={objectIndex =>
+                  this.setState({
+                    isSelectingEmoji: true,
+                    currentlySelectingIndex: { listIndex: index, objectIndex },
+                  })
+                }
+                beginCommenting={() => this.setState({ isCommenting: true })}
+              />
+            )}
+          />
         </View>
         {this.state.isSelectingEmoji ? (
           <EmojiSelector
@@ -222,22 +246,31 @@ export default class FeedsScreen extends React.Component {
             onEmojiSelected={async emoji => {
               let temp = this.state.feedsData;
               let currentIndex = this.state.currentlySelectingIndex;
-              temp[currentIndex.listIndex].data[currentIndex.objectIndex].reactions[
-                temp[currentIndex.listIndex].data[currentIndex.objectIndex].reactions.length
+              temp[currentIndex.listIndex].data[
+                currentIndex.objectIndex
+              ].reactions[
+                temp[currentIndex.listIndex].data[
+                  currentIndex.objectIndex
+                ].reactions.length
               ] = {
                 emoji,
                 reactedBy: [this.state.userID]
               };
               await FirebaseFunctions.updateFeedDoc(
-                temp[currentIndex.listIndex], 
+                temp[currentIndex.listIndex],
                 temp[currentIndex.listIndex].docID,
-                this.state.currentClassID, 
-                false, //Same here, this also doesn't matter
+                this.state.currentClassID,
+                false //Same here, this also doesn't matter
               );
-              this.setState({ currentlySelectingIndex: {listIndex: -1, objectIndex: -1}});
-              this.toggleSelectingEmoji(currentIndex.listIndex, currentIndex.objectIndex);
+              this.setState({
+                currentlySelectingIndex: { listIndex: -1, objectIndex: -1 },
+              });
+              this.toggleSelectingEmoji(
+                currentIndex.listIndex,
+                currentIndex.objectIndex
+              );
             }}
-            onBackdropPress={() => this.toggleSelectingEmoji()}
+            onBackdropPress={this.toggleSelectingEmoji.bind(this)}
           />
         ) : null}
         <KeyboardAvoidingView
@@ -255,7 +288,7 @@ export default class FeedsScreen extends React.Component {
             value={this.state.newCommentTxt}
             onChangeText={text => this.setState({ newCommentTxt: text })}
             multiline
-            onBlur={() => FeedsScreen.whenKeyboardHides()}
+            onBlur={FeedsScreen.whenKeyboardHides.bind(this)}
             blurOnSubmit={false}
             onContentSizeChange={event =>
               this.setState({
