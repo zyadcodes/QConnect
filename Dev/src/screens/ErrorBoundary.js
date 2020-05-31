@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, Image } from "react-native";
-import QcActionButton from "components/QcActionButton";
+import FirebaseFunctions from "config/FirebaseFunctions";
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
 import strings from "config/strings";
@@ -13,25 +13,33 @@ class ErrorBoundary extends React.Component {
   }
 
   static getDerivedStateFromError(error) {
-    console.log("hereee...");
     // Update state so the next render will show the fallback UI.
     return { hasError: true };
   }
 
-  componentDidCatch(error, errorInfo) {
-    console.log("cdc: ....");
+  async componentDidCatch(error, errorInfo) {
     // You can also log the error to an error reporting service
-    this.logErrorToMyService(error, errorInfo);
+    await this.logErrorToMyService(error, errorInfo);
   }
 
-  logErrorToMyService(error, errorInfo) {
+  async logErrorToMyService(error, errorInfo) {
     console.log(JSON.stringify(error.toString()), JSON.stringify(errorInfo));
+    try {
+      await FirebaseFunctions.logEvent("FATAL_ERROR_CATCH", {
+        error,
+        errorInfo,
+      });
+    } catch (err) {
+      //can't log to Firebase, may be service is not reachable.
+      //TODO: save the error and resend when reconnect..
+      console.log(
+        "can't send error to Firebase. TODO: add code to save it to storage and resend when connection is back."
+      );
+    }
   }
 
   render() {
-    console.log("render error:");
     if (this.state.hasError) {
-      console.log("in error state component part");
       // You can render any custom fallback UI
       return (
         <View
