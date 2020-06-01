@@ -132,6 +132,10 @@ export default class FeedsScreen extends React.Component {
     const newObj = {
       madeByUser: {
         ID: this.state.userID,
+        name: 
+          this.state.role === 'teacher'
+            ? this.state.teacher.name
+            : this.state.student.name,
         imageID:
           this.state.role === 'teacher'
             ? this.state.teacher.profileImageID

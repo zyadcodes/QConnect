@@ -5,6 +5,9 @@ import studentImages from '../../config/studentImages';
 import FeedsObject from './FeedObject';
 
 export default class FeedList extends Component {
+  componentDidMount(){
+
+  }
   render() {
     return (
       <FlatList
@@ -13,7 +16,7 @@ export default class FeedList extends Component {
         renderItem={({ item, index, separators }) => (
           <FeedsObject
             onPressSelectEmoji={() => this.props.onPressSelectEmoji()}
-            madeByUser={item.madeByUser.ID}
+            madeByUserID={item.madeByUser.ID}
             classID={this.props.classID}
             currentUser={
               this.props.role === 'teacher'
@@ -23,6 +26,7 @@ export default class FeedList extends Component {
             onPushToOtherScreen={(pushParamScreen, pushParamObj) =>
               this.props.onPushToOtherScreen(pushParamScreen, pushParamObj)
             }
+            viewableBy={item.viewableBy === undefined ? null : item.viewableBy}
             role={this.props.role}
             content={item.content}
             number={index}
@@ -43,6 +47,7 @@ export default class FeedList extends Component {
             onPressSelectEmoji={() => this.props.onPressSelectEmoji(index)}
             key={index}
             type={item.type}
+            userName={item.madeByUser.name}
             comments={item.comments}
             reactions={item.reactions}
             imageRequire={
