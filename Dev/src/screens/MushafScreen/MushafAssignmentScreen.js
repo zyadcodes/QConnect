@@ -140,7 +140,7 @@ class MushafAssignmentScreen extends Component {
       );
     }
 
-    this.setState({ isLoading: false, userName: await FirebaseFunctions.getTeacherByID(this.state.userID)});
+    this.setState({ isLoading: false, userName: (await FirebaseFunctions.getTeacherByID(this.state.userID)).name});
   }
 
   //======== end of Initialize Component ========================

@@ -10,15 +10,15 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
-import colors from '../../config/colors';
+import colors from '../../../config/colors';
 import {
   screenWidth,
   screenHeight,
   screenScale,
   fontScale,
-} from '../../config/dimensions';
-import teacherImages from '../../config/teacherImages';
-import studentImages from '../../config/studentImages';
+} from '../../../config/dimensions';
+import teacherImages from '../../../config/teacherImages';
+import studentImages from '../../../config/studentImages';
 
 export default class ThreadComponent extends Component {
   state = {

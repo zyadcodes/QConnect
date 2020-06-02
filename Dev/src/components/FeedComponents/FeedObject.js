@@ -11,35 +11,29 @@ import {
   screenWidth,
   screenScale,
   fontScale,
-} from '../../config/dimensions';
+} from '../../../config/dimensions';
 import { Text } from 'react-native';
-import strings from '../../config/strings';
+import strings from '../../../config/strings';
 import PropTypes from 'prop-types';
-import colors from '../../config/colors';
-import FirebaseFunctions from '../../config/FirebaseFunctions';
+import colors from '../../../config/colors';
+import FirebaseFunctions from '../../../config/FirebaseFunctions';
 import {
-  getPageTextWbW,
   getPageTextWbWLimitedLines,
-} from '../screens/MushafScreen/ServiceActions/getQuranContent';
-import SurahHeader from '../screens/MushafScreen/Components/SurahHeader';
-import Basmalah from '../screens/MushafScreen/Components/Basmalah';
-import TextLine from '../screens/MushafScreen/Components/TextLine';
-import LoadingSpinner from './LoadingSpinner';
+} from '../../screens/MushafScreen/ServiceActions/getQuranContent';
+import SurahHeader from '../../screens/MushafScreen/Components/SurahHeader';
+import Basmalah from '../../screens/MushafScreen/Components/Basmalah';
+import TextLine from '../../screens/MushafScreen/Components/TextLine';
 import { Icon } from 'react-native-elements';
 import ThreadComponent from './ThreadComponent';
-import StudentMainScreen from '../screens/StudentScreens/ClassTabs/StudentMainScreen';
+import QuranAssignmentView from './FeedObjectQuranView'
 
 export default class FeedsObject extends Component {
   state = {
     surahName: '',
-    isMadeByCurrentUser: false,
     page: [],
     isLoading: false,
   };
   async componentDidMount() {
-    console.log(screenHeight);
-    console.warn(this.props.madeByUserID)
-    console.warn(this.state.madeByCurrentUser)
     if (this.props.type === 'assignment') {
       this.setState({ isLoading: true });
       const pageLines = await getPageTextWbWLimitedLines(
@@ -82,7 +76,6 @@ export default class FeedsObject extends Component {
         surahName: pageLines[0].surah,
         page: allAyat,
         isLoading: false,
-        isMadeByCurrentUser: this.state.madeByCurrentUser
       });
     }
   }
@@ -103,11 +96,13 @@ export default class FeedsObject extends Component {
   }
   render() {
     return (
-      (this.props.role === 'student' && this.props.type === 'assignment' && !this.props.viewableBy.includes(this.props.currentUser.ID) ?
-        null
-        :
-        <View key={this.props.number} style={this.localStyles.containerView}>
-          <View style={{alignItems: 'center', flexDirection: this.state.madeByCurrentUser ? 'row-reverse' : 'row'}}>  
+      (this.props.role === 'student' 
+       && this.props.type === 'assignment' 
+       && this.props.viewableBy !== 'everyone' 
+       && !this.props.viewableBy.includes(this.props.currentUser.ID) 
+        ? null
+        : <View key={this.props.number} style={this.localStyles.containerView}>
+          <View style={this.localStyles.imageAndNameContainer}>  
             <Image
               source={this.props.imageRequire}
               style={this.localStyles.userImage}
@@ -116,8 +111,8 @@ export default class FeedsObject extends Component {
           </View>
           <View style={{ 
              flex: 2,
-             marginLeft: (this.state.madeByCurrentUser ? 0 : screenScale*18 + screenWidth/45),
-             marginRight: (this.state.madeByCurrentUser ? screenScale*18 + screenWidth/45 : 0) }}>
+             marginLeft: (this.props.isMadeByCurrentUser ? 0 : screenScale*18 + screenWidth/45),
+             marginRight: (this.props.isMadeByCurrentUser ? screenScale*18 + screenWidth/45 : 0) }}>
             <View style={{ flex: 5 }}>
               {this.props.type === 'assignment' ? (
                 <Text
@@ -178,7 +173,7 @@ export default class FeedsObject extends Component {
                     </TouchableOpacity>
                   )}
                 />
-                {this.props.madeByUserID == this.props.currentUser.ID ? null : (
+                {this.props.isMadeByCurrentUser ? null : (
                   <TouchableOpacity
                     onPress={() => this.props.onPressSelectEmoji()}
                     style={this.localStyles.addReaction}
@@ -197,7 +192,7 @@ export default class FeedsObject extends Component {
             {this.props.comments.length === 0 ? null : (
               <ThreadComponent
                 isCurrentUser={
-                  this.state.madeByCurrentUser
+                  this.props.isMadeByCurrentUser
                 }
                 beginCommenting={() => this.props.beginCommenting()}
                 listKey={this.props.number}
@@ -213,14 +208,26 @@ export default class FeedsObject extends Component {
   localStyles = StyleSheet.create({
     userName: {
       fontWeight: 'bold', 
-      marginLeft: this.state.madeByCurrentUser 
+      marginLeft: this.props.isMadeByCurrentUser 
           ? 0 
           : screenWidth/45,
-      marginRight: this.state.madeByCurrentUser 
+      marginRight: this.props.isMadeByCurrentUser 
           ? screenWidth/45 
           : 0, 
       fontSize: fontScale*16, 
       color: colors.black
+    },
+    imageAndNameContainer: {
+      marginLeft:
+      this.props.isMadeByCurrentUser
+        ? 0
+        : screenWidth / 45,
+      marginRight:
+      this.props.isMadeByCurrentUser
+        ? screenWidth / 45
+        : 0,
+      alignItems: 'center', 
+      flexDirection: this.props.isMadeByCurrentUser ? 'row-reverse' : 'row'
     },
     containerView: {
       width:
@@ -228,11 +235,11 @@ export default class FeedsObject extends Component {
           ? (2.4 * screenWidth) / 3
           : (2 * screenWidth) / 3,
       alignSelf:
-        this.state.madeByCurrentUser
+        this.props.isMadeByCurrentUser
           ? 'flex-end'
           : 'flex-start',
       flexDirection: 'column',
-      alignItems: this.state.madeByCurrentUser
+      alignItems: this.props.isMadeByCurrentUser
           ? 'flex-end'
           : 'flex-start',
       marginTop: this.props.number == 0 ? screenHeight / 40 : 0,
@@ -261,14 +268,6 @@ export default class FeedsObject extends Component {
     userImage: {
       width: screenScale * 18,
       height: screenScale * 18,
-      marginLeft:
-        this.props.madeByUserID == this.props.currentUser.ID
-          ? 0
-          : screenWidth / 45,
-      marginRight:
-        this.props.madeByUserID == this.props.currentUser.ID
-          ? screenWidth / 45
-          : 0,
       resizeMode: 'contain'
     },
     newAssignmentText: {
