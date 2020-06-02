@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import { FlatList, View, ScrollView } from 'react-native';
-import teacherImages from '../../config/teacherImages';
-import studentImages from '../../config/studentImages';
+import teacherImages from '../../../config/teacherImages';
+import studentImages from '../../../config/studentImages';
 import FeedsObject from './FeedObject';
 
 export default class FeedList extends Component {
-  componentDidMount(){
-
-  }
   render() {
     return (
       <FlatList
@@ -17,12 +14,9 @@ export default class FeedList extends Component {
           <FeedsObject
             onPressSelectEmoji={() => this.props.onPressSelectEmoji()}
             madeByUserID={item.madeByUser.ID}
+            isMadeByCurrentUser={this.props.currentUser.ID === item.madeByUser.ID}
             classID={this.props.classID}
-            currentUser={
-              this.props.role === 'teacher'
-                ? this.props.teacher
-                : this.props.student
-            }
+            currentUser={this.props.currentUser}
             onPushToOtherScreen={(pushParamScreen, pushParamObj) =>
               this.props.onPushToOtherScreen(pushParamScreen, pushParamObj)
             }

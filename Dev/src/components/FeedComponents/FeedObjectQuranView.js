@@ -11,14 +11,14 @@ import {
   screenWidth,
   screenScale,
   fontScale,
-} from '../../config/dimensions';
+} from '../../../config/dimensions';
 import { Text } from 'react-native';
-import colors from '../../config/colors';
-import SurahHeader from '../screens/MushafScreen/Components/SurahHeader';
-import LoadingSpinner from './LoadingSpinner';
-import StudentMainScreen from '../screens/StudentScreens/ClassTabs/StudentMainScreen';
+import colors from '../../../config/colors';
+import SurahHeader from '../../screens/MushafScreen/Components/SurahHeader';
+import LoadingSpinner from '../LoadingSpinner';
+import StudentMainScreen from '../../screens/StudentScreens/ClassTabs/StudentMainScreen';
 
-class QuranAssignmentView extends StudentMainScreen {
+export default class QuranAssignmentView extends StudentMainScreen {
     render() {
       return (
         <View>

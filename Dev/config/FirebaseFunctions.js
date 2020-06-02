@@ -930,15 +930,12 @@ export default class FirebaseFunctions {
       this.listenForFeedDocChanges(
         parseInt(lastIndex) - 1 + '',
         classID,
-        (docID, changedData) => refreshFunction(docID, changedData)
-      );
-    } else {
-      this.listenForFeedDocChanges(lastIndex, classID, (docID, changedData) =>
-        refreshFunction(docID, changedData)
+        (docID, changedData, isNewDoc) => refreshFunction(docID, changedData, isNewDoc),
+        true
       );
     }
-    this.checkForNewFeedDocListener(classID, (docID, changedData) =>
-      refreshFunction(docID, changedData)
+    this.checkForNewFeedDocListener(classID, (docID, changedData, isNewDoc) =>
+      refreshFunction(docID, changedData, isNewDoc)
     );
     this.logEvent('FETCHING_FEED');
   }
@@ -974,17 +971,23 @@ export default class FirebaseFunctions {
         this.listenForFeedDocChanges(
           querySnap.data().lastIndex,
           classID,
-          (docID, changedData) => refreshFunction(docID, changedData)
+          (docID, changedData, isNewDoc) => refreshFunction(docID, changedData, isNewDoc),
+          true
         )
       );
   }
-  static async listenForFeedDocChanges(docID, classID, refreshFunction) {
+  static async addOldFeedDoc(classID, currentOldest, refreshFunction){
+    this.listenForFeedDocChanges(parseInt(currentOldest)-1+'', classID, (docID, changedData, isNewDoc) => refreshFunction(docID, changedData, isNewDoc), false) 
+  }
+  static async listenForFeedDocChanges(docID, classID, refreshFunction, isNewDoc) {
     this.feeds
       .doc(classID)
       .collection("content")
       .doc(docID)
       .onSnapshot(querySnap => {
-        refreshFunction(docID, querySnap.data().data);
+        refreshFunction(docID, querySnap.data().data, isNewDoc);
+        console.warn('isNewDoc: '+isNewDoc)
+        isNewDoc = false;
       });
   }
 }

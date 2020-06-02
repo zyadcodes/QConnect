@@ -7,6 +7,7 @@ import {
   Text,
   TextInput,
   Keyboard,
+  RefreshControl,
   KeyboardAvoidingView,
 } from 'react-native';
 import FirebaseFunctions from '../../../config/FirebaseFunctions';
@@ -16,13 +17,13 @@ import StudentLeftNavPane from '../StudentScreens/LeftNavPane';
 import TeacherLeftNavPane from '../TeacherScreens/LeftNavPane';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import TopBanner from 'components/TopBanner';
-import FeedsObject from '../../components/FeedObject';
+import FeedsObject from '../../components/FeedComponents/FeedObject';
 import { screenHeight, screenWidth } from '../../../config/dimensions';
 import EmojiSelector from '../../components/CustomizedEmojiSelector';
 import { FlatList } from 'react-native-gesture-handler';
 import teacherImages from '../../../config/teacherImages';
 import studentImages from '../../../config/studentImages';
-import FeedList from '../../components/FeedList';
+import FeedList from '../../components/FeedComponents/FeedList';
 import FastResponseTouchableOpacity from '../../components/FastResponseTouchableOpacity';
 
 export default class FeedsScreen extends React.Component {
@@ -39,7 +40,6 @@ export default class FeedsScreen extends React.Component {
     role: '',
     currentClassID: '',
     teacher: null,
-    keyboardAvoidingMargin: 0,
     student: null,
     studentClassInfo: null,
     currentlySelectingIndex: {
@@ -47,6 +47,8 @@ export default class FeedsScreen extends React.Component {
       objectIndex: -1
     },
     feedsData: [],
+    oldestFeedDoc: '-1',
+    isRefreshingOldFeeds: false,
     isSelectingEmoji: false,
     isCommenting: false,
     newCommentTxt: '',
@@ -94,7 +96,7 @@ export default class FeedsScreen extends React.Component {
     const { classInviteCode } = currentClass;
     await FirebaseFunctions.getLatestFeed(
       currentClassID,
-      (index, docID, changedData) => this.refresh(index, docID, changedData)
+      this.refresh.bind(this)
     );
     this.setState(
       {
@@ -110,13 +112,24 @@ export default class FeedsScreen extends React.Component {
         this._isMounted = true;
         setTimeout(() => {
           this.flatListRef.scrollToEnd();
+          this.setState({oldestFeedDoc: this.state.feedsData[0].docID})
         }, 1000);
       }
     );
   }
-  refresh(docID, newData) {
+  refresh(docID, newData, isNewDoc) {
     if (this._isMounted) {
       let temp = this.state.feedsData;
+      if(isNewDoc){
+        temp.push({ docID, data: newData });
+        this.setState({feedsData: temp})
+        return;
+      }
+      if(parseInt(this.state.oldestFeedDoc) > docID){
+        temp.unshift({docID, newData})
+        this.setState({feedsData: temp, oldestFeedDoc: docID})
+        return;
+      }
       for (var i = 0; i < temp.length; i++) {
         if (temp[i].docID === docID) {
           temp[i].data = newData;
@@ -124,8 +137,6 @@ export default class FeedsScreen extends React.Component {
           return;
         }
       }
-      temp.push({ docID, data: newData });
-      this.setState({ feedsData: temp });
     }
   }
   async sendMessage(text) {
@@ -174,6 +185,16 @@ export default class FeedsScreen extends React.Component {
     }
     this.setState({ isSelectingEmoji: !this.state.isSelectingEmoji });
   }
+  async refreshOldFeed(){
+    this.setState({isRefreshingOldFeeds: true});
+    console.warn(this.state.oldestFeedDoc);
+    if(this.state.oldestFeedDoc === '0'){
+      this.setState({isRefreshingOldFeeds: false})
+      return;
+    }
+    await FirebaseFunctions.addOldFeedDoc(this.state.currentClassID, this.state.oldestFeedDoc, this.refresh.bind(this));
+    this.setState({isRefreshingOldFeeds: false})
+  }
   render() {
     const { LeftNavPane } = this.state;
     if (this.state.isLoading) {
@@ -204,6 +225,11 @@ export default class FeedsScreen extends React.Component {
             Title={this.state.currentClass.name + ' Feed'}
           />
           <FlatList
+            refreshControl={
+              <RefreshControl             
+                refreshing={this.state.isRefreshingOldFeeds}
+                onRefresh={() => this.refreshOldFeed()}/>
+            }
             scrollEnabled
             onScrollBeginDrag={() => this.setState({ isScrolling: true })}
             onScrollEndDrag={() => this.setState({ isScrolling: false })}
@@ -223,6 +249,9 @@ export default class FeedsScreen extends React.Component {
                 role={this.state.role}
                 teacher={this.state.teacher}
                 student={this.state.student}
+                currentUser={this.state.role === 'teacher' 
+                    ? this.state.teacher
+                    : this.state.student}
                 item={item}
                 onPushToOtherScreen={(pushParamScreen, pushParamObj) => {
                   this.setState({ isLoading: true });
