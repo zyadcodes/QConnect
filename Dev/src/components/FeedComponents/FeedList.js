@@ -3,6 +3,7 @@ import { FlatList, View, ScrollView } from 'react-native';
 import teacherImages from '../../../config/teacherImages';
 import studentImages from '../../../config/studentImages';
 import FeedsObject from './FeedObject';
+import { screenHeight } from '../../../config/dimensions';
 
 export default class FeedList extends Component {
   render() {
@@ -10,11 +11,14 @@ export default class FeedList extends Component {
       <FlatList
         listKey={this.props.index + 1}
         data={this.props.item.data}
+        style={{ marginTop: this.props.index === 0 ? screenHeight / 40 : 0 }}
         renderItem={({ item, index, separators }) => (
           <FeedsObject
             onPressSelectEmoji={() => this.props.onPressSelectEmoji()}
             madeByUserID={item.madeByUser.ID}
-            isMadeByCurrentUser={this.props.currentUser.ID === item.madeByUser.ID}
+            isMadeByCurrentUser={
+              this.props.currentUser.ID === item.madeByUser.ID
+            }
             classID={this.props.classID}
             currentUser={this.props.currentUser}
             onPushToOtherScreen={(pushParamScreen, pushParamObj) =>
@@ -24,6 +28,7 @@ export default class FeedList extends Component {
             role={this.props.role}
             content={item.content}
             number={index}
+            listIndex={this.props.index}
             studentClassInfo={
               item.type === 'assignment' && this.props.role === 'student'
                 ? this.props.studentClassInfo
@@ -35,7 +40,11 @@ export default class FeedList extends Component {
                 : null
             }
             onPressChangeEmojiVote={changedReactions =>
-              this.props.onPressChangeEmojiVote(index, changedReactions)
+              this.props.onPressChangeEmojiVote(
+                this.props.index,
+                index,
+                changedReactions
+              )
             }
             beginCommenting={() => this.props.beginCommenting()}
             onPressSelectEmoji={() => this.props.onPressSelectEmoji(index)}

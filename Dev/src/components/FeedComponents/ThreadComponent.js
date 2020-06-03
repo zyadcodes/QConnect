@@ -40,9 +40,9 @@ export default class ThreadComponent extends Component {
       arrowDirection,
     });
   }
-  addingComment(){
+  addingComment() {
     this.props.beginCommenting();
-    if(!this.state.isExtended){  
+    if (!this.state.isExtended) {
       this.toggleThread();
     }
   }
@@ -51,20 +51,21 @@ export default class ThreadComponent extends Component {
       <View
         style={{
           position: 'relative',
-          bottom: screenScale*3,
+          bottom: screenScale * 3,
           width: this.props.isAssignment ? '60%' : '75%',
           marginTop: this.props.isCurrentUser ? screenScale * 8 : 0,
         }}
       >
-      <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           <TouchableOpacity
             key={this.props.listKey + 1}
             onPress={() => this.addingComment()}
-            style={[this.localStyles.threadActionBtn, {marginRight: screenWidth/50}]}
+            style={[
+              this.localStyles.threadActionBtn,
+              { marginRight: screenWidth / 50 },
+            ]}
           >
-            <Text style={this.localStyles.btnTxt}>
-              + Comment
-            </Text>
+            <Text style={this.localStyles.btnTxt}>+ Comment</Text>
           </TouchableOpacity>
           <TouchableOpacity
             key={this.props.listKey + 2}
@@ -80,7 +81,7 @@ export default class ThreadComponent extends Component {
               name={this.state.arrowDirection}
             />
           </TouchableOpacity>
-      </View>
+        </View>
         {this.state.isExtended ? (
           <FlatList
             listKey={this.props.listKey + 1}

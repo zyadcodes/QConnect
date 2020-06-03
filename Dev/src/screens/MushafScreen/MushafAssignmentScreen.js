@@ -279,7 +279,7 @@ class MushafAssignmentScreen extends Component {
       let newFeedObj =  {
         madeByUser: {
           ID: this.state.userID,
-          userName: this.state.userName, //Please don't forget to clean this up, when we implement cleaner front-end code
+          name: this.state.userName, //Please don't forget to clean this up, when we implement cleaner front-end code
           imageID: this.state.imageID,
           role: 'teacher'
         },
@@ -396,7 +396,7 @@ class MushafAssignmentScreen extends Component {
       let newFeedObj =  {
         madeByUser: {
           ID: this.state.userID,
-          userName: this.state.userName,
+          name: this.state.userName,
           imageID: this.state.imageID,
           role: 'teacher'
         },
