@@ -100,7 +100,6 @@ export default class FeedsScreen extends React.Component {
     );
     this.setState(
       {
-        isLoading: false,
         currentClass,
         currentClassID,
         classInviteCode,
@@ -112,28 +111,30 @@ export default class FeedsScreen extends React.Component {
         this._isMounted = true;
         setTimeout(() => {
           this.flatListRef.scrollToEnd();
-          this.setState({oldestFeedDoc: this.state.feedsData[0].docID})
         }, 1000);
       }
     );
   }
   refresh(docID, newData, isNewDoc) {
     if (this._isMounted) {
-      let temp = this.state.feedsData;
-      if(isNewDoc){
-        temp.push({ docID, data: newData });
-        this.setState({feedsData: temp})
+      let tempData = this.state.feedsData.slice();
+      if (isNewDoc) {
+        tempData.push({ docID, data: newData });
+        this.setState({ feedsData: tempData, isLoading: false });
+        if (parseInt(this.state.oldestFeedDoc) === -1) {
+          this.setState({ oldestFeedDoc: docID });
+        }
         return;
       }
-      if(parseInt(this.state.oldestFeedDoc) > docID){
-        temp.unshift({docID, newData})
-        this.setState({feedsData: temp, oldestFeedDoc: docID})
+      if (parseInt(this.state.oldestFeedDoc) > parseInt(docID)) {
+        tempData.unshift({ docID, data: newData });
+        this.setState({ feedsData: tempData, oldestFeedDoc: docID });
         return;
       }
-      for (var i = 0; i < temp.length; i++) {
-        if (temp[i].docID === docID) {
-          temp[i].data = newData;
-          this.setState({ feedsData: temp });
+      for (var i = 0; i < tempData.length; i++) {
+        if (tempData[i].docID === docID) {
+          tempData[i].data = newData;
+          this.setState({ feedsData: tempData });
           return;
         }
       }
@@ -143,7 +144,7 @@ export default class FeedsScreen extends React.Component {
     const newObj = {
       madeByUser: {
         ID: this.state.userID,
-        name: 
+        name:
           this.state.role === 'teacher'
             ? this.state.teacher.name
             : this.state.student.name,
@@ -158,23 +159,28 @@ export default class FeedsScreen extends React.Component {
       comments: [],
       reactions: []
     };
-    let temp = this.state.feedsData;
-    temp[temp.length - 1].data.push(newObj);
+    let tempData = this.state.feedsData[
+      this.state.feedsData.length - 1
+    ].data.slice();
+    let docID = this.state.feedsData[this.state.feedsData.length - 1].docID;
+    //console.warn(this.state.feedsData)
+    tempData.push(newObj);
     await FirebaseFunctions.updateFeedDoc(
-      temp[temp.length - 1],
-      temp[temp.length - 1].docID,
+      tempData,
+      docID,
       this.state.currentClassID,
       true
     );
     this.setState({ newCommentTxt: '' });
   }
   async changeEmojiVote(listIndex, objectIndex, changedReactions) {
-    let temp = this.state.feedsData;
-    console.warn(changedReactions);
-    temp[listIndex].data[objectIndex].reactions = changedReactions;
+    //console.warn(listIndex)
+    let tempData = this.state.feedsData[listIndex].data.slice();
+    let docID = this.state.feedsData[listIndex].docID;
+    tempData[objectIndex].reactions = changedReactions;
     await FirebaseFunctions.updateFeedDoc(
-      temp[listIndex],
-      temp[listIndex].docID,
+      tempData,
+      docID,
       this.state.currentClassID,
       false //this doesn't matter, we're not adding another Feed Object anyways
     );
@@ -185,15 +191,18 @@ export default class FeedsScreen extends React.Component {
     }
     this.setState({ isSelectingEmoji: !this.state.isSelectingEmoji });
   }
-  async refreshOldFeed(){
-    this.setState({isRefreshingOldFeeds: true});
-    console.warn(this.state.oldestFeedDoc);
-    if(this.state.oldestFeedDoc === '0'){
-      this.setState({isRefreshingOldFeeds: false})
+  async refreshOldFeed() {
+    this.setState({ isRefreshingOldFeeds: true });
+    //console.warn(this.state.oldestFeedDoc);
+    if (this.state.oldestFeedDoc === "0") {
+      this.setState({ isRefreshingOldFeeds: false });
       return;
     }
-    await FirebaseFunctions.addOldFeedDoc(this.state.currentClassID, this.state.oldestFeedDoc, this.refresh.bind(this));
-    this.setState({isRefreshingOldFeeds: false})
+    await FirebaseFunctions.addOldFeedDoc(
+      this.state.currentClassID,
+      this.state.oldestFeedDoc,
+      this.refresh.bind(this)
+    );
   }
   render() {
     const { LeftNavPane } = this.state;
@@ -226,32 +235,41 @@ export default class FeedsScreen extends React.Component {
           />
           <FlatList
             refreshControl={
-              <RefreshControl             
+              <RefreshControl
                 refreshing={this.state.isRefreshingOldFeeds}
-                onRefresh={() => this.refreshOldFeed()}/>
+                onRefresh={() => this.refreshOldFeed()}
+              />
             }
             scrollEnabled
             onScrollBeginDrag={() => this.setState({ isScrolling: true })}
             onScrollEndDrag={() => this.setState({ isScrolling: false })}
             keyboardShouldPersistTaps="always"
-            onTouchStart={() => this.setState({ isCommenting: false })}
             style={localStyles.scrollViewStyle}
             ref={ref => (this.flatListRef = ref)}
             listKey={0}
-            onContentSizeChange={() =>
-              this.state.isScrolling
-                ? null
-                : this.flatListRef.scrollToEnd({ animated: true })
-            }
+            onContentSizeChange={() => {
+              this.state.isScrolling || this.state.isRefreshingOldFeeds
+                ? this.state.isRefreshingOldFeeds
+                  ? this.flatListRef.scrollToOffset({
+                      animated: true,
+                      offset: 0,
+                    })
+                  : null
+                : this.flatListRef.scrollToEnd({ animated: true });
+              this.setState({ isRefreshingOldFeeds: false });
+            }}
             data={this.state.feedsData}
             renderItem={({ index, item, separators }) => (
               <FeedList
                 role={this.state.role}
                 teacher={this.state.teacher}
                 student={this.state.student}
-                currentUser={this.state.role === 'teacher' 
+                key={item.docID}
+                currentUser={
+                  this.state.role === 'teacher'
                     ? this.state.teacher
-                    : this.state.student}
+                    : this.state.student
+                }
                 item={item}
                 onPushToOtherScreen={(pushParamScreen, pushParamObj) => {
                   this.setState({ isLoading: true });
@@ -277,21 +295,20 @@ export default class FeedsScreen extends React.Component {
           <EmojiSelector
             theme={colors.primaryLight}
             onEmojiSelected={async emoji => {
-              let temp = this.state.feedsData;
               let currentIndex = this.state.currentlySelectingIndex;
-              temp[currentIndex.listIndex].data[
-                currentIndex.objectIndex
-              ].reactions[
-                temp[currentIndex.listIndex].data[
-                  currentIndex.objectIndex
-                ].reactions.length
+              let docID = this.state.feedsData[currentIndex.listIndex].docID;
+              let tempData = this.state.feedsData[
+                currentIndex.listIndex
+              ].data.slice();
+              tempData[currentIndex.objectIndex].reactions[
+                tempData[currentIndex.objectIndex].reactions.length
               ] = {
                 emoji,
                 reactedBy: [this.state.userID]
               };
               await FirebaseFunctions.updateFeedDoc(
-                temp[currentIndex.listIndex],
-                temp[currentIndex.listIndex].docID,
+                tempData,
+                docID,
                 this.state.currentClassID,
                 false //Same here, this also doesn't matter
               );

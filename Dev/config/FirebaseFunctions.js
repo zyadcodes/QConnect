@@ -930,7 +930,8 @@ export default class FirebaseFunctions {
       this.listenForFeedDocChanges(
         parseInt(lastIndex) - 1 + '',
         classID,
-        (docID, changedData, isNewDoc) => refreshFunction(docID, changedData, isNewDoc),
+        (docID, changedData, isNewDoc) =>
+          refreshFunction(docID, changedData, isNewDoc),
         true
       );
     }
@@ -940,7 +941,7 @@ export default class FirebaseFunctions {
     this.logEvent('FETCHING_FEED');
   }
   static async onNotificationUpdateFeed(classID, newObj) {
-    console.warn(classID);
+    //console.warn(classID);
     let lastIndex = (await this.feeds.doc(classID).get()).data().lastIndex;
     let temp = (await this.feeds
       .doc(classID)
@@ -948,12 +949,12 @@ export default class FirebaseFunctions {
       .doc(lastIndex)
       .get()).data();
     temp.data.push(newObj);
-    await this.updateFeedDoc(temp, lastIndex, classID, true);
+    await this.updateFeedDoc(temp.data, lastIndex, classID, true);
     this.logEvent("NOTIFICATION_SENT_TO_FEED");
   }
   static async updateFeedDoc(changedData, docID, classID, isLastIndex) {
-    if (changedData.data.length > 20 && isLastIndex) {
-      let oldDocData = changedData[changedData.length - 1].data;
+    if (changedData.length > 20 && isLastIndex) {
+      let oldDocData = changedData;
       let firstObj = oldDocData[oldDocData.length - 1];
       await this.createFeedDocument(firstObj, classID, parseInt(docID) + 1);
     } else {
@@ -961,7 +962,7 @@ export default class FirebaseFunctions {
         .doc(classID)
         .collection('content')
         .doc(docID)
-        .update({ data: changedData.data });
+        .update({ data: changedData });
     }
   }
   static async checkForNewFeedDocListener(classID, refreshFunction) {
@@ -971,22 +972,34 @@ export default class FirebaseFunctions {
         this.listenForFeedDocChanges(
           querySnap.data().lastIndex,
           classID,
-          (docID, changedData, isNewDoc) => refreshFunction(docID, changedData, isNewDoc),
+          (docID, changedData, isNewDoc) =>
+            refreshFunction(docID, changedData, isNewDoc),
           true
         )
       );
   }
-  static async addOldFeedDoc(classID, currentOldest, refreshFunction){
-    this.listenForFeedDocChanges(parseInt(currentOldest)-1+'', classID, (docID, changedData, isNewDoc) => refreshFunction(docID, changedData, isNewDoc), false) 
+  static async addOldFeedDoc(classID, currentOldest, refreshFunction) {
+    this.listenForFeedDocChanges(
+      parseInt(currentOldest) - 1 + '',
+      classID,
+      (docID, changedData, isNewDoc) =>
+        refreshFunction(docID, changedData, isNewDoc),
+      false
+    );
   }
-  static async listenForFeedDocChanges(docID, classID, refreshFunction, isNewDoc) {
+  static async listenForFeedDocChanges(
+    docID,
+    classID,
+    refreshFunction,
+    isNewDoc
+  ) {
     this.feeds
       .doc(classID)
       .collection("content")
       .doc(docID)
       .onSnapshot(querySnap => {
         refreshFunction(docID, querySnap.data().data, isNewDoc);
-        console.warn('isNewDoc: '+isNewDoc)
+        //console.warn('isNewDoc: '+isNewDoc)
         isNewDoc = false;
       });
   }

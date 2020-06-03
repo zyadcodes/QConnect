@@ -17,15 +17,13 @@ import strings from '../../../config/strings';
 import PropTypes from 'prop-types';
 import colors from '../../../config/colors';
 import FirebaseFunctions from '../../../config/FirebaseFunctions';
-import {
-  getPageTextWbWLimitedLines,
-} from '../../screens/MushafScreen/ServiceActions/getQuranContent';
+import { getPageTextWbWLimitedLines } from '../../screens/MushafScreen/ServiceActions/getQuranContent';
 import SurahHeader from '../../screens/MushafScreen/Components/SurahHeader';
 import Basmalah from '../../screens/MushafScreen/Components/Basmalah';
 import TextLine from '../../screens/MushafScreen/Components/TextLine';
 import { Icon } from 'react-native-elements';
 import ThreadComponent from './ThreadComponent';
-import QuranAssignmentView from './FeedObjectQuranView'
+import QuranAssignmentView from './FeedObjectQuranView';
 
 export default class FeedsObject extends Component {
   state = {
@@ -78,9 +76,10 @@ export default class FeedsObject extends Component {
         isLoading: false,
       });
     }
+    this.forceUpdate();
   }
   changeEmojiVote(reactionIndex) {
-    let temp = this.props.reactions;
+    let temp = this.props.reactions.slice();
     if (temp[reactionIndex].reactedBy.includes(this.props.currentUser.ID)) {
       temp[reactionIndex].reactedBy.splice(
         temp[reactionIndex].reactedBy.indexOf(this.props.currentUser.ID),
@@ -95,154 +94,148 @@ export default class FeedsObject extends Component {
     return temp;
   }
   render() {
-    return (
-      (this.props.role === 'student' 
-       && this.props.type === 'assignment' 
-       && this.props.viewableBy !== 'everyone' 
-       && !this.props.viewableBy.includes(this.props.currentUser.ID) 
-        ? null
-        : <View key={this.props.number} style={this.localStyles.containerView}>
-          <View style={this.localStyles.imageAndNameContainer}>  
-            <Image
-              source={this.props.imageRequire}
-              style={this.localStyles.userImage}
-            />
-            <Text style={this.localStyles.userName}>{this.props.userName}</Text>
-          </View>
-          <View style={{ 
-             flex: 2,
-             marginLeft: (this.props.isMadeByCurrentUser ? 0 : screenScale*18 + screenWidth/45),
-             marginRight: (this.props.isMadeByCurrentUser ? screenScale*18 + screenWidth/45 : 0) }}>
-            <View style={{ flex: 5 }}>
+    return this.props.role === 'student' &&
+      this.props.type === 'assignment' &&
+      this.props.viewableBy !== 'everyone' &&
+      !this.props.viewableBy.includes(this.props.currentUser.ID) ? null : (
+      <View key={this.props.number} style={this.localStyles.containerView}>
+        <View style={this.localStyles.imageAndNameContainer}>
+          <Image
+            source={this.props.imageRequire}
+            style={this.localStyles.userImage}
+          />
+          <Text style={this.localStyles.userName}>{this.props.userName}</Text>
+        </View>
+        <View
+          style={{
+            flex: 2,
+            marginLeft: this.props.isMadeByCurrentUser
+              ? 0
+              : screenScale * 18 + screenWidth / 45,
+            marginRight: this.props.isMadeByCurrentUser
+              ? screenScale * 18 + screenWidth / 45
+              : 0,
+          }}
+        >
+          <View style={{ flex: 5 }}>
+            {this.props.type === 'assignment' ? (
+              <Text
+                style={[
+                  this.localStyles.newAssignmentText,
+                  { fontSize: fontScale * 18 },
+                ]}
+              >
+                New Assignment:{' '}
+              </Text>
+            ) : null}
+            <View style={this.localStyles.contentContainerView}>
               {this.props.type === 'assignment' ? (
-                <Text
-                  style={[
-                    this.localStyles.newAssignmentText,
-                    { fontSize: fontScale * 18 },
-                  ]}
-                >
-                  New Assignment:{' '}
+                <QuranAssignmentView
+                  setScreenToLoading={() => this.setState({ isLoading: true })}
+                  surahName={this.state.surahName}
+                  page={this.state.page}
+                  onPushToOtherScreen={(pushParamScreen, pushParamObj) =>
+                    this.props.onPushToOtherScreen(
+                      pushParamScreen,
+                      pushParamObj
+                    )
+                  }
+                  isLoading={this.state.isLoading}
+                  role={this.props.role}
+                  classID={this.props.classID}
+                  studentClassInfo={this.props.studentClassInfo}
+                  hiddenContent={this.props.hiddenContent}
+                  content={this.props.content}
+                  madeByUserID={this.props.madeByUserID}
+                  currentUser={this.props.currentUser}
+                />
+              ) : (
+                <Text style={this.localStyles.contentText}>
+                  {this.props.content}
                 </Text>
-              ) : null}
-              <View style={this.localStyles.contentContainerView}>
-                {this.props.type === 'assignment' ? (
-                  <QuranAssignmentView
-                    setScreenToLoading={() => this.setState({ isLoading: true })}
-                    surahName={this.state.surahName}
-                    page={this.state.page}
-                    onPushToOtherScreen={(pushParamScreen, pushParamObj) =>
-                      this.props.onPushToOtherScreen(
-                        pushParamScreen,
-                        pushParamObj
+              )}
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignSelf: this.props.isMadeByCurrentUser
+                  ? 'flex-start'
+                  : 'flex-end'
+              }}
+            >
+              <FlatList
+                data={this.props.reactions}
+                style={{ flexDirection: 'row' }}
+                renderItem={({ item, index, seperators }) => (
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.props.onPressChangeEmojiVote(
+                        this.changeEmojiVote(index)
                       )
                     }
-                    isLoading={this.state.isLoading}
-                    role={this.props.role}
-                    classID={this.props.classID}
-                    studentClassInfo={this.props.studentClassInfo}
-                    hiddenContent={this.props.hiddenContent}
-                    content={this.props.content}
-                    madeByUserID={this.props.madeByUserID}
-                    currentUser={this.props.currentUser}
-                  />
-                ) : (
-                  <Text style={this.localStyles.contentText}>
-                    {this.props.content}
-                  </Text>
-                )}
-              </View>
-              <View style={{ flexDirection: 'row', alignSelf: 'flex-end' }}>
-                <FlatList
-                  data={this.props.reactions}
-                  style={{ flexDirection: 'row' }}
-                  renderItem={({ item, index, seperators }) => (
-                    <TouchableOpacity
-                      onPress={() =>
-                        this.props.onPressChangeEmojiVote(
-                          this.changeEmojiVote(index)
-                        )
-                      }
-                      key={index}
-                      activeOpacity={0.6}
-                      style={this.localStyles.Reaction}
-                    >
-                      <View style={this.localStyles.reactionView}>
-                        <Text>{item.reactedBy.length}</Text>
-                        <Text>{item.emoji}</Text>
-                      </View>
-                    </TouchableOpacity>
-                  )}
-                />
-                {this.props.isMadeByCurrentUser ? null : (
-                  <TouchableOpacity
-                    onPress={() => this.props.onPressSelectEmoji()}
-                    style={this.localStyles.addReaction}
+                    key={index}
                     activeOpacity={0.6}
+                    style={this.localStyles.Reaction}
                   >
-                    <Icon
-                      name="plus"
-                      type="entypo"
-                      size={fontScale * 16}
-                      color={colors.primaryDark}
-                    />
+                    <View style={this.localStyles.reactionView}>
+                      <Text>{item.reactedBy.length}</Text>
+                      <Text>{item.emoji}</Text>
+                    </View>
                   </TouchableOpacity>
                 )}
-              </View>
-            </View>
-            {this.props.comments.length === 0 ? null : (
-              <ThreadComponent
-                isCurrentUser={
-                  this.props.isMadeByCurrentUser
-                }
-                beginCommenting={() => this.props.beginCommenting()}
-                listKey={this.props.number}
-                isAssignment={this.props.type === 'assignment'}
-                comments={this.props.comments}
               />
-            )}
+              {this.props.isMadeByCurrentUser ? null : (
+                <TouchableOpacity
+                  onPress={() => this.props.onPressSelectEmoji()}
+                  style={this.localStyles.addReaction}
+                  activeOpacity={0.6}
+                >
+                  <Icon
+                    name="plus"
+                    type="entypo"
+                    size={fontScale * 16}
+                    color={colors.primaryDark}
+                  />
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
+          {this.props.comments.length === 0 ? null : (
+            <ThreadComponent
+              isCurrentUser={this.props.isMadeByCurrentUser}
+              beginCommenting={() => this.props.beginCommenting()}
+              listKey={this.props.number}
+              isAssignment={this.props.type === 'assignment'}
+              comments={this.props.comments}
+            />
+          )}
         </View>
-      )
+      </View>
     );
   }
   localStyles = StyleSheet.create({
     userName: {
-      fontWeight: 'bold', 
-      marginLeft: this.props.isMadeByCurrentUser 
-          ? 0 
-          : screenWidth/45,
-      marginRight: this.props.isMadeByCurrentUser 
-          ? screenWidth/45 
-          : 0, 
-      fontSize: fontScale*16, 
+      fontWeight: 'bold',
+      marginLeft: this.props.isMadeByCurrentUser ? 0 : screenWidth / 45,
+      marginRight: this.props.isMadeByCurrentUser ? screenWidth / 45 : 0,
+      fontSize: fontScale * 16,
       color: colors.black
     },
     imageAndNameContainer: {
-      marginLeft:
-      this.props.isMadeByCurrentUser
-        ? 0
-        : screenWidth / 45,
-      marginRight:
-      this.props.isMadeByCurrentUser
-        ? screenWidth / 45
-        : 0,
-      alignItems: 'center', 
-      flexDirection: this.props.isMadeByCurrentUser ? 'row-reverse' : 'row'
+      flexDirection: this.props.isMadeByCurrentUser ? 'row-reverse' : 'row',
+      marginLeft: screenWidth / 45,
+      alignItems: 'center'
     },
     containerView: {
+      includeFontPadding: this.props.isMadeByCurrentUser,
       width:
         this.props.type == 'assignment'
           ? (2.4 * screenWidth) / 3
           : (2 * screenWidth) / 3,
-      alignSelf:
-        this.props.isMadeByCurrentUser
-          ? 'flex-end'
-          : 'flex-start',
+      alignSelf: this.props.isMadeByCurrentUser ? 'flex-end' : 'flex-start',
       flexDirection: 'column',
-      alignItems: this.props.isMadeByCurrentUser
-          ? 'flex-end'
-          : 'flex-start',
-      marginTop: this.props.number == 0 ? screenHeight / 40 : 0,
+      alignItems: this.props.isMadeByCurrentUser ? 'flex-end' : 'flex-start',
+      marginTop: 0,
       marginBottom: screenHeight / 40
     },
     assignmentContainer: {
@@ -328,5 +321,3 @@ export default class FeedsObject extends Component {
     }
   });
 }
-
-
