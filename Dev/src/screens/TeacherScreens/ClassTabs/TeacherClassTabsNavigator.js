@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { createBottomTabNavigator, createAppContainer, BottomTabBar } from 'react-navigation';
-import { PixelRatio, Platform, Keyboard } from 'react-native';
-import colors from 'config/colors';
-import { Icon } from 'react-native-elements';
+import { PixelRatio, Platform, Keyboard, View } from 'react-native';
+import colors from '../../../../config/colors';
+import { Icon, Badge, withBadge } from 'react-native-elements';
 import ClassMainScreen from './ClassMainScreen';
 import ClassAttendanceScreen from './ClassAttendanceScreen';
 import strings from '../../../../config/strings';
@@ -10,10 +10,13 @@ import MushafAssignmentScreen from '../../MushafScreen/MushafAssignmentScreen';
 import { screenHeight } from 'config/dimensions';
 import FeedsScreen from '../../UniversalClassScreens/FeedsScreen';
 import { string } from 'prop-types';
+import { screenScale } from '../../../../config/dimensions';
+import IconWithBadge from '../../../components/IconWithBadge';
 
 var iconSizeSelected = PixelRatio.get() < 2 ? 18 : 25;
 var iconSizeNotSelected = PixelRatio.get() < 2 ? 14 : 20;
 var fontSize = PixelRatio.get() < 2 ? 12 : 14;
+const FeedWithBadge = IconWithBadge() (Icon);
 
 const routeConfig = {
   AttendanceTab: {
@@ -50,10 +53,12 @@ const routeConfig = {
       return {
         tabBarLabel: strings.Feed, 
         tabBarIcon: ({tintColor, focused}) => (
-          <Icon 
+          <FeedWithBadge
+            hidden={true}
             type="material" 
             name="chat" size={focused ? iconSizeSelected : iconSizeSelected}
-            color={tintColor}/>
+            color={tintColor}
+          />
         )
       }
     }

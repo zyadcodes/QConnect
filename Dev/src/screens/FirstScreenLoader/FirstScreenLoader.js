@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ActivityIndicator, StatusBar, View } from 'react-native';
+import { ActivityIndicator, StatusBar, View, AppState } from 'react-native';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
@@ -35,11 +35,23 @@ class FirstScreenLoader extends Component {
           FirebaseFunctions.fcm.subscribeToTopic(user.uid);
           const student = await FirebaseFunctions.getStudentByID(user.uid);
           if (student !== -1) {
+            AppState.addEventListener("change", (newAppState) => {
+              if(newAppState === 'background'){
+                FirebaseFunctions.setUserActiveState(student.ID, false, 'away')
+              }
+            })
+            FirebaseFunctions.setUserActiveState(student.ID, false, 'online');
             this.props.navigation.push("StudentCurrentClass", {
               userID: user.uid,
             });
             return;
           }
+          AppState.addEventListener("change", (newAppState) => {
+            if(newAppState === 'background'){
+              FirebaseFunctions.setUserActiveState(user.uid, true, 'away')
+            }
+          })
+          FirebaseFunctions.setUserActiveState(user.uid, true, 'online');
           this.props.navigation.push("TeacherCurrentClass", {
             userID: user.uid,
           });

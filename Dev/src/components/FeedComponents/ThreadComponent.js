@@ -67,20 +67,23 @@ export default class ThreadComponent extends Component {
           >
             <Text style={this.localStyles.btnTxt}>+ Comment</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            key={this.props.listKey + 2}
-            onPress={() => this.toggleThread()}
-            style={this.localStyles.threadActionBtn}
-          >
-            <Text style={this.localStyles.btnTxt}>
-              {this.state.threadAction} Thread
-            </Text>
-            <Icon
-              style={{ paddingRight: screenWidth / 40 }}
-              type="ionicon"
-              name={this.state.arrowDirection}
-            />
-          </TouchableOpacity>
+          { this.props.comments.length === 0 
+            ? null
+            : <TouchableOpacity
+              key={this.props.listKey + 2}
+              onPress={() => this.toggleThread()}
+              style={this.localStyles.threadActionBtn}
+            >
+              <Text style={this.localStyles.btnTxt}>
+                {this.state.threadAction} Thread
+              </Text>
+              <Icon
+                style={{ paddingRight: screenWidth / 40 }}
+                type="ionicon"
+                name={this.state.arrowDirection}
+              />
+            </TouchableOpacity>
+        }
         </View>
         {this.state.isExtended ? (
           <FlatList

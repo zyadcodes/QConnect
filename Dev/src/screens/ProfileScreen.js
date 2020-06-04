@@ -252,6 +252,7 @@ export class ProfileScreen extends QcParentScreen {
               <TouchableOpacity
                 style={styles.cardStyle}
                 onPress={async () => {
+                  await FirebaseFunctions.setUserActiveState(this.state.userID, this.state.isTeacher, 'offline')
                   await FirebaseFunctions.logOut(this.state.userID);
                   this.props.navigation.push("FirstScreenLoader");
                 }}
