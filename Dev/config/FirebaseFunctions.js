@@ -952,6 +952,15 @@ export default class FirebaseFunctions {
     await this.updateFeedDoc(temp.data, lastIndex, classID, true);
     this.logEvent("NOTIFICATION_SENT_TO_FEED");
   }
+
+  static async setUserActiveState(userID, isTeacher, state){
+    if(isTeacher){
+      await this.teachers.doc(userID).update({activeState: state})
+      return;
+    }
+    await this.students.doc(userID).update({activeState: state})
+  }
+
   static async updateFeedDoc(changedData, docID, classID, isLastIndex) {
     if (changedData.length > 20 && isLastIndex) {
       let oldDocData = changedData;

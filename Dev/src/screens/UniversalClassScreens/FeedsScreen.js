@@ -46,6 +46,8 @@ export default class FeedsScreen extends React.Component {
       listIndex: -1,
       objectIndex: -1
     },
+    scrollLength: 0,
+    currentScrollLoc: 0,
     feedsData: [],
     oldestFeedDoc: '-1',
     isRefreshingOldFeeds: false,
@@ -241,21 +243,28 @@ export default class FeedsScreen extends React.Component {
               />
             }
             scrollEnabled
+            onScroll={nativeEvent => {
+              this.setState({currentScrollLoc: nativeEvent.nativeEvent.contentOffset.y})
+            }}
             onScrollBeginDrag={() => this.setState({ isScrolling: true })}
             onScrollEndDrag={() => this.setState({ isScrolling: false })}
             keyboardShouldPersistTaps="always"
             style={localStyles.scrollViewStyle}
             ref={ref => (this.flatListRef = ref)}
             listKey={0}
+            onLayout={nativeEvent => this.setState({scrollLength: nativeEvent.nativeEvent.layout.height})}
             onContentSizeChange={() => {
-              this.state.isScrolling || this.state.isRefreshingOldFeeds
-                ? this.state.isRefreshingOldFeeds
-                  ? this.flatListRef.scrollToOffset({
+              console.warn(this.state.scrollLength)
+              if(this.state.isScrolling || this.state.isRefreshingOldFeeds || this.state.scrollLength-this.state.currentScrollLoc > screenHeight/2){
+                if(this.state.isRefreshingOldFeeds){
+                  this.flatListRef.scrollToOffset({
                       animated: true,
                       offset: 0,
                     })
-                  : null
-                : this.flatListRef.scrollToEnd({ animated: true });
+                }
+              }else{
+                this.flatListRef.scrollToEnd({ animated: true });
+              }
               this.setState({ isRefreshingOldFeeds: false });
             }}
             data={this.state.feedsData}

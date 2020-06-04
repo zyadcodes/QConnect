@@ -72,10 +72,12 @@ class LoginScreen extends Component {
         const isTeacher = await FirebaseFunctions.getTeacherByID(userID);
         if (isTeacher === -1) {
           FirebaseFunctions.logEvent("STUDENT_LOG_IN");
+          await FirebaseFunctions.setUserActiveState(account.uid, isTeacher, 'online')
           this.props.navigation.push("StudentCurrentClass", {
             userID,
           });
         } else {
+          await FirebaseFunctions.setUserActiveState(account.uid, isTeacher, 'online')
           FirebaseFunctions.logEvent("TEACHER_LOG_IN");
           this.props.navigation.push("TeacherCurrentClass", {
             userID,

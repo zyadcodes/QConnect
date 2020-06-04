@@ -175,7 +175,10 @@ export default class FeedsObject extends Component {
                     }
                     key={index}
                     activeOpacity={0.6}
-                    style={this.localStyles.Reaction}
+                    style={[this.localStyles.Reaction,
+                       item.reactedBy.includes(this.props.currentUser.ID) 
+                        ? {backgroundColor: colors.lightBlue, borderColor: colors.lightBlue} 
+                        : {backgroundColor: colors.primaryLight, borderColor: colors.primaryLight}]}
                   >
                     <View style={this.localStyles.reactionView}>
                       <Text>{item.reactedBy.length}</Text>
@@ -200,15 +203,13 @@ export default class FeedsObject extends Component {
               )}
             </View>
           </View>
-          {this.props.comments.length === 0 ? null : (
-            <ThreadComponent
-              isCurrentUser={this.props.isMadeByCurrentUser}
-              beginCommenting={() => this.props.beginCommenting()}
-              listKey={this.props.number}
-              isAssignment={this.props.type === 'assignment'}
-              comments={this.props.comments}
-            />
-          )}
+          <ThreadComponent
+            isCurrentUser={this.props.isMadeByCurrentUser}
+            beginCommenting={() => this.props.beginCommenting()}
+            listKey={this.props.number}
+            isAssignment={this.props.type === 'assignment'}
+            comments={this.props.comments}
+          />
         </View>
       </View>
     );
