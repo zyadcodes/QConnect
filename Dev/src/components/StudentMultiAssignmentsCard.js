@@ -71,7 +71,9 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
         }}
       >
         <View style={styles.infoStyle}>
-          <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 3 }}>
+          <View
+            style={{ flexDirection: 'row', marginTop: 10, marginBottom: 3 }}
+          >
             <ListItem
               key={studentName}
               title={studentName}
@@ -86,12 +88,10 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
               contentContainerStyle={{
                 flex: 2
               }}
-              leftAvatar={{ source: profilePic, size: "medium" } }
+              leftAvatar={{ source: profilePic, size: "medium" }}
               //convert status to shorter strings to fit in the single line ListItem
               rightTitle={strings.GoToProfile}
-              rightTitleStyle={[
-                fontStyles.smallestTextStyleDarkGrey,
-              ]}
+              rightTitleStyle={[fontStyles.smallestTextStyleDarkGrey]}
             />
           </View>
           {currentAssignments && currentAssignments.length > 0 && (
@@ -111,109 +111,113 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
           )}
           {currentAssignments && currentAssignments.length > 0 ? (
             currentAssignments.map((assignment, index) => (
-              <ListItem
-                key={assignment.name}
-                title={assignment.name}
-                titleStyle={[
-                  fontStyles.mediumTextStyleDarkestGrey,
-                  { flex: 1 },
-                ]}
-                subtitle={
-                  assignment.isReadyEnum === "NEED_HELP"
-                    ? strings.NeedHelpNonCap
-                    : assignment.isReadyEnum === "READY"
-                    ? strings.ReadyNonCap
-                    : assignment.isReadyEnum === "WORKING_ON_IT"
-                    ? strings.WorkingOnItNonCap
-                    : undefined
-                }
-                subtitleStyle={[
-                  fontStyles.smallTextStyleDarkGrey,
-                  assignment.isReadyEnum === "NEED_HELP"
-                    ? { color: colors.darkRed }
-                    : assignment.isReadyEnum === "READY"
-                    ? { color: colors.darkGreen }
-                    : assignment.isReadyEnum === "WORKING_ON_IT"
-                    ? { color: colors.primaryDark }
-                    : {}
-                ]}
-                chevron={assignment.submission ? false : true}
-                containerStyle={{
-                  flex: 1,
-                  width: screenWidth * 0.95,
-                  borderRadius: 2,
-                  marginLeft: 3,
-                }}
-                contentContainerStyle={{
-                  flex: 1
-                }}
-                badge={
-                  assignment.submission
-                    ? {
-                        badgeStyle: {
-                          backgroundColor: 'rgba(255,255,250,0.1)'
-                        },
-                        value: (
-                          <View
-                            style={{
-                              position: "absolute",
-                              zIndex: 10,
-                              bottom: 0,
-                              right: 0
-                            }}
-                          >
-                            <Icon
-                              size={15}
-                              name="microphone"
-                              type="material-community"
-                              color={colors.darkRed}
-                            />
-                          </View>
-                        )
-                      }
-                    : undefined
-                }
-                leftElement={
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: 40,
-                    }}
-                  >
-                    <Avatar
-                      rounded
-                      icon={{
-                        name: assignmentTypes[assignment.type].iconName,
-                        type: assignmentTypes[assignment.type].iconType,
-                        color: colors.white,
-                      }}
-                      overlayContainerStyle={{
-                        backgroundColor: assignmentTypes[assignment.type].color,
-                      }}
-                    />
-                    <Text
-                      style={[
-                        fontStyles.smallestTextStyleDarkGrey,
-                        { width: 45, textAlign: "center", paddingTop: 3 },
-                      ]}
-                    >
-                      {assignmentTypes[assignment.type].name}
-                    </Text>
-                  </View>
-                }
-                //convert status to shorter strings to fit in the single line ListItem
-                rightTitle="Open"
-                rightTitleStyle={[
-                  fontStyles.smallestTextStyleDarkGrey,
-                  { width: 25 }
-                ]}
-                bottomDivider={
-                  index !== currentAssignments.length - 1 ? true : false
-                }
-                topDivider={index === 0 ? true : false}
+              <TouchableOpacity
                 onPress={() => this.props.onAssignmentPress(index)}
-              />
+              >
+                <ListItem
+                  key={assignment.name}
+                  title={assignment.name}
+                  titleStyle={[
+                    fontStyles.mediumTextStyleDarkestGrey,
+                    { flex: 1 },
+                  ]}
+                  subtitle={
+                    assignment.isReadyEnum === "NEED_HELP"
+                      ? strings.NeedHelpNonCap
+                      : assignment.isReadyEnum === "READY"
+                      ? strings.ReadyNonCap
+                      : assignment.isReadyEnum === "WORKING_ON_IT"
+                      ? strings.WorkingOnItNonCap
+                      : undefined
+                  }
+                  subtitleStyle={[
+                    fontStyles.smallTextStyleDarkGrey,
+                    assignment.isReadyEnum === "NEED_HELP"
+                      ? { color: colors.darkRed }
+                      : assignment.isReadyEnum === "READY"
+                      ? { color: colors.darkGreen }
+                      : assignment.isReadyEnum === "WORKING_ON_IT"
+                      ? { color: colors.primaryDark }
+                      : {}
+                  ]}
+                  chevron={assignment.submission ? false : true}
+                  containerStyle={{
+                    flex: 1,
+                    width: screenWidth * 0.95,
+                    borderRadius: 2,
+                    marginLeft: 3,
+                  }}
+                  contentContainerStyle={{
+                    flex: 1
+                  }}
+                  badge={
+                    assignment.submission
+                      ? {
+                          badgeStyle: {
+                            backgroundColor: 'rgba(255,255,250,0.1)'
+                          },
+                          value: (
+                            <View
+                              style={{
+                                position: "absolute",
+                                zIndex: 10,
+                                bottom: 0,
+                                right: 0
+                              }}
+                            >
+                              <Icon
+                                size={15}
+                                name="microphone"
+                                type="material-community"
+                                color={colors.darkRed}
+                              />
+                            </View>
+                          )
+                        }
+                      : undefined
+                  }
+                  leftElement={
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: 40,
+                      }}
+                    >
+                      <Avatar
+                        rounded
+                        icon={{
+                          name: assignmentTypes[assignment.type].iconName,
+                          type: assignmentTypes[assignment.type].iconType,
+                          color: colors.white,
+                        }}
+                        overlayContainerStyle={{
+                          backgroundColor:
+                            assignmentTypes[assignment.type].color,
+                        }}
+                      />
+                      <Text
+                        style={[
+                          fontStyles.smallestTextStyleDarkGrey,
+                          { width: 45, textAlign: 'center', paddingTop: 3 },
+                        ]}
+                      >
+                        {assignmentTypes[assignment.type].name}
+                      </Text>
+                    </View>
+                  }
+                  //convert status to shorter strings to fit in the single line ListItem
+                  rightTitle="Open"
+                  rightTitleStyle={[
+                    fontStyles.smallestTextStyleDarkGrey,
+                    { width: 25 }
+                  ]}
+                  bottomDivider={
+                    index !== currentAssignments.length - 1 ? true : false
+                  }
+                  topDivider={index === 0 ? true : false}
+                />
+              </TouchableOpacity>
             ))
           ) : (
             <ListItem

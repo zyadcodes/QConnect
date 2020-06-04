@@ -5,19 +5,9 @@ import MushafScreen from "./MushafScreen";
 import LoadingSpinner from "components/LoadingSpinner";
 import studentImages from "config/studentImages";
 import Sound from 'react-native-sound';
-
-const noAyahSelected = {
-  surah: 0,
-  page: 0,
-  ayah: 0
-};
-
-const noSelection = {
-  start: noAyahSelected,
-  end: noAyahSelected,
-  started: false,
-  completed: false
-};
+import KeepAwake from 'react-native-keep-awake';
+import { noSelection } from 'screens/MushafScreen/Helpers/consts';
+import { toNumberString } from "../MushafScreen/Helpers/AyahsOrder";
 
 class MushafReadingScreen extends Component {
   state = {
@@ -30,7 +20,10 @@ class MushafReadingScreen extends Component {
         }
       : noSelection,
     isLoading: true,
+    isPlaying: false,
   };
+
+  static track = undefined;
 
   async componentDidMount() {
     this.setState({ isLoading: false });
@@ -43,7 +36,8 @@ class MushafReadingScreen extends Component {
     // the call to push navigation to the proper next screen.
     if(this.props.navigation.state.params.origin !== 'FeedObject'){  
       this.props.navigation.push("StudentCurrentClass", {
-        userID
+        userID,
+        logAsPractice: true
       });
       return;
     }
@@ -51,32 +45,68 @@ class MushafReadingScreen extends Component {
   }
 
   onSelectAyah(selectedAyah, selectedWord) {
-    console.log(JSON.stringify(selectedWord));
+    if (this.state.isPlaying) {
+      if (this.track !== undefined) {
+        this.track.stop();
+        this.setState({
+          highlightedWords: undefined,
+          highlightedAyahs: undefined,
+          isPlaying: false,
+          isAudioLoading: false,
+        });
+      }
+      return;
+    }
     //todo: implement audio playback
     if (selectedWord) {
-      this.setState({ highlightedWord: selectedWord.id });
       let location =
         ('00' + selectedAyah.surah).slice(-3) +
         ('00' + selectedAyah.ayah).slice(-3);
 
       if (selectedWord.audio) {
-        let url = `https://dl.salamquran.com/wbw/${selectedWord.audio}`;
-        // 'https://dl.salamquran.com/ayat/afasy-murattal-192/' +
-        // location +
-        // ".mp3";
-        this.playTrack(url);
+        let url = "";
+        if (selectedWord.char_type === "word") {
+          let highlightedWords = {
+            [selectedWord.id]: {}
+          };
+          url = `https://dl.salamquran.com/wbw/${selectedWord.audio}`;
+          this.setState({ highlightedWords });
+          this.playTrack(url);
+        } else if (selectedWord.char_type === "end") {
+          //if user presses on an end of ayah, we highlight that entire ayah
+          let ayahKey = toNumberString(selectedAyah);
+          let highlightedAyahs = {
+            [ayahKey]: { ...selectedAyah }
+          };
+          url = `https://dl.salamquran.com/ayat/afasy-murattal-192/${
+            selectedWord.audio
+          }`;
+          this.setState({ highlightedAyahs });
+          this.playTrack(url);
+        }
       }
     }
   }
 
   playTrack = url => {
-    const track = new Sound(url, null, e => {
+    this.setState({ isPlaying: true, isAudioLoading: true });
+    this.track = new Sound(url, null, e => {
       if (e) {
         console.log("e: " + JSON.stringify(e));
+        this.setState({
+          highlightedWords: undefined,
+          highlightedAyahs: undefined,
+          isAudioLoading: false,
+          isPlaying: false,
+        });
       } else {
-        track.play(success => {
-          console.log(JSON.stringify(success));
-          this.setState({ highlightedWord: undefined });
+        this.setState({ isAudioLoading: false });
+        this.track.play(success => {
+          this.setState({
+            highlightedWords: undefined,
+            highlightedAyahs: undefined,
+            isPlaying: false,
+          });
         });
       }
     });
@@ -112,12 +142,18 @@ class MushafReadingScreen extends Component {
     } else {
       return (
         <View style={{ flex: 1 }}>
+          <KeepAwake />
           <MushafScreen
             assignToID={studentID}
             classID={classID}
             profileImage={studentImages.images[imageID]}
             selection={selection}
-            highlightedWord={this.state.highlightedWord}
+            showLoadingOnHighlightedAyah={
+              this.state.isAudioLoading === true &&
+              this.state.highlightedAyahs !== undefined
+            }
+            highlightedWords={this.state.highlightedWords}
+            highlightedAyahs={this.state.highlightedAyahs}
             assignmentName={assignmentName}
             assignmentLocation={assignmentLocation}
             assignmentType={assignmentType}

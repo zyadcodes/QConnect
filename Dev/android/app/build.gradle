@@ -131,8 +131,8 @@ android {
         applicationId "com.yungdevz.quranconnect"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 148
-        versionName "1.4.8"
+        versionCode 156
+        versionName "1.4.16"
         multiDexEnabled true
     }
     splits {
@@ -195,6 +195,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-keep-awake')
     implementation project(':react-native-firebase')
     implementation project(':react-native-sound')
     implementation project(':react-native-reanimated')
