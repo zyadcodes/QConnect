@@ -25,6 +25,9 @@ import teacherImages from '../../../config/teacherImages';
 import studentImages from '../../../config/studentImages';
 import FeedList from '../../components/FeedComponents/FeedList';
 import FastResponseTouchableOpacity from '../../components/FastResponseTouchableOpacity';
+import Modal from 'react-native-modal';
+import CommentModal from '../../components/FeedComponents/CommentModal';
+import ChatInput from '../../components/FeedComponents/ChatInput';
 
 export default class FeedsScreen extends React.Component {
   //*IMPORTANT* Make sure to clean up my Firebase calls here
@@ -46,6 +49,10 @@ export default class FeedsScreen extends React.Component {
       listIndex: -1,
       objectIndex: -1
     },
+    currentlyCommentingOn: {
+      listIndex: -1,
+      objectIndex: -1
+    },
     scrollLength: 0,
     currentScrollLoc: 0,
     feedsData: [],
@@ -53,6 +60,7 @@ export default class FeedsScreen extends React.Component {
     isRefreshingOldFeeds: false,
     isSelectingEmoji: false,
     isCommenting: false,
+    isChatting: false,
     newCommentTxt: '',
     isScrolling: false,
     inputHeight: screenHeight / 12
@@ -141,6 +149,25 @@ export default class FeedsScreen extends React.Component {
         }
       }
     }
+  }
+  async addComment(text){
+    const { feedsData, currentlyCommentingOn, role, student, teacher, currentClassID } = this.state;
+    let tempData = feedsData[currentlyCommentingOn.listIndex].data.splice();
+    let docID = feedsData[currentlyCommentingOn.listIndex].docID;
+    let currComments = tempData[currentlyCommentingOn.objectIndex].comments.splice();
+    currComments.push({
+      user: {
+        imageID: role === 'teacher' 
+          ? teacher.profileImageID 
+          : student.profileImageID, 
+        isTeacher: role === 'teacher', 
+        name: role === 'teacher' 
+          ? teacher.name 
+          : student.name,
+      },
+      content: text})
+    tempData[currentlyCommentingOn.objectIndex].comments = currComments;
+    await FirebaseFunctions.updateFeedDoc(tempData, docID, currentClassID, false)
   }
   async sendMessage(text) {
     const newObj = {
@@ -295,7 +322,9 @@ export default class FeedsScreen extends React.Component {
                     currentlySelectingIndex: { listIndex: index, objectIndex },
                   })
                 }
-                beginCommenting={() => this.setState({ isCommenting: true })}
+                beginCommenting={(listIndex, objectIndex) => {
+                  this.setState({currentlyCommentingOn: {listIndex, objectIndex}, isCommenting: true})
+                }}
               />
             )}
           />
@@ -332,43 +361,79 @@ export default class FeedsScreen extends React.Component {
             onBackdropPress={this.toggleSelectingEmoji.bind(this)}
           />
         ) : null}
-        <KeyboardAvoidingView
-          style={[
-            localStyles.commentingContainer,
-            { paddingBottom: screenHeight / 70 },
-          ]}
-        >
-          <TextInput
-            ref={ref => (this.commentInputRef = ref)}
-            onTouchEnd={() => {
-              FeedsScreen.whenKeyboardShows();
-              this.setState({ isCommenting: true });
-            }}
-            value={this.state.newCommentTxt}
-            onChangeText={text => this.setState({ newCommentTxt: text })}
-            multiline
-            onBlur={FeedsScreen.whenKeyboardHides.bind(this)}
-            blurOnSubmit={false}
-            onContentSizeChange={event =>
-              this.setState({
-                inputHeight: event.nativeEvent.contentSize.height + 5,
-              })
-            }
-            style={localStyles.commentingTextInput}
-          />
-          <FastResponseTouchableOpacity
-            ref={ref => (this.sendBtnRef = ref)}
-            disabled={this.state.newCommentTxt === ''}
-            onPress={async () =>
-              await this.sendMessage(this.state.newCommentTxt).then(() => {
-                this.setState({ isCommenting: false });
-              })
-            }
-            style={[localStyles.sendBtn]}
-          >
-            <Text style={{ color: colors.primaryDark }}>Send</Text>
-          </FastResponseTouchableOpacity>
-        </KeyboardAvoidingView>
+        {this.state.isCommenting ?
+          <CommentModal 
+              onBackdropPress={() => this.setState({isCommenting: false})}
+              item={this.state.feedsData[this.state.currentlyCommentingOn.listIndex]
+              .data[this.state.currentlyCommentingOn.objectIndex]}
+              role={this.state.role}
+              teacher={this.state.teacher}
+              student={this.state.student}
+              objectIndex={this.state.currentlyCommentingOn.objectIndex}
+              listIndex={this.state.currentlyCommentingOn.listIndex}
+              currentUser={
+                this.state.role === 'teacher'
+                  ? this.state.teacher
+                  : this.state.student
+              }
+              onPushToOtherScreen={(pushParamScreen, pushParamObj) => {
+                this.setState({ isLoading: true });
+                this.props.navigation.push(pushParamScreen, pushParamObj);
+                this.setState({ isLoading: false });
+              }}
+              classID={this.state.currentClassID}
+              studentClassInfo={this.state.studentClassInfo}
+              onPressChangeEmojiVote={this.changeEmojiVote.bind(this)}
+              onPressSelectEmoji={objectIndex =>
+                this.setState({
+                  isSelectingEmoji: true,
+                  currentlySelectingIndex: { listIndex: index, objectIndex },
+                })
+              }
+              showCommentButton={false}
+            >
+              <ChatInput
+                width={0.9*screenWidth}
+                newCommentTxt={this.state.newCommentTxt}
+                onChangeText={text => this.setState({ newCommentTxt: text })}
+                onTextInputBlur={() => FeedsScreen.whenKeyboardHides()}
+                textInputOnTouchEnd={() => {}}
+                textInputOnContentSizeChange={event =>
+                  this.setState({
+                    inputHeight: event.nativeEvent.contentSize.height + 5,
+                  })
+                }
+                ref={ref => this.chatInputRef = ref}
+                sendOnPress={async () => {
+                    console.warn('IM HERE')
+                    await this.addComment(this.state.newCommentTxt)
+                    this.setState({newCommentTxt: ''})
+                }}
+              />
+          </CommentModal>
+          : null
+        }
+        <ChatInput
+          width={screenWidth}
+          newCommentTxt={this.state.newCommentTxt}
+          onChangeText={text => this.setState({ newCommentTxt: text })}
+          onTextInputBlur={() => FeedsScreen.whenKeyboardHides()}
+          textInputOnTouchEnd={() => {
+          FeedsScreen.whenKeyboardShows();
+            this.setState({ isChatting: true });
+          }}
+             textInputOnContentSizeChange={event =>
+                  this.setState({
+                    inputHeight: event.nativeEvent.contentSize.height + 5,
+                  })
+                }
+                ref={ref => this.chatInputRef = ref}
+                sendOnPress={async () => {
+                    await this.sendMessage(this.state.newCommentTxt).then(() => {
+                      this.setState({ isChatting: false });
+                    })
+                }}
+              />
       </SideMenu>
     );
   }
@@ -377,34 +442,8 @@ const localStyles = StyleSheet.create({
   containerView: {
     flex: 1
   },
-  sendBtn: {
-    paddingVertical: 1,
-    paddingHorizontal: 5,
-    borderWidth: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.primaryLight,
-    borderColor: colors.primaryLight,
-    borderRadius: 10,
-  },
-  commentingContainer: {
-    width: screenWidth,
-    alignItems: 'flex-end',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: colors.veryLightGrey
-  },
-  commentingTextInput: {
-    borderWidth: 2,
-    borderRadius: 10,
-    height: '70%',
-    flexWrap: 'wrap',
-    marginLeft: screenWidth / 15,
-    borderColor: colors.primaryDark,
-    width: screenWidth / 1.75
-  },
   scrollViewStyle: {
-    backgroundColor: colors.lightGrey,
+    backgroundColor: colors.primaryVeryLight,
   },
   spinnerContainerStyle: {
     flex: 1,

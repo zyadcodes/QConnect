@@ -107,6 +107,7 @@ export default class FeedsObject extends Component {
           <Text style={this.localStyles.userName}>{this.props.userName}</Text>
         </View>
         <View
+          onLayout={(nativeEvent) => this.contentContainerViewWidth = nativeEvent.nativeEvent.layout.width}
           style={{
             flex: 2,
             marginLeft: this.props.isMadeByCurrentUser
@@ -158,54 +159,64 @@ export default class FeedsObject extends Component {
             <View
               style={{
                 flexDirection: 'row',
+                justifyContent: 'space-between',
                 alignSelf: this.props.isMadeByCurrentUser
                   ? 'flex-start'
-                  : 'flex-end'
+                  : 'flex-end',
+                width: this.contentContainerViewWidth,
               }}
-            >
-              <FlatList
-                data={this.props.reactions}
-                style={{ flexDirection: 'row' }}
-                renderItem={({ item, index, seperators }) => (
+            > 
+              {this.props.isMadeByCurrentUser || !this.props.showCommentButton 
+                ? <View/>
+                : <TouchableOpacity key="comment" onPress={() => this.props.beginCommenting(this.props.number)} style={[this.localStyles.addReaction, {left: 0}]}>
+                    <Icon type="font-awesome" name="commenting" size={fontScale*16} color={colors.primaryDark}/>
+                  </TouchableOpacity>
+              }
+              <View style={{flexDirection: 'row'}}>
+                <FlatList
+                  data={this.props.reactions}
+                  style={{ flexDirection: 'row' }}
+                  renderItem={({ item, index, seperators }) => (
+                    <TouchableOpacity
+                      onPress={() =>
+                        this.props.onPressChangeEmojiVote(
+                          this.changeEmojiVote(index)
+                        )
+                      }
+                      key={index}
+                      activeOpacity={0.6}
+                      style={[this.localStyles.Reaction,
+                        item.reactedBy.includes(this.props.currentUser.ID) 
+                          ? {backgroundColor: colors.lightBlue, borderColor: colors.lightBlue} 
+                          : {backgroundColor: colors.primaryLight, borderColor: colors.primaryLight}]}
+                    >
+                      <View style={this.localStyles.reactionView}>
+                        <Text>{item.reactedBy.length}</Text>
+                        <Text>{item.emoji}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                />
+                {this.props.isMadeByCurrentUser ? null : (
                   <TouchableOpacity
-                    onPress={() =>
-                      this.props.onPressChangeEmojiVote(
-                        this.changeEmojiVote(index)
-                      )
-                    }
-                    key={index}
+                    key="reaction"
+                    onPress={() => this.props.onPressSelectEmoji()}
+                    style={[this.localStyles.addReaction]}
                     activeOpacity={0.6}
-                    style={[this.localStyles.Reaction,
-                       item.reactedBy.includes(this.props.currentUser.ID) 
-                        ? {backgroundColor: colors.lightBlue, borderColor: colors.lightBlue} 
-                        : {backgroundColor: colors.primaryLight, borderColor: colors.primaryLight}]}
                   >
-                    <View style={this.localStyles.reactionView}>
-                      <Text>{item.reactedBy.length}</Text>
-                      <Text>{item.emoji}</Text>
-                    </View>
+                    <Icon
+                      name="plus"
+                      type="entypo"
+                      size={fontScale * 16}
+                      color={colors.primaryDark}
+                    />
                   </TouchableOpacity>
                 )}
-              />
-              {this.props.isMadeByCurrentUser ? null : (
-                <TouchableOpacity
-                  onPress={() => this.props.onPressSelectEmoji()}
-                  style={this.localStyles.addReaction}
-                  activeOpacity={0.6}
-                >
-                  <Icon
-                    name="plus"
-                    type="entypo"
-                    size={fontScale * 16}
-                    color={colors.primaryDark}
-                  />
-                </TouchableOpacity>
-              )}
+              </View>
             </View>
           </View>
           <ThreadComponent
             isCurrentUser={this.props.isMadeByCurrentUser}
-            beginCommenting={() => this.props.beginCommenting()}
             listKey={this.props.number}
             isAssignment={this.props.type === 'assignment'}
             comments={this.props.comments}
@@ -228,7 +239,7 @@ export default class FeedsObject extends Component {
       alignItems: 'center'
     },
     containerView: {
-      includeFontPadding: this.props.isMadeByCurrentUser,
+      flex: 1,
       width:
         this.props.type == 'assignment'
           ? (2.4 * screenWidth) / 3
@@ -281,7 +292,6 @@ export default class FeedsObject extends Component {
       backgroundColor: colors.primaryLight,
       borderColor: colors.primaryLight,
       borderRadius: (screenScale * 8) / 2,
-      alignSelf: 'flex-end',
       position: 'relative',
       bottom: screenScale * 4,
       left: screenScale * 4

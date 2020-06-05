@@ -57,16 +57,6 @@ export default class ThreadComponent extends Component {
         }}
       >
         <View style={{ flexDirection: 'row' }}>
-          <TouchableOpacity
-            key={this.props.listKey + 1}
-            onPress={() => this.addingComment()}
-            style={[
-              this.localStyles.threadActionBtn,
-              { marginRight: screenWidth / 50 },
-            ]}
-          >
-            <Text style={this.localStyles.btnTxt}>+ Comment</Text>
-          </TouchableOpacity>
           { this.props.comments.length === 0 
             ? null
             : <TouchableOpacity
@@ -100,8 +90,8 @@ export default class ThreadComponent extends Component {
                   }
                 />
                 <View style={this.localStyles.userNameAndComment}>
-                  <Text style={{ fontWeight: 'bold' }}>{item.user.Name}</Text>
-                  <Text>fewfjewifjewiofjewiofjewfweffjewiojfowe</Text>
+                  <Text style={{ fontWeight: 'bold' }}>{item.user.name}</Text>
+                  <Text>{item.content}</Text>
                 </View>
               </View>
             )}

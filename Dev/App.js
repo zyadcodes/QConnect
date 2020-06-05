@@ -27,23 +27,6 @@ export default class App extends Component {
 
   async componentWillUnmount() {
     this.unsubscribe();
-    await FirebaseFunctions.auth.onAuthStateChanged(async user => {
-      try {
-          if (!user) {
-            return;
-          }
-          //Makes sure this user is subscribed to a topic
-          const student = await FirebaseFunctions.getStudentByID(user.uid);
-          if (student !== -1) {
-            FirebaseFunctions.setUserActiveState(student.ID, false, 'offline');
-            return;
-          }
-          FirebaseFunctions.setUserActiveState(user.uid, true, 'offline');
-          return;
-      } catch (err) {
-        console.log(JSON.stringify(err.toString()));
-      }
-    });
   }
 
   async componentDidMount() {
@@ -97,7 +80,7 @@ export default class App extends Component {
       "componentWillMount",
       "componentWillReceiveProps"
     ]);
-    console.disableYellowBox = false;
+    console.disableYellowBox = true;
 
     try {
       return this.renderMainApp();

@@ -14,6 +14,7 @@ export default class FeedList extends Component {
         style={{ marginTop: this.props.index === 0 ? screenHeight / 40 : 0 }}
         renderItem={({ item, index, separators }) => (
           <FeedsObject
+            showCommentButton={true}
             onPressSelectEmoji={() => this.props.onPressSelectEmoji()}
             madeByUserID={item.madeByUser.ID}
             isMadeByCurrentUser={
@@ -28,7 +29,6 @@ export default class FeedList extends Component {
             role={this.props.role}
             content={item.content}
             number={index}
-            listIndex={this.props.index}
             studentClassInfo={
               item.type === 'assignment' && this.props.role === 'student'
                 ? this.props.studentClassInfo
@@ -46,7 +46,7 @@ export default class FeedList extends Component {
                 changedReactions
               )
             }
-            beginCommenting={() => this.props.beginCommenting()}
+            beginCommenting={(objectIndex) => this.props.beginCommenting(this.props.index, objectIndex)}
             onPressSelectEmoji={() => this.props.onPressSelectEmoji(index)}
             key={index}
             type={item.type}

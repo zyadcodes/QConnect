@@ -300,9 +300,9 @@ export default class FirebaseFunctions {
           : status === "NEED_HELP"
           ? strings.NeedsHelp
           : strings.Ready;
-      currentClass.teachers.forEach(async teacherID => {
+      currentClass.teachers.forEach(async ({ID}) => {
         this.functions.httpsCallable("sendNotification")({
-          topic: teacherID,
+          topic: ID,
           title: strings.StudentUpdate,
           body:
             arrayOfStudents[studentIndex].name +
@@ -601,11 +601,11 @@ export default class FirebaseFunctions {
 
       if (sendNotification) {
         //send notification
-        currentClass.teachers.forEach(async teacherID => {
+        currentClass.teachers.forEach(async ({ID}) => {
           //todo: this may end up too noisy.
           // once we implement in-app feed, consider show this there instead.
           this.functions.httpsCallable("sendNotification")({
-            topic: teacherID,
+            topic: ID,
             title: strings.StudentUpdate,
             body:
               arrayOfStudents[studentIndex].name +
@@ -801,7 +801,7 @@ export default class FirebaseFunctions {
 
     //Sends a notification to the teachers of that class saying that a student has joined the class
     //alert(classToJoin.docs[0].data().teachers);
-    classToJoin.docs[0].data().teachers.forEach(teacherID => {
+    classToJoin.docs[0].data().teachers.forEach(({ID}) => {
       this.functions.httpsCallable("sendNotification", {
         topic: teacherID,
         title: strings.NewStudent,
