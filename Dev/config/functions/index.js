@@ -44,18 +44,37 @@ exports.createTeacher = functions.https.onCall(async (input, context) => {
 exports.createStudent = functions.https.onCall(async (input, context) => {
 	const { emailAddress, isManual, name, phoneNumber, profileImageID, studentID } = input;
 
-	batch.create(Students.doc(studentID), {
-		classIDs: [],
-		currentClassID: '',
-		emailAddress,
-		isManual,
-		name,
-		phoneNumber,
-		profileImageID,
-		studentID,
-	});
-	await batch.commit();
-	return 0;
+	if (isManual === true) {
+		const newDocument = await Students.add({
+			classIDs: [],
+			currentClassID: '',
+			emailAddress,
+			isManual,
+			name,
+			phoneNumber,
+			profileImageID,
+		});
+
+		const docID = (await newDocument.get()).id;
+
+		await newDocument.update({
+			studentID: docID,
+		});
+	} else {
+		batch.create(Students.doc(studentID), {
+			classIDs: [],
+			currentClassID: '',
+			emailAddress,
+			isManual,
+			name,
+			phoneNumber,
+			profileImageID,
+			studentID,
+		});
+		await batch.commit();
+
+		return 0;
+	}
 });
 
 //Method takes in all the required information to create a class document, and adds it to Cloud Firestore under
@@ -67,7 +86,6 @@ exports.createClass = functions.https.onCall(async (input, context) => {
 	//Adds the base class invite code, the classID and the teacher's information to the newly created class document
 	const result = await firestore.runTransaction(async (transaction) => {
 		const teacherDocument = (await transaction.get(Teachers.doc(teacherID))).data();
-
 		await transaction.update(Classes.doc(newClassDocument.id), {
 			classID: newClassDocument.id,
 			classInviteCode: newClassDocument.id.substring(0, 5),
@@ -80,6 +98,10 @@ exports.createClass = functions.https.onCall(async (input, context) => {
 			],
 		});
 
+		await transaction.update(Teachers.doc(teacherID), {
+			classIDs: admin.firestore.FieldValue.arrayUnion(newClassDocument.id),
+			currentClassID: newClassDocument.id
+		});
 		return 0;
 	});
 
@@ -168,9 +190,12 @@ exports.updateTeacherByID = functions.https.onCall(async (input, context) => {
 	if (updates.name || updates.profileImageID) {
 		await firestore.runTransaction(async (transaction) => {
 			const teacherDocument = (await transaction.get(Teachers.doc(teacherID))).data();
-			const classDocuments = await teacherDocument.classIDs.map(async (classID) =>
-				(await transaction.get(Classes.doc(classID))).data()
-			);
+			const classIDs = teacherDocument.classIDs;
+			const classDocuments = [];
+			for (const classID of classIDs) {
+				const eachClass = (await transaction.get(Classes.doc(classID))).data();
+				classDocuments.push(eachClass);
+			}
 			for (const eachClass of classDocuments) {
 				const updatedClass = eachClass;
 				const indexOfTeacher = eachClass.teachers.findIndex(
@@ -207,9 +232,12 @@ exports.updateStudentByID = functions.https.onCall(async (input, context) => {
 	if (updates.name || updates.profileImageID) {
 		await firestore.runTransaction(async (transaction) => {
 			const studentDocument = (await transaction.get(Students.doc(studentID))).data();
-			const classDocuments = await studentDocument.classIDs.map(async (classID) =>
-				(await transaction.get(Classes.doc(classID))).data()
-			);
+			const classIDs = studentDocument.classIDs;
+			const classDocuments = [];
+			for (classID of classIDs) {
+				const eachClass = (await transaction.get(Classes.doc(classID))).data();
+				classDocuments.push(eachClass);
+			}
 			for (const eachClass of classDocuments) {
 				const updatedClass = eachClass;
 				const indexOfStudent = eachClass.students.findIndex(
@@ -217,22 +245,29 @@ exports.updateStudentByID = functions.https.onCall(async (input, context) => {
 				);
 				if (updates.name) {
 					updatedClass.students[indexOfStudent].name = updates.name;
+					await transaction.update(
+						Classes.doc(eachClass.classID)
+							.collection('Students')
+							.doc(studentID),
+						{
+							name: updates.name,
+						}
+					);
 				}
 				if (updates.profileImageID) {
 					updatedClass.students[indexOfStudent].profileImageID = updates.profileImageID;
+					await transaction.update(
+						Classes.doc(eachClass.classID)
+							.collection('Students')
+							.doc(studentID),
+						{
+							profileImageID: updates.profileImageID,
+						}
+					);
 				}
 				await transaction.update(Classes.doc(eachClass.classID), {
 					students: updatedClass.students,
 				});
-				await transaction.update(
-					Classes.doc(eachClass.classID)
-						.collection('Students')
-						.doc(studentID),
-					{
-						name: updates.name,
-						profileImageID: updates.profileImageID,
-					}
-				);
 			}
 			await transaction.update(Students.doc(studentID), updates);
 		});
@@ -263,19 +298,23 @@ exports.disconnectTeacherFromClass = functions.https.onCall(async (input, contex
 		const teacherDocument = (await transaction.get(Teachers.doc(teacherID))).data();
 
 		await transaction.update(Classes.doc(classID), {
-			teachers: admin.firestore.FieldValue.arrayRemove(teacherID),
+			teachers: admin.firestore.FieldValue.arrayRemove({
+				name: teacherDocument.name,
+				profileImageID: teacherDocument.profileImageID,
+				teacherID
+			}),
 		});
 
 		if (teacherDocument.currentClassID === classID) {
-			if (teacherDocument.classes.length > 1) {
-				const newClassID = teacherDocument.classes.find((eachClassID) => eachClassID !== classID);
+			if (teacherDocument.classIDs.length > 1) {
+				const newClassID = teacherDocument.classIDs.find((eachClassID) => eachClassID !== classID);
 				await transaction.update(Teachers.doc(teacherID), {
-					classes: admin.firestore.FieldValue.arrayRemove(classID),
+					classIDs: admin.firestore.FieldValue.arrayRemove(classID),
 					currentClassID: newClassID,
 				});
 			} else {
 				await transaction.update(Teachers.doc(teacherID), {
-					classes: admin.firestore.FieldValue.arrayRemove(classID),
+					classIDs: admin.firestore.FieldValue.arrayRemove(classID),
 					currentClassID: '',
 				});
 			}
@@ -290,7 +329,7 @@ exports.disconnectTeacherFromClass = functions.https.onCall(async (input, contex
 	return result;
 });
 
-// -------------------------- Join Class Functions --------------------------
+//-------------------------- Join Class Functions --------------------------
 
 //This method is going to take in a studentID and a classInviteCode as parameters. It is then going to connect
 //the two documents by adding the classID to the array of the student's classes. Then it will add the student snippet
@@ -301,19 +340,20 @@ exports.joinClassByClassInviteCode = functions.https.onCall(async (input, contex
 
 	const result = await firestore.runTransaction(async (transaction) => {
 		const query = await transaction.get(Classes.where('classInviteCode', '==', classInviteCode));
-		const studentDoc = await transaction.get(
-			Classes.doc(classID)
-				.collection('Students')
-				.doc(studentID)
-		);
 		if (query.docs.length === 0) {
 			return -1;
 		}
 		const classDocument = query.docs[0].data();
 		const studentDocument = (await transaction.get(Students.doc(studentID))).data();
+		const subCollectionStudentDoc = await transaction.get(
+			Classes.doc(classDocument.classID)
+				.collection('Students')
+				.doc(studentID)
+		);
 
 		await transaction.update(Students.doc(studentID), {
-			classes: admin.firestore.FieldValue.arrayUnion(classDocument.classID),
+			classIDs: admin.firestore.FieldValue.arrayUnion(classDocument.classID),
+			currentClassID: classDocument.classID,
 		});
 		await transaction.update(Classes.doc(classDocument.classID), {
 			students: admin.firestore.FieldValue.arrayUnion({
@@ -324,7 +364,7 @@ exports.joinClassByClassInviteCode = functions.https.onCall(async (input, contex
 		});
 
 		//Checks to see if that student already had data in that class
-		if (!studentDoc.exists) {
+		if (!subCollectionStudentDoc.exists) {
 			await transaction.set(
 				Classes.doc(classDocument.classID)
 					.collection('Students')
@@ -338,6 +378,25 @@ exports.joinClassByClassInviteCode = functions.https.onCall(async (input, contex
 					studentID,
 					totalAssignments: 0,
 				}
+			);
+		} else {
+			await transaction.update(
+				Classes.doc(classDocument.classID)
+					.collection('Students')
+					.doc(studentID),
+				{
+					name: studentDocument.name,
+					profileImageID: studentDocument.profileImageID,
+				}
+			);
+		}
+
+		for (const teacher of classDocument.teachers) {
+			const { teacherID } = teacher;
+			sendNotification(
+				teacherID,
+				'New Student',
+				studentDocument.name + ' has joined ' + classDocument.className
 			);
 		}
 
@@ -365,12 +424,12 @@ exports.disconnectStudentFromClass = functions.https.onCall(async (input, contex
 		});
 
 		await transaction.update(Students.doc(studentID), {
-			classes: admin.firestore.FieldValue.arrayRemove(classID),
+			classIDs: admin.firestore.FieldValue.arrayRemove(classID),
 		});
 
 		if (studentDocument.currentClassID === classID) {
-			if (studentDocument.classes.length > 1) {
-				const classIDToUpdateTo = studentDocument.classes.find(
+			if (studentDocument.classIDs.length > 1) {
+				const classIDToUpdateTo = studentDocument.classIDs.find(
 					(newClassIDs) => newClassIDs !== classID
 				);
 				await transaction.update(Students.doc(studentID), {
@@ -389,7 +448,7 @@ exports.disconnectStudentFromClass = functions.https.onCall(async (input, contex
 	return result;
 });
 
-// -------------------------- Assignment Functions --------------------------
+//-------------------------- Assignment Functions --------------------------
 
 //This method is going to take in assignment details and a studentID and a classID as parameters, and is going to add
 //that assignment as a document to the student's assingments subcollection. The method is going to return
@@ -407,7 +466,7 @@ exports.addAssignmentByClassID = functions.https.onCall(async (input, context) =
 	const { classID, location, name, type } = input;
 
 	const result = await firestore.runTransaction(async (transaction) => {
-		const classDocument = await transaction.get(Classes.doc(classID));
+		const classDocument = (await transaction.get(Classes.doc(classID))).data();
 		const promises = [];
 		for (const studentObject of classDocument.students) {
 			promises.push(
@@ -430,7 +489,7 @@ exports.updateAssignmentByAssignmentID = functions.https.onCall(async (input, co
 
 	const result = await firestore.runTransaction(async (transaction) => {
 		const classDocument = (await transaction.get(Classes.doc(classID))).data();
-		const studentDocument = (await transaction.get(Classes.doc(studentID))).data();
+		const studentDocument = (await transaction.get(Students.doc(studentID))).data();
 
 		await transaction.update(
 			Classes.doc(classID)
@@ -438,13 +497,13 @@ exports.updateAssignmentByAssignmentID = functions.https.onCall(async (input, co
 				.doc(studentID)
 				.collection('Assignments')
 				.doc(assignmentID),
-			{ updates }
+			updates
 		);
 
 		if (updates.status) {
-			for (const teacherID of classDocument.teachers) {
+			for (const teacher of classDocument.teachers) {
 				sendNotification(
-					teacherID,
+					teacher.teacherID,
 					'Status Update',
 					studentDocument.name + ' has updated their status for an assignment.'
 				);
@@ -481,41 +540,6 @@ exports.getAssignmentByID = functions.https.onCall(async (input, context) => {
 	return result;
 });
 
-//This method is going to take in a studentID and a classID. It will then return all the completed assignments for that student
-//as an array. If the student doesn't have any completed assignments, then the method returns an empty array. This method takes
-//in a second parameter: limit. If this parameter is a number, then the method will only return that number of assignments sorted
-//by completion date. If that parameter is not a number, then the method returns ALL of the student's past assignments sorted
-//by completion date
-exports.getCompletedAssignmentsByStudentID = functions.https.onCall(async (input, context) => {
-	const { classID, studentID, limit } = input;
-
-	const result = await firestore.runTransaction(async (transaction) => {
-		const assignmentsQuery = Classes.doc(classID)
-			.collection('Students')
-			.doc(studentID)
-			.collection('Assignments');
-
-		let finalDocs = [];
-
-		if (typeof limit === 'number') {
-			finalDocs = await transaction.get(assignmentsQuery.limit(limit));
-		} else {
-			finalDocs = await transaction.get(assignmentsQuery);
-		}
-
-		finalDocs = finalDocs.docs.map((doc) => doc.data());
-
-		//Sortst them by completionDate
-		finalDocs.sort((a, b) => {
-			return new Date(a.completionDate).getTime() - new Date(b.completionDate).getTime();
-		});
-
-		return finalDocs;
-	});
-
-	return result;
-});
-
 //This method is going to take in an evalutation object, a studentID, a classID, and an assignmentID and will set the
 //evaluation for that assignment to that object. If this is a new evaluation, then a completion date field will also
 //be added to the document. And the average rating and total assignments for the student will be updated.
@@ -541,7 +565,7 @@ exports.submitEvaluationByAssignmentID = functions.https.onCall(async (input, co
 		if (assignmentObject.evaluation) {
 			//Performs the calculation to figure out the new average grade
 			let sum = studentObject.averageRating * studentObject.totalAssignments;
-			sum -= assignmentObject.rating;
+			sum -= assignmentObject.evaluation.rating;
 			sum += evaluation.rating;
 
 			const newAverageRating = sum / studentObject.totalAssignments;
@@ -607,8 +631,44 @@ exports.submitEvaluationByAssignmentID = functions.https.onCall(async (input, co
 
 			return 0;
 		}
+	});
 
-		sendNotification(studentID, 'Assignment Graded', 'Your teacher has graded your assignment.');
+	sendNotification(studentID, 'Assignment Graded', 'Your teacher has graded your assignment.');
+
+	return result;
+});
+
+//This method is going to take in a studentID and a classID. It will then return all the completed assignments for that student
+//as an array. If the student doesn't have any completed assignments, then the method returns an empty array. This method takes
+//in a second parameter: limit. If this parameter is a number, then the method will only return that number of assignments sorted
+//by completion date. If that parameter is not a number, then the method returns ALL of the student's past assignments sorted
+//by completion date
+exports.getCompletedAssignmentsByStudentID = functions.https.onCall(async (input, context) => {
+	const { classID, studentID, limit } = input;
+
+	const result = await firestore.runTransaction(async (transaction) => {
+		const assignmentsQuery = Classes.doc(classID)
+			.collection('Students')
+			.doc(studentID)
+			.collection('Assignments')
+			.where('status', '==', 'COMPLETED');
+
+		let finalDocs = [];
+
+		if (typeof limit === 'number') {
+			finalDocs = await transaction.get(assignmentsQuery.limit(limit));
+		} else {
+			finalDocs = await transaction.get(assignmentsQuery);
+		}
+
+		finalDocs = finalDocs.docs.map((doc) => doc.data());
+
+		//Sortst them by completionDate
+		finalDocs.sort((a, b) => {
+			return new Date(a.completionDate).getTime() - new Date(b.completionDate).getTime();
+		});
+
+		return finalDocs;
 	});
 
 	return result;
@@ -655,6 +715,8 @@ exports.downloadAudioByAssignmentID = functions.https.onCall(async (input, conte
 exports.addPracticeLogForStudentByWeek = functions.https.onCall(async (input, context) => {
 	const { studentID, classID, day, practiceLog } = input;
 
+	const batch = firestore.batch();
+
 	const document = Classes.doc(classID)
 		.collection('Students')
 		.doc(studentID)
@@ -692,7 +754,7 @@ exports.getPracticeLogForStudentByWeek = functions.https.onCall(async (input, co
 	return result;
 });
 
-// -------------------------- Attendance Functions --------------------------
+//-------------------------- Attendance Functions --------------------------
 
 //This method is going to take in a classID and a day string in the format YYYY-MM-DD and an object containing key-value pairs of
 //students and their attendance for that specific day. If there is already an attendance that exists and is saved to that
@@ -705,6 +767,7 @@ exports.saveAttendanceForClassByDay = functions.https.onCall(async (input, conte
 			.collection('Attendance')
 			.doc(day);
 		const attendanceDocument = await transaction.get(attendanceDocumentRef);
+		const attendanceData = attendanceDocument.data();
 
 		if (!attendanceDocument.exists) {
 			for (const studentID of Object.keys(attendanceObject)) {
@@ -723,6 +786,30 @@ exports.saveAttendanceForClassByDay = functions.https.onCall(async (input, conte
 							.collection('Students')
 							.doc(studentID),
 						{
+							classesMissed: admin.firestore.FieldValue.increment(1),
+						}
+					);
+				}
+			}
+		} else {
+			for (const studentID of Object.keys(attendanceObject)) {
+				if (attendanceObject[studentID] === true && attendanceData[studentID] === false) {
+					await transaction.update(
+						Classes.doc(classID)
+							.collection('Students')
+							.doc(studentID),
+						{
+							classesAttended: admin.firestore.FieldValue.increment(1),
+							classesMissed: admin.firestore.FieldValue.increment(-1),
+						}
+					);
+				} else if (attendanceObject[studentID] === false && attendanceData[studentID] === true) {
+					await transaction.update(
+						Classes.doc(classID)
+							.collection('Students')
+							.doc(studentID),
+						{
+							classesAttended: admin.firestore.FieldValue.increment(-1),
 							classesMissed: admin.firestore.FieldValue.increment(1),
 						}
 					);
@@ -783,6 +870,7 @@ const sendNotification = async (topic, title, body) => {
 
 //This method will serve as the global function for adding an assignment for a specific student
 const addAssignmentByStudentID = async (classID, studentID, location, name, type) => {
+	const newBatch = firestore.batch();
 	const date = new Date();
 	let year = date.getFullYear();
 	let month = date.getMonth() + 1;
@@ -807,7 +895,7 @@ const addAssignmentByStudentID = async (classID, studentID, location, name, type
 			status: 'NOT_STARTED',
 		});
 
-	batch.update(
+	newBatch.update(
 		Classes.doc(classID)
 			.collection('Students')
 			.doc(studentID)
@@ -816,7 +904,7 @@ const addAssignmentByStudentID = async (classID, studentID, location, name, type
 		{ assignmentID: newDocument.id }
 	);
 
-	await batch.commit();
+	await newBatch.commit();
 
 	sendNotification(studentID, 'New Assignment', 'Your teacher has added a new assignment for you.');
 	return newDocument.id;

@@ -21,6 +21,13 @@ export default class FirebaseFunctions {
   //-----------------------------
   //Methods that can be called from any other class
 
+  //Method calls a firebase function by taking the functions name as a parameter, the parameters of the cloud function
+	//as a second parameter, and then returns the functions result
+	static async call(functionName, parameters) {
+		const functionReturn = await this.functions.httpsCallable(functionName)(parameters);
+		return functionReturn.data;
+	}
+
   //This functions will take in an email and a password & will sign a user up using
   //firebase authentication (will also sign the user in). Additionally, it will take
   //in a boolean to determine whether this is a student or a teacher account. Based
