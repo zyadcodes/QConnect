@@ -22,10 +22,12 @@ import studentImages from '../../../config/studentImages';
 
 export default class ThreadComponent extends Component {
   state = {
-    threadAction: 'Extend',
-    isExtended: false,
+    threadAction: this.props.isExtended ? 'Collapse' : 'Extend',
+    isExtended: this.props.isExtended,
     isCommenting: false,
-    arrowDirection: 'md-arrow-dropright'
+    arrowDirection: this.props.isExtended
+      ? 'md-arrow-dropdown'
+      : 'md-arrow-dropright'
   };
   toggleThread() {
     let threadAction = 'Collapse';
@@ -57,9 +59,8 @@ export default class ThreadComponent extends Component {
         }}
       >
         <View style={{ flexDirection: 'row' }}>
-          { this.props.comments.length === 0 
-            ? null
-            : <TouchableOpacity
+          {this.props.comments.length === 0 ? null : (
+            <TouchableOpacity
               key={this.props.listKey + 2}
               onPress={() => this.toggleThread()}
               style={this.localStyles.threadActionBtn}
@@ -73,7 +74,7 @@ export default class ThreadComponent extends Component {
                 name={this.state.arrowDirection}
               />
             </TouchableOpacity>
-        }
+          )}
         </View>
         {this.state.isExtended ? (
           <FlatList

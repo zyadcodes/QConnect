@@ -300,7 +300,7 @@ export default class FirebaseFunctions {
           : status === "NEED_HELP"
           ? strings.NeedsHelp
           : strings.Ready;
-      currentClass.teachers.forEach(async ({ID}) => {
+      currentClass.teachers.forEach(async ({ ID }) => {
         this.functions.httpsCallable("sendNotification")({
           topic: ID,
           title: strings.StudentUpdate,
@@ -553,7 +553,26 @@ export default class FirebaseFunctions {
       this.analytics.logEvent("COMPLETE_CURRENT_ASSIGNMENT", {
         improvementAreas: evaluationDetails.improvementAreas
       });
-
+      let lastIndex = (await this.feeds.doc(classID).get()).data().lastIndex;
+      let tempData = await (await this.feeds
+        .doc(classID)
+        .collection('content')
+        .doc(lastIndex)
+        .get()).data().data;
+      tempData.push({
+        type: 'achievement',
+        comments: [],
+        reactions: [],
+        madeByUser: {
+          name: arrayOfStudents[studentIndex].name,
+          imageID: arrayOfStudents[studentIndex].profileImageID,
+          role: 'student',
+          ID: arrayOfStudents[studentIndex].ID
+        },
+        content:
+          arrayOfStudents[studentIndex].name + ' Completed an Assignment!'
+      });
+      await this.updateFeedDoc(tempData, lastIndex, classID, true);
       //Notifies that student that their assignment has been graded
       this.functions.httpsCallable("sendNotification")({
         topic: studentID,
@@ -601,7 +620,7 @@ export default class FirebaseFunctions {
 
       if (sendNotification) {
         //send notification
-        currentClass.teachers.forEach(async ({ID}) => {
+        currentClass.teachers.forEach(async ({ ID }) => {
           //todo: this may end up too noisy.
           // once we implement in-app feed, consider show this there instead.
           this.functions.httpsCallable("sendNotification")({
@@ -801,7 +820,7 @@ export default class FirebaseFunctions {
 
     //Sends a notification to the teachers of that class saying that a student has joined the class
     //alert(classToJoin.docs[0].data().teachers);
-    classToJoin.docs[0].data().teachers.forEach(({ID}) => {
+    classToJoin.docs[0].data().teachers.forEach(({ ID }) => {
       this.functions.httpsCallable("sendNotification", {
         topic: teacherID,
         title: strings.NewStudent,
@@ -965,12 +984,12 @@ export default class FirebaseFunctions {
     this.logEvent("NOTIFICATION_SENT_TO_FEED");
   }
 
-  static async setUserActiveState(userID, isTeacher, state){
-    if(isTeacher){
-      await this.teachers.doc(userID).update({activeState: state})
+  static async setUserActiveState(userID, isTeacher, state) {
+    if (isTeacher) {
+      await this.teachers.doc(userID).update({ activeState: state });
       return;
     }
-    await this.students.doc(userID).update({activeState: state})
+    await this.students.doc(userID).update({ activeState: state });
   }
 
   static async updateFeedDoc(changedData, docID, classID, isLastIndex) {

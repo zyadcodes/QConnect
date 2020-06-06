@@ -46,13 +46,16 @@ export default class FeedList extends Component {
                 changedReactions
               )
             }
-            beginCommenting={(objectIndex) => this.props.beginCommenting(this.props.index, objectIndex)}
+            beginCommenting={objectIndex =>
+              this.props.beginCommenting(this.props.index, objectIndex)
+            }
             onPressSelectEmoji={() => this.props.onPressSelectEmoji(index)}
             key={index}
             type={item.type}
             userName={item.madeByUser.name}
             comments={item.comments}
             reactions={item.reactions}
+            isThreadExtended={false}
             imageRequire={
               item.madeByUser.role === 'teacher'
                 ? teacherImages.images[item.madeByUser.imageID]

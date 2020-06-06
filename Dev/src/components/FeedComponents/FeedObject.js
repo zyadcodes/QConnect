@@ -106,73 +106,100 @@ export default class FeedsObject extends Component {
           />
           <Text style={this.localStyles.userName}>{this.props.userName}</Text>
         </View>
-        <View
-          onLayout={(nativeEvent) => this.contentContainerViewWidth = nativeEvent.nativeEvent.layout.width}
-          style={{
-            flex: 2,
-            marginLeft: this.props.isMadeByCurrentUser
-              ? 0
-              : screenScale * 18 + screenWidth / 45,
-            marginRight: this.props.isMadeByCurrentUser
-              ? screenScale * 18 + screenWidth / 45
-              : 0,
-          }}
-        >
-          <View style={{ flex: 5 }}>
-            {this.props.type === 'assignment' ? (
-              <Text
-                style={[
-                  this.localStyles.newAssignmentText,
-                  { fontSize: fontScale * 18 },
-                ]}
-              >
-                New Assignment:{' '}
-              </Text>
-            ) : null}
-            <View style={this.localStyles.contentContainerView}>
+        <View style={{ flexDirection: 'row' }}>
+          <View
+            onLayout={nativeEvent => {
+              this.contentContainerViewWidth =
+                nativeEvent.nativeEvent.layout.width;
+              this.contentContainerViewHeight =
+                nativeEvent.nativeEvent.layout.height;
+            }}
+            style={{
+              flex: 2,
+              marginLeft: this.props.isMadeByCurrentUser
+                ? 0
+                : screenScale * 18 + screenWidth / 45,
+              marginRight: this.props.isMadeByCurrentUser
+                ? screenScale * 18 + screenWidth / 45
+                : 0,
+            }}
+          >
+            <View style={{ flex: 5 }}>
               {this.props.type === 'assignment' ? (
-                <QuranAssignmentView
-                  setScreenToLoading={() => this.setState({ isLoading: true })}
-                  surahName={this.state.surahName}
-                  page={this.state.page}
-                  onPushToOtherScreen={(pushParamScreen, pushParamObj) =>
-                    this.props.onPushToOtherScreen(
-                      pushParamScreen,
-                      pushParamObj
-                    )
-                  }
-                  isLoading={this.state.isLoading}
-                  role={this.props.role}
-                  classID={this.props.classID}
-                  studentClassInfo={this.props.studentClassInfo}
-                  hiddenContent={this.props.hiddenContent}
-                  content={this.props.content}
-                  madeByUserID={this.props.madeByUserID}
-                  currentUser={this.props.currentUser}
-                />
-              ) : (
-                <Text style={this.localStyles.contentText}>
-                  {this.props.content}
+                <Text
+                  style={[
+                    this.localStyles.newAssignmentText,
+                    { fontSize: fontScale * 18 },
+                  ]}
+                >
+                  New Assignment:{' '}
                 </Text>
-              )}
+              ) : null}
+              <View style={this.localStyles.contentContainerView}>
+                {this.props.type === 'assignment' ? (
+                  <QuranAssignmentView
+                    setScreenToLoading={() =>
+                      this.setState({ isLoading: true })
+                    }
+                    surahName={this.state.surahName}
+                    page={this.state.page}
+                    onPushToOtherScreen={(pushParamScreen, pushParamObj) =>
+                      this.props.onPushToOtherScreen(
+                        pushParamScreen,
+                        pushParamObj
+                      )
+                    }
+                    isLoading={this.state.isLoading}
+                    role={this.props.role}
+                    classID={this.props.classID}
+                    studentClassInfo={this.props.studentClassInfo}
+                    hiddenContent={this.props.hiddenContent}
+                    content={this.props.content}
+                    madeByUserID={this.props.madeByUserID}
+                    currentUser={this.props.currentUser}
+                  />
+                ) : (
+                  <Text
+                    style={[
+                      this.localStyles.contentText,
+                      this.props.type === 'achievement'
+                        ? { color: '#008000', fontWeight: 'bold' }
+                        : { color: colors.black },
+                    ]}
+                  >
+                    {this.props.content}
+                  </Text>
+                )}
+              </View>
             </View>
             <View
               style={{
-                flexDirection: 'row',
+                flexDirection: this.props.isMadeByCurrentUser
+                  ? 'row-reverse'
+                  : 'row',
                 justifyContent: 'space-between',
-                alignSelf: this.props.isMadeByCurrentUser
-                  ? 'flex-start'
-                  : 'flex-end',
-                width: this.contentContainerViewWidth,
+                alignSelf: 'stretch',
+                flex: 1,
               }}
-            > 
-              {this.props.isMadeByCurrentUser || !this.props.showCommentButton 
-                ? <View/>
-                : <TouchableOpacity key="comment" onPress={() => this.props.beginCommenting(this.props.number)} style={[this.localStyles.addReaction, {left: 0}]}>
-                    <Icon type="font-awesome" name="commenting" size={fontScale*16} color={colors.primaryDark}/>
-                  </TouchableOpacity>
-              }
-              <View style={{flexDirection: 'row'}}>
+            >
+              {this.props.isMadeByCurrentUser ||
+              !this.props.showCommentButton ? (
+                <View />
+              ) : (
+                <TouchableOpacity
+                  key="comment"
+                  onPress={() => this.props.beginCommenting(this.props.number)}
+                  style={[this.localStyles.addReaction, { left: 0 }]}
+                >
+                  <Icon
+                    type="font-awesome"
+                    name="commenting"
+                    size={fontScale * 16}
+                    color={colors.primaryDark}
+                  />
+                </TouchableOpacity>
+              )}
+              <View style={{ flexDirection: 'row' }}>
                 <FlatList
                   data={this.props.reactions}
                   style={{ flexDirection: 'row' }}
@@ -185,10 +212,18 @@ export default class FeedsObject extends Component {
                       }
                       key={index}
                       activeOpacity={0.6}
-                      style={[this.localStyles.Reaction,
-                        item.reactedBy.includes(this.props.currentUser.ID) 
-                          ? {backgroundColor: colors.lightBlue, borderColor: colors.lightBlue} 
-                          : {backgroundColor: colors.primaryLight, borderColor: colors.primaryLight}]}
+                      style={[
+                        this.localStyles.Reaction,
+                        item.reactedBy.includes(this.props.currentUser.ID)
+                          ? {
+                              backgroundColor: colors.lightBlue,
+                              borderColor: colors.lightBlue,
+                            }
+                          : {
+                              backgroundColor: colors.primaryLight,
+                              borderColor: colors.primaryLight,
+                            },
+                      ]}
                     >
                       <View style={this.localStyles.reactionView}>
                         <Text>{item.reactedBy.length}</Text>
@@ -214,18 +249,33 @@ export default class FeedsObject extends Component {
                 )}
               </View>
             </View>
+            <ThreadComponent
+              isCurrentUser={this.props.isMadeByCurrentUser}
+              listKey={this.props.number}
+              isAssignment={this.props.type === 'assignment'}
+              comments={this.props.comments}
+              isExtended={this.props.isThreadExtended}
+            />
           </View>
-          <ThreadComponent
-            isCurrentUser={this.props.isMadeByCurrentUser}
-            listKey={this.props.number}
-            isAssignment={this.props.type === 'assignment'}
-            comments={this.props.comments}
-          />
+          {this.props.type === 'achievement' ? (
+            <Image
+              style={this.localStyles.medallionStyle}
+              source={require('../../../assets/medallion.png')}
+            />
+          ) : null}
         </View>
       </View>
     );
   }
   localStyles = StyleSheet.create({
+    medallionStyle: {
+      resizeMode: 'contain',
+      width: 40,
+      height: 40,
+      position: 'relative',
+      right: 20,
+      bottom: 20
+    },
     userName: {
       fontWeight: 'bold',
       marginLeft: this.props.isMadeByCurrentUser ? 0 : screenWidth / 45,
@@ -319,7 +369,7 @@ export default class FeedsObject extends Component {
       marginRight: screenWidth / 86
     },
     contentContainerView: {
-      borderWidth: 2,
+      borderWidth: this.props.type === 'achievement' ? 4 : 2,
       marginTop: 0,
       flex: 5,
       paddingBottom:
@@ -327,7 +377,8 @@ export default class FeedsObject extends Component {
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: 4,
-      borderColor: colors.lightBrown,
+      borderColor:
+        this.props.type === 'achievement' ? '#008000' : colors.lightBrown,
       backgroundColor: colors.white,
     }
   });

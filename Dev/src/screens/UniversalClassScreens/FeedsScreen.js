@@ -62,6 +62,7 @@ export default class FeedsScreen extends React.Component {
     isCommenting: false,
     isChatting: false,
     newCommentTxt: '',
+    newChatTxt: '',
     isScrolling: false,
     inputHeight: screenHeight / 12
   };
@@ -150,24 +151,36 @@ export default class FeedsScreen extends React.Component {
       }
     }
   }
-  async addComment(text){
-    const { feedsData, currentlyCommentingOn, role, student, teacher, currentClassID } = this.state;
-    let tempData = feedsData[currentlyCommentingOn.listIndex].data.splice();
+  async addComment(text) {
+    const {
+      feedsData,
+      currentlyCommentingOn,
+      role,
+      student,
+      teacher,
+      currentClassID,
+    } = this.state;
+    let tempData = feedsData[currentlyCommentingOn.listIndex].data.slice();
     let docID = feedsData[currentlyCommentingOn.listIndex].docID;
-    let currComments = tempData[currentlyCommentingOn.objectIndex].comments.splice();
+    let currComments = tempData[
+      currentlyCommentingOn.objectIndex
+    ].comments.slice();
     currComments.push({
       user: {
-        imageID: role === 'teacher' 
-          ? teacher.profileImageID 
-          : student.profileImageID, 
-        isTeacher: role === 'teacher', 
-        name: role === 'teacher' 
-          ? teacher.name 
-          : student.name,
+        imageID:
+          role === 'teacher' ? teacher.profileImageID : student.profileImageID,
+        isTeacher: role === 'teacher',
+        name: role === 'teacher' ? teacher.name : student.name,
       },
-      content: text})
+      content: text,
+    });
     tempData[currentlyCommentingOn.objectIndex].comments = currComments;
-    await FirebaseFunctions.updateFeedDoc(tempData, docID, currentClassID, false)
+    await FirebaseFunctions.updateFeedDoc(
+      tempData,
+      docID,
+      currentClassID,
+      false
+    );
   }
   async sendMessage(text) {
     const newObj = {
@@ -200,7 +213,7 @@ export default class FeedsScreen extends React.Component {
       this.state.currentClassID,
       true
     );
-    this.setState({ newCommentTxt: '' });
+    this.setState({ newChatTxt: '' });
   }
   async changeEmojiVote(listIndex, objectIndex, changedReactions) {
     //console.warn(listIndex)
@@ -271,7 +284,9 @@ export default class FeedsScreen extends React.Component {
             }
             scrollEnabled
             onScroll={nativeEvent => {
-              this.setState({currentScrollLoc: nativeEvent.nativeEvent.contentOffset.y})
+              this.setState({
+                currentScrollLoc: nativeEvent.nativeEvent.contentOffset.y,
+              });
             }}
             onScrollBeginDrag={() => this.setState({ isScrolling: true })}
             onScrollEndDrag={() => this.setState({ isScrolling: false })}
@@ -279,17 +294,26 @@ export default class FeedsScreen extends React.Component {
             style={localStyles.scrollViewStyle}
             ref={ref => (this.flatListRef = ref)}
             listKey={0}
-            onLayout={nativeEvent => this.setState({scrollLength: nativeEvent.nativeEvent.layout.height})}
+            onLayout={nativeEvent =>
+              this.setState({
+                scrollLength: nativeEvent.nativeEvent.layout.height,
+              })
+            }
             onContentSizeChange={() => {
-              console.warn(this.state.scrollLength)
-              if(this.state.isScrolling || this.state.isRefreshingOldFeeds || this.state.scrollLength-this.state.currentScrollLoc > screenHeight/2){
-                if(this.state.isRefreshingOldFeeds){
+              //console.warn(this.state.scrollLength)
+              if (
+                this.state.isScrolling ||
+                this.state.isRefreshingOldFeeds ||
+                this.state.scrollLength - this.state.currentScrollLoc >
+                  screenHeight / 2
+              ) {
+                if (this.state.isRefreshingOldFeeds) {
                   this.flatListRef.scrollToOffset({
-                      animated: true,
-                      offset: 0,
-                    })
+                    animated: true,
+                    offset: 0,
+                  });
                 }
-              }else{
+              } else {
                 this.flatListRef.scrollToEnd({ animated: true });
               }
               this.setState({ isRefreshingOldFeeds: false });
@@ -323,7 +347,10 @@ export default class FeedsScreen extends React.Component {
                   })
                 }
                 beginCommenting={(listIndex, objectIndex) => {
-                  this.setState({currentlyCommentingOn: {listIndex, objectIndex}, isCommenting: true})
+                  this.setState({
+                    currentlyCommentingOn: { listIndex, objectIndex },
+                    isCommenting: true,
+                  });
                 }}
               />
             )}
@@ -361,79 +388,80 @@ export default class FeedsScreen extends React.Component {
             onBackdropPress={this.toggleSelectingEmoji.bind(this)}
           />
         ) : null}
-        {this.state.isCommenting ?
-          <CommentModal 
-              onBackdropPress={() => this.setState({isCommenting: false})}
-              item={this.state.feedsData[this.state.currentlyCommentingOn.listIndex]
-              .data[this.state.currentlyCommentingOn.objectIndex]}
-              role={this.state.role}
-              teacher={this.state.teacher}
-              student={this.state.student}
-              objectIndex={this.state.currentlyCommentingOn.objectIndex}
-              listIndex={this.state.currentlyCommentingOn.listIndex}
-              currentUser={
-                this.state.role === 'teacher'
-                  ? this.state.teacher
-                  : this.state.student
-              }
-              onPushToOtherScreen={(pushParamScreen, pushParamObj) => {
-                this.setState({ isLoading: true });
-                this.props.navigation.push(pushParamScreen, pushParamObj);
-                this.setState({ isLoading: false });
-              }}
-              classID={this.state.currentClassID}
-              studentClassInfo={this.state.studentClassInfo}
-              onPressChangeEmojiVote={this.changeEmojiVote.bind(this)}
-              onPressSelectEmoji={objectIndex =>
+        {this.state.isCommenting ? (
+          <CommentModal
+            onBackdropPress={() => this.setState({ isCommenting: false })}
+            item={
+              this.state.feedsData[this.state.currentlyCommentingOn.listIndex]
+                .data[this.state.currentlyCommentingOn.objectIndex]
+            }
+            role={this.state.role}
+            teacher={this.state.teacher}
+            student={this.state.student}
+            objectIndex={this.state.currentlyCommentingOn.objectIndex}
+            listIndex={this.state.currentlyCommentingOn.listIndex}
+            currentUser={
+              this.state.role === 'teacher'
+                ? this.state.teacher
+                : this.state.student
+            }
+            onPushToOtherScreen={(pushParamScreen, pushParamObj) => {
+              this.setState({ isLoading: true });
+              this.props.navigation.push(pushParamScreen, pushParamObj);
+              this.setState({ isLoading: false });
+            }}
+            classID={this.state.currentClassID}
+            studentClassInfo={this.state.studentClassInfo}
+            onPressChangeEmojiVote={this.changeEmojiVote.bind(this)}
+            onPressSelectEmoji={objectIndex =>
+              this.setState({
+                isSelectingEmoji: true,
+                currentlySelectingIndex: { listIndex: index, objectIndex },
+              })
+            }
+            showCommentButton={false}
+          >
+            <ChatInput
+              width={0.9 * screenWidth}
+              value={this.state.newCommentTxt}
+              onChangeText={text => this.setState({ newCommentTxt: text })}
+              onTextInputBlur={() => FeedsScreen.whenKeyboardHides()}
+              textInputOnTouchEnd={() => {}}
+              textInputOnContentSizeChange={event =>
                 this.setState({
-                  isSelectingEmoji: true,
-                  currentlySelectingIndex: { listIndex: index, objectIndex },
+                  inputHeight: event.nativeEvent.contentSize.height + 5,
                 })
               }
-              showCommentButton={false}
-            >
-              <ChatInput
-                width={0.9*screenWidth}
-                newCommentTxt={this.state.newCommentTxt}
-                onChangeText={text => this.setState({ newCommentTxt: text })}
-                onTextInputBlur={() => FeedsScreen.whenKeyboardHides()}
-                textInputOnTouchEnd={() => {}}
-                textInputOnContentSizeChange={event =>
-                  this.setState({
-                    inputHeight: event.nativeEvent.contentSize.height + 5,
-                  })
-                }
-                ref={ref => this.chatInputRef = ref}
-                sendOnPress={async () => {
-                    console.warn('IM HERE')
-                    await this.addComment(this.state.newCommentTxt)
-                    this.setState({newCommentTxt: ''})
-                }}
-              />
+              ref={ref => (this.chatInputRef = ref)}
+              sendOnPress={async () => {
+                //console.warn(this.state.feedsData[this.state.currentlyCommentingOn.listIndex].data[this.state.currentlyCommentingOn.objectIndex])
+                await this.addComment(this.state.newCommentTxt);
+                this.setState({ newCommentTxt: '' });
+              }}
+            />
           </CommentModal>
-          : null
-        }
+        ) : null}
         <ChatInput
           width={screenWidth}
-          newCommentTxt={this.state.newCommentTxt}
-          onChangeText={text => this.setState({ newCommentTxt: text })}
+          value={this.state.newChatTxt}
+          onChangeText={text => this.setState({ newChatTxt: text })}
           onTextInputBlur={() => FeedsScreen.whenKeyboardHides()}
           textInputOnTouchEnd={() => {
-          FeedsScreen.whenKeyboardShows();
+            FeedsScreen.whenKeyboardShows();
             this.setState({ isChatting: true });
           }}
-             textInputOnContentSizeChange={event =>
-                  this.setState({
-                    inputHeight: event.nativeEvent.contentSize.height + 5,
-                  })
-                }
-                ref={ref => this.chatInputRef = ref}
-                sendOnPress={async () => {
-                    await this.sendMessage(this.state.newCommentTxt).then(() => {
-                      this.setState({ isChatting: false });
-                    })
-                }}
-              />
+          textInputOnContentSizeChange={event =>
+            this.setState({
+              inputHeight: event.nativeEvent.contentSize.height + 5,
+            })
+          }
+          ref={ref => (this.chatInputRef = ref)}
+          sendOnPress={async () => {
+            await this.sendMessage(this.state.newChatTxt).then(() => {
+              this.setState({ isChatting: false });
+            });
+          }}
+        />
       </SideMenu>
     );
   }
