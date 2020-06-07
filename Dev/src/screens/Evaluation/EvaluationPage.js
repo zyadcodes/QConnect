@@ -10,7 +10,8 @@ import {
   Alert,
   ScrollView,
   TouchableOpacity,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import { AirbnbRating, Icon } from "react-native-elements";
 import colors from "config/colors";
@@ -34,7 +35,9 @@ import {
   compareOrder,
   toNumberString
 } from "../MushafScreen/Helpers/AyahsOrder";
-import DailyTracker, { getTodaysDateString } from 'components/DailyTracker';
+import DailyTracker, { getTodaysDateString } from "components/DailyTracker";
+
+const isAndroid = Platform.OS === "android";
 
 export class EvaluationPage extends QcParentScreen {
   //Default improvement areas
@@ -115,7 +118,7 @@ export class EvaluationPage extends QcParentScreen {
         "EvaluationPage"
       );
     }
-    
+
     const studentObject = await FirebaseFunctions.getStudentByID(
       this.state.studentID
     );
@@ -314,7 +317,7 @@ export class EvaluationPage extends QcParentScreen {
     }
   }
   onSelectAyah(selectedAyah, selectedWord) {
-    if(this.state.readOnly){
+    if (this.state.readOnly) {
       // don't change highlighted words/ayahs on read-only mode.
       return;
     }
@@ -431,7 +434,9 @@ export class EvaluationPage extends QcParentScreen {
           />
         )}
         {showMushaf && (
-          <View style={{ height: screenHeight - headerHeight, paddingBottom: 150 }}>
+          <View
+            style={{ height: screenHeight - headerHeight, paddingBottom: 150 }}
+          >
             <KeepAwake />
             <MushafScreen
               assignToID={studentID}
@@ -460,7 +465,7 @@ export class EvaluationPage extends QcParentScreen {
         )}
 
         <KeyboardAvoidingView
-          behavior="padding"
+          behavior= {isAndroid? undefined : "padding"}
           style={
             showMushaf
               ? styles.evaluationContainer
@@ -498,7 +503,13 @@ export class EvaluationPage extends QcParentScreen {
             )}
 
             {this.state.audioFile !== -1 ? (
-              <View style={{ justifyContent: "center", alignItems: "center", margin: 10 }}>
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  margin: 10
+                }}
+              >
                 <View style={styles.playAudio}>
                   <AudioPlayer
                     visible={true}
@@ -592,27 +603,27 @@ export class EvaluationPage extends QcParentScreen {
                     }}
                   />
                   <View style={{ height: 30 }} />
+                  {!readOnly && (
+                    <ActionButton
+                      buttonColor={colors.darkGreen}
+                      onPress={() => {
+                        this.submitRating();
+                      }}
+                      renderIcon={() => (
+                        <Icon
+                          name="check-bold"
+                          color="#fff"
+                          type="material-community"
+                          style={styles.actionButtonIcon}
+                        />
+                      )}
+                    />
+                  )}
                 </View>
               )}
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
-        {!readOnly && (
-          <ActionButton
-            buttonColor={colors.darkGreen}
-            onPress={() => {
-              this.submitRating();
-            }}
-            renderIcon={() => (
-              <Icon
-                name="check-bold"
-                color="#fff"
-                type="material-community"
-                style={styles.actionButtonIcon}
-              />
-            )}
-          />
-        )}
       </View>
     );
   }
