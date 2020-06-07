@@ -519,7 +519,9 @@ export default class FirebaseFunctions {
 
       arrayOfStudents[studentIndex].totalAssignments =
         arrayOfStudents[studentIndex].totalAssignments + 1;
-      arrayOfStudents[studentIndex].assignmentHistory.push(evaluationDetails);
+      arrayOfStudents[studentIndex].assignmentHistory.unshift(
+        evaluationDetails
+      );
 
       let avgGrade = 0;
       arrayOfStudents[studentIndex].assignmentHistory.forEach(assignment => {

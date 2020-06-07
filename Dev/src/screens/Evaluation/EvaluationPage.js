@@ -465,7 +465,7 @@ export class EvaluationPage extends QcParentScreen {
         )}
 
         <KeyboardAvoidingView
-          behavior= {isAndroid? undefined : "padding"}
+          behavior={isAndroid ? undefined : "padding"}
           style={
             showMushaf
               ? styles.evaluationContainer
@@ -546,6 +546,22 @@ export class EvaluationPage extends QcParentScreen {
                   isDisabled={readOnly}
                 />
               </View>
+              {!readOnly && (
+                <ActionButton
+                  buttonColor={colors.darkGreen}
+                  onPress={() => {
+                    this.submitRating();
+                  }}
+                  renderIcon={() => (
+                    <Icon
+                      name="check-bold"
+                      color="#fff"
+                      type="material-community"
+                      style={styles.actionButtonIcon}
+                    />
+                  )}
+                />
+              )}
 
               {this.state.evaluationCollapsed === false && (
                 <View>
@@ -603,22 +619,6 @@ export class EvaluationPage extends QcParentScreen {
                     }}
                   />
                   <View style={{ height: 30 }} />
-                  {!readOnly && (
-                    <ActionButton
-                      buttonColor={colors.darkGreen}
-                      onPress={() => {
-                        this.submitRating();
-                      }}
-                      renderIcon={() => (
-                        <Icon
-                          name="check-bold"
-                          color="#fff"
-                          type="material-community"
-                          style={styles.actionButtonIcon}
-                        />
-                      )}
-                    />
-                  )}
                 </View>
               )}
             </View>
