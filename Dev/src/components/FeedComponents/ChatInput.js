@@ -61,7 +61,7 @@ const localStyles = StyleSheet.create({
     alignItems: 'flex-end',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    backgroundColor: colors.primaryVeryLight
+    backgroundColor: '#f7f7f9'
   },
   commentingTextInput: {
     borderWidth: 2,

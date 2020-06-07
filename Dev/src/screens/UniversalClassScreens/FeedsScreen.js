@@ -120,9 +120,6 @@ export default class FeedsScreen extends React.Component {
       },
       () => {
         this._isMounted = true;
-        setTimeout(() => {
-          this.flatListRef.scrollToEnd();
-        }, 1000);
       }
     );
   }
@@ -130,8 +127,9 @@ export default class FeedsScreen extends React.Component {
     if (this._isMounted) {
       let tempData = this.state.feedsData.slice();
       if (isNewDoc) {
+        setTimeout(() => this.setState({isLoading: false}), 1000)
         tempData.push({ docID, data: newData });
-        this.setState({ feedsData: tempData, isLoading: false });
+        this.setState({ feedsData: tempData });
         if (parseInt(this.state.oldestFeedDoc) === -1) {
           this.setState({ oldestFeedDoc: docID });
         }
@@ -286,6 +284,10 @@ export default class FeedsScreen extends React.Component {
             onScroll={nativeEvent => {
               this.setState({
                 currentScrollLoc: nativeEvent.nativeEvent.contentOffset.y,
+              }, () => {
+                if(this.state.currentScrollLoc > this.state.scrollLength){
+                  this.setState({scrollLength: this.state.currentScrollLoc})
+                }
               });
             }}
             onScrollBeginDrag={() => this.setState({ isScrolling: true })}
@@ -294,13 +296,13 @@ export default class FeedsScreen extends React.Component {
             style={localStyles.scrollViewStyle}
             ref={ref => (this.flatListRef = ref)}
             listKey={0}
+            scrollEventThrottle={16}
             onLayout={nativeEvent =>
               this.setState({
                 scrollLength: nativeEvent.nativeEvent.layout.height,
-              })
+              }, () => setTimeout(() => this.flatListRef.scrollToEnd({animated: true}), 1000))
             }
             onContentSizeChange={() => {
-              //console.warn(this.state.scrollLength)
               if (
                 this.state.isScrolling ||
                 this.state.isRefreshingOldFeeds ||
@@ -471,7 +473,7 @@ const localStyles = StyleSheet.create({
     flex: 1
   },
   scrollViewStyle: {
-    backgroundColor: colors.primaryVeryLight,
+    backgroundColor: '#f7f7f9',
   },
   spinnerContainerStyle: {
     flex: 1,

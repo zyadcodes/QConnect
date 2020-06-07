@@ -21,7 +21,7 @@ export default class CommentModal extends Component {
         isVisible={true}
         onBackdropPress={() => this.props.onBackdropPress()}
         style={{
-          backgroundColor: colors.primaryVeryLight,
+          backgroundColor: '#f7f7f9',
           maxWidth: screenWidth * 0.9,
           alignSelf: 'center',
           justifyContent: 'space-between'

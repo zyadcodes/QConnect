@@ -24,12 +24,16 @@ import TextLine from '../../screens/MushafScreen/Components/TextLine';
 import { Icon } from 'react-native-elements';
 import ThreadComponent from './ThreadComponent';
 import QuranAssignmentView from './FeedObjectQuranView';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default class FeedsObject extends Component {
   state = {
     surahName: '',
     page: [],
+    isReactionScrollViewOpen: false,
     isLoading: false,
+    shownReactions: [],
+    hiddenReactions: []
   };
   async componentDidMount() {
     if (this.props.type === 'assignment') {
@@ -76,7 +80,18 @@ export default class FeedsObject extends Component {
         isLoading: false,
       });
     }
-    this.forceUpdate();
+    let tempShownReactions = []
+    for(var i = 0; i < 3 && i < this.props.reactions.length; i++){
+      tempShownReactions[i] = this.props.reactions[i]
+    }
+    let tempHiddenReactions = []
+    for(var i = 3; i < this.props.reactions.length; i++){
+      tempHiddenReactions[i-3] = this.props.reactions[i]
+    }
+    if(this.props.content === 'Alhamdullillah it worked'){  
+      console.warn(tempShownReactions)
+    }
+    this.setState({hiddenReactions: tempHiddenReactions, shownReactions: tempShownReactions})
   }
   changeEmojiVote(reactionIndex) {
     let temp = this.props.reactions.slice();
@@ -106,7 +121,7 @@ export default class FeedsObject extends Component {
           />
           <Text style={this.localStyles.userName}>{this.props.userName}</Text>
         </View>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: (this.props.isMadeByCurrentUser ? 'row-reverse' : 'row' )}}>
           <View
             onLayout={nativeEvent => {
               this.contentContainerViewWidth =
@@ -163,7 +178,7 @@ export default class FeedsObject extends Component {
                     style={[
                       this.localStyles.contentText,
                       this.props.type === 'achievement'
-                        ? { color: '#008000', fontWeight: 'bold' }
+                        ? { color: '#009500', fontWeight: 'bold' }
                         : { color: colors.black },
                     ]}
                   >
@@ -195,13 +210,65 @@ export default class FeedsObject extends Component {
                     type="font-awesome"
                     name="commenting"
                     size={fontScale * 16}
-                    color={colors.primaryDark}
+                    color={(this.props.type === 'achievement' ? '#009500' : colors.primaryDark)}
                   />
                 </TouchableOpacity>
               )}
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{ flexDirection: (this.props.isMadeByCurrentUser ? 'row-reverse' : 'row') }}>
+              {this.props.reactions.length > 1 
+                  ? 
+                  <View>
+                    <TouchableOpacity
+                      onPress={() =>
+                        this.setState({isReactionScrollViewOpen: !this.state.isReactionScrollViewOpen})
+                      }
+                      activeOpacity={0.6}
+                      style={[this.localStyles.addReaction, {width: screenScale*12, marginRight: 3}]}
+                    >
+                      <View style={this.localStyles.reactionView}>
+                        <Text>+{this.props.reactions.slice(1, this.props.reactions.length).length}</Text>
+                      </View>
+                    </TouchableOpacity>
+                    {
+                      this.state.isReactionScrollViewOpen 
+                      ? <ScrollView style={this.localStyles.hiddenReactionsScrollView}>
+                          <FlatList listKey="extra reactions" data={this.props.reactions.slice(1, this.props.reactions.length)} renderItem={({index, item, separators}) => 
+                             <TouchableOpacity
+                             onPress={() =>
+                               this.props.onPressChangeEmojiVote(
+                                 this.changeEmojiVote(index)
+                               )
+                             }
+                             key={index}
+                             activeOpacity={0.6}
+                             style={[
+                               this.localStyles.Reaction,
+                               item.reactedBy.includes(this.props.currentUser.ID)
+                                 ? {
+                                     backgroundColor: colors.lightBlue,
+                                     borderColor: colors.lightBlue,
+                                   }
+                                 : {
+                                     backgroundColor: colors.primaryLight,
+                                     borderColor: colors.primaryLight,
+                                   },
+                               { bottom: 0, left: 0, marginTop: 3, marginRight: 0 }
+                             ]}
+                           >
+                             <View style={this.localStyles.reactionView}>
+                               <Text>{item.reactedBy.length}</Text>
+                               <Text>{item.emoji}</Text>
+                             </View>
+                           </TouchableOpacity>
+                          }/>
+                        </ScrollView>
+                      : null
+                    }
+                  </View>
+                  : null
+                }
                 <FlatList
-                  data={this.props.reactions}
+                  data={this.props.reactions.slice(0, 1)}
                   style={{ flexDirection: 'row' }}
                   renderItem={({ item, index, seperators }) => (
                     <TouchableOpacity
@@ -219,10 +286,17 @@ export default class FeedsObject extends Component {
                               backgroundColor: colors.lightBlue,
                               borderColor: colors.lightBlue,
                             }
-                          : {
-                              backgroundColor: colors.primaryLight,
-                              borderColor: colors.primaryLight,
-                            },
+                          : this.props.type === 'achievement' 
+                            ?
+                              {
+                                backgroundColor: '#00ff00',
+                                borderColor: '#00ff00',
+                              }
+                            :
+                              {
+                                backgroundColor: colors.primaryLight,
+                                borderColor: colors.primaryLight,
+                              },
                       ]}
                     >
                       <View style={this.localStyles.reactionView}>
@@ -243,7 +317,7 @@ export default class FeedsObject extends Component {
                       name="plus"
                       type="entypo"
                       size={fontScale * 16}
-                      color={colors.primaryDark}
+                      color={(this.props.type === 'achievement' ? '#009500' : colors.primaryDark)}
                     />
                   </TouchableOpacity>
                 )}
@@ -283,6 +357,22 @@ export default class FeedsObject extends Component {
       fontSize: fontScale * 16,
       color: colors.black
     },
+    hiddenReactionsScrollView: {
+      height: screenHeight/8,
+      marginTop: 5,
+      position: 'relative',
+      left: '25%',
+      padding: 3,
+      alignSelf: 'center',
+      borderWidth: 4,
+      borderRadius: 5,
+      borderColor: (this.props.type === 'achievement' 
+        ? '#009500'
+        : colors.primaryDark),
+      backgroundColor: (this.props.type === 'achievement' 
+        ? '#009500'
+        : colors.primaryDark) 
+    },  
     imageAndNameContainer: {
       flexDirection: this.props.isMadeByCurrentUser ? 'row-reverse' : 'row',
       marginLeft: screenWidth / 45,
@@ -339,8 +429,8 @@ export default class FeedsObject extends Component {
       width: screenScale * 8,
       height: screenScale * 8,
       borderWidth: 1,
-      backgroundColor: colors.primaryLight,
-      borderColor: colors.primaryLight,
+      backgroundColor: ( this.props.type === 'achievement' ? '#00ff00' : colors.primaryLight),
+      borderColor: ( this.props.type === 'achievement' ? '#00ff00' : colors.primaryLight),
       borderRadius: (screenScale * 8) / 2,
       position: 'relative',
       bottom: screenScale * 4,
@@ -357,8 +447,8 @@ export default class FeedsObject extends Component {
       width: screenScale * 16,
       height: screenScale * 8,
       borderWidth: 1,
-      backgroundColor: colors.primaryLight,
-      borderColor: colors.primaryLight,
+      backgroundColor: (this.props.type === 'achievement' ? '#00ff00' : colors.primaryLight),
+      borderColor: (this.props.type === 'achievement' ? '#00ff00' : colors.primaryLight),
       borderRadius: (screenScale * 8) / 2,
       alignSelf: 'flex-end',
       position: 'relative',
@@ -378,7 +468,7 @@ export default class FeedsObject extends Component {
       justifyContent: 'center',
       borderRadius: 4,
       borderColor:
-        this.props.type === 'achievement' ? '#008000' : colors.lightBrown,
+        this.props.type === 'achievement' ? '#009500' : colors.lightBrown,
       backgroundColor: colors.white,
     }
   });

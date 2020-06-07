@@ -54,7 +54,7 @@ const routeConfig = {
         tabBarLabel: strings.Feed, 
         tabBarIcon: ({tintColor, focused}) => (
           <FeedWithBadge
-            hidden={true}
+            hidden={false}
             type="material" 
             name="chat" size={focused ? iconSizeSelected : iconSizeSelected}
             color={tintColor}

@@ -569,8 +569,7 @@ export default class FirebaseFunctions {
           role: 'student',
           ID: arrayOfStudents[studentIndex].ID
         },
-        content:
-          arrayOfStudents[studentIndex].name + ' Completed an Assignment!'
+        content: arrayOfStudents[studentIndex].name + ' Completed ' + evaluationDetails.assignmentType+ ' ' + evaluationDetails.name + '!'
       });
       await this.updateFeedDoc(tempData, lastIndex, classID, true);
       //Notifies that student that their assignment has been graded
