@@ -5,6 +5,7 @@ import strings from "./strings";
 import _ from 'lodash';
 import moment from 'moment';
 import FeedsScreen from "../src/screens/UniversalClassScreens/FeedsScreen";
+import { TabBarIOS } from "react-native";
 
 export default class FirebaseFunctions {
   //References that'll be used throughout the class's static functions
@@ -992,6 +993,7 @@ export default class FirebaseFunctions {
   }
 
   static async updateFeedDoc(changedData, docID, classID, isLastIndex) {
+    await this.updateSeenFeedForClass(classID, false);
     if (changedData.length > 20 && isLastIndex) {
       let oldDocData = changedData;
       let firstObj = oldDocData[oldDocData.length - 1];
@@ -1041,5 +1043,45 @@ export default class FirebaseFunctions {
         //console.warn('isNewDoc: '+isNewDoc)
         isNewDoc = false;
       });
+  }
+  static async updateSeenFeedForClass(classID, haveSeenFeed){
+    return await this.database.runTransaction(async (transaction) => {
+      return await transaction.get(this.classes.doc(classID)).then(async (doc) => {
+        let tempData = doc.data();
+        for(var i = 0; i < tempData.teachers; i++){
+          tempData.teachers[i].hasSeenLatestFeed = haveSeenFeed;
+        }
+        for(var i = 0; i < tempData.students; i++){
+          tempData.students[i].hasSeenLatestFeed = haveSeenFeed;
+        }
+        await transaction.update(tempData)
+      })
+    })
+  }
+  static async updateSeenFeedForInidividual(classID, hasSeenFeed, isTeacher, userObj){
+    return await this.database.runTransaction(async (transaction) => {
+      return await transaction.get(this.classes.doc(classID)).then(async (doc) => {
+        let tempData = doc.data();
+        if(isTeacher){
+          let teacherInClass = -1;
+          for(var i = 0; i < tempData.teachers.length; i++){
+            if(tempData.teachers[i].ID === userObj.ID){
+              teacherInClass = i;
+            }
+          }
+          tempData.teachers[teacherInClass].hasSeenLatestFeed = hasSeenFeed;
+          await transaction.update({teachers: tempData.teachers})
+        }else{
+          let studentInClass = -1;
+          for(var i = 0; i < tempData.students.length; i++){
+            if(tempData.students[i].ID === userObj.ID){
+              studentInClass = i;
+            }
+          }
+          tempData.students[studentInClass].hasSeenLatestFeed = hasSeenFeed;
+          await transaction.update({students: tempData.students})
+        }
+      })
+    })
   }
 }

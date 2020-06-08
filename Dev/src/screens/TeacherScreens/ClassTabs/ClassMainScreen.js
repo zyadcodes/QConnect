@@ -27,6 +27,8 @@ import { Icon } from "react-native-elements";
 import { screenHeight, screenWidth } from "config/dimensions";
 import Toast, { DURATION } from "react-native-easy-toast";
 import themeStyles from 'config/themeStyles'
+import FeedHandler from "../../../components/FeedComponents/FeedHandler";
+import { element } from "prop-types";
 
 export class ClassMainScreen extends QcParentScreen {
   state = {
@@ -62,7 +64,13 @@ export class ClassMainScreen extends QcParentScreen {
     if (currentClass === undefined) {
       currentClass = await FirebaseFunctions.getClassByID(currentClassID);
     }
-
+    for(var i = 0; i < currentClass.teachers.length; i++){
+      if(currentClass.teachers[i].ID === teacher.ID){
+        FeedHandler.shouldntShowBadge = currentClass.teachers[i].hasSeenLatestFeed;
+        this.props.eventEmitter.emit('badgeChange')
+        break;
+      }
+    }
     const classInviteCode = currentClass.classInviteCode;
     const classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
     this.setState({

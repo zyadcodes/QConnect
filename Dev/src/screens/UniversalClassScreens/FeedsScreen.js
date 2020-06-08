@@ -28,6 +28,7 @@ import FastResponseTouchableOpacity from '../../components/FastResponseTouchable
 import Modal from 'react-native-modal';
 import CommentModal from '../../components/FeedComponents/CommentModal';
 import ChatInput from '../../components/FeedComponents/ChatInput';
+import FeedHandler from '../../components/FeedComponents/FeedHandler';
 
 export default class FeedsScreen extends React.Component {
   //*IMPORTANT* Make sure to clean up my Firebase calls here
@@ -122,17 +123,23 @@ export default class FeedsScreen extends React.Component {
         this._isMounted = true;
       }
     );
+    FeedHandler.shouldntShowBadge = true;
+    this.props.eventEmitter.emit('badgeChange')
   }
-  refresh(docID, newData, isNewDoc) {
+  async iHaveSeenLatestFeed(currentClassID, teacher){
+    await FirebaseFunctions.updateSeenFeedForInidividual(currentClassID, true, this.state.role === 'teacher', this.state.role === 'teacher' ? this.state.teacher : this.state.student)
+  }
+  async refresh(docID, newData, isNewDoc) {
     if (this._isMounted) {
       let tempData = this.state.feedsData.slice();
       if (isNewDoc) {
-        setTimeout(() => this.setState({isLoading: false}), 1000)
+        this.setState({isLoading: false})
         tempData.push({ docID, data: newData });
         this.setState({ feedsData: tempData });
         if (parseInt(this.state.oldestFeedDoc) === -1) {
           this.setState({ oldestFeedDoc: docID });
         }
+        await this.iHaveSeenLatestFeed(this.state.currentClassID, this.state.teacher)
         return;
       }
       if (parseInt(this.state.oldestFeedDoc) > parseInt(docID)) {
@@ -147,6 +154,7 @@ export default class FeedsScreen extends React.Component {
           return;
         }
       }
+      await this.iHaveSeenLatestFeed(this.state.currentClassID, this.state.teacher)
     }
   }
   async addComment(text) {
@@ -296,11 +304,10 @@ export default class FeedsScreen extends React.Component {
             style={localStyles.scrollViewStyle}
             ref={ref => (this.flatListRef = ref)}
             listKey={0}
+            
             scrollEventThrottle={16}
             onLayout={nativeEvent =>
-              this.setState({
-                scrollLength: nativeEvent.nativeEvent.layout.height,
-              }, () => setTimeout(() => this.flatListRef.scrollToEnd({animated: true}), 1000))
+              setTimeout(() => this.flatListRef.scrollToEnd({animated: true}), 1000)
             }
             onContentSizeChange={() => {
               if (

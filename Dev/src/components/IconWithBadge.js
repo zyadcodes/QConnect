@@ -3,14 +3,23 @@ import {View} from 'react-native'
 import { screenScale } from '../../config/dimensions'
 import { Badge } from 'react-native-elements'
 import colors from '../../config/colors'
+import FeedHandler from './FeedComponents/FeedHandler'
 
-export default withBadge = () => WrappedComponent => 
+export default withBadge = () => WrappedComponent =>
     class extends Component{
+        state = {
+            hidden: this.props.hidden
+        }
+        componentDidMount(){
+            this.props.eventEmitter.addListener('badgeChange', () => {
+                this.setState({hidden: FeedHandler.shouldntShowBadge})
+            })
+        }
         render(){
             return (
-                <View style={{flexDirection: 'row', alignSelf: 'center', left: (this.props.hidden ? 0 : screenScale*2.75)}}>
+                <View style={{flexDirection: 'row', alignSelf: 'center', left: (this.state.hidden ? 0 : screenScale*2.75)}}>
                     <WrappedComponent {...this.props}/>
-                    {this.props.hidden 
+                    {this.state.hidden 
                         ? null
                         : <Badge 
                             containerStyle={{

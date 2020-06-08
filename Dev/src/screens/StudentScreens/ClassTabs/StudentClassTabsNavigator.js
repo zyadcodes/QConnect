@@ -8,14 +8,18 @@ import StudentMainScreen from './StudentMainScreen';
 import { screenHeight } from 'config/dimensions';
 import FeedsScreen from '../../UniversalClassScreens/FeedsScreen';
 import { string } from 'prop-types';
+import EventEmitter from 'events'
+import FeedHandler from '../../../components/FeedComponents/FeedHandler'
 
 var iconSizeSelected = PixelRatio.get() < 2 ? 18 : 25;
 var iconSizeNotSelected = PixelRatio.get() < 2 ? 14 : 20;
 var fontSize = PixelRatio.get() < 2 ? 12 : 14;
 
+const eventEmitter = new EventEmitter();
+
 const routeConfig = {
   ClassTab: {
-    screen: StudentMainScreen,
+    screen: props => <StudentMainScreen {...props} eventEmitter={eventEmitter}/>,
     navigationOptions: {
       tabBarLabel: strings.Class,
       tabBarIcon: ({ tintColor, focused }) => (
@@ -29,15 +33,21 @@ const routeConfig = {
     },
   },
   FeedsScreen: {
-    screen: FeedsScreen,
-    navigationOptions: {
-      tabBarLabel: strings.Feed,
-      tabBarIcon: ({tintColor, focused}) => (
-        <Icon 
-          type="material" 
-          name="chat" size={focused ? iconSizeSelected : iconSizeSelected}
-          color={tintColor}/>
-      )
+    screen: props => <FeedsScreen {...props} eventEmitter={eventEmitter} />,
+    navigationOptions: ({ navigation }) => {
+      return {
+        tabBarLabel: strings.Feed, 
+        tabBarIcon: ({tintColor, focused}) => (
+          <FeedWithBadge
+            eventEmitter={eventEmitter}
+            hidden={FeedHandler.shouldntShowBadge}
+            type="material" 
+            name="chat" 
+            size={focused ? iconSizeSelected : iconSizeSelected}
+            color={tintColor}
+          />
+        )
+      }
     }
   },
 };
