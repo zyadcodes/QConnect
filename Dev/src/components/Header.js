@@ -1,4 +1,3 @@
-import { PixelRatio, Text } from "react-native";
 import { Avatar, Icon } from 'react-native-elements';
 import styled from "styled-components";
 import React, { useState, useEffect } from "react";

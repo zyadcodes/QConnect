@@ -443,6 +443,7 @@ export class EvaluationPage extends QcParentScreen {
               hideHeader={true}
               showSelectedLinesOnly={false}
               classID={classID}
+              showTooltipOnPress={true}
               profileImage={studentImages.images[profileImageID]}
               showLoadingOnHighlightedAyah={
                 this.state.isAudioLoading === true &&

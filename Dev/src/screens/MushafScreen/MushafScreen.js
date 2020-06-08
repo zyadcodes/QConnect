@@ -90,6 +90,7 @@ export default class MushafScreen extends QcParentScreen {
       hideHeader,
       showSelectedLinesOnly,
       highlightedColor,
+      showTooltipOnPress
     } = this.props;
 
     const itemInt = parseInt(item);
@@ -100,6 +101,7 @@ export default class MushafScreen extends QcParentScreen {
           page={itemInt}
           hideHeader={hideHeader}
           showSelectedLinesOnly={showSelectedLinesOnly}
+          showTooltipOnPress={showTooltipOnPress === true} //if the prop is not passed, we default to false
           onChangePage={this.onChangePage.bind(this)}
           highlightedWords={highlightedWords}
           highlightedAyahs={highlightedAyahs}

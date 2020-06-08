@@ -8,7 +8,6 @@ import {
 import AyahSelectionWord from './AyahSelectionWord';
 import EndOfAyah from './EndOfAyah';
 import { screenHeight } from 'config/dimensions';
-import LoadingSpinner from "components/LoadingSpinner";
 
 //Creates the higher order component
 const TextLine = ({
@@ -25,7 +24,8 @@ const TextLine = ({
   highlightedWords,
   highlightedAyahs,
   highlightedColor,
-  showLoadingOnHighlightedAyah
+  showLoadingOnHighlightedAyah,
+  showTooltipOnPress
 }) => {
   let isFirstWord = noSelectionInPreviousLines;
   return (
@@ -60,6 +60,7 @@ const TextLine = ({
                 <AyahSelectionWord
                   key={word.id}
                   text={word.text}
+                  showTooltipOnPress={showTooltipOnPress}
                   highlighted={highlighted}
                   highlightedColor={highlightedColor}
                   selected={false}
@@ -100,6 +101,7 @@ const TextLine = ({
                 <AyahSelectionWord
                   key={word.id}
                   text={word.text}
+                  showTooltipOnPress={showTooltipOnPress}
                   // the margins and border radius are different between the cases
                   //  of when a word is selected separately or the entire ayah is selected
                   // together. That's why we are passing these as different props

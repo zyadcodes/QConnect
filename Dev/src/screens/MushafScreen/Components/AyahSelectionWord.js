@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import colors from "config/colors";
 import { screenWidth } from "config/dimensions";
+import { Popover, PopoverController } from 'react-native-modal-popover';
 
 //Creates the higher order component
 class Word extends React.Component {
@@ -28,15 +29,33 @@ class Word extends React.Component {
     return true;
   }
 
+  //renders the word content.
+  //The content is then wrapped in either poppover control or simple touchable 
+  // depending on the mus7af version that is being rendered.
+  renderWord() {
+    const { text, isWordHighlighted, isAyahHighlighted } = this.props;
+    return (
+      <Text
+        style={
+          isWordHighlighted || isAyahHighlighted
+            ? styles.highlightedWordText
+            : styles.wordText
+        }
+      >
+        {text}
+      </Text>
+    );
+  }
+
   render() {
     const {
-      text,
       onPress,
       selected,
       isWordHighlighted,
       isFirstSelectedWord,
       highlightedColor,
-      isAyahHighlighted
+      isAyahHighlighted,
+      showTooltipOnPress
     } = this.props;
     let containerStyle = [styles.container];
     if (selected) {
@@ -52,27 +71,58 @@ class Word extends React.Component {
       containerStyle.push(styles.ayahHighlightedStyle);
     }
 
-    if (
+    let highlightWord =
       highlightedColor !== undefined &&
-      (isAyahHighlighted === true || isWordHighlighted === true)
-    ) {
+      (isAyahHighlighted === true || isWordHighlighted === true);
+
+    if (highlightWord) {
       containerStyle.push({
         backgroundColor: highlightedColor,
       });
     }
     return (
       <View style={containerStyle}>
-        <TouchableWithoutFeedback onPress={() => onPress()}>
-          <Text
-            style={
-              isWordHighlighted || isAyahHighlighted
-                ? styles.highlightedWordText
-                : styles.wordText
-            }
-          >
-            {text}
-          </Text>
-        </TouchableWithoutFeedback>
+        {showTooltipOnPress === true ? (
+          <PopoverController>
+            {({
+              openPopover,
+              closePopover,
+              popoverVisible,
+              setPopoverAnchor,
+              popoverAnchorRect,
+            }) => (
+              <React.Fragment>
+                <TouchableWithoutFeedback
+                  ref={setPopoverAnchor}
+                  onPress={() => {
+                    openPopover();
+                    if (!highlightWord) {
+                      onPress();
+                    }
+                  }}
+                >
+                  {this.renderWord()}
+                </TouchableWithoutFeedback>
+
+                <Popover
+                  contentStyle={styles.content}
+                  arrowStyle={styles.arrow}
+                  backgroundStyle={styles.background}
+                  visible={popoverVisible}
+                  onClose={closePopover}
+                  fromRect={popoverAnchorRect}
+                  supportedOrientations={['portrait']}
+                >
+                  <Text>Hello from inside popover!</Text>
+                </Popover>
+              </React.Fragment>
+            )}
+          </PopoverController>
+        ) : (
+          <TouchableWithoutFeedback onPress={() => onPress()}>
+            {this.renderWord()}
+          </TouchableWithoutFeedback>
+        )}
       </View>
     );
   }
@@ -118,6 +168,23 @@ const styles = StyleSheet.create({
   firstSelectedWordText: {
     borderTopRightRadius: 25,
     borderBottomRightRadius: 25,
+  },
+  app: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#c2ffd2'
+  },
+  content: {
+    padding: 16,
+    backgroundColor: 'pink',
+    borderRadius: 8,
+  },
+  arrow: {
+    borderTopColor: 'pink'
+  },
+  background: {
+    backgroundColor: "rgba(107,107,107,0.2)"
   },
 });
 
