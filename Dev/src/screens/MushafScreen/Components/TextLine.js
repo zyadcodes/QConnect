@@ -73,6 +73,7 @@ const TextLine = ({
                 <EndOfAyah
                   key={word.id}
                   ayahNumber={word.aya}
+                  showTooltipOnPress={showTooltipOnPress}
                   onPress={() => onSelectAyah(curAyah, word)}
                   selected={false}
                   highlighted={highlighted}
@@ -119,6 +120,7 @@ const TextLine = ({
                 <EndOfAyah
                   key={word.id}
                   ayahNumber={word.aya}
+                  showTooltipOnPress={showTooltipOnPress}
                   onPress={() => onSelectAyah(curAyah, word)}
                   highlighted={highlighted}
                   showLoading={showLoading}

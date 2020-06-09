@@ -9,7 +9,36 @@ import {
 } from 'react-native';
 import colors from 'config/colors';
 import { screenWidth } from "config/dimensions";
+import { Popover, PopoverController } from 'react-native-modal-popover';
 
+const EndOfAyahView = ({ highlighted, ayahNumber }) => {
+  const rightBracket = '  \uFD3F';
+  const leftBracket = '\uFD3E';
+  const endOfAyahSymbol = '\u06DD';
+
+  return (
+    <View>
+      <Text
+        style={[
+          styles.ayahSeparator,
+          highlighted ? { color: colors.white } : {},
+        ]}
+      >
+        {endOfAyahSymbol}
+      </Text>
+      <View style={styles.ayahNumberContainer}>
+        <Text
+          style={[
+            styles.ayahNumber,
+            highlighted ? { color: colors.white } : {},
+          ]}
+        >
+          {ayahNumber}
+        </Text>
+      </View>
+    </View>
+  );
+};
 //Creates the higher order component
 const EndOfAyah = ({
   ayahNumber,
@@ -18,11 +47,9 @@ const EndOfAyah = ({
   highlighted,
   isLastSelectedAyah,
   showLoading,
-  highlightedColor
+  highlightedColor,
+  showTooltipOnPress
 }) => {
-  const rightBracket = '  \uFD3F';
-  const leftBracket = '\uFD3E';
-  const endOfAyahSymbol = '\u06DD';
   let containerStyle = [styles.container];
   if (selected) {
     containerStyle.push(styles.selectionStyle);
@@ -53,28 +80,48 @@ const EndOfAyah = ({
             animating={showLoading}
           />
         </View>
+      ) : showTooltipOnPress === true ? (
+        <PopoverController>
+          {({
+            openPopover,
+            closePopover,
+            popoverVisible,
+            setPopoverAnchor,
+            popoverAnchorRect,
+          }) => (
+            <React.Fragment>
+              <TouchableHighlight
+                ref={setPopoverAnchor}
+                onPress={() => {
+                  openPopover();
+                  if (!highlighted) {
+                    onPress();
+                  }
+                }}
+              >
+                <EndOfAyahView
+                  ayahNumber={ayahNumber}
+                  highlighted={highlighted}
+                />
+              </TouchableHighlight>
+
+              <Popover
+                contentStyle={styles.content}
+                arrowStyle={styles.arrow}
+                backgroundStyle={styles.background}
+                visible={popoverVisible}
+                onClose={closePopover}
+                fromRect={popoverAnchorRect}
+                supportedOrientations={['portrait']}
+              >
+                <Text>Hello from inside popover!</Text>
+              </Popover>
+            </React.Fragment>
+          )}
+        </PopoverController>
       ) : (
         <TouchableHighlight onPress={() => onPress()}>
-          <View>
-            <Text
-              style={[
-                styles.ayahSeparator,
-                highlighted ? { color: colors.white } : {},
-              ]}
-            >
-              {endOfAyahSymbol}
-            </Text>
-            <View style={styles.ayahNumberContainer}>
-              <Text
-                style={[
-                  styles.ayahNumber,
-                  highlighted ? { color: colors.white } : {},
-                ]}
-              >
-                {ayahNumber}
-              </Text>
-            </View>
-          </View>
+          <EndOfAyahView ayahNumber={ayahNumber} highlighted={highlighted} />
         </TouchableHighlight>
       )}
     </View>
