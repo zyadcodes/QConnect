@@ -73,6 +73,7 @@ export default class FeedsScreen extends React.Component {
 
   static whenKeyboardShows;
   static whenKeyboardHides;
+  isOnFeedsScreen = true;
 
   static doThisWhenKeyboardShows(func) {
     FeedsScreen.whenKeyboardShows = func;
@@ -80,7 +81,17 @@ export default class FeedsScreen extends React.Component {
   static doThisWhenKeyboardHides(func) {
     FeedsScreen.whenKeyboardHides = func;
   }
+  componentWillUnmount(){
+    this.unsubscribeBlur();
+    this.unsubscribeFocus();
+  }
   async componentDidMount() {
+    this.unsubscribeBlur = this.props.navigation.addListener('didBlur', () => {
+      this.isOnFeedsScreen = false;
+    });
+    this.unsubscribeFocus = this.props.navigation.addListener('didFocus', () => {
+      this.isOnFeedsScreen = true;
+    });
     FirebaseFunctions.setCurrentScreen('Class Feed Screen', 'ClassFeedScreen');
     const { userID } = this.props.navigation.state.params;
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
@@ -141,7 +152,10 @@ export default class FeedsScreen extends React.Component {
         if (parseInt(this.state.oldestFeedDoc) === -1) {
           this.setState({ oldestFeedDoc: docID });
         }
-        this.iHaveSeenLatestFeed(this.state.currentClassID)
+        if(this.isOnFeedsScreen){ 
+          console.warn(this.props.navigation.state) 
+          this.iHaveSeenLatestFeed(this.state.currentClassID)
+        }
         return;
       }
       if (parseInt(this.state.oldestFeedDoc) > parseInt(docID)) {
@@ -153,7 +167,10 @@ export default class FeedsScreen extends React.Component {
         if (tempData[i].docID === docID) {
           tempData[i].data = newData;
           this.setState({ feedsData: tempData });
-          this.iHaveSeenLatestFeed(this.state.currentClassID)
+          if(this.isOnFeedsScreen){  
+            console.warn(this.props.navigation.state)
+            this.iHaveSeenLatestFeed(this.state.currentClassID)
+          }
           return;
         }
       }
@@ -283,14 +300,7 @@ export default class FeedsScreen extends React.Component {
             LeftOnPress={() => this.setState({ isOpen: true })}
             Title={this.state.currentClass.name + ' Feed'}
           />
-          <FlatList
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.isRefreshingOldFeeds}
-                onRefresh={() => this.refreshOldFeed()}
-              />
-            }
-            scrollEnabled
+          <ScrollView
             onScroll={nativeEvent => {
               this.setState({
                 currentScrollLoc: nativeEvent.nativeEvent.contentOffset.y,
@@ -303,8 +313,14 @@ export default class FeedsScreen extends React.Component {
             onScrollBeginDrag={() => this.setState({ isScrolling: true })}
             onScrollEndDrag={() => this.setState({ isScrolling: false })}
             keyboardShouldPersistTaps="always"
-            style={localStyles.scrollViewStyle}
             ref={ref => (this.flatListRef = ref)}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.isRefreshingOldFeeds}
+                onRefresh={() => this.refreshOldFeed()}
+              />
+            }
+            style={localStyles.scrollViewStyle}
             listKey={0}
             scrollEventThrottle={16}
             onLayout={() =>
@@ -317,53 +333,57 @@ export default class FeedsScreen extends React.Component {
                 this.state.scrollLength - this.state.currentScrollLoc >
                   screenHeight / 2
               ) {
-                if (this.state.isRefreshingOldFeeds) {
-                  this.flatListRef.scrollToOffset({
-                    animated: true,
-                    offset: 0,
-                  });
-                }
+                // if (this.state.isRefreshingOldFeeds) {
+                //   this.flatListRef.scrollTo({
+                //     animated: true,
+                //     offset: 0,
+                //   });
+                // }
               } else {
                 this.flatListRef.scrollToEnd({ animated: true });
               }
               this.setState({ isRefreshingOldFeeds: false });
             }}
-            data={this.state.feedsData}
-            renderItem={({ index, item, separators }) => (
-              <FeedList
-                role={this.state.role}
-                teacher={this.state.teacher}
-                student={this.state.student}
-                key={item.docID}
-                currentUser={
-                  this.state.role === 'teacher'
-                    ? this.state.teacher
-                    : this.state.student
-                }
-                item={item}
-                onPushToOtherScreen={(pushParamScreen, pushParamObj) => {
-                  this.setState({ isLoading: true });
-                  this.props.navigation.push(pushParamScreen, pushParamObj);
-                  this.setState({ isLoading: false });
-                }}
-                studentClassInfo={this.state.studentClassInfo}
-                index={index}
-                onPressChangeEmojiVote={this.changeEmojiVote.bind(this)}
-                onPressSelectEmoji={objectIndex =>
-                  this.setState({
-                    isSelectingEmoji: true,
-                    currentlySelectingIndex: { listIndex: index, objectIndex },
-                  })
-                }
-                beginCommenting={(listIndex, objectIndex) => {
-                  this.setState({
-                    currentlyCommentingOn: { listIndex, objectIndex },
-                    isCommenting: true,
-                  });
-                }}
-              />
-            )}
-          />
+          >
+            <FlatList
+              listKey={1}
+              data={this.state.feedsData}
+              renderItem={({ index, item, separators }) => (
+                <FeedList
+                  role={this.state.role}
+                  teacher={this.state.teacher}
+                  student={this.state.student}
+                  key={item.docID}
+                  currentUser={
+                    this.state.role === 'teacher'
+                      ? this.state.teacher
+                      : this.state.student
+                  }
+                  item={item}
+                  onPushToOtherScreen={(pushParamScreen, pushParamObj) => {
+                    this.setState({ isLoading: true });
+                    this.props.navigation.push(pushParamScreen, pushParamObj);
+                    this.setState({ isLoading: false });
+                  }}
+                  studentClassInfo={this.state.studentClassInfo}
+                  index={index}
+                  onPressChangeEmojiVote={this.changeEmojiVote.bind(this)}
+                  onPressSelectEmoji={objectIndex =>
+                    this.setState({
+                      isSelectingEmoji: true,
+                      currentlySelectingIndex: { listIndex: index, objectIndex },
+                    })
+                  }
+                  beginCommenting={(listIndex, objectIndex) => {
+                    this.setState({
+                      currentlyCommentingOn: { listIndex, objectIndex },
+                      isCommenting: true,
+                    });
+                  }}
+                />
+              )}
+            />
+          </ScrollView>
         </View>
         {this.state.isSelectingEmoji ? (
           <EmojiSelector

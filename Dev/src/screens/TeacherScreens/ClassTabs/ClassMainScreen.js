@@ -64,13 +64,15 @@ export class ClassMainScreen extends QcParentScreen {
     if (currentClass === undefined) {
       currentClass = await FirebaseFunctions.getClassByID(currentClassID);
     }
-    for(var i = 0; i < currentClass.teachers.length; i++){
-      if(currentClass.teachers[i].ID === teacher.ID){
-        FeedHandler.shouldntShowBadge = currentClass.teachers[i].hasSeenLatestFeed;
-        this.props.eventEmitter.emit('badgeChange')
-        break;
+    FirebaseFunctions.badgeUpdates(currentClassID, (currentClassData) => {
+      for(var i = 0; i < currentClassData.teachers.length; i++){
+        if(currentClassData.teachers[i].ID === teacher.ID){
+          FeedHandler.shouldntShowBadge = currentClass.teachers[i].hasSeenLatestFeed;
+          this.props.eventEmitter.emit('badgeChange')
+          break;
+        }
       }
-    }
+    })
     const classInviteCode = currentClass.classInviteCode;
     const classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
     this.setState({

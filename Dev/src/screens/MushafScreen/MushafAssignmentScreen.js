@@ -278,13 +278,11 @@ class MushafAssignmentScreen extends Component {
         },
         type: 'assignment',
         content: {
+          name: newAssignmentName,
           assignmentType: assignmentType,
           start: assignmentLocation.start,
-          end: assignmentLocation.end
-        },
-        hiddenContent: {
-          assignmentIndex,
-          assignmentName: newAssignmentName
+          end: assignmentLocation.end,
+          assignmentIndex: assignmentIndex
         },
         comments: [],
         reactions: [],
@@ -389,25 +387,26 @@ class MushafAssignmentScreen extends Component {
       let newFeedObj =  {
         madeByUser: {
           ID: this.state.userID,
-          name: this.state.userName,
+          name: this.state.userName, //Please don't forget to clean this up, when we implement cleaner front-end code
           imageID: this.state.imageID,
           role: 'teacher'
         },
         type: 'assignment',
         content: {
+          name: newAssignmentName,
           assignmentType: assignmentType,
           start: assignmentLocation.start,
-          end: assignmentLocation.end
-        },
-        hiddenContent: {
-          assignmentIndex,
-          assignmentName: newAssignmentName
+          end: assignmentLocation.end,
+          assignmentIndex: assignmentIndex
         },
         comments: [],
         reactions: [],
-        viewableBy: [studentID]
+        viewableBy: 'everyone'
       };
-      await FirebaseFunctions.onNotificationUpdateFeed()
+      await FirebaseFunctions.onNotificationUpdateFeed(
+        classID,
+        newFeedObj
+      );
     }
     this.setState(
       {

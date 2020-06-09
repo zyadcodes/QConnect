@@ -20,18 +20,23 @@ import StudentMainScreen from '../../screens/StudentScreens/ClassTabs/StudentMai
 
 export default class QuranAssignmentView extends StudentMainScreen {
   determineIfAssignmentComplete(){
-    let index = this.props.studentClassInfo.currentAssignments.findIndex(element =>{
-      return (element.name === this.props.content.name && element.location.start === this.props.content.start && element.location.end === this.props.content.end && element.type === this.props.content.assignmentType)
-    })
-    return (index === -1)
+    for(var i = 0; i < this.props.studentClassInfo.currentAssignments.length; i++){
+      let element = this.props.studentClassInfo.currentAssignments[i];
+      if(element.name === this.props.content.name &&
+         element.type === this.props.content.assignmentType){
+        return i;
+      }
+    }
+    return -1;
   }
   getPastAssignment(){
-    let item = this.props.studentClassInfo.assignmentHistory.find(element =>{
-      console.warn(element.name+ ' ' + this.props.content.name)
-      console.warn('0 ' + element.name == this.props.content.name)
-      return (element.name === this.props.content.name && element.location.start === this.props.content.start && element.location.end === this.props.content.end && element.assignmentType === this.props.content.assignmentType)
-    })
-    return item;
+    for(var i = 0; i < this.props.studentClassInfo.assignmentHistory.length; i++){
+      let element = this.props.studentClassInfo.assignmentHistory[i];
+      if(element.name === this.props.content.name && 
+         element.assignmentType === this.props.content.assignmentType){
+        return element;
+      }
+    }
   }
   onPress(){
     if(this.determineIfAssignmentComplete()){
@@ -57,6 +62,7 @@ export default class QuranAssignmentView extends StudentMainScreen {
         newAssignment: false,
         assignmentName: item.name,
       });
+      return;
     }
     this.updateCurrentAssignmentStatus('WORKING_ON_IT', this.props.assignmentIndex);
       this.props.onPushToOtherScreen('MushafReadingScreen', {
@@ -73,8 +79,8 @@ export default class QuranAssignmentView extends StudentMainScreen {
       start: this.props.content.start,
       },
       assignmentType: this.props.content.type,
-      assignmentName: this.props.hiddenContent.assignmentName,
-      assignmentIndex: this.props.hiddenContent.assignmentIndex,
+      assignmentName: this.props.content.assignmentName,
+      assignmentIndex: this.props.content.assignmentIndex,
       imageID: this.props.studentClassInfo.profileImageID
     });
   }

@@ -978,8 +978,12 @@ export default class FirebaseFunctions {
     );
     this.logEvent('FETCHING_FEED');
   }
+
+  static async badgeUpdates(classID, refreshFunction){
+    this.classes.doc(classID).onSnapshot(querySnap => refreshFunction(querySnap.data()))
+  }
+
   static async onNotificationUpdateFeed(classID, newObj) {
-    //console.warn(classID);
     let lastIndex = (await this.feeds.doc(classID).get()).data().lastIndex;
     let temp = (await this.feeds
       .doc(classID)

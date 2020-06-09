@@ -121,7 +121,7 @@ export default class FeedsObject extends Component {
           />
           <Text style={this.localStyles.userName}>{this.props.userName}</Text>
         </View>
-        <View style={{ flexDirection: (this.props.isMadeByCurrentUser ? 'row-reverse' : 'row' )}}>
+        <View style={{ flex: 1, flexDirection: (this.props.isMadeByCurrentUser ? 'row-reverse' : 'row' )}}>
           <View
             onLayout={nativeEvent => {
               this.contentContainerViewWidth =
@@ -130,7 +130,7 @@ export default class FeedsObject extends Component {
                 nativeEvent.nativeEvent.layout.height;
             }}
             style={{
-              flex: 2,
+              flex: 3,
               marginLeft: this.props.isMadeByCurrentUser
                 ? 0
                 : screenScale * 18 + screenWidth / 45,
@@ -168,7 +168,6 @@ export default class FeedsObject extends Component {
                     role={this.props.role}
                     classID={this.props.classID}
                     studentClassInfo={this.props.studentClassInfo}
-                    hiddenContent={this.props.hiddenContent}
                     content={this.props.content}
                     madeByUserID={this.props.madeByUserID}
                     currentUser={this.props.currentUser}

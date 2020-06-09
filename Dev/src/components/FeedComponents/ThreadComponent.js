@@ -53,6 +53,7 @@ export default class ThreadComponent extends Component {
       <View
         style={{
           position: 'relative',
+          flex: 1,
           bottom: screenScale * 3,
           width: this.props.isAssignment ? '60%' : '75%',
           marginTop: this.props.isCurrentUser ? screenScale * 8 : 0,
@@ -107,6 +108,7 @@ export default class ThreadComponent extends Component {
       backgroundColor: colors.primaryLight,
       borderColor: colors.primaryLight,
       borderWidth: 2,
+      width: screenWidth/2.7,
       borderRadius: screenWidth / 2,
       alignItems: 'center',
       justifyContent: 'space-around',
