@@ -4,8 +4,10 @@ import {
   StyleSheet,
   View,
   TouchableWithoutFeedback,
+  TouchableOpacity,
   PixelRatio,
 } from "react-native";
+import { Icon } from "react-native-elements";
 import colors from "config/colors";
 import { screenWidth } from "config/dimensions";
 import { Popover, PopoverController } from 'react-native-modal-popover';
@@ -30,7 +32,7 @@ class Word extends React.Component {
   }
 
   //renders the word content.
-  //The content is then wrapped in either poppover control or simple touchable 
+  //The content is then wrapped in either poppover control or simple touchable
   // depending on the mus7af version that is being rendered.
   renderWord() {
     const { text, isWordHighlighted, isAyahHighlighted } = this.props;
@@ -113,7 +115,28 @@ class Word extends React.Component {
                   fromRect={popoverAnchorRect}
                   supportedOrientations={['portrait']}
                 >
-                  <Text>Hello from inside popover!</Text>
+                  <View
+                    style={{
+                      top: 5,
+                      left: screenWidth * 0.82,
+                      zIndex: 1,
+                      position: "absolute" // add if dont work with above
+                    }}
+                  >
+                    <TouchableOpacity
+                      onPress={() => {
+                        onPress();
+                        closePopover();
+                      }}
+                    >
+                      <Icon
+                        name="delete-forever-outline"
+                        type="material-community"
+                        color={colors.darkRed}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <Text>testing 123 </Text>
                 </Popover>
               </React.Fragment>
             )}
@@ -177,8 +200,10 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 16,
-    backgroundColor: 'pink',
+    backgroundColor: colors.white,
     borderRadius: 8,
+    width: screenWidth * 0.9,
+    height: 150
   },
   arrow: {
     borderTopColor: 'pink'
