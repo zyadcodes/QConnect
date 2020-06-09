@@ -19,6 +19,65 @@ import LoadingSpinner from '../LoadingSpinner';
 import StudentMainScreen from '../../screens/StudentScreens/ClassTabs/StudentMainScreen';
 
 export default class QuranAssignmentView extends StudentMainScreen {
+  determineIfAssignmentComplete(){
+    let index = this.props.studentClassInfo.currentAssignments.findIndex(element =>{
+      return (element.name === this.props.content.name && element.location.start === this.props.content.start && element.location.end === this.props.content.end && element.type === this.props.content.assignmentType)
+    })
+    return (index === -1)
+  }
+  getPastAssignment(){
+    let item = this.props.studentClassInfo.assignmentHistory.find(element =>{
+      console.warn(element.name+ ' ' + this.props.content.name)
+      console.warn('0 ' + element.name == this.props.content.name)
+      return (element.name === this.props.content.name && element.location.start === this.props.content.start && element.location.end === this.props.content.end && element.assignmentType === this.props.content.assignmentType)
+    })
+    return item;
+  }
+  onPress(){
+    if(this.determineIfAssignmentComplete()){
+      let item = this.getPastAssignment();
+      this.props.onPushToOtherScreen("EvaluationPage", {
+        classID: this.props.classID,
+        studentID: this.props.currentUser.ID,
+        studentClassInfo: this.props.studentClassInfo,
+        classStudent: this.props.studentClassInfo,
+        assignment: item,
+        completionDate: item.completionDate,
+        assignmentLocation: item.location,
+        rating: item.evaluation.rating,
+        notes: item.evaluation.notes,
+        improvementAreas: item.evaluation.improvementAreas,
+        submission: item.submission,
+        userID: this.props.currentUser.ID,
+        highlightedWords: item.evaluation.highlightedWords,
+        highlightedAyahs: item.evaluation.highlightedAyahs,
+        isStudentSide: true,
+        evaluationID: item.ID,
+        readOnly: true,
+        newAssignment: false,
+        assignmentName: item.name,
+      });
+    }
+    this.updateCurrentAssignmentStatus('WORKING_ON_IT', this.props.assignmentIndex);
+      this.props.onPushToOtherScreen('MushafReadingScreen', {
+      origin: 'FeedObject',
+      popOnClose: true,
+      isTeacher: false,
+      assignToAllClass: false,
+      userID: this.props.currentUser.ID,
+      classID: this.props.classID,
+      studentID: this.props.currentUser.ID,
+      currentClass: this.props.studentClassInfo,
+      assignmentLocation: {
+      end: this.props.content.end,
+      start: this.props.content.start,
+      },
+      assignmentType: this.props.content.type,
+      assignmentName: this.props.hiddenContent.assignmentName,
+      assignmentIndex: this.props.hiddenContent.assignmentIndex,
+      imageID: this.props.studentClassInfo.profileImageID
+    });
+  }
   render() {
     return (
       <View>
@@ -37,32 +96,10 @@ export default class QuranAssignmentView extends StudentMainScreen {
             },
           ]}
         >
-          {this.props.content.assignmentType} from ayah{' '}
-          {this.props.content.start.ayah} to ayah {this.props.content.end.ayah}
+          {this.props.content.assignmentType} {this.props.content.name}
         </Text>
         <TouchableOpacity
-          onPress={() => {
-            // console.warn('Hello World Before')
-            // this.updateCurrentAssignmentStatus('WORKING_ON_IT', this.props.assignmentIndex);
-            this.props.onPushToOtherScreen('MushafReadingScreen', {
-              origin: 'FeedObject',
-              popOnClose: true,
-              isTeacher: false,
-              assignToAllClass: false,
-              userID: this.props.currentUser.ID,
-              classID: this.props.classID,
-              studentID: this.props.currentUser.ID,
-              currentClass: this.props.studentClassInfo,
-              assignmentLocation: {
-                end: this.props.content.end,
-                start: this.props.content.start,
-              },
-              assignmentType: this.props.content.type,
-              assignmentName: this.props.hiddenContent.assignmentName,
-              assignmentIndex: this.props.hiddenContent.assignmentIndex,
-              imageID: this.props.studentClassInfo.profileImageID
-            });
-          }}
+          onPress={() => this.onPress()}
           disabled={this.props.role === 'teacher'}
           style={this.localStyles.assignmentContainer}
         >
@@ -77,7 +114,7 @@ export default class QuranAssignmentView extends StudentMainScreen {
             </View>
           )}
         </TouchableOpacity>
-        {this.state.madeByCurrentUser ? null : (
+        {this.props.role === 'teacher' ? null : (
           <Text
             style={[
               this.localStyles.newAssignmentText,

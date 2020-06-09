@@ -244,14 +244,21 @@ export default class FeedsObject extends Component {
                              style={[
                                this.localStyles.Reaction,
                                item.reactedBy.includes(this.props.currentUser.ID)
-                                 ? {
-                                     backgroundColor: colors.lightBlue,
-                                     borderColor: colors.lightBlue,
-                                   }
-                                 : {
-                                     backgroundColor: colors.primaryLight,
-                                     borderColor: colors.primaryLight,
-                                   },
+                          ? {
+                              backgroundColor: colors.lightBlue,
+                              borderColor: colors.lightBlue,
+                            }
+                          : this.props.type === 'achievement' 
+                            ?
+                              {
+                                backgroundColor: '#00ff00',
+                                borderColor: '#00ff00',
+                              }
+                            :
+                              {
+                                backgroundColor: colors.primaryLight,
+                                borderColor: colors.primaryLight,
+                              },
                                { bottom: 0, left: 0, marginTop: 3, marginRight: 0 }
                              ]}
                            >

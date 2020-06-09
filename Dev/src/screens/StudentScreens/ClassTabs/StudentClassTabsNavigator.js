@@ -10,11 +10,12 @@ import FeedsScreen from '../../UniversalClassScreens/FeedsScreen';
 import { string } from 'prop-types';
 import EventEmitter from 'events'
 import FeedHandler from '../../../components/FeedComponents/FeedHandler'
+import IconWithBadge from '../../../components/IconWithBadge'
 
 var iconSizeSelected = PixelRatio.get() < 2 ? 18 : 25;
 var iconSizeNotSelected = PixelRatio.get() < 2 ? 14 : 20;
 var fontSize = PixelRatio.get() < 2 ? 12 : 14;
-
+const FeedWithBadge = IconWithBadge() (Icon);
 const eventEmitter = new EventEmitter();
 
 const routeConfig = {

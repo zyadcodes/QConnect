@@ -1046,42 +1046,46 @@ export default class FirebaseFunctions {
   }
   static async updateSeenFeedForClass(classID, haveSeenFeed){
     return await this.database.runTransaction(async (transaction) => {
-      return await transaction.get(this.classes.doc(classID)).then(async (doc) => {
+      await transaction.get(this.classes.doc(classID)).then(async (doc) => {
         let tempData = doc.data();
-        for(var i = 0; i < tempData.teachers; i++){
-          tempData.teachers[i].hasSeenLatestFeed = haveSeenFeed;
-        }
-        for(var i = 0; i < tempData.students; i++){
-          tempData.students[i].hasSeenLatestFeed = haveSeenFeed;
-        }
-        await transaction.update(tempData)
+          for(var i = 0; i < tempData.teachers.length; i++){
+            tempData.teachers[i].hasSeenLatestFeed = haveSeenFeed;
+          }
+          for(var i = 0; i < tempData.students.length; i++){
+            tempData.students[i].hasSeenLatestFeed = haveSeenFeed;
+          }
+        transaction.update(this.classes.doc(classID), {students: tempData.students, teachers: tempData.teachers})
       })
+      return 0;
     })
   }
   static async updateSeenFeedForInidividual(classID, hasSeenFeed, isTeacher, userObj){
     return await this.database.runTransaction(async (transaction) => {
-      return await transaction.get(this.classes.doc(classID)).then(async (doc) => {
+      await transaction.get(this.classes.doc(classID)).then(async (doc) => {
         let tempData = doc.data();
         if(isTeacher){
           let teacherInClass = -1;
           for(var i = 0; i < tempData.teachers.length; i++){
             if(tempData.teachers[i].ID === userObj.ID){
               teacherInClass = i;
+              break;
             }
           }
           tempData.teachers[teacherInClass].hasSeenLatestFeed = hasSeenFeed;
-          await transaction.update({teachers: tempData.teachers})
+          await transaction.update(this.classes.doc(classID), {teachers: tempData.teachers})
         }else{
           let studentInClass = -1;
           for(var i = 0; i < tempData.students.length; i++){
             if(tempData.students[i].ID === userObj.ID){
               studentInClass = i;
+              break;
             }
           }
           tempData.students[studentInClass].hasSeenLatestFeed = hasSeenFeed;
-          await transaction.update({students: tempData.students})
+          await transaction.update(this.classes.doc(classID), {students: tempData.students})
         }
       })
+      return 0;
     })
   }
 }

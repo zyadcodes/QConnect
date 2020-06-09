@@ -45,6 +45,7 @@ export default class FeedsScreen extends React.Component {
     currentClassID: '',
     teacher: null,
     student: null,
+    studentClassIndex: -1,
     studentClassInfo: null,
     currentlySelectingIndex: {
       listIndex: -1,
@@ -101,8 +102,9 @@ export default class FeedsScreen extends React.Component {
     const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
     if (teacher === -1) {
       const studentClassInfo = currentClass.students.find(student => {
-        return student.ID === userID;
+        return student.ID === userType.ID;
       });
+      console.warn(studentClassInfo)
       this.setState({ studentClassInfo });
     }
     const { classInviteCode } = currentClass;
@@ -126,7 +128,7 @@ export default class FeedsScreen extends React.Component {
     FeedHandler.shouldntShowBadge = true;
     this.props.eventEmitter.emit('badgeChange')
   }
-  async iHaveSeenLatestFeed(currentClassID, teacher){
+  async iHaveSeenLatestFeed(currentClassID){
     await FirebaseFunctions.updateSeenFeedForInidividual(currentClassID, true, this.state.role === 'teacher', this.state.role === 'teacher' ? this.state.teacher : this.state.student)
   }
   async refresh(docID, newData, isNewDoc) {
@@ -139,7 +141,7 @@ export default class FeedsScreen extends React.Component {
         if (parseInt(this.state.oldestFeedDoc) === -1) {
           this.setState({ oldestFeedDoc: docID });
         }
-        await this.iHaveSeenLatestFeed(this.state.currentClassID, this.state.teacher)
+        this.iHaveSeenLatestFeed(this.state.currentClassID)
         return;
       }
       if (parseInt(this.state.oldestFeedDoc) > parseInt(docID)) {
@@ -151,10 +153,10 @@ export default class FeedsScreen extends React.Component {
         if (tempData[i].docID === docID) {
           tempData[i].data = newData;
           this.setState({ feedsData: tempData });
+          this.iHaveSeenLatestFeed(this.state.currentClassID)
           return;
         }
       }
-      await this.iHaveSeenLatestFeed(this.state.currentClassID, this.state.teacher)
     }
   }
   async addComment(text) {
@@ -304,9 +306,8 @@ export default class FeedsScreen extends React.Component {
             style={localStyles.scrollViewStyle}
             ref={ref => (this.flatListRef = ref)}
             listKey={0}
-            
             scrollEventThrottle={16}
-            onLayout={nativeEvent =>
+            onLayout={() =>
               setTimeout(() => this.flatListRef.scrollToEnd({animated: true}), 1000)
             }
             onContentSizeChange={() => {
@@ -345,7 +346,6 @@ export default class FeedsScreen extends React.Component {
                   this.props.navigation.push(pushParamScreen, pushParamObj);
                   this.setState({ isLoading: false });
                 }}
-                classID={this.state.currentClassID}
                 studentClassInfo={this.state.studentClassInfo}
                 index={index}
                 onPressChangeEmojiVote={this.changeEmojiVote.bind(this)}
