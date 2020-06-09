@@ -7,7 +7,7 @@ import screenStyle from 'config/screenStyle';
 import strings from 'config/strings';
 import { checkNotifications, requestNotifications } from 'react-native-permissions';
 import FirebaseFunctions from 'config/FirebaseFunctions';
-import OfflineEmptyState from './src/components/OfflineEmptyState';
+import OfflineEmptyState from './src/components/OfflineEmptyState/OfflineEmptyState';
 
 //Declares the functional component
 const App = (props) => {
