@@ -11,6 +11,7 @@ import { Icon } from "react-native-elements";
 import colors from "config/colors";
 import { screenWidth } from "config/dimensions";
 import { Popover, PopoverController } from 'react-native-modal-popover';
+import EvaluationNotes from "components/EvaluationNotes";
 
 //Creates the higher order component
 class Word extends React.Component {
@@ -118,7 +119,8 @@ class Word extends React.Component {
                   <View
                     style={{
                       top: 5,
-                      left: screenWidth * 0.82,
+                      left: screenWidth * 0.75,
+                      flexDirection: "row",
                       zIndex: 1,
                       position: "absolute" // add if dont work with above
                     }}
@@ -135,8 +137,25 @@ class Word extends React.Component {
                         color={colors.darkRed}
                       />
                     </TouchableOpacity>
+
+                  <View style={{ width: 10, height: 10 }} />
+                    <TouchableOpacity
+                      onPress={() => {
+                        closePopover();
+                      }}
+                    >
+                      <Icon
+                        name="close"
+                        type="antdesign"
+                        color={colors.darkGrey}
+                      />
+                    </TouchableOpacity>
                   </View>
-                  <Text>testing 123 </Text>
+                  <EvaluationNotes
+                    readOnly={false}
+                    improvementAreas={["alif", "baa", "taa"]}
+                  />
+                  
                 </Popover>
               </React.Fragment>
             )}
@@ -203,7 +222,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 8,
     width: screenWidth * 0.9,
-    height: 150
+    minHeight: 150
   },
   arrow: {
     borderTopColor: 'pink'
