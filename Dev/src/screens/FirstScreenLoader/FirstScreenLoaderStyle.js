@@ -13,3 +13,4 @@ export default StyleSheet.create({
 		alignItems: 'center',
 	},
 });
+ 

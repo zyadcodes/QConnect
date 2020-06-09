@@ -22,5 +22,5 @@ const OfflineEmptyState = (props) => {
 		</View>
 	);
 };
-
+ 
 export default OfflineEmptyState;

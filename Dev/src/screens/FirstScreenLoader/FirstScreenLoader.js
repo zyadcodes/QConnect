@@ -59,7 +59,7 @@ const FirstScreenLoader = (props) => {
 		});
 		return ret;
 	};
-
+ 
 	// Renders the loading screen & sets a screen timeout function in case the async fetch takes too long to load
 	setTimeout(() => {
 		setAlreadyCalled(false);
