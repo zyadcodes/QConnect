@@ -54,8 +54,8 @@ export default class ThreadComponent extends Component {
         style={{
           position: 'relative',
           flex: 1,
+          overflow: 'visible',
           bottom: screenScale * 3,
-          width: this.props.isAssignment ? '60%' : '75%',
           marginTop: this.props.isCurrentUser ? screenScale * 8 : 0,
         }}
       >
@@ -81,6 +81,7 @@ export default class ThreadComponent extends Component {
           <FlatList
             listKey={this.props.listKey + 1}
             data={this.props.comments}
+            style={{ overflow: 'visible' }}
             renderItem={({ index, item, separators }) => (
               <View key={index} style={this.localStyles.commentContainer}>
                 <Image
@@ -93,7 +94,9 @@ export default class ThreadComponent extends Component {
                 />
                 <View style={this.localStyles.userNameAndComment}>
                   <Text style={{ fontWeight: 'bold' }}>{item.user.name}</Text>
-                  <Text>{item.content}</Text>
+                  <Text style={{ flexWrap: 'wrap', paddingRight: 40 }}>
+                    {item.content}
+                  </Text>
                 </View>
               </View>
             )}
@@ -108,7 +111,7 @@ export default class ThreadComponent extends Component {
       backgroundColor: colors.primaryLight,
       borderColor: colors.primaryLight,
       borderWidth: 2,
-      width: screenWidth/2.7,
+      width: screenWidth / 2.7,
       borderRadius: screenWidth / 2,
       alignItems: 'center',
       justifyContent: 'space-around',
@@ -134,12 +137,14 @@ export default class ThreadComponent extends Component {
     },
     userNameAndComment: {
       alignContent: 'space-around',
-      marginLeft: screenWidth / 45
+      marginLeft: screenWidth / 45,
+      overflow: 'visible'
     },
     commentContainer: {
       width: screenWidth / 2,
       marginTop: screenHeight / 100,
-      flexDirection: 'row'
+      flexDirection: 'row',
+      overflow: 'visible'
     }
   });
 }

@@ -65,7 +65,6 @@ export default class FeedsScreen extends React.Component {
     isChatting: false,
     newCommentTxt: '',
     newChatTxt: '',
-    isScrolling: false,
     inputHeight: screenHeight / 12
   };
 
@@ -73,7 +72,6 @@ export default class FeedsScreen extends React.Component {
 
   static whenKeyboardShows;
   static whenKeyboardHides;
-  isOnFeedsScreen = true;
 
   static doThisWhenKeyboardShows(func) {
     FeedsScreen.whenKeyboardShows = func;
@@ -81,17 +79,12 @@ export default class FeedsScreen extends React.Component {
   static doThisWhenKeyboardHides(func) {
     FeedsScreen.whenKeyboardHides = func;
   }
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.unsubscribeBlur();
     this.unsubscribeFocus();
+    FirebaseFunctions.unsubscribeFromFeedListeners();
   }
   async componentDidMount() {
-    this.unsubscribeBlur = this.props.navigation.addListener('didBlur', () => {
-      this.isOnFeedsScreen = false;
-    });
-    this.unsubscribeFocus = this.props.navigation.addListener('didFocus', () => {
-      this.isOnFeedsScreen = true;
-    });
     FirebaseFunctions.setCurrentScreen('Class Feed Screen', 'ClassFeedScreen');
     const { userID } = this.props.navigation.state.params;
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
@@ -115,10 +108,23 @@ export default class FeedsScreen extends React.Component {
       const studentClassInfo = currentClass.students.find(student => {
         return student.ID === userType.ID;
       });
-      console.warn(studentClassInfo)
+      console.warn(studentClassInfo);
       this.setState({ studentClassInfo });
     }
     const { classInviteCode } = currentClass;
+    this.isOnFeedsScreen = true;
+    this.unsubscribeBlur = this.props.navigation.addListener('didBlur', () => {
+      this.isOnFeedsScreen = false;
+    });
+    this.unsubscribeFocus = this.props.navigation.addListener(
+      'didFocus',
+      () => {
+        if (!FeedHandler.shouldntShowBadge) {
+          this.iHaveSeenLatestFeed(currentClassID);
+        }
+        this.isOnFeedsScreen = true;
+      }
+    );
     await FirebaseFunctions.getLatestFeed(
       currentClassID,
       this.refresh.bind(this)
@@ -136,25 +142,32 @@ export default class FeedsScreen extends React.Component {
         this._isMounted = true;
       }
     );
-    FeedHandler.shouldntShowBadge = true;
-    this.props.eventEmitter.emit('badgeChange')
   }
-  async iHaveSeenLatestFeed(currentClassID){
-    await FirebaseFunctions.updateSeenFeedForInidividual(currentClassID, true, this.state.role === 'teacher', this.state.role === 'teacher' ? this.state.teacher : this.state.student)
+  async iHaveSeenLatestFeed(currentClassID) {
+    await FirebaseFunctions.updateSeenFeedForInidividual(
+      currentClassID,
+      true,
+      this.state.role === 'teacher',
+      this.state.role === 'teacher' ? this.state.teacher : this.state.student
+    );
   }
   async refresh(docID, newData, isNewDoc) {
     if (this._isMounted) {
       let tempData = this.state.feedsData.slice();
       if (isNewDoc) {
-        this.setState({isLoading: false})
+        this.setState({ isLoading: false });
         tempData.push({ docID, data: newData });
         this.setState({ feedsData: tempData });
         if (parseInt(this.state.oldestFeedDoc) === -1) {
           this.setState({ oldestFeedDoc: docID });
         }
-        if(this.isOnFeedsScreen){ 
-          console.warn(this.props.navigation.state) 
-          this.iHaveSeenLatestFeed(this.state.currentClassID)
+        if (
+          this.isOnFeedsScreen &&
+          this.state.scrollLength - this.state.currentScrollLoc <
+            screenHeight / 2
+        ) {
+          console.warn('OH hey');
+          this.iHaveSeenLatestFeed(this.state.currentClassID);
         }
         return;
       }
@@ -167,9 +180,13 @@ export default class FeedsScreen extends React.Component {
         if (tempData[i].docID === docID) {
           tempData[i].data = newData;
           this.setState({ feedsData: tempData });
-          if(this.isOnFeedsScreen){  
-            console.warn(this.props.navigation.state)
-            this.iHaveSeenLatestFeed(this.state.currentClassID)
+          if (
+            this.isOnFeedsScreen &&
+            this.state.scrollLength - this.state.currentScrollLoc <
+              screenHeight / 2
+          ) {
+            console.warn('OH hey');
+            this.iHaveSeenLatestFeed(this.state.currentClassID);
           }
           return;
         }
@@ -206,6 +223,16 @@ export default class FeedsScreen extends React.Component {
       currentClassID,
       false
     );
+  }
+  determineScrollHeight() {
+    const { feedsData } = this.state;
+    let predictedHeight = 0;
+    for (var i = 0; i < feedsData.length; i++) {
+      for (var j = 0; j < feedsData[i].data.length; j++) {
+        predictedHeight += screenHeight / 6.5;
+      }
+    }
+    return predictedHeight;
   }
   async sendMessage(text) {
     const newObj = {
@@ -302,18 +329,28 @@ export default class FeedsScreen extends React.Component {
           />
           <ScrollView
             onScroll={nativeEvent => {
-              this.setState({
-                currentScrollLoc: nativeEvent.nativeEvent.contentOffset.y,
-              }, () => {
-                if(this.state.currentScrollLoc > this.state.scrollLength){
-                  this.setState({scrollLength: this.state.currentScrollLoc})
+              this.setState(
+                {
+                  currentScrollLoc: nativeEvent.nativeEvent.contentOffset.y,
+                },
+                () => {
+                  if (this.state.currentScrollLoc > this.state.scrollLength) {
+                    this.setState({
+                      scrollLength: this.state.currentScrollLoc,
+                    });
+                  }
+                  if (
+                    this.state.scrollLength - this.state.currentScrollLoc <
+                      screenHeight / 3 &&
+                    !FeedHandler.shouldntShowBadge
+                  ) {
+                    this.iHaveSeenLatestFeed(this.state.currentClassID);
+                  }
                 }
-              });
+              );
             }}
-            onScrollBeginDrag={() => this.setState({ isScrolling: true })}
-            onScrollEndDrag={() => this.setState({ isScrolling: false })}
             keyboardShouldPersistTaps="always"
-            ref={ref => (this.flatListRef = ref)}
+            ref={ref => (this.scrollViewRef = ref)}
             refreshControl={
               <RefreshControl
                 refreshing={this.state.isRefreshingOldFeeds}
@@ -322,27 +359,30 @@ export default class FeedsScreen extends React.Component {
             }
             style={localStyles.scrollViewStyle}
             listKey={0}
-            scrollEventThrottle={16}
             onLayout={() =>
-              setTimeout(() => this.flatListRef.scrollToEnd({animated: true}), 1000)
+              setTimeout(
+                () => this.scrollViewRef.scrollToEnd({ animated: true }),
+                1000
+              )
             }
+            scrollEventThrottle={16}
             onContentSizeChange={() => {
-              if (
-                this.state.isScrolling ||
-                this.state.isRefreshingOldFeeds ||
-                this.state.scrollLength - this.state.currentScrollLoc >
-                  screenHeight / 2
-              ) {
-                // if (this.state.isRefreshingOldFeeds) {
-                //   this.flatListRef.scrollTo({
-                //     animated: true,
-                //     offset: 0,
-                //   });
-                // }
-              } else {
-                this.flatListRef.scrollToEnd({ animated: true });
-              }
-              this.setState({ isRefreshingOldFeeds: false });
+              this.setState(
+                { scrollLength: this.determineScrollHeight() },
+                () => {
+                  if (
+                    !(
+                      this.state.isRefreshingOldFeeds ||
+                      this.state.scrollLength - this.state.currentScrollLoc >
+                        screenHeight / 3
+                    )
+                  ) {
+                    this.scrollViewRef.scrollToEnd({ animated: true });
+                  }
+                  //console.warn('scrollLength: '+ this.state.scrollLength)
+                  this.setState({ isRefreshingOldFeeds: false });
+                }
+              );
             }}
           >
             <FlatList
@@ -500,7 +540,7 @@ const localStyles = StyleSheet.create({
     flex: 1
   },
   scrollViewStyle: {
-    backgroundColor: '#f7f7f9',
+    backgroundColor: '#f7f7f9'
   },
   spinnerContainerStyle: {
     flex: 1,

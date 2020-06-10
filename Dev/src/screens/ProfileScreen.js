@@ -206,9 +206,11 @@ export class ProfileScreen extends QcParentScreen {
               <View style={styles.picContainer}>
                 <Image
                   style={styles.profilePic}
-                  source={this.state.isTeacher === true
-                    ? teacherImages.images[profileImageID]
-                    : studentImages.images[profileImageID]}
+                  source={
+                    this.state.isTeacher === true
+                      ? teacherImages.images[profileImageID]
+                      : studentImages.images[profileImageID]
+                  }
                 />
                 <TouchableText
                   text={strings.UpdateProfileImage}
@@ -252,7 +254,11 @@ export class ProfileScreen extends QcParentScreen {
               <TouchableOpacity
                 style={styles.cardStyle}
                 onPress={async () => {
-                  await FirebaseFunctions.setUserActiveState(this.state.userID, this.state.isTeacher, 'offline')
+                  await FirebaseFunctions.setUserActiveState(
+                    this.state.userID,
+                    this.state.isTeacher,
+                    'offline'
+                  );
                   await FirebaseFunctions.logOut(this.state.userID);
                   this.props.navigation.push("FirstScreenLoader");
                 }}

@@ -20,16 +20,19 @@ export default class FirebaseFunctions {
   static fcm = firebase.messaging();
   static auth = firebase.auth();
   static analytics = firebase.analytics();
+  static feedListeners = [];
 
   //-----------------------------
   //Methods that can be called from any other class
 
   //Method calls a firebase function by taking the functions name as a parameter, the parameters of the cloud function
-	//as a second parameter, and then returns the functions result
-	static async call(functionName, parameters) {
-		const functionReturn = await this.functions.httpsCallable(functionName)(parameters);
-		return functionReturn.data;
-	}
+  //as a second parameter, and then returns the functions result
+  static async call(functionName, parameters) {
+    const functionReturn = await this.functions.httpsCallable(functionName)(
+      parameters
+    );
+    return functionReturn.data;
+  }
 
   //This functions will take in an email and a password & will sign a user up using
   //firebase authentication (will also sign the user in). Additionally, it will take
@@ -229,6 +232,8 @@ export default class FirebaseFunctions {
       currentClassID,
       classes: firebase.firestore.FieldValue.arrayUnion(ID)
     });
+    //Creates a feed for the new class
+    await this.createFeedForClass(ID);
     this.logEvent("ADD_NEW_CLASS");
     return ID;
   }
@@ -239,7 +244,7 @@ export default class FirebaseFunctions {
     const thisClass = await this.getClassByID(classID);
     const arrayOfTeachers = thisClass.teachers;
     const indexOfTeacher = arrayOfTeachers.findIndex(element => {
-      return element === teacherID;
+      return element.ID === teacherID;
     });
     arrayOfTeachers.splice(indexOfTeacher, 1);
     await this.updateClassObject(classID, {
@@ -577,7 +582,13 @@ export default class FirebaseFunctions {
           role: 'student',
           ID: arrayOfStudents[studentIndex].ID
         },
-        content: arrayOfStudents[studentIndex].name + ' Completed ' + evaluationDetails.assignmentType+ ' ' + evaluationDetails.name + '!'
+        content:
+          arrayOfStudents[studentIndex].name +
+          ' Completed ' +
+          evaluationDetails.assignmentType +
+          ' ' +
+          evaluationDetails.name +
+          '!'
       });
       await this.updateFeedDoc(tempData, lastIndex, classID, true);
       //Notifies that student that their assignment has been graded
@@ -809,6 +820,7 @@ export default class FirebaseFunctions {
       attendanceHistory: {},
       averageRating: 0,
       currentAssignments: [],
+      hasSeenLatestFeed: false,
       profileImageID: student.profileImageID,
       name: student.name,
       totalAssignments: 0
@@ -965,22 +977,30 @@ export default class FirebaseFunctions {
       .doc(lastIndex)
       .get()).data();
     if (determiningData.data.length < 14 && parseInt(lastIndex) >= 1) {
-      this.listenForFeedDocChanges(
-        parseInt(lastIndex) - 1 + '',
-        classID,
-        (docID, changedData, isNewDoc) =>
-          refreshFunction(docID, changedData, isNewDoc),
-        true
+      this.feedListeners.push(
+        this.listenForFeedDocChanges(
+          parseInt(lastIndex) - 1 + '',
+          classID,
+          (docID, changedData, isNewDoc) =>
+            refreshFunction(docID, changedData, isNewDoc),
+          true
+        )
       );
     }
-    this.checkForNewFeedDocListener(classID, (docID, changedData, isNewDoc) =>
-      refreshFunction(docID, changedData, isNewDoc)
+    this.feedListeners.push(
+      this.checkForNewFeedDocListener(classID, (docID, changedData, isNewDoc) =>
+        refreshFunction(docID, changedData, isNewDoc)
+      )
     );
     this.logEvent('FETCHING_FEED');
   }
 
-  static async badgeUpdates(classID, refreshFunction){
-    this.classes.doc(classID).onSnapshot(querySnap => refreshFunction(querySnap.data()))
+  static async badgeUpdates(classID, refreshFunction) {
+    this.feedListeners.push(
+      this.classes.doc(classID).onSnapshot(querySnap => {
+        refreshFunction(querySnap.data());
+      })
+    );
   }
 
   static async onNotificationUpdateFeed(classID, newObj) {
@@ -1018,17 +1038,19 @@ export default class FirebaseFunctions {
     }
   }
   static async checkForNewFeedDocListener(classID, refreshFunction) {
-    this.feeds
-      .doc(classID)
-      .onSnapshot(querySnap =>
-        this.listenForFeedDocChanges(
-          querySnap.data().lastIndex,
-          classID,
-          (docID, changedData, isNewDoc) =>
-            refreshFunction(docID, changedData, isNewDoc),
-          true
+    this.feedListeners.push(
+      this.feeds
+        .doc(classID)
+        .onSnapshot(querySnap =>
+          this.listenForFeedDocChanges(
+            querySnap.data().lastIndex,
+            classID,
+            (docID, changedData, isNewDoc) =>
+              refreshFunction(docID, changedData, isNewDoc),
+            true
+          )
         )
-      );
+    );
   }
   static async addOldFeedDoc(classID, currentOldest, refreshFunction) {
     this.listenForFeedDocChanges(
@@ -1045,58 +1067,89 @@ export default class FirebaseFunctions {
     refreshFunction,
     isNewDoc
   ) {
-    this.feeds
-      .doc(classID)
-      .collection("content")
-      .doc(docID)
-      .onSnapshot(querySnap => {
-        refreshFunction(docID, querySnap.data().data, isNewDoc);
-        //console.warn('isNewDoc: '+isNewDoc)
-        isNewDoc = false;
+    this.feedListeners.push(
+      this.feeds
+        .doc(classID)
+        .collection("content")
+        .doc(docID)
+        .onSnapshot(querySnap => {
+          refreshFunction(docID, querySnap.data().data, isNewDoc);
+          //console.warn('isNewDoc: '+isNewDoc)
+          isNewDoc = false;
+        })
+    );
+  }
+  static unsubscribeFromFeedListeners() {
+    for (var i = 0; i < this.feedListeners.length; i++) {
+      this.feedListeners[i]();
+      this.feedListeners.splice(i, 1);
+    }
+  }
+  static async updateSeenFeedForClass(classID, haveSeenFeed) {
+    return await this.database.runTransaction(async transaction => {
+      await transaction.get(this.classes.doc(classID)).then(async doc => {
+        let tempData = doc.data();
+        for (var i = 0; i < tempData.teachers.length; i++) {
+          tempData.teachers[i].hasSeenLatestFeed = haveSeenFeed;
+        }
+        for (var i = 0; i < tempData.students.length; i++) {
+          tempData.students[i].hasSeenLatestFeed = haveSeenFeed;
+        }
+        transaction.update(this.classes.doc(classID), {
+          students: tempData.students,
+          teachers: tempData.teachers,
+        });
       });
-  }
-  static async updateSeenFeedForClass(classID, haveSeenFeed){
-    return await this.database.runTransaction(async (transaction) => {
-      await transaction.get(this.classes.doc(classID)).then(async (doc) => {
-        let tempData = doc.data();
-          for(var i = 0; i < tempData.teachers.length; i++){
-            tempData.teachers[i].hasSeenLatestFeed = haveSeenFeed;
-          }
-          for(var i = 0; i < tempData.students.length; i++){
-            tempData.students[i].hasSeenLatestFeed = haveSeenFeed;
-          }
-        transaction.update(this.classes.doc(classID), {students: tempData.students, teachers: tempData.teachers})
-      })
       return 0;
-    })
+    });
   }
-  static async updateSeenFeedForInidividual(classID, hasSeenFeed, isTeacher, userObj){
-    return await this.database.runTransaction(async (transaction) => {
-      await transaction.get(this.classes.doc(classID)).then(async (doc) => {
+  static async updateSeenFeedForInidividual(
+    classID,
+    hasSeenFeed,
+    isTeacher,
+    userObj
+  ) {
+    return await this.database.runTransaction(async transaction => {
+      await transaction.get(this.classes.doc(classID)).then(async doc => {
         let tempData = doc.data();
-        if(isTeacher){
+        if (isTeacher) {
           let teacherInClass = -1;
-          for(var i = 0; i < tempData.teachers.length; i++){
-            if(tempData.teachers[i].ID === userObj.ID){
+          for (var i = 0; i < tempData.teachers.length; i++) {
+            if (tempData.teachers[i].ID === userObj.ID) {
               teacherInClass = i;
               break;
             }
           }
           tempData.teachers[teacherInClass].hasSeenLatestFeed = hasSeenFeed;
-          await transaction.update(this.classes.doc(classID), {teachers: tempData.teachers})
-        }else{
+          await transaction.update(this.classes.doc(classID), {
+            teachers: tempData.teachers,
+          });
+        } else {
           let studentInClass = -1;
-          for(var i = 0; i < tempData.students.length; i++){
-            if(tempData.students[i].ID === userObj.ID){
+          for (var i = 0; i < tempData.students.length; i++) {
+            if (tempData.students[i].ID === userObj.ID) {
               studentInClass = i;
               break;
             }
           }
           tempData.students[studentInClass].hasSeenLatestFeed = hasSeenFeed;
-          await transaction.update(this.classes.doc(classID), {students: tempData.students})
+          await transaction.update(this.classes.doc(classID), {
+            students: tempData.students,
+          });
         }
-      })
+      });
       return 0;
-    })
+    });
+  }
+  static async createFeedForClass(classID) {
+    let ref = this.feeds.doc(classID);
+    this.batch.set(ref);
+    this.batch.set(ref.collection('content').doc('0'));
+    await this.batch.commit();
+    await ref.update({ lastIndex: '0' });
+    await ref
+      .collection('content')
+      .doc('0')
+      .update({ data: [] });
   }
 }

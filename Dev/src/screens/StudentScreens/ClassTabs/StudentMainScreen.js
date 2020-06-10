@@ -37,7 +37,7 @@ import DailyTracker, { getTodaysDateString } from 'components/DailyTracker';
 import themeStyles from "config/themeStyles";
 import TouchableText from "components/TouchableText";
 import QCView from "components/QCView";
-import FeedHandler from '../../../components/FeedComponents/FeedHandler'
+import FeedHandler from '../../../components/FeedComponents/FeedHandler';
 
 const translateY = new Animated.Value(-35);
 const opacity = new Animated.Value(0);
@@ -97,15 +97,16 @@ class StudentMainScreen extends QcParentScreen {
         return student.ID === userID;
       });
       const classes = await FirebaseFunctions.getClassesByIDs(student.classes);
-      FirebaseFunctions.badgeUpdates(currentClassID, (currentClassData) => {
-        for(var i = 0; i < currentClassData.students.length; i++){
-          if(currentClassData.students[i].ID === student.ID){
-            FeedHandler.shouldntShowBadge = currentClassData.students[i].hasSeenLatestFeed;
-            this.props.eventEmitter.emit('badgeChange')
+      FirebaseFunctions.badgeUpdates(currentClassID, currentClassData => {
+        for (var i = 0; i < currentClassData.students.length; i++) {
+          if (currentClassData.students[i].ID === student.ID) {
+            FeedHandler.shouldntShowBadge =
+              currentClassData.students[i].hasSeenLatestFeed;
+            this.props.eventEmitter.emit('badgeChange');
             break;
           }
         }
-      })
+      });
       //This constructs an array of the student's past assignments & only includes the "length" field which is how many
       //words that assignment was. The method returns that array which is then passed to the line graph below as the data
       const { dailyPracticeLog, currentAssignments } = studentClassInfo;

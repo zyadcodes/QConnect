@@ -26,7 +26,7 @@ import fontStyles from "config/fontStyles";
 import { Icon } from "react-native-elements";
 import { screenHeight, screenWidth } from "config/dimensions";
 import Toast, { DURATION } from "react-native-easy-toast";
-import themeStyles from 'config/themeStyles'
+import themeStyles from 'config/themeStyles';
 import FeedHandler from "../../../components/FeedComponents/FeedHandler";
 import { element } from "prop-types";
 
@@ -51,6 +51,8 @@ export class ClassMainScreen extends QcParentScreen {
     await this.initScreen();
   }
 
+  componentWillUnmount() {}
+
   async initScreen() {
     const { userID } = this.props.navigation.state.params;
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
@@ -64,15 +66,16 @@ export class ClassMainScreen extends QcParentScreen {
     if (currentClass === undefined) {
       currentClass = await FirebaseFunctions.getClassByID(currentClassID);
     }
-    FirebaseFunctions.badgeUpdates(currentClassID, (currentClassData) => {
-      for(var i = 0; i < currentClassData.teachers.length; i++){
-        if(currentClassData.teachers[i].ID === teacher.ID){
-          FeedHandler.shouldntShowBadge = currentClass.teachers[i].hasSeenLatestFeed;
-          this.props.eventEmitter.emit('badgeChange')
+    FirebaseFunctions.badgeUpdates(currentClassID, currentClassData => {
+      for (var i = 0; i < currentClassData.teachers.length; i++) {
+        if (currentClassData.teachers[i].ID === teacher.ID) {
+          FeedHandler.shouldntShowBadge =
+            currentClassData.teachers[i].hasSeenLatestFeed;
+          this.props.eventEmitter.emit('badgeChange');
           break;
         }
       }
-    })
+    });
     const classInviteCode = currentClass.classInviteCode;
     const classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
     this.setState({
@@ -90,18 +93,24 @@ export class ClassMainScreen extends QcParentScreen {
     }
   }
 
-  showToast(assignedToAllClass){
+  showToast(assignedToAllClass) {
     let toastMsg = assignedToAllClass
-        ? strings.ClassAssignmentSent
-        : strings.AssignmentSent;
-      this.refs.toast.show(toastMsg, DURATION.LENGTH_LONG);
+      ? strings.ClassAssignmentSent
+      : strings.AssignmentSent;
+    this.refs.toast.show(toastMsg, DURATION.LENGTH_LONG);
   }
 
-  updateStateWithNewAssignmentInfo(newAssignment, index, currentClass, showToast, assignedToAllClass) {
-    if(showToast === true){
+  updateStateWithNewAssignmentInfo(
+    newAssignment,
+    index,
+    currentClass,
+    showToast,
+    assignedToAllClass
+  ) {
+    if (showToast === true) {
       this.showToast(assignedToAllClass);
     }
-    
+
     //re-fetch data
     this.initScreen();
   }

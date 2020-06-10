@@ -1,27 +1,37 @@
-import React from "react";
-import { StyleSheet, View, Image, Text, TouchableOpacity, Alert, ScrollView, LayoutAnimation, Platform } from "react-native";
-import QcActionButton from "components/QcActionButton";
-import Toast, { DURATION } from "react-native-easy-toast";
-import colors from "config/colors";
-import ImageSelectionRow from "components/ImageSelectionRow";
-import ImageSelectionModal from "components/ImageSelectionModal";
-import TeacherInfoEntries from "components/TeacherInfoEntries";
-import teacherImages from "config/teacherImages";
-import strings from "config/strings";
-import QcParentScreen from "screens/QcParentScreen";
-import FadeInView from "../../components/FadeInView";
-import FirebaseFunctions from 'config/FirebaseFunctions';
-import { Icon } from 'react-native-elements';
-import QCView from 'components/QCView';
-import screenStyle from 'config/screenStyle';
-import fontStyles from "config/fontStyles";
-import { screenHeight, screenWidth } from 'config/dimensions';
+import React from 'react';
+import {
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  TouchableOpacity,
+  Alert,
+  ScrollView,
+  LayoutAnimation,
+  Platform
+} from 'react-native';
+import QcActionButton from 'components/QcActionButton';
+import Toast, { DURATION } from 'react-native-easy-toast';
+import colors from 'config/colors';
+import ImageSelectionRow from 'components/ImageSelectionRow';
+import ImageSelectionModal from 'components/ImageSelectionModal';
+import TeacherInfoEntries from 'components/TeacherInfoEntries';
+import teacherImages from 'config/teacherImages';
+import strings from 'config/strings';
+import QcParentScreen from 'screens/QcParentScreen';
+import FadeInView from '../../components/FadeInView';
+import FirebaseFunctions from "config/FirebaseFunctions";
+import { Icon } from "react-native-elements";
+import QCView from "components/QCView";
+import screenStyle from "config/screenStyle";
+import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from "config/dimensions";
 
 const initialState = {
-  authCode: '',
-  password: '',
-  passwordTwo: '',
-}
+  authCode: "",
+  password: "",
+  passwordTwo: ""
+};
 
 //To-Do: All info in this class is static, still needs to be hooked up to data base in order
 //to function dynamically
@@ -29,24 +39,30 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   state = initialState;
 
   getRandomGenderNeutralImage = () => {
-    index = Math.floor(Math.random() * Math.floor(teacherImages.genderNeutralImages.length));
+    index = Math.floor(
+      Math.random() * Math.floor(teacherImages.genderNeutralImages.length)
+    );
     imageIndex = teacherImages.genderNeutralImages[index];
     return imageIndex;
-  }
+  };
 
   getRandomMaleImage = () => {
-    index = Math.floor(Math.random() * Math.floor(teacherImages.maleImages.length));
+    index = Math.floor(
+      Math.random() * Math.floor(teacherImages.maleImages.length)
+    );
     imageIndex = teacherImages.maleImages[index];
     return imageIndex;
-  }
+  };
 
   getRandomFemaleImage = () => {
-    index = Math.floor(Math.random() * Math.floor(teacherImages.femaleImages.length));
+    index = Math.floor(
+      Math.random() * Math.floor(teacherImages.femaleImages.length)
+    );
     imageIndex = teacherImages.femaleImages[index];
     return imageIndex;
-  }
+  };
 
-  initialDefaultImageId = this.getRandomGenderNeutralImage()
+  initialDefaultImageId = this.getRandomGenderNeutralImage();
 
   getHighlightedImages = () => {
     defaultImageId = this.initialDefaultImageId;
@@ -54,22 +70,27 @@ export class TeacherWelcomeScreen extends QcParentScreen {
     // get a second gender neutral image, make sure it is different than the first one
     do {
       secondGenericImageId = this.getRandomGenderNeutralImage();
-    } while (secondGenericImageId === defaultImageId)
+    } while (secondGenericImageId === defaultImageId);
 
     //initialize the array of suggested images
-    let proposedImages = [defaultImageId, secondGenericImageId, this.getRandomFemaleImage(), this.getRandomMaleImage()]
+    let proposedImages = [
+      defaultImageId,
+      secondGenericImageId,
+      this.getRandomFemaleImage(),
+      this.getRandomMaleImage()
+    ];
     return proposedImages;
-  }
+  };
 
   //--- state captures the inputted user info ------------------
   state = {
-    phoneNumber: "",
-    emailAddress: "",
-    name: "",
+    phoneNumber: '',
+    emailAddress: '',
+    name: '',
     profileImageID: this.initialDefaultImageId,
     highlightedImagesIndices: this.getHighlightedImages(),
     modalVisible: false,
-    isPhoneValid: false, //todo: this should be properly validated or saved
+    isPhoneValid: false //todo: this should be properly validated or saved
   };
 
   //--- event handlers, handle user interaction ------------------
@@ -87,14 +108,14 @@ export class TeacherWelcomeScreen extends QcParentScreen {
 
     this.setState({
       profileImageID: index,
-      highlightedImagesIndices: candidateImages
+      highlightedImagesIndices: candidateImages,
     });
 
     this.setModalVisible(false);
   }
 
   onTeacherFlow = () => {
-    this.props.navigation.push("AddClass");
+    this.props.navigation.push('AddClass');
   };
 
   // This method saves the new profile information to the firestore database
@@ -102,8 +123,13 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   // In teacher welcome page, teacher ID will be passed as undefined, in which case
   // we will generate a new ID before saving to the store.
   async saveProfileInfo() {
-
-    let { name, phoneNumber, emailAddress, password, profileImageID } = this.state;
+    let {
+      name,
+      phoneNumber,
+      emailAddress,
+      password,
+      profileImageID
+    } = this.state;
     name = name.trim();
     phoneNumber = phoneNumber.trim();
     emailAddress = emailAddress.trim();
@@ -112,13 +138,13 @@ export class TeacherWelcomeScreen extends QcParentScreen {
     //Creates the teacher object to be sent up to the database
     const teacherObject = {
       classes: [],
-      currentClassID: "",
+      currentClassID: '',
       emailAddress,
       name,
       phoneNumber,
       profileImageID,
-      isTeacher: true
-    }
+      isTeacher: true,
+    };
 
     try {
       const ID = await FirebaseFunctions.signUp(
@@ -127,8 +153,8 @@ export class TeacherWelcomeScreen extends QcParentScreen {
         true,
         teacherObject
       );
-      this.props.navigation.push("TeacherCurrentClass", {
-        userID: ID
+      this.props.navigation.push('TeacherCurrentClass', {
+        userID: ID,
       });
     } catch (err) {
       if (err && err.message) {
@@ -137,45 +163,44 @@ export class TeacherWelcomeScreen extends QcParentScreen {
         Alert.alert(strings.Whoops, strings.SomethingWentWrong);
       }
 
-      FirebaseFunctions.logEvent("CREATE_USER_FAILED", { err });
+      FirebaseFunctions.logEvent('CREATE_USER_FAILED', { err });
     }
-  };
+  }
 
   //Creates new account, or launches confirmation dialog if account was created but not confirmed yet.
   onCreateOrConfirmAccount() {
     //validate entries first
     const { name, phoneNumber, emailAddress, password } = this.state;
-    if (!name ||
+    if (
+      !name ||
       !phoneNumber ||
       !emailAddress ||
       !password ||
-      name.trim() === ""
-      || phoneNumber.trim() === ""
-      || emailAddress.trim() === ""
-      || password.trim() === "") {
+      name.trim() === '' ||
+      phoneNumber.trim() === "" ||
+      emailAddress.trim() === "" ||
+      password.trim() === ""
+    ) {
       Alert.alert(strings.Whoops, strings.PleaseMakeSureAllFieldsAreFilledOut);
-    } 
+    }
     /**
      * Phone input Check
      */
-    else if (!this.state.isPhoneValid) {
-      Alert.alert(strings.Whoops, strings.InvalidPhoneNumber);
-    } 
+    else if (!(this.state.password === this.state.passwordTwo)){
+      Alert.alert(strings.Whoops, strings.PasswordsDontMatch);
+    }
 
     /**
      * Password Input Check
      */
-    else if (!(this.state.password === this.state.passwordTwo)){
-      Alert.alert(strings.Whoops, strings.PasswordsDontMatch)
-    } 
+    Alert.alert(strings.Whoops, strings.InvalidPhoneNumber);
 
     /**
      * Save Profile info
      */
-    else {
       //else, create account and save profile info
-      this.saveProfileInfo()
-    }
+      this.saveProfileInfo();
+
   }
 
   //------ event handlers to capture user input into state as user modifies the entries -----
@@ -186,7 +211,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   onPhoneNumberChanged = phone => {
     this.setState({
       isPhoneValid: phone.isValidNumber(),
-      phoneNumber: phone.getValue()
+      phoneNumber: phone.getValue(),
     });
   };
 
@@ -195,17 +220,17 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   };
 
   onPasswordChanged = value => {
-    this.setState({ password: value })
-  }
+    this.setState({ password: value });
+  };
 
   onPasswordTwoChanged = value => {
     this.setState({
-      passwordTwo: value
+      passwordTwo: value,
     });
   };
 
   componentWillMount() {
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
       LayoutAnimation.easeInEaseOut();
     }
   }
@@ -217,7 +242,6 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   // -    ImageSelectionRow: a row with suggested avatars, and a button to invoke the pop up with more avatars
   //-----------------------------------------------------------
   render() {
-
     return (
       <View>
         <ScrollView>
@@ -231,31 +255,56 @@ export class TeacherWelcomeScreen extends QcParentScreen {
               screen={this.name}
             />
             <View style={styles.picContainer}>
-              <View style={{ flex: 1, paddingTop: screenHeight * 0.04, alignSelf: 'flex-start', flexDirection: 'row' }}>
-                <TouchableOpacity style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start', paddingLeft: screenWidth*0.03 }} onPress={() => { this.props.navigation.goBack() }}>
-                  <Icon
-                    name={'angle-left'}
-                    type="font-awesome" />
+              <View
+                style={{
+                  flex: 1,
+                  paddingTop: screenHeight * 0.04,
+                  alignSelf: "flex-start",
+                  flexDirection: "row"
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    flex: 2,
+                    justifyContent: "flex-start",
+                    alignItems: "flex-start",
+                    paddingLeft: screenWidth * 0.03
+                  }}
+                  onPress={() => {
+                    this.props.navigation.goBack();
+                  }}
+                >
+                  <Icon name={"angle-left"} type="font-awesome" />
                 </TouchableOpacity>
               </View>
-              <View style={{ flex: 1, paddingLeft: screenWidth * 0.05, paddingRight: screenWidth * 0.05, paddingBottom: screenHeight * 0.02 }}>
+              <View
+                style={{
+                  flex: 1,
+                  paddingLeft: screenWidth * 0.05,
+                  paddingRight: screenWidth * 0.05,
+                  paddingBottom: screenHeight * 0.02
+                }}
+              >
                 <FadeInView
-                  style={{ alignItems: 'center', justifyContent: 'center' }}>
+                  style={{ alignItems: "center", justifyContent: "center" }}
+                >
                   <Image
                     style={styles.welcomeImage}
-                    source={require("assets/images/salam.png")}
+                    source={require('assets/images/salam.png')}
                   />
-                  <Text style={fontStyles.mainTextStyleDarkGrey}>{strings.TeacherWelcomeMessage}</Text>
+                  <Text style={fontStyles.mainTextStyleDarkGrey}>
+                    {strings.TeacherWelcomeMessage}
+                  </Text>
                 </FadeInView>
               </View>
             </View>
             <View style={styles.editInfo} behavior="padding">
-              <TeacherInfoEntries 
+              <TeacherInfoEntries
                 name={this.state.name}
                 phoneNumber={this.state.phoneNumber}
                 emailAddress={this.state.emailAddress}
                 password={this.state.password}
-                passwordTwo = {this.state.passwordTwo}
+                passwordTwo={this.state.passwordTwo}
                 onNameChanged={this.onNameChanged}
                 onPhoneNumberChanged={this.onPhoneNumberChanged}
                 onEmailAddressChanged={this.onEmailAddressChanged}
@@ -263,9 +312,9 @@ export class TeacherWelcomeScreen extends QcParentScreen {
                 onPasswordChanged={this.onPasswordChanged}
                 onPasswordTwoChanged={this.onPasswordTwoChanged}
               />
-               <Text></Text>
+              <Text />
               <ImageSelectionRow
-                
+
                 images={teacherImages.images}
                 highlightedImagesIndices={this.state.highlightedImagesIndices}
                 onImageSelected={this.onImageSelected.bind(this)}
@@ -282,7 +331,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
               />
             </View>
             <View style={styles.filler} />
-            <Toast position={'center'} ref="toast" />
+            <Toast position={"center"} ref="toast" />
           </View>
         </ScrollView>
       </View>
@@ -293,35 +342,35 @@ export class TeacherWelcomeScreen extends QcParentScreen {
 //-----------------   Styles for the Teacher profile class-----------------------------------
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "column",
+    flexDirection: 'column',
     backgroundColor: colors.lightGrey,
     flex: 1,
-    justifyContent: "flex-end"
+    justifyContent: 'flex-end'
   },
   picContainer: {
-    alignItems: "center",
+    alignItems: 'center',
     marginBottom: 0.015 * screenHeight,
-    backgroundColor: colors.white
+    backgroundColor: colors.white,
   },
   welcomeImage: {
     marginTop: 0.022 * screenHeight,
     width: screenWidth * 0.44,
-    resizeMode: "contain"
+    resizeMode: 'contain'
   },
   editInfo: {
-    flexDirection: "column",
+    flexDirection: 'column',
     backgroundColor: colors.white,
-    color: colors.darkGrey,
+    color: colors.darkGrey
   },
   buttonsContainer: {
-    flexDirection: "column",
+    flexDirection: 'column',
     marginTop: 0.015 * screenHeight,
     backgroundColor: colors.white,
-    justifyContent: "center"
+    justifyContent: 'center'
   },
   filler: {
-    height: 20
-  },
+    height: 20,
+  }
 });
 
 export default TeacherWelcomeScreen;
