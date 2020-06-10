@@ -34,10 +34,14 @@ class MushafReadingScreen extends Component {
 
     //todo: if we need to generalize this, then we can add a props: onClose, and the caller specifies the onClose behavior with
     // the call to push navigation to the proper next screen.
-    this.props.navigation.push("StudentCurrentClass", {
-      userID,
-      logAsPractice: true
-    });
+    if(this.props.navigation.state.params.origin !== 'FeedObject'){  
+      this.props.navigation.push("StudentCurrentClass", {
+        userID,
+        logAsPractice: true
+      });
+      return;
+    }
+    this.props.navigation.navigate('FeedsScreen');
   }
 
   onSelectAyah(selectedAyah, selectedWord) {

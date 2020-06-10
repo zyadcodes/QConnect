@@ -102,7 +102,7 @@ export class AddClassScreen extends QcParentScreen {
       classImageID: this.state.classImageID,
       students: [],
       classInviteCode: '',
-      teachers: [this.state.userID]
+      teachers: [{ID: this.state.userID, hasSeenLatestFeed: true}]
     };
 
     const newClassID = await FirebaseFunctions.addNewClass(classInfo, this.state.userID);

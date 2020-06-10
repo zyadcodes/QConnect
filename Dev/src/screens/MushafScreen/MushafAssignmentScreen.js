@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { View, Text, StyleSheet, Alert, PixelRatio } from "react-native";
 import MushafScreen from "./MushafScreen";
 import { screenHeight, screenWidth } from "config/dimensions";
-import FirebaseFunctions from "config/FirebaseFunctions";
+import FirebaseFunctions from "../../../config/FirebaseFunctions";
 import QcActionButton from "components/QcActionButton";
 import strings from "config/strings";
 import { ScrollView } from "react-native-gesture-handler";
@@ -40,6 +40,7 @@ class MushafAssignmentScreen extends Component {
       : strings.Memorization,
     assignmentLocation: this.props.navigation.state.params.assignmentLocation,
     currentClass: this.props.navigation.state.params.currentClass,
+    userName: '',
     assignmentIndex: this.props.navigation.state.params.assignmentIndex,
     isTeacher:
       this.props.navigation.state.params.isTeacher !== undefined
@@ -127,7 +128,7 @@ class MushafAssignmentScreen extends Component {
       );
     }
 
-    this.setState({ isLoading: false });
+    this.setState({ isLoading: false, userName: (await FirebaseFunctions.getTeacherByID(this.state.userID)).name});
   }
 
   //======== end of Initialize Component ========================
@@ -196,7 +197,7 @@ class MushafAssignmentScreen extends Component {
     return JSON.stringify(selection) === JSON.stringify(noSelection);
   }
 
-  onSaveAssignment(
+  async onSaveAssignment(
     classID,
     studentID,
     assignmentName,
@@ -227,7 +228,7 @@ class MushafAssignmentScreen extends Component {
           closeAfterSave
         );
       } else {
-        this.saveStudentAssignment(
+        await this.saveStudentAssignment(
           isNewAssignment,
           assignmentName,
           classID,
@@ -252,6 +253,7 @@ class MushafAssignmentScreen extends Component {
     assignmentIndex,
     closeAfterSave
   ) {
+    console.warn(classID)
     let assignmentLocation = {
       start: selection.start,
       end: selection.end,
@@ -266,7 +268,31 @@ class MushafAssignmentScreen extends Component {
       assignmentIndex,
       isNewAssignment
     );
-
+    if(isNewAssignment){
+      let newFeedObj =  {
+        madeByUser: {
+          ID: this.state.userID,
+          name: this.state.userName, //Please don't forget to clean this up, when we implement cleaner front-end code
+          imageID: this.state.imageID,
+          role: 'teacher'
+        },
+        type: 'assignment',
+        content: {
+          name: newAssignmentName,
+          assignmentType: assignmentType,
+          start: assignmentLocation.start,
+          end: assignmentLocation.end,
+          assignmentIndex: assignmentIndex
+        },
+        comments: [],
+        reactions: [],
+        viewableBy: 'everyone'
+      };
+      await FirebaseFunctions.onNotificationUpdateFeed(
+        classID,
+        newFeedObj
+      );
+    }
     let newAssignment = {
       name: newAssignmentName,
       type: assignmentType,
@@ -310,7 +336,7 @@ class MushafAssignmentScreen extends Component {
   }
 
   //method updates the current assignment of the student
-  saveStudentAssignment(
+  async saveStudentAssignment(
     isNewAssignment,
     newAssignmentName,
     classID,
@@ -356,9 +382,32 @@ class MushafAssignmentScreen extends Component {
       ...currentClass,
       students
     };
-
-    FirebaseFunctions.updateClassObject(classID, updatedClass);
-
+    await FirebaseFunctions.updateClassObject(classID, updatedClass);
+    if(isNewAssignment){  
+      let newFeedObj =  {
+        madeByUser: {
+          ID: this.state.userID,
+          name: this.state.userName, //Please don't forget to clean this up, when we implement cleaner front-end code
+          imageID: this.state.imageID,
+          role: 'teacher'
+        },
+        type: 'assignment',
+        content: {
+          name: newAssignmentName,
+          assignmentType: assignmentType,
+          start: assignmentLocation.start,
+          end: assignmentLocation.end,
+          assignmentIndex: assignmentIndex
+        },
+        comments: [],
+        reactions: [],
+        viewableBy: 'everyone'
+      };
+      await FirebaseFunctions.onNotificationUpdateFeed(
+        classID,
+        newFeedObj
+      );
+    }
     this.setState(
       {
         currentClass: updatedClass
@@ -890,8 +939,8 @@ class MushafAssignmentScreen extends Component {
             >
               <QcActionButton
                 text={strings.Save}
-                onPress={() => {
-                  this.onSaveAssignment(
+                onPress={async () => {
+                  await this.onSaveAssignment(
                     classID,
                     studentID,
                     assignmentName,
