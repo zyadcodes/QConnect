@@ -361,6 +361,18 @@ export class EvaluationPage extends QcParentScreen {
       : this.props.navigation.goBack();
   }
 
+  onImprovementAreasSelectionChanged = selectedImprovementAreas => {
+    this.setState({ selectedImprovementAreas });
+  };
+
+  onImprovementsCustomized = newAreas => {
+    this.setState({ improvementAreas: newAreas });
+    FirebaseFunctions.saveTeacherCustomImprovementTags(
+      this.props.navigation.state.params.userID,
+      newAreas
+    );
+  };
+
   // --------------  Renders Evaluation scree UI --------------
   render() {
     if (isLoading === true) {
@@ -467,8 +479,16 @@ export class EvaluationPage extends QcParentScreen {
                   <EvaluationNotes
                     improvementAreas={improvementAreas}
                     readOnly={readOnly}
-                    onImrpvementAreasSelectionChanged={() => {
-                      this.props.onImrpvementAreasSelectionChanged();
+                    userID={this.props.navigation.state.params.userID}
+                    onImprovementAreasSelectionChanged={this.onImprovementAreasSelectionChanged.bind(
+                      this
+                    )}
+                    onImprovementsCustomized={newAreas => {
+                      this.setState({ improvementAreas: newAreas });
+                      FirebaseFunctions.saveTeacherCustomImprovementTags(
+                        this.props.navigation.state.params.userID,
+                        newAreas
+                      );
                     }}
                   />
                 );
@@ -580,9 +600,12 @@ export class EvaluationPage extends QcParentScreen {
                 <EvaluationNotes
                   improvementAreas={improvementAreas}
                   readOnly={readOnly}
-                  onImrpvementAreasSelectionChanged={() => {
-                    this.props.onImrpvementAreasSelectionChanged();
-                  }}
+                  onImprovementAreasSelectionChanged={this.onImprovementAreasSelectionChanged.bind(
+                    this
+                  )}
+                  onImprovementsCustomized={this.onImprovementsCustomized.bind(
+                    this
+                  )}
                 />
               )}
             </View>

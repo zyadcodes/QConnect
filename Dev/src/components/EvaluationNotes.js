@@ -59,16 +59,8 @@ class EvaluationNotes extends React.Component {
           title={strings.ImprovementAreas}
           readOnly={this.props.readOnly}
           selectedByDefault={this.props.readOnly ? true : false}
-          onSelectionChanged={() => {}
-            // this.props.onImrpvementAreasSelectionChanged()
-          }
-          onImprovementsCustomized={newAreas => {
-            this.setState({ improvementAreas: newAreas });
-            FirebaseFunctions.saveTeacherCustomImprovementTags(
-              this.props.userID,
-              newAreas
-            );
-          }}
+          onSelectionChanged={this.props.onImprovementAreasSelectionChanged}
+          onImprovementsCustomized={this.props.onImprovementsCustomized}
         />
         <View style={{ height: 30 }} />
       </View>
