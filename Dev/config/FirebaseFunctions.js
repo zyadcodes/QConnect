@@ -1074,7 +1074,6 @@ export default class FirebaseFunctions {
         .doc(docID)
         .onSnapshot(querySnap => {
           refreshFunction(docID, querySnap.data().data, isNewDoc);
-          //console.warn('isNewDoc: '+isNewDoc)
           isNewDoc = false;
         })
     );

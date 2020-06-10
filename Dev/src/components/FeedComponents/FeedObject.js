@@ -88,9 +88,6 @@ export default class FeedsObject extends Component {
     for (var i = 3; i < this.props.reactions.length; i++) {
       tempHiddenReactions[i - 3] = this.props.reactions[i];
     }
-    if (this.props.content === "Alhamdullillah it worked") {
-      console.warn(tempShownReactions);
-    }
     this.setState({
       hiddenReactions: tempHiddenReactions,
       shownReactions: tempShownReactions,

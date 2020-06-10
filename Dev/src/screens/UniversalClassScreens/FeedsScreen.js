@@ -108,7 +108,6 @@ export default class FeedsScreen extends React.Component {
       const studentClassInfo = currentClass.students.find(student => {
         return student.ID === userType.ID;
       });
-      console.warn(studentClassInfo);
       this.setState({ studentClassInfo });
     }
     const { classInviteCode } = currentClass;
@@ -166,7 +165,6 @@ export default class FeedsScreen extends React.Component {
           this.state.scrollLength - this.state.currentScrollLoc <
             screenHeight / 2
         ) {
-          console.warn('OH hey');
           this.iHaveSeenLatestFeed(this.state.currentClassID);
         }
         return;
@@ -185,7 +183,6 @@ export default class FeedsScreen extends React.Component {
             this.state.scrollLength - this.state.currentScrollLoc <
               screenHeight / 2
           ) {
-            console.warn('OH hey');
             this.iHaveSeenLatestFeed(this.state.currentClassID);
           }
           return;
@@ -257,7 +254,6 @@ export default class FeedsScreen extends React.Component {
       this.state.feedsData.length - 1
     ].data.slice();
     let docID = this.state.feedsData[this.state.feedsData.length - 1].docID;
-    //console.warn(this.state.feedsData)
     tempData.push(newObj);
     await FirebaseFunctions.updateFeedDoc(
       tempData,
@@ -268,7 +264,6 @@ export default class FeedsScreen extends React.Component {
     this.setState({ newChatTxt: '' });
   }
   async changeEmojiVote(listIndex, objectIndex, changedReactions) {
-    //console.warn(listIndex)
     let tempData = this.state.feedsData[listIndex].data.slice();
     let docID = this.state.feedsData[listIndex].docID;
     tempData[objectIndex].reactions = changedReactions;
@@ -287,7 +282,6 @@ export default class FeedsScreen extends React.Component {
   }
   async refreshOldFeed() {
     this.setState({ isRefreshingOldFeeds: true });
-    //console.warn(this.state.oldestFeedDoc);
     if (this.state.oldestFeedDoc === "0") {
       this.setState({ isRefreshingOldFeeds: false });
       return;
@@ -379,7 +373,6 @@ export default class FeedsScreen extends React.Component {
                   ) {
                     this.scrollViewRef.scrollToEnd({ animated: true });
                   }
-                  //console.warn('scrollLength: '+ this.state.scrollLength)
                   this.setState({ isRefreshingOldFeeds: false });
                 }
               );
@@ -503,7 +496,6 @@ export default class FeedsScreen extends React.Component {
               }
               ref={ref => (this.chatInputRef = ref)}
               sendOnPress={async () => {
-                //console.warn(this.state.feedsData[this.state.currentlyCommentingOn.listIndex].data[this.state.currentlyCommentingOn.objectIndex])
                 await this.addComment(this.state.newCommentTxt);
                 this.setState({ newCommentTxt: '' });
               }}
