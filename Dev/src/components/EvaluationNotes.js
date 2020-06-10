@@ -17,9 +17,7 @@ class EvaluationNotes extends React.Component {
     notes: "",
     notesHeight: notesHeightCollapsed
   }
-  render() {
-    console.log(JSON.stringify(this.state));
-    
+  render() {    
     return (
       <View>
         <TextInput
