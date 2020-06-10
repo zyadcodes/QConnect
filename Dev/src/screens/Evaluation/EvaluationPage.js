@@ -36,6 +36,7 @@ import {
   toNumberString
 } from "../MushafScreen/Helpers/AyahsOrder";
 import DailyTracker, { getTodaysDateString } from "components/DailyTracker";
+import EvaluationNotes from "../../components/EvaluationNotes";
 
 const isAndroid = Platform.OS === "android";
 
@@ -461,6 +462,17 @@ export class EvaluationPage extends QcParentScreen {
               currentClass={classStudent}
               onSelectAyah={this.onSelectAyah.bind(this)}
               disableChangingUser={true}
+              evalNotesComponent={() => {
+                return (
+                  <EvaluationNotes
+                    improvementAreas={improvementAreas}
+                    readOnly={readOnly}
+                    onImrpvementAreasSelectionChanged={() => {
+                      this.props.onImrpvementAreasSelectionChanged();
+                    }}
+                  />
+                );
+              }}
             />
           </View>
         )}
@@ -565,62 +577,13 @@ export class EvaluationPage extends QcParentScreen {
               )}
 
               {this.state.evaluationCollapsed === false && (
-                <View>
-                  <TextInput
-                    style={styles.notesStyle}
-                    multiline={true}
-                    height={this.state.notesHeight}
-                    onChangeText={teacherNotes =>
-                      this.setState({
-                        notes: teacherNotes
-                      })
-                    }
-                    returnKeyType={"done"}
-                    autoCorrect={false}
-                    blurOnSubmit={true}
-                    placeholder={strings.WriteANote}
-                    placeholderColor={colors.black}
-                    editable={!readOnly}
-                    value={notes}
-                    onFocus={() =>
-                      this.setState({ notesHeight: screenHeight * 0.1 })
-                    }
-                    onEndEditing={() => this.setState({ notesHeight: 40 })}
-                  />
-
-                  {/**
-                  The Things to work on button.
-              */}
-
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "flex-start"
-                    }}
-                  >
-                    <Text style={fontStyles.mainTextStyleDarkGrey}>
-                      {strings.ImprovementAreas}
-                    </Text>
-                  </View>
-                  <FlowLayout
-                    ref="flow"
-                    dataValue={improvementAreas}
-                    title={strings.ImprovementAreas}
-                    readOnly={readOnly}
-                    selectedByDefault={readOnly ? true : false}
-                    onSelectionChanged={selectedImprovementAreas => {
-                      this.setState({ selectedImprovementAreas });
-                    }}
-                    onImprovementsCustomized={newAreas => {
-                      this.setState({ improvementAreas: newAreas });
-                      FirebaseFunctions.saveTeacherCustomImprovementTags(
-                        this.props.navigation.state.params.userID,
-                        newAreas
-                      );
-                    }}
-                  />
-                  <View style={{ height: 30 }} />
-                </View>
+                <EvaluationNotes
+                  improvementAreas={improvementAreas}
+                  readOnly={readOnly}
+                  onImrpvementAreasSelectionChanged={() => {
+                    this.props.onImrpvementAreasSelectionChanged();
+                  }}
+                />
               )}
             </View>
           </ScrollView>

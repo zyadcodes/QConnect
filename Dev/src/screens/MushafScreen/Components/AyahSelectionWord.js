@@ -151,10 +151,7 @@ class Word extends React.Component {
                       />
                     </TouchableOpacity>
                   </View>
-                  <EvaluationNotes
-                    readOnly={false}
-                    improvementAreas={["alif", "baa", "taa"]}
-                  />
+                  {this.props.evalNotesComponent()}
                   
                 </Popover>
               </React.Fragment>

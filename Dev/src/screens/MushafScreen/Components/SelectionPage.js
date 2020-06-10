@@ -489,6 +489,7 @@ class SelectionPage extends React.Component {
                           }
                           page={this.state.page}
                           lineAlign={lineAlign}
+                          evalNotesComponent={this.props.evalNotesComponent}
                         />
                       );
                     }

@@ -25,7 +25,8 @@ const TextLine = ({
   highlightedAyahs,
   highlightedColor,
   showLoadingOnHighlightedAyah,
-  showTooltipOnPress
+  showTooltipOnPress,
+  evalNotesComponent
 }) => {
   let isFirstWord = noSelectionInPreviousLines;
   return (
@@ -66,6 +67,7 @@ const TextLine = ({
                   selected={false}
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={false}
+                  evalNotesComponent={evalNotesComponent}
                 />
               );
             } else if (word.char_type === 'end') {
@@ -80,6 +82,7 @@ const TextLine = ({
                   highlightedColor={highlightedColor}
                   showLoading={showLoading}
                   isLastSelectedAyah={false}
+                  evalNotesComponent={evalNotesComponent}
                 />
               );
             }
@@ -113,6 +116,7 @@ const TextLine = ({
                   selected={isAyaSelected}
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={isFirstSelectedWord}
+                  evalNotesComponent={evalNotesComponent}
                 />
               );
             } else if (word.char_type === 'end') {
@@ -133,6 +137,7 @@ const TextLine = ({
                     selectedAyahsEnd
                   )}
                   isLastSelectedAyah={isLastSelectedAyah}
+                  evalNotesComponent={evalNotesComponent}
                 />
               );
             }

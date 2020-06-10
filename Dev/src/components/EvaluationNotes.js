@@ -12,11 +12,14 @@ const notesHeightCollapsed = 40;
 const notesHeightExpanded = screenHeight * 0.1;
 
 class EvaluationNotes extends React.Component {
+  
   state = {
     notes: "",
     notesHeight: notesHeightCollapsed
   }
   render() {
+    console.log(JSON.stringify(this.state));
+    
     return (
       <View>
         <TextInput
@@ -64,7 +67,7 @@ class EvaluationNotes extends React.Component {
           onImprovementsCustomized={newAreas => {
             this.setState({ improvementAreas: newAreas });
             FirebaseFunctions.saveTeacherCustomImprovementTags(
-              this.props.navigation.state.params.userID,
+              this.props.userID,
               newAreas
             );
           }}
