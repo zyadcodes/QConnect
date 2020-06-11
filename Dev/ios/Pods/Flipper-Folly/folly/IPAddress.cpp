@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2014-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include <folly/IPAddress.h>
 
 #include <limits>
@@ -121,8 +120,6 @@ CIDRNetwork IPAddress::createNetwork(
           vec.size() == 2 ? vec.at(1) : to<string>(cidr),
           subnet.bitCount()));
     }
-    case CIDRNetworkError::INVALID_DEFAULT_CIDR:
-    case CIDRNetworkError::INVALID_IP_SLASH_CIDR:
     default:
       // unreachable
       break;
@@ -222,7 +219,7 @@ IPAddress::IPAddress(StringPiece str) : addr_(), family_(AF_UNSPEC) {
     throw IPAddressFormatException(
         to<std::string>("Invalid IP address '", str, "'"));
   }
-  *this = maybeIp.value();
+  *this = std::move(maybeIp.value());
 }
 
 Expected<IPAddress, IPAddressFormatError> IPAddress::tryFromString(
@@ -246,12 +243,12 @@ IPAddress::IPAddress(const sockaddr* addr) : addr_(), family_(AF_UNSPEC) {
   family_ = addr->sa_family;
   switch (addr->sa_family) {
     case AF_INET: {
-      auto v4addr = reinterpret_cast<const sockaddr_in*>(addr);
+      const sockaddr_in* v4addr = reinterpret_cast<const sockaddr_in*>(addr);
       addr_.ipV4Addr = IPAddressV4(v4addr->sin_addr);
       break;
     }
     case AF_INET6: {
-      auto v6addr = reinterpret_cast<const sockaddr_in6*>(addr);
+      const sockaddr_in6* v6addr = reinterpret_cast<const sockaddr_in6*>(addr);
       addr_.ipV6Addr = IPAddressV6(*v6addr);
       break;
     }
@@ -376,9 +373,6 @@ uint8_t IPAddress::getNthMSByte(size_t byteIndex) const {
 
 // public
 bool operator==(const IPAddress& addr1, const IPAddress& addr2) {
-  if (addr1.empty() || addr2.empty()) {
-    return addr1.empty() == addr2.empty();
-  }
   if (addr1.family() == addr2.family()) {
     if (addr1.isV6()) {
       return (addr1.asV6() == addr2.asV6());
@@ -409,9 +403,6 @@ bool operator==(const IPAddress& addr1, const IPAddress& addr2) {
 }
 
 bool operator<(const IPAddress& addr1, const IPAddress& addr2) {
-  if (addr1.empty() || addr2.empty()) {
-    return addr1.empty() < addr2.empty();
-  }
   if (addr1.family() == addr2.family()) {
     if (addr1.isV6()) {
       return (addr1.asV6() < addr2.asV6());

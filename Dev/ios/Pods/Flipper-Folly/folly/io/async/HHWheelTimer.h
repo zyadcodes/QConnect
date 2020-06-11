@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2014-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,21 +30,6 @@
 #include <memory>
 
 namespace folly {
-
-namespace detail {
-template <class Duration>
-struct HHWheelTimerDurationConst;
-
-template <>
-struct HHWheelTimerDurationConst<std::chrono::milliseconds> {
-  static constexpr int DEFAULT_TICK_INTERVAL = 10;
-};
-
-template <>
-struct HHWheelTimerDurationConst<std::chrono::microseconds> {
-  static constexpr int DEFAULT_TICK_INTERVAL = 200;
-};
-} // namespace detail
 
 /**
  * Hashed Hierarchical Wheel Timer
@@ -126,7 +111,7 @@ class HHWheelTimerBase : private folly::AsyncTimeout,
      * timeout is not scheduled or expired. Otherwise, return expiration
      * time minus current time.
      */
-    Duration getTimeRemaining() const {
+    Duration getTimeRemaining() {
       return getTimeRemaining(std::chrono::steady_clock::now());
     }
 
@@ -170,7 +155,7 @@ class HHWheelTimerBase : private folly::AsyncTimeout,
    */
   static int DEFAULT_TICK_INTERVAL;
   explicit HHWheelTimerBase(
-      folly::TimeoutManager* timeoutMananger,
+      folly::TimeoutManager* timeoutManager,
       Duration intervalDuration = Duration(DEFAULT_TICK_INTERVAL),
       AsyncTimeout::InternalEnum internal = AsyncTimeout::InternalEnum::NORMAL,
       Duration defaultTimeoutDuration = Duration(-1));
@@ -299,10 +284,7 @@ class HHWheelTimerBase : private folly::AsyncTimeout,
     return t.count() / interval_.count();
   }
 
-  bool cascadeTimers(
-      int bucket,
-      int tick,
-      std::chrono::steady_clock::time_point curTime);
+  bool cascadeTimers(int bucket, int tick);
   void scheduleTimeoutInternal(Duration timeout);
 
   int64_t expireTick_;
@@ -361,7 +343,6 @@ class HHWheelTimerBase : private folly::AsyncTimeout,
   }
 };
 
-// std::chrono::milliseconds
 using HHWheelTimer = HHWheelTimerBase<std::chrono::milliseconds>;
 extern template class HHWheelTimerBase<std::chrono::milliseconds>;
 

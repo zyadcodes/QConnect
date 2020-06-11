@@ -19,7 +19,6 @@
 #include <folly/Optional.h>
 #include <folly/String.h>
 #include <folly/io/async/EventBaseManager.h>
-#include <folly/lang/Assume.h>
 
 #include "rsocket/DuplexConnection.h"
 #include "rsocket/RSocketConnectionEvents.h"
@@ -57,8 +56,7 @@ void disconnectError(
 
 void disconnectError(
     std::shared_ptr<yarpl::single::SingleObserver<Payload>> observer) {
-  auto exn = folly::make_exception_wrapper<std::runtime_error>(
-      "RSocket connection is disconnected or closed");
+  std::runtime_error exn{"RSocket connection is disconnected or closed"};
   observer->onSubscribe(yarpl::single::SingleSubscriptions::empty());
   observer->onError(std::move(exn));
 }
@@ -188,8 +186,8 @@ void RSocketStateMachine::connectClient(
   setResumable(params.resumable);
 
   Frame_SETUP frame(
-      (params.resumable ? FrameFlags::RESUME_ENABLE : FrameFlags::EMPTY_) |
-          (params.payload.metadata ? FrameFlags::METADATA : FrameFlags::EMPTY_),
+      (params.resumable ? FrameFlags::RESUME_ENABLE : FrameFlags::EMPTY) |
+          (params.payload.metadata ? FrameFlags::METADATA : FrameFlags::EMPTY),
       version.major,
       version.minor,
       getKeepaliveTime(),
@@ -524,7 +522,7 @@ void RSocketStateMachine::onKeepAliveFrame(
   resumeManager_->resetUpToPosition(resumePosition);
   if (mode_ == RSocketMode::SERVER) {
     if (keepAliveRespond) {
-      sendKeepalive(FrameFlags::EMPTY_, std::move(data));
+      sendKeepalive(FrameFlags::EMPTY, std::move(data));
     } else {
       closeWithError(Frame_ERROR::connectionError("keepalive without flag"));
     }
@@ -955,7 +953,6 @@ RSocketStateMachine::onNewStreamReady(
     case StreamType::REQUEST_RESPONSE:
       // the other overload method should be called
       CHECK(false);
-      folly::assume_unreachable();
 
     case StreamType::FNF:
       requestResponder_->handleFireAndForget(std::move(payload), streamId);
@@ -963,7 +960,6 @@ RSocketStateMachine::onNewStreamReady(
 
     default:
       CHECK(false) << "unknown value: " << streamType;
-      folly::assume_unreachable();
   }
 }
 
@@ -1062,7 +1058,7 @@ bool RSocketStateMachine::shouldQueue() {
 
 void RSocketStateMachine::fireAndForget(Payload request) {
   auto const streamId = getNextStreamId();
-  Frame_REQUEST_FNF frame{streamId, FrameFlags::EMPTY_, std::move(request)};
+  Frame_REQUEST_FNF frame{streamId, FrameFlags::EMPTY, std::move(request)};
   outputFrameOrEnqueue(frameSerializer_->serializeOut(std::move(frame)));
 }
 

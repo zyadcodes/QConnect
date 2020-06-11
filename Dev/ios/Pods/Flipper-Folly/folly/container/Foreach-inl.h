@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2017-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -133,27 +133,29 @@ struct IndexingTag {};
 
 template <typename Func, typename Item, typename Iter>
 using ForEachImplTag = std::conditional_t<
-    is_invocable_v<Func, Item, index_constant<0>, Iter>,
+    is_invocable<Func, Item, index_constant<0>, Iter>::value,
     index_constant<3>,
     std::conditional_t<
-        is_invocable_v<Func, Item, index_constant<0>>,
+        is_invocable<Func, Item, index_constant<0>>::value,
         index_constant<2>,
         std::conditional_t<
-            is_invocable_v<Func, Item>,
+            is_invocable<Func, Item>::value,
             index_constant<1>,
             void>>>;
 
 template <
     typename Func,
     typename... Args,
-    std::enable_if_t<is_invocable_r_v<LoopControl, Func, Args...>, int> = 0>
+    std::enable_if_t<is_invocable_r<LoopControl, Func, Args...>::value, int> =
+        0>
 LoopControl invoke_returning_loop_control(Func&& f, Args&&... a) {
   return static_cast<Func&&>(f)(static_cast<Args&&>(a)...);
 }
 template <
     typename Func,
     typename... Args,
-    std::enable_if_t<!is_invocable_r_v<LoopControl, Func, Args...>, int> = 0>
+    std::enable_if_t<!is_invocable_r<LoopControl, Func, Args...>::value, int> =
+        0>
 LoopControl invoke_returning_loop_control(Func&& f, Args&&... a) {
   static_assert(
       std::is_void<invoke_result_t<Func, Args...>>::value,
@@ -267,14 +269,14 @@ void for_each_tuple_impl(index_constant<1>, Sequence&& seq, Func& func) {
  * range rather than as a tuple
  */
 template <typename Sequence, typename Func>
-void for_each_impl(TupleTag, Sequence&& range, Func& func) {
+static void for_each_impl(TupleTag, Sequence&& range, Func& func) {
   using type = decltype(get_impl<0>(std::declval<Sequence>()));
   using tag = ForEachImplTag<Func, type, void>;
   static_assert(!std::is_same<tag, void>::value, "unknown invocability");
   for_each_tuple_impl(tag{}, std::forward<Sequence>(range), func);
 }
 template <typename Sequence, typename Func>
-void for_each_impl(RangeTag, Sequence&& range, Func& func) {
+static void for_each_impl(RangeTag, Sequence&& range, Func& func) {
   using iter = decltype(adl::adl_begin(std::declval<Sequence>()));
   using type = decltype(*std::declval<iter>());
   using tag = ForEachImplTag<Func, type, iter>;

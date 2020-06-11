@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2014-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #pragma once
 
 #include <algorithm>
@@ -24,12 +23,10 @@
 #include <system_error>
 
 #include <folly/CPortability.h>
+#include <folly/CachelinePadded.h>
 #include <folly/IndexedMemPool.h>
 #include <folly/Likely.h>
-#include <folly/Portability.h>
 #include <folly/Traits.h>
-#include <folly/detail/StaticSingletonManager.h>
-#include <folly/lang/Aligned.h>
 #include <folly/lang/SafeAssert.h>
 #include <folly/synchronization/AtomicStruct.h>
 #include <folly/synchronization/SaturatingSemaphore.h>
@@ -98,9 +95,9 @@ struct LifoSemImpl;
 typedef LifoSemImpl<> LifoSem;
 
 /// The exception thrown when wait()ing on an isShutdown() LifoSem
-class FOLLY_EXPORT ShutdownSemError : public std::runtime_error {
- public:
-  using std::runtime_error::runtime_error;
+struct FOLLY_EXPORT ShutdownSemError : public std::runtime_error {
+  explicit ShutdownSemError(const std::string& msg);
+  ~ShutdownSemError() noexcept override;
 };
 
 namespace detail {
@@ -130,47 +127,36 @@ struct LifoSemRawNode {
   /// The IndexedMemPool index of the next node in this chain, or 0
   /// if none.  This will be set to uint32_t(-1) if the node is being
   /// posted due to a shutdown-induced wakeup
-  Atom<uint32_t> next{0};
+  uint32_t next;
 
   bool isShutdownNotice() const {
-    return next.load(std::memory_order_relaxed) == uint32_t(-1);
+    return next == uint32_t(-1);
   }
   void clearShutdownNotice() {
-    next.store(0, std::memory_order_relaxed);
+    next = 0;
   }
   void setShutdownNotice() {
-    next.store(uint32_t(-1), std::memory_order_relaxed);
+    next = uint32_t(-1);
   }
 
-  typedef folly::IndexedMemPool<
-      LifoSemRawNode<Atom>,
-      32,
-      200,
-      Atom,
-      IndexedMemPoolTraitsLazyRecycle<LifoSemRawNode<Atom>>>
-      Pool;
+  typedef folly::IndexedMemPool<LifoSemRawNode<Atom>, 32, 200, Atom> Pool;
 
   /// Storage for all of the waiter nodes for LifoSem-s that use Atom
-  static Pool& pool() {
-    return detail::createGlobal<PoolImpl, void>();
-  }
-
- private:
-  struct PoolImpl : Pool {
-    /// Raw node storage is preallocated in a contiguous memory segment,
-    /// but we use an anonymous mmap so the physical memory used (RSS) will
-    /// only reflect the maximum number of waiters that actually existed
-    /// concurrently.  For blocked threads the max node count is limited by the
-    /// number of threads, so we can conservatively estimate that this will be
-    /// < 10k.  For LifoEventSem, however, we could potentially have many more.
-    ///
-    /// On a 64-bit architecture each LifoSemRawNode takes 16 bytes.  We make
-    /// the pool 1 million entries.
-    static constexpr size_t capacity = 1 << 20;
-
-    PoolImpl() : Pool(static_cast<uint32_t>(capacity)) {}
-  };
+  static Pool& pool();
 };
+
+/// Use this macro to declare the static storage that backs the raw nodes
+/// for the specified atomic type
+#define LIFOSEM_DECLARE_POOL(Atom, capacity)                 \
+  namespace folly {                                          \
+  namespace detail {                                         \
+  template <>                                                \
+  LifoSemRawNode<Atom>::Pool& LifoSemRawNode<Atom>::pool() { \
+    static Pool* instance = new Pool((capacity));            \
+    return *instance;                                        \
+  }                                                          \
+  }                                                          \
+  }
 
 /// Handoff is a type not bigger than a void* that knows how to perform a
 /// single post() -> wait() communication.  It must have a post() method.
@@ -193,9 +179,9 @@ struct LifoSemNode : public LifoSemRawNode<Atom> {
 
   void destroy() {
     handoff().~Handoff();
-    if (kIsDebug) {
-      memset(&this->raw, 'F', sizeof(this->raw));
-    }
+#ifndef NDEBUG
+    memset(&this->raw, 'F', sizeof(this->raw));
+#endif
   }
 
   Handoff& handoff() {
@@ -367,7 +353,7 @@ template <typename Handoff, template <typename> class Atom = std::atomic>
 struct LifoSemBase {
   /// Constructor
   constexpr explicit LifoSemBase(uint32_t initialValue = 0)
-      : head_(in_place, LifoSemHead::fresh(initialValue)) {}
+      : head_(LifoSemHead::fresh(initialValue)) {}
 
   LifoSemBase(LifoSemBase const&) = delete;
   LifoSemBase& operator=(LifoSemBase const&) = delete;
@@ -436,7 +422,7 @@ struct LifoSemBase {
         continue;
       }
       auto& node = idxToNode(h.idx());
-      auto repl = h.withPop(node.next.load(std::memory_order_relaxed));
+      auto repl = h.withPop(node.next);
       if (head_->compare_exchange_strong(h, repl)) {
         // successful pop, wake up the waiter and move on.  The next
         // field is used to convey that this wakeup didn't consume a value
@@ -601,6 +587,18 @@ struct LifoSemBase {
     return decrOrPush(n, nodeToIdx(waiterNode));
   }
 
+ private:
+  CachelinePadded<folly::AtomicStruct<LifoSemHead, Atom>> head_;
+
+  static LifoSemNode<Handoff, Atom>& idxToNode(uint32_t idx) {
+    auto raw = &LifoSemRawNode<Atom>::pool()[idx];
+    return *static_cast<LifoSemNode<Handoff, Atom>*>(raw);
+  }
+
+  static uint32_t nodeToIdx(const LifoSemNode<Handoff, Atom>& node) {
+    return LifoSemRawNode<Atom>::pool().locateElem(&node);
+  }
+
   // Locks the list head (blocking concurrent pushes and pops)
   // and attempts to remove this node.  Returns true if node was
   // found and removed, false if not found.
@@ -632,39 +630,24 @@ struct LifoSemBase {
     if (idx == removeidx) {
       // pop from head.  Head seqno is updated.
       head_->store(
-          head.withoutLock(removenode.next.load(std::memory_order_relaxed)),
-          std::memory_order_release);
+          head.withoutLock(removenode.next), std::memory_order_release);
       return true;
     }
     auto node = &idxToNode(idx);
-    idx = node->next.load(std::memory_order_relaxed);
+    idx = node->next;
     while (idx) {
       if (idx == removeidx) {
         // Pop from mid-list.
-        node->next.store(
-            removenode.next.load(std::memory_order_relaxed),
-            std::memory_order_relaxed);
+        node->next = removenode.next;
         result = true;
         break;
       }
       node = &idxToNode(idx);
-      idx = node->next.load(std::memory_order_relaxed);
+      idx = node->next;
     }
     // Unlock and return result
     head_->store(head.withoutLock(head.idx()), std::memory_order_release);
     return result;
-  }
-
- private:
-  cacheline_aligned<folly::AtomicStruct<LifoSemHead, Atom>> head_;
-
-  static LifoSemNode<Handoff, Atom>& idxToNode(uint32_t idx) {
-    auto raw = &LifoSemRawNode<Atom>::pool()[idx];
-    return *static_cast<LifoSemNode<Handoff, Atom>*>(raw);
-  }
-
-  static uint32_t nodeToIdx(const LifoSemNode<Handoff, Atom>& node) {
-    return LifoSemRawNode<Atom>::pool().locateElem(&node);
   }
 
   /// Either increments by n and returns 0, or pops a node and returns it.
@@ -681,9 +664,7 @@ struct LifoSemBase {
       }
       if (head.isNodeIdx()) {
         auto& node = idxToNode(head.idx());
-        if (head_->compare_exchange_strong(
-                head,
-                head.withPop(node.next.load(std::memory_order_relaxed)))) {
+        if (head_->compare_exchange_strong(head, head.withPop(node.next))) {
           // successful pop
           return head.idx();
         }
@@ -734,8 +715,7 @@ struct LifoSemBase {
         }
 
         auto& node = idxToNode(idx);
-        node.next.store(
-            head.isNodeIdx() ? head.idx() : 0, std::memory_order_relaxed);
+        node.next = head.isNodeIdx() ? head.idx() : 0;
         if (head_->compare_exchange_strong(head, head.withPush(idx))) {
           // push succeeded
           return WaitResult::PUSH;

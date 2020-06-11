@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2016-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,8 +22,6 @@
 #include <sys/types.h>
 
 #include <folly/portability/Windows.h>
-
-#include <folly/Portability.h>
 
 // I have no idea what the normal values for these are,
 // and really don't care what they are. They're only used
@@ -54,8 +52,5 @@ int open(char const* fn, int of, int pm = 0);
 } // namespace portability
 } // namespace folly
 
-FOLLY_PUSH_WARNING
-FOLLY_CLANG_DISABLE_WARNING("-Wheader-hygiene")
 /* using override */ using namespace folly::portability::fcntl;
-FOLLY_POP_WARNING
 #endif

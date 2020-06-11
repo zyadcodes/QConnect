@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2016-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -133,7 +133,10 @@ class VirtualEventBase : public folly::Executor, public folly::TimeoutManager {
     return true;
   }
 
-  void keepAliveReleaseEvb() {
+  void keepAliveRelease() override {
+    if (!evb_->inRunningEventBaseThread()) {
+      return evb_->add([=] { keepAliveRelease(); });
+    }
     if (loopKeepAliveCountAtomic_.load()) {
       loopKeepAliveCount_ += loopKeepAliveCountAtomic_.exchange(0);
     }
@@ -141,15 +144,6 @@ class VirtualEventBase : public folly::Executor, public folly::TimeoutManager {
     if (--loopKeepAliveCount_ == 0) {
       destroyImpl();
     }
-  }
-
-  void keepAliveRelease() override {
-    if (!evb_->inRunningEventBaseThread()) {
-      evb_->add([=] { keepAliveReleaseEvb(); });
-      return;
-    }
-
-    keepAliveReleaseEvb();
   }
 
  private:
