@@ -6,12 +6,12 @@ import MushafScreen from './MushafScreen/MushafScreen'
 import MushafAssignmentScreen from './MushafScreen/MushafAssignmentScreen';
 import MushafReadingScreen from './MushafScreen/MushafReadingScreen';
 import FirstScreenLoader from './FirstScreenLoader/FirstScreenLoader';
-import LoginScreen from './AuthenticationScreens/LoginScreen';
-import AccountTypeScreen from './AuthenticationScreens/AccountTypeScreen';
-import TeacherWelcomeScreen from './TeacherScreens/TeacherWelcomeScreen';
+import LoginScreen from './AuthenticationScreens/LoginScreen/LoginScreen';
+import AccountTypeScreen from './AuthenticationScreens/AccountTypeScreen/AccountTypeScreen';
+import TeacherWelcomeScreen from './TeacherScreens/TeacherWelcomeScreen/TeacherWelcomeScreen';
 import AddClassScreen from './TeacherScreens/AddClass/AddClassScreen';
-import ForgotPassword from './AuthenticationScreens/ForgotPassword';
-import StudentWelcomeScren from './StudentScreens/StudentWelcomeScreen';
+import ForgotPassword from './AuthenticationScreens/ForgotPassword/ForgotPassword';
+import StudentWelcomeScren from './StudentScreens/StudentWelcomeScreen/StudentWelcomeScreen';
 import allSettingsScreen from './SettingsScreen/allSettingsScreen';
 import creditsScreen from './SettingsScreen/creditsScreen';
 import ProfileScreen from './ProfileScreen';
