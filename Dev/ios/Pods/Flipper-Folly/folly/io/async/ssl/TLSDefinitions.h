@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2016-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -77,10 +77,6 @@ enum class SignatureAlgorithm : uint8_t {
   ECDSA = 3
 };
 
-enum class NameType : uint8_t {
-  HOST_NAME = 0,
-};
-
 struct ClientHelloInfo {
   folly::IOBufQueue clientHelloBuf_;
   uint8_t clientHelloMajorVersion_;
@@ -90,11 +86,6 @@ struct ClientHelloInfo {
   std::vector<TLSExtension> clientHelloExtensions_;
   std::vector<std::pair<HashAlgorithm, SignatureAlgorithm>> clientHelloSigAlgs_;
   std::vector<uint16_t> clientHelloSupportedVersions_;
-
-  // Technically, the TLS spec allows for multiple ServerNames to be sent (as
-  // long as each ServerName has a distinct type). In practice, the only one
-  // we really care about is HOST_NAME.
-  std::string clientHelloSNIHostname_;
 };
 
 } // namespace ssl

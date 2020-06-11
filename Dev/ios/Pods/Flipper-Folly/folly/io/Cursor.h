@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2013-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #pragma once
 
 #include <cassert>
@@ -67,17 +66,6 @@ class CursorBase {
     }
   }
 
-  CursorBase(BufType* buf, size_t len) : crtBuf_(buf), buffer_(buf) {
-    if (crtBuf_) {
-      crtPos_ = crtBegin_ = crtBuf_->data();
-      crtEnd_ = crtBuf_->tail();
-      if (crtPos_ + len < crtEnd_) {
-        crtEnd_ = crtPos_ + len;
-      }
-      remainingLen_ = len - (crtEnd_ - crtPos_);
-    }
-  }
-
   /**
    * Copy constructor.
    *
@@ -91,27 +79,7 @@ class CursorBase {
         crtBegin_(cursor.crtBegin_),
         crtEnd_(cursor.crtEnd_),
         crtPos_(cursor.crtPos_),
-        absolutePos_(cursor.absolutePos_),
-        remainingLen_(cursor.remainingLen_) {}
-
-  template <class OtherDerived, class OtherBuf>
-  explicit CursorBase(
-      const CursorBase<OtherDerived, OtherBuf>& cursor,
-      size_t len)
-      : crtBuf_(cursor.crtBuf_),
-        buffer_(cursor.buffer_),
-        crtBegin_(cursor.crtBegin_),
-        crtEnd_(cursor.crtEnd_),
-        crtPos_(cursor.crtPos_),
-        absolutePos_(cursor.absolutePos_) {
-    if (cursor.isBounded() && len > cursor.remainingLen_ + cursor.length()) {
-      throw_exception<std::out_of_range>("underflow");
-    }
-    if (crtPos_ + len < crtEnd_) {
-      crtEnd_ = crtPos_ + len;
-    }
-    remainingLen_ = len - (crtEnd_ - crtPos_);
-  }
+        absolutePos_(cursor.absolutePos_) {}
 
   /**
    * Reset cursor to point to a new buffer.
@@ -120,7 +88,6 @@ class CursorBase {
     crtBuf_ = buf;
     buffer_ = buf;
     absolutePos_ = 0;
-    remainingLen_ = std::numeric_limits<size_t>::max();
     if (crtBuf_) {
       crtPos_ = crtBegin_ = crtBuf_->data();
       crtEnd_ = crtBuf_->tail();
@@ -155,16 +122,14 @@ class CursorBase {
 
   /**
    * Return the space available until the end of the entire IOBuf chain.
-   * For bounded Cursors, return the available space until the boundary.
    */
   size_t totalLength() const {
-    size_t len = 0;
-    const IOBuf* buf = crtBuf_->next();
-    while (buf != buffer_ && len < remainingLen_) {
-      len += buf->length();
-      buf = buf->next();
+    if (crtBuf_ == buffer_) {
+      return crtBuf_->computeChainDataLength() - (crtPos_ - crtBegin_);
     }
-    return std::min(len, remainingLen_) + length();
+    CursorBase end(buffer_->prev());
+    end.crtPos_ = end.crtEnd_;
+    return end - *this;
   }
 
   /**
@@ -175,9 +140,6 @@ class CursorBase {
    * walks the minimal set of buffers in the chain to determine the result.
    */
   bool canAdvance(size_t amount) const {
-    if (isBounded() && amount > remainingLen_ + length()) {
-      return false;
-    }
     const IOBuf* nextBuf = crtBuf_;
     size_t available = length();
     do {
@@ -203,13 +165,11 @@ class CursorBase {
     if (crtBuf_ == buffer_->prev()) {
       return true;
     }
-    if (isBounded() && remainingLen_ == 0) {
-      return true;
-    }
     // We are at the end of a buffer, but it isn't the last buffer.
     // We might still be at the end if the remaining buffers in the chain are
     // empty.
     const IOBuf* buf = crtBuf_->next();
+    ;
     while (buf != buffer_) {
       if (buf->length() > 0) {
         return false;
@@ -231,24 +191,14 @@ class CursorBase {
 
     auto* nextBuf = crtBuf_->next();
     while (nextBuf != buffer_) {
-      if (isBounded() && remainingLen_ == 0) {
-        crtPos_ = crtEnd_;
-        return;
-      }
       absolutePos_ += crtEnd_ - crtBegin_;
 
       crtBuf_ = nextBuf;
       nextBuf = crtBuf_->next();
       crtBegin_ = crtBuf_->data();
-      crtEnd_ = crtBuf_->tail();
-      if (isBounded()) {
-        if (crtBegin_ + remainingLen_ < crtEnd_) {
-          crtEnd_ = crtBegin_ + remainingLen_;
-        }
-        remainingLen_ -= crtEnd_ - crtBegin_;
-      }
-      crtPos_ = crtEnd_;
-      derived().advanceDone();
+      crtPos_ = crtEnd_ = crtBuf_->tail();
+
+      static_cast<Derived*>(this)->advanceDone();
     }
   }
 
@@ -573,11 +523,7 @@ class CursorBase {
     size_t len = 0;
 
     if (otherBuf != crtBuf_) {
-      if (other.remainingLen_ == 0) {
-        len += otherBuf->tail() - other.crtPos_;
-      } else {
-        len += other.crtEnd_ - other.crtPos_;
-      }
+      len += other.crtEnd_ - other.crtPos_;
 
       for (otherBuf = otherBuf->next();
            otherBuf != crtBuf_ && otherBuf != other.buffer_;
@@ -620,17 +566,13 @@ class CursorBase {
     return len;
   }
 
-  bool isBounded() const {
-    return remainingLen_ != std::numeric_limits<size_t>::max();
-  }
-
  protected:
   void dcheckIntegrity() const {
     DCHECK(crtBegin_ <= crtPos_ && crtPos_ <= crtEnd_);
     DCHECK(crtBuf_ == nullptr || crtBegin_ == crtBuf_->data());
     DCHECK(
         crtBuf_ == nullptr ||
-        (std::size_t)(crtEnd_ - crtBegin_) <= crtBuf_->length());
+        (std::size_t)(crtEnd_ - crtBegin_) == crtBuf_->length());
   }
 
   ~CursorBase() {}
@@ -641,7 +583,7 @@ class CursorBase {
 
   bool tryAdvanceBuffer() {
     BufType* nextBuf = crtBuf_->next();
-    if (UNLIKELY(nextBuf == buffer_) || remainingLen_ == 0) {
+    if (UNLIKELY(nextBuf == buffer_)) {
       crtPos_ = crtEnd_;
       return false;
     }
@@ -650,13 +592,7 @@ class CursorBase {
     crtBuf_ = nextBuf;
     crtPos_ = crtBegin_ = crtBuf_->data();
     crtEnd_ = crtBuf_->tail();
-    if (isBounded()) {
-      if (crtPos_ + remainingLen_ < crtEnd_) {
-        crtEnd_ = crtPos_ + remainingLen_;
-      }
-      remainingLen_ -= crtEnd_ - crtPos_;
-    }
-    derived().advanceDone();
+    static_cast<Derived*>(this)->advanceDone();
     return true;
   }
 
@@ -665,14 +601,11 @@ class CursorBase {
       crtPos_ = crtBegin_;
       return false;
     }
-    if (isBounded()) {
-      remainingLen_ += crtEnd_ - crtBegin_;
-    }
     crtBuf_ = crtBuf_->prev();
     crtBegin_ = crtBuf_->data();
     crtPos_ = crtEnd_ = crtBuf_->tail();
     absolutePos_ -= crtEnd_ - crtBegin_;
-    derived().advanceDone();
+    static_cast<Derived*>(this)->advanceDone();
     return true;
   }
 
@@ -689,20 +622,8 @@ class CursorBase {
   const uint8_t* crtEnd_{nullptr};
   const uint8_t* crtPos_{nullptr};
   size_t absolutePos_{0};
-  // For bounded Cursor, remainingLen_ is the remaining number of data bytes
-  // in subsequent IOBufs in the chain. For unbounded Cursor, remainingLen_
-  // is set to the max of size_t
-  size_t remainingLen_{std::numeric_limits<size_t>::max()};
 
  private:
-  Derived& derived() {
-    return static_cast<Derived&>(*this);
-  }
-
-  Derived const& derived() const {
-    return static_cast<const Derived&>(*this);
-  }
-
   template <class T>
   FOLLY_NOINLINE T readSlow() {
     T val;
@@ -802,16 +723,9 @@ class Cursor : public detail::CursorBase<Cursor, const IOBuf> {
   explicit Cursor(const IOBuf* buf)
       : detail::CursorBase<Cursor, const IOBuf>(buf) {}
 
-  explicit Cursor(const IOBuf* buf, size_t len)
-      : detail::CursorBase<Cursor, const IOBuf>(buf, len) {}
-
   template <class OtherDerived, class OtherBuf>
   explicit Cursor(const detail::CursorBase<OtherDerived, OtherBuf>& cursor)
       : detail::CursorBase<Cursor, const IOBuf>(cursor) {}
-
-  template <class OtherDerived, class OtherBuf>
-  Cursor(const detail::CursorBase<OtherDerived, OtherBuf>& cursor, size_t len)
-      : detail::CursorBase<Cursor, const IOBuf>(cursor, len) {}
 };
 
 namespace detail {
@@ -909,10 +823,7 @@ class RWCursor : public detail::CursorBase<RWCursor<access>, IOBuf>,
   template <class OtherDerived, class OtherBuf>
   explicit RWCursor(const detail::CursorBase<OtherDerived, OtherBuf>& cursor)
       : detail::CursorBase<RWCursor<access>, IOBuf>(cursor),
-        maybeShared_(true) {
-    CHECK(!cursor.isBounded())
-        << "Creating RWCursor from bounded Cursor is not allowed";
-  }
+        maybeShared_(true) {}
   /**
    * Gather at least n bytes contiguously into the current buffer,
    * by coalescing subsequent buffers from the chain as necessary.
@@ -1262,7 +1173,7 @@ class QueueAppender : public detail::Writable<QueueAppender> {
   }
 
   void insert(const folly::IOBuf& buf) {
-    queueCache_.queue()->append(buf, true);
+    insert(buf.clone());
   }
 
  private:

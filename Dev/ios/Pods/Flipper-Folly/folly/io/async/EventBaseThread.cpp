@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2016-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,17 +33,6 @@ EventBaseThread::EventBaseThread(
   }
 }
 
-EventBaseThread::EventBaseThread(
-    bool autostart,
-    std::unique_ptr<EventBaseBackendBase>&& evb,
-    EventBaseManager* ebm,
-    folly::StringPiece threadName)
-    : ebm_(ebm), evb_(std::move(evb)) {
-  if (autostart) {
-    start(threadName);
-  }
-}
-
 EventBaseThread::EventBaseThread(EventBaseManager* ebm)
     : EventBaseThread(true, ebm) {}
 
@@ -65,8 +54,7 @@ void EventBaseThread::start(folly::StringPiece threadName) {
   if (th_) {
     return;
   }
-  th_ = std::make_unique<ScopedEventBaseThread>(
-      std::move(evb_), ebm_, threadName);
+  th_ = std::make_unique<ScopedEventBaseThread>(ebm_, threadName);
 }
 
 void EventBaseThread::stop() {

@@ -1,72 +1,96 @@
-import React, { useState, useEffect } from 'react';
-import MainStackNavigator from './src/screens/MainStackNavigator';
-import { Alert, ScrollView, View } from 'react-native';
+import React, { Component } from "react";
+import MainStackNavigator from "./src/screens/MainStackNavigator";
+import { YellowBox, Alert, ScrollView, View } from "react-native";
 import NetInfo from '@react-native-community/netinfo';
-import QCView from 'components/QCView';
-import screenStyle from 'config/screenStyle';
+import QCView from "components/QCView";
+import screenStyle from "config/screenStyle";
 import strings from 'config/strings';
-import { checkNotifications, requestNotifications } from 'react-native-permissions';
-import FirebaseFunctions from 'config/FirebaseFunctions';
-import OfflineEmptyState from './src/components/OfflineEmptyState/OfflineEmptyState';
+import {
+  checkNotifications,
+  requestNotifications,
+  check,
+  request,
+  PERMISSIONS,
+} from "react-native-permissions";
+import FirebaseFunctions from "config/FirebaseFunctions";
+import OfflineEmptyState from "./src/components/OfflineEmptyState";
 
-//Declares the functional component
-const App = (props) => {
-	// The state fields used in this component
-	const [requestingPermissions, setRequestingPermissions] = useState(true);
-	const [isOnline, setIsOnline] = useState(true);
-	const [retry, setRetry] = useState(0);
+export default class App extends Component {
+  state = {
+    requestingPermissions: true,
+    isOnline: true,
+    retry: 0
+  };
 
-	// This method actts as the componentDidMount method. It is called once when the component is first mounted
-	useEffect(() => {
-		// useEffect hook can't take async function, so it calls a helper function
-		asyncUseEffect();
-	}, []);
+  // Subscribe
+  unsubscribe = () => {};
 
-	// The helper function handles the asynchronous tasks of the useEffect hook
-	const asyncUseEffect = async () => {
-		const isPermissionsGranted = await checkNotifications();
-		if (isPermissionsGranted !== 'granted') {
-			await requestNotifications(['alert', 'sound', 'badge']);
-		}
-		setRequestingPermissions(false);
-	};
+  async componentWillUnmount() {
+    this.unsubscribe();
+  }
 
-	// This method gets called by the offline state in order to keep trying to connect to the internet and move on
-	const onRetry = async () => {
-		let nstate = await NetInfo.fetch();
-		if (nstate.isConnected !== isOnline) {
-			setIsOnline(nstate.isConnected);
-		}
-		// Change a dummy state variable to force re-mount / retry
-		setRetry(retry + 1);
-	};
+  async componentDidMount() {
+    const isPermissionsGranted = await checkNotifications();
+    if (isPermissionsGranted !== "granted") {
+      await requestNotifications(["alert", "sound", "badge"]);
+      this.setState({ requestingPermissions: false });
+    } else {
+      this.setState({ requestingPermissions: false });
+    }
 
-	// Returns the UI of the app. Handles errors as need be
-	try {
-		return (
-			<ScrollView
-				contentContainerStyle={{
-					flex: 1,
-				}}>
-				{isOnline ? (
-					requestingPermissions === false ? (
-						<MainStackNavigator />
-					) : (
-						<View />
-					)
-				) : (
-					<OfflineEmptyState retry={() => onRetry()} />
-				)}
-			</ScrollView>
-		);
-	} catch (error) {
-		if (isOnline) {
-			FirebaseFunctions.logEvent('FATAL_ERROR', { error });
-		}
-		Alert.alert(strings.Whoops, strings.SomethingWentWrong);
-		return <QCView style={screenStyle.container} />;
-	}
-};
+    this.unsubscribe = NetInfo.addEventListener(state => {
+      this.setState({ isOnline: state.isConnected });
+    });
+  }
 
-// Exports the funcitional component
-export default App;
+  //get called if device connectivity state changes (online/offline)
+  handleConnectivityChange = isConnected => {
+    this.setState({ isConnected });
+  };
+
+  async onRetry() {
+    let nstate = await NetInfo.fetch();
+    if (nstate.isConnected !== this.state.isConnected) {
+      this.setState({ isConnected: nstate.isConnected });
+    }
+    //change a dummy state variable to force re-mount / retry
+    this.setState({ retry: this.state.retry + 1 });
+  }
+
+  renderMainApp() {
+    return (
+      <ScrollView contentContainerStyle={{
+        flex: 1,
+    }}>
+        {this.state.isOnline ? (
+          this.state.requestingPermissions === false ? (
+            <MainStackNavigator />
+          ) : (
+            <View />
+          )
+        ) : (
+          <OfflineEmptyState retry={this.onRetry.bind(this)} />
+        )}
+      </ScrollView>
+    );
+  }
+  render() {
+    YellowBox.ignoreWarnings([
+      "componentWillUpdate",
+      "componentWillMount",
+      "componentWillReceiveProps"
+    ]);
+    console.disableYellowBox = true;
+
+    try {
+      return this.renderMainApp();
+    } catch (err) {
+      if (this.state.online) {
+        FirebaseFunctions.logEvent("FATAL_ERROR", { err });
+      }
+      console.log(JSON.stringify(err.toString()));
+      Alert.alert(strings.Whoops, strings.SomethingWentWrong);
+      return <QCView style={screenStyle.container} />;
+    }
+  }
+}

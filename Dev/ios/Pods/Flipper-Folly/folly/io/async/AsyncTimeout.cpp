@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2014-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,32 +18,25 @@
 #include <folly/io/async/EventBase.h>
 #include <folly/io/async/EventUtil.h>
 #include <folly/io/async/Request.h>
-#include <folly/net/NetworkSocket.h>
 
+#include <assert.h>
 #include <glog/logging.h>
-#include <cassert>
 
 namespace folly {
 
 AsyncTimeout::AsyncTimeout(TimeoutManager* timeoutManager)
     : timeoutManager_(timeoutManager) {
-  event_.eb_event_set(
-      NetworkSocket::invalid_handle_value,
-      EV_TIMEOUT,
-      &AsyncTimeout::libeventCallback,
-      this);
-  event_.eb_ev_base(nullptr);
+  folly_event_set(
+      &event_, -1, EV_TIMEOUT, &AsyncTimeout::libeventCallback, this);
+  event_.ev_base = nullptr;
   timeoutManager_->attachTimeoutManager(
       this, TimeoutManager::InternalEnum::NORMAL);
 }
 
 AsyncTimeout::AsyncTimeout(EventBase* eventBase) : timeoutManager_(eventBase) {
-  event_.eb_event_set(
-      NetworkSocket::invalid_handle_value,
-      EV_TIMEOUT,
-      &AsyncTimeout::libeventCallback,
-      this);
-  event_.eb_ev_base(nullptr);
+  folly_event_set(
+      &event_, -1, EV_TIMEOUT, &AsyncTimeout::libeventCallback, this);
+  event_.ev_base = nullptr;
   if (eventBase) {
     timeoutManager_->attachTimeoutManager(
         this, TimeoutManager::InternalEnum::NORMAL);
@@ -54,33 +47,24 @@ AsyncTimeout::AsyncTimeout(
     TimeoutManager* timeoutManager,
     InternalEnum internal)
     : timeoutManager_(timeoutManager) {
-  event_.eb_event_set(
-      NetworkSocket::invalid_handle_value,
-      EV_TIMEOUT,
-      &AsyncTimeout::libeventCallback,
-      this);
-  event_.eb_ev_base(nullptr);
+  folly_event_set(
+      &event_, -1, EV_TIMEOUT, &AsyncTimeout::libeventCallback, this);
+  event_.ev_base = nullptr;
   timeoutManager_->attachTimeoutManager(this, internal);
 }
 
 AsyncTimeout::AsyncTimeout(EventBase* eventBase, InternalEnum internal)
     : timeoutManager_(eventBase) {
-  event_.eb_event_set(
-      NetworkSocket::invalid_handle_value,
-      EV_TIMEOUT,
-      &AsyncTimeout::libeventCallback,
-      this);
-  event_.eb_ev_base(nullptr);
+  folly_event_set(
+      &event_, -1, EV_TIMEOUT, &AsyncTimeout::libeventCallback, this);
+  event_.ev_base = nullptr;
   timeoutManager_->attachTimeoutManager(this, internal);
 }
 
 AsyncTimeout::AsyncTimeout() : timeoutManager_(nullptr) {
-  event_.eb_event_set(
-      NetworkSocket::invalid_handle_value,
-      EV_TIMEOUT,
-      &AsyncTimeout::libeventCallback,
-      this);
-  event_.eb_ev_base(nullptr);
+  folly_event_set(
+      &event_, -1, EV_TIMEOUT, &AsyncTimeout::libeventCallback, this);
+  event_.ev_base = nullptr;
 }
 
 AsyncTimeout::~AsyncTimeout() {
@@ -112,7 +96,7 @@ void AsyncTimeout::cancelTimeout() {
 }
 
 bool AsyncTimeout::isScheduled() const {
-  return event_.isEventRegistered();
+  return EventUtil::isEventRegistered(&event_);
 }
 
 void AsyncTimeout::attachTimeoutManager(
@@ -151,17 +135,15 @@ void AsyncTimeout::detachEventBase() {
 }
 
 void AsyncTimeout::libeventCallback(libevent_fd_t fd, short events, void* arg) {
-  auto timeout = reinterpret_cast<AsyncTimeout*>(arg);
-  assert(fd == NetworkSocket::invalid_handle_value);
+  AsyncTimeout* timeout = reinterpret_cast<AsyncTimeout*>(arg);
+  assert(libeventFdToFd(fd) == -1);
   assert(events == EV_TIMEOUT);
   // prevent unused variable warnings
   (void)fd;
   (void)events;
 
   // double check that ev_flags gets reset when the timeout is not running
-  assert(
-      (event_ref_flags(timeout->event_.getEvent()) & ~EVLIST_INTERNAL) ==
-      EVLIST_INIT);
+  assert((event_ref_flags(&timeout->event_) & ~EVLIST_INTERNAL) == EVLIST_INIT);
 
   // this can't possibly fire if timeout->eventBase_ is nullptr
   timeout->timeoutManager_->bumpHandlingTime();

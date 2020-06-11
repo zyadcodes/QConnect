@@ -19,6 +19,9 @@
 
 namespace rsocket {
 
+using namespace yarpl;
+using namespace yarpl::flowable;
+
 void RequestResponseRequester::subscribe(
     std::shared_ptr<yarpl::single::SingleObserver<Payload>> subscriber) {
   DCHECK(state_ != State::CLOSED);

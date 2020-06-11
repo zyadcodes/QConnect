@@ -186,7 +186,7 @@ class BufferBackpressureStrategy : public BackpressureStrategyBase<T> {
   using Super = BackpressureStrategyBase<T>;
 
   void onComplete() override {
-    if (!buffer_.rlock()->empty()) {
+    if (!buffer_->empty()) {
       // we have buffered some items so we will defer delivering on complete for
       // later
       completed_ = true;
