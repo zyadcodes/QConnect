@@ -12,27 +12,20 @@ import {
 	Platform,
 } from 'react-native';
 import QcActionButton from 'components/QcActionButton';
-import Toast, { DURATION } from 'react-native-easy-toast';
-import colors from 'config/colors';
 import ImageSelectionRow from 'components/ImageSelectionRow';
 import ImageSelectionModal from 'components/ImageSelectionModal';
 import TeacherInfoEntries from 'components/TeacherInfoEntries';
 import strings from 'config/strings';
-import QcParentScreen from 'screens/QcParentScreen';
 import FadeInView from '../../../components/FadeInView';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import { Icon } from 'react-native-elements';
-import QCView from 'components/QCView';
-import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
 import styles from './TeacherWelcomeScreenStyle';
-import { screenHeight, screenWidth } from 'config/dimensions';
 import {
-	getRandomFemaleImage,
-	getRandomMaleImage,
 	getHighlightedImages,
 	getRandomGenderNeutralImage,
 } from './FunctionHelpers';
+import teacherImages from 'config/teacherImages';
 
 // Creates the functional component
 const TeacherWelcomeScreen = (props) => {
@@ -183,7 +176,6 @@ const TeacherWelcomeScreen = (props) => {
 						<QcActionButton text={strings.CreateAccount} onPress={() => saveProfileInfo()} />
 					</View>
 					<View style={styles.filler} />
-					<Toast position={'center'} ref='toast' />
 				</View>
 			</ScrollView>
 		</View>

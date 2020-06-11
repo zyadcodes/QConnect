@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import { getRandomGenderNeutralImage, getHighlightedImages } from './FunctionHelpers';
 import QcActionButton from 'components/QcActionButton';
-import Toast, { DURATION } from 'react-native-easy-toast';
 import ImageSelectionRow from 'components/ImageSelectionRow';
 import ImageSelectionModal from 'components/ImageSelectionModal';
 import TeacherInfoEntries from 'components/TeacherInfoEntries';
@@ -175,7 +174,6 @@ const StudentWelcomeScreen = (props) => {
 						<QcActionButton text={strings.CreateAccount} onPress={() => saveProfileInfo()} />
 					</View>
 					<View style={styles.filler} />
-					<Toast position={'center'} ref='toast' />
 				</View>
 			</ScrollView>
 		</QCView>

@@ -19,10 +19,8 @@ const getRandomFemaleImage = () => {
 	return imageIndex;
 };
 
-initialDefaultImageId = this.getRandomGenderNeutralImage();
-
 const getHighlightedImages = () => {
-	defaultImageId = getRandomGenderNeutralImage;
+	defaultImageId = getRandomGenderNeutralImage();
 
 	// get a second gender neutral image, make sure it is different than the first one
 	do {

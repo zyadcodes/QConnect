@@ -1,6 +1,7 @@
 // This file will serve as the StyleSheet for the ForgotPassword screen
 import { StyleSheet } from 'react-native';
 import { screenHeight, screenWidth } from 'config/dimensions';
+import colors from 'config/colors';
 
 export default StyleSheet.create({
 	textInputStyle: {

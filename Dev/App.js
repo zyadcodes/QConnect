@@ -24,7 +24,6 @@ const App = (props) => {
 
 	// The helper function handles the asynchronous tasks of the useEffect hook
 	const asyncUseEffect = async () => {
-		await FirebaseFunctions.logOut();
 		const isPermissionsGranted = await checkNotifications();
 		if (isPermissionsGranted !== 'granted') {
 			await requestNotifications(['alert', 'sound', 'badge']);

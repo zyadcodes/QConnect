@@ -26,7 +26,7 @@ const AccountTypeScreen = (props) => {
 					<View style={styles.topSpacer} />
 					<View style={styles.middleSpacers}>
 						<QcActionButton
-							navigation={navigation}
+							navigation={props.navigation}
 							text={strings.IAmATeacher}
 							onPress={() => {
 								//Navigates to the teacher side
@@ -35,7 +35,7 @@ const AccountTypeScreen = (props) => {
 						/>
 						<View style={styles.middleSpacers} />
 						<QcActionButton
-							navigation={navigation}
+							navigation={props.navigation}
 							text={strings.IAmAStudent}
 							onPress={() => {
 								// Navigates to the student side
