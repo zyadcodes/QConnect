@@ -1,7 +1,7 @@
 //This class will contain all the functions that interact with the react native firebase
 //library
-import firebase from "react-native-firebase";
-import strings from "./strings";
+import firebase from 'react-native-firebase';
+import strings from './strings';
 import _ from 'lodash';
 import moment from 'moment';
 import FeedsScreen from "../src/screens/UniversalClassScreens/FeedsScreen";
