@@ -161,7 +161,7 @@ export class ProfileScreen extends QcParentScreen {
           this.state.isTeacher === true ? (
             <TeacherLeftNavPane
               teacher={this.state.accountObject}
-              userID={userID}
+              teacherID={userID}
               classes={this.state.classes}
               edgeHitWidth={0}
               navigation={this.props.navigation}

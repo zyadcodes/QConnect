@@ -18,7 +18,7 @@ import strings from 'config/strings';
 import QcParentScreen from 'screens/QcParentScreen';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import LoadingSpinner from 'components/LoadingSpinner';
-import LeftNavPane from '../LeftNavPane';
+import LeftNavPane from '../LeftNavPane/LeftNavPane';
 import TopBanner from 'components/TopBanner';
 import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
@@ -231,7 +231,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
         menu={
           <LeftNavPane
             teacher={teacher}
-            userID={userID}
+            teacherID={userID}
             classes={this.state.classes}
             edgeHitWidth={0}
             navigation={this.props.navigation}
@@ -331,7 +331,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
         menu={
           <LeftNavPane
             teacher={this.state.teacher}
-            userID={this.state.userID}
+            teacherID={this.state.userID}
             classes={this.state.classes}
             edgeHitWidth={0}
             navigation={this.props.navigation}

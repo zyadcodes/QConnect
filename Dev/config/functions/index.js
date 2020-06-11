@@ -162,6 +162,50 @@ exports.getClassByID = functions.https.onCall(async (input, context) => {
 	return result;
 });
 
+// Method takes in a teacherID and returns an array of class documents that belong to that specific teacher
+exports.getClassesByTeacherID = functions.https.onCall(async (input, context) => {
+	const { teacherID } = input;
+
+	const result = await firestore.runTransaction(async (transaction) => {
+		const teacherDocument = (await transaction.get(Teachers.doc(teacherID))).data();
+
+		const promises = [];
+		for (classID of teacherDocument.classIDs) {
+			promises.push(transaction.get(Classes.doc(classID)));
+		}
+
+		let finalArray = await Promise.all(promises);
+
+		finalArray = finalArray.map((classDoc) => classDoc.data());
+
+		return finalArray;
+	});
+
+	return result;
+});
+
+// Method takes in a studentID and returns an array of class documents that belong to that specific student
+exports.getClassesByStudentID = functions.https.onCall(async (input, context) => {
+	const { studentID } = input;
+
+	const result = await firestore.runTransaction(async (transaction) => {
+		const studentDocument = (await transaction.get(Students.doc(studentID))).data();
+
+		const promises = [];
+		for (classID of studentDocument.classIDs) {
+			promises.push(transaction.get(Classes.doc(classID)));
+		}
+
+		let finalArray = await Promise.all(promises);
+
+		finalArray = finalArray.map((classDoc) => classDoc.data());
+
+		return finalArray;
+	});
+
+	return result;
+});
+
 //Method takes in a class ID and a student ID and returns that studen's information specific to that class. If the document
 //doesn't exist, the method returns -1
 exports.getStudentByClassID = functions.https.onCall(async (input, context) => {

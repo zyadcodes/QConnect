@@ -87,7 +87,7 @@ export default class AllSettingsScreen extends QcParentScreen {
             this.props.navigation.state.params.isTeacher ? (
                 <SideMenu isOpen={this.state.isOpen} menu={<TeacherLeftNavPane
                     teacher={this.props.navigation.state.params.teacher}
-                    userID={this.props.navigation.state.params.userID}
+                    teacherID={this.props.navigation.state.params.userID}
                     classes={this.props.navigation.state.params.classes}
                     edgeHitWidth={0}
                     navigation={this.props.navigation} />}>
