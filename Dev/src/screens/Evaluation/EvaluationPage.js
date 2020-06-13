@@ -319,14 +319,14 @@ export class EvaluationPage extends QcParentScreen {
   }
 
   //remove the highlight and its corresponding evaluation notes from the given word.
-  unhighlightWord(word){
+  unhighlightWord(word) {
     let highlightedWords = this.state.highlightedWords;
     delete highlightedWords[word.id];
     this.setState({ highlightedWords });
   }
 
-  //this function is called when users 
-  onSelectAyah(selectedAyah, selectedWord) {
+  //this function is called when users
+  onSelectAyah(selectedAyah, selectedWord, improvementAreas) {
     if (this.state.readOnly) {
       // don't change highlighted words/ayahs on read-only mode.
       return;
@@ -334,13 +334,13 @@ export class EvaluationPage extends QcParentScreen {
     //if users press on a word, we highlight that word
     if (selectedWord.char_type === "word") {
       let highlightedWords = this.state.highlightedWords;
-      if (!Object.keys(highlightedWords).includes(selectedWord.id)) {
-        highlightedWords = {
-          ...highlightedWords,
-          [selectedWord.id]: {}
-        };
-        this.setState({ highlightedWords });
-      }
+      let newImprovementAreas = _.get(highlightedWords, "improvementAreas", []);
+      newImprovementAreas = { ...newImprovementAreas, ...improvementAreas };
+      highlightedWords = {
+        ...highlightedWords,
+        [selectedWord.id]: { improvementAreas }
+      };
+      this.setState({ highlightedWords });
     } else if (selectedWord.char_type === "end") {
       //if user presses on an end of ayah, we highlight that entire ayah
       let highlightedAyahs = this.state.highlightedAyahs;
@@ -367,8 +367,14 @@ export class EvaluationPage extends QcParentScreen {
       : this.props.navigation.goBack();
   }
 
-  onImprovementAreasSelectionChanged = selectedImprovementAreas => {
-    this.setState({ selectedImprovementAreas });
+  onImprovementAreasSelectionChanged = (selectedImprovementAreas, word) => {
+    if (word === undefined) {
+      this.setState({ selectedImprovementAreas });
+    } else {
+      console.log("here..");
+
+      this.onSelectAyah(undefined, word, selectedImprovementAreas);
+    }
   };
 
   onImprovementsCustomized = newAreas => {
@@ -481,15 +487,18 @@ export class EvaluationPage extends QcParentScreen {
               onSelectAyah={this.onSelectAyah.bind(this)}
               disableChangingUser={true}
               removeHighlightFromWord={this.unhighlightWord.bind(this)}
-              evalNotesComponent={(word) => {
+              evalNotesComponent={word => {
                 return (
                   <EvaluationNotes
                     improvementAreas={improvementAreas}
                     readOnly={readOnly}
                     userID={this.props.navigation.state.params.userID}
-                    onImprovementAreasSelectionChanged={this.onImprovementAreasSelectionChanged.bind(
-                      this
-                    )}
+                    onImprovementAreasSelectionChanged={selectedImprovementAreas =>
+                      this.onImprovementAreasSelectionChanged(
+                        selectedImprovementAreas,
+                        word
+                      )
+                    }
                     onImprovementsCustomized={newAreas => {
                       this.setState({ improvementAreas: newAreas });
                       FirebaseFunctions.saveTeacherCustomImprovementTags(

@@ -141,7 +141,7 @@ class Word extends React.Component {
                       />
                     </TouchableOpacity>
 
-                  <View style={{ width: 10, height: 10 }} />
+                    <View style={{ width: 10, height: 10 }} />
                     <TouchableOpacity
                       onPress={() => {
                         closePopover();
@@ -154,8 +154,7 @@ class Word extends React.Component {
                       />
                     </TouchableOpacity>
                   </View>
-                  {this.props.evalNotesComponent()}
-                  
+                  {this.props.evalNotesComponent(word)}
                 </Popover>
               </React.Fragment>
             )}
