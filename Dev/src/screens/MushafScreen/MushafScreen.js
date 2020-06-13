@@ -91,7 +91,8 @@ export default class MushafScreen extends QcParentScreen {
       showSelectedLinesOnly,
       highlightedColor,
       showTooltipOnPress,
-      evalNotesComponent
+      evalNotesComponent,
+      removeHighlightFromWord
     } = this.props;
 
     const itemInt = parseInt(item);
@@ -113,6 +114,7 @@ export default class MushafScreen extends QcParentScreen {
           selectionStarted={selection.started}
           selectionCompleted={selection.completed}
           evalNotesComponent={evalNotesComponent}
+          removeHighlightFromWord={removeHighlightFromWord}
           selectionOn={
             itemInt >= selection.start.page && itemInt <= selection.end.page
           }

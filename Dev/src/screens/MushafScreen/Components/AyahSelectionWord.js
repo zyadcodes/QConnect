@@ -36,7 +36,8 @@ class Word extends React.Component {
   //The content is then wrapped in either poppover control or simple touchable
   // depending on the mus7af version that is being rendered.
   renderWord() {
-    const { text, isWordHighlighted, isAyahHighlighted } = this.props;
+    const { word, isWordHighlighted, isAyahHighlighted } = this.props;
+    const { text } = word;
     return (
       <Text
         style={
@@ -58,7 +59,9 @@ class Word extends React.Component {
       isFirstSelectedWord,
       highlightedColor,
       isAyahHighlighted,
-      showTooltipOnPress
+      showTooltipOnPress,
+      word,
+      removeHighlightFromWord
     } = this.props;
     let containerStyle = [styles.container];
     if (selected) {
@@ -127,7 +130,7 @@ class Word extends React.Component {
                   >
                     <TouchableOpacity
                       onPress={() => {
-                        onPress();
+                        removeHighlightFromWord(word);
                         closePopover();
                       }}
                     >

@@ -26,7 +26,8 @@ const TextLine = ({
   highlightedColor,
   showLoadingOnHighlightedAyah,
   showTooltipOnPress,
-  evalNotesComponent
+  evalNotesComponent,
+  removeHighlightFromWord
 }) => {
   let isFirstWord = noSelectionInPreviousLines;
   return (
@@ -60,7 +61,7 @@ const TextLine = ({
               return (
                 <AyahSelectionWord
                   key={word.id}
-                  text={word.text}
+                  word={word}
                   showTooltipOnPress={showTooltipOnPress}
                   highlighted={highlighted}
                   highlightedColor={highlightedColor}
@@ -68,6 +69,7 @@ const TextLine = ({
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={false}
                   evalNotesComponent={evalNotesComponent}
+                  removeHighlightFromWord={removeHighlightFromWord}
                 />
               );
             } else if (word.char_type === 'end') {
@@ -104,7 +106,7 @@ const TextLine = ({
               return (
                 <AyahSelectionWord
                   key={word.id}
-                  text={word.text}
+                  word={word}
                   showTooltipOnPress={showTooltipOnPress}
                   // the margins and border radius are different between the cases
                   //  of when a word is selected separately or the entire ayah is selected
@@ -117,6 +119,7 @@ const TextLine = ({
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={isFirstSelectedWord}
                   evalNotesComponent={evalNotesComponent}
+                  removeHighlightFromWord={removeHighlightFromWord}
                 />
               );
             } else if (word.char_type === 'end') {

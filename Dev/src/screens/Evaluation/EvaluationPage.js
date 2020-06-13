@@ -317,6 +317,15 @@ export class EvaluationPage extends QcParentScreen {
       }
     }
   }
+
+  //remove the highlight and its corresponding evaluation notes from the given word.
+  unhighlightWord(word){
+    let highlightedWords = this.state.highlightedWords;
+    delete highlightedWords[word.id];
+    this.setState({ highlightedWords });
+  }
+
+  //this function is called when users 
   onSelectAyah(selectedAyah, selectedWord) {
     if (this.state.readOnly) {
       // don't change highlighted words/ayahs on read-only mode.
@@ -330,11 +339,8 @@ export class EvaluationPage extends QcParentScreen {
           ...highlightedWords,
           [selectedWord.id]: {}
         };
-      } else {
-        //if the same highlighted word is pressed again, un-highlight it (toggle off)
-        delete highlightedWords[selectedWord.id];
+        this.setState({ highlightedWords });
       }
-      this.setState({ highlightedWords });
     } else if (selectedWord.char_type === "end") {
       //if user presses on an end of ayah, we highlight that entire ayah
       let highlightedAyahs = this.state.highlightedAyahs;
@@ -474,7 +480,8 @@ export class EvaluationPage extends QcParentScreen {
               currentClass={classStudent}
               onSelectAyah={this.onSelectAyah.bind(this)}
               disableChangingUser={true}
-              evalNotesComponent={() => {
+              removeHighlightFromWord={this.unhighlightWord.bind(this)}
+              evalNotesComponent={(word) => {
                 return (
                   <EvaluationNotes
                     improvementAreas={improvementAreas}
