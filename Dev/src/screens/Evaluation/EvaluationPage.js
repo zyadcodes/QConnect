@@ -161,16 +161,7 @@ export class EvaluationPage extends QcParentScreen {
       //show areas pressed when evaluating this history item (passed from calling screen)
       improvementAreas = this.props.navigation.state.params.improvementAreas;
     } else {
-      const teacher = await FirebaseFunctions.getTeacherByID(
-        this.props.navigation.state.params.userID
-      );
-      //if teacher has customized areas, let's load theirs.
-      if (
-        teacher.evaluationImprovementTags &&
-        teacher.evaluationImprovementTags.length > 0
-      ) {
-        improvementAreas = teacher.evaluationImprovementTags;
-      }
+      this.getTeacherCustomImprovementAreas();
     }
 
     this.setState({
@@ -181,6 +172,22 @@ export class EvaluationPage extends QcParentScreen {
       audioSentDateTime,
       improvementAreas
     });
+  }
+
+  //asynchronously loads custom evaluation tags that the teacher might have
+  // saved on firebase and update the state once loaded.
+  async getTeacherCustomImprovementAreas() {
+    const teacher = await FirebaseFunctions.getTeacherByID(
+      this.props.navigation.state.params.userID
+    );
+    //if teacher has customized areas, let's load theirs.
+    if (
+      teacher.evaluationImprovementTags &&
+      teacher.evaluationImprovementTags.length > 0
+    ) {
+      let improvementAreas = teacher.evaluationImprovementTags;
+      this.setState({ improvementAreas });
+    }
   }
 
   // --------------  Updates state to reflect a change in a category rating --------------
@@ -334,8 +341,6 @@ export class EvaluationPage extends QcParentScreen {
     //if users press on a word, we highlight that word
     if (selectedWord.char_type === "word") {
       let highlightedWords = this.state.highlightedWords;
-      let newImprovementAreas = _.get(highlightedWords, "improvementAreas", []);
-      newImprovementAreas = { ...newImprovementAreas, ...improvementAreas };
       highlightedWords = {
         ...highlightedWords,
         [selectedWord.id]: { improvementAreas }
@@ -371,8 +376,6 @@ export class EvaluationPage extends QcParentScreen {
     if (word === undefined) {
       this.setState({ selectedImprovementAreas });
     } else {
-      console.log("here..");
-
       this.onSelectAyah(undefined, word, selectedImprovementAreas);
     }
   };
@@ -418,7 +421,6 @@ export class EvaluationPage extends QcParentScreen {
         ": " +
         this.props.navigation.state.params.completionDate
       : strings.HowWas + classStudent.name + strings.sTasmee3;
-
     return (
       //----- outer view, gray background ------------------------
       //Makes it so keyboard is dismissed when clicked somewhere else
@@ -491,6 +493,11 @@ export class EvaluationPage extends QcParentScreen {
                 return (
                   <EvaluationNotes
                     improvementAreas={improvementAreas}
+                    selectedImprovementAreas={_.get(
+                      highlightedWords[word.id],
+                      "improvementAreas",
+                      []
+                    )}
                     readOnly={readOnly}
                     userID={this.props.navigation.state.params.userID}
                     onImprovementAreasSelectionChanged={selectedImprovementAreas =>

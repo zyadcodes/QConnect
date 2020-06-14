@@ -17,7 +17,7 @@ class EvaluationNotes extends React.Component {
     notes: "",
     notesHeight: notesHeightCollapsed
   }
-  render() {    
+  render() {
     return (
       <View>
         <TextInput
@@ -56,6 +56,7 @@ class EvaluationNotes extends React.Component {
         <FlowLayout
           ref="flow"
           dataValue={this.props.improvementAreas}
+          selectedValues={this.props.selectedImprovementAreas}
           title={strings.ImprovementAreas}
           readOnly={this.props.readOnly}
           selectedByDefault={this.props.readOnly ? true : false}

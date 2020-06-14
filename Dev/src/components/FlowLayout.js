@@ -146,6 +146,7 @@ export default class FlowLayout extends Component {
     onSelectionChanged: PropTypes.func.isRequired,
     readOnly: PropTypes.bool,
     selectedByDefault: PropTypes.bool,
+    selectedIndices: PropTypes.array,
   };
   static defaultProps = {
     style: {},
@@ -156,13 +157,20 @@ export default class FlowLayout extends Component {
     selectedByDefault: false
   };
   constructor(props) {
+    let selectedState = new Array(props.dataValue.length).fill(
+      props.selectedByDefault === true
+    );
+    let selectedValues = props.selectedValues;
+
+    if (selectedValues !== undefined && selectedValues.length > 0) {
+      selectedValues.forEach(val => _.set(selectedState, val, true));
+    }
     super(props);
     this.state = {
       modalVisible: false,
       dataValue: this.props.dataValue,
-      selectedState: new Array(this.props.dataValue.length).fill(
-        this.props.selectedByDefault === true
-      ),
+      selectedState,
+      selectedValues,
       isBadgeVisible: false,
       isNewAddition: true,
       newImprovementText: ''
@@ -179,6 +187,22 @@ export default class FlowLayout extends Component {
     if (!_.isEmpty(_.xor(props.dataValue, state.dataValue))) {
       return {
         dataValue: props.dataValue
+      };
+    }
+    //if the parent component passes a set of values to be pre-selected
+    // let's find their index and update their selectedState accordingly
+    if (props.selectedValues !== undefined) {
+      let { selectedState } = state;
+      const { dataValue } = state;
+      props.selectedValues.forEach(val => {
+        let index = dataValue.indexOf(val);
+        if (index >= 0) {
+          selectedState[index] = true;
+        }
+      });
+      return {
+        selectedValues: props.selectedValues,
+        selectedState
       };
     }
     return null;
