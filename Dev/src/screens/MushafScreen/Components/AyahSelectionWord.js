@@ -60,7 +60,8 @@ class Word extends React.Component {
       isAyahHighlighted,
       showTooltipOnPress,
       word,
-      removeHighlightFromWord
+      removeHighlight,
+      evalNotesComponent
     } = this.props;
     let containerStyle = [styles.container];
     if (selected) {
@@ -129,7 +130,7 @@ class Word extends React.Component {
                   >
                     <TouchableOpacity
                       onPress={() => {
-                        removeHighlightFromWord(word);
+                        removeHighlight(word);
                         closePopover();
                       }}
                     >
@@ -153,7 +154,7 @@ class Word extends React.Component {
                       />
                     </TouchableOpacity>
                   </View>
-                  {this.props.evalNotesComponent(word)}
+                  {evalNotesComponent(word)}
                 </Popover>
               </React.Fragment>
             )}

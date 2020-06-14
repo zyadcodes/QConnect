@@ -27,7 +27,7 @@ const TextLine = ({
   showLoadingOnHighlightedAyah,
   showTooltipOnPress,
   evalNotesComponent,
-  removeHighlightFromWord
+  removeHighlight
 }) => {
   let isFirstWord = noSelectionInPreviousLines;
   return (
@@ -69,14 +69,15 @@ const TextLine = ({
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={false}
                   evalNotesComponent={evalNotesComponent}
-                  removeHighlightFromWord={removeHighlightFromWord}
+                  removeHighlight={removeHighlight}
                 />
               );
             } else if (word.char_type === 'end') {
               return (
                 <EndOfAyah
                   key={word.id}
-                  ayahNumber={word.aya}
+                  word={word}
+                  curAyah={curAyah}
                   showTooltipOnPress={showTooltipOnPress}
                   onPress={() => onSelectAyah(curAyah, word)}
                   selected={false}
@@ -85,6 +86,7 @@ const TextLine = ({
                   showLoading={showLoading}
                   isLastSelectedAyah={false}
                   evalNotesComponent={evalNotesComponent}
+                  removeHighlight={removeHighlight}
                 />
               );
             }
@@ -119,14 +121,15 @@ const TextLine = ({
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={isFirstSelectedWord}
                   evalNotesComponent={evalNotesComponent}
-                  removeHighlightFromWord={removeHighlightFromWord}
+                  removeHighlight={removeHighlight}
                 />
               );
             } else if (word.char_type === 'end') {
               return (
                 <EndOfAyah
                   key={word.id}
-                  ayahNumber={word.aya}
+                  word={word}
+                  curAyah={curAyah}
                   showTooltipOnPress={showTooltipOnPress}
                   onPress={() => onSelectAyah(curAyah, word)}
                   highlighted={highlighted}
@@ -141,6 +144,7 @@ const TextLine = ({
                   )}
                   isLastSelectedAyah={isLastSelectedAyah}
                   evalNotesComponent={evalNotesComponent}
+                  removeHighlight={removeHighlight}
                 />
               );
             }

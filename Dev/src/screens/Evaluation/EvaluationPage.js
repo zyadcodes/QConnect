@@ -319,10 +319,18 @@ export class EvaluationPage extends QcParentScreen {
   }
 
   //remove the highlight and its corresponding evaluation notes from the given word.
-  unhighlightWord(word) {
-    let highlightedWords = this.state.highlightedWords;
-    delete highlightedWords[word.id];
-    this.setState({ highlightedWords });
+  unhighlightWord(word, ayah) {
+    if (word.char_type === "word") {
+      let highlightedWords = this.state.highlightedWords;
+      delete highlightedWords[word.id];
+      this.setState({ highlightedWords });
+    } else if (word.char_type === "end") {
+      //if user presses on an end of ayah, we highlight that entire ayah
+      let highlightedAyahs = this.state.highlightedAyahs;
+      let ayahKey = toNumberString(ayah);
+      delete highlightedAyahs[ayahKey];
+      this.setState({ highlightedAyahs });
+    }
   }
 
   //this function is called when users
@@ -344,16 +352,11 @@ export class EvaluationPage extends QcParentScreen {
       //if user presses on an end of ayah, we highlight that entire ayah
       let highlightedAyahs = this.state.highlightedAyahs;
       let ayahKey = toNumberString(selectedAyah);
-
-      if (!Object.keys(highlightedAyahs).includes(ayahKey)) {
-        highlightedAyahs = {
-          ...highlightedAyahs,
-          [ayahKey]: { ...selectedAyah }
-        };
-      } else {
-        //if the same highlighted word is pressed again, un-highlight it (toggle off)
-        delete highlightedAyahs[ayahKey];
-      }
+      let ayahEval = _.get(highlightedAyahs, ayahKey, {});
+      highlightedAyahs = {
+        ...highlightedAyahs,
+        [ayahKey]: { ...ayahEval, ...evalNotes }
+      };
       this.setState({ highlightedAyahs });
     }
   }
@@ -367,22 +370,26 @@ export class EvaluationPage extends QcParentScreen {
   }
 
   //handles when teacher taps on an improvement area durig tasmee3 evaluation
-  onImprovementAreasSelectionChanged = (selectedImprovementAreas, word) => {
+  onImprovementAreasSelectionChanged = (
+    selectedImprovementAreas,
+    word,
+    ayah
+  ) => {
     if (word === undefined) {
       this.setState({ selectedImprovementAreas });
     } else {
-      this.onSelectAyah(undefined, word, {
+      this.onSelectAyah(ayah, word, {
         improvementAreas: selectedImprovementAreas
       });
     }
   };
 
   //handles when teacher enters a note durig tasmee3 evaluation
-  onSaveNotes(notes, word) {
+  onSaveNotes(notes, word, ayah) {
     if (word === undefined) {
       this.setState({ notes });
     } else {
-      this.onSelectAyah(undefined, word, { notes });
+      this.onSelectAyah(ayah, word, { notes });
     }
   }
 
@@ -409,8 +416,7 @@ export class EvaluationPage extends QcParentScreen {
       assignmentType,
       showMushaf,
       highlightedAyahs,
-      highlightedWords,
-      evaluationCollapsed
+      highlightedWords
     } = this.state;
 
     if (isLoading === true) {
@@ -598,8 +604,8 @@ export class EvaluationPage extends QcParentScreen {
                 currentClass={classStudent}
                 onSelectAyah={this.onSelectAyah.bind(this)}
                 disableChangingUser={true}
-                removeHighlightFromWord={this.unhighlightWord.bind(this)}
-                evalNotesComponent={word => {
+                removeHighlight={this.unhighlightWord.bind(this)}
+                evalNotesComponent={(word, ayah) => {
                   let wordImprovementAreas = _.get(
                     highlightedWords[word.id],
                     "improvementAreas",
@@ -621,7 +627,8 @@ export class EvaluationPage extends QcParentScreen {
                       onImprovementAreasSelectionChanged={selectedImprovementAreas =>
                         this.onImprovementAreasSelectionChanged(
                           selectedImprovementAreas,
-                          word
+                          word,
+                          ayah
                         )
                       }
                       onImprovementsCustomized={newAreas => {
@@ -631,7 +638,9 @@ export class EvaluationPage extends QcParentScreen {
                           newAreas
                         );
                       }}
-                      saveNotes={wordNotes => this.onSaveNotes(wordNotes, word)}
+                      saveNotes={wordNotes =>
+                        this.onSaveNotes(wordNotes, word, ayah)
+                      }
                     />
                   );
                 }}
