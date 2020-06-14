@@ -57,11 +57,12 @@ const Header = props => {
 
 export default Header;
 
-export const headerHeight = 130;
+export const headerHeight = 90;
 
 const Container = styled.View`
   width: 100%;
   min-height: ${headerHeight};
+  padding-top: 15px;
   box-shadow: 0 50px 57px #000000;
   flex-direction: row;
   justify-content: flex-start;
