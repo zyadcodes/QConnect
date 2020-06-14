@@ -40,7 +40,8 @@ export class ClassMainScreen extends QcParentScreen {
     classes: "",
     isEditing: false,
     titleHasChanged: false,
-  };
+    show: true
+  }
 
   async componentDidMount() {
     FirebaseFunctions.setCurrentScreen("Class Main Screen", "ClassMainScreen");
@@ -586,17 +587,12 @@ export class ClassMainScreen extends QcParentScreen {
       });
 
       return (
-        <SideMenu
-          isOpen={this.state.isOpen}
-          menu={
-            <LeftNavPane
-              teacher={teacher}
-              userID={userID}
-              classes={this.state.classes}
-              edgeHitWidth={0}
-              navigation={this.props.navigation}
-            />
-          }
+
+
+        <View
+          style = {{
+            alignItems: "center",
+          }}
         >
           <Toast
             position={'bottom'}
@@ -659,7 +655,7 @@ export class ClassMainScreen extends QcParentScreen {
                 colors.white
               )}
           </ScrollView>
-        </SideMenu>
+        </View>
       );
     }
   }
