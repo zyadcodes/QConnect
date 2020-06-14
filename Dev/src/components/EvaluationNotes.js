@@ -21,7 +21,7 @@ class EvaluationNotes extends React.Component {
         <TextInput
           style={styles.notesStyle}
           multiline={true}
-          height={this.notesHeight}
+          height={this.state.notesHeight}
           onChangeText={teacherNotes => this.setState({ notes: teacherNotes })}
           returnKeyType={"done"}
           autoCorrect={false}

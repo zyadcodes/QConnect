@@ -78,7 +78,6 @@ export class EvaluationPage extends QcParentScreen {
     isPlaying: "Stopped",
     currentPosition: "0:00",
     audioFile: -1,
-    notesHeight: 40,
     selectedImprovementAreas: [],
     highlightedWords:
       this.props.navigation.state.params.highlightedWords !== undefined
@@ -503,15 +502,20 @@ export class EvaluationPage extends QcParentScreen {
               disableChangingUser={true}
               removeHighlightFromWord={this.unhighlightWord.bind(this)}
               evalNotesComponent={word => {
-                return (
-                  <EvaluationNotes
-                    improvementAreas={improvementAreas}
-                    notes={_.get(highlightedWords[word.id], "notes", "")}
-                    selectedImprovementAreas={_.get(
+                let wordImprovementAreas = _.get(
                       highlightedWords[word.id],
                       "improvementAreas",
                       []
-                    )}
+                    );
+                return (
+                  <EvaluationNotes
+                    //TODO: This logic needs cleaning
+                    // for now: if the teacher is evaluating, then we pass the full set of improvement ares for her to choose from
+                    // if this is readonly (ie: student or teacher are seeing a past assignment), 
+                    //  then we show only imp. areas entered for ths word.
+                    improvementAreas={readOnly? wordImprovementAreas : improvementAreas}
+                    notes={_.get(highlightedWords[word.id], "notes", "")}
+                    selectedImprovementAreas={wordImprovementAreas}
                     readOnly={readOnly}
                     userID={this.props.navigation.state.params.userID}
                     onImprovementAreasSelectionChanged={selectedImprovementAreas =>
@@ -644,7 +648,7 @@ export class EvaluationPage extends QcParentScreen {
                   onImprovementsCustomized={this.onImprovementsCustomized.bind(
                     this
                   )}
-                  saveNotes={evalNotes => this.saveNotes(evalNotes)}
+                  saveNotes={evalNotes => this.onSaveNotes(evalNotes)}
                 />
               )}
             </View>
