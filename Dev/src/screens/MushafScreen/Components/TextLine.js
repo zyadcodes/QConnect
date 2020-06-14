@@ -1,13 +1,13 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import React from "react";
+import { StyleSheet, View } from "react-native";
 import {
   compareOrder,
   isAyahSelected,
   toNumberString
 } from "../Helpers/AyahsOrder";
-import AyahSelectionWord from './AyahSelectionWord';
-import EndOfAyah from './EndOfAyah';
-import { screenHeight } from 'config/dimensions';
+import AyahSelectionWord from "./AyahSelectionWord";
+import EndOfAyah from "./EndOfAyah";
+import { screenHeight } from "config/dimensions";
 
 //Creates the higher order component
 const TextLine = ({
@@ -33,7 +33,7 @@ const TextLine = ({
   return (
     <View style={{ ...styles.line, alignItems: lineAlign }}>
       {lineText &&
-        lineText.map(word => {
+        lineText.map((word, index) => {
           let curAyah = {
             ayah: Number(word.aya),
             surah: Number(word.sura),
@@ -57,7 +57,15 @@ const TextLine = ({
             Object.keys(highlightedAyahs).includes(toNumberString(curAyah));
 
           if (selectionOn === false) {
-            if (word.char_type === 'word') {
+            if (word.char_type !== "end" && word.char_type !== "pause") {
+              if (
+                word.char_type === "word" &&
+                lineText[index + 1] !== undefined &&
+                lineText[index + 1].char_type === "pause"
+              ) {
+                word.text = word.text + lineText[index + 1].text;
+              }
+
               return (
                 <AyahSelectionWord
                   key={word.id}
@@ -72,7 +80,7 @@ const TextLine = ({
                   removeHighlight={removeHighlight}
                 />
               );
-            } else if (word.char_type === 'end') {
+            } else if (word.char_type === "end") {
               return (
                 <EndOfAyah
                   key={word.id}
@@ -100,7 +108,15 @@ const TextLine = ({
             );
             let isLastSelectedAyah =
               isAyaSelected && compareOrder(selectedAyahsEnd, curAyah) === 0;
-            if (word.char_type === 'word') {
+            if (word.char_type !== "end" && word.char_type !== "pause") {
+              if (
+                word.char_type === "word" &&
+                lineText[index + 1] !== undefined &&
+                lineText[index + 1].char_type === "pause"
+              ) {
+                word.text = word.text + lineText[index + 1].text;
+              }
+
               let isFirstSelectedWord = isAyaSelected && isFirstWord;
               if (isFirstSelectedWord) {
                 isFirstWord = false;
@@ -124,7 +140,7 @@ const TextLine = ({
                   removeHighlight={removeHighlight}
                 />
               );
-            } else if (word.char_type === 'end') {
+            } else if (word.char_type === "end") {
               return (
                 <EndOfAyah
                   key={word.id}
@@ -156,21 +172,21 @@ const TextLine = ({
 
 const styles = StyleSheet.create({
   line: {
-    flexDirection: 'row-reverse',
-    backgroundColor: 'transparent',
-    justifyContent: 'space-between'
+    flexDirection: "row-reverse",
+    backgroundColor: "transparent",
+    justifyContent: "space-between",
   },
   footer: {
-    justifyContent: 'center',
-    alignSelf: 'stretch',
+    justifyContent: "center",
+    alignSelf: "stretch",
     height: screenHeight * 0.25,
-    alignItems: 'center'
+    alignItems: "center",
   },
   imageContainer: {
-    width: '100%',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    alignItems: 'center'
+    width: "100%",
+    justifyContent: "center",
+    alignSelf: "center",
+    alignItems: "center",
   }
 });
 
