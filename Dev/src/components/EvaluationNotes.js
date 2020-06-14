@@ -6,17 +6,15 @@ import strings from "config/strings";
 import colors from "config/colors";
 import { screenWidth, screenHeight } from "config/dimensions";
 import fontStyles from "config/fontStyles";
-import FirebaseFunctions from "config/FirebaseFunctions";
 
 const notesHeightCollapsed = 40;
 const notesHeightExpanded = screenHeight * 0.1;
 
 class EvaluationNotes extends React.Component {
-  
   state = {
-    notes: "",
+    notes: this.props.notes === undefined ? "" : this.props.notes,
     notesHeight: notesHeightCollapsed
-  }
+  };
   render() {
     return (
       <View>
@@ -33,9 +31,10 @@ class EvaluationNotes extends React.Component {
           editable={!this.props.readOnly}
           value={this.state.notes}
           onFocus={() => this.setState({ notesHeight: notesHeightExpanded })}
-          onEndEditing={() =>
-            this.setState({ notesHeight: notesHeightCollapsed })
-          }
+          onEndEditing={() => {
+            this.setState({ notesHeight: notesHeightCollapsed });
+            this.props.saveNotes(this.state.notes);
+          }}
         />
 
         {/**
@@ -82,4 +81,3 @@ const styles = StyleSheet.create({
 });
 
 export default EvaluationNotes;
-

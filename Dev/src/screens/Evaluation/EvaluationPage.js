@@ -333,7 +333,7 @@ export class EvaluationPage extends QcParentScreen {
   }
 
   //this function is called when users
-  onSelectAyah(selectedAyah, selectedWord, improvementAreas) {
+  onSelectAyah(selectedAyah, selectedWord, evalNotes) {
     if (this.state.readOnly) {
       // don't change highlighted words/ayahs on read-only mode.
       return;
@@ -341,9 +341,10 @@ export class EvaluationPage extends QcParentScreen {
     //if users press on a word, we highlight that word
     if (selectedWord.char_type === "word") {
       let highlightedWords = this.state.highlightedWords;
+      let wordEval = _.get(highlightedWords, selectedWord.id, {});
       highlightedWords = {
         ...highlightedWords,
-        [selectedWord.id]: { improvementAreas }
+        [selectedWord.id]: { ...wordEval, ...evalNotes }
       };
       this.setState({ highlightedWords });
     } else if (selectedWord.char_type === "end") {
@@ -372,13 +373,25 @@ export class EvaluationPage extends QcParentScreen {
       : this.props.navigation.goBack();
   }
 
+  //handles when teacher taps on an improvement area durig tasmee3 evaluation
   onImprovementAreasSelectionChanged = (selectedImprovementAreas, word) => {
     if (word === undefined) {
       this.setState({ selectedImprovementAreas });
     } else {
-      this.onSelectAyah(undefined, word, selectedImprovementAreas);
+      this.onSelectAyah(undefined, word, {
+        improvementAreas: selectedImprovementAreas
+      });
     }
   };
+
+  //handles when teacher enters a note durig tasmee3 evaluation
+  onSaveNotes(notes, word) {
+    if (word === undefined) {
+      this.setState({ notes });
+    } else {
+      this.onSelectAyah(undefined, word, { notes });
+    }
+  }
 
   onImprovementsCustomized = newAreas => {
     this.setState({ improvementAreas: newAreas });
@@ -493,6 +506,7 @@ export class EvaluationPage extends QcParentScreen {
                 return (
                   <EvaluationNotes
                     improvementAreas={improvementAreas}
+                    notes={_.get(highlightedWords[word.id], "notes", "")}
                     selectedImprovementAreas={_.get(
                       highlightedWords[word.id],
                       "improvementAreas",
@@ -513,6 +527,7 @@ export class EvaluationPage extends QcParentScreen {
                         newAreas
                       );
                     }}
+                    saveNotes={wordNotes => this.onSaveNotes(wordNotes, word)}
                   />
                 );
               }}
@@ -629,6 +644,7 @@ export class EvaluationPage extends QcParentScreen {
                   onImprovementsCustomized={this.onImprovementsCustomized.bind(
                     this
                   )}
+                  saveNotes={evalNotes => this.saveNotes(evalNotes)}
                 />
               )}
             </View>
