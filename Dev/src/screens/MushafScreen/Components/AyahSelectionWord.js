@@ -38,15 +38,17 @@ class Word extends React.Component {
     const { word, isWordHighlighted, isAyahHighlighted } = this.props;
     const { text } = word;
     return (
-      <Text
-        style={
-          isWordHighlighted || isAyahHighlighted
-            ? styles.highlightedWordText
-            : styles.wordText
-        }
-      >
-        {text}
-      </Text>
+      <View>
+        <Text
+          style={
+            isWordHighlighted || isAyahHighlighted
+              ? styles.highlightedWordText
+              : styles.wordText
+          }
+        >
+          {text}
+        </Text>
+      </View>
     );
   }
 
@@ -220,7 +222,7 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: colors.white,
     borderRadius: 8,
-    width: screenWidth * 0.9,
+    width: screenWidth * 0.96,
     minHeight: 150
   },
   arrow: {

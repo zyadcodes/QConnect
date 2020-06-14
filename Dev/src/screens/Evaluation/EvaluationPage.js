@@ -576,8 +576,7 @@ export class EvaluationPage extends QcParentScreen {
           {showMushaf && (
             <View
               style={{
-                height: screenHeight - headerHeight,
-                paddingBottom: 150
+                height: screenHeight - headerHeight
               }}
             >
               <KeepAwake />
@@ -606,11 +605,39 @@ export class EvaluationPage extends QcParentScreen {
                 disableChangingUser={true}
                 removeHighlight={this.unhighlightWord.bind(this)}
                 evalNotesComponent={(word, ayah) => {
-                  let wordImprovementAreas = _.get(
-                    highlightedWords[word.id],
-                    "improvementAreas",
-                    []
-                  );
+                  let wordOrAyahImprovements = [];
+                  let wordOrAyahNotes = "";
+                  try {
+                    if (word.char_type === "end") {
+                      let ayahNumber = toNumberString(ayah);
+                      wordOrAyahImprovements = _.get(
+                        highlightedAyahs[ayahNumber],
+                        "improvementAreas",
+                        []
+                      );
+                      wordOrAyahNotes = _.get(
+                        highlightedAyahs[ayahNumber],
+                        "notes",
+                        []
+                      );
+                    } else {
+                      wordOrAyahImprovements = _.get(
+                        highlightedWords[word.id],
+                        "improvementAreas",
+                        []
+                      );
+                      wordOrAyahNotes = _.get(
+                        highlightedWords[word.id],
+                        "notes",
+                        []
+                      );
+                    }
+                  } catch (error) {
+                    console.log(JSON.stringify(error));
+                    FirebaseFunctions.log("ERROR_GET_WRD_AYAH_IMPROVEMENTS", {
+                      error
+                    });
+                  }
                   return (
                     <EvaluationNotes
                       //TODO: This logic needs cleaning
@@ -618,10 +645,10 @@ export class EvaluationPage extends QcParentScreen {
                       // if this is readonly (ie: student or teacher are seeing a past assignment),
                       //  then we show only imp. areas entered for ths word.
                       improvementAreas={
-                        readOnly ? wordImprovementAreas : improvementAreas
+                        readOnly ? wordOrAyahImprovements : improvementAreas
                       }
-                      notes={_.get(highlightedWords[word.id], "notes", "")}
-                      selectedImprovementAreas={wordImprovementAreas}
+                      notes={wordOrAyahNotes}
+                      selectedImprovementAreas={wordOrAyahImprovements}
                       readOnly={readOnly}
                       userID={this.props.navigation.state.params.userID}
                       onImprovementAreasSelectionChanged={selectedImprovementAreas =>

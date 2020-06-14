@@ -383,7 +383,7 @@ class SelectionPage extends React.Component {
               id={this.state.page + "upperWrapper"}
               style={{
                 backgroundColor: colors.white,
-                justifyContent: 'flex-end'
+                justifyContent: 'flex-end',
               }}
             >
               <AssignmentEntryComponent
@@ -559,6 +559,7 @@ class SelectionPage extends React.Component {
                 </ImageBackground>
               </View>
             </View>
+            <View style={{height: 300}}/>
           </ScrollView>
         </KeyboardAvoidingView>
       );
