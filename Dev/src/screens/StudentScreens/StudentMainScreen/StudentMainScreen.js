@@ -1,6 +1,6 @@
 //This screen will be the main screen that will display for students as a landing page for when they first
 //sign up or log in
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import QcParentScreen from '../../QcParentScreen';
 import {
   View,
@@ -15,6 +15,7 @@ import {
   Animated,
   TouchableHighlight
 } from "react-native";
+import styles from './StudentMainScreenStyle'
 import { Icon, Avatar, Overlay } from "react-native-elements";
 import studentImages from "config/studentImages";
 import { Rating } from "react-native-elements";
@@ -48,19 +49,26 @@ const opacityInterpolate = opacity.interpolate({
 const StudentMainScreen  = (props) => {
     const [isLoading, setIsLoading] = useState(true)
     const [student, setStudent] = useState("")
+    const [sent, setSent] = useState(null)
     const [userID, setUserID] = useState("")
     const [currentClass, setCurrentClass] = useState("")
     const [currentClassID, setCurrentClassID] = useState("")
+    const [assignmentHistory, setAssignmentHistory] = useState([])
+    const [isOpen, setIsOpen] = useState(false)
     const [studentClassInfo, setStudentClassInfo] = useState("")
     const [modalVisible, setModalVisible] = useState(false)
     const [recordingUIVisible, setRecordingUIVisible] = useState([])
     const [noCurrentClass, setNoCurrentClass] = useState(false)
     const [classCode, setClassCode] = useState("")
+    const [wordsPerAssignmentData, setWordsPerAssignmentData] = useState([])
+    const [submittedRecordings, setSubmittedRecordings] = useState(null)
     const [classes, setClasses] = useState("")
+    const [audioFilePath, setAudioFilePath] = useState("")
     const [isRecording, setIsRecording] = useState(false)
     const [currentPosition, setCurrentPosition] = useState("0:00")
     const [classesAttended, setClassesAttended] = useState(0)
     const [classesMissed, setClassesMissed] = useState(0)
+    const [refs, setRefs] = useState({toast: useRef()})
     const [dailyPracticeLog, setDailyPracticeLog] = useState({})
     const [audioPlaybackVisible, setAudioPlaybackVisible] = useState(false)
 
@@ -701,7 +709,7 @@ const StudentMainScreen  = (props) => {
       value === "NEED_HELP"
         ? strings.TeacherIsNotifiedNeedHelp
         : strings.TeacherIsNotified;
-
+    
     if (value !== "NOT_STARTED") {
       refs.toast.show(toastMsg, DURATION.LENGTH_LONG);
     }
@@ -1454,7 +1462,7 @@ const StudentMainScreen  = (props) => {
       >
         <Toast
           position={"bottom"}
-          ref="toast"
+          ref={refs.toast}
           fadeInDuration={3000}
           positionValue={100}
           style={themeStyles.toastStyle}

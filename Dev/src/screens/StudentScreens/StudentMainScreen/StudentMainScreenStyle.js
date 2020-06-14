@@ -1,4 +1,8 @@
-export default styles = StyleSheet.create({
+import React from 'react'
+import {StyleSheet} from 'react-native'
+import colors from 'config/colors'
+import {screenHeight, screenWidth} from 'config/dimensions'
+const styles = StyleSheet.create({
     topView: {
       flexDirection: 'column',
       backgroundColor: colors.veryLightGrey
@@ -137,3 +141,4 @@ export default styles = StyleSheet.create({
       alignItems: "center"
     },
   });
+  export default styles
