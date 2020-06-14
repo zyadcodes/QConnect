@@ -5,19 +5,18 @@ import {
   View,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  PixelRatio,
+  PixelRatio
 } from "react-native";
 import { Icon } from "react-native-elements";
 import colors from "config/colors";
 import { screenWidth } from "config/dimensions";
-import { Popover, PopoverController } from 'react-native-modal-popover';
-import EvaluationNotes from "components/EvaluationNotes";
+import { Popover, PopoverController } from "react-native-modal-popover";
 
 //Creates the higher order component
 class Word extends React.Component {
   state = {
     selected: this.props.selected,
-    isFirstSelectedWord: this.props.isFirstSelectedWord,
+    isFirstSelectedWord: this.props.isFirstSelectedWord
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -83,7 +82,7 @@ class Word extends React.Component {
 
     if (highlightWord) {
       containerStyle.push({
-        backgroundColor: highlightedColor,
+        backgroundColor: highlightedColor
       });
     }
     return (
@@ -95,7 +94,7 @@ class Word extends React.Component {
               closePopover,
               popoverVisible,
               setPopoverAnchor,
-              popoverAnchorRect,
+              popoverAnchorRect
             }) => (
               <React.Fragment>
                 <TouchableWithoutFeedback
@@ -117,7 +116,7 @@ class Word extends React.Component {
                   visible={popoverVisible}
                   onClose={closePopover}
                   fromRect={popoverAnchorRect}
-                  supportedOrientations={['portrait']}
+                  supportedOrientations={["portrait"]}
                 >
                   <View
                     style={{
@@ -182,13 +181,13 @@ const styles = StyleSheet.create({
     textAlign: "right",
     fontFamily: "me_quran",
     fontSize: mushafFontSize,
-    color: colors.darkGrey,
+    color: colors.darkGrey
   },
   highlightedWordText: {
     textAlign: "right",
     fontFamily: "me_quran",
     fontSize: mushafFontSize,
-    color: colors.white,
+    color: colors.white
   },
   container: {
     flexGrow: 1,
@@ -208,13 +207,13 @@ const styles = StyleSheet.create({
   },
   firstSelectedWordText: {
     borderTopRightRadius: 25,
-    borderBottomRightRadius: 25,
+    borderBottomRightRadius: 25
   },
   app: {
     ...StyleSheet.absoluteFillObject,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#c2ffd2'
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#c2ffd2"
   },
   content: {
     padding: 16,
@@ -224,11 +223,11 @@ const styles = StyleSheet.create({
     minHeight: 150
   },
   arrow: {
-    borderTopColor: 'pink'
+    borderTopColor: "pink"
   },
   background: {
     backgroundColor: "rgba(107,107,107,0.2)"
-  },
+  }
 });
 
 export default Word;
