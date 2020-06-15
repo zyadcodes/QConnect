@@ -206,7 +206,6 @@ exports.getClassesByStudentID = functions.https.onCall(async (input, context) =>
 	return result;
 });
 
-//Method takes in a class ID and a student ID and returns that studen's information specific to that class. If the document
 // Method takes in a class ID and a student ID and returns that studen's information specific to that class. If the document
 // doesn't exist, the method returns -1
 exports.getStudentByClassID = functions.https.onCall(async (input, context) => {
