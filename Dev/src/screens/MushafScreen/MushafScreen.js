@@ -3,84 +3,21 @@ import React from "react";
 import { View, StyleSheet, ScrollView, PixelRatio } from "react-native";
 import LoadingSpinner from "components/LoadingSpinner";
 import colors from "config/colors";
-import QcParentScreen from 'screens/QcParentScreen';
+import QcParentScreen from "screens/QcParentScreen";
 import SelectionPage from "./Components/SelectionPage";
 import Swiper from "react-native-swiper";
 import { screenHeight, screenWidth } from "config/dimensions";
+import * as _ from "lodash";
 
-//-------- MushafScreen: container component for the screen holding Mushaf pages ------
-// Implements pagination through a swiper component with a fixed width: 3 screens
-// swiping screens back and forth changes the loaded pages but keeps the set to 3 screens and the loaded page as the middle screen
-// this way a user can always swipe left and right
-// Todo: currently the first and last screen of the mushhaf have a hack since they deviate from this paradigm. Need to fix later on.
-export default class MushafScreen extends QcParentScreen {
-  //------------------------ initial state ----------------------------
-  lastPage = 604;
-  state = {
-    pages: [],
-    key: 1,
-    index:
-      this.props.selection && this.props.selection.start
-        ? 604 - this.props.selection.start.page
-        : 3,
-    classID: this.props,
-    studentID: this.props.studentID,
-    assignmentType: this.props.assignmentType,
-    loadScreenOnClose: this.props.loadScreenOnClose,
-    popOnClose: this.props.popOnClose,
-    isLoading: true,
-  };
-
-  async componentDidMount() {
-    //we mimmic right to left pages scanning by reversing the pages order in the swiper component
-    let allPages = Array.from(Array(604), (e, i) => 604 - i);
-
-    this.setState({
-      pages: allPages,
-      isLoading: false,
-    });
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (
-      JSON.stringify(prevState.selection) !==
-      JSON.stringify(nextProps.selection)
-    ) {
-      let index =
-        nextProps.selection && nextProps.selection.start
-          ? 604 - nextProps.selection.start.page
-          : 3;
-
-      return {
-        selection: nextProps.selection,
-        page: nextProps.selection.start ? nextProps.selection.start.page : 3,
-        index: index,
-        key: index,
-      };
+class MushafPage extends React.Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.curIndex === nextProps.idx){
+      return true;
     }
-
-    return null;
+    return false;
   }
 
-  // ------------------------- Event handlers --------------------------------------------
-
-  onChangePage(page, keepSelection) {
-    let index = 604 - page;
-
-    this.setState({
-      page: page,
-      index: index,
-      key: index,
-    });
-
-    if (this.props.onChangePage) {
-      this.props.onChangePage(page, keepSelection);
-    }
-  }
-
-  // ------------------------ Render the Mushhaf Component ----------------------------------------
-  renderItem(item, idx, highlightedWords, highlightedAyahs) {
-    const { assignmentType } = this.state;
+  render() {
     const {
       profileImage,
       assignToID,
@@ -92,11 +29,18 @@ export default class MushafScreen extends QcParentScreen {
       highlightedColor,
       showTooltipOnPress,
       evalNotesComponent,
-      removeHighlight
+      removeHighlight,
+      assignmentType,
+      highlightedWords,
+      highlightedAyahs,
+      item,
+      idx,
+      onChangePage,
+      isLoading,
+      currentClass
     } = this.props;
 
     const itemInt = parseInt(item);
-
     return (
       <View style={{ flex: 1 }} key={idx}>
         <SelectionPage
@@ -104,7 +48,7 @@ export default class MushafScreen extends QcParentScreen {
           hideHeader={hideHeader}
           showSelectedLinesOnly={showSelectedLinesOnly}
           showTooltipOnPress={showTooltipOnPress === true} //if the prop is not passed, we default to false
-          onChangePage={this.onChangePage.bind(this)}
+          onChangePage={onChangePage}
           highlightedWords={highlightedWords}
           highlightedAyahs={highlightedAyahs}
           highlightedColor={highlightedColor}
@@ -119,8 +63,8 @@ export default class MushafScreen extends QcParentScreen {
             itemInt >= selection.start.page && itemInt <= selection.end.page
           }
           profileImage={profileImage}
-          currentClass={this.props.currentClass}
-          isLoading={this.state.isLoading}
+          currentClass={currentClass}
+          isLoading={isLoading}
           assignmentType={assignmentType}
           assignToID={assignToID}
           disableChangingUser={disableChangingUser}
@@ -148,11 +92,110 @@ export default class MushafScreen extends QcParentScreen {
       </View>
     );
   }
+}
 
+//-------- MushafScreen: container component for the screen holding Mushaf pages ------
+// Implements pagination through a swiper component with a fixed width: 3 screens
+// swiping screens back and forth changes the loaded pages but keeps the set to 3 screens and the loaded page as the middle screen
+// this way a user can always swipe left and right
+// Todo: currently the first and last screen of the mushhaf have a hack since they deviate from this paradigm. Need to fix later on.
+export default class MushafScreen extends QcParentScreen {
+  //------------------------ initial state ----------------------------
+  lastPage = 604;
+  state = {
+    pages: [],
+    key: 1,
+    index:
+      this.props.selection && this.props.selection.start
+        ? 604 - this.props.selection.start.page
+        : 3,
+    classID: this.props,
+    studentID: this.props.studentID,
+    assignmentType: this.props.assignmentType,
+    loadScreenOnClose: this.props.loadScreenOnClose,
+    popOnClose: this.props.popOnClose,
+    isLoading: true
+  };
+
+  async componentDidMount() {
+    //we mimmic right to left pages scanning by reversing the pages order in the swiper component
+    let allPages = Array.from(Array(604), (e, i) => 604 - i);
+
+    this.setState({
+      pages: allPages,
+      isLoading: false
+    });
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      nextState.isLoading === this.state.isLoading &&
+      nextState.pages === this.state.pages &&
+      nextState.index === this.state.index &&
+      nextState.assignmentType === this.state.assignmentType &&
+      nextProps.assignToID === this.props.assignToID &&
+      nextProps.profileImage === this.props.profileImage &&
+      nextProps.showLoadingOnHighlightedAyah ===
+        this.props.showLoadingOnHighlightedAyah &&
+      _.isEqual(nextProps.selection, this.props.selection) &&
+      _.isEqual(nextProps.highlightedWords, this.props.highlightedWords) &&
+      _.isEqual(nextProps.highlightedAyahs, this.props.highlightedAyahs) &&
+      nextProps.assignmentName === this.props.assignmentName &&
+      nextProps.assignmentType === this.props.assignmentType
+    ) {
+      console.log("shouldUpdate: false");
+      return false;
+    }
+    console.log("shouldUpdate: true");
+    return true;
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    console.log("ms: gdsfpr");
+
+    if (
+      JSON.stringify(prevState.selection) !==
+      JSON.stringify(nextProps.selection)
+    ) {
+      let index =
+        nextProps.selection && nextProps.selection.start
+          ? 604 - nextProps.selection.start.page
+          : 3;
+
+      return {
+        selection: nextProps.selection,
+        page: nextProps.selection.start ? nextProps.selection.start.page : 3,
+        index: index,
+        key: index
+      };
+    }
+
+    return null;
+  }
+
+  // ------------------------- Event handlers --------------------------------------------
+
+  onChangePage(page, keepSelection) {
+    let index = 604 - page;
+
+    this.setState({
+      page: page,
+      index: index,
+      key: index
+    });
+
+    if (this.props.onChangePage) {
+      this.props.onChangePage(page, keepSelection);
+    }
+  }
+
+  // ------------------------ Render the Mushhaf Component ----------------------------------------
   render() {
     const { isLoading } = this.state;
+
     const highlightedWords = Object.assign({}, this.props.highlightedWords);
     const highlightedAyahs = Object.assign({}, this.props.highlightedAyahs);
+    console.log("mshfscreen");
 
     if (isLoading === true) {
       return (
@@ -179,9 +222,18 @@ export default class MushafScreen extends QcParentScreen {
               this.setState({ page: 604 - index });
             }}
           >
-            {this.state.pages.map((item, idx) =>
-              this.renderItem(item, idx, highlightedWords, highlightedAyahs)
-            )}
+            {this.state.pages.map((item, idx) => (
+              <MushafPage
+                item={item}
+                idx={idx}
+                curIndex={this.state.index}
+                highlightedWords={highlightedWords}
+                highlightedAyahs={highlightedAyahs}
+                onChangePage={this.onChangePage.bind(this)}
+                isLoading={this.state.isLoading}
+                {...this.props}
+              />
+            ))}
           </Swiper>
         </View>
       );
@@ -196,6 +248,6 @@ const styles = StyleSheet.create({
     textAlign: "right",
     fontFamily: "me_quran",
     fontSize: 30,
-    color: colors.darkGrey,
-  },
+    color: colors.darkGrey
+  }
 });
