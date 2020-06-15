@@ -65,7 +65,7 @@ exports.createStudent = functions.https.onCall(async (input, context) => {
 			classIDs: [classID],
 			currentClassID: classID,
 			emailAddress,
-			isManual,
+			isManual: true,
 			name,
 			phoneNumber,
 			profileImageID,
@@ -207,7 +207,8 @@ exports.getClassesByStudentID = functions.https.onCall(async (input, context) =>
 });
 
 //Method takes in a class ID and a student ID and returns that studen's information specific to that class. If the document
-//doesn't exist, the method returns -1
+// Method takes in a class ID and a student ID and returns that studen's information specific to that class. If the document
+// doesn't exist, the method returns -1
 exports.getStudentByClassID = functions.https.onCall(async (input, context) => {
 	const { classID, studentID } = input;
 
@@ -226,6 +227,32 @@ exports.getStudentByClassID = functions.https.onCall(async (input, context) => {
 
 	return result;
 });
+
+// This method is going to take in a classID and is going to return all the class-level student objects
+// that are appended with an array called "currentAssignments" which will contain the assignment documents
+// for the specified student
+exports.getStudentsWithCurrentAssignmentsByClassID = functions.https.onCall(
+	async (input, context) => {
+		const { classID } = input;
+
+		const result = await firestore.runTransaction(async (transaction) => {
+			const promises = [];
+
+			const classLevelStudents = Classes.doc(classID).collection('Students');
+			const collectionDocuments = await classLevelStudents.listDocuments();
+
+			for (const document of collectionDocuments) {
+				promises.push(getStudentWithCurrentAssignmentsByStudentID(document.id, classID));
+			}
+
+			const finalArray = await Promise.all(promises);
+
+			return finalArray;
+		});
+
+		return result;
+	}
+);
 
 //This method is going to take an object containing updates and a teacherID. Then it will update the teacher document
 //in Cloud Firestore. If, based on the updates, the Teacher Object also needs to updated in other locations where data
@@ -408,22 +435,25 @@ exports.disconnectStudentFromClass = functions.https.onCall(async (input, contex
 			}),
 		});
 
-		await transaction.update(Students.doc(studentID), {
-			classIDs: admin.firestore.FieldValue.arrayRemove(classID),
-		});
-
-		if (studentDocument.currentClassID === classID) {
-			if (studentDocument.classIDs.length > 1) {
-				const classIDToUpdateTo = studentDocument.classIDs.find(
-					(newClassIDs) => newClassIDs !== classID
-				);
-				await transaction.update(Students.doc(studentID), {
-					currentClassID: classIDToUpdateTo,
-				});
-			} else {
-				await transaction.update(Students.doc(studentID), {
-					currentClassID: '',
-				});
+		if (studentDocument.isManual === true) {
+			await transaction.delete(Students.doc(studentID));
+		} else {
+			await transaction.update(Students.doc(studentID), {
+				classIDs: admin.firestore.FieldValue.arrayRemove(classID),
+			});
+			if (studentDocument.currentClassID === classID) {
+				if (studentDocument.classIDs.length > 1) {
+					const classIDToUpdateTo = studentDocument.classIDs.find(
+						(newClassIDs) => newClassIDs !== classID
+					);
+					await transaction.update(Students.doc(studentID), {
+						currentClassID: classIDToUpdateTo,
+					});
+				} else {
+					await transaction.update(Students.doc(studentID), {
+						currentClassID: '',
+					});
+				}
 			}
 		}
 
@@ -961,4 +991,45 @@ const addAssignmentByStudentID = async (classID, studentID, location, name, type
 
 	sendNotification(studentID, 'New Assignment', 'Your teacher has added a new assignment for you.');
 	return newDocument.id;
+};
+
+// This global function is going to take in a student ID and a class ID and is going to return that student's object
+// along with array titled currentAssignments, containing the student's current assignments.
+const getStudentWithCurrentAssignmentsByStudentID = async (studentID, classID) => {
+	const studentDocument = Classes.doc(classID)
+		.collection('Students')
+		.doc(studentID);
+	const assignmentsNeedHelp = studentDocument
+		.collection('Assignments')
+		.where('status', '==', 'NEED_HELP')
+		.get();
+	const assignmentsReady = studentDocument
+		.collection('Assignments')
+		.where('status', '==', 'READY')
+		.get();
+	const assignmentsWorkingOnIt = studentDocument
+		.collection('Assignments')
+		.where('status', '==', 'WORKING_ON_IT')
+		.get();
+	const assignmentsNotStarted = studentDocument
+		.collection('Assignments')
+		.where('status', '==', 'NOT_STARTED')
+		.get();
+
+	const functionResults = await Promise.all([
+		studentDocument.get(),
+		assignmentsNeedHelp,
+		assignmentsReady,
+		assignmentsWorkingOnIt,
+		assignmentsNotStarted,
+	]);
+
+	const studentObject = functionResults[0].data();
+	studentObject.currentAssignments = functionResults[1].docs
+		.map((doc) => doc.data())
+		.concat(functionResults[2].docs.map((doc) => doc.data()))
+		.concat(functionResults[3].docs.map((doc) => doc.data()))
+		.concat(functionResults[4].docs.map((doc) => doc.data()));
+
+	return studentObject;
 };

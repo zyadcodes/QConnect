@@ -56,6 +56,33 @@ const LeftNavPane = (props) => {
 		setDeleteBool(!deleteBool);
 	};
 
+	// Handles the logic behind disconnecting a teacher from a class
+	const disconnectTeacher = async (classID) => {
+		// Disconnects the teacher from the class
+		await FirebaseFunctions.call('disconnectTeacherFromClass', {
+			teacherID,
+			classID,
+		});
+		if (teacher.currentClassID === classID) {
+			if (teacher.classIDs.length > 1) {
+				const newClassID = teacher.classIDs.find((eachClassID) => eachClassID !== classID);
+				props.navigation.push('TeacherCurrentClass', {
+					teacherID,
+					classID: newClassID,
+				});
+			} else {
+				props.navigation.push('TeacherCurrentClass', {
+					teacherID,
+				});
+			}
+		} else {
+			props.navigation.push('TeacherCurrentClass', {
+				teacherID,
+				classID: teacher.currentClassID,
+			});
+		}
+	};
+
 	// Returns the UI of the screen
 	return (
 		<ScrollView>
@@ -88,14 +115,7 @@ const LeftNavPane = (props) => {
 							image={classImages.images[item.classImageID]}
 							onPress={async () => {
 								if (deleteBool === true) {
-									// Disconnects the teacher from the class
-									await FirebaseFunctions.call('disconnectTeacherFromClass', {
-										teacherID,
-										classID: item.classID,
-									});
-									props.navigation.push('TeacherCurrentClass', {
-										teacherID,
-									});
+									disconnectTeacher(item.classID);
 								} else {
 									openClass(item.classID);
 								}
