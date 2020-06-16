@@ -254,7 +254,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
                 this.props.navigation.push('ShareClassCode', {
                   classInviteCode,
                   currentClassID,
-                  userID: this.state.userID,
+                  teacherID: this.state.userID,
                   currentClass,
                 })
               }
@@ -287,7 +287,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
                 this.props.navigation.push('ShareClassCode', {
                   classInviteCode,
                   currentClassID,
-                  userID: this.state.userID,
+                  teacherID: this.state.userID,
                   currentClass,
                 })
               }

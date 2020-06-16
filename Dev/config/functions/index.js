@@ -82,7 +82,7 @@ exports.createStudent = functions.https.onCall(async (input, context) => {
 });
 
 //Method takes in all the required information to create a class document, and adds it to Cloud Firestore under
-//the Classes collection.
+//the Classes collection. Returns the new class ID
 exports.createClass = functions.https.onCall(async (input, context) => {
 	const { classImageID, className, teacherID } = input;
 
@@ -106,7 +106,7 @@ exports.createClass = functions.https.onCall(async (input, context) => {
 			classIDs: admin.firestore.FieldValue.arrayUnion(newClassDocument.id),
 			currentClassID: newClassDocument.id,
 		});
-		return 0;
+		return newClassDocument.id;
 	});
 
 	return result;

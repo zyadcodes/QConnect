@@ -9,7 +9,7 @@ import FirstScreenLoader from './FirstScreenLoader/FirstScreenLoader';
 import LoginScreen from './AuthenticationScreens/LoginScreen/LoginScreen';
 import AccountTypeScreen from './AuthenticationScreens/AccountTypeScreen/AccountTypeScreen';
 import TeacherWelcomeScreen from './TeacherScreens/TeacherWelcomeScreen/TeacherWelcomeScreen';
-import AddClassScreen from './TeacherScreens/AddClass/AddClassScreen';
+import AddClassScreen from './TeacherScreens/AddClassScreen/AddClassScreen';
 import ForgotPassword from './AuthenticationScreens/ForgotPassword/ForgotPassword';
 import StudentWelcomeScren from './StudentScreens/StudentWelcomeScreen/StudentWelcomeScreen';
 import AllSettingsScreen from './SettingsScreen/AllSettingsScreen/AllSettingsScreen';
@@ -20,7 +20,7 @@ import StudentMainScreen from './StudentScreens/StudentMainScreen';
 import ClassTabsNavigator from './TeacherScreens/ClassTabs/ClassTabsNavigator';
 import StudentProfileScreen from './TeacherScreens/ClassTabs/StudentProfileScreen';
 import EvaluationPage from './Evaluation/EvaluationPage';
-import ShareClassCodeScreen from './TeacherScreens/AddStudents/ShareClassCodeScreen';
+import ShareClassCodeScreen from './TeacherScreens/ShareClassCodeScreen/ShareClassCodeScreen';
 import strings from 'config/strings';
 import TopBanner from 'components/TopBanner';
 
@@ -107,7 +107,7 @@ routeConfig = {
 		}),
 	},
 
-	AddClass: {
+	AddClassScreen: {
 		screen: AddClassScreen,
 		navigationOptions: ({ navigation }) => ({
 			header: null,

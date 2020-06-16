@@ -128,9 +128,8 @@ const LeftNavPane = (props) => {
 					title={strings.AddNewClass}
 					icon='plus'
 					onPress={() => {
-						this.props.navigation.push('AddClass', {
-							userID: teacherID,
-							teacher: teacher,
+						this.props.navigation.push('AddClassScreen', {
+							teacherID: teacherID,
 						});
 					}}
 				/>

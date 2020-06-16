@@ -300,9 +300,8 @@ const ClassMainScreen = (props) => {
 						<QcActionButton
 							text={strings.AddClassButton}
 							onPress={() => {
-								props.navigation.push('AddClass', {
+								props.navigation.push('AddClassScreen', {
 									teacherID,
-									teacher,
 								});
 							}}
 						/>
