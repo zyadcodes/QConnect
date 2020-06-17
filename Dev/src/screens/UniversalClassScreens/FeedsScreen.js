@@ -303,6 +303,9 @@ export default class FeedsScreen extends React.Component {
     }
     return (
       <SideMenu
+        onChange={isOpen => {
+          this.setState({ isOpen });
+        }}
         isOpen={this.state.isOpen}
         menu={
           <LeftNavPane
@@ -315,7 +318,6 @@ export default class FeedsScreen extends React.Component {
           />
         }
       >
-        <View per style={[localStyles.containerView, { paddingTop: 0 }]}>
           <TopBanner
             LeftIconName="navicon"
             LeftOnPress={() => this.setState({ isOpen: true })}
@@ -417,7 +419,6 @@ export default class FeedsScreen extends React.Component {
               )}
             />
           </ScrollView>
-        </View>
         {this.state.isSelectingEmoji ? (
           <EmojiSelector
             theme={colors.primaryLight}

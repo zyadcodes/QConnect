@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import React, { Component } from 'react';
-import { ActivityIndicator, StatusBar, View, AppState } from 'react-native';
-=======
 import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, StatusBar, View } from 'react-native';
->>>>>>> ef3710b129cc0b3bbdee990bd7364c9d9bfd3453
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
@@ -23,51 +18,6 @@ const FirstScreenLoader = (props) => {
 		asynUseEffect();
 	}, []);
 
-<<<<<<< HEAD
-  async tryInitUser() {
-    let ret = true;
-    await FirebaseFunctions.auth.onAuthStateChanged(async user => {
-      try {
-        if (this.state.alreadyCalled === false) {
-          this.setState({ alreadyCalled: true });
-          if (!user) {
-            this.props.navigation.push("LoginScreen");
-            return;
-          }
-          //Makes sure this user is subscribed to a topic
-          FirebaseFunctions.fcm.subscribeToTopic(user.uid);
-          const student = await FirebaseFunctions.getStudentByID(user.uid);
-          if (student !== -1) {
-            AppState.addEventListener("change", (newAppState) => {
-              if(newAppState === 'background'){
-                FirebaseFunctions.setUserActiveState(student.ID, false, 'away')
-              }
-            })
-            FirebaseFunctions.setUserActiveState(student.ID, false, 'online');
-            this.props.navigation.push("StudentCurrentClass", {
-              userID: user.uid,
-            });
-            return;
-          }
-          AppState.addEventListener("change", (newAppState) => {
-            if(newAppState === 'background'){
-              FirebaseFunctions.setUserActiveState(user.uid, true, 'away')
-            }
-          })
-          FirebaseFunctions.setUserActiveState(user.uid, true, 'online');
-          this.props.navigation.push("TeacherCurrentClass", {
-            userID: user.uid,
-          });
-          return;
-        }
-      } catch (err) {
-        console.log(JSON.stringify(err.toString()));
-        ret = false;
-      }
-    });
-    return ret;
-  }
-=======
 	// Checks if a user has been logged in. If a user has, it navigates the correct screen depending if they
 	// are a student or a teacher
 	const asynUseEffect = async () => {
@@ -77,7 +27,6 @@ const FirstScreenLoader = (props) => {
 			setAlreadyCalled(false);
 		}
 	};
->>>>>>> ef3710b129cc0b3bbdee990bd7364c9d9bfd3453
 
 	// This method leverages the Firebase Auth API to check if a user is currently logged in
 	const tryInitUser = async () => {
