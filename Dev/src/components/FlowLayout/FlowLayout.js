@@ -1,7 +1,7 @@
 // ------- FlowLayout: Sorts items in a way similar to Android's FlowLayout ------
 // items flowing through the row and then overflowing down to next columns ------
 //--------------------------------------------------------------------------------
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   StyleSheet,
@@ -14,75 +14,51 @@ import {
 } from 'react-native';
 import colors from 'config/colors';
 import strings from 'config/strings';
-import QcActionButton from './QcActionButton';
+import QcActionButton from '../QcActionButton';
 import { Badge } from 'react-native-elements';
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
 import { Icon } from 'react-native-elements';
 import _ from 'lodash';
+import styles from './FlowLayoutStyles'
 
-class FlowView extends Component {
-  static propTypes = {
-    backgroundColors: PropTypes.array,
-    textColors: PropTypes.array,
-    text: PropTypes.string,
-    isSelected: PropTypes.bool,
-    onClick: PropTypes.func,
-    readOnly: PropTypes.bool,
-  };
+const FlowView = (props) => {
+  const [isSelected, setIsSelected] = useState(props.isSelected);
 
-  static defaultProps = {
-    backgroundColors: [colors.lightGrey, colors.primaryLight],
-    textColors: [colors.darkGrey, colors.primaryDark],
-    isSelected: false,
-    readOnly: false,
-  };
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isSelected: this.props.isSelected,
-    };
+  const setSelected = (bool) => {
+    setIsSelected(bool)
   }
 
-  setSelected(bool) {
-    this.setState({
-      isSelected: bool,
-    });
-  }
-
-  _backgoundColor() {
-    if (this.state.isSelected) {
-      return this.props.backgroundColors[1];
+  const _backgoundColor = () => {
+    if (isSelected) {
+      return props.backgroundColors[1];
     } else {
-      return this.props.backgroundColors[0];
+      return props.backgroundColors[0];
     }
   }
 
-  _textColor() {
-    if (this.state.isSelected) {
-      return this.props.textColors[1];
+  const _textColor = () => {
+    if (isSelected) {
+      return props.textColors[1];
     } else {
-      return this.props.textColors[0];
+      return props.textColors[0];
     }
   }
 
-  render() {
     return (
       <View>
         <TouchableOpacity
-          disabled={this.props.readOnly}
+          disabled={props.readOnly}
           onPress={() => {
-            if (!this.props.readOnly) {
-              this.props.onClick();
+            if (!props.readOnly) {
+              props.onClick();
               if (
-                this.props.text !== strings.Ellipses &&
-                this.props.text !== strings.PlusSign &&
-                !this.props.editMode &&
-                !this.props.isBadgeVisible
+                props.text !== strings.Ellipses &&
+                props.text !== strings.PlusSign &&
+                !props.editMode &&
+                !props.isBadgeVisible
               ) {
-                this.setState({ isSelected: !this.state.isSelected });
+                setIsSelected(!isSelected)
               }
             }
           }}
@@ -92,9 +68,9 @@ class FlowView extends Component {
               styles.corner,
               {
                 flexDirection: 'row',
-                backgroundColor: this.props.backgroundColor
-                  ? this.props.backgroundColor
-                  : this._backgoundColor(),
+                backgroundColor: props.backgroundColor
+                  ? props.backgroundColor
+                  : _backgoundColor(),
               },
             ]}
           >
@@ -110,13 +86,13 @@ class FlowView extends Component {
             <Text
               style={[
                 fontStyles.smallTextStyleDarkGrey,
-                { textAlign: 'center', color: this._textColor() },
+                { textAlign: 'center', color: _textColor() },
               ]}
             >
-              {this.props.text}
+              {props.text}
             </Text>
           </View>
-          {this.props.isBadgeVisible ? (
+          {props.isBadgeVisible ? (
             <Badge
               value={strings.MinusSign}
               badgeStyle={{
@@ -134,46 +110,39 @@ class FlowView extends Component {
         </TouchableOpacity>
       </View>
     );
-  }
 }
+FlowView.propTypes = {
+  backgroundColors: PropTypes.array,
+  textColors: PropTypes.array,
+  text: PropTypes.string,
+  isSelected: PropTypes.bool,
+  onClick: PropTypes.func,
+  readOnly: PropTypes.bool,
+};
 
-export default class FlowLayout extends Component {
-  static propTypes = {
-    style: PropTypes.object,
-    dataValue: PropTypes.array,
-    title: PropTypes.string,
-    multiselect: PropTypes.bool,
-    onSelectionChanged: PropTypes.func.isRequired,
-    readOnly: PropTypes.bool,
-    selectedByDefault: PropTypes.bool,
-  };
-  static defaultProps = {
-    style: {},
-    dataValue: [],
-    multiselect: true,
-    title: strings.ImprovementAreas,
-    readOnly: false,
-    selectedByDefault: false
-  };
-  constructor(props) {
-    super(props);
-    this.state = {
-      modalVisible: false,
-      dataValue: this.props.dataValue,
-      selectedState: new Array(this.props.dataValue.length).fill(
-        this.props.selectedByDefault === true
-      ),
-      isBadgeVisible: false,
-      isNewAddition: true,
-      newImprovementText: ''
-    };
-  }
+FlowView.defaultProps = {
+  backgroundColors: [colors.lightGrey, colors.primaryLight],
+  textColors: [colors.darkGrey, colors.primaryDark],
+  isSelected: false,
+  readOnly: false,
+};
 
-  componentDidMount() {
+export default FlowLayout = (props) => {
+
+  const [modalVisible, setModalVisible] = useState(false)
+  const [dataValue, setDataValue] = useState(props.dataValue),
+  const [selectedState, setSelectedState] = useState(new Array(this.props.dataValue.length).fill(
+   this.props.selectedByDefault === true
+  ))
+  const [isBadgeVisible, setIsBadgeVisible] = useState(false)
+  const [isNewAddition, setIsNewAddition] = useState(true)
+  const [newImprovementText, setNewImprovementText] = useState('')
+
+  useEffect(() => {
     this.change();
-  }
+  }, [])
 
-  static getDerivedStateFromProps(props, state) {
+  const getDerivedStateFromProps = static (props, state) => {
     //if improvement areas have changed from the calling screen, let's reflect that here.
     //this is a quick way to check if the arrays have the same content
     if (!_.isEmpty(_.xor(props.dataValue, state.dataValue))) {
@@ -413,61 +382,20 @@ export default class FlowLayout extends Component {
     );
   }
 }
-const styles = StyleSheet.create({
-  modalStyle: {
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: screenHeight * 0.707,
-    flexDirection: 'column',
-    marginTop: screenHeight * 0.15,
-    borderWidth: 1,
-    borderRadius: 2,
-    borderColor: colors.grey,
-    borderBottomWidth: 1,
-    shadowColor: colors.darkGrey,
-    shadowOffset: { width: 0, height: 0.003 * screenHeight },
-    shadowOpacity: 0.8,
-    shadowRadius: 3,
-    elevation: 0.003 * screenHeight,
-    marginHorizontal: screenWidth * 0.05,
-  },
-  textInputStyle: {
-    backgroundColor: colors.lightGrey,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderColor: colors.grey,
-    borderWidth: 1 / PixelRatio.get(),
-    borderRadius: 5,
-    height: 30,
-    paddingHorizontal: 3,
-    marginRight: 5,
-    marginTop: 5,
-    paddingVertical: 0
-  },
-  corner: {
-    borderColor: colors.grey,
-    borderWidth: 1 / PixelRatio.get(),
-    borderRadius: 5,
-    height: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 3,
-    marginRight: 5,
-    marginTop: 5,
-  },
-  container: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginHorizontal: 0.036 * screenWidth,
-    width: screenWidth * 0.9,
-  },
-  text: {
-    fontSize: 16,
-    textAlign: 'center'
-  },
-  minusText: {
-    fontSize: 10,
-    color: colors.white,
-  },
-});
+FlowLayout.propTypes = {
+  style: PropTypes.object,
+  dataValue: PropTypes.array,
+  title: PropTypes.string,
+  multiselect: PropTypes.bool,
+  onSelectionChanged: PropTypes.func.isRequired,
+  readOnly: PropTypes.bool,
+  selectedByDefault: PropTypes.bool,
+};
+FlowLayout.defaultProps = {
+  style: {},
+  dataValue: [],
+  multiselect: true,
+  title: strings.ImprovementAreas,
+  readOnly: false,
+  selectedByDefault: false
+};
