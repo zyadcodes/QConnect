@@ -633,7 +633,9 @@ export class EvaluationPage extends QcParentScreen {
                       );
                     }
                   } catch (error) {
-                    console.log(JSON.stringify(error));
+                    console.log(
+                      "ERROR_GET_WRD_AYAH_IMPROVEMENTS" + JSON.stringify(error)
+                    );
                     FirebaseFunctions.log("ERROR_GET_WRD_AYAH_IMPROVEMENTS", {
                       error
                     });

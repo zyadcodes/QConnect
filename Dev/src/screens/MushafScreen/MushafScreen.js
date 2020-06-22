@@ -143,16 +143,12 @@ export default class MushafScreen extends QcParentScreen {
       nextProps.assignmentName === this.props.assignmentName &&
       nextProps.assignmentType === this.props.assignmentType
     ) {
-      console.log("shouldUpdate: false");
       return false;
     }
-    console.log("shouldUpdate: true");
     return true;
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    console.log("ms: gdsfpr");
-
     if (
       JSON.stringify(prevState.selection) !==
       JSON.stringify(nextProps.selection)
@@ -195,7 +191,6 @@ export default class MushafScreen extends QcParentScreen {
 
     const highlightedWords = Object.assign({}, this.props.highlightedWords);
     const highlightedAyahs = Object.assign({}, this.props.highlightedAyahs);
-    console.log("mshfscreen");
 
     if (isLoading === true) {
       return (
