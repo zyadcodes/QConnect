@@ -18,24 +18,28 @@ class EvaluationNotes extends React.Component {
   render() {
     return (
       <View>
-        <TextInput
-          style={styles.notesStyle}
-          multiline={true}
-          height={this.state.notesHeight}
-          onChangeText={teacherNotes => this.setState({ notes: teacherNotes })}
-          returnKeyType={"done"}
-          autoCorrect={false}
-          blurOnSubmit={true}
-          placeholder={strings.WriteANote}
-          placeholderColor={colors.black}
-          editable={!this.props.readOnly}
-          value={this.state.notes}
-          onFocus={() => this.setState({ notesHeight: notesHeightExpanded })}
-          onEndEditing={() => {
-            this.setState({ notesHeight: notesHeightCollapsed });
-            this.props.saveNotes(this.state.notes);
-          }}
-        />
+        {(!this.props.readOnly || (this.props.notes !== undefined && this.props.notes.length > 0)) && (
+          <TextInput
+            style={styles.notesStyle}
+            multiline={true}
+            height={this.state.notesHeight}
+            onChangeText={teacherNotes =>
+              this.setState({ notes: teacherNotes })
+            }
+            returnKeyType={"done"}
+            autoCorrect={false}
+            blurOnSubmit={true}
+            placeholder={strings.WriteANote}
+            placeholderColor={colors.black}
+            editable={!this.props.readOnly}
+            value={this.state.notes}
+            onFocus={() => this.setState({ notesHeight: notesHeightExpanded })}
+            onEndEditing={() => {
+              this.setState({ notesHeight: notesHeightCollapsed });
+              this.props.saveNotes(this.state.notes);
+            }}
+          />
+        )}
 
         {/**
         The Things to work on button.
