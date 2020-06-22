@@ -99,28 +99,28 @@ const StudentMainScreen  = (props) => {
         setIsOpen(false)
         setClasses([])
     } else {
-      const fetchedData = Promise.all(
+      const fetchedData = await Promise.all(
         [
-          FirebaseFunctions.call('getClassByID', {
+          await FirebaseFunctions.call('getClassByID', {
             classID: currentClassID
           }), 
-          FirebaseFunctions.call('getStudentWithCurrentAssignmentsByStudentID', {
+          await FirebaseFunctions.call('getStudentWithCurrentAssignmentsByStudentID', {
             classID: currentClassID,
             studentID: userID
           }), 
-          FirebaseFunctions.call('getStudentByClassID', {
+          await FirebaseFunctions.call('getStudentByClassID', {
             classID: currentClassID,
             studentID: userID
           }), 
-          FirebaseFunctions.call('getClassesByStudentID', {
+          await FirebaseFunctions.call('getClassesByStudentID', {
             studentID: student.ID
           }), 
-          FirebaseFunctions.call('getPracticeLogForStudentByWeek', {
+          await FirebaseFunctions.call('getPracticeLogForStudentByWeek', {
             studentID: userID, 
             classID: currentClassID, 
             day: determineWeekBeginning()
           }), 
-          FirebaseFunctions.call('getCompletedAssignmentsByStudentID', {
+          await FirebaseFunctions.call('getCompletedAssignmentsByStudentID', {
             classID: currentClassID, studentID: userID, limit: 3
           })
         ]
@@ -678,7 +678,7 @@ const StudentMainScreen  = (props) => {
       classID: currentClassID,
       studentID: userID,
       updates: value,
-      assignmentID: updatedAssignments[index].id
+      assignmentID: updatedAssignments[index].assignmentID
     });
 
     let toastMsg =
