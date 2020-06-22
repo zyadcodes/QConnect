@@ -38,6 +38,7 @@ import DailyTracker, { getTodaysDateString } from 'components/DailyTracker';
 import themeStyles from "config/themeStyles";
 import TouchableText from "components/TouchableText";
 import QCView from "components/QCView";
+import { Firebase } from 'react-native-firebase';
 
 const translateY = new Animated.Value(-35);
 const opacity = new Animated.Value(0);
@@ -87,7 +88,7 @@ const StudentMainScreen  = (props) => {
     );
 
     const { userID, logAsPractice } = props.navigation.state.params;
-    const student = await FirebaseFunctions.getStudentByID(userID);
+    const student = await FirebaseFunctions.call('getStudentByID', {studentID: userID});
     const { currentClassID } = student;
 
     if (currentClassID === "") {
@@ -98,17 +99,41 @@ const StudentMainScreen  = (props) => {
         setIsOpen(false)
         setClasses([])
     } else {
-      const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
-      const studentClassInfo = currentClass.students.find(student => {
-        return student.ID === userID;
-      });
-      const classes = await FirebaseFunctions.getClassesByIDs(student.classes);
+      const fetchedData = Promise.all(
+        [
+          FirebaseFunctions.call('getClassByID', {
+            classID: currentClassID
+          }), 
+          FirebaseFunctions.call('getStudentWithCurrentAssignmentsByStudentID', {
+            classID: currentClassID,
+            studentID: userID
+          }), 
+          FirebaseFunctions.call('getStudentByClassID', {
+            classID: currentClassID,
+            studentID: userID
+          }), 
+          FirebaseFunctions.call('getClassesByStudentID', {
+            studentID: student.ID
+          }), 
+          FirebaseFunctions.call('getPracticeLogForStudentByWeek', {
+            studentID: userID, 
+            classID: currentClassID, 
+            day: determineWeekBeginning()
+          }), 
+          FirebaseFunctions.call('getCompletedAssignmentsByStudentID', {
+            classID: currentClassID, studentID: userID, limit: 3
+          })
+        ]
+      )
+      const currentClass = fetchedData[0] 
+      const currentAssignments = fetchedData[1] 
+      const studentClassInfo = fetchedData[2] 
+      const classes = fetchedData[3] 
 
       //This constructs an array of the student's past assignments & only includes the "length" field which is how many
       //words that assignment was. The method returns that array which is then passed to the line graph below as the data
-      const { dailyPracticeLog, currentAssignments } = studentClassInfo;
-
-      let { assignmentHistory } = studentClassInfo;
+      const dailyPracticeLog = fetchedData[4] 
+      let assignmentHistory = fetchedData[5]
 
       const data = [];
       for (const assignment of assignmentHistory) {
@@ -167,7 +192,12 @@ const StudentMainScreen  = (props) => {
   }
 
   //------------------- end of component lifecycle methods ---------------------------
-
+  const determineWeekBeginning = () => {
+      let today = new Date();
+      let weekBeginning = today.getDate()-today.getDay();
+      let str = today.getFullYear()+'-'+today.getMonth()+'-'+weekBeginning
+      return str
+  }
   const getFormattedDateTimeString = (date) => {
     return `${date.toLocaleDateString(
       'EN-US'
@@ -178,9 +208,11 @@ const StudentMainScreen  = (props) => {
     let audioFile = -1;
     if (submission !== undefined && submission.audioFileID !== undefined) {
       //Fetches audio file for student if one is present
-      audioFile = await FirebaseFunctions.downloadAudioFile(
-        submission.audioFileID
-      );
+      audioFile = await FirebaseFunctions.call('downloadAudioByAssignmentID', {
+        assignmentID: assignment.id,
+        studentID: userID,
+        classID: currentClassID
+      });
 
       let sent = getFormattedDateTimeString(submission.sent.toDate());
 
@@ -215,10 +247,10 @@ const StudentMainScreen  = (props) => {
       Alert.alert(strings.Whoops, strings.ClassAlreadyJoined);
        setIsLoading(false);
     } else {
-      const didJoinClass = await FirebaseFunctions.joinClass(
-        student,
-        classCode
-      );
+      const didJoinClass = await FirebaseFunctions.call('joinClassByClassInviteCode', {
+        studentID = student.ID,
+        classInviteCode: classCode
+      });
       if (didJoinClass === -1) {
         Alert.alert(strings.Whoops, strings.IncorrectClassCode);
          setIsLoading(false)
@@ -277,13 +309,9 @@ const StudentMainScreen  = (props) => {
             />
           </View>
           <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              alignSelf: "center"
-            }}
+            style={styles.noClassMsgContainer}
           >
-            <View style={{ height: 100 }} />
+            <View style={styles.noClassMsgView} />
             <Text
               style={[
                 fontStyles.hugeTextStyleDarkGrey,
@@ -303,11 +331,7 @@ const StudentMainScreen  = (props) => {
 
             <Image
               source={require("assets/emptyStateIdeas/welcome-girl.png")}
-              style={{
-                width: screenWidth * 0.73,
-                height: screenHeight * 0.22,
-                resizeMode: "contain"
-              }}
+              style={styles.welcomeGirlImg}
             />
 
             <Text
@@ -316,7 +340,7 @@ const StudentMainScreen  = (props) => {
               {strings.TypeInAClassCode}
             </Text>
 
-            <View style={{ height: 100 }}>
+            <View style={styles.codeInputView}>
               <CodeInput
                 space={2}
                 size={50}
@@ -373,29 +397,17 @@ const StudentMainScreen  = (props) => {
       >
         <View style={styles.prevAssignmentCard} key={index}>
           <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center"
-            }}
+            style={styles.prevAssignmentCardFirstView}
           >
             <View
-              style={{
-                flex: 3,
-                justifyContent: "center",
-                alignItems: "flex-start"
-              }}
+              style={styles.prevAssignmentCardSecondView}
             >
               <Text style={fontStyles.mainTextStylePrimaryDark}>
                 {item.completionDate}
               </Text>
             </View>
             <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                flex: 3,
-              }}
+              style={styles.assignmentTypeView}
             >
               <Text
                 numberOfLines={1}
@@ -418,11 +430,7 @@ const StudentMainScreen  = (props) => {
               </Text>
             </View>
             <View
-              style={{
-                flex: 3,
-                justifyContent: "center",
-                alignItems: "flex-end"
-              }}
+              style={styles.ratingView}
             >
               <Rating
                 readonly={true}
@@ -432,10 +440,7 @@ const StudentMainScreen  = (props) => {
             </View>
           </View>
           <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center"
-            }}
+            style={styles.assignmentNameView}
           >
             <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>
               {item.name}
@@ -451,12 +456,7 @@ const StudentMainScreen  = (props) => {
           {item.evaluation.improvementAreas &&
           item.evaluation.improvementAreas.length > 0 ? (
             <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                height: screenHeight * 0.03,
-              }}
+              style={styles.improvementAreasContainer}
             >
               <Text
                 style={[
@@ -480,8 +480,8 @@ const StudentMainScreen  = (props) => {
                     <Icon
                       name="tag"
                       size={10}
-                      containerStyle={{ paddingRight: 5 }}
-                      style={{ paddingRight: 3 }}
+                      containerStyle={styles.simpleLineIconContainerStyle}
+                      style={styles.simpleLineIconStyle}
                       type="simple-line-icon"
                       color={colors.darkGrey}
                     />
@@ -503,7 +503,7 @@ const StudentMainScreen  = (props) => {
             <View />
           )}
           {item.submission ? (
-            <View style={{ justifyContent: "flex-end", flexDirection: "row" }}>
+            <View style={styles.microphoneIconContainer}>
               <Icon
                 name="microphone"
                 type="material-community"
@@ -543,10 +543,7 @@ const StudentMainScreen  = (props) => {
                 {student.name.toUpperCase()}
               </Text>
               <View
-                style={{
-                  flexDirection: "row",
-                  height: screenHeight * 0.04,
-                }}
+                style={styles.studentAverageRatingContainer}
               >
                 <Rating
                   readonly={true}
@@ -554,10 +551,7 @@ const StudentMainScreen  = (props) => {
                   imageSize={25}
                 />
                 <View
-                  style={{
-                    flexDirection: "column",
-                    justifyContent: "center"
-                  }}
+                  style={styles.averageRatingTextContainer}
                 >
                   <Text style={fontStyles.bigTextStyleDarkGrey}>
                     {studentClassInfo.averageRating === 0
@@ -573,11 +567,7 @@ const StudentMainScreen  = (props) => {
           </View>
           <View style={styles.profileInfoBottom}>
             <View
-              style={{
-                paddingTop: 10,
-                flexDirection: "row",
-                justifyContent: "flex-start"
-              }}
+              style={styles.attendanceTextContainer}
             >
               <Text
                 style={[
@@ -590,10 +580,7 @@ const StudentMainScreen  = (props) => {
 
               <View style={styles.classesAttended}>
                 <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "flex-start"
-                  }}
+                  style={styles.classesAttendedSecondaryView}
                 >
                   <Icon
                     name="account-check-outline"
@@ -614,13 +601,10 @@ const StudentMainScreen  = (props) => {
                   </Text>
                 </View>
               </View>
-              <View style={{ width: 20 }} />
+              <View style={styles.attendanceFillerView} />
               <View style={styles.classesMissed}>
                 <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "flex-start"
-                  }}
+                  style={styles.classesMissedSecondaryContainer}
                 >
                   <Icon
                     name="account-remove-outline"
@@ -663,11 +647,7 @@ const StudentMainScreen  = (props) => {
   const getCustomPickerTemplate = (item) => {
     return (
       <View
-        style={{
-          flexDirection: "row",
-          paddingLeft: screenWidth * 0.02,
-          justifyContent: "space-between"
-        }}
+        style={styles.isReadyEnumContainer}
       >
         <Text style={fontStyles.mainTextStylePrimaryDark}>
           {item.isReadyEnum === "READY" && strings.Ready}
@@ -676,11 +656,7 @@ const StudentMainScreen  = (props) => {
           {item.isReadyEnum === "NEED_HELP" && strings.NeedHelp}
         </Text>
         <View
-          style={{
-            flexDirection: "row",
-            paddingRight: screenWidth * 0.02,
-            justifyContent: "space-between"
-          }}
+          style={styles.changeStatusContainer}
         >
           <Text style={fontStyles.mainTextStylePrimaryDark}>
             {strings.ChangeStatus}
@@ -698,12 +674,12 @@ const StudentMainScreen  = (props) => {
         currentAssignments: updatedAssignments,
       })
 
-    FirebaseFunctions.updateStudentAssignmentStatus(
-      currentClassID,
-      userID,
-      value,
-      index
-    );
+    FirebaseFunctions.call('updateAssignmentByAssignmentID', {
+      classID: currentClassID,
+      studentID: userID,
+      updates: value,
+      assignmentID: updatedAssignments[index].id
+    });
 
     let toastMsg =
       value === "NEED_HELP"
@@ -875,11 +851,7 @@ const StudentMainScreen  = (props) => {
         overlayStyle={{ width: screenWidth * 0.9, height: 150 }}
       >
         <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            marginBottom: 10,
-          }}
+          style={styles.sendRecitationRecordingTextContainer}
         >
           <Text style={fontStyles.bigTextStylePrimaryDark}>
             Sent Recitation Recording
@@ -897,11 +869,7 @@ const StudentMainScreen  = (props) => {
           sent={submittedAudio.sent}
         />
         <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            height: 15,
-          }}
+          style={styles.resendRecordingContainer}
         >
           <TouchableText
             text="Re-send a new recording"
@@ -954,22 +922,10 @@ const StudentMainScreen  = (props) => {
 
     return (
       <View
-        style={{
-          flexDirection: "row",
-          flex: 1,
-          justifyContent: "space-between",
-          paddingVertical: 3,
-          backgroundColor: "rgba(255,255,250,0.6)",
-          borderRadius: 3,
-          marginHorizontal: 5,
-        }}
+        style={styles.statusContainer}
       >
         <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            minHeight: 25,
-          }}
+          style={styles.statusSecondaryContainer}
         >
           <Text
             style={[
@@ -986,7 +942,7 @@ const StudentMainScreen  = (props) => {
               onPress={() =>
                 updateCurrentAssignmentStatus(statusKey, assignmentIndex)
               }
-              style={{ justifyContent: "center", alignItems: "center" }}
+              style={styles.updateCurrentAssignmentTouchable}
             >
               <View
                 style={[
@@ -1037,17 +993,10 @@ const StudentMainScreen  = (props) => {
   const renderAssignmentsSectionHeader = (label, iconName, desc) => {
     return (
       <View
-        style={{
-          marginLeft: screenWidth * 0.017,
-          paddingTop: screenHeight * 0.005,
-          paddingBottom: screenHeight * 0.01,
-        }}
+        style={styles.assignmentSectionHeaderContainer}
       >
         <View
-          style={{
-            alignItems: "center",
-            flexDirection: "row"
-          }}
+          style={styles.assignmentSectionHeaderSecondaryContainer}
         >
           <Icon
             name={iconName}
@@ -1098,12 +1047,7 @@ const StudentMainScreen  = (props) => {
           <View>
             {assignmentHasAudioSubmission(index) ? (
               <View
-                style={{
-                  top: 5,
-                  left: screenWidth * 0.9,
-                  zIndex: 1,
-                  position: "absolute" // add if dont work with above
-                }}
+                style={styles.microphoneIconContainerIfAssignmentSubmitted}
               >
                 <TouchableOpacity onPress={toggleOverlay.bind(this)}>
                   <Icon
@@ -1127,20 +1071,14 @@ const StudentMainScreen  = (props) => {
             </View>
           </View>
 
-          <View style={{ flexDirection: "row", marginBottom: 5 }}>
-            <View style={{ flex: 1 }}>
+          <View style={styles.statusAvatarPrimaryContainer}>
+            <View style={styles.statusAvatarSecondaryContainer}>
               {renderStatusAvatars(item.isReadyEnum, index)}
             </View>
           </View>
           <View>
             <View
-              style={{
-                flexDirection: "row",
-                height: 50,
-                justifyContent: "center",
-                alignContent: "center",
-                flex: 1,
-              }}
+              style={styles.updateCurrentAssignmentTouchableContainer}
             >
               <TouchableHighlight
                 style={styles.cardButtonStyle}
@@ -1149,11 +1087,7 @@ const StudentMainScreen  = (props) => {
                 }
               >
                 <View
-                  style={{
-                    paddingLeft: screenWidth * 0.02,
-                    opacity: 1,
-                    flexDirection: "row"
-                  }}
+                  style={styles.checkIconContainer}
                 >
                   <Icon name="check" color={colors.primaryDark} size={15} />
                   <Text
@@ -1191,7 +1125,7 @@ const StudentMainScreen  = (props) => {
                   });
                 }}
               >
-                <View style={{ flexDirection: "row" }}>
+                <View style={styles.openBookIconContainer}>
                   <Icon
                     name="open-book"
                     type="entypo"
@@ -1226,7 +1160,7 @@ const StudentMainScreen  = (props) => {
         )}
 
         <FlatList
-          style={{ flexGrow: 0 }}
+          style={styles.assignmentCardsFlatList}
           extraData={studentClassInfo.currentAssignments}
           data={studentClassInfo.currentAssignments}
           keyExtractor={(item, index) => item.name + index + Math.random() * 10}
@@ -1250,12 +1184,7 @@ const StudentMainScreen  = (props) => {
           ]}
         >
           <View
-            style={{
-              flex: 0.5,
-              justifyContent: "center",
-              alignItems: "center",
-              paddingVertical: screenHeight * 0.04,
-            }}
+            style={styles.noAssignmentsTextContainer}
           >
             <Text style={fontStyles.bigTextStyleBlack}>
               {strings.NoAssignmentsYet}
@@ -1275,11 +1204,7 @@ const StudentMainScreen  = (props) => {
           </View>
         </View>
         <View
-          style={{
-            alignItems: "center",
-            justifyContent: "flex-start",
-            alignSelf: "center"
-          }}
+          style={styles.readQuranMotivationContainer}
         >
           <Text
             style={[
@@ -1304,10 +1229,7 @@ const StudentMainScreen  = (props) => {
 
           <Image
             source={require("assets/emptyStateIdeas/student-read.png")}
-            style={{
-              height: 0.16 * screenHeight,
-              resizeMode: "contain"
-            }}
+            style={styles.studentReadingImage}
           />
 
           <QcActionButton
@@ -1337,11 +1259,11 @@ const StudentMainScreen  = (props) => {
     return (
       <View>
         {wordsPerAssignmentData.length > 0 && (
-          <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <View style={styles.wordsPerAssignmentContainer}>
             <Text style={fontStyles.bigTextStyleBlack}>
               {strings.WordsPerAssignment}
             </Text>
-            <View style={{ height: screenHeight * 0.0075 }} />
+            <View style={styles.wordsPerAssignmentFiller} />
             <LineChart
               data={{
                 labels:
@@ -1417,12 +1339,12 @@ const StudentMainScreen  = (props) => {
 
     //we only send notification if user toggled a new day
     let sendNotifications = !untoggleAction;
-    FirebaseFunctions.updateDailyPracticeTracker(
-      currentClassID,
-      userID,
-      dailyPracticeLog,
-      sendNotifications
-    );
+    FirebaseFunctions.call('addPracticeLogForStudentByWeek', {
+      classID: currentClassID,
+      studentID: userID,
+      practiceLog: dailyPracticeLog,
+      day: determineWeekBeginning()
+    });
 
     setDailyPracticeLog(dailyPracticeLog)
   }
@@ -1432,7 +1354,7 @@ const StudentMainScreen  = (props) => {
     if (isLoading === true) {
       return (
         <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          style={styles.loadingSpinnerContainer}
         >
           <LoadingSpinner isVisible={true} />
         </View>
