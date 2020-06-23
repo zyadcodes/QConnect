@@ -101,26 +101,26 @@ const StudentMainScreen  = (props) => {
     } else {
       const fetchedData = await Promise.all(
         [
-          await FirebaseFunctions.call('getClassByID', {
+          FirebaseFunctions.call('getClassByID', {
             classID: currentClassID
           }), 
-          await FirebaseFunctions.call('getStudentWithCurrentAssignmentsByStudentID', {
+          FirebaseFunctions.call('getStudentWithCurrentAssignmentsByStudentID', {
             classID: currentClassID,
             studentID: userID
           }), 
-          await FirebaseFunctions.call('getStudentByClassID', {
+          FirebaseFunctions.call('getStudentByClassID', {
             classID: currentClassID,
             studentID: userID
           }), 
-          await FirebaseFunctions.call('getClassesByStudentID', {
+          FirebaseFunctions.call('getClassesByStudentID', {
             studentID: student.ID
           }), 
-          await FirebaseFunctions.call('getPracticeLogForStudentByWeek', {
+          FirebaseFunctions.call('getPracticeLogForStudentByWeek', {
             studentID: userID, 
             classID: currentClassID, 
             day: determineWeekBeginning()
           }), 
-          await FirebaseFunctions.call('getCompletedAssignmentsByStudentID', {
+          FirebaseFunctions.call('getCompletedAssignmentsByStudentID', {
             classID: currentClassID, studentID: userID, limit: 3
           })
         ]
@@ -209,7 +209,7 @@ const StudentMainScreen  = (props) => {
     if (submission !== undefined && submission.audioFileID !== undefined) {
       //Fetches audio file for student if one is present
       audioFile = await FirebaseFunctions.call('downloadAudioByAssignmentID', {
-        assignmentID: assignment.id,
+        assignmentID: assignment.assignmentID,
         studentID: userID,
         classID: currentClassID
       });
