@@ -47,7 +47,7 @@ class MushafPage extends React.Component {
           page={itemInt}
           hideHeader={hideHeader}
           showSelectedLinesOnly={showSelectedLinesOnly}
-          showTooltipOnPress={showTooltipOnPress === true} //if the prop is not passed, we default to false
+          showTooltipOnPress={showTooltipOnPress} //if the prop is not passed, we default to false
           onChangePage={onChangePage}
           highlightedWords={highlightedWords}
           highlightedAyahs={highlightedAyahs}

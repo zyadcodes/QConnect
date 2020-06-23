@@ -121,11 +121,21 @@ const TextLine = ({
               if (isFirstSelectedWord) {
                 isFirstWord = false;
               }
+
+              let showTooltip = false;
+              if (
+                showTooltipOnPress === "true" ||
+                (showTooltipOnPress === "whenHighlighted" &&
+                  isCurWordHighlighted === true)
+              ) {
+                showTooltip = true;
+              }
+
               return (
                 <AyahSelectionWord
                   key={word.id}
                   word={word}
-                  showTooltipOnPress={showTooltipOnPress}
+                  showTooltipOnPress={showTooltip}
                   // the margins and border radius are different between the cases
                   //  of when a word is selected separately or the entire ayah is selected
                   // together. That's why we are passing these as different props
@@ -141,12 +151,21 @@ const TextLine = ({
                 />
               );
             } else if (word.char_type === "end") {
+              let showTooltip = false;
+              if (
+                showTooltipOnPress === "true" ||
+                (showTooltipOnPress === "whenHighlighted" &&
+                  isCurAyahHighlighted === true)
+              ) {
+                showTooltip = true;
+              }
+
               return (
                 <EndOfAyah
                   key={word.id}
                   word={word}
                   curAyah={curAyah}
-                  showTooltipOnPress={showTooltipOnPress}
+                  showTooltipOnPress={showTooltip}
                   onPress={() => onSelectAyah(curAyah, word)}
                   highlighted={highlighted}
                   showLoading={showLoading}

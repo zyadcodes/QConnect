@@ -444,7 +444,7 @@ export class EvaluationPage extends QcParentScreen {
       >
         {this.props.navigation.state.params.newAssignment === true ? (
           <Header
-            title={strings.Evaluation}
+            title={assignmentType}
             subtitle={assignmentName}
             avatarName={classStudent.name}
             avatarImage={studentImages.images[profileImageID]}
@@ -466,7 +466,7 @@ export class EvaluationPage extends QcParentScreen {
           />
         ) : (
           <Header
-            title={strings.Evaluation}
+            title={assignmentType}
             avatarName={classStudent.name}
             subtitle={assignmentName}
             avatarImage={studentImages.images[profileImageID]}
@@ -568,7 +568,6 @@ export class EvaluationPage extends QcParentScreen {
                   )}
                   saveNotes={evalNotes => this.onSaveNotes(evalNotes)}
                   notes={this.state.notes}
-
                   selectedImprovementAreas={this.state.selectedImprovementAreas}
                   userID={this.props.navigation.state.params.userID}
                 />
@@ -589,7 +588,7 @@ export class EvaluationPage extends QcParentScreen {
                 hideHeader={true}
                 showSelectedLinesOnly={false}
                 classID={classID}
-                showTooltipOnPress={true}
+                showTooltipOnPress={readOnly ? "whenHighlighted" : "true"}
                 profileImage={studentImages.images[profileImageID]}
                 showLoadingOnHighlightedAyah={
                   this.state.isAudioLoading === true &&
