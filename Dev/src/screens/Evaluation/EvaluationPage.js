@@ -567,6 +567,10 @@ export class EvaluationPage extends QcParentScreen {
                     this
                   )}
                   saveNotes={evalNotes => this.onSaveNotes(evalNotes)}
+                  notes={this.state.notes}
+
+                  selectedImprovementAreas={this.state.selectedImprovementAreas}
+                  userID={this.props.navigation.state.params.userID}
                 />
               )}
             </View>
