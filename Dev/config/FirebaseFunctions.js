@@ -4,6 +4,7 @@ import firebase from "react-native-firebase";
 import strings from "./strings";
 import _ from "lodash";
 import moment from "moment";
+import { Alert } from "react-native";
 
 export default class FirebaseFunctions {
   //References that'll be used throughout the class's static functions
@@ -536,28 +537,33 @@ export default class FirebaseFunctions {
 
       if (indexOfAssignment !== -1) {
         student.currentAssignments.splice(indexOfAssignment, 1);
+        arrayOfStudents[studentIndex] = student;
+
+        await this.updateClassObject(classID, {
+          students: arrayOfStudents,
+        });
+        this.analytics.logEvent("COMPLETE_CURRENT_ASSIGNMENT", {
+          improvementAreas: evaluationDetails.improvementAreas,
+        });
+
+        //Notifies that student that their assignment has been graded
+        this.functions.httpsCallable("sendNotification")({
+          topic: studentID,
+          title: strings.AssignmentGraded,
+          body: strings.YourAssignmentHasBeenGraded,
+        });
       } else {
         console.log(
           "failed to locate currentAssignment: " +
-            JSON.stringify(evaluationDetails.name)
+            JSON.stringify(evaluationDetails.name) +
+            ". Assingments: " +
+            JSON.stringify(student.currentAssignments)
+        );
+        Alert.alert(
+          "Failed to save the assignment. Please try again. " +
+            evaluationDetails.name
         );
       }
-
-      arrayOfStudents[studentIndex] = student;
-
-      await this.updateClassObject(classID, {
-        students: arrayOfStudents,
-      });
-      this.analytics.logEvent("COMPLETE_CURRENT_ASSIGNMENT", {
-        improvementAreas: evaluationDetails.improvementAreas,
-      });
-
-      //Notifies that student that their assignment has been graded
-      this.functions.httpsCallable("sendNotification")({
-        topic: studentID,
-        title: strings.AssignmentGraded,
-        body: strings.YourAssignmentHasBeenGraded,
-      });
     } catch (err) {
       this.logEvent("EVALUATE_ASSIGNMENT_FAILED", { err });
       console.log(JSON.stringify(err.toString()));
