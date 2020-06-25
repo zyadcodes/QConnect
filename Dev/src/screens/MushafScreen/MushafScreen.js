@@ -11,7 +11,7 @@ import * as _ from "lodash";
 
 class MushafPage extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.curIndex === nextProps.idx){
+    if (nextProps.curIndex === nextProps.idx) {
       return true;
     }
     return false;
@@ -41,6 +41,7 @@ class MushafPage extends React.Component {
     } = this.props;
 
     const itemInt = parseInt(item);
+
     return (
       <View style={{ flex: 1 }} key={idx}>
         <SelectionPage
@@ -106,9 +107,9 @@ export default class MushafScreen extends QcParentScreen {
     pages: [],
     key: 1,
     index:
-      this.props.selection && this.props.selection.start
+      this.props.selection && this.props.selection.start.page > 0
         ? 604 - this.props.selection.start.page
-        : 3,
+        : 603,
     classID: this.props,
     studentID: this.props.studentID,
     assignmentType: this.props.assignmentType,
@@ -125,6 +126,12 @@ export default class MushafScreen extends QcParentScreen {
       pages: allPages,
       isLoading: false
     });
+
+    if (this.props.selection && this.props.selection.start.page > 0) {
+      this.setState({ index: 604 - this.props.selection.start.page });
+    } else {
+      this.setState({ index: 603 });
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -149,10 +156,7 @@ export default class MushafScreen extends QcParentScreen {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (
-      JSON.stringify(prevState.selection) !==
-      JSON.stringify(nextProps.selection)
-    ) {
+    if (!_.isEqual(prevState.selection, nextProps.selection)) {
       let index =
         nextProps.selection && nextProps.selection.start
           ? 604 - nextProps.selection.start.page
@@ -214,13 +218,15 @@ export default class MushafScreen extends QcParentScreen {
             loadMinimalSize={1}
             showsPagination={false}
             onIndexChanged={index => {
-              this.setState({ page: 604 - index });
+              console.log("test: " + index);
+              this.setState({ page: 604 - index, index });
             }}
           >
             {this.state.pages.map((item, idx) => (
               <MushafPage
                 item={item}
                 idx={idx}
+                page={this.state.page}
                 curIndex={this.state.index}
                 highlightedWords={highlightedWords}
                 highlightedAyahs={highlightedAyahs}
