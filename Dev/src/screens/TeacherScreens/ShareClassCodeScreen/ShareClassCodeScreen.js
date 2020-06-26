@@ -18,7 +18,7 @@ import styles from './ShareClassCodeScreenStyle';
 // Creates the functional component
 const ShareClassCodeScreen = (props) => {
 	// Fetches all the correct fields from the props
-	const { classInviteCode, classID, currentClass, teacherID } = props;
+	const { classInviteCode, classID, currentClass, teacherID } = props.navigation.state.params;
 
 	// Renders the UI of the screen
 	return (
@@ -28,7 +28,7 @@ const ShareClassCodeScreen = (props) => {
 			</View>
 			<View style={styles.classCode}>
 				<View style={styles.classCodeContainer}>
-					<Text style={[fontStyles.bigTextStyleBlack, ...styles.marginBottom]}>
+					<Text style={[fontStyles.bigTextStyleBlack, styles.marginBottom]}>
 						{strings.YourClassCode}
 					</Text>
 				</View>
@@ -70,8 +70,7 @@ const ShareClassCodeScreen = (props) => {
 					onPress={() => {
 						props.navigation.push('AddManualStudents', {
 							teacherID,
-							classInviteCode: classInviteCode,
-							classID: currentClassID,
+							classID,
 							currentClass,
 						});
 					}}>

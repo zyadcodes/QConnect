@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, StatusBar, View } from 'react-native';
-import FirebaseFunctions from 'config/FirebaseFunctions';
+import FirebaseFunctions from '../../../config/FirebaseFunctions';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import OfflineEmptyState from 'components/OfflineEmptyState/OfflineEmptyState';

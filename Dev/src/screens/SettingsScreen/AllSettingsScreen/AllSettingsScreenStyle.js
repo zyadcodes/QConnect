@@ -1,6 +1,7 @@
 // This is going to contain the StyleSheet for the AllSettingsScreen
 import { StyleSheet } from 'react-native';
 import { screenHeight, screenWidth } from 'config/dimensions';
+import colors from 'config/colors';
 
 export default StyleSheet.create({
 	container: {

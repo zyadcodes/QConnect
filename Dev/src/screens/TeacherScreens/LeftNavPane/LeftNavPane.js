@@ -111,7 +111,7 @@ const LeftNavPane = (props) => {
 					keyExtractor={(item, index) => item.classID}
 					renderItem={({ item, index }) => (
 						<QcDrawerItem
-							title={item.name}
+							title={item.className}
 							image={classImages.images[item.classImageID]}
 							onPress={async () => {
 								if (deleteBool === true) {
@@ -128,7 +128,7 @@ const LeftNavPane = (props) => {
 					title={strings.AddNewClass}
 					icon='plus'
 					onPress={() => {
-						this.props.navigation.push('AddClassScreen', {
+						props.navigation.push('AddClassScreen', {
 							teacherID: teacherID,
 						});
 					}}

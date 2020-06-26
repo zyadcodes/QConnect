@@ -1,6 +1,7 @@
 // This is going to contain the StyleSheet for the credits screen
 import { StyleSheet } from 'react-native';
 import { screenWidth, screenHeight } from 'config/dimensions';
+import colors from 'config/colors';
 
 export default StyleSheet.create({
     container: {

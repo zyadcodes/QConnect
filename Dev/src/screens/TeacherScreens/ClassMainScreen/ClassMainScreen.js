@@ -35,21 +35,22 @@ import styles from './ClassMainScreenStyle';
 const ClassMainScreen = (props) => {
 	// The state fields for this screen
 	const [isLoading, setIsLoading] = useState(true);
-	const [teacherID, setTeacherID] = useState(props.teacherID);
+	const [teacherID, setTeacherID] = useState(props.navigation.state.params.teacherID);
 	const [teacher, setTeacher] = useState('');
-	const [classID, setClassID] = useState(props.classID);
+	const [classID, setClassID] = useState(props.navigation.state.params.classID);
 	const [currentClass, setCurrentClass] = useState('');
 	const [isLeftNavOpen, setIsLeftNavOpen] = useState(false);
 	const [allTeacherClasses, setAllTeacherClasses] = useState('');
 	const [isEditingClass, setIsEditingClass] = useState(false);
 	const [doesTeacherHaveClasses, setDoesTeacherHaveClasses] = useState(
-		props.classID ? true : false
+		props.navigation.state.params.classID ? true : false
 	);
 	const [studentsNeedHelp, setStudentsNeedHelp] = useState([]);
 	const [studentsReady, setStudentsReady] = useState([]);
 	const [studentsWorkingOnIt, setStudentsWorkingOnIt] = useState([]);
 	const [studentsNotStarted, setStudentsNotStarted] = useState([]);
 	const [studentsWithNoAssignments, setStudentsWithNoAssignments] = useState([]);
+	const [updateBoolean, setUpdateBoolean] = useState(true);
 
 	// The useEffect method acts as the componentDidMount method, which is called when the screen is first initialized.
 	// This method is going to set the screen in Firebase analytics, then will call another helper function to fetch
@@ -136,6 +137,7 @@ const ClassMainScreen = (props) => {
 					arrayOfClassStudents.splice(indexOfStudent, 1);
 					updatedClass.students = arrayOfClassStudents;
 					setCurrentClass(updatedClass);
+					setUpdateBoolean(!updateBoolean);
 				},
 			},
 			{ text: strings.Cancel, style: 'cancel' },
@@ -174,7 +176,7 @@ const ClassMainScreen = (props) => {
 					<Icon name={sectionIcon} type={sectionIconType} color={sectionColor} />
 					<Text
 						style={[
-							...styles.sectionTitleTextStyle,
+							styles.sectionTitleTextStyle,
 							fontStyles.mainTextStyleDarkRed,
 							{ color: sectionColor },
 						]}>
@@ -192,6 +194,7 @@ const ClassMainScreen = (props) => {
 							currentAssignments={item.currentAssignments}
 							onPress={() =>
 								props.navigation.push('TeacherStudentProfile', {
+									currentAssignments: item.currentAssignments,
 									teacherID,
 									studentID: item.studentID,
 									currentClass,
@@ -422,7 +425,7 @@ const ClassMainScreen = (props) => {
 						}}
 					/>
 				</View>
-				{isEditing && (
+				{isEditingClass && (
 					<View style={styles.AddStudentButton}>
 						<TouchableText
 							text={strings.AddStudents}

@@ -18,7 +18,7 @@ const AddClassScreen = (props) => {
 	const [className, setClassName] = useState('');
 	const [classImageID, setClassImageID] = useState(Math.floor(Math.random() * 10));
 	const [modalVisible, setModalVisible] = useState(false);
-	const [teacherID, setTeacherID] = useState(props.teacherID);
+	const [teacherID, setTeacherID] = useState(props.navigation.state.params.teacherID);
 	const [isLoading, setIsLoading] = useState(false);
 
 	// The useEffect method acts as a componentDidMount and gets called when the component is mounted first. It will
@@ -30,13 +30,12 @@ const AddClassScreen = (props) => {
 	// This method is going to add a new class based on the teacher's entered information to Cloud Firestore
 	const addNewClass = async () => {
 		setIsLoading(true);
-
+		console.log(1);
 		if (className.trim().length === 0) {
 			Alert.alert(strings.Whoops, strings.PleaseMakeSureAllFieldsAreFilledOut);
 			setIsLoading(false);
 			return;
 		}
-
 		const newClassID = await FirebaseFunctions.call('createClass', {
 			classImageID,
 			className,
@@ -107,7 +106,6 @@ const AddClassScreen = (props) => {
 						onPress={() => {
 							addNewClass();
 						}}
-						screen={name}
 					/>
 				</View>
 			</View>

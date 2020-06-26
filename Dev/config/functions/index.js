@@ -16,7 +16,6 @@ const firestore = admin.firestore();
 const Teachers = firestore.collection('Teachers');
 const Classes = firestore.collection('Classes');
 const Students = firestore.collection('Students');
-const batch = firestore.batch();
 
 // -------------------------- Document Creators, Getters, and Updaters --------------------------
 
@@ -24,6 +23,8 @@ const batch = firestore.batch();
 //the Teachers collection.
 exports.createTeacher = functions.https.onCall(async (input, context) => {
 	const { emailAddress, name, phoneNumber, profileImageID, teacherID } = input;
+
+	const batch = firestore.batch();
 
 	batch.create(Teachers.doc(teacherID), {
 		classIDs: [],
@@ -45,6 +46,7 @@ exports.createTeacher = functions.https.onCall(async (input, context) => {
 exports.createStudent = functions.https.onCall(async (input, context) => {
 	const { emailAddress, isManual, name, phoneNumber, profileImageID, studentID } = input;
 
+	const batch = firestore.batch();
 	if (isManual === false) {
 		batch.create(Students.doc(studentID), {
 			classIDs: [],
@@ -58,7 +60,7 @@ exports.createStudent = functions.https.onCall(async (input, context) => {
 		});
 		await batch.commit();
 
-		return 0;
+		return studentID;
 	} else {
 		const { classID, classInviteCode } = isManual;
 		const newDocument = await Students.add({
@@ -77,7 +79,7 @@ exports.createStudent = functions.https.onCall(async (input, context) => {
 
 		await joinClassByClassInviteCode(classInviteCode, docID);
 
-		return 0;
+		return newDocument.id;
 	}
 });
 
@@ -288,6 +290,7 @@ exports.updateTeacherByID = functions.https.onCall(async (input, context) => {
 			await transaction.update(Teachers.doc(teacherID), updates);
 		});
 	} else {
+		const batch = firestore.batch();
 		batch.update(Teachers.doc(teacherID), updates);
 		await batch.commit();
 	}
@@ -346,6 +349,7 @@ exports.updateStudentByID = functions.https.onCall(async (input, context) => {
 			await transaction.update(Students.doc(studentID), updates);
 		});
 	} else {
+		const batch = firestore.batch();
 		batch.update(Students.doc(studentID), updates);
 		await batch.commit();
 	}
@@ -357,7 +361,7 @@ exports.updateStudentByID = functions.https.onCall(async (input, context) => {
 //in Cloud Firestore.
 exports.updateClassByID = functions.https.onCall(async (input, context) => {
 	const { classID, updates } = input;
-
+	const batch = firestore.batch();
 	batch.update(Classes.doc(classID), updates);
 	await batch.commit();
 	return 0;

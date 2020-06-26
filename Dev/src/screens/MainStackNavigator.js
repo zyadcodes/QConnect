@@ -14,11 +14,11 @@ import ForgotPassword from './AuthenticationScreens/ForgotPassword/ForgotPasswor
 import StudentWelcomeScren from './StudentScreens/StudentWelcomeScreen/StudentWelcomeScreen';
 import AllSettingsScreen from './SettingsScreen/AllSettingsScreen/AllSettingsScreen';
 import CreditsScreen from './SettingsScreen/CreditsScreen/CreditsScreen';
-import ProfileScreen from './ProfileScreen';
-import AddManualStudentsScreen from './TeacherScreens/AddStudents/AddManualStudentsScreen';
+import ProfileScreen from './ProfileScreen/ProfileScreen';
+import AddManualStudentsScreen from './TeacherScreens/AddManualStudentsScreen/AddManualStudentsScreen';
 import StudentMainScreen from './StudentScreens/StudentMainScreen';
 import ClassTabsNavigator from './TeacherScreens/ClassTabs/ClassTabsNavigator';
-import StudentProfileScreen from './TeacherScreens/ClassTabs/StudentProfileScreen';
+import StudentProfileScreen from './TeacherScreens/StudentProfileScreen/StudentProfileScreen';
 import EvaluationPage from './Evaluation/EvaluationPage';
 import ShareClassCodeScreen from './TeacherScreens/ShareClassCodeScreen/ShareClassCodeScreen';
 import strings from 'config/strings';
