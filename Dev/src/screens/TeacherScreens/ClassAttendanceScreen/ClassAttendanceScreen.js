@@ -40,9 +40,6 @@ const ClassAttendanceScreen = (props) => {
 	const [attendanceObject, setAttendanceObject] = useState('');
 	const [absent, setAbsent] = useState([]);
 
-	// The toast reference
-	const toast = useRef();
-
 	// The useEffect method is going to set the initial state of the screen by fetching the correct information
 	// about the teacher, the current attendance, etc.
 	useEffect(() => {
@@ -89,10 +86,6 @@ const ClassAttendanceScreen = (props) => {
 			attendanceObject,
 		});
 		setIsLoading(false);
-		toast.current.show(
-			strings.AttendanceFor + selectedDate + strings.HasBeenSaved,
-			DURATION.LENGTH_SHORT
-		);
 	};
 
 	// This handles the state setting of the attendance. It will split the attendance into two arrays, one with present
@@ -168,6 +161,7 @@ const ClassAttendanceScreen = (props) => {
 			</SideMenu>
 		);
 	}
+
 	return (
 		<SideMenu
 			isOpen={isOpen}
@@ -186,21 +180,19 @@ const ClassAttendanceScreen = (props) => {
 						<TopBanner
 							LeftIconName='navicon'
 							LeftOnPress={() => setIsOpen(true)}
-							Title={currentClass.name}
+							Title={currentClass.className}
 						/>
 					</View>
 					<View style={styles.saveAttendance}>
 						<DailyTracker
 							data={{
 								[selectedDate]: { type: 'attendance' },
-								attendance,
 							}}
 							selectedDate={selectedDate}
 							trackingMode={false}
 							onDatePressed={async (date) => {
 								setIsLoading(true);
-								const dateObject = new Date(date);
-								const dateString = convertDateToString(dateObject);
+								const dateString = date.dateString;
 								setSelectedDate(dateString);
 								await setAttendance(dateString);
 								setIsLoading(false);
@@ -214,7 +206,7 @@ const ClassAttendanceScreen = (props) => {
 					</View>
 					{(absent.length !== 0 || present.length !== 0) && (
 						<View style={styles.attendanceTextContainer}>
-							<Text style={[fontStyles.mainTextStyleDarkGrey, ...styles.attendanceText]}>
+							<Text style={[fontStyles.mainTextStyleDarkGrey, styles.attendanceText]}>
 								{strings.Attendance}:
 							</Text>
 
@@ -226,7 +218,7 @@ const ClassAttendanceScreen = (props) => {
 										color={colors.darkGreen}
 										size={20}
 									/>
-									<Text style={[fontStyles.mainTextStyleDarkGreen, ...styles.attendanceText]}>
+									<Text style={[fontStyles.mainTextStyleDarkGreen, styles.attendanceText]}>
 										{strings.Present}
 									</Text>
 									<Text style={[fontStyles.mainTextStyleDarkGreen]}>{present.length}</Text>
@@ -241,7 +233,7 @@ const ClassAttendanceScreen = (props) => {
 										color={colors.darkRed}
 										size={20}
 									/>
-									<Text style={[fontStyles.mainTextStyleDarkRed, ...styles.attendanceText]}>
+									<Text style={[fontStyles.mainTextStyleDarkRed, styles.attendanceText]}>
 										{strings.Absent}
 									</Text>
 									<Text style={[fontStyles.mainTextStyleDarkRed]}>{absent.length}</Text>
@@ -263,8 +255,9 @@ const ClassAttendanceScreen = (props) => {
 								profilePic={studentImages.images[student.profileImageID]}
 								background={color}
 								onPress={() => {
+									console.log(attendanceObject);
 									const isHere = attendanceObject[student.studentID];
-									if (isHere === true) {
+									if (isHere === undefined || isHere === true) {
 										setAttendanceObject({ ...attendanceObject, [student.studentID]: false });
 										const updatedAbsent = absent;
 										updatedAbsent.push(student.studentID);
@@ -291,7 +284,6 @@ const ClassAttendanceScreen = (props) => {
 							/>
 						);
 					})}
-					<Toast position={'center'} ref='toast' />
 				</ScrollView>
 			</QCView>
 		</SideMenu>

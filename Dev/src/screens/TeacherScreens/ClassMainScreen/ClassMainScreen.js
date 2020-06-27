@@ -150,6 +150,7 @@ const ClassMainScreen = (props) => {
 		let updatedClass = currentClass;
 		updatedClass.className = newTitle;
 		setCurrentClass(updatedClass);
+		setUpdateBoolean(!updateBoolean);
 	};
 
 	// This method is going to handle the profile picture change logic of the class. It'll change the local state just so the
@@ -158,6 +159,7 @@ const ClassMainScreen = (props) => {
 		let updatedClass = currentClass;
 		updatedClass.classImageID = picID;
 		setCurrentClass(updatedClass);
+		setUpdateBoolean(!updateBoolean);
 	};
 
 	// This method is going to be a helper method in the render function. It will render each student
@@ -401,19 +403,19 @@ const ClassMainScreen = (props) => {
 						profileImageID={currentClass.classImageID}
 						RightOnPress={() => {
 							if (isEditingClass === true) {
-								if (currentClass.name.trim() === '') {
+								if (currentClass.className.trim() === '') {
 									Alert.alert(strings.Whoops, strings.AddText);
 								} else {
 									FirebaseFunctions.call('updateClassByID', {
 										classID,
 										updates: {
-											classImageID: picID,
+											classImageID: currentClass.classImageID,
 										},
 									});
 									FirebaseFunctions.call('updateClassByID', {
 										classID,
 										updates: {
-											className: newTitle,
+											className: currentClass.className,
 										},
 									});
 									setIsEditingClass(false);
