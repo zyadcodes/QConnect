@@ -71,10 +71,8 @@ const TextLine = ({
                   key={word.id}
                   word={word}
                   showTooltipOnPress={showTooltipOnPress}
-                  isWordHighlighted={isCurWordHighlighted}
-                  isAyahHighlighted={isCurAyahHighlighted}
-                  highlightedColor={highlightedColor}
                   highlighted={highlighted}
+                  highlightedColor={highlightedColor}
                   selected={false}
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={false}
@@ -145,7 +143,6 @@ const TextLine = ({
                   isWordHighlighted={isCurWordHighlighted}
                   isAyahHighlighted={isCurAyahHighlighted}
                   highlightedColor={highlightedColor}
-                  highlighted={highlighted}
                   selected={isAyaSelected}
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={isFirstSelectedWord}
