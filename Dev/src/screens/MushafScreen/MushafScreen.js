@@ -11,7 +11,10 @@ import * as _ from "lodash";
 
 class MushafPage extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.curIndex === nextProps.idx){
+    if (
+      nextProps.curIndex === nextProps.idx &&
+      nextProps.page === this.props.page
+    ) {
       return true;
     }
     return false;
@@ -105,10 +108,14 @@ export default class MushafScreen extends QcParentScreen {
   state = {
     pages: [],
     key: 1,
+    page:
+      this.props.selection && this.props.selection.start
+        ? this.props.selection.start.page
+        : 1,
     index:
       this.props.selection && this.props.selection.start
         ? 604 - this.props.selection.start.page
-        : 3,
+        : 603,
     classID: this.props,
     studentID: this.props.studentID,
     assignmentType: this.props.assignmentType,
@@ -132,6 +139,7 @@ export default class MushafScreen extends QcParentScreen {
       nextState.isLoading === this.state.isLoading &&
       nextState.pages === this.state.pages &&
       nextState.index === this.state.index &&
+      nextState.page === this.state.page &&
       nextState.assignmentType === this.state.assignmentType &&
       nextProps.assignToID === this.props.assignToID &&
       nextProps.profileImage === this.props.profileImage &&
@@ -156,11 +164,11 @@ export default class MushafScreen extends QcParentScreen {
       let index =
         nextProps.selection && nextProps.selection.start
           ? 604 - nextProps.selection.start.page
-          : 3;
+          : 603;
 
       return {
         selection: nextProps.selection,
-        page: nextProps.selection.start ? nextProps.selection.start.page : 3,
+        page: nextProps.selection.start ? nextProps.selection.start.page : 1,
         index: index,
         key: index
       };
@@ -221,7 +229,8 @@ export default class MushafScreen extends QcParentScreen {
               <MushafPage
                 item={item}
                 idx={idx}
-                curIndex={this.state.index}
+                page={this.state.page}
+                curIndex={604 - this.state.page}
                 highlightedWords={highlightedWords}
                 highlightedAyahs={highlightedAyahs}
                 onChangePage={this.onChangePage.bind(this)}
