@@ -11,7 +11,10 @@ import * as _ from "lodash";
 
 class MushafPage extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.curIndex === nextProps.idx) {
+    if (
+      nextProps.curIndex === nextProps.idx &&
+      nextProps.page === this.props.page
+    ) {
       return true;
     }
     return false;
@@ -41,7 +44,6 @@ class MushafPage extends React.Component {
     } = this.props;
 
     const itemInt = parseInt(item);
-
     return (
       <View style={{ flex: 1 }} key={idx}>
         <SelectionPage
@@ -106,8 +108,12 @@ export default class MushafScreen extends QcParentScreen {
   state = {
     pages: [],
     key: 1,
+    page:
+      this.props.selection && this.props.selection.start
+        ? this.props.selection.start.page
+        : 1,
     index:
-      this.props.selection && this.props.selection.start.page > 0
+      this.props.selection && this.props.selection.start
         ? 604 - this.props.selection.start.page
         : 603,
     classID: this.props,
@@ -126,12 +132,6 @@ export default class MushafScreen extends QcParentScreen {
       pages: allPages,
       isLoading: false
     });
-
-    if (this.props.selection && this.props.selection.start.page > 0) {
-      this.setState({ index: 604 - this.props.selection.start.page });
-    } else {
-      this.setState({ index: 603 });
-    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -139,6 +139,7 @@ export default class MushafScreen extends QcParentScreen {
       nextState.isLoading === this.state.isLoading &&
       nextState.pages === this.state.pages &&
       nextState.index === this.state.index &&
+      nextState.page === this.state.page &&
       nextState.assignmentType === this.state.assignmentType &&
       nextProps.assignToID === this.props.assignToID &&
       nextProps.profileImage === this.props.profileImage &&
@@ -156,15 +157,18 @@ export default class MushafScreen extends QcParentScreen {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (!_.isEqual(prevState.selection, nextProps.selection)) {
+    if (
+      JSON.stringify(prevState.selection) !==
+      JSON.stringify(nextProps.selection)
+    ) {
       let index =
         nextProps.selection && nextProps.selection.start
           ? 604 - nextProps.selection.start.page
-          : 3;
+          : 603;
 
       return {
         selection: nextProps.selection,
-        page: nextProps.selection.start ? nextProps.selection.start.page : 3,
+        page: nextProps.selection.start ? nextProps.selection.start.page : 1,
         index: index,
         key: index
       };
@@ -218,8 +222,7 @@ export default class MushafScreen extends QcParentScreen {
             loadMinimalSize={1}
             showsPagination={false}
             onIndexChanged={index => {
-              console.log("test: " + index);
-              this.setState({ page: 604 - index, index });
+              this.setState({ page: 604 - index });
             }}
           >
             {this.state.pages.map((item, idx) => (
@@ -227,7 +230,7 @@ export default class MushafScreen extends QcParentScreen {
                 item={item}
                 idx={idx}
                 page={this.state.page}
-                curIndex={this.state.index}
+                curIndex={604 - this.state.page}
                 highlightedWords={highlightedWords}
                 highlightedAyahs={highlightedAyahs}
                 onChangePage={this.onChangePage.bind(this)}

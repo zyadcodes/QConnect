@@ -73,8 +73,8 @@ const TextLine = ({
                   showTooltipOnPress={showTooltipOnPress}
                   isWordHighlighted={isCurWordHighlighted}
                   isAyahHighlighted={isCurAyahHighlighted}
-                  highlightedColor={highlightedColor}
                   highlighted={highlighted}
+                  highlightedColor={highlightedColor}
                   selected={false}
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={false}
