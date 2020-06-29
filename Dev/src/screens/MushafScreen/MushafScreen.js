@@ -12,8 +12,14 @@ import * as _ from "lodash";
 class MushafPage extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     if (
-      nextProps.curIndex === nextProps.idx &&
-      nextProps.page === this.props.page
+      (nextProps.curIndex === nextProps.idx &&
+        nextProps.page === this.props.page) ||
+      ((!_.isEqual(nextProps.selection, this.props.selection) &&
+        (
+          nextProps.selection === undefined) ||
+          (nextProps.page <= nextProps.selection.end.page &&
+          nextProps.page >= nextProps.selection.start.page)
+      ))
     ) {
       return true;
     }
