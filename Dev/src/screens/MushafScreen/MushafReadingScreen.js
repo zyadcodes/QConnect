@@ -4,9 +4,9 @@ import { View } from "react-native";
 import MushafScreen from "./MushafScreen";
 import LoadingSpinner from "components/LoadingSpinner";
 import studentImages from "config/studentImages";
-import Sound from 'react-native-sound';
-import KeepAwake from 'react-native-keep-awake';
-import { noSelection } from 'screens/MushafScreen/Helpers/consts';
+import Sound from "react-native-sound";
+import KeepAwake from "react-native-keep-awake";
+import { noSelection } from "screens/MushafScreen/Helpers/consts";
 import { toNumberString } from "../MushafScreen/Helpers/AyahsOrder";
 
 class MushafReadingScreen extends Component {
@@ -29,12 +29,28 @@ class MushafReadingScreen extends Component {
     this.setState({ isLoading: false });
   }
 
+  componentWillUnmount() {
+    //stop playing tracks if we are unmounting the component
+    try {
+      if (this.track !== undefined) {
+        this.track.stop();
+        this.track.release();
+      }
+    } catch (err) {
+      console.log(
+        "Failed unmounting sound player. err: " + JSON.stringify(err)
+      );
+      console.trace();
+    }
+    this.track = undefined;
+  }
+
   closeScreen() {
     const { userID } = this.props.navigation.state.params;
 
     //todo: if we need to generalize this, then we can add a props: onClose, and the caller specifies the onClose behavior with
     // the call to push navigation to the proper next screen.
-    this.props.navigation.push("StudentCurrentClass", {
+    this.props.navigation.navigate("StudentCurrentClass", {
       userID,
       logAsPractice: true
     });
@@ -56,8 +72,8 @@ class MushafReadingScreen extends Component {
     //todo: implement audio playback
     if (selectedWord) {
       let location =
-        ('00' + selectedAyah.surah).slice(-3) +
-        ('00' + selectedAyah.ayah).slice(-3);
+        ("00" + selectedAyah.surah).slice(-3) +
+        ("00" + selectedAyah.ayah).slice(-3);
 
       if (selectedWord.audio) {
         let url = "";
@@ -88,22 +104,27 @@ class MushafReadingScreen extends Component {
     this.setState({ isPlaying: true, isAudioLoading: true });
     this.track = new Sound(url, null, e => {
       if (e) {
-        console.log("e: " + JSON.stringify(e));
+        console.log("Failed initializing e: " + JSON.stringify(e));
         this.setState({
           highlightedWords: undefined,
           highlightedAyahs: undefined,
           isAudioLoading: false,
-          isPlaying: false,
+          isPlaying: false
         });
       } else {
         this.setState({ isAudioLoading: false });
-        this.track.play(success => {
-          this.setState({
-            highlightedWords: undefined,
-            highlightedAyahs: undefined,
-            isPlaying: false,
+        try {
+          this.track.play(success => {
+            this.setState({
+              highlightedWords: undefined,
+              highlightedAyahs: undefined,
+              isPlaying: false
+            });
           });
-        });
+        } catch (err) {
+          console.log("Failed playing err: " + JSON.stringify(err));
+          console.trace();
+        }
       }
     });
   };

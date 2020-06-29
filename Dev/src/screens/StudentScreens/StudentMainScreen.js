@@ -1,7 +1,7 @@
 //This screen will be the main screen that will display for students as a landing page for when they first
 //sign up or log in
-import React from 'react';
-import QcParentScreen from '../QcParentScreen';
+import React from "react";
+import QcParentScreen from "../QcParentScreen";
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import {
   Animated,
   TouchableHighlight
 } from "react-native";
+import { NavigationEvents } from "react-navigation";
 import { Icon, Avatar, Overlay } from "react-native-elements";
 import studentImages from "config/studentImages";
 import { Rating } from "react-native-elements";
@@ -30,10 +31,10 @@ import screenStyle from "config/screenStyle";
 import fontStyles from "config/fontStyles";
 import { screenHeight, screenWidth } from "config/dimensions";
 import AudioPlayer from "components/AudioPlayer/AudioPlayer";
-import Toast, { DURATION } from 'react-native-easy-toast';
+import Toast, { DURATION } from "react-native-easy-toast";
 import { LineChart } from "react-native-chart-kit";
-import CodeInput from 'react-native-confirmation-code-input';
-import DailyTracker, { getTodaysDateString } from 'components/DailyTracker';
+import CodeInput from "react-native-confirmation-code-input";
+import DailyTracker, { getTodaysDateString } from "components/DailyTracker";
 import themeStyles from "config/themeStyles";
 import TouchableText from "components/TouchableText";
 import QCView from "components/QCView";
@@ -168,7 +169,7 @@ class StudentMainScreen extends QcParentScreen {
 
   getFormattedDateTimeString(date) {
     return `${date.toLocaleDateString(
-      'EN-US'
+      "EN-US"
     )}, ${date.getHours()}:${date.getMinutes()}`;
   }
   async getSubmissionFromAssignment(assignment) {
@@ -926,8 +927,8 @@ class StudentMainScreen extends QcParentScreen {
         />
         <View
           style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
+            flexDirection: "row",
+            justifyContent: "flex-end",
             height: 15,
           }}
         >
@@ -1511,6 +1512,11 @@ class StudentMainScreen extends QcParentScreen {
           />
         }
       >
+        <NavigationEvents
+          onWillFocus={() => {
+            this.setState({ isOpen: false });
+          }}
+        />
         <Toast
           position={"bottom"}
           ref="toast"
@@ -1561,32 +1567,32 @@ class StudentMainScreen extends QcParentScreen {
 //Styles for the entire container along with the top banner
 const styles = StyleSheet.create({
   topView: {
-    flexDirection: 'column',
+    flexDirection: "column",
     backgroundColor: colors.veryLightGrey
   },
   profileInfoTop: {
     paddingHorizontal: screenWidth * 0.024,
     paddingTop: screenHeight * 0.015,
-    flexDirection: 'row',
+    flexDirection: "row",
     height: screenHeight * 0.125,
     borderBottomColor: colors.lightGrey,
     borderBottomWidth: 1
   },
   profileInfoTopRight: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
+    flexDirection: "column",
+    alignItems: "flex-start",
     paddingLeft: screenWidth * 0.075,
     paddingBottom: screenHeight * 0.007
   },
   innerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: colors.grey
   },
   optionContainer: {
     backgroundColor: colors.grey,
     height: screenHeight * 0.08,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingLeft: screenWidth * 0.25
   },
   box: {
@@ -1595,7 +1601,7 @@ const styles = StyleSheet.create({
     marginRight: screenWidth * 0.024
   },
   profileInfoBottom: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: screenWidth * 0.024,
     borderBottomColor: colors.grey,
     borderBottomWidth: 1
@@ -1606,7 +1612,7 @@ const styles = StyleSheet.create({
     borderRadius: (screenHeight * 0.1) / 2
   },
   currentAssignment: {
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     minHeight: 150,
     borderWidth: 0.5,
     borderColor: colors.grey,
@@ -1621,8 +1627,8 @@ const styles = StyleSheet.create({
     elevation: 2
   },
   middleView: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingVertical: screenHeight * 0.0112
   },
   bottomView: {
@@ -1630,7 +1636,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.veryLightGrey
   },
   prevAssignmentCard: {
-    flexDirection: 'column',
+    flexDirection: "column",
     paddingHorizontal: screenWidth * 0.008,
     paddingBottom: screenHeight * 0.019,
     marginBottom: screenHeight * 0.009,
@@ -1647,21 +1653,21 @@ const styles = StyleSheet.create({
     elevation: 2
   },
   profileInfo: {
-    flexDirection: 'column',
+    flexDirection: "column",
     backgroundColor: colors.white
   },
   corner: {
-    borderColor: '#D0D0D0',
+    borderColor: "#D0D0D0",
     borderWidth: 1,
     borderRadius: 3,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: screenWidth * 0.012,
     marginRight: screenWidth * 0.015,
     marginTop: screenHeight * 0.007
   },
   prevAssignments: {
-    flexDirection: 'column',
+    flexDirection: "column",
     backgroundColor: colors.veryLightGrey,
     flex: 1
   },
@@ -1674,9 +1680,9 @@ const styles = StyleSheet.create({
   },
   modal: {
     backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
     height: 300,
     width: screenWidth * 0.75,
     borderWidth: screenHeight * 0.003,
@@ -1691,7 +1697,7 @@ const styles = StyleSheet.create({
   cardButtonStyle: {
     flex: 1,
     marginHorizontal: 5,
-    backgroundColor: 'rgba(255,255,255,0.8)',
+    backgroundColor: "rgba(255,255,255,0.8)",
     height: 40,
     borderRadius: 2,
     justifyContent: "center",

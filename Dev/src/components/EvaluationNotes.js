@@ -18,7 +18,8 @@ class EvaluationNotes extends React.Component {
   render() {
     return (
       <View>
-        {(!this.props.readOnly || (this.props.notes !== undefined && this.props.notes.length > 0)) && (
+        {(!this.props.readOnly ||
+          (this.props.notes !== undefined && this.props.notes.length > 0)) && (
           <TextInput
             style={styles.notesStyle}
             multiline={true}
@@ -45,28 +46,34 @@ class EvaluationNotes extends React.Component {
         The Things to work on button.
     */}
 
-        <View
-          style={{
-            marginTop: 10,
-            flexDirection: "row",
-            justifyContent: "flex-start"
-          }}
-        >
-          <Text style={fontStyles.smallTextStyleDarkGrey}>
-            {strings.ImprovementAreas}
-          </Text>
-        </View>
-        <FlowLayout
-          ref="flow"
-          dataValue={this.props.improvementAreas}
-          selectedValues={this.props.selectedImprovementAreas}
-          title={strings.ImprovementAreas}
-          readOnly={this.props.readOnly}
-          selectedByDefault={this.props.readOnly ? true : false}
-          onSelectionChanged={this.props.onImprovementAreasSelectionChanged}
-          onImprovementsCustomized={this.props.onImprovementsCustomized}
-        />
-        <View style={{ height: 30 }} />
+        {(!this.props.readOnly ||
+          (this.props.improvementAreas !== undefined &&
+            this.props.improvementAreas.length > 0)) && (
+          <View>
+            <View
+              style={{
+                marginTop: 10,
+                flexDirection: "row",
+                justifyContent: "flex-start"
+              }}
+            >
+              <Text style={fontStyles.smallTextStyleDarkGrey}>
+                {strings.ImprovementAreas}
+              </Text>
+            </View>
+            <FlowLayout
+              ref="flow"
+              dataValue={this.props.improvementAreas}
+              selectedValues={this.props.selectedImprovementAreas}
+              title={strings.ImprovementAreas}
+              readOnly={this.props.readOnly}
+              selectedByDefault={this.props.readOnly ? true : false}
+              onSelectionChanged={this.props.onImprovementAreasSelectionChanged}
+              onImprovementsCustomized={this.props.onImprovementsCustomized}
+            />
+            <View style={{ height: 30 }} />
+          </View>
+        )}
       </View>
     );
   }
