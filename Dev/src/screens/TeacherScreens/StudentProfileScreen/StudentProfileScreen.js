@@ -23,6 +23,7 @@ import DailyTracker from 'components/DailyTracker';
 import Toast, { DURATION } from 'react-native-easy-toast';
 import themeStyles from 'config/themeStyles';
 import styles from './StudentProfileScreenStyle';
+import { convertDateToString } from 'config/utils/dateUtils';
 
 // Creates the functional component
 const StudentProfileScreen = (props) => {
@@ -76,16 +77,18 @@ const StudentProfileScreen = (props) => {
 		promises.push(
 			FirebaseFunctions.call('getCompletedAssignmentsByStudentID', { classID, studentID, limit: 3 })
 		);
-		promises.push(FirebaseFunctions.call('getPracticeLogForStudentByWeek'), {
-			studentID,
-			classID,
-			day: new Date(),
-		});
+		promises.push(
+			FirebaseFunctions.call('getPracticeLogForStudentByWeek', {
+				studentID,
+				classID,
+				day: convertDateToString(new Date()),
+			})
+		);
 
 		const results = await Promise.all(promises);
 		setClassStudent(results[0]);
 		setAssignmentHistory(results[1]);
-		setDailyPracticeLog([2]);
+		setDailyPracticeLog(results[2]);
 		setIsLoading(false);
 	};
 
@@ -117,7 +120,7 @@ const StudentProfileScreen = (props) => {
 					}}>
 					<Icon name={iconName} type='material-community' color={colors.darkGrey} />
 					<Text
-						style={[...styles.assignmentSectionHeaderLeftMargin, fontStyles.mainTextStyleDarkGrey]}>
+						style={[styles.assignmentSectionHeaderLeftMargin, fontStyles.mainTextStyleDarkGrey]}>
 						{label ? label.toUpperCase() : strings.Assignment}
 					</Text>
 				</View>
@@ -191,7 +194,7 @@ const StudentProfileScreen = (props) => {
 							</Text>
 							{item.evaluation.improvementAreas.map((tag, cnt) => {
 								return (
-									<View style={[styles.corner, ...styles.improvementAreaBox]}>
+									<View style={[styles.corner, styles.improvementAreaBox]}>
 										<Icon
 											name='tag'
 											size={10}
@@ -201,9 +204,7 @@ const StudentProfileScreen = (props) => {
 											color={colors.darkGrey}
 										/>
 
-										<Text
-											key={tag}
-											style={[fontStyles.smallTextStyleDarkGrey, ...styles.centerText]}>
+										<Text key={tag} style={[fontStyles.smallTextStyleDarkGrey, styles.centerText]}>
 											{tag}
 										</Text>
 									</View>
@@ -269,7 +270,7 @@ const StudentProfileScreen = (props) => {
 							/>
 						</View>
 						<View style={styles.attendanceHeader}>
-							<Text style={[fontStyles.mainTextStyleDarkGrey, ...styles.textPadding]}>
+							<Text style={[fontStyles.mainTextStyleDarkGrey, styles.textPadding]}>
 								{strings.Attendance}:
 							</Text>
 
@@ -285,7 +286,7 @@ const StudentProfileScreen = (props) => {
 										color={colors.darkGreen}
 										size={20}
 									/>
-									<Text style={[fontStyles.mainTextStyleDarkGreen, ...styles.textPadding]}>
+									<Text style={[fontStyles.mainTextStyleDarkGreen, styles.textPadding]}>
 										{strings.Attended}
 									</Text>
 									<Text style={[fontStyles.mainTextStyleDarkGreen]}>
@@ -302,7 +303,7 @@ const StudentProfileScreen = (props) => {
 										color={colors.darkRed}
 										size={20}
 									/>
-									<Text style={[fontStyles.mainTextStyleDarkRed, ...styles.textPadding]}>
+									<Text style={[fontStyles.mainTextStyleDarkRed, styles.textPadding]}>
 										{strings.Missed}
 									</Text>
 									<Text style={[fontStyles.mainTextStyleDarkRed]}>
@@ -463,7 +464,7 @@ const StudentProfileScreen = (props) => {
 					}}>
 					<View style={styles.addAssignmentText}>
 						<Icon name='addfile' type='antdesign' size={15} color={colors.primaryDark} />
-						<Text style={[fontStyles.mainTextStylePrimaryDark, ...styles.smallLeftMargin]}>
+						<Text style={[fontStyles.mainTextStylePrimaryDark, styles.smallLeftMargin]}>
 							{strings.AddAssignment}
 						</Text>
 					</View>

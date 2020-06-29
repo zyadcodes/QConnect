@@ -744,7 +744,6 @@ exports.addPracticeLogForStudentByWeek = functions.https.onCall(async (input, co
 //If there is no log for that week i.e. the document doesn't exist, the function will return -1
 exports.getPracticeLogForStudentByWeek = functions.https.onCall(async (input, context) => {
 	const { studentID, classID, day } = input;
-
 	const result = await firestore.runTransaction(async (transaction) => {
 		const document = await transaction.get(
 			Classes.doc(classID)
