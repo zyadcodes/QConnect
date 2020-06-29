@@ -7,7 +7,7 @@ import {
   mainFont,
   bodyFontBig,
   fontFamily,
-} from "../../config/fontStyles";
+} from "../../../config/fontStyles";
 import colors from "config/colors";
 
 const Header = props => {

@@ -2,16 +2,15 @@ import React, { Component } from 'react'
 import { ScrollView, FlatList, Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types';
 import { screenWidth, screenHeight } from 'config/dimensions';
-
+import styles from './ImageSelectionGridStyle'
 
 //--------------------------------------------------------------
 // Renders a set of passed-in images in a 3 columns table 
 // and calls back passed in function when one of the images is selected
 // the images are displaed in circular avatar format
 //-------------------------------------------------
-export default class ImageSelectionGrid extends Component {
-    render() {
-        const { onImageSelected, images } = this.props;
+export default ImageSelectionGrid = (props) => {
+        const { onImageSelected, images } = props;
 
         return (
             <ScrollView >
@@ -35,22 +34,9 @@ export default class ImageSelectionGrid extends Component {
                 </View>
             </ScrollView>
         );
-    }
 }
 ImageSelectionGrid.propTypes = {
     images: PropTypes.array.isRequired,
     onImageSelected: PropTypes.func.isRequired,
 }
 
-const styles = StyleSheet.create({
-    imageStyle: {
-        height: 0.088 * screenHeight,
-        width: 0.088 * screenHeight,
-        marginLeft: screenWidth * 0.036,
-        marginTop: 0.022 * screenHeight,
-        paddingHorizontal: 0.022 * screenWidth,
-        paddingVertical: screenHeight * 0.022,
-        borderRadius: 0.044 * screenHeight,
-    },
-}
-);

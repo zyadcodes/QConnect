@@ -4,9 +4,9 @@ import {ListItem} from 'react-native-elements'
 import studentImages from 'config/studentImages';
 import classImages from 'config/classImages';
 
-class StudentSelectorComponent extends Component {
+const StudentSelectorComponent  = (props) => {
 
-    getItemAvatar(item, index){
+    const getItemAvatar = (item, index) => {
         if(index === 0){
             return classImages.images[item.profileImageID];
         }
@@ -14,8 +14,7 @@ class StudentSelectorComponent extends Component {
         return studentImages.images[item.profileImageID]
     }
 
-    render() {
-        const {currentClass, selectedItemID} = this.props;
+        const {currentClass, selectedItemID} = props;
         
         return (
             <FlatList
@@ -24,10 +23,10 @@ class StudentSelectorComponent extends Component {
                 renderItem={({ item, index }) => (
                     <ListItem
                         title={item.name}
-                        leftAvatar={{ rounded: true, size: 40, source: this.getItemAvatar(item, index) }}
+                        leftAvatar={{ rounded: true, size: 40, source: getItemAvatar(item, index) }}
                         onPress={() => { 
                             //2nd param indicates whether the ID is for a class. index 0 is always reserved for class
-                            this.props.onSelect(item.ID, item.profileImageID, index === 0)
+                            props.onSelect(item.ID, item.profileImageID, index === 0)
                             }} 
                         bottomDivider
                         checkmark={selectedItemID === item.ID}
@@ -36,7 +35,6 @@ class StudentSelectorComponent extends Component {
                 }
             />
         )
-    }
 }
 
 export default StudentSelectorComponent;

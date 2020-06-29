@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import UserInput from 'components/UserInput';
 import usernameImg from '../screens/images/username.png';
@@ -6,50 +6,49 @@ import passwordImg from '../screens/images/password.png';
 import eyeImg from '../screens/images/eye_black.png';
 import { screenHeight, screenWidth } from 'config/dimensions';
 import strings from "config/strings";
+import styles from './FormStyle'
 
-export default class Form extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showPass: true,
-      press: false,
-    };
-    this.showPass = this.showPass.bind(this);
+export default Form = (props) => {
+  const [showPass, setShowPass] = useState(true)
+  const [press, setPress] = useState(false)
+
+  const shouldShowPass = () => {
+    press === false
+      ? setShowPassAndPress(false, true)
+      : setShowPassAndPress(true, false)
   }
 
-  showPass() {
-    this.state.press === false
-      ? this.setState({ showPass: false, press: true })
-      : this.setState({ showPass: true, press: false });
+  const setShowPassAndPress = (showPass, press) => {
+    setShowPass(showPass)
+    setPress(press)
   }
 
-  render() {
     return (
       <View style={styles.container}>
-        <View style={{ flex: 1 }}>
+        <View style={styles.standardView}>
           <UserInput
             source={usernameImg}
             placeholder={strings.emailPlaceHolder}
             autoCapitalize={'none'}
             returnKeyType={'done'}
             autoCorrect={false}
-            onChangeText={this.props.onUserNameChange}
+            onChangeText={props.onUserNameChange}
           />
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={styles.standardView}>
           <UserInput
             source={passwordImg}
-            secureTextEntry={this.state.showPass}
+            secureTextEntry={showPass}
             placeholder="Password"
             returnKeyType={'done'}
             autoCapitalize={'none'}
             autoCorrect={false}
-            onChangeText={this.props.onPwChange}
+            onChangeText={props.onPwChange}
           />
           <TouchableOpacity
             activeOpacity={0.7}
             style={styles.btnEye}
-            onPress={this.showPass}
+            onPress={() => shouldShowPass()}
           >
             <Image
               source={eyeImg}
@@ -60,21 +59,5 @@ export default class Form extends Component {
         </View>
       </View>
     );
-  }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center'
-  },
-  btnEye: {
-    top: 0.009 * screenHeight,
-    position: 'absolute',
-    right: 0.07 * screenWidth,
-  },
-  iconEye: {
-    width: 30,
-    height: 25,
-    tintColor: 'rgba(0,0,0,0.2)'
-  },
-});

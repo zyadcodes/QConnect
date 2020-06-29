@@ -5,22 +5,21 @@ import TouchableAvatar from 'components/TouchableAvatar';
 import colors from 'config/colors';
 import PropTypes from 'prop-types';
 import { screenHeight, screenWidth } from 'config/dimensions';
+import styles from './ImageSelectionRowStyle'
 
 //---------------------------------------------------------
 // Renders set of passed in images in a single row, and adds 
 //  an "expand more" ellipsis in the end that calls back to passed in function
 //  to show more images.
 //--------------------------------------------------------------
-export default class ImageSelectionRow extends Component {
+export default ImageSelectionRow = (props) => {
 
     //log event and dispatch image selection event to screen
-    onRowImageSelected(index) {
-
-        this.props.onImageSelected(index);
+    const onRowImageSelected = (index) => {
+        props.onImageSelected(index);
     }
 
-    render() {
-        const { highlightedImagesIndices, onShowMore, selectedImageIndex, images } = this.props;
+        const { highlightedImagesIndices, onShowMore, selectedImageIndex, images } = props;
 
         return (
             <View style={styles.rowContainer}>
@@ -32,7 +31,7 @@ export default class ImageSelectionRow extends Component {
                                 index={index}
                                 image={images[index]}
                                 selected={selectedImageIndex === index}
-                                onPress={() => this.onRowImageSelected(index)} />
+                                onPress={() => onRowImageSelected(index)} />
                         </View>
                     )
                 })}
@@ -46,7 +45,6 @@ export default class ImageSelectionRow extends Component {
                     }} />
             </View>
         );
-    }
 }
 
 ImageSelectionRow.propTypes = {
@@ -57,14 +55,3 @@ ImageSelectionRow.propTypes = {
     images: PropTypes.array.isRequired,
     style: PropTypes.object
 }
-
-//Styles for the Teacher profile class
-const styles = StyleSheet.create({
-    rowContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 0.015 * screenHeight,
-        paddingHorizontal: screenWidth * 0.012
-    },
-});
