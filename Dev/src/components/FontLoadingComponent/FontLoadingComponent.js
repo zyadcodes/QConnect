@@ -1,5 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 
+
+const fontLoaded = false;
 const FontLoadingComponent = (props) => {
     const [fontLoaded, setFontLoaded] = useState(false);
 

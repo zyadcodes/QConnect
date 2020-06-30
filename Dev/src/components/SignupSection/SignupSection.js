@@ -1,35 +1,24 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import fontStyles from 'config/fontStyles';
-import strings from '../../config/strings';
+import strings from '../../../config/strings';
 import { screenWidth } from 'config/dimensions';
+import styles from './SignupSectionStyle'
 
-export default class SignupSection extends Component {
-
-  render() {
+export default SignupSection = (props) => {
     return (
       <View style={styles.container}>
         <TouchableOpacity
           activeOpacity={1}
-          onPress={() => { this.props.onCreateAccount(); }}>
+          onPress={() => { props.onCreateAccount(); }}>
           <Text style={fontStyles.mainTextStyleBlack}>{strings.CreateAccount}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={1}
-          onPress={() => { this.props.onForgotPassword(); }}>
+          onPress={() => { props.onForgotPassword(); }}>
           <Text style={fontStyles.mainTextStyleBlack}>{strings.ForgotPasswordQuestion}</Text>
         </TouchableOpacity>
       </View>
     );
-  }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: screenWidth,
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-});

@@ -1,7 +1,7 @@
 //Component represents a top banner that will have three components within it,
 //an icon, a title, and another icon that will all be equally seperated
 import FontLoadingComponent from './FontLoadingComponent';
-import React from 'react';
+import React, { useState } from 'react';
 import ImageSelectionModal from 'components/ImageSelectionModal'
 import strings from 'config/strings';
 import PropTypes from 'prop-types';
@@ -12,27 +12,23 @@ import colors from 'config/colors'
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
 import { TextInput } from 'react-native-gesture-handler';
+import styles from './TopBannerStyle'
 
-class TopBanner extends FontLoadingComponent {
-    state = {
-        modalVisible: false,
-    }
-    setModalVisible(visible) {
-        this.setState({ modalVisible: visible });
-    }
-    editProfilePic() {
-        this.setModalVisible(true);
-    }
-    onImageSelected(index) {
-        this.setState({ profileImageID: index, })
-        this.setModalVisible(false);
-        this.props.onEditingPicture(index);
+const TopBanner = (props) => {
+    const [modalVisible, setModalVisible] = useState(false)
+    const [profileImageID, setProfileImageID] = useState(-1)
 
+    const editProfilePic = () => {
+        setModalVisible(true);
     }
-    render() {
+    const onImageSelected = (index) => {
+        setProfileImageID(index)
+        setModalVisible(false);
+        props.onEditingPicture(index);
+    }
         //Component properties
         const { LeftIconName, LeftTextName, LeftOnPress, Title, isEditingTitle, onTitleChanged, isEditingPicture,
-            RightIconName, RightTextName, RightOnPress, profilePic, onEditingPicture, profileImageID, } = this.props;
+            RightIconName, RightTextName, RightOnPress, profilePic, onEditingPicture, profileImageID, } = props;
 
         return (
             <View  style={styles.container}>
@@ -42,11 +38,11 @@ class TopBanner extends FontLoadingComponent {
                         {(isEditingPicture ?
                             <View>
                                 <ImageSelectionModal
-                                    visible={this.state.modalVisible}
+                                    visible={state.modalVisible}
                                     images={classImages.images}
                                     cancelText={strings.Cancel}
-                                    setModalVisible={this.setModalVisible.bind(this)}
-                                    onImageSelected={this.onImageSelected.bind(this)}
+                                    setModalVisible={setModalVisible.bind(this)}
+                                    onImageSelected={onImageSelected.bind(this)}
                                 />
                                 <View style={styles.picContainer}>
                                     <Image
@@ -98,13 +94,12 @@ class TopBanner extends FontLoadingComponent {
                     <View style={styles.updateImage}>
                     <TouchableText
                         text={"Update Image"}
-                        onPress={() => this.editProfilePic()} />
+                        onPress={() => editProfilePic()} />
                     </View> : <View></View> 
                 }
                 
             </View>
         )
-    }
 }
 
 //Verifies the propTypes are correct
@@ -118,52 +113,4 @@ TopBanner.propTypes = {
     RightOnPress: PropTypes.func,
 }
 
-const styles = StyleSheet.create({
-    container: {
-        height: screenHeight * 0.125,
-        backgroundColor: colors.white,
-        borderBottomWidth: 0.25,
-        borderBottomColor: colors.black,
-    },
-    entireTopView: {
-        height: screenHeight * 0.095,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    topLeftView: {
-        flex: 1.,
-        paddingTop: screenHeight * 0.035,
-        paddingBottom: screenHeight * 0.01
-    },
-    topMiddleView: {
-        justifyContent: 'center',
-        alignSelf: 'center',
-        alignItems: 'center',
-        flex: 10,
-        paddingTop: screenHeight * 0.035,
-        paddingBottom: screenHeight * 0.01
-    },
-    topRightView: {
-        flex: 1.5,
-        justifyContent: 'center',
-        paddingTop: screenHeight * 0.035,
-        paddingBottom: screenHeight * 0.01
-    },
-    profilePic: {
-        width: screenHeight * 0.060,
-        height: screenHeight * 0.060,
-        borderRadius: screenHeight * 0.09,
-    },
-    picContainer: {
-        paddingTop: 0 - screenHeight * .02,
-        //width: screenHeight *.03,
-        //height: screenHeight *.03,
-        alignItems: 'center',
-    },
-    updateImage: {
-        paddingLeft: screenWidth * 0.01
-    }
-
-});
 export default TopBanner;

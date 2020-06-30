@@ -2,10 +2,11 @@ import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import colors from 'config/colors';
-import strings from '../../config/strings';
+import strings from '../../../config/strings';
 import PhoneInput from 'react-native-phone-input';
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
+import styles from './TeacherInfoEntriesStyle'
 
 //--------------------------------------------------------------------------
 // Teacher info entries (Name, Phone number, and Email address).
@@ -128,42 +129,4 @@ TeacherInfoEntries.propTypes = {
   showPasswordField: PropTypes.bool,
 };
 
-//Styles for the Teacher profile class
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.white,
-  },
-  textInput: {
-    flex: 1,
-    paddingLeft: 5,
-    backgroundColor: colors.veryLightGrey,
-    height: 40,
-    borderRadius: 1
-  },
-  infoRow: {
-    flexDirection: "row",
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingLeft: screenWidth * 0.025,
-    height: screenHeight * 0.08,
-    borderBottomColor: colors.grey,
-    borderBottomWidth: 0.25
-  },
 
-  passwordRow: {
-    flexDirection: "column",
-    justifyContent: 'space-between',
-    alignContent: "flex-start",
-    paddingLeft: screenWidth * 0.025,
-    height: screenHeight * 0.07,
-    borderBottomColor: colors.grey,
-    borderBottomWidth: 0.25
-  },
-  infoTextInput: {
-    paddingLeft: screenWidth * 0.025,
-    fontSize: 14,
-    color: colors.darkGrey,
-    flex: 1,
-    alignSelf: 'stretch'
-  },
-});
