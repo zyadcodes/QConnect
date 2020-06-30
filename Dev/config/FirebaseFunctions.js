@@ -21,6 +21,13 @@ export default class FirebaseFunctions {
   //-----------------------------
   //Methods that can be called from any other class
 
+  //Method calls a firebase function by taking the functions name as a parameter, the parameters of the cloud function
+	//as a second parameter, and then returns the functions result
+	static async call(functionName, parameters) {
+		const functionReturn = await this.functions.httpsCallable(functionName)(parameters);
+		return functionReturn.data;
+	}
+
   //This functions will take in an email and a password & will sign a user up using
   //firebase authentication (will also sign the user in). Additionally, it will take
   //in a boolean to determine whether this is a student or a teacher account. Based
@@ -569,7 +576,12 @@ export default class FirebaseFunctions {
 
   //This function will take in an assignment details object and overwrite an old evaluation with the new data.
   //It will take in a classID, a studentID, and an evaluationID in order to locate the correct evaluation object
-  static async updateDailyPracticeTracker(classID, studentID, newPracticeLog) {
+  static async updateDailyPracticeTracker(
+    classID,
+    studentID,
+    newPracticeLog,
+    sendNotification = true
+  ) {
     try {
       let currentClass = await this.getClassByID(classID);
       let arrayOfStudents = currentClass.students;
@@ -577,29 +589,36 @@ export default class FirebaseFunctions {
         return student.ID === studentID;
       });
 
-      arrayOfStudents[studentIndex].dailyPracticeLog = _.merge(
-        arrayOfStudents[studentIndex].dailyPracticeLog,
-        newPracticeLog
-      );
+      arrayOfStudents[studentIndex].dailyPracticeLog = newPracticeLog;
+      //TODO:  in the future we need to accomodate larger tracking data set by simply
+      // merging and not downloading and re-saving the entire object
+      // that's said, we then need to accomodate the untoggle (remove) case as well.
+      //for now, we will simply copy / assign the entire practice log
+      // _.merge(
+      //   arrayOfStudents[studentIndex].dailyPracticeLog,
+      //   newPracticeLog
+      // );
 
       await this.updateClassObject(classID, {
         students: arrayOfStudents
       });
       this.analytics.logEvent("DAILY_PRACTICE_LOGGED");
 
-      //send notification
-      currentClass.teachers.forEach(async teacherID => {
-        //todo: this may end up too noisy.
-        // once we implement in-app feed, consider show this there instead.
-        this.functions.httpsCallable("sendNotification")({
-          topic: teacherID,
-          title: strings.StudentUpdate,
-          body:
-            arrayOfStudents[studentIndex].name +
-            ' ' +
-            strings.PracticeLogNotification
+      if (sendNotification) {
+        //send notification
+        currentClass.teachers.forEach(async teacherID => {
+          //todo: this may end up too noisy.
+          // once we implement in-app feed, consider show this there instead.
+          this.functions.httpsCallable("sendNotification")({
+            topic: teacherID,
+            title: strings.StudentUpdate,
+            body:
+              arrayOfStudents[studentIndex].name +
+              ' ' +
+              strings.PracticeLogNotification
+          });
         });
-      });
+      }
     } catch (err) {
       this.analytics.logEvent("ERR_LOGGING_DAILY_PRACTICE", { err });
       console.log("Error logging daily practice. ", { err });

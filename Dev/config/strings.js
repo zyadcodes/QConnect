@@ -7,6 +7,8 @@ export default {
 
   //--------------------- Mushaf Screen -----------------------
   AssignTo: "Assign to",
+  AssignmentSent: "Assignment is sent. The student is notified.",
+  ClassAssignmentSent: "Assignment is sent. The students are notified.",
 
   //--------------------- Notifications ---------------------
   NeedsHelp: "Needs help",
@@ -19,8 +21,10 @@ export default {
     "You have a new assignment from your teacher",
   AssignmentGraded: "Assignment Graded",
   YourAssignmentHasBeenGraded: "Your assignment has been graded",
-  SomethingWentWrong: "Bummer. Something went wrong. Please try again. If the problem persists, please report it to quranconnect@outlook.com",
+  SomethingWentWrong:
+    "Bummer. Something went wrong. Please try again. If the problem persists, please report it to quranconnect@outlook.com",
   Retry: "Check again",
+  RecordingSent: "Congrats! Your recording is sent to the teacher.",
   //--------------------- Student Main Screen ---------------------
   TotalAssignments: "Total assignments completed",
   Ready: "READY",
@@ -45,7 +49,6 @@ export default {
   DailyPracticeLogDec: "Log and share your daily Quran practice",
   DailyPracticeLogDecTeacherView: "Student's log of daily assignment practice",
   PracticeLogNotification: "was working on the assignment",
-
 
   //--------------------- Forgot Password Screen-------------------
   emailPlaceHolder: "Email",
@@ -85,8 +88,10 @@ export default {
   Pause: "Pause",
   Resume: "Resume",
   Play: "Play",
-  FailedToPlayAudioFile: "Failed to play student recording. We know it is a bummer. Please try again later.",
-  FailedToRecordAudio: "Failed to record the audio. We know it is a bummer. Please try again later.",
+  FailedToPlayAudioFile:
+    "Failed to play student recording. We know it is a bummer. Please try again later.",
+  FailedToRecordAudio:
+    "Failed to record the audio. We know it is a bummer. Please try again later.",
   OtherArea: "Other...",
   //--------------------- First Run Screen ---------------------
   IAmATeacher: "I am a teacher",
@@ -95,7 +100,6 @@ export default {
   IncorrectInfo: "Incorrect username or password",
   CreateAccount: "Create Account",
   ForgotPasswordQuestion: "Forgot Password?",
-
 
   //--------------------- Teacher Welcome Screen ---------------------
   YourProfileHasBeenSaved: "Your profile has been saved",
@@ -131,7 +135,7 @@ export default {
   ReadQuranMotivation: "Feeling bored?",
   ReadQuranMotivationDesc: "God sent you a beautiful message",
   readInMushaf: "Review assignment",
-  Status:  "Status: ",
+  Status: "Status: ",
   OpenMushaf: "Open the Mus'haf to read it",
   EvaluateAssignment: "Evaluate this assignment",
   EditAssignment: "Edit assignment",
@@ -161,8 +165,10 @@ export default {
   ParenthesisPage: ") p. ",
   PagesWithParenthesis: ") pp. ",
   To: " to ",
-  TeacherIsNotified: "Awesome! Your teacher is notified and she sure will be excited :)",
-  TeacherIsNotifiedNeedHelp: "Oh no! Your teacher is notified and should be happy to help.",
+  TeacherIsNotified:
+    "Wonderful masha'Allah! We've let your teacher know.",
+  TeacherIsNotifiedNeedHelp:
+    "Oh no! Your teacher is notified and should be happy to help.",
 
   //--------------------- Join Class Screen ---------------------
   JoinClass: "Join your class",

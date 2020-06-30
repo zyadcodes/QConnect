@@ -16,21 +16,9 @@ import classImages from "config/classImages";
 import LoadingSpinner from "components/LoadingSpinner";
 import ActionButton from "react-native-action-button";
 import { Icon } from "react-native-elements";
+import { noAyahSelected, noSelection } from 'screens/MushafScreen/Helpers/consts';
 
 //------- constants to indicate the case when there is no ayah selected
-const noAyahSelected = {
-  surah: 0,
-  page: 0,
-  ayah: 0,
-  length: 0
-};
-
-const noSelection = {
-  start: noAyahSelected,
-  end: noAyahSelected,
-  started: false,
-  completed: false
-};
 
 var actionButtonFont = PixelRatio.get() < 2 ? 16 : 20;
 var actionButtonHeight = PixelRatio.get() < 2 ? 12 : 22;
@@ -145,7 +133,7 @@ class MushafAssignmentScreen extends Component {
   //======== end of Initialize Component ========================
 
   //======== action methods to handle user interation actions ===
-  closeScreen() {
+  closeScreen(showNotifications) {
     const {
       popOnClose,
       loadScreenOnClose,
@@ -157,7 +145,8 @@ class MushafAssignmentScreen extends Component {
       assignmentName,
       assignmentType,
       selection,
-      currentClass
+      currentClass,
+      assignToAllClass
     } = this.state;
 
     const { started, completed, ...location } = selection;
@@ -179,7 +168,9 @@ class MushafAssignmentScreen extends Component {
         this.props.navigation.state.params.onSaveAssignment(
           assignment,
           assignmentIndex,
-          currentClass
+          currentClass,
+          showNotifications,
+          assignToAllClass
         );
       }
       this.props.navigation.pop();
@@ -190,7 +181,9 @@ class MushafAssignmentScreen extends Component {
           : "TeacherCurrentClass";
       this.props.navigation.push(screenName, {
         userID,
-        currentClass
+        currentClass,
+        showAssignmentSentNotification: showNotifications,
+        assignedToAllClass: assignToAllClass //tell target screen whether updated assignment was for all class. (used for notification strings)
       });
     }
   }
@@ -310,7 +303,7 @@ class MushafAssignmentScreen extends Component {
       },
       () => {
         if (closeAfterSave) {
-          this.closeScreen();
+          this.closeScreen(true); //true sends a param to next screen to show a toast notification that assignment is updated.
         }
       }
     );
@@ -372,7 +365,7 @@ class MushafAssignmentScreen extends Component {
       },
       () => {
         if (closeAfterSave) {
-          this.closeScreen();
+          this.closeScreen(true); //true sends a param to next screen to show a toast notification that assignment is updated.
         }
       }
     );
@@ -910,7 +903,7 @@ class MushafAssignmentScreen extends Component {
               />
               <QcActionButton
                 text={strings.Cancel}
-                onPress={() => this.closeScreen()}
+                onPress={() => this.closeScreen(false)}
               />
             </View>
           </View>

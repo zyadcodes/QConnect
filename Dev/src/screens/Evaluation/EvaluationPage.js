@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable quotes */
 /* eslint-disable comma-dangle */
 import React from "react";
@@ -6,13 +7,15 @@ import {
   View,
   Text,
   TextInput,
-  Image,
   Alert,
-  ScrollView
+  ScrollView,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
-import { AirbnbRating } from "react-native-elements";
+import { AirbnbRating, Icon } from "react-native-elements";
 import colors from "config/colors";
-import QcActionButton from "components/QcActionButton";
+import ActionButton from "react-native-action-button";
 import strings from "config/strings";
 import studentImages from "config/studentImages";
 import QcParentScreen from "screens/QcParentScreen";
@@ -20,11 +23,21 @@ import FlowLayout from "components/FlowLayout";
 import TopBanner from "components/TopBanner";
 import FirebaseFunctions from "config/FirebaseFunctions";
 import LoadingSpinner from "components/LoadingSpinner";
-import QCView from "components/QCView";
-import screenStyle from "config/screenStyle";
 import fontStyles from "config/fontStyles";
 import { screenWidth, screenHeight } from "config/dimensions";
 import AudioPlayer from "components/AudioPlayer/AudioPlayer";
+import Header, { headerHeight } from "components/Header";
+import MushafScreen from "screens/MushafScreen/MushafScreen";
+import KeepAwake from "react-native-keep-awake";
+import { noSelection } from "screens/MushafScreen/Helpers/consts";
+import * as _ from "lodash";
+import {
+  compareOrder,
+  toNumberString
+} from "../MushafScreen/Helpers/AyahsOrder";
+import DailyTracker, { getTodaysDateString } from "components/DailyTracker";
+
+const isAndroid = Platform.OS === "android";
 
 export class EvaluationPage extends QcParentScreen {
   //Default improvement areas
@@ -49,6 +62,12 @@ export class EvaluationPage extends QcParentScreen {
     assignmentName: this.props.navigation.state.params.assignmentName,
     assignmentLength: this.props.navigation.state.params.assignmentLength,
     assignmentType: this.props.navigation.state.params.assignmentType,
+    assignmentLocation: this.props.navigation.state.params.assignmentLocation,
+    // we show Mushaf in evaluation page only if the assignment location was passed in
+    showMushaf:
+      this.props.navigation.state.params.assignmentLocation === undefined
+        ? false
+        : true,
     submission: this.props.navigation.state.params.submission,
     isLoading: true,
     rating: this.props.navigation.state.params.rating
@@ -58,8 +77,26 @@ export class EvaluationPage extends QcParentScreen {
     isPlaying: "Stopped",
     currentPosition: "0:00",
     audioFile: -1,
-    notesHeight: 30,
-    selectedImprovementAreas: []
+    notesHeight: 40,
+    selectedImprovementAreas: [],
+    highlightedWords:
+      this.props.navigation.state.params.highlightedWords !== undefined
+        ? this.props.navigation.state.params.highlightedWords
+        : {},
+    highlightedAyahs:
+      this.props.navigation.state.params.highlightedAyahs !== undefined
+        ? this.props.navigation.state.params.highlightedAyahs
+        : {},
+    audioPlaybackVisible: true,
+    evaluationCollapsed: false,
+    selection: this.props.navigation.state.params.assignmentLocation
+      ? {
+          start: this.props.navigation.state.params.assignmentLocation.start,
+          end: this.props.navigation.state.params.assignmentLocation.end,
+          started: false,
+          completed: true
+        }
+      : noSelection
   };
 
   componentWillUnmount() {
@@ -158,7 +195,10 @@ export class EvaluationPage extends QcParentScreen {
       studentID,
       assignmentLength,
       assignmentType,
-      evaluationID
+      assignmentLocation,
+      evaluationID,
+      highlightedWords,
+      highlightedAyahs
     } = this.state;
 
     notes = notes.trim();
@@ -170,6 +210,7 @@ export class EvaluationPage extends QcParentScreen {
       name: assignmentName,
       assignmentLength,
       assignmentType: assignmentType,
+      location: assignmentLocation,
       completionDate: new Date().toLocaleDateString("en-US", {
         year: "numeric",
         month: "2-digit",
@@ -178,6 +219,8 @@ export class EvaluationPage extends QcParentScreen {
       evaluation: {
         rating,
         notes,
+        highlightedWords,
+        highlightedAyahs,
         improvementAreas: selectedImprovementAreas
       },
       ...submission
@@ -273,6 +316,49 @@ export class EvaluationPage extends QcParentScreen {
       }
     }
   }
+  onSelectAyah(selectedAyah, selectedWord) {
+    if (this.state.readOnly) {
+      // don't change highlighted words/ayahs on read-only mode.
+      return;
+    }
+    //if users press on a word, we highlight that word
+    if (selectedWord.char_type === "word") {
+      let highlightedWords = this.state.highlightedWords;
+      if (!Object.keys(highlightedWords).includes(selectedWord.id)) {
+        highlightedWords = {
+          ...highlightedWords,
+          [selectedWord.id]: {}
+        };
+      } else {
+        //if the same highlighted word is pressed again, un-highlight it (toggle off)
+        delete highlightedWords[selectedWord.id];
+      }
+      this.setState({ highlightedWords });
+    } else if (selectedWord.char_type === "end") {
+      //if user presses on an end of ayah, we highlight that entire ayah
+      let highlightedAyahs = this.state.highlightedAyahs;
+      let ayahKey = toNumberString(selectedAyah);
+
+      if (!Object.keys(highlightedAyahs).includes(ayahKey)) {
+        highlightedAyahs = {
+          ...highlightedAyahs,
+          [ayahKey]: { ...selectedAyah }
+        };
+      } else {
+        //if the same highlighted word is pressed again, un-highlight it (toggle off)
+        delete highlightedAyahs[ayahKey];
+      }
+      this.setState({ highlightedAyahs });
+    }
+  }
+
+  closeScreen() {
+    this.props.navigation.state.params.onCloseNavigateTo
+      ? this.props.navigation.navigate(
+          this.props.navigation.state.params.onCloseNavigateTo
+        )
+      : this.props.navigation.goBack();
+  }
 
   // --------------  Renders Evaluation scree UI --------------
   render() {
@@ -290,12 +376,16 @@ export class EvaluationPage extends QcParentScreen {
       improvementAreas,
       readOnly,
       rating,
-      classID,
-      studentID,
       classStudent,
       assignmentName,
       isLoading,
-      studentObject
+      studentObject,
+      studentID,
+      classID,
+      assignmentType,
+      showMushaf,
+      highlightedAyahs,
+      highlightedWords
     } = this.state;
     const { profileImageID } = studentObject;
     const headerTitle = readOnly
@@ -307,76 +397,125 @@ export class EvaluationPage extends QcParentScreen {
     return (
       //----- outer view, gray background ------------------------
       //Makes it so keyboard is dismissed when clicked somewhere else
-
-      <QCView style={screenStyle.container}>
-        <ScrollView>
-          {this.props.navigation.state.params.newAssignment === true ? (
-            <TopBanner
-              LeftIconName="angle-left"
-              LeftOnPress={() =>
-                this.props.navigation.state.params.onCloseNavigateTo
-                  ? this.props.navigation.navigate(
-                      this.props.navigation.state.params.onCloseNavigateTo
-                    )
-                  : this.props.navigation.goBack()
+      <View
+        style={{
+          flex: 1
+        }}
+      >
+        {this.props.navigation.state.params.newAssignment === true ? (
+          <Header
+            title={strings.Evaluation}
+            subtitle={assignmentName}
+            avatarName={classStudent.name}
+            avatarImage={studentImages.images[profileImageID]}
+            onClose={this.closeScreen.bind(this)}
+          />
+        ) : readOnly === true &&
+          !this.props.navigation.state.params.isStudentSide ? (
+          <TopBanner
+            LeftIconName="angle-left"
+            LeftOnPress={this.closeScreen.bind(this)}
+            Title={strings.Evaluation}
+            RightIconName="edit"
+            RightOnPress={() => {
+              this.setState({
+                readOnly: false,
+                improvementAreas: this.state.improvementAreas
+              });
+            }}
+          />
+        ) : (
+          <Header
+            title={strings.Evaluation}
+            avatarName={classStudent.name}
+            subtitle={assignmentName}
+            avatarImage={studentImages.images[profileImageID]}
+            onClose={this.closeScreen.bind(this)}
+          />
+        )}
+        {showMushaf && (
+          <View
+            style={{ height: screenHeight - headerHeight, paddingBottom: 150 }}
+          >
+            <KeepAwake />
+            <MushafScreen
+              assignToID={studentID}
+              hideHeader={true}
+              showSelectedLinesOnly={false}
+              classID={classID}
+              profileImage={studentImages.images[profileImageID]}
+              showLoadingOnHighlightedAyah={
+                this.state.isAudioLoading === true &&
+                (this.state.highlightedAyahs !== undefined ||
+                  _.isEqual(this.state.highlightedAyahs, {}))
               }
-              Title={strings.Evaluation}
+              selection={this.state.selection}
+              highlightedWords={highlightedWords}
+              highlightedAyahs={highlightedAyahs}
+              highlightedColor={colors.darkRed}
+              assignmentName={assignmentName}
+              assignmentType={assignmentType}
+              topRightIconName="close"
+              onClose={this.closeScreen.bind(this)}
+              currentClass={classStudent}
+              onSelectAyah={this.onSelectAyah.bind(this)}
+              disableChangingUser={true}
             />
-          ) : readOnly === true &&
-            !this.props.navigation.state.params.isStudentSide ? (
-            <TopBanner
-              LeftIconName="angle-left"
-              LeftOnPress={() => {
-                let index = this.props.navigation.dangerouslyGetParent().state
-                  .index;
-                // go back to previous page if we have one
-                if (index > 0) {
-                  this.props.navigation.goBack();
-                } else {
-                  //if navigation stack is empty (no previous page), go to main screen
-                  this.props.navigation.push("TeacherCurrentClass", {
-                    userID: this.state.userID
-                  });
-                }
-              }}
-              Title={strings.Evaluation}
-              RightIconName="edit"
-              RightOnPress={() => {
-                this.setState({
-                  readOnly: false,
-                  improvementAreas: this.state.improvementAreas
-                });
-              }}
-            />
-          ) : (
-            <TopBanner
-              LeftIconName="angle-left"
-              LeftOnPress={() => this.props.navigation.goBack()}
-              Title={strings.Evaluation}
-            />
-          )}
-          <View style={styles.evaluationContainer}>
-            <View style={styles.section}>
-              <Image
-                source={studentImages.images[profileImageID]}
-                style={styles.profilePic}
-              />
-              <Text style={fontStyles.bigTextStyleDarkGrey}>
-                {classStudent.name}
-              </Text>
-              <Text style={fontStyles.mainTextStylePrimaryDark}>
-                {assignmentName}
-              </Text>
-            </View>
+          </View>
+        )}
+
+        <KeyboardAvoidingView
+          behavior= {isAndroid? undefined : "padding"}
+          style={
+            showMushaf
+              ? styles.evaluationContainer
+              : { justifyContent: "center", alignItems: "center" }
+          }
+        >
+          <ScrollView>
+            {showMushaf && (
+              <View
+                style={{
+                  top: 5,
+                  left: screenWidth * 0.9,
+                  zIndex: 1,
+                  position: "absolute" // add if dont work with above
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() =>
+                    this.setState({
+                      evaluationCollapsed: !this.state.evaluationCollapsed
+                    })
+                  }
+                >
+                  <Icon
+                    name={
+                      this.state.evaluationCollapsed
+                        ? "angle-double-up"
+                        : "angle-double-down"
+                    }
+                    type="font-awesome"
+                    color={colors.primaryDark}
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+
             {this.state.audioFile !== -1 ? (
-              <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  margin: 10
+                }}
+              >
                 <View style={styles.playAudio}>
                   <AudioPlayer
                     visible={true}
                     compensateForVerticalMove={false}
                     image={studentImages.images[profileImageID]}
                     reciter={classStudent.name}
-                    title={assignmentName}
                     audioFilePath={this.state.audioFile}
                     hideCancel={true}
                     sent={
@@ -408,75 +547,84 @@ export class EvaluationPage extends QcParentScreen {
                 />
               </View>
 
-              <TextInput
-                style={styles.notesStyle}
-                multiline={true}
-                height={this.state.notesHeight}
-                onChangeText={teacherNotes =>
-                  this.setState({
-                    notes: teacherNotes
-                  })
-                }
-                returnKeyType={"done"}
-                autoCorrect={false}
-                blurOnSubmit={true}
-                placeholder={strings.WriteANote}
-                placeholderColor={colors.black}
-                editable={!readOnly}
-                value={notes}
-                onFocus={() =>
-                  this.setState({ notesHeight: screenHeight * 0.1 })
-                }
-                onEndEditing={() => this.setState({ notesHeight: 30 })}
-              />
+              {this.state.evaluationCollapsed === false && (
+                <View>
+                  <TextInput
+                    style={styles.notesStyle}
+                    multiline={true}
+                    height={this.state.notesHeight}
+                    onChangeText={teacherNotes =>
+                      this.setState({
+                        notes: teacherNotes
+                      })
+                    }
+                    returnKeyType={"done"}
+                    autoCorrect={false}
+                    blurOnSubmit={true}
+                    placeholder={strings.WriteANote}
+                    placeholderColor={colors.black}
+                    editable={!readOnly}
+                    value={notes}
+                    onFocus={() =>
+                      this.setState({ notesHeight: screenHeight * 0.1 })
+                    }
+                    onEndEditing={() => this.setState({ notesHeight: 40 })}
+                  />
 
-              {/**
+                  {/**
                   The Things to work on button.
               */}
 
-              <View
-                style={{ flexDirection: "row", justifyContent: "flex-start" }}
-              >
-                <Text style={fontStyles.mainTextStyleDarkGrey}>
-                  {strings.ImprovementAreas}
-                </Text>
-              </View>
-              <FlowLayout
-                ref="flow"
-                dataValue={improvementAreas}
-                title={strings.ImprovementAreas}
-                readOnly={readOnly}
-                selectedByDefault={readOnly ? true : false}
-                onSelectionChanged={selectedImprovementAreas => {
-                  this.setState({ selectedImprovementAreas });
-                }}
-                onImprovementsCustomized={newAreas => {
-                  this.setState({ improvementAreas: newAreas });
-                  FirebaseFunctions.saveTeacherCustomImprovementTags(
-                    this.props.navigation.state.params.userID,
-                    newAreas
-                  );
-                }}
-              />
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "flex-start"
+                    }}
+                  >
+                    <Text style={fontStyles.mainTextStyleDarkGrey}>
+                      {strings.ImprovementAreas}
+                    </Text>
+                  </View>
+                  <FlowLayout
+                    ref="flow"
+                    dataValue={improvementAreas}
+                    title={strings.ImprovementAreas}
+                    readOnly={readOnly}
+                    selectedByDefault={readOnly ? true : false}
+                    onSelectionChanged={selectedImprovementAreas => {
+                      this.setState({ selectedImprovementAreas });
+                    }}
+                    onImprovementsCustomized={newAreas => {
+                      this.setState({ improvementAreas: newAreas });
+                      FirebaseFunctions.saveTeacherCustomImprovementTags(
+                        this.props.navigation.state.params.userID,
+                        newAreas
+                      );
+                    }}
+                  />
+                  <View style={{ height: 30 }} />
+                  {!readOnly && (
+                    <ActionButton
+                      buttonColor={colors.darkGreen}
+                      onPress={() => {
+                        this.submitRating();
+                      }}
+                      renderIcon={() => (
+                        <Icon
+                          name="check-bold"
+                          color="#fff"
+                          type="material-community"
+                          style={styles.actionButtonIcon}
+                        />
+                      )}
+                    />
+                  )}
+                </View>
+              )}
             </View>
-          </View>
-        </ScrollView>
-        <View style={styles.buttonsContainer}>
-          {!readOnly ? (
-            <QcActionButton
-              text={strings.Submit}
-              onPress={() => {
-                this.submitRating();
-              }}
-              disabled={this.state.isLoading}
-              screen={this.name}
-            />
-          ) : (
-            <View />
-          )}
-        </View>
-        <View style={styles.filler} />
-      </QCView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
     );
   }
 }
@@ -486,8 +634,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
     backgroundColor: colors.lightGrey,
-    flex: 1,
-    justifyContent: "flex-end"
+    flex: 1
   },
   playAudio: {
     height: screenHeight * 0.1,
@@ -496,23 +643,30 @@ const styles = StyleSheet.create({
   },
   evaluationContainer: {
     flexDirection: "column",
-    paddingTop: screenHeight * 0.048,
-    paddingBottom: screenHeight * 0.037,
+    paddingTop: 5,
+    paddingBottom: 5,
     alignItems: "center",
-    marginTop: screenHeight * 0.044,
-    marginBottom: screenHeight * 0.015,
-    marginHorizontal: screenWidth * 0.024,
+    marginTop: 5,
+    marginBottom: 5,
+    marginHorizontal: 5,
     backgroundColor: colors.white,
     borderColor: colors.lightGrey,
-    borderWidth: screenWidth * 0.0025
+    borderWidth: 1,
+    shadowColor: colors.black,
+    shadowOpacity: 0.26,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
+    elevation: 3,
+    borderRadius: 3,
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0
   },
   section: {
     alignItems: "center",
-    alignSelf: "stretch",
-    paddingTop: screenHeight * 0.015,
-    paddingBottom: screenHeight * 0.015,
-    paddingLeft: screenWidth * 0.024,
-    paddingRight: screenWidth * 0.024
+    padding: 5,
+    width: screenWidth * 0.99
   },
   profilePic: {
     width: screenHeight * 0.1,
@@ -540,6 +694,7 @@ const styles = StyleSheet.create({
   },
   filler: {
     flexDirection: "column",
+    backgroundColor: colors.blue,
     flex: 1
   }
 });

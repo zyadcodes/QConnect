@@ -23,7 +23,8 @@ import AssignmentEntryComponent from "components/AssignmentEntryComponent";
 import surahs from "../Data/Surahs.json";
 import pages from "../Data/mushaf-wbw.json";
 import SurahHeader from "./SurahHeader";
-import { compareOrder } from "../Helpers/AyahsOrder";
+import { compareOrder, isLineSelected } from "../Helpers/AyahsOrder";
+import * as _ from "lodash";
 
 //Creates the higher order component
 class SelectionPage extends React.Component {
@@ -137,7 +138,12 @@ class SelectionPage extends React.Component {
       return true;
     }
 
-    if (nextProps.highlightedWord !== this.props.highlightedWord) {
+    if (
+      !_.isEqual(nextProps.highlightedWords, this.props.highlightedWords) ||
+      !_.isEqual(nextProps.highlightedAyahs, this.props.highlightedAyahs) ||
+      nextProps.showLoadingOnHighlightedAyah !==
+        this.props.showLoadingOnHighlightedAyah
+    ) {
       return true;
     }
 
@@ -352,8 +358,12 @@ class SelectionPage extends React.Component {
         </View>
       );
     } else {
-      let isFirstWord = true;
       let lineAlign = "stretch";
+
+      // We show an arc shading with borderRadius to mark the beginning of a selection
+      // we use this to remember that we did it already so we don't
+      // do that in the next lines that belong to the same ayah.
+      let noSelectionInPreviousLines;
 
       const surahName =
         lines[0] && lines[0].surah
@@ -385,30 +395,32 @@ class SelectionPage extends React.Component {
                 }
               />
 
-              <PageHeader
-                Title={surahName}
-                TitleOnPress={() => {
-                  const { isSurahSelectionVisible } = this.state;
-                  this.setState({
-                    isSurahSelectionVisible: !isSurahSelectionVisible
-                  });
-                }}
-                RightIconName={
-                  this.props.topRightIconName
-                    ? this.props.topRightIconName
-                    : "check-all"
-                }
-                RightOnPress={() => {
-                  this.props.topRightOnPress
-                    ? this.props.topRightOnPress()
-                    : this.onSelectPage();
-                }}
-                LeftImage={this.props.profileImage}
-                currentClass={this.props.currentClass}
-                assignToID={this.props.assignToID}
-                onSelect={this.props.onChangeAssignee}
-                disableChangingUser={this.props.disableChangingUser}
-              />
+              {!this.props.hideHeader && (
+                <PageHeader
+                  Title={surahName}
+                  TitleOnPress={() => {
+                    const { isSurahSelectionVisible } = this.state;
+                    this.setState({
+                      isSurahSelectionVisible: !isSurahSelectionVisible
+                    });
+                  }}
+                  RightIconName={
+                    this.props.topRightIconName
+                      ? this.props.topRightIconName
+                      : "check-all"
+                  }
+                  RightOnPress={() => {
+                    this.props.topRightOnPress
+                      ? this.props.topRightOnPress()
+                      : this.onSelectPage();
+                  }}
+                  LeftImage={this.props.profileImage}
+                  currentClass={this.props.currentClass}
+                  assignToID={this.props.assignToID}
+                  onSelect={this.props.onChangeAssignee}
+                  disableChangingUser={this.props.disableChangingUser}
+                />
+              )}
 
               <View id={this.state.page} style={styles.pageContent}>
                 {lines !== undefined &&
@@ -423,17 +435,54 @@ class SelectionPage extends React.Component {
                     } else if (line.type === 'besmellah') {
                       return <Basmalah key={line.line + "_basmalah"} />;
                     } else {
+                      let word = line.text[line.text.length - 1];
+                      let curAyah = {
+                        ayah: Number(word.aya),
+                        surah: Number(word.sura),
+                        page: page,
+                        wordNum: Number(word.id)
+                      };
+                      if (compareOrder(selectedAyahsStart, curAyah) >= 0) {
+                        //if we are passed the ayah for the first time, set noSelectionInPreviousLines to true
+                        if (noSelectionInPreviousLines === undefined) {
+                          noSelectionInPreviousLines = true;
+                        } else {
+                          //if we passed it but the beginning of the ayah was in a prior line, don't mark it as the first line.
+                          noSelectionInPreviousLines = false;
+                        }
+                      }
+
+                      if (selectionOn && selectedAyahsStart.ayah !== 0) {
+                        let lineSelected = isLineSelected(
+                          line,
+                          selectedAyahsStart,
+                          selectedAyahsEnd,
+                          page
+                        );
+
+                        if (this.props.showSelectedLinesOnly && !lineSelected) {
+                          return undefined;
+                        }
+                      }
+
                       return (
                         <TextLine
                           key={page + '_' + line.line}
                           lineText={line.text}
                           selectionOn={selectionOn}
-                          highlightedWord={this.props.highlightedWord}
+                          highlightedWords={this.props.highlightedWords}
+                          highlightedAyahs={this.props.highlightedAyahs}
+                          highlightedColor={this.props.highlightedColor}
+                          showLoadingOnHighlightedAyah={
+                            this.props.showLoadingOnHighlightedAyah
+                          }
                           selectedAyahsEnd={selectedAyahsEnd}
                           selectedAyahsStart={selectedAyahsStart}
                           selectionStarted={selectionStarted}
                           selectionCompleted={selectionCompleted}
-                          isFirstWord={isFirstWord}
+                          noSelectionInPreviousLines={
+                            noSelectionInPreviousLines
+                          }
                           onSelectAyah={(ayah, word) =>
                             this.props.onSelectAyah(ayah, word)
                           }
@@ -568,7 +617,7 @@ const styles = StyleSheet.create({
   },
   pageContent: {
     marginVertical: 5,
-    marginHorizontal: 5,
+    marginHorizontal: 2,
     backgroundColor: colors.white,
   },
 });
