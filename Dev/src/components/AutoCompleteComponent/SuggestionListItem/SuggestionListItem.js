@@ -2,17 +2,17 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import fontStyles from 'config/fontStyles';
+import styles from './SuggestionListItemStyle'
 
-class SuggestionListItem extends PureComponent {
-  onPress = () => {
-    const { name, id, ename, onPressItem } = this.props;
+const SuggestionListItem = (props) => {
+  const onPress = () => {
+    const { name, id, ename, onPressItem } = props;
     onPressItem(id, name, ename);
   };
 
-  render() {
-    const { name, ename, textStyle, enameStyle } = this.props;
+    const { name, ename, textStyle, enameStyle } = props;
     return (
-      <TouchableOpacity style={styles.card} onPress={this.onPress}>
+      <TouchableOpacity style={styles.card} onPress={onPress}>
         <View
           style={{
             flex: 1,
@@ -40,7 +40,6 @@ class SuggestionListItem extends PureComponent {
         </View>
       </TouchableOpacity>
     );
-  }
 }
 SuggestionListItem.propTypes = {
   textStyle: PropTypes.shape({}),
@@ -55,31 +54,7 @@ SuggestionListItem.defaultProps = {
   enameStyle: {},
 };
 
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    flex: 1,
-    alignItems: 'center',
-    height: 40,
-    margin: 5,
-  },
-  card: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: 'black',
-    shadowOpacity: 0.26,
-    shadowOffset: { width: 0, height: 0.1 },
-    shadowRadius: 1,
-    elevation: 1,
-    flex: 1,
-    height: 50,
-    margin: 5,
-    borderRadius: 2,
-    backgroundColor: 'white'
-  }
-});
-
 /**
  *
  */
-export default SuggestionListItem;
+export default React.memo(SuggestionListItem);
