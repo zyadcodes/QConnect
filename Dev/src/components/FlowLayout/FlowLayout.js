@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import colors from 'config/colors';
 import strings from 'config/strings';
-import QcActionButton from '../QcActionButton';
+import QcActionButton from '../QcActionButton/QcActionButton';
 import { Badge } from 'react-native-elements';
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
@@ -131,70 +131,52 @@ export default FlowLayout = (props) => {
 
   const [modalVisible, setModalVisible] = useState(false)
   const [dataValue, setDataValue] = useState(props.dataValue),
-  const [selectedState, setSelectedState] = useState(new Array(this.props.dataValue.length).fill(
-   this.props.selectedByDefault === true
+  const [selectedState, setSelectedState] = useState(new Array(props.dataValue.length).fill(
+   props.selectedByDefault === true
   ))
   const [isBadgeVisible, setIsBadgeVisible] = useState(false)
   const [isNewAddition, setIsNewAddition] = useState(true)
   const [newImprovementText, setNewImprovementText] = useState('')
 
   useEffect(() => {
-    this.change();
+    change();
   }, [])
 
-  const getDerivedStateFromProps = static (props, state) => {
-    //if improvement areas have changed from the calling screen, let's reflect that here.
-    //this is a quick way to check if the arrays have the same content
-    if (!_.isEmpty(_.xor(props.dataValue, state.dataValue))) {
-      return {
-        dataValue: props.dataValue
-      };
-    }
-    return null;
-  }
-
-  change() {
-    for (var i = 0; i < this.state.selectedState.length; i++) {
-      let item = this.refs[this.state.dataValue[i]];
+  const change = () => {
+    for (var i = 0; i < selectedState.length; i++) {
+      let item = refs[dataValue[i]];
       if (item) {
-        item.setSelected(this.state.selectedState[i]);
+        item.setSelected(selectedState[i]);
       }
     }
 
-    this.props.onSelectionChanged(this.getSelectedPosition());
+    props.onSelectionChanged(getSelectedPosition());
   }
-  getSelectedPosition() {
+  const getSelectedPosition = () => {
     let list = [];
-    this.state.selectedState.forEach((value, key) => {
+    selectedState.forEach((value, key) => {
       if (value) {
-        list.push(this.state.dataValue[key]);
+        list.push(dataValue[key]);
       }
     });
     return list;
   }
-  resetData() {
-    this.setState(
-      {
-        selectedState: new Array(this.state.dataValue.length).fill(false),
-      },
-      () => {
-        this.change();
-      }
-    );
+  const resetData = () => {
+        setSelectedState(new Array(dataValue.length).fill(false))
+        change();
   }
-  openCustomImprovements() {
-    this.setState({ modalVisible: true });
+  const openCustomImprovements = () => {
+    setModalVisible(true)
   }
 
-  render() {
-    const { dataValue, selectedState } = this.state;
+    const { dataValue, selectedState } = state;
     //Creates a new array of data values that exclude the ellipses & instead
     //include an addition symbol to add new improvments
     return (
       <View>
         <Modal
           transparent={true}
-          visible={this.state.modalVisible}
+          visible={modalVisible}
           presentationStyle="overFullScreen"
         >
           <View style={styles.modalStyle}>
@@ -206,19 +188,19 @@ export default FlowLayout = (props) => {
                 justifyContent: 'center'
               }}
             >
-              {this.state.isBadgeVisible === true
+              {isBadgeVisible === true
                 ? dataValue.map((value, position) => {
                     return (
                       <View key={position}>
                         <FlowView
                           isBadgeVisible={true}
-                          ref={this.state.dataValue[position]}
+                          ref={dataValue[position]}
                           text={value}
                           readOnly={false}
                           onClick={() => {
                             dataValue.splice(position, 1);
                             selectedState.splice(position, 1);
-                            this.setState({ dataValue });
+                            setDataValue(dataValue)
                           }}
                         />
                       </View>
@@ -228,7 +210,7 @@ export default FlowLayout = (props) => {
                     return (
                       <View key={position}>
                         <FlowView
-                          ref={this.state.dataValue[position]}
+                          ref={dataValue[position]}
                           text={value}
                           editMode={true}
                           readOnly={false}
@@ -237,39 +219,37 @@ export default FlowLayout = (props) => {
                       </View>
                     );
                   })}
-              {this.state.isBadgeVisible === true ? (
+              {isBadgeVisible === true ? (
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                  {this.state.isNewAddition === true ? (
+                  {isNewAddition === true ? (
                     <TextInput
                       style={[
                         styles.textInputStyle,
                         {
                           minWidth:
-                            this.state.newImprovementText.length * 4 + 80,
+                            newImprovementText.length * 4 + 80,
                         },
                         fontStyles.smallTextStyleDarkGrey,
                       ]}
                       placeholder={strings.OtherArea}
                       value={
-                        this.state.newImprovementText.length > 0
-                          ? this.state.newImprovementText
+                        newImprovementText.length > 0
+                          ? newImprovementText
                           : undefined
                       }
                       autoCorrect={false}
                       onChangeText={text => {
-                        this.setState({ newImprovementText: text });
+                        setNewImprovementText(text)
                       }}
                       onEndEditing={() => {
-                        if (this.state.newImprovementText) {
-                          dataValue.push(this.state.newImprovementText);
+                        if (newImprovementText) {
+                          dataValue.push(newImprovementText);
                           selectedState.push(false);
                         }
-                        this.setState({
-                          dataValue,
-                          isNewAddition: true,
-                          newImprovementText: ''
-                        });
-                        this.props.onImprovementsCustomized(dataValue);
+                          setDataValue(dataValue)
+                          setIsNewAddition(true)
+                          setNewImprovementText('')
+                        props.onImprovementsCustomized(dataValue);
                       }}
                     />
                   ) : (
@@ -281,7 +261,7 @@ export default FlowLayout = (props) => {
                   text={strings.Ellipses}
                   backgroundColor={colors.primaryLight}
                   onClick={() => {
-                    this.setState({ isBadgeVisible: true });
+                    setIsBadgeVisible(true)
                   }}
                 />
               )}
@@ -292,7 +272,7 @@ export default FlowLayout = (props) => {
               <QcActionButton
                 text={strings.Done}
                 onPress={() => {
-                  this.setState({ modalVisible: false });
+                  setModalVisible(false)
                 }}
               />
             </View>
@@ -305,61 +285,59 @@ export default FlowLayout = (props) => {
                 <FlowView
                   ref={dataValue[position]}
                   text={value}
-                  readOnly={this.props.readOnly}
+                  readOnly={props.readOnly}
                   onClick={() => {
-                    if (this.props.multiselect == false) {
+                    if (props.multiselect == false) {
                       for (
-                        var i = this.state.selectedState.length - 1;
+                        var i = selectedState.length - 1;
                         i >= 0;
                         i--
                       ) {
                         if (i == position) {
                           continue;
                         }
-                        if (this.state.selectedState[i] == true) {
-                          this.state.selectedState[i] = false;
+                        if (selectedState[i] == true) {
+                          selectedState[i] = false;
                           break;
                         }
                       }
                     }
-                    this.state.selectedState[position] = !this.state
+                    selectedState[position] = !state
                       .selectedState[position];
 
-                    this.change();
+                    change();
                   }}
                 />
               </View>
             );
           })}
           {//Only shows the ellipses if this is not read only
-          !this.props.readOnly ? (
+          !props.readOnly ? (
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-              {this.state.isNewAddition === true ? (
+              {isNewAddition === true ? (
                 <TextInput
                   style={[
                     fontStyles.smallTextStyleDarkGrey,
                     styles.textInputStyle,
                     {
-                      minWidth: this.state.newImprovementText.length * 4 + 80
+                      minWidth: newImprovementText.length * 4 + 80
                     },
                   ]}
-                  value={this.state.newImprovementText}
+                  value={newImprovementText}
                   placeholder={strings.OtherArea}
-                  value={this.state.newImprovementText}
+                  value={newImprovementText}
                   autoCorrect={false}
                   onChangeText={text => {
-                    this.setState({ newImprovementText: text });
+                    setNewImprovementText(text)
                   }}
                   onEndEditing={() => {
-                    this.state.newImprovementText
-                      ? dataValue.push(this.state.newImprovementText)
+                    newImprovementText
+                      ? dataValue.push(newImprovementText)
                       : {};
-                    this.setState({
-                      dataValue,
-                      isNewAddition: true,
-                      newImprovementText: ''
-                    });
-                    this.props.onImprovementsCustomized(dataValue);
+                      setDataValue(dataValue)
+                      setIsNewAddition(true)
+                      setNewImprovementText('')
+                    props.onImprovementsCustomized(dataValue);
                   }}
                 />
               ) : (
@@ -369,8 +347,8 @@ export default FlowLayout = (props) => {
                 text={strings.Ellipses}
                 backgroundColor={colors.primaryLight}
                 onClick={() => {
-                  this.openCustomImprovements();
-                  this.setState({ isNewAddition: true });
+                  openCustomImprovements();
+                  setIsNewAddition(true)
                 }}
               />
             </View>
@@ -380,7 +358,6 @@ export default FlowLayout = (props) => {
         </View>
       </View>
     );
-  }
 }
 FlowLayout.propTypes = {
   style: PropTypes.object,

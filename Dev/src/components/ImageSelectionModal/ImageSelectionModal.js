@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { View, StyleSheet, Modal } from 'react-native'
 import PropTypes from 'prop-types'
-import ImageSelectionGrid from 'components/ImageSelectionGrid'
-import TouchableText from 'components/TouchableText'
+import ImageSelectionGrid from 'components/ImageSelectionGrid/ImageSelectionGrid'
+import TouchableText from 'components/TouchableText/TouchableText'
 import colors from 'config/colors'
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TouchableOpacity, Text, StyleSheet, Image, View } from 'react-native';
 import colors from 'config/colors'
-import FontLoadingComponent from './FontLoadingComponent';
+import FontLoadingComponent from 'components/FontLoadingComponent/FontLoadingComponent';
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
 import styles from './StudentCardStyle'

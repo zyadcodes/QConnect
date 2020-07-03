@@ -16,7 +16,7 @@
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
     "react": "16.11.0",
-    "react-native": "^0.62.0",
+    "react-native": "^0.60.1",
     "react-native-action-button": "^2.8.5",
     "react-native-audio-recorder-player": "^2.4.4-rc.1",
     "react-native-autocomplete-search": "^1.0.8",

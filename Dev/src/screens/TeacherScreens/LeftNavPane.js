@@ -5,13 +5,13 @@ import colors from "config/colors";
 import classImages from "config/classImages";
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import { SafeAreaView } from "react-navigation";
-import QcDrawerItem from "components/QcDrawerItem";
+import QcDrawerItem from "components/QcDrawerItem/QcDrawerItem";
 import teacherImages from "../../../config/teacherImages";
 import strings from '../../../config/strings';
 import QcParentScreen from "screens/QcParentScreen";
-import QcActionButton from 'components/QcActionButton';
+import QcActionButton from 'components/QcActionButton/QcActionButton';
 import fontStyles from 'config/fontStyles';
-import QCView from 'components/QCView';
+import QCView from 'QCView/QCView';
 import screenStyle from 'config/screenStyle';
 import { screenHeight, screenWidth } from 'config/dimensions';
 

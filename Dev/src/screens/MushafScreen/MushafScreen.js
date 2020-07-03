@@ -1,7 +1,7 @@
 //Screen which will provide all of the possible settings for the user to click on
 import React from "react";
 import { View, StyleSheet, ScrollView, PixelRatio } from "react-native";
-import LoadingSpinner from "components/LoadingSpinner";
+import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 import colors from "config/colors";
 import QcParentScreen from 'screens/QcParentScreen';
 import SelectionPage from "./Components/SelectionPage";

@@ -1,6 +1,8 @@
-// This is going to serve as the StyleSheet for the OfflineEmptyStyle component
-import { StyleSheet } from 'react-native';
-import { screenHeight, screenWidth } from 'config/dimensions';
+import React from 'react'
+import {StyleSheet} from 'react-native'
+import {screenHeight, screenWidth} from 'config/dimensions'
+import fontStyles from 'config/fontStyles'
+import colors from 'config/colors'
 
 export default StyleSheet.create({
 	containerStyle: {

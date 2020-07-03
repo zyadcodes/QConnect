@@ -1,9 +1,9 @@
 import React, { Component, useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
-import UserInput from 'components/UserInput';
-import usernameImg from '../screens/images/username.png';
-import passwordImg from '../screens/images/password.png';
-import eyeImg from '../screens/images/eye_black.png';
+import UserInput from 'components/UserInput/UserInput';
+import usernameImg from '../../screens/images/username.png';
+import passwordImg from '../../screens/images/password.png';
+import eyeImg from '../../screens/images/eye_black.png';
 import { screenHeight, screenWidth } from 'config/dimensions';
 import strings from "config/strings";
 import styles from './FormStyle'

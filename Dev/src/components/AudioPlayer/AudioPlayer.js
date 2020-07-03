@@ -23,7 +23,7 @@ import colors from "config/colors";
 import strings from "config/strings";
 import FirebaseFunctions from "config/FirebaseFunctions";
 import { check, request, PERMISSIONS, RESULTS } from "react-native-permissions";
-import TouchableText from "components/TouchableText";
+import TouchableText from "components/TouchableText/TouchableText";
 import fontStyles from "config/fontStyles";
 
 const translateX = new Animated.Value(0);

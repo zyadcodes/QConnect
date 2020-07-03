@@ -22,7 +22,7 @@ import StudentProfileScreen from './TeacherScreens/ClassTabs/StudentProfileScree
 import EvaluationPage from './Evaluation/EvaluationPage';
 import ShareClassCodeScreen from './TeacherScreens/AddStudents/ShareClassCodeScreen';
 import strings from 'config/strings';
-import TopBanner from 'components/TopBanner';
+import TopBanner from 'components/TopBanner/TopBanner';
 
 //The routes containing all the screens & their navigation options
 routeConfig = {

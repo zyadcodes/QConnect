@@ -1,5 +1,8 @@
 import React from 'react'
 import {StyleSheet} from 'react-native'
+import {screenHeight, screenWidth} from 'config/dimensions'
+import fontStyles from 'config/fontStyles'
+import colors from 'config/colors'
 
 //'rgba(255, 255, 255, 0.4)'
 const styles = StyleSheet.create({

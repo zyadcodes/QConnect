@@ -9,7 +9,6 @@ import {
   FlatList
 } from "react-native";
 import colors from "config/colors";
-import FontLoadingComponent from "./FontLoadingComponent";
 import fontStyles from "config/fontStyles";
 import { screenHeight, screenWidth } from "config/dimensions";
 import { ListItem } from "react-native-elements";

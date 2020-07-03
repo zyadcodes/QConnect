@@ -10,8 +10,8 @@ import {
   PixelRatio
 } from "react-native";
 import colors from "config/colors";
-import TouchableText from "components/TouchableText";
-import LoadingSpinner from "components/LoadingSpinner";
+import TouchableText from "components/TouchableText/TouchableText";
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import { getPageTextWbW } from "../ServiceActions/getQuranContent";
 import Basmalah from "./Basmalah";
 import fontStyles from "config/fontStyles";
@@ -19,7 +19,7 @@ import strings from "config/strings";
 import { screenHeight, screenWidth } from "config/dimensions";
 import PageHeader from "./PageHeader";
 import TextLine from "./TextLine";
-import AssignmentEntryComponent from "components/AssignmentEntryComponent";
+import AssignmentEntryComponent from 'components/AssignmentEntryComponent/AssignmentEntryComponent';
 import surahs from "../Data/Surahs.json";
 import pages from "../Data/mushaf-wbw.json";
 import SurahHeader from "./SurahHeader";

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MainStackNavigator from './src/screens/MainStackNavigator';
 import { Alert, ScrollView, View } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
-import QCView from 'components/QCView';
+import QCView from 'QCView/QCView';
 import screenStyle from 'config/screenStyle';
 import strings from 'config/strings';
 import { checkNotifications, requestNotifications } from 'react-native-permissions';

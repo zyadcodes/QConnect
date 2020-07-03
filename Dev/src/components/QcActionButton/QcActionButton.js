@@ -1,10 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import colors from 'config/colors'
-import FontLoadingComponent from 'components/FontLoadingComponent'
 import fontStyles from 'config/fontStyles';
-import { screenHeight, screenWidth } from 'config/dimensions';
 import styles from './QcActionButtonStyle'
 
 const QcActionButton = (props) => {

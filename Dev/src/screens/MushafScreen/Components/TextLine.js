@@ -8,7 +8,7 @@ import {
 import AyahSelectionWord from './AyahSelectionWord';
 import EndOfAyah from './EndOfAyah';
 import { screenHeight } from 'config/dimensions';
-import LoadingSpinner from "components/LoadingSpinner";
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 
 //Creates the higher order component
 const TextLine = ({

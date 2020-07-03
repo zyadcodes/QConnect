@@ -1,8 +1,7 @@
 //Component represents a top banner that will have three components within it,
 //an icon, a title, and another icon that will all be equally seperated
-import FontLoadingComponent from './FontLoadingComponent';
-import React, { useState } from 'react';
-import ImageSelectionModal from 'components/ImageSelectionModal'
+import React, { useState, useEffect } from 'react';
+import ImageSelectionModal from 'components/ImageSelectionModal/ImageSelectionModal'
 import strings from 'config/strings';
 import PropTypes from 'prop-types';
 import classImages from 'config/classImages'
@@ -18,6 +17,9 @@ const TopBanner = (props) => {
     const [modalVisible, setModalVisible] = useState(false)
     const [profileImageID, setProfileImageID] = useState(-1)
 
+    useEffect(() => {
+        setProfileImageID(props.profileImageID)
+    }, [])
     const editProfilePic = () => {
         setModalVisible(true);
     }
@@ -28,7 +30,7 @@ const TopBanner = (props) => {
     }
         //Component properties
         const { LeftIconName, LeftTextName, LeftOnPress, Title, isEditingTitle, onTitleChanged, isEditingPicture,
-            RightIconName, RightTextName, RightOnPress, profilePic, onEditingPicture, profileImageID, } = props;
+            RightIconName, RightTextName, RightOnPress, profilePic, onEditingPicture, profileImageID } = props;
 
         return (
             <View  style={styles.container}>

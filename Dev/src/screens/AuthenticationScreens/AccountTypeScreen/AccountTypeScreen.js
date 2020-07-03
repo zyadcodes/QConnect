@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, ScrollView, ImageBackground } from 'react-native';
-import QcActionButton from 'components/QcActionButton';
-import QcAppBanner from 'components/QcAppBanner';
+import QcActionButton from 'components/QcActionButton/QcActionButton';
+import QcAppBanner from 'components/QcAppBanner/QcAppBanner';
 import strings from '../../../../config/strings';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import screenStyle from 'config/screenStyle';

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
-import TouchableAvatar from 'components/TouchableAvatar';
+import TouchableAvatar from 'components/TouchableAvatar/TouchableAvatar';
 import colors from 'config/colors';
 import PropTypes from 'prop-types';
 import { screenHeight, screenWidth } from 'config/dimensions';

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Text, View, StyleSheet, KeyboardAvoidingView } from 'react-native';
-import QcActionButton from 'components/QcActionButton'
+import QcActionButton from 'components/QcActionButton/QcActionButton'
 import strings from 'config/strings';
 import colors from 'config/colors';
 import surahNames from 'config/surahNames';
-import InputAutoSuggest from 'components/AutoCompleteComponent/InputAutoSuggest';
+import InputAutoSuggest from 'components/AutoCompleteComponent/InputAutoSuggest/InputAutoSuggest';
 import fontStyles from 'config/fontStyles';
 import MultiSwitch from "react-native-multi-switch";
 import { screenWidth, screenHeight } from 'config/dimensions';
