@@ -27,7 +27,7 @@ import QCView from 'QCView/QCView';
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
 
-export class ProfileScreen extends QcParentScreen {
+export class ProfileScreen extends React.Component {
   //Sets the current screen for firebase analytics
   componentDidMount() {
     if (this.props.navigation.state.params.isTeacher === true) {

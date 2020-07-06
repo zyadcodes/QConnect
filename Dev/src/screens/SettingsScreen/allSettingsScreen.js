@@ -16,7 +16,7 @@ import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
 
 
-export default class AllSettingsScreen extends QcParentScreen {
+export default class AllSettingsScreen extends React.Component {
 
     //The state controlling the side menu
     state = {

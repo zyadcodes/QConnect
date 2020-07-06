@@ -16,7 +16,7 @@ import ImageSelectionRow from 'components/ImageSelectionRow/ImageSelectionRow';
 import ImageSelectionModal from 'components/ImageSelectionModal/ImageSelectionModal';
 import TeacherInfoEntries from 'components/TeacherInfoEntries/TeacherInfoEntries';
 import strings from 'config/strings';
-import FadeInView from '../../../components/FadeInView/FadeInView';
+import FadeInView from 'components/FadeInView/FadeInView';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import { Icon } from 'react-native-elements';
 import fontStyles from 'config/fontStyles';

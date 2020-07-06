@@ -10,7 +10,7 @@ import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
 import { screenWidth, screenHeight } from 'config/dimensions';
 
-export default class CreditsScreen extends QcParentScreen {
+export default class CreditsScreen extends React.Component {
 
     componentDidMount() {
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import colors from 'config/colors';
-import strings from '../../../config/strings';
+import strings from 'config/strings';
 import PhoneInput from 'react-native-phone-input';
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';

@@ -13,7 +13,7 @@ import QCView from 'QCView/QCView';
 import screenStyle from 'config/screenStyle';
 import { screenHeight, screenWidth } from 'config/dimensions';
 
-export class AddClassScreen extends QcParentScreen {
+export class AddClassScreen extends React.Component {
 
   //----------------------- state -------------------------------------
   state = {

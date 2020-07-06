@@ -12,7 +12,7 @@ import {
 import StudentMultiAssignmentsCard from "components/StudentMultiAssignmentsCard/StudentMultiAssignmentsCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages";
-import LoadingSpinner from "../../../components/LoadingSpinner/LoadingSpinner";
+import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 import strings from "config/strings";
 import QcParentScreen from "screens/QcParentScreen";
 import QcActionButton from "components/QcActionButton/QcActionButton";
@@ -28,7 +28,7 @@ import { screenHeight, screenWidth } from "config/dimensions";
 import Toast, { DURATION } from "react-native-easy-toast";
 import themeStyles from 'config/themeStyles'
 
-export class ClassMainScreen extends QcParentScreen {
+class ClassMainScreen extends React.Component {
   state = {
     isLoading: true,
     teacher: "",

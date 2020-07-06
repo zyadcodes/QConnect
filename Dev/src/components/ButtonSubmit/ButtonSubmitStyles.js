@@ -4,6 +4,8 @@ import {screenHeight, screenWidth} from 'config/dimensions'
 import fontStyles from 'config/fontStyles'
 import colors from 'config/colors'
 
+const MARGIN = screenWidth * 0.15;
+
 export default styles = StyleSheet.create({
     container: {
       marginTop: 0.03 * screenHeight,

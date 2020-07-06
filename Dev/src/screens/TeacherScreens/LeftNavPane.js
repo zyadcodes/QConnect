@@ -15,7 +15,7 @@ import QCView from 'QCView/QCView';
 import screenStyle from 'config/screenStyle';
 import { screenHeight, screenWidth } from 'config/dimensions';
 
-class LeftNavPane extends QcParentScreen {
+class LeftNavPane extends React.Component {
   state = {
     teacher: this.props.teacher,
     userID: this.props.userID,

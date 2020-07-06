@@ -20,7 +20,7 @@ import studentImages from 'config/studentImages';
 import classImages from 'config/classImages';
 import strings from "config/strings";
 
-class PageHeader extends FontLoadingComponent {
+class PageHeader extends React.Component {
   state = {
     selectorModalVisible: false,
 

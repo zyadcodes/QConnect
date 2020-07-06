@@ -26,7 +26,7 @@ import Toast, { DURATION } from "react-native-easy-toast";
 import themeStyles from 'config/themeStyles'
 
 
-class StudentProfileScreen extends QcParentScreen {
+class StudentProfileScreen extends React.Component {
   state = {
     studentID: this.props.navigation.state.params.studentID,
     currentClass: this.props.navigation.state.params.currentClass,

@@ -27,3 +27,5 @@ const styles = StyleSheet.create({
       top: 0.005 * screenHeight
     },
   });
+
+  export default styles

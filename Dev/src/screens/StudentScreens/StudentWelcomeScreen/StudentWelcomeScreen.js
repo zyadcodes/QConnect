@@ -16,7 +16,7 @@ import ImageSelectionModal from 'components/ImageSelectionModal/ImageSelectionMo
 import TeacherInfoEntries from 'components/TeacherInfoEntries/TeacherInfoEntries';
 import studentImages from 'config/studentImages';
 import strings from 'config/strings';
-import FadeInView from '../../../components/FadeInView/FadeInView';
+import FadeInView from 'components/FadeInView/FadeInView';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import { Icon } from 'react-native-elements';
 import QCView from 'components/QCView/QCView';

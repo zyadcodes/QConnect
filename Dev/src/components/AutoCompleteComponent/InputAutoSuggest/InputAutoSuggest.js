@@ -4,9 +4,6 @@ import React, { Component, useState, useReducer, useRef } from 'react';
 import * as _ from 'lodash';
 import SuggestionListItem from '../SuggestionListItem/SuggestionListItem';
 import suggest from '../services/suggest';
-import { screenWidth, screenHeight } from 'config/dimensions';
-import fontStyles from 'config/fontStyles';
-import { colors } from 'react-native-elements';
 import style from './InputAutoSuggestStyle'
 
 const InputAutoSuggest = (props) => {
@@ -17,8 +14,8 @@ const InputAutoSuggest = (props) => {
   const [value, setValue] = useState(props.assignment)
   const [id, setID] = useState('')
 
-  let searchList = searchList.bind(this);
-  let renderItem = renderItem.bind(this);
+  let searchList = searchListMethod.bind(this);
+  let renderItem = renderItemMethod.bind(this);
   let myTextInput = useRef(null);
 
   const onPressItem = (id: string, name: string, ename: string) => {
@@ -38,7 +35,7 @@ const InputAutoSuggest = (props) => {
 
   keyExtractor = (item, index) => item.id + '';
 
-  const searchList = async (text) => {
+  const searchListMethod = async (text) => {
     props.onTextChanged(text);
 
     const {
@@ -78,7 +75,7 @@ const InputAutoSuggest = (props) => {
     setData(suggestData.suggest)
   }
 
-  const renderItem = ({ item, index }) => {
+  const renderItemMethod = ({ item, index }) => {
     const { itemTextStyle, itemTagStyle } = props;
     return (
       <SuggestionListItem

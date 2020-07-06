@@ -11,10 +11,9 @@ export default ButtonSubmit = (props) => {
 
   const [isLoading, setIsLoading] = useState(false)
 
-  buttonAnimated = new Animated.Value(0);
-  growAnimated = new Animated.Value(0);
-  _onPress = _onPress.bind(this);
-  _isMounted = false;
+  let buttonAnimated = new Animated.Value(0);
+  let growAnimated = new Animated.Value(0);
+  let _isMounted = false;
 
   useEffect(() => {
     _isMounted = true;
@@ -74,7 +73,7 @@ export default ButtonSubmit = (props) => {
         <Animated.View style={{ width: changeWidth, backgroundColor: 'transparent' }}>
           <TouchableOpacity
             style={styles.button}
-            onPress={_onPress}
+            onPress={() => _onPress()}
             activeOpacity={1}>
             {isLoading ? (
               <ActivityIndicator size="small" color={colors.white} />

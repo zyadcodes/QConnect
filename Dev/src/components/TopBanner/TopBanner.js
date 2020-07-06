@@ -15,11 +15,8 @@ import styles from './TopBannerStyle'
 
 const TopBanner = (props) => {
     const [modalVisible, setModalVisible] = useState(false)
-    const [profileImageID, setProfileImageID] = useState(-1)
+    const [profileImageID, setProfileImageID] = useState(props.profileImageID)
 
-    useEffect(() => {
-        setProfileImageID(props.profileImageID)
-    }, [])
     const editProfilePic = () => {
         setModalVisible(true);
     }
@@ -30,7 +27,7 @@ const TopBanner = (props) => {
     }
         //Component properties
         const { LeftIconName, LeftTextName, LeftOnPress, Title, isEditingTitle, onTitleChanged, isEditingPicture,
-            RightIconName, RightTextName, RightOnPress, profilePic, onEditingPicture, profileImageID } = props;
+            RightIconName, RightTextName, RightOnPress, profilePic, onEditingPicture } = props;
 
         return (
             <View  style={styles.container}>

@@ -39,7 +39,7 @@ import DailyTracker, { getTodaysDateString } from "components/DailyTracker/Daily
 
 const isAndroid = Platform.OS === "android";
 
-export class EvaluationPage extends QcParentScreen {
+export class EvaluationPage extends React.Component {
   //Default improvement areas
   areas = [
     strings.Memorization,

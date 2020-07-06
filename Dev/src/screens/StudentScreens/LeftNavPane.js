@@ -28,7 +28,7 @@ import screenStyle from "config/screenStyle";
 import CodeInput from 'react-native-confirmation-code-input';
 import fontStyles from 'config/fontStyles';
 
-class LeftNavPane extends QcParentScreen {
+class LeftNavPane extends React.Component {
   state = {
     student: this.props.student,
     userID: this.props.userID,

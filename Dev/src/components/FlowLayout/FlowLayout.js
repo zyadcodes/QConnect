@@ -130,7 +130,7 @@ FlowView.defaultProps = {
 export default FlowLayout = (props) => {
 
   const [modalVisible, setModalVisible] = useState(false)
-  const [dataValue, setDataValue] = useState(props.dataValue),
+  const [dataValue, setDataValue] = useState(props.dataValue)
   const [selectedState, setSelectedState] = useState(new Array(props.dataValue.length).fill(
    props.selectedByDefault === true
   ))
@@ -169,7 +169,6 @@ export default FlowLayout = (props) => {
     setModalVisible(true)
   }
 
-    const { dataValue, selectedState } = state;
     //Creates a new array of data values that exclude the ellipses & instead
     //include an addition symbol to add new improvments
     return (
@@ -302,8 +301,7 @@ export default FlowLayout = (props) => {
                         }
                       }
                     }
-                    selectedState[position] = !state
-                      .selectedState[position];
+                    selectedState[position] = !selectedState[position];
 
                     change();
                   }}

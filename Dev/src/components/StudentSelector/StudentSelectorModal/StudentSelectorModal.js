@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { View, StyleSheet, Modal, Text } from 'react-native'
 import PropTypes from 'prop-types'
 import TouchableText from 'components/TouchableText/TouchableText'
-import colors from '../config/colors'
-import fontStyles from '../config/fontStyles';
-import { screenHeight, screenWidth } from '../config/dimensions';
+import colors from 'config/colors'
+import fontStyles from 'config/fontStyles';
+import { screenHeight, screenWidth } from 'config/dimensions';
 import StudentSelectorComponent from '../StudentSelectorComponent/StudentSelectorComponent';
 import styles from './StudentSelectorModalStyle'
 

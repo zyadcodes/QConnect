@@ -29,7 +29,7 @@ import DailyTracker from 'components/DailyTracker/DailyTracker';
 import moment from 'moment';
 import { Icon } from 'react-native-elements';
 
-export class ClassAttendanceScreen extends QcParentScreen {
+export class ClassAttendanceScreen extends React.Component {
   state = {
     isLoading: true,
     currentClass: '',

@@ -36,7 +36,7 @@ import { LineChart } from "react-native-chart-kit";
 import CodeInput from 'react-native-confirmation-code-input';
 import DailyTracker, { getTodaysDateString } from 'components/DailyTracker/DailyTracker';
 import themeStyles from "config/themeStyles";
-import TouchableText from "components/TouchableText/TouchableText/TouchableText";
+import TouchableText from "components/TouchableText/TouchableText";
 import QCView from "QCView/QCView";
 import { Firebase } from 'react-native-firebase';
 
@@ -248,7 +248,7 @@ const StudentMainScreen  = (props) => {
        setIsLoading(false);
     } else {
       const didJoinClass = await FirebaseFunctions.call('joinClassByClassInviteCode', {
-        studentID = student.ID,
+        studentID: student.ID,
         classInviteCode: classCode
       });
       if (didJoinClass === -1) {
