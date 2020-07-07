@@ -4,6 +4,7 @@ import {
   TextInput,
   Text,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import FastResponseTouchableOpacity from '../FastResponseTouchableOpacity';
 import colors from '../../../config/colors';
@@ -20,6 +21,7 @@ export default class ChatInput extends Component {
             width: this.props.width
           },
         ]}
+        accessible
       >
         <TextInput
           ref={ref => (this.commentInputRef = ref)}
@@ -34,14 +36,14 @@ export default class ChatInput extends Component {
           }
           style={localStyles.commentingTextInput}
         />
-        <FastResponseTouchableOpacity
+        <TouchableOpacity
           ref={ref => (this.sendBtnRef = ref)}
           disabled={this.props.value === ''}
           onPress={async () => await this.props.sendOnPress()}
-          style={[localStyles.sendBtn]}
+          style={[localStyles.sendBtn, { opacity: this.props.value === '' ? 0.3 : 1.0 }]}
         >
           <Text style={{ color: colors.primaryDark }}>Send</Text>
-        </FastResponseTouchableOpacity>
+        </TouchableOpacity>
       </KeyboardAvoidingView>
     );
   }

@@ -3,6 +3,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const serviceAccount = require('./qcServiceAccountKey.json');
+const { func } = require('prop-types');
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
@@ -13,10 +14,12 @@ admin.initializeApp({
 const messaging = admin.messaging();
 const storage = admin.storage().bucket();
 const firestore = admin.firestore();
+const Feeds = firestore.collection('feeds')
 const Teachers = firestore.collection('Teachers');
 const Classes = firestore.collection('Classes');
 const Students = firestore.collection('Students');
 const batch = firestore.batch();
+const feedListeners = [];
 
 // -------------------------- Document Creators, Getters, and Updaters --------------------------
 
@@ -918,3 +921,195 @@ const addAssignmentByStudentID = async (classID, studentID, location, name, type
 	sendNotification(studentID, 'New Assignment', 'Your teacher has added a new assignment for you.');
 	return newDocument.id;
 };
+
+//These are all the Feeds screen Firebase Functions
+exports.createFeedDocument = functions.https.onCall(async (input, context) => {
+	const {firstObj, classID, docIdInt} = input;
+	return createFeedDocument(firstObj, classID, docIdInt)
+})
+
+const createFeedDocument = async (firstObj, classID, docIdInt) => {
+	const batch = firestore.batch()
+    const ref = Feeds
+      .doc(classID)
+      .collection('content')
+      .doc('' + docIdInt);
+    batch.set(ref);
+    await batch.commit();
+    await ref.update({ data: [firstObj] });
+    await Feeds.doc(classID).update({ lastIndex: '' + docIdInt });
+}
+const getLatestFeed = async (classID, refreshFunction) => {
+    let lastIndex = (await Feeds.doc(classID).get()).data().lastIndex;
+    let determiningData = (await Feeds
+      .doc(classID)
+      .collection('content')
+      .doc(lastIndex)
+      .get()).data();
+    if (determiningData.data.length < 14 && parseInt(lastIndex) >= 1) {
+      feedListeners.push(
+        listenForFeedDocChanges(
+          parseInt(lastIndex) - 1 + '',
+          classID,
+          (docID, changedData, isNewDoc) =>
+            refreshFunction(docID, changedData, isNewDoc),
+          true
+        )
+      );
+    }
+    feedListeners.push(
+      checkForNewFeedDocListener(classID, (docID, changedData, isNewDoc) =>
+        refreshFunction(docID, changedData, isNewDoc)
+      )
+    );
+    logEvent('FETCHING_FEED');
+  }
+  const badgeUpdates = async (classID, refreshFunction) => {
+    feedListeners.push(
+      Classes.doc(classID).onSnapshot(querySnap => {
+        refreshFunction(querySnap.data());
+      })
+    );
+  }
+
+  const onNotificationUpdateFeed = (classID, newObj) => {
+    let lastIndex = (await Feeds.doc(classID).get()).data().lastIndex;
+    let temp = (await Feeds
+      .doc(classID)
+      .collection('content')
+      .doc(lastIndex)
+      .get()).data();
+    temp.data.push(newObj);
+    await updateFeedDoc(temp.data, lastIndex, classID, true);
+    logEvent("NOTIFICATION_SENT_TO_FEED");
+  }
+
+  const updateFeedDoc = async (changedData, docID, classID, isLastIndex) => {
+    await updateSeenFeedForClass(classID, false);
+    if (changedData.length > 20 && isLastIndex) {
+      let oldDocData = changedData;
+      let firstObj = oldDocData[oldDocData.length - 1];
+      await createFeedDocument(firstObj, classID, parseInt(docID) + 1);
+    } else {
+      await Feeds
+        .doc(classID)
+        .collection('content')
+        .doc(docID)
+        .update({ data: changedData });
+    }
+  }
+  const checkForNewFeedDocListener = async (classID, refreshFunction) => {
+    feedListeners.push(
+      Feeds
+        .doc(classID)
+        .onSnapshot(querySnap =>
+          listenForFeedDocChanges(
+            querySnap.data().lastIndex,
+            classID,
+            (docID, changedData, isNewDoc) =>
+              refreshFunction(docID, changedData, isNewDoc),
+            true
+          )
+        )
+    );
+  }
+  const addOldFeedDoc = (classID, currentOldest, refreshFunction) => {
+    listenForFeedDocChanges(
+      parseInt(currentOldest) - 1 + '',
+      classID,
+      (docID, changedData, isNewDoc) =>
+        refreshFunction(docID, changedData, isNewDoc),
+      false
+    );
+  }
+  const listenForFeedDocChanges = async (
+    docID,
+    classID,
+    refreshFunction,
+    isNewDoc
+  ) => {
+    feedListeners.push(
+      Feeds
+        .doc(classID)
+        .collection("content")
+        .doc(docID)
+        .onSnapshot(querySnap => {
+          refreshFunction(docID, querySnap.data().data, isNewDoc);
+          isNewDoc = false;
+        })
+    );
+  }
+  const unsubscribeFromFeedListeners = () => {
+    for (var i = 0; i < feedListeners.length; i++) {
+      feedListeners[i]();
+      feedListeners.splice(i, 1);
+    }
+  }
+  const updateSeenFeedForClass = (classID, haveSeenFeed) => {
+    return await firestore.runTransaction(async transaction => {
+      await transaction.get(Classes.doc(classID)).then(async doc => {
+        let tempData = doc.data();
+        for (var i = 0; i < tempData.teachers.length; i++) {
+          tempData.teachers[i].hasSeenLatestFeed = haveSeenFeed;
+        }
+        for (var i = 0; i < tempData.students.length; i++) {
+          tempData.students[i].hasSeenLatestFeed = haveSeenFeed;
+        }
+        transaction.update(Classes.doc(classID), {
+          students: tempData.students,
+          teachers: tempData.teachers,
+        });
+      });
+      return 0;
+    });
+  }
+  const updateSeenFeedForInidividual = async (
+    classID,
+    hasSeenFeed,
+    isTeacher,
+    userObj
+  ) => {
+    return await firestore.runTransaction(async transaction => {
+      await transaction.get(Classes.doc(classID)).then(async doc => {
+        let tempData = doc.data();
+        if (isTeacher) {
+          let teacherInClass = -1;
+          for (var i = 0; i < tempData.teachers.length; i++) {
+            if (tempData.teachers[i].ID === userObj.ID) {
+              teacherInClass = i;
+              break;
+            }
+          }
+          tempData.teachers[teacherInClass].hasSeenLatestFeed = hasSeenFeed;
+          await transaction.update(Classes.doc(classID), {
+            teachers: tempData.teachers,
+          });
+        } else {
+          let studentInClass = -1;
+          for (var i = 0; i < tempData.students.length; i++) {
+            if (tempData.students[i].ID === userObj.ID) {
+              studentInClass = i;
+              break;
+            }
+          }
+          tempData.students[studentInClass].hasSeenLatestFeed = hasSeenFeed;
+          await transaction.update(Classes.doc(classID), {
+            students: tempData.students,
+          });
+        }
+      });
+      return 0;
+    });
+  }
+  const createFeedForClass = async (classID) => {
+	const batch = firestore.batch()
+    const ref = Feeds.doc(classID);
+    batch.set(ref);
+    batch.set(ref.collection('content').doc('0'));
+    await batch.commit();
+    await ref.update({ lastIndex: '0' });
+    await ref
+      .collection('content')
+      .doc('0')
+      .update({ data: [] });
+  }
