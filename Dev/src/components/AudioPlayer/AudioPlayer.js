@@ -9,7 +9,8 @@ import {
   Easing,
   Alert,
   Platform,
-  View
+  View,
+  PixelRatio
 } from "react-native";
 import AudioRecorderPlayer, {
   AVEncoderAudioQualityIOSType,
@@ -34,7 +35,6 @@ const postStopAction = {
   close: 1,
   send: 2
 };
-const audioRecorderPlayer = new AudioRecorderPlayer();
 
 const AudioPlayer = props => {
   const [toggled, setToggled] = useState(true);
@@ -47,6 +47,9 @@ const AudioPlayer = props => {
     false
   );
   const [visible, setVisible] = useState(props.visible);
+  const [audioRecorderPlayer, setAudioPlayer] = useState(
+    new AudioRecorderPlayer()
+  );
 
   useEffect(() => {
     // returned function will be called on component unmount
@@ -58,7 +61,7 @@ const AudioPlayer = props => {
       audioRecorderPlayer.stopPlayer();
       audioRecorderPlayer.removePlayBackListener();
     };
-  }, [isRecording]);
+  }, [audioRecorderPlayer, isRecording]);
 
   audioRecorderPlayer.setSubscriptionDuration(0.09); // optional. Default is 0.1
   const spin = rotation.interpolate({
@@ -204,6 +207,7 @@ const AudioPlayer = props => {
     if (isRecording) {
       await audioRecorderPlayer.stopRecorder();
       await audioRecorderPlayer.removeRecordBackListener();
+      await onStopPlay();
 
       setPlayWidth(0);
       setIsRecording(false);
@@ -212,7 +216,7 @@ const AudioPlayer = props => {
 
     //let's perform a post action is requested.
     if (postAction === postStopAction.send) {
-      props.onSend(fullPath);
+      props.onSend(fullPath, path);
     } else if (postAction === postStopAction.close) {
       props.onClose();
     }
@@ -336,6 +340,8 @@ const AudioPlayer = props => {
                 <AudioStatus>
                   {props.isRecordMode
                     ? strings.SendRecording
+                    : props.title
+                    ? props.title
                     : strings.AudioRecordingReceived}
                 </AudioStatus>
                 <Subtitle>
@@ -406,6 +412,9 @@ const AudioPlayer = props => {
 
 export default AudioPlayer;
 
+const mainTextSize = PixelRatio.get() < 2 ? 12 : 15;
+const imageDiameter = PixelRatio.get() < 2 ? 35 : 50;
+
 const Container = styled.View`
   min-width: 95%;
   min-height: 80px;
@@ -416,9 +425,9 @@ const Container = styled.View`
 `;
 
 const Image = styled.Image`
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
+  width: ${imageDiameter};
+  height: ${imageDiameter};
+  border-radius: ${imageDiameter / 2};
 `;
 
 const VerticalSpacer = styled.View`
@@ -486,19 +495,19 @@ const Column = styled.View`
 const AnimatedColumn = Animated.createAnimatedComponent(Column);
 
 const AudioStatus = styled.Text`
-  font-size: 15px;
+  font-size: ${mainTextSize};
   font-family: "Montserrat-Regular";
   color: rgba(0, 0, 0, 0.7);
 `;
 
 const Subtitle = styled.Text`
-  font-size: 12px;
+  font-size: ${mainTextSize * 0.8};
   font-family: "Montserrat-Light";
   color: rgba(0, 0, 0, 0.7);
 `;
 
 const Reciter = styled.Text`
-  font-size: 15px;
+  font-size: ${mainTextSize};
   font-family: "Montserrat-Bold";
   color: rgba(0, 0, 0, 0.7);
 `;

@@ -22,6 +22,9 @@ import { screenHeight, screenWidth } from 'config/dimensions';
 import { LineChart } from 'react-native-chart-kit';
 import { Icon } from 'react-native-elements';
 import DailyTracker from "components/DailyTracker";
+import Toast, { DURATION } from "react-native-easy-toast";
+import themeStyles from 'config/themeStyles'
+
 
 class StudentProfileScreen extends QcParentScreen {
   state = {
@@ -60,7 +63,7 @@ class StudentProfileScreen extends QcParentScreen {
 
       //This constructs an array of the student's past assignments & only includes the "length" field which is how many
       //words that assignment was. The method returns that array which is then passed to the line graph below as the data
-      const { assignmentHistory, dailyPracticeLog } = student;
+      let { assignmentHistory, dailyPracticeLog } = student;
       const data = [];
       for (const assignment of assignmentHistory) {
         if (assignment.assignmentLength && assignment.assignmentLength > 0) {
@@ -68,9 +71,24 @@ class StudentProfileScreen extends QcParentScreen {
         }
       }
 
+      //sort chart data from oldest to newest
+      data.sort(function(a, b) {
+        var dateA = new Date(a.completionDate),
+          dateB = new Date(b.completionDate);
+        return dateA - dateB;
+      });
+
+      //sort assignment history from newest to oldest
+      assignmentHistory.sort(function(a, b) {
+        var dateA = new Date(a.completionDate),
+          dateB = new Date(b.completionDate);
+        return dateB - dateA;
+      });
+
       this.setState({
         classStudent: student,
         currentAssignments: student.currentAssignments,
+        assignmentHistory,
         isLoading: false,
         wordsPerAssignmentData: data,
         dailyPracticeLog,
@@ -79,9 +97,18 @@ class StudentProfileScreen extends QcParentScreen {
         classesAttended: student.classesAttended ? student.classesAttended : 0,
         classesMissed: student.classesMissed ? student.classesMissed : 0,
       });
-    } catch (err){
-      console.log('Failed to get student info: ' + JSON.stringify(err.toString()));
+    } catch (err) {
+      console.log(
+        'Failed to get student info: ' + JSON.stringify(err.toString())
+      );
     }
+  }
+
+  showToast(assignedToAllClass) {
+    let toastMsg = assignedToAllClass
+      ? strings.ClassAssignmentSent
+      : strings.AssignmentSent;
+    this.refs.toast.show(toastMsg, DURATION.LENGTH_LONG);
   }
 
   getRatingCaption() {
@@ -100,7 +127,16 @@ class StudentProfileScreen extends QcParentScreen {
     return caption;
   }
 
-  async updateStateWithNewAssignmentInfo(newAssignment, index, currentClass) {
+  async updateStateWithNewAssignmentInfo(
+    newAssignment,
+    index,
+    currentClass,
+    showToast,
+    assignedToAllClass
+  ) {
+    if (showToast === true) {
+      this.showToast(assignedToAllClass);
+    }
     await this.fetchStudentInfo();
   }
 
@@ -181,6 +217,7 @@ class StudentProfileScreen extends QcParentScreen {
             classStudent: thisClassInfo,
             assignmentName: item.name,
             completionDate: item.completionDate,
+            assignmentLocation: item.location,
             rating: item.evaluation.rating,
             notes: item.evaluation.notes,
             improvementAreas: item.evaluation.improvementAreas,
@@ -284,7 +321,7 @@ class StudentProfileScreen extends QcParentScreen {
               <Text
                 style={[
                   fontStyles.smallTextStyleDarkGrey,
-                  {textVerticalAlign: "center", paddingTop: 5},
+                  { textVerticalAlign: 'center', paddingTop: 5 },
                 ]}
               >
                 {strings.ImprovementAreas}
@@ -354,8 +391,9 @@ class StudentProfileScreen extends QcParentScreen {
       classesMissed,
       wordsPerAssignmentData,
       dailyPracticeLog,
+      assignmentHistory,
     } = this.state;
-    let { assignmentHistory, averageRating, name } = classStudent;
+    let { averageRating, name } = classStudent;
 
     //If the screen is loading, a spinner will display
     if (isLoading === true) {
@@ -390,13 +428,17 @@ class StudentProfileScreen extends QcParentScreen {
       name: strings.Review,
     };
 
-    //Sorts the assignments by date completed
-    if (classStudent && assignmentHistory) {
-      assignmentHistory = assignmentHistory.reverse();
-    }
+    let sumWordsWorkedOn = 0;
 
     return (
       <View style={{ flex: 1 }}>
+        <Toast
+          position={'bottom'}
+          ref="toast"
+          fadeInDuration={3000}
+          positionValue={200}
+          style={themeStyles.toastStyle}
+        />
         <ScrollView containerStyle={styles.studentInfoContainer}>
           <View style={styles.profileInfo}>
             <View style={styles.profileInfoTop}>
@@ -808,9 +850,10 @@ class StudentProfileScreen extends QcParentScreen {
                         ],
                   datasets: [
                     {
-                      data: wordsPerAssignmentData.map(
-                        data => data.assignmentLength
-                      )
+                      data: wordsPerAssignmentData.map(data => {
+                        sumWordsWorkedOn += data.assignmentLength;
+                        return sumWordsWorkedOn;
+                      })
                     }
                   ]
                 }}
