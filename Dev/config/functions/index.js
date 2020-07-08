@@ -922,12 +922,66 @@ const addAssignmentByStudentID = async (classID, studentID, location, name, type
 	return newDocument.id;
 };
 
-//These are all the Feeds screen Firebase Functions
+//These are all the Feeds screen Firebase Functions' epxorts
 exports.createFeedDocument = functions.https.onCall(async (input, context) => {
 	const {firstObj, classID, docIdInt} = input;
-	return createFeedDocument(firstObj, classID, docIdInt)
+	await createFeedDocument(firstObj, classID, docIdInt)
 })
 
+exports.getLatestFeed = functions.https.onCall(async (input, context) => {
+	const {classID, refreshFunction} = input;
+	await getLatestFeed(classID, refreshFunction);
+})
+
+exports.badgeUpdates = functions.https.onCall(async (input, context) => {
+	const {classID, refreshFunction} = input;
+	await badgeUpdates(classID, refreshFunction);
+})
+
+exports.onNotificationUpdateFeed = functions.https.onCall(async (input, context) => {
+	const {classID, newObj} = input;
+	await onNotificationUpdateFeed(classID, newObj);
+})
+
+exports.updateFeedDoc = functions.https.onCall(async (input, context) => {
+	const {changedData, docID, classID, isLastIndex} = input;
+	await updateFeedDoc(changedData, docID, classID, isLastIndex);
+})
+
+exports.checkForNewFeedDocListener = functions.https.onCall(async (input, context) => {
+	const {classID, refreshFunction} = input;
+	checkForNewFeedDocListener(classID, refreshFunction);
+})
+
+exports.addOldFeedDoc = functions.https.onCall(async (input, context) => {
+	const {classID, currentOldest, refreshFunction} = input;
+	addOldFeedDoc(classID, currentOldest, refreshFunction)
+})
+
+exports.listenForFeedDocChanges = functions.https.onCall(async (input, context) => {
+	const {docID, classID, isNewDoc, refreshFunction} = input;
+	await listenForFeedDocChanges(docID, classID, refreshFunction, isNewDoc);
+})
+
+exports.unsubscribeFromFeedListeners = functions.https.onCall(async (input, context) => {
+	unsubscribeFromFeedListeners();
+})
+
+exports.updateSeenFeedForClass = functions.https.onCall(async (input, context) => {
+	const {classID, haveSeenFeed} = input;
+	return await updateSeenFeedForClass(classID, haveSeenFeed);
+})
+
+exports.updateSeenFeedForInidividual = functions.https.onCall(async (input, context) => {
+	const {classID, hasSeenFeed, isTeacher, userObj} = input;
+	return await updateSeenFeedForInidividual(classID, hasSeenFeed, isTeacher, userObj);
+})
+
+exports.createFeedForClass = functions.https.onCall(async (input, context) => {
+	const {classID} = input;
+	await createFeedForClass(classID);
+})
+//These are all the Feeds screen's Firebase Functions themselves
 const createFeedDocument = async (firstObj, classID, docIdInt) => {
 	const batch = firestore.batch()
     const ref = Feeds
@@ -972,7 +1026,7 @@ const getLatestFeed = async (classID, refreshFunction) => {
     );
   }
 
-  const onNotificationUpdateFeed = (classID, newObj) => {
+  const onNotificationUpdateFeed = async (classID, newObj) => {
     let lastIndex = (await Feeds.doc(classID).get()).data().lastIndex;
     let temp = (await Feeds
       .doc(classID)
@@ -998,7 +1052,7 @@ const getLatestFeed = async (classID, refreshFunction) => {
         .update({ data: changedData });
     }
   }
-  const checkForNewFeedDocListener = async (classID, refreshFunction) => {
+  const checkForNewFeedDocListener = (classID, refreshFunction) => {
     feedListeners.push(
       Feeds
         .doc(classID)
@@ -1112,4 +1166,4 @@ const getLatestFeed = async (classID, refreshFunction) => {
       .collection('content')
       .doc('0')
       .update({ data: [] });
-  }
+}
