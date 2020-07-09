@@ -288,9 +288,11 @@ class MushafAssignmentScreen extends Component {
         reactions: [],
         viewableBy: 'everyone'
       };
-      await FirebaseFunctions.onNotificationUpdateFeed(
-        classID,
-        newFeedObj
+      await FirebaseFunctions.call('onNotificationUpdateFeed',
+        {  
+          classID,
+          newObj: newFeedObj
+        }
       );
     }
     let newAssignment = {
@@ -403,9 +405,11 @@ class MushafAssignmentScreen extends Component {
         reactions: [],
         viewableBy: 'everyone'
       };
-      await FirebaseFunctions.onNotificationUpdateFeed(
-        classID,
-        newFeedObj
+      await FirebaseFunctions.call('onNotificationUpdateFeed',
+        {  
+          classID,
+          newObj: newFeedObj
+        }
       );
     }
     this.setState(

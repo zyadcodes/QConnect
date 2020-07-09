@@ -97,7 +97,7 @@ class StudentMainScreen extends QcParentScreen {
         return student.ID === userID;
       });
       const classes = await FirebaseFunctions.getClassesByIDs(student.classes);
-      FirebaseFunctions.badgeUpdates(currentClassID, currentClassData => {
+      FirebaseFunctions.call('badgeUpdates', {classID: currentClassID, refreshFunction: currentClassData => {
         for (var i = 0; i < currentClassData.students.length; i++) {
           if (currentClassData.students[i].ID === student.ID) {
             FeedHandler.shouldntShowBadge =
@@ -106,7 +106,7 @@ class StudentMainScreen extends QcParentScreen {
             break;
           }
         }
-      });
+      }});
       //This constructs an array of the student's past assignments & only includes the "length" field which is how many
       //words that assignment was. The method returns that array which is then passed to the line graph below as the data
       const { dailyPracticeLog, currentAssignments } = studentClassInfo;

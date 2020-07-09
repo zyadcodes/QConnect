@@ -82,7 +82,7 @@ export default class FeedsScreen extends React.Component {
   componentWillUnmount() {
     this.unsubscribeBlur();
     this.unsubscribeFocus();
-    FirebaseFunctions.unsubscribeFromFeedListeners();
+    FirebaseFunctions.call('unsubscribeFromFeedListeners', {});
   }
   async componentDidMount() {
     FirebaseFunctions.setCurrentScreen('Class Feed Screen', 'ClassFeedScreen');
@@ -124,10 +124,10 @@ export default class FeedsScreen extends React.Component {
         this.isOnFeedsScreen = true;
       }
     );
-    await FirebaseFunctions.getLatestFeed(
+    await FirebaseFunctions.call('getLatestFeed', {
       currentClassID,
-      this.refresh.bind(this)
-    );
+      refreshFunction: this.refresh.bind(this)
+    });
     this.setState(
       {
         currentClass,
@@ -143,12 +143,12 @@ export default class FeedsScreen extends React.Component {
     );
   }
   async iHaveSeenLatestFeed(currentClassID) {
-    await FirebaseFunctions.updateSeenFeedForInidividual(
-      currentClassID,
-      true,
-      this.state.role === 'teacher',
-      this.state.role === 'teacher' ? this.state.teacher : this.state.student
-    );
+    await FirebaseFunctions.call('updateSeenFeedForInidividual', {
+      classID: currentClassID,
+      hasSeenFeed: true,
+      isTeacher: this.state.role === 'teacher',
+      userObj: this.state.role === 'teacher' ? this.state.teacher : this.state.student
+    });
   }
   async refresh(docID, newData, isNewDoc) {
     if (this._isMounted) {
@@ -214,12 +214,12 @@ export default class FeedsScreen extends React.Component {
       content: text,
     });
     tempData[currentlyCommentingOn.objectIndex].comments = currComments;
-    await FirebaseFunctions.updateFeedDoc(
-      tempData,
+    await FirebaseFunctions.call('updateFeedDoc', {
+      changedData: tempData,
       docID,
-      currentClassID,
-      false
-    );
+      classID: currentClassID,
+      isLastIndex: false
+    });
   }
   determineScrollHeight() {
     const { feedsData } = this.state;
@@ -255,24 +255,24 @@ export default class FeedsScreen extends React.Component {
     ].data.slice();
     let docID = this.state.feedsData[this.state.feedsData.length - 1].docID;
     tempData.push(newObj);
-    await FirebaseFunctions.updateFeedDoc(
-      tempData,
+    await FirebaseFunctions.call('updateFeedDoc', {
+      changedData: tempData,
       docID,
-      this.state.currentClassID,
-      true
-    );
+      classID: this.state.currentClassID,
+      isLastIndex: true
+    });
     this.setState({ newChatTxt: '' });
   }
   async changeEmojiVote(listIndex, objectIndex, changedReactions) {
     let tempData = this.state.feedsData[listIndex].data.slice();
     let docID = this.state.feedsData[listIndex].docID;
     tempData[objectIndex].reactions = changedReactions;
-    await FirebaseFunctions.updateFeedDoc(
-      tempData,
+    await FirebaseFunctions.call('updateFeedDoc', {
+      changedData: tempData,
       docID,
-      this.state.currentClassID,
-      false //this doesn't matter, we're not adding another Feed Object anyways
-    );
+      classID: this.state.currentClassID,
+      isLastIndex: false //this doesn't matter, we're not adding another Feed Object anyways
+    });
   }
   toggleSelectingEmoji(listIndex, objectIndex) {
     if (!this.state.isSelectingEmoji) {
@@ -286,11 +286,11 @@ export default class FeedsScreen extends React.Component {
       this.setState({ isRefreshingOldFeeds: false });
       return;
     }
-    await FirebaseFunctions.addOldFeedDoc(
-      this.state.currentClassID,
-      this.state.oldestFeedDoc,
-      this.refresh.bind(this)
-    );
+    await FirebaseFunctions.call('addOldFeedDoc', {
+      classID: this.state.currentClassID,
+      currentOldest: this.state.oldestFeedDoc,
+      refreshFunction: this.refresh.bind(this)
+    });
   }
   render() {
     const { LeftNavPane } = this.state;
@@ -434,12 +434,12 @@ export default class FeedsScreen extends React.Component {
                 emoji,
                 reactedBy: [this.state.userID]
               };
-              await FirebaseFunctions.updateFeedDoc(
-                tempData,
+              await FirebaseFunctions.call('updateFeedDoc', {
+                changedData: tempData,
                 docID,
-                this.state.currentClassID,
-                false //Same here, this also doesn't matter
-              );
+                classID: this.state.currentClassID,
+                isLastIndex: false //Same here, this also doesn't matter
+              });
               this.setState({
                 currentlySelectingIndex: { listIndex: -1, objectIndex: -1 },
               });
