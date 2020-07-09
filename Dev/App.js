@@ -3,6 +3,7 @@ import MainStackNavigator from "./src/screens/MainStackNavigator";
 import { YellowBox, Alert, ScrollView, View } from "react-native";
 import NetInfo from '@react-native-community/netinfo';
 import QCView from "components/QCView";
+import ErrorBoundary from "./src/screens/ErrorBoundary";
 import screenStyle from "config/screenStyle";
 import strings from 'config/strings';
 import {
@@ -59,19 +60,23 @@ export default class App extends Component {
 
   renderMainApp() {
     return (
-      <ScrollView contentContainerStyle={{
-        flex: 1,
-    }}>
-        {this.state.isOnline ? (
-          this.state.requestingPermissions === false ? (
-            <MainStackNavigator />
+      <ErrorBoundary>
+        <ScrollView
+          contentContainerStyle={{
+            flex: 1,
+          }}
+        >
+          {this.state.isOnline ? (
+            this.state.requestingPermissions === false ? (
+              <MainStackNavigator />
+            ) : (
+              <View />
+            )
           ) : (
-            <View />
-          )
-        ) : (
-          <OfflineEmptyState retry={this.onRetry.bind(this)} />
-        )}
-      </ScrollView>
+            <OfflineEmptyState retry={this.onRetry.bind(this)} />
+          )}
+        </ScrollView>
+      </ErrorBoundary>
     );
   }
   render() {

@@ -213,21 +213,24 @@ class StudentProfileScreen extends QcParentScreen {
           //To-Do: Navigates to more specific evaluation for this assignment
           this.props.navigation.push("EvaluationPage", {
             classID: this.state.currentClassID,
-            studentID: this.state.studentID,
+            studentID: this.state.userID,
             classStudent: thisClassInfo,
-            assignmentName: item.name,
+            assignment: item,
             completionDate: item.completionDate,
             assignmentLocation: item.location,
             rating: item.evaluation.rating,
             notes: item.evaluation.notes,
             improvementAreas: item.evaluation.improvementAreas,
             userID: this.state.userID,
+            highlightedWords: item.evaluation.highlightedWords,
+            highlightedAyahs: item.evaluation.highlightedAyahs,
             evaluationObject: item.evaluation,
             submission: item.submission,
-            isStudentSide: true,
+            isStudentSide: false,
             evaluationID: item.ID,
             readOnly: true,
-            newAssignment: false
+            newAssignment: false,
+            assignmentName: item.name
           });
         }}
       >

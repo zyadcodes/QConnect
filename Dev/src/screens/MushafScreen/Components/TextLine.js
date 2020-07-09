@@ -1,14 +1,13 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import React from "react";
+import { StyleSheet, View } from "react-native";
 import {
   compareOrder,
   isAyahSelected,
   toNumberString
 } from "../Helpers/AyahsOrder";
-import AyahSelectionWord from './AyahSelectionWord';
-import EndOfAyah from './EndOfAyah';
-import { screenHeight } from 'config/dimensions';
-import LoadingSpinner from "components/LoadingSpinner";
+import AyahSelectionWord from "./AyahSelectionWord";
+import EndOfAyah from "./EndOfAyah";
+import { screenHeight } from "config/dimensions";
 
 //Creates the higher order component
 const TextLine = ({
@@ -25,13 +24,16 @@ const TextLine = ({
   highlightedWords,
   highlightedAyahs,
   highlightedColor,
-  showLoadingOnHighlightedAyah
+  showLoadingOnHighlightedAyah,
+  showTooltipOnPress,
+  evalNotesComponent,
+  removeHighlight
 }) => {
   let isFirstWord = noSelectionInPreviousLines;
   return (
     <View style={{ ...styles.line, alignItems: lineAlign }}>
       {lineText &&
-        lineText.map(word => {
+        lineText.map((word, index) => {
           let curAyah = {
             ayah: Number(word.aya),
             surah: Number(word.sura),
@@ -55,29 +57,46 @@ const TextLine = ({
             Object.keys(highlightedAyahs).includes(toNumberString(curAyah));
 
           if (selectionOn === false) {
-            if (word.char_type === 'word') {
+            if (word.char_type !== "end" && word.char_type !== "pause") {
+              if (
+                word.char_type === "word" &&
+                lineText[index + 1] !== undefined &&
+                lineText[index + 1].char_type === "pause"
+              ) {
+                word.text = word.text + lineText[index + 1].text;
+              }
+
               return (
                 <AyahSelectionWord
                   key={word.id}
-                  text={word.text}
+                  word={word}
+                  showTooltipOnPress={showTooltipOnPress}
+                  isWordHighlighted={isCurWordHighlighted}
+                  isAyahHighlighted={isCurAyahHighlighted}
                   highlighted={highlighted}
                   highlightedColor={highlightedColor}
                   selected={false}
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={false}
+                  evalNotesComponent={evalNotesComponent}
+                  removeHighlight={removeHighlight}
                 />
               );
-            } else if (word.char_type === 'end') {
+            } else if (word.char_type === "end") {
               return (
                 <EndOfAyah
                   key={word.id}
-                  ayahNumber={word.aya}
+                  word={word}
+                  curAyah={curAyah}
+                  showTooltipOnPress={showTooltipOnPress}
                   onPress={() => onSelectAyah(curAyah, word)}
                   selected={false}
                   highlighted={highlighted}
                   highlightedColor={highlightedColor}
                   showLoading={showLoading}
                   isLastSelectedAyah={false}
+                  evalNotesComponent={evalNotesComponent}
+                  removeHighlight={removeHighlight}
                 />
               );
             }
@@ -91,15 +110,34 @@ const TextLine = ({
             );
             let isLastSelectedAyah =
               isAyaSelected && compareOrder(selectedAyahsEnd, curAyah) === 0;
-            if (word.char_type === 'word') {
+            if (word.char_type !== "end" && word.char_type !== "pause") {
+              if (
+                word.char_type === "word" &&
+                lineText[index + 1] !== undefined &&
+                lineText[index + 1].char_type === "pause"
+              ) {
+                word.text = word.text + lineText[index + 1].text;
+              }
+
               let isFirstSelectedWord = isAyaSelected && isFirstWord;
               if (isFirstSelectedWord) {
                 isFirstWord = false;
               }
+
+              let showTooltip = false;
+              if (
+                showTooltipOnPress === "true" ||
+                (showTooltipOnPress === "whenHighlighted" &&
+                  isCurWordHighlighted === true)
+              ) {
+                showTooltip = true;
+              }
+
               return (
                 <AyahSelectionWord
                   key={word.id}
-                  text={word.text}
+                  word={word}
+                  showTooltipOnPress={showTooltip}
                   // the margins and border radius are different between the cases
                   //  of when a word is selected separately or the entire ayah is selected
                   // together. That's why we are passing these as different props
@@ -107,16 +145,30 @@ const TextLine = ({
                   isWordHighlighted={isCurWordHighlighted}
                   isAyahHighlighted={isCurAyahHighlighted}
                   highlightedColor={highlightedColor}
+                  highlighted={highlighted}
                   selected={isAyaSelected}
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={isFirstSelectedWord}
+                  evalNotesComponent={evalNotesComponent}
+                  removeHighlight={removeHighlight}
                 />
               );
-            } else if (word.char_type === 'end') {
+            } else if (word.char_type === "end") {
+              let showTooltip = false;
+              if (
+                showTooltipOnPress === "true" ||
+                (showTooltipOnPress === "whenHighlighted" &&
+                  isCurAyahHighlighted === true)
+              ) {
+                showTooltip = true;
+              }
+
               return (
                 <EndOfAyah
                   key={word.id}
-                  ayahNumber={word.aya}
+                  word={word}
+                  curAyah={curAyah}
+                  showTooltipOnPress={showTooltip}
                   onPress={() => onSelectAyah(curAyah, word)}
                   highlighted={highlighted}
                   showLoading={showLoading}
@@ -129,6 +181,8 @@ const TextLine = ({
                     selectedAyahsEnd
                   )}
                   isLastSelectedAyah={isLastSelectedAyah}
+                  evalNotesComponent={evalNotesComponent}
+                  removeHighlight={removeHighlight}
                 />
               );
             }
@@ -140,21 +194,21 @@ const TextLine = ({
 
 const styles = StyleSheet.create({
   line: {
-    flexDirection: 'row-reverse',
-    backgroundColor: 'transparent',
-    justifyContent: 'space-between'
+    flexDirection: "row-reverse",
+    backgroundColor: "transparent",
+    justifyContent: "space-between",
   },
   footer: {
-    justifyContent: 'center',
-    alignSelf: 'stretch',
+    justifyContent: "center",
+    alignSelf: "stretch",
     height: screenHeight * 0.25,
-    alignItems: 'center'
+    alignItems: "center",
   },
   imageContainer: {
-    width: '100%',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    alignItems: 'center'
+    width: "100%",
+    justifyContent: "center",
+    alignSelf: "center",
+    alignItems: "center",
   }
 });
 

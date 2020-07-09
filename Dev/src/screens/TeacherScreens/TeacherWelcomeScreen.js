@@ -134,7 +134,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
       if (err && err.message) {
         Alert.alert(strings.Whoops, err.message);
       } else {
-        Alert.alert(strings.Whoops, strings.SomethingWentWrong);
+        Alert.alert(strings.SomethingWentWrong, strings.SomethingWentWrongDesc);
       }
 
       FirebaseFunctions.logEvent("CREATE_USER_FAILED", { err });

@@ -4,16 +4,19 @@ import {
   StyleSheet,
   View,
   TouchableWithoutFeedback,
-  PixelRatio,
+  TouchableOpacity,
+  PixelRatio
 } from "react-native";
+import { Icon } from "react-native-elements";
 import colors from "config/colors";
 import { screenWidth } from "config/dimensions";
+import { Popover, PopoverController } from "react-native-modal-popover";
 
 //Creates the higher order component
 class Word extends React.Component {
   state = {
     selected: this.props.selected,
-    isFirstSelectedWord: this.props.isFirstSelectedWord,
+    isFirstSelectedWord: this.props.isFirstSelectedWord
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -28,15 +31,38 @@ class Word extends React.Component {
     return true;
   }
 
+  //renders the word content.
+  //The content is then wrapped in either poppover control or simple touchable
+  // depending on the mus7af version that is being rendered.
+  renderWord() {
+    const { word, isWordHighlighted, isAyahHighlighted } = this.props;
+    const { text } = word;
+    return (
+      <View>
+        <Text
+          style={
+            isWordHighlighted || isAyahHighlighted
+              ? styles.highlightedWordText
+              : styles.wordText
+          }
+        >
+          {text}
+        </Text>
+      </View>
+    );
+  }
+
   render() {
     const {
-      text,
       onPress,
       selected,
       isWordHighlighted,
       isFirstSelectedWord,
       highlightedColor,
-      isAyahHighlighted
+      isAyahHighlighted,
+      showTooltipOnPress,
+      word,
+      removeHighlight
     } = this.props;
     let containerStyle = [styles.container];
     if (selected) {
@@ -52,27 +78,94 @@ class Word extends React.Component {
       containerStyle.push(styles.ayahHighlightedStyle);
     }
 
-    if (
+    let highlightWord =
       highlightedColor !== undefined &&
-      (isAyahHighlighted === true || isWordHighlighted === true)
-    ) {
+      (isAyahHighlighted === true || isWordHighlighted === true);
+
+    if (highlightWord) {
       containerStyle.push({
-        backgroundColor: highlightedColor,
+        backgroundColor: highlightedColor
       });
     }
     return (
       <View style={containerStyle}>
-        <TouchableWithoutFeedback onPress={() => onPress()}>
-          <Text
-            style={
-              isWordHighlighted || isAyahHighlighted
-                ? styles.highlightedWordText
-                : styles.wordText
-            }
-          >
-            {text}
-          </Text>
-        </TouchableWithoutFeedback>
+        {showTooltipOnPress === true ? (
+          <PopoverController>
+            {({
+              openPopover,
+              closePopover,
+              popoverVisible,
+              setPopoverAnchor,
+              popoverAnchorRect
+            }) => (
+              <React.Fragment>
+                <TouchableWithoutFeedback
+                  ref={setPopoverAnchor}
+                  onPress={() => {
+                    openPopover();
+                    if (!highlightWord) {
+                      onPress();
+                    }
+                  }}
+                >
+                  {this.renderWord()}
+                </TouchableWithoutFeedback>
+
+                <Popover
+                  contentStyle={styles.content}
+                  arrowStyle={styles.arrow}
+                  backgroundStyle={styles.background}
+                  placement="top"
+                  visible={popoverVisible}
+                  onClose={closePopover}
+                  fromRect={popoverAnchorRect}
+                  supportedOrientations={["portrait"]}
+                >
+                  <View
+                    style={{
+                      top: 5,
+                      left: screenWidth * 0.75,
+                      flexDirection: "row",
+                      zIndex: 1,
+                      position: "absolute" // add if dont work with above
+                    }}
+                  >
+                    <TouchableOpacity
+                      onPress={() => {
+                        removeHighlight(word);
+                        closePopover();
+                      }}
+                    >
+                      <Icon
+                        name="delete-forever-outline"
+                        type="material-community"
+                        color={colors.darkRed}
+                      />
+                    </TouchableOpacity>
+
+                    <View style={{ width: 10, height: 10 }} />
+                    <TouchableOpacity
+                      onPress={() => {
+                        closePopover();
+                      }}
+                    >
+                      <Icon
+                        name="close"
+                        type="antdesign"
+                        color={colors.darkGrey}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  {this.props.evalNotesComponent(word)}
+                </Popover>
+              </React.Fragment>
+            )}
+          </PopoverController>
+        ) : (
+          <TouchableWithoutFeedback onPress={() => onPress()}>
+            {this.renderWord()}
+          </TouchableWithoutFeedback>
+        )}
       </View>
     );
   }
@@ -91,13 +184,13 @@ const styles = StyleSheet.create({
     textAlign: "right",
     fontFamily: "me_quran",
     fontSize: mushafFontSize,
-    color: colors.darkGrey,
+    color: colors.darkGrey
   },
   highlightedWordText: {
     textAlign: "right",
     fontFamily: "me_quran",
     fontSize: mushafFontSize,
-    color: colors.white,
+    color: colors.white
   },
   container: {
     flexGrow: 1,
@@ -117,8 +210,27 @@ const styles = StyleSheet.create({
   },
   firstSelectedWordText: {
     borderTopRightRadius: 25,
-    borderBottomRightRadius: 25,
+    borderBottomRightRadius: 25
   },
+  app: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#c2ffd2"
+  },
+  content: {
+    padding: 16,
+    backgroundColor: colors.white,
+    borderRadius: 8,
+    width: screenWidth * 0.96,
+    minHeight: 150
+  },
+  arrow: {
+    borderTopColor: "pink"
+  },
+  background: {
+    backgroundColor: "rgba(107,107,107,0.2)"
+  }
 });
 
 export default Word;

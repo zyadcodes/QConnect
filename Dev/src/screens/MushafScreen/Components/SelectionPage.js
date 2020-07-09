@@ -383,7 +383,7 @@ class SelectionPage extends React.Component {
               id={this.state.page + "upperWrapper"}
               style={{
                 backgroundColor: colors.white,
-                justifyContent: 'flex-end'
+                justifyContent: 'flex-end',
               }}
             >
               <AssignmentEntryComponent
@@ -470,6 +470,7 @@ class SelectionPage extends React.Component {
                           key={page + '_' + line.line}
                           lineText={line.text}
                           selectionOn={selectionOn}
+                          showTooltipOnPress={this.props.showTooltipOnPress}
                           highlightedWords={this.props.highlightedWords}
                           highlightedAyahs={this.props.highlightedAyahs}
                           highlightedColor={this.props.highlightedColor}
@@ -488,6 +489,8 @@ class SelectionPage extends React.Component {
                           }
                           page={this.state.page}
                           lineAlign={lineAlign}
+                          evalNotesComponent={this.props.evalNotesComponent}
+                          removeHighlight={this.props.removeHighlight}
                         />
                       );
                     }
@@ -556,6 +559,7 @@ class SelectionPage extends React.Component {
                 </ImageBackground>
               </View>
             </View>
+            <View style={{height: 300}}/>
           </ScrollView>
         </KeyboardAvoidingView>
       );

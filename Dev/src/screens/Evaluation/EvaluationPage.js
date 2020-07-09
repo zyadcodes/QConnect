@@ -6,7 +6,6 @@ import {
   StyleSheet,
   View,
   Text,
-  TextInput,
   Alert,
   ScrollView,
   TouchableOpacity,
@@ -19,7 +18,6 @@ import ActionButton from "react-native-action-button";
 import strings from "config/strings";
 import studentImages from "config/studentImages";
 import QcParentScreen from "screens/QcParentScreen";
-import FlowLayout from "components/FlowLayout";
 import TopBanner from "components/TopBanner";
 import FirebaseFunctions from "config/FirebaseFunctions";
 import LoadingSpinner from "components/LoadingSpinner";
@@ -31,11 +29,8 @@ import MushafScreen from "screens/MushafScreen/MushafScreen";
 import KeepAwake from "react-native-keep-awake";
 import { noSelection } from "screens/MushafScreen/Helpers/consts";
 import * as _ from "lodash";
-import {
-  compareOrder,
-  toNumberString
-} from "../MushafScreen/Helpers/AyahsOrder";
-import DailyTracker, { getTodaysDateString } from "components/DailyTracker";
+import { toNumberString } from "../MushafScreen/Helpers/AyahsOrder";
+import EvaluationNotes from "../../components/EvaluationNotes";
 
 const isAndroid = Platform.OS === "android";
 
@@ -77,7 +72,6 @@ export class EvaluationPage extends QcParentScreen {
     isPlaying: "Stopped",
     currentPosition: "0:00",
     audioFile: -1,
-    notesHeight: 40,
     selectedImprovementAreas: [],
     highlightedWords:
       this.props.navigation.state.params.highlightedWords !== undefined
@@ -88,7 +82,7 @@ export class EvaluationPage extends QcParentScreen {
         ? this.props.navigation.state.params.highlightedAyahs
         : {},
     audioPlaybackVisible: true,
-    evaluationCollapsed: false,
+    evaluationCollapsed: true,
     selection: this.props.navigation.state.params.assignmentLocation
       ? {
           start: this.props.navigation.state.params.assignmentLocation.start,
@@ -160,16 +154,7 @@ export class EvaluationPage extends QcParentScreen {
       //show areas pressed when evaluating this history item (passed from calling screen)
       improvementAreas = this.props.navigation.state.params.improvementAreas;
     } else {
-      const teacher = await FirebaseFunctions.getTeacherByID(
-        this.props.navigation.state.params.userID
-      );
-      //if teacher has customized areas, let's load theirs.
-      if (
-        teacher.evaluationImprovementTags &&
-        teacher.evaluationImprovementTags.length > 0
-      ) {
-        improvementAreas = teacher.evaluationImprovementTags;
-      }
+      this.getTeacherCustomImprovementAreas();
     }
 
     this.setState({
@@ -180,6 +165,22 @@ export class EvaluationPage extends QcParentScreen {
       audioSentDateTime,
       improvementAreas
     });
+  }
+
+  //asynchronously loads custom evaluation tags that the teacher might have
+  // saved on firebase and update the state once loaded.
+  async getTeacherCustomImprovementAreas() {
+    const teacher = await FirebaseFunctions.getTeacherByID(
+      this.props.navigation.state.params.userID
+    );
+    //if teacher has customized areas, let's load theirs.
+    if (
+      teacher.evaluationImprovementTags &&
+      teacher.evaluationImprovementTags.length > 0
+    ) {
+      let improvementAreas = teacher.evaluationImprovementTags;
+      this.setState({ improvementAreas });
+    }
   }
 
   // --------------  Updates state to reflect a change in a category rating --------------
@@ -246,7 +247,7 @@ export class EvaluationPage extends QcParentScreen {
         classID: this.state.classID
       });
     } catch (err) {
-      Alert.alert(strings.Whoops, strings.SomethingWentWrong);
+      Alert.alert(strings.SomethingWentWrong, strings.SomethingWentWrongDesc);
     }
   }
 
@@ -259,8 +260,7 @@ export class EvaluationPage extends QcParentScreen {
       notes,
       rating,
       selectedImprovementAreas,
-      assignmentLength,
-      classStudent
+      assignmentLength
     } = this.state;
     const { assignmentType } = this.props.navigation.state.params;
     this.setState({ isLoading: true });
@@ -299,6 +299,7 @@ export class EvaluationPage extends QcParentScreen {
           style: "cancel",
           onPress: () => {
             if (this.props.navigation.state.params.newAssignment === true) {
+              this.setState({ isLoading: true });
               this.doSubmitRating();
             } else {
               this.overwriteOldEvaluation();
@@ -316,7 +317,24 @@ export class EvaluationPage extends QcParentScreen {
       }
     }
   }
-  onSelectAyah(selectedAyah, selectedWord) {
+
+  //remove the highlight and its corresponding evaluation notes from the given word.
+  unhighlightWord(word, ayah) {
+    if (word.char_type === "word") {
+      let highlightedWords = this.state.highlightedWords;
+      delete highlightedWords[word.id];
+      this.setState({ highlightedWords });
+    } else if (word.char_type === "end") {
+      //if user presses on an end of ayah, we highlight that entire ayah
+      let highlightedAyahs = this.state.highlightedAyahs;
+      let ayahKey = toNumberString(ayah);
+      delete highlightedAyahs[ayahKey];
+      this.setState({ highlightedAyahs });
+    }
+  }
+
+  //this function is called when users
+  onSelectAyah(selectedAyah, selectedWord, evalNotes) {
     if (this.state.readOnly) {
       // don't change highlighted words/ayahs on read-only mode.
       return;
@@ -324,30 +342,21 @@ export class EvaluationPage extends QcParentScreen {
     //if users press on a word, we highlight that word
     if (selectedWord.char_type === "word") {
       let highlightedWords = this.state.highlightedWords;
-      if (!Object.keys(highlightedWords).includes(selectedWord.id)) {
-        highlightedWords = {
-          ...highlightedWords,
-          [selectedWord.id]: {}
-        };
-      } else {
-        //if the same highlighted word is pressed again, un-highlight it (toggle off)
-        delete highlightedWords[selectedWord.id];
-      }
+      let wordEval = _.get(highlightedWords, selectedWord.id, {});
+      highlightedWords = {
+        ...highlightedWords,
+        [selectedWord.id]: { ...wordEval, ...evalNotes }
+      };
       this.setState({ highlightedWords });
     } else if (selectedWord.char_type === "end") {
       //if user presses on an end of ayah, we highlight that entire ayah
       let highlightedAyahs = this.state.highlightedAyahs;
       let ayahKey = toNumberString(selectedAyah);
-
-      if (!Object.keys(highlightedAyahs).includes(ayahKey)) {
-        highlightedAyahs = {
-          ...highlightedAyahs,
-          [ayahKey]: { ...selectedAyah }
-        };
-      } else {
-        //if the same highlighted word is pressed again, un-highlight it (toggle off)
-        delete highlightedAyahs[ayahKey];
-      }
+      let ayahEval = _.get(highlightedAyahs, ayahKey, {});
+      highlightedAyahs = {
+        ...highlightedAyahs,
+        [ayahKey]: { ...ayahEval, ...evalNotes }
+      };
       this.setState({ highlightedAyahs });
     }
   }
@@ -360,19 +369,41 @@ export class EvaluationPage extends QcParentScreen {
       : this.props.navigation.goBack();
   }
 
+  //handles when teacher taps on an improvement area durig tasmee3 evaluation
+  onImprovementAreasSelectionChanged = (
+    selectedImprovementAreas,
+    word,
+    ayah
+  ) => {
+    if (word === undefined) {
+      this.setState({ selectedImprovementAreas });
+    } else {
+      this.onSelectAyah(ayah, word, {
+        improvementAreas: selectedImprovementAreas
+      });
+    }
+  };
+
+  //handles when teacher enters a note durig tasmee3 evaluation
+  onSaveNotes(notes, word, ayah) {
+    if (word === undefined) {
+      this.setState({ notes });
+    } else {
+      this.onSelectAyah(ayah, word, { notes });
+    }
+  }
+
+  onImprovementsCustomized = newAreas => {
+    this.setState({ improvementAreas: newAreas });
+    FirebaseFunctions.saveTeacherCustomImprovementTags(
+      this.props.navigation.state.params.userID,
+      newAreas
+    );
+  };
+
   // --------------  Renders Evaluation scree UI --------------
   render() {
-    if (isLoading === true) {
-      return (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <LoadingSpinner isVisible={true} />
-        </View>
-      );
-    }
     const {
-      notes,
       improvementAreas,
       readOnly,
       rating,
@@ -387,13 +418,22 @@ export class EvaluationPage extends QcParentScreen {
       highlightedAyahs,
       highlightedWords
     } = this.state;
+
+    if (isLoading === true) {
+      return (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <LoadingSpinner isVisible={true} />
+        </View>
+      );
+    }
     const { profileImageID } = studentObject;
     const headerTitle = readOnly
       ? strings.Completed +
         ": " +
         this.props.navigation.state.params.completionDate
       : strings.HowWas + classStudent.name + strings.sTasmee3;
-
     return (
       //----- outer view, gray background ------------------------
       //Makes it so keyboard is dismissed when clicked somewhere else
@@ -404,7 +444,7 @@ export class EvaluationPage extends QcParentScreen {
       >
         {this.props.navigation.state.params.newAssignment === true ? (
           <Header
-            title={strings.Evaluation}
+            title={assignmentType}
             subtitle={assignmentName}
             avatarName={classStudent.name}
             avatarImage={studentImages.images[profileImageID]}
@@ -426,46 +466,15 @@ export class EvaluationPage extends QcParentScreen {
           />
         ) : (
           <Header
-            title={strings.Evaluation}
+            title={assignmentType}
             avatarName={classStudent.name}
             subtitle={assignmentName}
             avatarImage={studentImages.images[profileImageID]}
             onClose={this.closeScreen.bind(this)}
           />
         )}
-        {showMushaf && (
-          <View
-            style={{ height: screenHeight - headerHeight, paddingBottom: 150 }}
-          >
-            <KeepAwake />
-            <MushafScreen
-              assignToID={studentID}
-              hideHeader={true}
-              showSelectedLinesOnly={false}
-              classID={classID}
-              profileImage={studentImages.images[profileImageID]}
-              showLoadingOnHighlightedAyah={
-                this.state.isAudioLoading === true &&
-                (this.state.highlightedAyahs !== undefined ||
-                  _.isEqual(this.state.highlightedAyahs, {}))
-              }
-              selection={this.state.selection}
-              highlightedWords={highlightedWords}
-              highlightedAyahs={highlightedAyahs}
-              highlightedColor={colors.darkRed}
-              assignmentName={assignmentName}
-              assignmentType={assignmentType}
-              topRightIconName="close"
-              onClose={this.closeScreen.bind(this)}
-              currentClass={classStudent}
-              onSelectAyah={this.onSelectAyah.bind(this)}
-              disableChangingUser={true}
-            />
-          </View>
-        )}
-
         <KeyboardAvoidingView
-          behavior= {isAndroid? undefined : "padding"}
+          behavior={isAndroid ? undefined : "padding"}
           style={
             showMushaf
               ? styles.evaluationContainer
@@ -476,7 +485,7 @@ export class EvaluationPage extends QcParentScreen {
             {showMushaf && (
               <View
                 style={{
-                  top: 5,
+                  bottom: 5,
                   left: screenWidth * 0.9,
                   zIndex: 1,
                   position: "absolute" // add if dont work with above
@@ -492,8 +501,8 @@ export class EvaluationPage extends QcParentScreen {
                   <Icon
                     name={
                       this.state.evaluationCollapsed
-                        ? "angle-double-up"
-                        : "angle-double-down"
+                        ? "angle-double-down"
+                        : "angle-double-up"
                     }
                     type="font-awesome"
                     color={colors.primaryDark}
@@ -548,82 +557,145 @@ export class EvaluationPage extends QcParentScreen {
               </View>
 
               {this.state.evaluationCollapsed === false && (
-                <View>
-                  <TextInput
-                    style={styles.notesStyle}
-                    multiline={true}
-                    height={this.state.notesHeight}
-                    onChangeText={teacherNotes =>
-                      this.setState({
-                        notes: teacherNotes
-                      })
-                    }
-                    returnKeyType={"done"}
-                    autoCorrect={false}
-                    blurOnSubmit={true}
-                    placeholder={strings.WriteANote}
-                    placeholderColor={colors.black}
-                    editable={!readOnly}
-                    value={notes}
-                    onFocus={() =>
-                      this.setState({ notesHeight: screenHeight * 0.1 })
-                    }
-                    onEndEditing={() => this.setState({ notesHeight: 40 })}
-                  />
-
-                  {/**
-                  The Things to work on button.
-              */}
-
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "flex-start"
-                    }}
-                  >
-                    <Text style={fontStyles.mainTextStyleDarkGrey}>
-                      {strings.ImprovementAreas}
-                    </Text>
-                  </View>
-                  <FlowLayout
-                    ref="flow"
-                    dataValue={improvementAreas}
-                    title={strings.ImprovementAreas}
-                    readOnly={readOnly}
-                    selectedByDefault={readOnly ? true : false}
-                    onSelectionChanged={selectedImprovementAreas => {
-                      this.setState({ selectedImprovementAreas });
-                    }}
-                    onImprovementsCustomized={newAreas => {
-                      this.setState({ improvementAreas: newAreas });
-                      FirebaseFunctions.saveTeacherCustomImprovementTags(
-                        this.props.navigation.state.params.userID,
-                        newAreas
-                      );
-                    }}
-                  />
-                  <View style={{ height: 30 }} />
-                  {!readOnly && (
-                    <ActionButton
-                      buttonColor={colors.darkGreen}
-                      onPress={() => {
-                        this.submitRating();
-                      }}
-                      renderIcon={() => (
-                        <Icon
-                          name="check-bold"
-                          color="#fff"
-                          type="material-community"
-                          style={styles.actionButtonIcon}
-                        />
-                      )}
-                    />
+                <EvaluationNotes
+                  improvementAreas={improvementAreas}
+                  readOnly={readOnly}
+                  onImprovementAreasSelectionChanged={this.onImprovementAreasSelectionChanged.bind(
+                    this
                   )}
-                </View>
+                  onImprovementsCustomized={this.onImprovementsCustomized.bind(
+                    this
+                  )}
+                  saveNotes={evalNotes => this.onSaveNotes(evalNotes)}
+                  notes={this.state.notes}
+                  selectedImprovementAreas={this.state.selectedImprovementAreas}
+                  userID={this.props.navigation.state.params.userID}
+                />
               )}
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
+        <View style={{ flex: 1 }}>
+          {showMushaf && (
+            <View
+              style={{
+                height: screenHeight - headerHeight
+              }}
+            >
+              <KeepAwake />
+              <MushafScreen
+                assignToID={studentID}
+                hideHeader={true}
+                showSelectedLinesOnly={false}
+                classID={classID}
+                showTooltipOnPress={readOnly ? "whenHighlighted" : "true"}
+                profileImage={studentImages.images[profileImageID]}
+                showLoadingOnHighlightedAyah={
+                  this.state.isAudioLoading === true &&
+                  (this.state.highlightedAyahs !== undefined ||
+                    _.isEqual(this.state.highlightedAyahs, {}))
+                }
+                selection={this.state.selection}
+                highlightedWords={highlightedWords}
+                highlightedAyahs={highlightedAyahs}
+                highlightedColor={colors.darkRed}
+                assignmentName={assignmentName}
+                assignmentType={assignmentType}
+                topRightIconName="close"
+                onClose={this.closeScreen.bind(this)}
+                currentClass={classStudent}
+                onSelectAyah={this.onSelectAyah.bind(this)}
+                disableChangingUser={true}
+                removeHighlight={this.unhighlightWord.bind(this)}
+                evalNotesComponent={(word, ayah) => {
+                  let wordOrAyahImprovements = [];
+                  let wordOrAyahNotes = "";
+                  try {
+                    if (word.char_type === "end") {
+                      let ayahNumber = toNumberString(ayah);
+                      wordOrAyahImprovements = _.get(
+                        highlightedAyahs[ayahNumber],
+                        "improvementAreas",
+                        []
+                      );
+                      wordOrAyahNotes = _.get(
+                        highlightedAyahs[ayahNumber],
+                        "notes",
+                        []
+                      );
+                    } else {
+                      wordOrAyahImprovements = _.get(
+                        highlightedWords[word.id],
+                        "improvementAreas",
+                        []
+                      );
+                      wordOrAyahNotes = _.get(
+                        highlightedWords[word.id],
+                        "notes",
+                        []
+                      );
+                    }
+                  } catch (error) {
+                    console.log(
+                      "ERROR_GET_WRD_AYAH_IMPROVEMENTS" + JSON.stringify(error)
+                    );
+                    FirebaseFunctions.log("ERROR_GET_WRD_AYAH_IMPROVEMENTS", {
+                      error
+                    });
+                  }
+                  return (
+                    <EvaluationNotes
+                      //TODO: This logic needs cleaning
+                      // for now: if the teacher is evaluating, then we pass the full set of improvement ares for her to choose from
+                      // if this is readonly (ie: student or teacher are seeing a past assignment),
+                      //  then we show only imp. areas entered for ths word.
+                      improvementAreas={
+                        readOnly ? wordOrAyahImprovements : improvementAreas
+                      }
+                      notes={wordOrAyahNotes}
+                      selectedImprovementAreas={wordOrAyahImprovements}
+                      readOnly={readOnly}
+                      userID={this.props.navigation.state.params.userID}
+                      onImprovementAreasSelectionChanged={selectedImprovementAreas =>
+                        this.onImprovementAreasSelectionChanged(
+                          selectedImprovementAreas,
+                          word,
+                          ayah
+                        )
+                      }
+                      onImprovementsCustomized={newAreas => {
+                        this.setState({ improvementAreas: newAreas });
+                        FirebaseFunctions.saveTeacherCustomImprovementTags(
+                          this.props.navigation.state.params.userID,
+                          newAreas
+                        );
+                      }}
+                      saveNotes={wordNotes =>
+                        this.onSaveNotes(wordNotes, word, ayah)
+                      }
+                    />
+                  );
+                }}
+              />
+            </View>
+          )}
+          {!readOnly && (
+            <ActionButton
+              buttonColor={colors.darkGreen}
+              onPress={() => {
+                this.submitRating();
+              }}
+              renderIcon={() => (
+                <Icon
+                  name="check-bold"
+                  color="#fff"
+                  type="material-community"
+                  style={styles.actionButtonIcon}
+                />
+              )}
+            />
+          )}
+        </View>
       </View>
     );
   }
@@ -657,11 +729,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
     elevation: 3,
-    borderRadius: 3,
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0
+    borderRadius: 3
   },
   section: {
     alignItems: "center",
