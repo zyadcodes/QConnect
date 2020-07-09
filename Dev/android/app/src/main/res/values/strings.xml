@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">QuranConnect</string>
+     <string moduleConfig="true" name="CodePushDeploymentKey">zcto1VGZdG3ei3j10UjRJGh-9XUiAs0HAD3Lx</string>
 </resources>

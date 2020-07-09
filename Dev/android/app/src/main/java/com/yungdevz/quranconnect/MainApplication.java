@@ -1,30 +1,23 @@
 package com.yungdevz.quranconnect;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.facebook.react.PackageList;
-import com.facebook.hermes.reactexecutor.HermesExecutorFactory;
-import com.facebook.react.bridge.JavaScriptExecutorFactory;
 import com.facebook.react.ReactApplication;
-import com.zmxv.RNSound.RNSoundPackage;
-import com.zmxv.RNSound.RNSoundPackage;
-import com.reactnativecommunity.netinfo.NetInfoPackage;
-import com.swmansion.reanimated.ReanimatedPackage;
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import io.invertase.firebase.storage.RNFirebaseStoragePackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-import io.invertase.firebase.RNFirebasePackage;
-import io.invertase.firebase.auth.RNFirebaseAuthPackage;
-import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
-import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
-import io.invertase.firebase.functions.RNFirebaseFunctionsPackage;
-import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 
 import java.util.List;
+
+import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
+import io.invertase.firebase.auth.RNFirebaseAuthPackage;
+import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
+import io.invertase.firebase.functions.RNFirebaseFunctionsPackage;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import io.invertase.firebase.storage.RNFirebaseStoragePackage;
+import com.microsoft.codepush.react.CodePush;
+
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -52,6 +45,11 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected String getJSMainModuleName() {
       return "index";
+    }
+
+    @Override
+    protected String getJSBundleFile() {
+      return CodePush.getJSBundleFile();
     }
   };
 
