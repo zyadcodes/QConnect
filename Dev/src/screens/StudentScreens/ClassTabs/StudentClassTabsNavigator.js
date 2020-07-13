@@ -91,10 +91,10 @@ class ClassTabsNavigator extends Component {
   };
   componentDidMount() {
     setTimeout(() => {
-      FeedsScreen.doThisWhenKeyboardHides(() =>
+      FeedHandler.doThisWhenKeyboardHides(() =>
         this.setState({ isVisible: true })
       );
-      FeedsScreen.doThisWhenKeyboardShows(() =>
+      FeedHandler.doThisWhenKeyboardShows(() =>
         this.setState({ isVisible: false })
       );
     }, 2000);

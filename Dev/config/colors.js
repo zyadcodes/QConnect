@@ -20,6 +20,7 @@ export default {
   primaryVeryLight: "#F8FCF0",
   actionButtonColor: "rgba(231,76,60,1)",
   magenta: "#1abc9c",
-  lightBrown: '#707070'
-  
+  lightBrown: '#707070',
+  darkishGreen: '#009500',
+  pureGreen: '#00ff00'  
 };

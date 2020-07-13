@@ -70,15 +70,6 @@ export default class FeedsScreen extends React.Component {
 
   _isMounted = false;
 
-  static whenKeyboardShows;
-  static whenKeyboardHides;
-
-  static doThisWhenKeyboardShows(func) {
-    FeedsScreen.whenKeyboardShows = func;
-  }
-  static doThisWhenKeyboardHides(func) {
-    FeedsScreen.whenKeyboardHides = func;
-  }
   componentWillUnmount() {
     this.unsubscribeBlur();
     this.unsubscribeFocus();
@@ -488,7 +479,7 @@ export default class FeedsScreen extends React.Component {
               width={0.9 * screenWidth}
               value={this.state.newCommentTxt}
               onChangeText={text => this.setState({ newCommentTxt: text })}
-              onTextInputBlur={() => FeedsScreen.whenKeyboardHides()}
+              onTextInputBlur={() => FeedHandler.whenKeyboardHides()}
               textInputOnTouchEnd={() => {}}
               textInputOnContentSizeChange={event =>
                 this.setState({
@@ -507,9 +498,9 @@ export default class FeedsScreen extends React.Component {
           width={screenWidth}
           value={this.state.newChatTxt}
           onChangeText={text => this.setState({ newChatTxt: text })}
-          onTextInputBlur={() => FeedsScreen.whenKeyboardHides()}
+          onTextInputBlur={() => FeedHandler.whenKeyboardHides()}
           textInputOnTouchEnd={() => {
-            FeedsScreen.whenKeyboardShows();
+            FeedHandler.whenKeyboardShows();
             this.setState({ isChatting: true });
           }}
           textInputOnContentSizeChange={event =>

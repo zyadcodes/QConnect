@@ -5,51 +5,50 @@ import studentImages from '../../../config/studentImages';
 import FeedsObject from './FeedObject';
 import { screenHeight } from '../../../config/dimensions';
 
-export default class FeedList extends Component {
-  render() {
+export default FeedList = (props) => {
     return (
       <FlatList
-        listKey={this.props.index + 1}
-        data={this.props.item.data}
-        style={{ marginTop: this.props.index === 0 ? screenHeight / 40 : 0 }}
+        listKey={props.index + 1}
+        data={props.item.data}
+        style={{ marginTop: props.index === 0 ? screenHeight / 40 : 0 }}
         renderItem={({ item, index, separators }) => (
           <FeedsObject
             showCommentButton={true}
-            onPressSelectEmoji={() => this.props.onPressSelectEmoji()}
+            onPressSelectEmoji={() => props.onPressSelectEmoji()}
             madeByUserID={item.madeByUser.ID}
             isMadeByCurrentUser={
-              this.props.currentUser.ID === item.madeByUser.ID
+              props.currentUser.ID === item.madeByUser.ID
             }
-            classID={this.props.classID}
-            currentUser={this.props.currentUser}
+            classID={props.classID}
+            currentUser={props.currentUser}
             onPushToOtherScreen={(pushParamScreen, pushParamObj) =>
-              this.props.onPushToOtherScreen(pushParamScreen, pushParamObj)
+              props.onPushToOtherScreen(pushParamScreen, pushParamObj)
             }
             viewableBy={item.viewableBy === undefined ? null : item.viewableBy}
-            role={this.props.role}
+            role={props.role}
             content={item.content}
             number={index}
             studentClassInfo={
-              item.type === 'assignment' && this.props.role === 'student'
-                ? this.props.studentClassInfo
+              item.type === 'assignment' && props.role === 'student'
+                ? props.studentClassInfo
                 : null
             }
             hiddenContent={
-              item.type === 'assignment' && this.props.role === 'student'
+              item.type === 'assignment' && props.role === 'student'
                 ? item.hiddenContent
                 : null
             }
             onPressChangeEmojiVote={changedReactions =>
-              this.props.onPressChangeEmojiVote(
-                this.props.index,
+              props.onPressChangeEmojiVote(
+                props.index,
                 index,
                 changedReactions
               )
             }
             beginCommenting={objectIndex =>
-              this.props.beginCommenting(this.props.index, objectIndex)
+              props.beginCommenting(props.index, objectIndex)
             }
-            onPressSelectEmoji={() => this.props.onPressSelectEmoji(index)}
+            onPressSelectEmoji={() => props.onPressSelectEmoji(index)}
             key={index}
             type={item.type}
             userName={item.madeByUser.name}
@@ -65,5 +64,4 @@ export default class FeedList extends Component {
         )}
       />
     );
-  }
 }

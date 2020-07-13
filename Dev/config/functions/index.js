@@ -89,7 +89,7 @@ exports.createStudent = functions.https.onCall(async (input, context) => {
 exports.createClass = functions.https.onCall(async (input, context) => {
 	const { classImageID, className, teacherID } = input;
 	const newClassDocument = await Classes.add({ classImageID, className, students: [] });
-	await createFeedForClass(newClassDocument.id);
+	await createFeedForClass(newClassDocument.id, teacherID);
 	//Adds the base class invite code, the classID and the teacher's information to the newly created class document
 	const result = await firestore.runTransaction(async (transaction) => {
 		const teacherDocument = (await transaction.get(Teachers.doc(teacherID))).data();
@@ -828,13 +828,19 @@ const joinClassByClassInviteCode = async (classInviteCode, studentID) => {
 			return -1;
 		}
 		const classDocument = query.docs[0].data();
+		const classID = query.docs[0].id
 		const studentDocument = (await transaction.get(Students.doc(studentID))).data();
 		const subCollectionStudentDoc = await transaction.get(
 			Classes.doc(classDocument.classID)
 				.collection('Students')
 				.doc(studentID)
 		);
-
+		await transaction.update(Feeds.doc(classID), {
+			students: admin.firestore.FieldValue.arrayUnion({
+				ID: studentID,
+				hasSeenLatestFeed: false	
+			})
+		})
 		await transaction.update(Students.doc(studentID), {
 			classIDs: admin.firestore.FieldValue.arrayUnion(classDocument.classID),
 			currentClassID: classDocument.classID,
@@ -1020,7 +1026,7 @@ const getLatestFeed = async (classID, refreshFunction) => {
   }
   const badgeUpdates = async (classID, refreshFunction) => {
     feedListeners.push(
-      Classes.doc(classID).onSnapshot(querySnap => {
+      Feeds.doc(classID).onSnapshot(querySnap => {
         refreshFunction(querySnap.data());
       })
     );
@@ -1101,7 +1107,7 @@ const getLatestFeed = async (classID, refreshFunction) => {
   }
   const updateSeenFeedForClass = (classID, haveSeenFeed) => {
     return await firestore.runTransaction(async transaction => {
-      await transaction.get(Classes.doc(classID)).then(async doc => {
+      await transaction.get(Feeds.doc(classID)).then(async doc => {
         let tempData = doc.data();
         for (var i = 0; i < tempData.teachers.length; i++) {
           tempData.teachers[i].hasSeenLatestFeed = haveSeenFeed;
@@ -1109,7 +1115,7 @@ const getLatestFeed = async (classID, refreshFunction) => {
         for (var i = 0; i < tempData.students.length; i++) {
           tempData.students[i].hasSeenLatestFeed = haveSeenFeed;
         }
-        transaction.update(Classes.doc(classID), {
+        transaction.update(Feeds.doc(classID), {
           students: tempData.students,
           teachers: tempData.teachers,
         });
@@ -1124,7 +1130,7 @@ const getLatestFeed = async (classID, refreshFunction) => {
     userObj
   ) => {
     return await firestore.runTransaction(async transaction => {
-      await transaction.get(Classes.doc(classID)).then(async doc => {
+      await transaction.get(Feeds.doc(classID)).then(async doc => {
         let tempData = doc.data();
         if (isTeacher) {
           let teacherInClass = -1;
@@ -1135,7 +1141,7 @@ const getLatestFeed = async (classID, refreshFunction) => {
             }
           }
           tempData.teachers[teacherInClass].hasSeenLatestFeed = hasSeenFeed;
-          await transaction.update(Classes.doc(classID), {
+          await transaction.update(Feeds.doc(classID), {
             teachers: tempData.teachers,
           });
         } else {
@@ -1147,7 +1153,7 @@ const getLatestFeed = async (classID, refreshFunction) => {
             }
           }
           tempData.students[studentInClass].hasSeenLatestFeed = hasSeenFeed;
-          await transaction.update(Classes.doc(classID), {
+          await transaction.update(Feeds.doc(classID), {
             students: tempData.students,
           });
         }
@@ -1155,13 +1161,13 @@ const getLatestFeed = async (classID, refreshFunction) => {
       return 0;
     });
   }
-  const createFeedForClass = async (classID) => {
+  const createFeedForClass = async (classID, teacherID) => {
 	const batch = firestore.batch()
     const ref = Feeds.doc(classID);
     batch.set(ref);
     batch.set(ref.collection('content').doc('0'));
     await batch.commit();
-    await ref.update({ lastIndex: '0' });
+    await ref.update({ lastIndex: '0', teachers: [{ID: teacherID, hasSeenLatestFeed: true}], students: [] });
     await ref
       .collection('content')
       .doc('0')
