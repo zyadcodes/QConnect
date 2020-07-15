@@ -22,5 +22,6 @@ export default {
   magenta: "#1abc9c",
   lightBrown: '#707070',
   darkishGreen: '#009500',
-  pureGreen: '#00ff00'  
+  pureGreen: '#00ff00',
+  oyster: '#f7f7f9'  
 };

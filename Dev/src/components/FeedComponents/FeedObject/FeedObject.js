@@ -108,13 +108,13 @@ export default FeedsObject = (props) => {
       props.type === 'assignment' &&
       props.viewableBy !== 'everyone' &&
       !props.viewableBy.includes(props.currentUser.ID) ? null : (
-      <View key={props.number} style={styles.containerView}>
-        <View style={styles.imageAndNameContainer}>
+      <View key={props.number} style={[styles.containerView, props.isMadeByCurrentUser ? styles.containerViewFlexEnd : styles.containerViewFlexStart]}>
+        <View style={[styles.imageAndNameContainer, props.isMadeByCurrentUser ? styles.imageAndNameContainerRowReverse : styles.imageAndNameContainerRow]}>
           <Image
             source={props.imageRequire}
             style={styles.userImage}
           />
-          <Text style={styles.userName}>{props.userName}</Text>
+          <Text style={[styles.userName, props.isMadeByCurrentUser ? styles.userNameCurrUser : styles.userNameOtherUser]}>{props.userName}</Text>
         </View>
         <View
           style={{
@@ -153,7 +153,7 @@ export default FeedsObject = (props) => {
                   New Assignment:{' '}
                 </Text>
               ) : null}
-              <View style={styles.contentContainerView}>
+              <View style={[styles.contentContainerView, props.type === 'achievement' ? styles.contentContainerViewThickBorder : styles.contentContainerViewThinBorder, props.type === 'assignment' ? styles.contentContainerViewIsAssignment : {}]}>
                 {props.type === 'assignment' ? (
                   <QuranAssignmentView
                     setScreenToLoading={() =>
@@ -206,7 +206,7 @@ export default FeedsObject = (props) => {
                 <TouchableOpacity
                   key="comment"
                   onPress={() => props.beginCommenting(props.number)}
-                  style={[styles.addReaction, { left: 0 }]}
+                  style={[styles.addReaction, { left: 0 }, props.type === 'achievement' ? styles.addReactionGreen : styles.addReactionNormal]}
                 >
                   <Icon
                     type="font-awesome"
@@ -256,7 +256,7 @@ export default FeedsObject = (props) => {
                     </TouchableOpacity>
                     {isReactionScrollViewOpen ? (
                       <ScrollView
-                        style={styles.hiddenReactionsScrollView}
+                        style={[styles.hiddenReactionsScrollView, props.type === 'achievement' ? styles.hiddenReactionsScrollViewLight : styles.hiddenReactionsScrollViewDark]}
                       >
                         <FlatList
                           listKey="extra reactions"
@@ -274,7 +274,8 @@ export default FeedsObject = (props) => {
                               key={index}
                               activeOpacity={0.6}
                               style={[
-                                styles.Reaction,
+                                styles.reaction,
+                                props.type === 'achievement' ? styles.reactionGreen : styles.reactionNormal,
                                 item.reactedBy.includes(
                                   props.currentUser.ID
                                 )
