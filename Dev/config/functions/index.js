@@ -957,7 +957,7 @@ const joinClassByClassInviteCode = async (classInviteCode, studentID) => {
 			);
 		}
 
-		return 0;
+		return classDocument.classID;
 	});
 
 	return result;
