@@ -150,9 +150,20 @@ export class EvaluationPage extends QcParentScreen {
     // otherwise, we'll use the default areas
     //-----------------------------------------------------------
     let improvementAreas = this.areas;
+    let evaluationCollapsed = this.state.evaluationCollapsed;
     if (this.props.navigation.state.params.readOnly === true) {
       //show areas pressed when evaluating this history item (passed from calling screen)
       improvementAreas = this.props.navigation.state.params.improvementAreas;
+      let itemHasImprovementAreas =
+        improvementAreas && improvementAreas.length > 0;
+      let itemHasNotes =
+        this.props.navigation.state.params.notes !== undefined &&
+        this.props.navigation.state.params.notes.length > 0;
+
+      // Expand evaluation card in history view to show evaluation notes if the evaluation item has some notes/areas.
+      if (itemHasImprovementAreas || itemHasNotes) {
+        evaluationCollapsed = false;
+      }
     } else {
       this.getTeacherCustomImprovementAreas();
     }
@@ -161,6 +172,7 @@ export class EvaluationPage extends QcParentScreen {
       studentObject,
       isLoading: false,
       evaluationID,
+      evaluationCollapsed,
       audioFile,
       audioSentDateTime,
       improvementAreas
@@ -651,13 +663,16 @@ export class EvaluationPage extends QcParentScreen {
                       );
                     }
                   } catch (error) {
-                    console.trace()
+                    console.trace();
                     console.log(
                       "ERROR_GET_WRD_AYAH_IMPROVEMENTS" + JSON.stringify(error)
                     );
-                    FirebaseFunctions.logEvent("ERROR_GET_WRD_AYAH_IMPROVEMENTS", {
-                      error
-                    });
+                    FirebaseFunctions.logEvent(
+                      "ERROR_GET_WRD_AYAH_IMPROVEMENTS",
+                      {
+                        error
+                      }
+                    );
                   }
                   return (
                     <EvaluationNotes
