@@ -74,13 +74,7 @@ const TextLine = ({
               ) {
                 word.text = word.text + lineText[index + 1].text;
               }
-
-              if (Number(curAyah.ayah) === 7) {
-                console.log(JSON.stringify(showTooltipOnPress));
-                console.log(JSON.stringify(isCurWordHighlighted));
-                console.log(JSON.stringify(isCurAyahHighlighted));
-              }
-
+              
               return (
                 <AyahSelectionWord
                   key={word.id}
