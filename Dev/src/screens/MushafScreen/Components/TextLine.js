@@ -76,6 +76,7 @@ const TextLine = ({
                   highlighted={highlighted}
                   highlightedColor={highlightedColor}
                   selected={false}
+                  curAyah={curAyah}
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={false}
                   evalNotesComponent={evalNotesComponent}
@@ -128,7 +129,8 @@ const TextLine = ({
               if (
                 showTooltipOnPress === "true" ||
                 (showTooltipOnPress === "whenHighlighted" &&
-                  isCurWordHighlighted === true)
+                  (isCurWordHighlighted === true ||
+                    isCurAyahHighlighted === true))
               ) {
                 showTooltip = true;
               }
@@ -147,6 +149,7 @@ const TextLine = ({
                   highlightedColor={highlightedColor}
                   highlighted={highlighted}
                   selected={isAyaSelected}
+                  curAyah={curAyah}
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={isFirstSelectedWord}
                   evalNotesComponent={evalNotesComponent}
