@@ -56,6 +56,15 @@ const TextLine = ({
             highlightedAyahs !== undefined &&
             Object.keys(highlightedAyahs).includes(toNumberString(curAyah));
 
+          let showTooltip = false;
+          if (
+            showTooltipOnPress === "true" ||
+            (showTooltipOnPress === "whenHighlighted" &&
+              (isCurWordHighlighted === true || isCurAyahHighlighted === true))
+          ) {
+            showTooltip = true;
+          }
+
           if (selectionOn === false) {
             if (word.char_type !== "end" && word.char_type !== "pause") {
               if (
@@ -66,11 +75,17 @@ const TextLine = ({
                 word.text = word.text + lineText[index + 1].text;
               }
 
+              if (Number(curAyah.ayah) === 7) {
+                console.log(JSON.stringify(showTooltipOnPress));
+                console.log(JSON.stringify(isCurWordHighlighted));
+                console.log(JSON.stringify(isCurAyahHighlighted));
+              }
+
               return (
                 <AyahSelectionWord
                   key={word.id}
                   word={word}
-                  showTooltipOnPress={showTooltipOnPress}
+                  showTooltipOnPress={showTooltip}
                   isWordHighlighted={isCurWordHighlighted}
                   isAyahHighlighted={isCurAyahHighlighted}
                   highlighted={highlighted}
@@ -89,7 +104,7 @@ const TextLine = ({
                   key={word.id}
                   word={word}
                   curAyah={curAyah}
-                  showTooltipOnPress={showTooltipOnPress}
+                  showTooltipOnPress={showTooltip}
                   onPress={() => onSelectAyah(curAyah, word)}
                   selected={false}
                   highlighted={highlighted}
@@ -123,16 +138,6 @@ const TextLine = ({
               let isFirstSelectedWord = isAyaSelected && isFirstWord;
               if (isFirstSelectedWord) {
                 isFirstWord = false;
-              }
-
-              let showTooltip = false;
-              if (
-                showTooltipOnPress === "true" ||
-                (showTooltipOnPress === "whenHighlighted" &&
-                  (isCurWordHighlighted === true ||
-                    isCurAyahHighlighted === true))
-              ) {
-                showTooltip = true;
               }
 
               return (
