@@ -150,9 +150,20 @@ export class EvaluationPage extends QcParentScreen {
     // otherwise, we'll use the default areas
     //-----------------------------------------------------------
     let improvementAreas = this.areas;
+    let evaluationCollapsed = this.state.evaluationCollapsed;
     if (this.props.navigation.state.params.readOnly === true) {
       //show areas pressed when evaluating this history item (passed from calling screen)
       improvementAreas = this.props.navigation.state.params.improvementAreas;
+      let itemHasImprovementAreas =
+        improvementAreas && improvementAreas.length > 0;
+      let itemHasNotes =
+        this.props.navigation.state.params.notes !== undefined &&
+        this.props.navigation.state.params.notes.length > 0;
+
+      // Expand evaluation card in history view to show evaluation notes if the evaluation item has some notes/areas.
+      if (itemHasImprovementAreas || itemHasNotes) {
+        evaluationCollapsed = false;
+      }
     } else {
       this.getTeacherCustomImprovementAreas();
     }
@@ -161,6 +172,7 @@ export class EvaluationPage extends QcParentScreen {
       studentObject,
       isLoading: false,
       evaluationID,
+      evaluationCollapsed,
       audioFile,
       audioSentDateTime,
       improvementAreas
@@ -610,8 +622,34 @@ export class EvaluationPage extends QcParentScreen {
                 evalNotesComponent={(word, ayah) => {
                   let wordOrAyahImprovements = [];
                   let wordOrAyahNotes = "";
+                  let wordHasFeedback = false;
                   try {
-                    if (word.char_type === "end") {
+                    //if user taps on a word, and teacher has put feedback specific to that word, show it
+                    if (word.char_type !== "end") {
+                      wordOrAyahImprovements = _.get(
+                        highlightedWords[word.id],
+                        "improvementAreas",
+                        []
+                      );
+                      wordOrAyahNotes = _.get(
+                        highlightedWords[word.id],
+                        "notes",
+                        []
+                      );
+
+                      if (
+                        wordOrAyahImprovements.length > 0 ||
+                        wordOrAyahNotes.length > 0
+                      ) {
+                        wordHasFeedback = true;
+                      }
+                    }
+
+                    //show ayah feedback if:
+                    // 1: user taps on an ayah number of an ayah that has feedback associated with it
+                    // 2: user taps on a word that belongs to an ayah with feedback items AND there is no other
+                    //    feedback specific to tha word
+                    if (word.char_type === "end" || wordHasFeedback === false) {
                       let ayahNumber = toNumberString(ayah);
                       wordOrAyahImprovements = _.get(
                         highlightedAyahs[ayahNumber],
@@ -623,25 +661,18 @@ export class EvaluationPage extends QcParentScreen {
                         "notes",
                         []
                       );
-                    } else {
-                      wordOrAyahImprovements = _.get(
-                        highlightedWords[word.id],
-                        "improvementAreas",
-                        []
-                      );
-                      wordOrAyahNotes = _.get(
-                        highlightedWords[word.id],
-                        "notes",
-                        []
-                      );
                     }
                   } catch (error) {
+                    console.trace();
                     console.log(
                       "ERROR_GET_WRD_AYAH_IMPROVEMENTS" + JSON.stringify(error)
                     );
-                    FirebaseFunctions.log("ERROR_GET_WRD_AYAH_IMPROVEMENTS", {
-                      error
-                    });
+                    FirebaseFunctions.logEvent(
+                      "ERROR_GET_WRD_AYAH_IMPROVEMENTS",
+                      {
+                        error
+                      }
+                    );
                   }
                   return (
                     <EvaluationNotes

@@ -56,6 +56,15 @@ const TextLine = ({
             highlightedAyahs !== undefined &&
             Object.keys(highlightedAyahs).includes(toNumberString(curAyah));
 
+          let showTooltip = false;
+          if (
+            showTooltipOnPress === "true" ||
+            (showTooltipOnPress === "whenHighlighted" &&
+              (isCurWordHighlighted === true || isCurAyahHighlighted === true))
+          ) {
+            showTooltip = true;
+          }
+
           if (selectionOn === false) {
             if (word.char_type !== "end" && word.char_type !== "pause") {
               if (
@@ -70,12 +79,13 @@ const TextLine = ({
                 <AyahSelectionWord
                   key={word.id}
                   word={word}
-                  showTooltipOnPress={showTooltipOnPress}
+                  showTooltipOnPress={showTooltip}
                   isWordHighlighted={isCurWordHighlighted}
                   isAyahHighlighted={isCurAyahHighlighted}
                   highlighted={highlighted}
                   highlightedColor={highlightedColor}
                   selected={false}
+                  curAyah={curAyah}
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={false}
                   evalNotesComponent={evalNotesComponent}
@@ -88,7 +98,7 @@ const TextLine = ({
                   key={word.id}
                   word={word}
                   curAyah={curAyah}
-                  showTooltipOnPress={showTooltipOnPress}
+                  showTooltipOnPress={showTooltip}
                   onPress={() => onSelectAyah(curAyah, word)}
                   selected={false}
                   highlighted={highlighted}
@@ -124,15 +134,6 @@ const TextLine = ({
                 isFirstWord = false;
               }
 
-              let showTooltip = false;
-              if (
-                showTooltipOnPress === "true" ||
-                (showTooltipOnPress === "whenHighlighted" &&
-                  isCurWordHighlighted === true)
-              ) {
-                showTooltip = true;
-              }
-
               return (
                 <AyahSelectionWord
                   key={word.id}
@@ -147,6 +148,7 @@ const TextLine = ({
                   highlightedColor={highlightedColor}
                   highlighted={highlighted}
                   selected={isAyaSelected}
+                  curAyah={curAyah}
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={isFirstSelectedWord}
                   evalNotesComponent={evalNotesComponent}
