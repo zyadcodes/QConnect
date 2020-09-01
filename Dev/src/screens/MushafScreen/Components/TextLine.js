@@ -74,7 +74,7 @@ const TextLine = ({
               ) {
                 word.text = word.text + lineText[index + 1].text;
               }
-              
+
               return (
                 <AyahSelectionWord
                   key={word.id}
