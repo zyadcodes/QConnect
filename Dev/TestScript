@@ -22,6 +22,7 @@ All these features should be functional before every release
 20. Teacher is able to view the privacy policy
 21. Teacher is able to log out
 22. Teacher is able to change their password
+23. Teacher receives a notification when a student changes her assignment status
 
 ----------------------- Student Tests -----------------------
 1. Student is able to create an account
@@ -35,3 +36,4 @@ All these features should be functional before every release
 9. Student is able to view the credits screen
 10. Student is able to log out
 11. Student is able to change their password
+12. student receives notification when her teachers updates her assignment

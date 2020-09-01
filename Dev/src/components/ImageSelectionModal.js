@@ -20,7 +20,7 @@ export default class ImageSelectionModal extends Component {
 
     render() {
 
-        cancelStyle = {...fontStyles.smallTextStyleBlack, marginTop: screenHeight * 0.015, marginBottom: screenHeight * 0.03 }
+        cancelStyle = {...fontStyles.smallTextStyleDarkGrey, marginTop: screenHeight * 0.015, marginBottom: screenHeight * 0.03 }
         return (
             <Modal
                 animationType="fade"

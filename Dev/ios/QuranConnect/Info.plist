@@ -22,6 +22,14 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>CodePushDeploymentKey</key>
+	<string>$(CODEPUSH_KEY)</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>mailto</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -38,9 +46,22 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Quran Connect would like to record your voice to submit your assignment</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Georgia.ttf</string>
+		<string>Montserrat-Bold.ttf</string>
+		<string>Montserrat-Light.ttf</string>
+		<string>Montserrat-Regular.ttf</string>
+		<string>Ubuntu-Bold.ttf</string>
+		<string>Ubuntu-Light-Italic.ttf</string>
+		<string>Ubuntu-Light.ttf</string>
+		<string>MADDINA.ttf</string>
+		<string>me_quran.ttf</string>
+		<string>Scheherazade-Regular</string>
+		<string>Scheherazade-Bold</string>
 		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
@@ -57,13 +78,6 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
-		<string>Georgia.ttf</string>
-		<string>Montserrat-Bold.ttf</string>
-		<string>Montserrat-Light.ttf</string>
-		<string>Montserrat-Regular.ttf</string>
-		<string>Ubuntu-Bold.ttf</string>
-		<string>Ubuntu-Light-Italic.ttf</string>
-		<string>Ubuntu-Light.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -79,5 +93,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>CodePushDeploymentKey</key>
+	<string>xgHCRhRz4PRViwFB0N0fD2yEl4CN1nmwRwh4W</string>
 </dict>
 </plist>

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Image, Text, TouchableOpacity, Alert, ScrollView, LayoutAnimation, Platform, Dimensions } from "react-native";
+import { StyleSheet, View, Image, Text, TouchableOpacity, Alert, ScrollView, LayoutAnimation, Platform } from "react-native";
 import QcActionButton from "components/QcActionButton";
 import Toast, { DURATION } from "react-native-easy-toast";
 import colors from "config/colors";
@@ -11,7 +11,7 @@ import strings from "config/strings";
 import QcParentScreen from "screens/QcParentScreen";
 import FadeInView from "../../components/FadeInView";
 import FirebaseFunctions from 'config/FirebaseFunctions';
-import { Input, Icon } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import QCView from 'components/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from "config/fontStyles";
@@ -120,11 +120,25 @@ export class TeacherWelcomeScreen extends QcParentScreen {
       isTeacher: true
     }
 
-    const ID = await FirebaseFunctions.signUp(emailAddress, password, true, teacherObject);
-    this.props.navigation.push("TeacherCurrentClass", {
-      userID: ID,
-    });
+    try {
+      const ID = await FirebaseFunctions.signUp(
+        emailAddress,
+        password,
+        true,
+        teacherObject
+      );
+      this.props.navigation.push("TeacherCurrentClass", {
+        userID: ID
+      });
+    } catch (err) {
+      if (err && err.message) {
+        Alert.alert(strings.Whoops, err.message);
+      } else {
+        Alert.alert(strings.SomethingWentWrong, strings.SomethingWentWrongDesc);
+      }
 
+      FirebaseFunctions.logEvent("CREATE_USER_FAILED", { err });
+    }
   };
 
   //Creates new account, or launches confirmation dialog if account was created but not confirmed yet.
@@ -205,7 +219,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   render() {
 
     return (
-      <QCView style={screenStyle.container}>
+      <View>
         <ScrollView>
           <View>
             <ImageSelectionModal
@@ -217,17 +231,14 @@ export class TeacherWelcomeScreen extends QcParentScreen {
               screen={this.name}
             />
             <View style={styles.picContainer}>
-              <View style={{ flex: 1 }}></View>
-              <View style={{ flex: 1, paddingTop: screenHeight * 0.025, alignSelf: 'flex-start', flexDirection: 'row' }}>
-                <View style={{ flex: 0.1 }}><Text>   </Text></View>
-                <TouchableOpacity style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
+              <View style={{ flex: 1, paddingTop: screenHeight * 0.04, alignSelf: 'flex-start', flexDirection: 'row' }}>
+                <TouchableOpacity style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'flex-start', paddingLeft: screenWidth*0.03 }} onPress={() => { this.props.navigation.goBack() }}>
                   <Icon
                     name={'angle-left'}
                     type="font-awesome" />
                 </TouchableOpacity>
-                <View style={{ flex: 3 }}></View>
               </View>
-              <View style={{ flex: 1, paddingLeft: screenWidth * 0.05, paddingRight: screenWidth * 0.05 }}>
+              <View style={{ flex: 1, paddingLeft: screenWidth * 0.05, paddingRight: screenWidth * 0.05, paddingBottom: screenHeight * 0.02 }}>
                 <FadeInView
                   style={{ alignItems: 'center', justifyContent: 'center' }}>
                   <Image
@@ -239,7 +250,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
               </View>
             </View>
             <View style={styles.editInfo} behavior="padding">
-              <TeacherInfoEntries
+              <TeacherInfoEntries 
                 name={this.state.name}
                 phoneNumber={this.state.phoneNumber}
                 emailAddress={this.state.emailAddress}
@@ -252,8 +263,9 @@ export class TeacherWelcomeScreen extends QcParentScreen {
                 onPasswordChanged={this.onPasswordChanged}
                 onPasswordTwoChanged={this.onPasswordTwoChanged}
               />
-              
+               <Text></Text>
               <ImageSelectionRow
+                
                 images={teacherImages.images}
                 highlightedImagesIndices={this.state.highlightedImagesIndices}
                 onImageSelected={this.onImageSelected.bind(this)}
@@ -273,17 +285,21 @@ export class TeacherWelcomeScreen extends QcParentScreen {
             <Toast position={'center'} ref="toast" />
           </View>
         </ScrollView>
-      </QCView>
+      </View>
     );
   }
 }
 
 //-----------------   Styles for the Teacher profile class-----------------------------------
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: "column",
+    backgroundColor: colors.lightGrey,
+    flex: 1,
+    justifyContent: "flex-end"
+  },
   picContainer: {
-    paddingTop: 0.015 * screenHeight,
     alignItems: "center",
-    marginTop: 0.022 * screenHeight,
     marginBottom: 0.015 * screenHeight,
     backgroundColor: colors.white
   },
@@ -295,7 +311,7 @@ const styles = StyleSheet.create({
   editInfo: {
     flexDirection: "column",
     backgroundColor: colors.white,
-    color: colors.darkGrey
+    color: colors.darkGrey,
   },
   buttonsContainer: {
     flexDirection: "column",
@@ -304,8 +320,7 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   filler: {
-    flexDirection: "column",
-    flex: 1
+    height: 20
   },
 });
 

@@ -1,0 +1,23 @@
+{
+  "name": "RNAudioRecorderPlayer",
+  "version": "2.4.4-rc.1",
+  "summary": "React Native Audio Recorder and Player.",
+  "license": "MIT",
+  "authors": {
+    "name": "dooboolab"
+  },
+  "homepage": "https://github.com/dooboolab/react-native-audio-recorder-player",
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source": {
+    "git": "https://github.com/dooboolab/react-native-audio-recorder-player.git",
+    "tag": "2.4.4-rc.1"
+  },
+  "source_files": "ios/**/*.{h,m}",
+  "dependencies": {
+    "React": [
+
+    ]
+  }
+}

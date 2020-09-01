@@ -81,6 +81,7 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
+apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -131,8 +132,8 @@ android {
         applicationId "com.yungdevz.quranconnect"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 114
-        versionName "1.1.4"
+        versionCode 160
+        versionName "1.4.20"
         multiDexEnabled true
     }
     splits {
@@ -160,12 +161,28 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+            // Note: CodePush updates should not be tested in Debug mode as they are overriden by the RN packager. However, because CodePush checks for updates in all modes, we must supply a key.
+            resValue "string", "CodePushDeploymentKey", '""'
+        }
+        releaseStaging {
+            signingConfig signingConfigs.release
+            minifyEnabled enableProguardInReleaseBuilds
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+
+            resValue "string", "CodePushDeploymentKey", '"zcto1VGZdG3ei3j10UjRJGh-9XUiAs0HAD3Lx"'
+
+            // Note: It is a good idea to provide matchingFallbacks for the new buildType you create to prevent build issues
+            // Add the following line if not already there
+            matchingFallbacks = ['release']
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
+            
+            resValue "string", "CodePushDeploymentKey", '"j5VfCm9KwwXwzlxdgBOoNRAYlSBa7yFccRAyY"'
+
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
@@ -195,6 +212,10 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-keep-awake')
+    implementation project(':react-native-firebase')
+    implementation project(':react-native-sound')
+    implementation project(':react-native-reanimated')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation "com.google.android.gms:play-services-base:16.1.0"
@@ -203,6 +224,7 @@ dependencies {
     implementation "com.google.firebase:firebase-firestore:19.0.0"
     implementation "com.google.firebase:firebase-functions:17.0.0"
     implementation "com.google.firebase:firebase-messaging:18.0.0"
+    implementation "com.google.firebase:firebase-storage:17.0.0"
     implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
     if (enableHermes) {
       def hermesPath = "../../node_modules/hermesvm/android/";

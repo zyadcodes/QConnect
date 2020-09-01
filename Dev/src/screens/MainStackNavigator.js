@@ -1,177 +1,215 @@
 //This stack navigator will be the base line for all screens across the app (with the exception of the
 //tabs navigator in the teacher screens & the drawerNavigators).
-import React from 'react';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
-import FirstScreenLoader from './FirstScreenLoader/FirstScreenLoader';
-import LoginScreen from './AuthenticationScreens/LoginScreen';
-import FirstRunScreen from './FirstRun/FirstRunScreen';
-import TeacherWelcomeScreen from './TeacherScreens/TeacherWelcomeScreen';
-import AddClassScreen from './TeacherScreens/AddClassScreen';
-import ForgotPassword from './AuthenticationScreens/ForgotPassword';
-import StudentWelcomeScren from './StudentScreens/StudentWelcomeScreen';
-import allSettingsScreen from './SettingsScreen/allSettingsScreen';
-import creditsScreen from './SettingsScreen/creditsScreen';
-import ProfileScreen from './ProfileScreen';
-import AddManualStudentsScreen from './TeacherScreens/AddStudents/AddManualStudentsScreen';
-import StudentMainScreen from './StudentScreens/StudentMainScreen';
-import ClassTabsNavigator from './TeacherScreens/ClassTabs/ClassTabsNavigator';
-import StudentProfileScreen from './TeacherScreens/ClassTabs/StudentProfileScreen';
-import EvaluationPage from './Evaluation/EvaluationPage';
-import ShareClassCodeScreen from './TeacherScreens/AddStudents/ShareClassCodeScreen';
-import strings from 'config/strings';
-import TopBanner from 'components/TopBanner';
+import React from "react";
+import { createStackNavigator, createAppContainer } from "react-navigation";
+import MushafScreen from "./MushafScreen/MushafScreen";
+import MushafAssignmentScreen from "./MushafScreen/MushafAssignmentScreen";
+import MushafReadingScreen from "./MushafScreen/MushafReadingScreen";
+import FirstScreenLoader from "./FirstScreenLoader/FirstScreenLoader";
+import LoginScreen from "./AuthenticationScreens/LoginScreen";
+import AccountTypeScreen from "./AuthenticationScreens/AccountTypeScreen";
+import TeacherWelcomeScreen from "./TeacherScreens/TeacherWelcomeScreen";
+import AddClassScreen from "./TeacherScreens/AddClass/AddClassScreen";
+import ForgotPassword from "./AuthenticationScreens/ForgotPassword";
+import StudentWelcomeScren from "./StudentScreens/StudentWelcomeScreen";
+import allSettingsScreen from "./SettingsScreen/allSettingsScreen";
+import creditsScreen from "./SettingsScreen/creditsScreen";
+import ProfileScreen from "./ProfileScreen";
+import AddManualStudentsScreen from "./TeacherScreens/AddStudents/AddManualStudentsScreen";
+import StudentMainScreen from "./StudentScreens/StudentMainScreen";
+import ClassTabsNavigator from "./TeacherScreens/ClassTabs/ClassTabsNavigator";
+import StudentProfileScreen from "./TeacherScreens/ClassTabs/StudentProfileScreen";
+import EvaluationPage from "./Evaluation/EvaluationPage";
+import ShareClassCodeScreen from "./TeacherScreens/AddStudents/ShareClassCodeScreen";
+import strings from "config/strings";
+import TopBanner from "components/TopBanner";
 
 //The routes containing all the screens & their navigation options
 routeConfig = {
+  MushafAssignmentScreen: {
+    screen: MushafAssignmentScreen,
+    navigationOptions: ({ navigation }) => ({
+      header: null,
+      //disable swipe back to go to previous screen as it interfers with mus7af page swipes
+      //https://github.com/zyadelgohary/QConnect/issues/234
+      gesturesEnabled: false
+    })
+  },
 
-    FirstScreenLoader: {
-        screen: FirstScreenLoader,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        }),
-    },
+  MushafReadingScreen: {
+    screen: MushafReadingScreen,
+    navigationOptions: ({ navigation }) => ({
+      header: null,
+      //disable swipe back to go to previous screen as it interfers with mus7af page swipes
+      //https://github.com/zyadelgohary/QConnect/issues/234
+      gesturesEnabled: false
+    })
+  },
 
-    LoginScreen: {
-        screen: LoginScreen,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        }),
-    },
+  FirstScreenLoader: {
+    screen: FirstScreenLoader,
+    navigationOptions: ({ navigation }) => ({
+      header: null,
+      gesturesEnabled: false
+    })
+  },
 
-    StudentCurrentClass: {
-        screen: StudentMainScreen,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        }),
-    },
+  LoginScreen: {
+    screen: LoginScreen,
+    navigationOptions: ({ navigation }) => ({
+      header: null,
+      gesturesEnabled: false
+    })
+  },
 
-    FirstRunScreen: {
-        screen: FirstRunScreen,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        }),
-    },
+  StudentCurrentClass: {
+    screen: StudentMainScreen,
+    navigationOptions: ({ navigation }) => ({
+      header: null,
+      gesturesEnabled: false
+    })
+  },
 
-    ForgotPassword: {
-        screen: ForgotPassword,
-        navigationOptions: ({ navigation }) => ({
-            header: <TopBanner
-                LeftIconName="angle-left"
-                LeftOnPress={() => navigation.goBack()}
-                Title={strings.ForgotPasswordNoQuestion}
-            />
-        }),
-    },
+  AccountTypeScreen: {
+    screen: AccountTypeScreen,
+    navigationOptions: ({ navigation }) => ({
+      header: null,
+      gesturesEnabled: false
+    })
+  },
 
-    TeacherWelcomeScreen: {
-        screen: TeacherWelcomeScreen,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        }),
-    },
+  ForgotPassword: {
+    screen: ForgotPassword,
+    navigationOptions: ({ navigation }) => ({
+      header: (
+        <TopBanner
+          LeftIconName="angle-left"
+          LeftOnPress={() => navigation.goBack()}
+          Title={strings.ForgotPasswordNoQuestion}
+        />
+      )
+    })
+  },
 
-    StudentWelcomeScreen: {
-        screen: StudentWelcomeScren,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        }),
-    },
+  TeacherWelcomeScreen: {
+    screen: TeacherWelcomeScreen,
+    navigationOptions: ({ navigation }) => ({
+      header: null,
+      gesturesEnabled: false
+    })
+  },
 
-    AddClass: {
-        screen: AddClassScreen,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        }),
-    },
+  StudentWelcomeScreen: {
+    screen: StudentWelcomeScren,
+    navigationOptions: ({ navigation }) => ({
+      header: null,
+      gesturesEnabled: false
+    })
+  },
 
-    Settings: {
-        screen: allSettingsScreen,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        }),
-    },
+  AddClass: {
+    screen: AddClassScreen,
+    navigationOptions: ({ navigation }) => ({
+      header: null,
+      gesturesEnabled: false
+    })
+  },
 
-    CreditsScreen: {
-        screen: creditsScreen,
-        navigationOptions: ({ navigation }) => ({
-            header: (
-                <TopBanner
-                    LeftIconName="angle-left"
-                    LeftOnPress={() => navigation.goBack()}
-                    Title={strings.Credits}
-                />
-            )
-        }),
-    },
+  Settings: {
+    screen: allSettingsScreen,
+    navigationOptions: ({ navigation }) => ({
+      header: null,
+      gesturesEnabled: false
+    })
+  },
 
-    Profile: {
-        screen: ProfileScreen,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        })
-    },
+  CreditsScreen: {
+    screen: creditsScreen,
+    navigationOptions: ({ navigation }) => ({
+      header: (
+        <TopBanner
+          LeftIconName="angle-left"
+          LeftOnPress={() => navigation.goBack()}
+          Title={strings.Credits}
+        />
+      )
+    })
+  },
 
-    TeacherCurrentClass: {
-        screen: ClassTabsNavigator,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        }),
-    },
+  Profile: {
+    screen: ProfileScreen,
+    navigationOptions: ({ navigation }) => ({
+      gesturesEnabled: false,
+      header: null,
+    })
+  },
 
-    TeacherStudentProfile: {
-        screen: StudentProfileScreen,
-        navigationOptions: ({ navigation }) => ({
-            header: (
-                <TopBanner
-                    Title={strings.StudentProfile}
-                    LeftIconName="angle-left"
-                    LeftOnPress={() => navigation.push('TeacherCurrentClass', {
-                        userID: navigation.state.params.userID
-                    })}
-                />
-            )
-        })
-    },
+  TeacherCurrentClass: {
+    screen: ClassTabsNavigator,
+    navigationOptions: ({ navigation }) => ({
+      gesturesEnabled: false,
+      header: null,
+    })
+  },
 
-    EvaluationPage: {
-        screen: EvaluationPage,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        })
-    },
+  TeacherStudentProfile: {
+    screen: StudentProfileScreen,
+    navigationOptions: ({ navigation }) => ({
+      gesturesEnabled: false,
+      header: (
+        <TopBanner
+          Title={strings.StudentProfile}
+          LeftIconName="angle-left"
+          LeftOnPress={() =>
+            navigation.push("TeacherCurrentClass", {
+              userID: navigation.state.params.userID,
+            })
+          }
+        />
+      )
+    })
+  },
 
-    ShareClassCode: {
-        screen: ShareClassCodeScreen,
-        navigationOptions: ({ navigation }) => ({
-            header: (
-                <TopBanner
-                    Title={strings.AddStudents} />
-            )
-        })
-    },
+  EvaluationPage: {
+    screen: EvaluationPage,
+    navigationOptions: ({ navigation }) => ({
+      gesturesEnabled: false,
+      header: null,
+    })
+  },
 
-    AddManualStudents: {
-        screen: AddManualStudentsScreen,
-        navigationOptions: ({ navigation }) => ({
-            header: (
-                <TopBanner
-                    Title={strings.AddManualStudents}
-                    LeftIconName="angle-left"
-                    LeftOnPress={() => navigation.goBack()} />
-            )
-        })
-    }
+  ShareClassCode: {
+    screen: ShareClassCodeScreen,
+    navigationOptions: ({ navigation }) => ({
+      gesturesEnabled: false,
+      header: <TopBanner Title={strings.AddStudents} />
+    })
+  },
 
-}
+  AddManualStudents: {
+    screen: AddManualStudentsScreen,
+    navigationOptions: ({ navigation }) => ({
+      gesturesEnabled: false,
+      header: (
+        <TopBanner
+          Title={strings.AddManualStudents}
+          LeftIconName="angle-left"
+          LeftOnPress={() => navigation.goBack()}
+        />
+      )
+    })
+  }
+};
 
 //The navigator config containing all the configurations of the navigator (initialRoute, header, etc)
 navigatorConfig = {
+  initialRouteName: "FirstScreenLoader"
+};
 
-    initialRouteName: 'FirstScreenLoader'
-
-}
-
-const MainStackStackNavigator = createStackNavigator(routeConfig, navigatorConfig);
+const MainStackStackNavigator = createStackNavigator(
+  routeConfig,
+  navigatorConfig
+);
 
 const MainStackNavigator = createAppContainer(MainStackStackNavigator);
 

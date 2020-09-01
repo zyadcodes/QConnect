@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+import { screenWidth, screenHeight } from 'config/dimensions';
 import { StyleSheet, TouchableOpacity, Text, Animated, Easing, ActivityIndicator, View } from 'react-native';
 import colors from 'config/colors';
 import fontStyles from 'config/fontStyles';
-import { screenWidth, screenHeight } from 'config/dimensions';
 
 const MARGIN = screenWidth * 0.15;
 
@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: 'center',
+    alignSelf: 'stretch',
     justifyContent: 'center',
     backgroundColor: colors.primaryLight,
     height: screenHeight * 0.05,

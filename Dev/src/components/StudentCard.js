@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TouchableOpacity, Text, StyleSheet, Image, View, Dimensions } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, Image, View } from 'react-native';
 import colors from 'config/colors'
 import FontLoadingComponent from './FontLoadingComponent';
 import fontStyles from 'config/fontStyles';
@@ -39,9 +39,12 @@ export default class StudentCard extends FontLoadingComponent {
                             <View style={{ marginBottom: screenWidth * 0.004 }}>
                                 <Text numberOfLines={1} style={[fontStyles.bigTextStyleDarkGrey, {textAlign: 'left'}]}>{currentAssignment}</Text>
                             </View>
+                            <View style={{ marginBottom: screenHeight * 0.005 }}>
+                                <Text style={fontStyles.mainTextStyleDarkGrey}>{status}</Text>
+                            </View>
                         </View>
                     ) : (
-                            <View style={{ marginLeft: screenWidth * 0.05 }}>
+                        <View style={{ marginLeft: screenWidth * 0.05 }}>
                                 <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>{studentName}</Text>
                             </View>
                         )}
@@ -86,10 +89,10 @@ const styles = StyleSheet.create({
     cardStyle: {
         flexDirection: 'row',
         marginRight: screenWidth * 0.017,
-        height: screenHeight * 0.15,
+        height: screenHeight * 0.112,
         alignItems: 'center',
         marginLeft: screenWidth * 0.017,
-        marginTop: screenHeight * 0.025,
+        marginTop: screenHeight * 0.01,
         fontFamily: 'Montserrat-Regular',
     },
     removeStudentStyle: {
@@ -105,9 +108,9 @@ const styles = StyleSheet.create({
         flex: 4
     },
     profilePicStyle: {
-        width: screenWidth * 0.15,
-        height: screenWidth * 0.15,
-        borderRadius: screenWidth * 0.075,
+        width: screenWidth * 0.12,
+        height: screenWidth * 0.12,
+        borderRadius: screenWidth * 0.06,
         marginLeft: screenWidth * 0.05
     },
 });
