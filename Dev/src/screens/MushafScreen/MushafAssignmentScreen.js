@@ -112,7 +112,7 @@ class MushafAssignmentScreen extends Component {
           assignmentName,
           isNewAssignment:
             assignmentLocation === undefined ||
-            this.props.navigation.state.params.newAssignment === true,
+            this.props.navigation.state.params.newAssignment !== false,
           selection: assignmentLocation
             ? {
                 start: assignmentLocation.start,
