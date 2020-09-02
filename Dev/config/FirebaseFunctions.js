@@ -429,7 +429,6 @@ export default class FirebaseFunctions {
     assignmentType,
     assignmentLocation,
     assignmentIndex,
-    isNewAssignment
   ) {
     if (assignmentIndex === undefined) {
       this.logEvent("UpdateClassAssignment_IndexIsUndefined");
@@ -453,13 +452,8 @@ export default class FirebaseFunctions {
         student.currentAssignments.length === 0
       ) {
         student.currentAssignments = [{ ...updatedAssignment }];
-      } else if (isNewAssignment === true) {
-        student.currentAssignments.push({ ...updatedAssignment });
-      } else if (student.currentAssignments[assignmentIndex] === undefined) {
-        this.logEvent("INVALID_ASSIGNMENT_INDEX", { assignmentIndex });
-        student.currentAssignments.push({ ...updatedAssignment });
       } else {
-        student.currentAssignments[assignmentIndex] = updatedAssignment;
+        student.currentAssignments.push({ ...updatedAssignment });
       }
 
       try {
