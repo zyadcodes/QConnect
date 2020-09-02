@@ -62,6 +62,7 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
       //The style of the card as a whole. Inside the card, you have the image,
       //student name, and student assignment
       <TouchableOpacity
+        key={studentName + "_" + profilePic}
         style={[styles.cardStyle, { backgroundColor: colors.white }]}
         borderColor={colors.black}
         //The on press function is for when the teacher clicks the card, the color of it
