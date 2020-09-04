@@ -97,6 +97,7 @@ class PageHeader extends FontLoadingComponent {
                 fontStyles.smallTextStylePrimaryDark,
                 { paddingBottom: 2 },
               ]}
+              numberOfLines={1}
             >
               {strings.AssignTo}
             </Text>

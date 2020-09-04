@@ -13,10 +13,24 @@ import { screenWidth } from "config/dimensions";
 import { Popover, PopoverController } from "react-native-modal-popover";
 import { Icon } from "react-native-elements";
 
-const EndOfAyahView = ({ highlighted, ayahNumber }) => {
+const mushafFontSize =
+  PixelRatio.get() <= 1.5
+    ? 14
+    : PixelRatio.get() < 2
+    ? 15
+    : screenWidth >= 400
+    ? 16
+    : 14;
+
+const EndOfAyahView = ({ highlighted, ayahNumber, mushafFontScale }) => {
   const rightBracket = "  \uFD3F";
   const leftBracket = "\uFD3E";
   const endOfAyahSymbol = "\u06DD";
+
+  const textfontSize =
+    mushafFontScale === undefined
+      ? mushafFontSize
+      : mushafFontSize / mushafFontScale;
 
   return (
     <View>
@@ -24,6 +38,7 @@ const EndOfAyahView = ({ highlighted, ayahNumber }) => {
         style={[
           styles.ayahSeparator,
           highlighted ? { color: colors.white } : {},
+          { fontSize: textfontSize }
         ]}
       >
         {endOfAyahSymbol}
@@ -33,6 +48,7 @@ const EndOfAyahView = ({ highlighted, ayahNumber }) => {
           style={[
             styles.ayahNumber,
             highlighted ? { color: colors.white } : {},
+            { fontSize: textfontSize * 0.55 }
           ]}
         >
           {ayahNumber}
@@ -53,7 +69,8 @@ const EndOfAyah = ({
   highlightedColor,
   showTooltipOnPress,
   evalNotesComponent,
-  removeHighlight
+  removeHighlight,
+  mushafFontScale
 }) => {
   const ayahNumber = word.aya;
 
@@ -163,21 +180,16 @@ const EndOfAyah = ({
         </PopoverController>
       ) : (
         <TouchableHighlight onPress={() => onPress()}>
-          <EndOfAyahView ayahNumber={ayahNumber} highlighted={highlighted} />
+          <EndOfAyahView
+            ayahNumber={ayahNumber}
+            highlighted={highlighted}
+            mushafFontScale={mushafFontScale}
+          />
         </TouchableHighlight>
       )}
     </View>
   );
 };
-
-const mushafFontSize =
-  PixelRatio.get() <= 1.5
-    ? 14
-    : PixelRatio.get() < 2
-    ? 15
-    : screenWidth >= 400
-    ? 16
-    : 14;
 
 const styles = StyleSheet.create({
   container: {

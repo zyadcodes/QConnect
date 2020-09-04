@@ -25,6 +25,7 @@
     "react-native-code-push": "^6.2.1",
     "react-native-confirmation-code-input": "^1.0.4",
     "react-native-custom-picker": "^0.4.0",
+    "react-native-device-info": "^6.0.1",
     "react-native-easy-toast": "^1.2.0",
     "react-native-elements": "^1.2.6",
     "react-native-firebase": "~5.5.6",

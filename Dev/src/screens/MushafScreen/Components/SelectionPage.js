@@ -147,6 +147,11 @@ class SelectionPage extends React.Component {
       return true;
     }
 
+    //if font scaling changed, re-render
+    if (nextProps.mushafFontScale !== this.props.mushafFontScale) {
+      return true;
+    }
+
     //if the sele.getDerivedStateFromPropsr
     if (
       nextProps.selectionOn != this.state.selectionOn ||
@@ -214,15 +219,15 @@ class SelectionPage extends React.Component {
 
     let lineAyahText = wordsList.reduce(
       (aya, word) => {
-        if (word.char_type === 'end') {
+        if (word.char_type === "end") {
           return "".concat(aya, " ", rightBracket, word.aya, leftBracket);
-        } else if (word.char_type === 'word') {
+        } else if (word.char_type === "word") {
           return "".concat(aya, " ", word.text);
         } else {
           return aya;
         }
       },
-      '' //initialize line text with empty string
+      "" //initialize line text with empty string
     );
 
     return lineAyahText;
@@ -232,7 +237,7 @@ class SelectionPage extends React.Component {
     const { page, lines } = this.state;
 
     //find the first line that has text inside (type === line, instad of basmalah or start_surah)
-    let startLine = lines.slice().find(line => line.type === 'line');
+    let startLine = lines.slice().find(line => line.type === "line");
 
     return {
       ayah: Number(startLine.ayah),
@@ -249,7 +254,7 @@ class SelectionPage extends React.Component {
     let word = line.text
       .slice()
       .reverse()
-      .find(word => word.char_type === 'end');
+      .find(word => word.char_type === "end");
 
     return Number(word.aya);
   }
@@ -263,7 +268,7 @@ class SelectionPage extends React.Component {
     let lastLine = lines
       .slice()
       .reverse()
-      .find(line => line.type === 'line');
+      .find(line => line.type === "line");
 
     //then get the last ayah within the last line
     let lastAyah = this.getLastAyahOfLine(lastLine);
@@ -353,7 +358,7 @@ class SelectionPage extends React.Component {
 
     if (isLoading === true) {
       return (
-        <View id={this.state.page + 'spinner'} style={styles.spinner}>
+        <View id={this.state.page + "spinner"} style={styles.spinner}>
           <LoadingSpinner isVisible={true} />
         </View>
       );
@@ -370,7 +375,7 @@ class SelectionPage extends React.Component {
           ? lines[0].surah
           : lines[1] && lines[1].surah
           ? lines[1].surah
-          : 'Select new assignment';
+          : "Select new assignment";
 
       if (this.state.page === 1) {
         lineAlign = "center";
@@ -383,7 +388,7 @@ class SelectionPage extends React.Component {
               id={this.state.page + "upperWrapper"}
               style={{
                 backgroundColor: colors.white,
-                justifyContent: 'flex-end',
+                justifyContent: "flex-end",
               }}
             >
               <AssignmentEntryComponent
@@ -419,21 +424,27 @@ class SelectionPage extends React.Component {
                   assignToID={this.props.assignToID}
                   onSelect={this.props.onChangeAssignee}
                   disableChangingUser={this.props.disableChangingUser}
+                  fontSizeScale={this.props.mushafFontScale}
                 />
               )}
 
               <View id={this.state.page} style={styles.pageContent}>
                 {lines !== undefined &&
                   lines.map((line, index) => {
-                    if (line.type === 'start_sura') {
+                    if (line.type === "start_sura") {
                       return (
                         <SurahHeader
                           surahName={line.name}
                           key={line.line + "_" + index}
                         />
                       );
-                    } else if (line.type === 'besmellah') {
-                      return <Basmalah key={line.line + "_basmalah"} />;
+                    } else if (line.type === "besmellah") {
+                      return (
+                        <Basmalah
+                          key={line.line + "_basmalah"}
+                          fontSizeScale={this.props.mushafFontScale}
+                        />
+                      );
                     } else {
                       let word = line.text[line.text.length - 1];
                       let curAyah = {
@@ -467,7 +478,7 @@ class SelectionPage extends React.Component {
 
                       return (
                         <TextLine
-                          key={page + '_' + line.line}
+                          key={page + "_" + line.line}
                           lineText={line.text}
                           selectionOn={selectionOn}
                           showTooltipOnPress={this.props.showTooltipOnPress}
@@ -491,6 +502,7 @@ class SelectionPage extends React.Component {
                           lineAlign={lineAlign}
                           evalNotesComponent={this.props.evalNotesComponent}
                           removeHighlight={this.props.removeHighlight}
+                          mushafFontScale={this.props.mushafFontScale}
                         />
                       );
                     }
@@ -559,7 +571,7 @@ class SelectionPage extends React.Component {
                 </ImageBackground>
               </View>
             </View>
-            <View style={{height: 300}}/>
+            <View style={{ height: 300 }} />
           </ScrollView>
         </KeyboardAvoidingView>
       );
@@ -590,9 +602,9 @@ const styles = StyleSheet.create({
     width: screenWidth * 0.3,
     height: 40,
     borderRadius: 2,
-    textAlign: 'center',
-    alignItems: 'center',
-    justifyContent: 'center'
+    textAlign: "center",
+    alignItems: "center",
+    justifyContent: "center",
   },
   topMiddleView: {
     justifyContent: "center",
@@ -623,6 +635,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginHorizontal: 2,
     backgroundColor: colors.white,
+    width: screenWidth
   },
 });
 

@@ -10,3 +10,7 @@ export const noSelection = {
   started: false,
   completed: false
 };
+
+export const isNoSelection = selection => {
+  return JSON.stringify(selection) === JSON.stringify(noSelection);
+};
