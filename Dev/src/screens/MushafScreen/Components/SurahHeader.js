@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
   footer: {
     justifyContent: "center",
     alignSelf: "stretch",
-    height: screenHeight * 0.025,
     alignItems: "center",
   },
   imageContainer: {

@@ -73,7 +73,6 @@ class Word extends React.Component {
         ? mushafFontSize
         : mushafFontSize / mushafFontScale;
 
-    console.log("scale: " + mushafFontScale + ". fontSize: " + wordFontSize);
     return (
       <View>
         <Text

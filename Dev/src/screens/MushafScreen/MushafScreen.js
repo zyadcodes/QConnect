@@ -138,8 +138,7 @@ export default class MushafScreen extends QcParentScreen {
 
     getFontScale().then(fontScale => {
       if (fontScale > 1) {
-        console.log("here..." + fontScale);
-        this.setState({ mushafFontScale: fontScale }, ()=> console.log("scale: " + mushafFontScale));
+        this.setState({ mushafFontScale: fontScale });
       }
     });
 
@@ -150,8 +149,6 @@ export default class MushafScreen extends QcParentScreen {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    console.log(nextState.mushafFontScale);
-    console.log(this.state.mus)
     if (
       nextState.isLoading === this.state.isLoading &&
       nextState.pages === this.state.pages &&
@@ -218,7 +215,6 @@ export default class MushafScreen extends QcParentScreen {
     const highlightedWords = Object.assign({}, this.props.highlightedWords);
     const highlightedAyahs = Object.assign({}, this.props.highlightedAyahs);
 
-    console.log("###: " + this.state.mushafFontScale)
     if (isLoading === true) {
       return (
         <View

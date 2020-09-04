@@ -5,13 +5,9 @@ import { screenHeight } from "config/dimensions";
 
 const defaultFontSize = 17;
 //Creates the higher order component
-const Basmalah = ({ number, id, fontSizeScale }) => {
-  let fontSize = defaultFontSize;
-  if (fontSizeScale !== undefined) {
-    fontSize = defaultFontSize / fontSizeScale;
-  }
+const Basmalah = ({ number, id }) => {
   return (
-    <Text numberOfLines={1} style={[styles.ayahText, { fontSize: fontSize }]}>
+    <Text numberOfLines={1} style={[styles.ayahText]}>
       بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
     </Text>
   );
@@ -19,10 +15,10 @@ const Basmalah = ({ number, id, fontSizeScale }) => {
 
 const styles = StyleSheet.create({
   ayahText: {
-    height: screenHeight * 0.05,
     textAlign: "center",
     fontFamily: "me_quran",
-    color: colors.darkishGrey
+    color: colors.darkishGrey,
+    fontSize: defaultFontSize
   }
 });
 

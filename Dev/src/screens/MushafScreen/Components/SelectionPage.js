@@ -147,7 +147,6 @@ class SelectionPage extends React.Component {
       return true;
     }
 
-    console.log("fs: " + nextProps.mushafFontScale)
     //if font scaling changed, re-render
     if (nextProps.mushafFontScale !== this.props.mushafFontScale) {
       return true;
@@ -425,7 +424,7 @@ class SelectionPage extends React.Component {
                   assignToID={this.props.assignToID}
                   onSelect={this.props.onChangeAssignee}
                   disableChangingUser={this.props.disableChangingUser}
-                  fontSizeScale={mushafFontScale}
+                  fontSizeScale={this.props.mushafFontScale}
                 />
               )}
 
@@ -440,7 +439,12 @@ class SelectionPage extends React.Component {
                         />
                       );
                     } else if (line.type === "besmellah") {
-                      return <Basmalah key={line.line + "_basmalah"} fontSizeScale={mushafFontScale}/>;
+                      return (
+                        <Basmalah
+                          key={line.line + "_basmalah"}
+                          fontSizeScale={this.props.mushafFontScale}
+                        />
+                      );
                     } else {
                       let word = line.text[line.text.length - 1];
                       let curAyah = {

@@ -32,7 +32,13 @@ const TextLine = ({
 }) => {
   let isFirstWord = noSelectionInPreviousLines;
   return (
-    <View style={{ ...styles.line, alignItems: lineAlign }}>
+    <View
+      style={{
+        ...styles.line,
+        alignItems: lineAlign,
+        flexWrap: mushafFontScale > 1 ? "wrap" : "nowrap",
+      }}
+    >
       {lineText &&
         lineText.map((word, index) => {
           let curAyah = {
@@ -91,7 +97,6 @@ const TextLine = ({
                   isFirstSelectedWord={false}
                   evalNotesComponent={evalNotesComponent}
                   removeHighlight={removeHighlight}
-                  mushafFontScale={mushafFontScale}
                 />
               );
             } else if (word.char_type === "end") {
@@ -109,7 +114,6 @@ const TextLine = ({
                   isLastSelectedAyah={false}
                   evalNotesComponent={evalNotesComponent}
                   removeHighlight={removeHighlight}
-                  mushafFontScale={mushafFontScale}
                 />
               );
             }
@@ -156,7 +160,6 @@ const TextLine = ({
                   isFirstSelectedWord={isFirstSelectedWord}
                   evalNotesComponent={evalNotesComponent}
                   removeHighlight={removeHighlight}
-                  mushafFontScale={mushafFontScale}
                 />
               );
             } else if (word.char_type === "end") {
@@ -189,7 +192,6 @@ const TextLine = ({
                   isLastSelectedAyah={isLastSelectedAyah}
                   evalNotesComponent={evalNotesComponent}
                   removeHighlight={removeHighlight}
-                  mushafFontScale={mushafFontScale}
                 />
               );
             }
@@ -204,7 +206,7 @@ const styles = StyleSheet.create({
     flexDirection: "row-reverse",
     backgroundColor: "transparent",
     justifyContent: "space-between",
-    width: screenWidth
+    width: screenWidth * 0.98
   },
   footer: {
     justifyContent: "center",

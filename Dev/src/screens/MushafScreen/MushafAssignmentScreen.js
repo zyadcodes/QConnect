@@ -872,7 +872,6 @@ class MushafAssignmentScreen extends Component {
             <SwitchSelector
               options={options}
               initial={selectedAssignmentTypeIndex}
-              height={20}
               textColor={colors.darkGrey}
               selectedColor={colors.primaryDark}
               buttonColor={colors.primaryLight}

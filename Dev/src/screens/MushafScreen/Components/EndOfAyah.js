@@ -32,7 +32,6 @@ const EndOfAyahView = ({ highlighted, ayahNumber, mushafFontScale }) => {
       ? mushafFontSize
       : mushafFontSize / mushafFontScale;
 
-      console.log("tfs" + textfontSize)
   return (
     <View>
       <Text
