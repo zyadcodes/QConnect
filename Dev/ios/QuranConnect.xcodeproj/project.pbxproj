@@ -25,11 +25,11 @@
 		016EA1842328BB8400CD20E2 /* Icon-App-60x60@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1752328BB8400CD20E2 /* Icon-App-60x60@3x.png */; };
 		016EA1852328BB8400CD20E2 /* Icon-App-76x76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1762328BB8400CD20E2 /* Icon-App-76x76@2x.png */; };
 		016EA1862328BB8400CD20E2 /* Icon-App-29x29@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1772328BB8400CD20E2 /* Icon-App-29x29@2x.png */; };
-		016EA18A2328BB9800CD20E2 /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		016EA18A2328BB9800CD20E2 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		016EA18B2328BB9800CD20E2 /* iTunesArtwork@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1882328BB9700CD20E2 /* iTunesArtwork@1x.png */; };
 		016EA18C2328BB9800CD20E2 /* iTunesArtwork@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 016EA1892328BB9700CD20E2 /* iTunesArtwork@3x.png */; };
 		017E518523234B7600B71C11 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 017E518423234B7600B71C11 /* GoogleService-Info.plist */; };
-		0188157D23348C52006806B3 /* MADDINA.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188157C23348C52006806B3 /* MADDINA.ttf */; };
+		0188157D23348C52006806B3 /* ../assets/fonts/MADDINA.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188157C23348C52006806B3 /* ../assets/fonts/MADDINA.ttf */; };
 		0188158423349101006806B3 /* MADDINA.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188158323349101006806B3 /* MADDINA.ttf */; };
 		0188158B2334966A006806B3 /* me_quran.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188158823349669006806B3 /* me_quran.ttf */; };
 		0188158C2334966A006806B3 /* Scheherazade-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0188158923349669006806B3 /* Scheherazade-Bold.ttf */; };
@@ -208,7 +208,7 @@
 		016EA1882328BB9700CD20E2 /* iTunesArtwork@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@1x.png"; sourceTree = "<group>"; };
 		016EA1892328BB9700CD20E2 /* iTunesArtwork@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@3x.png"; sourceTree = "<group>"; };
 		017E518423234B7600B71C11 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "QuranConnect/GoogleService-Info.plist"; sourceTree = "<group>"; };
-		0188157C23348C52006806B3 /* MADDINA.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ../assets/fonts/MADDINA.ttf; sourceTree = "<group>"; };
+		0188157C23348C52006806B3 /* ../assets/fonts/MADDINA.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ../assets/fonts/MADDINA.ttf; sourceTree = "<group>"; };
 		0188158323349101006806B3 /* MADDINA.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MADDINA.ttf; path = ../assets/fonts/MADDINA.ttf; sourceTree = "<group>"; };
 		0188158823349669006806B3 /* me_quran.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = me_quran.ttf; path = ../assets/fonts/me_quran.ttf; sourceTree = "<group>"; };
 		0188158923349669006806B3 /* Scheherazade-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Scheherazade-Bold.ttf"; path = "../assets/fonts/Scheherazade-Bold.ttf"; sourceTree = "<group>"; };
@@ -239,25 +239,25 @@
 		1A13C17377C04E798A50EFEB /* male5.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male5.png; path = "../assets/images/teacher-icons/male5.png"; sourceTree = "<group>"; };
 		1A32D67C41A6C031FD911341 /* Pods-QuranConnect-tvOSTests.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect-tvOSTests.staging.xcconfig"; path = "Target Support Files/Pods-QuranConnect-tvOSTests/Pods-QuranConnect-tvOSTests.staging.xcconfig"; sourceTree = "<group>"; };
 		1A40302066344B3987892CF6 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
-		1B72C5AF4C584E8B8B535E2A /* medal-2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "medal-2.png"; path = "../assets/images/badges/medal-2.png"; sourceTree = "<group>"; };
+		1B72C5AF4C584E8B8B535E2A /* medal-2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "medal-2.png"; path = "../assets/images/badges/medal-2.png"; sourceTree = "<group>"; };
 		1C12B1D7840043859FE0F841 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
-		1CA2100DCC2F4F168792C5E5 /* trophie-4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "trophie-4.png"; path = "../assets/images/badges/trophie-4.png"; sourceTree = "<group>"; };
+		1CA2100DCC2F4F168792C5E5 /* trophie-4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "trophie-4.png"; path = "../assets/images/badges/trophie-4.png"; sourceTree = "<group>"; };
 		203816654693425B91800AEC /* girl11.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl11.png; path = "../assets/images/student-icons/girl11.png"; sourceTree = "<group>"; };
 		2529BA491F5E41168F6C457F /* boy3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boy3.png; path = "../assets/images/student-icons/boy3.png"; sourceTree = "<group>"; };
-		25D403CD5D9045A1984B91D9 /* shiled.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = shiled.png; path = ../assets/images/badges/shiled.png; sourceTree = "<group>"; };
+		25D403CD5D9045A1984B91D9 /* shiled.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = shiled.png; path = ../assets/images/badges/shiled.png; sourceTree = "<group>"; };
 		27E36662E0D54F0EB72EE904 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		2B2B4B659EF541BDA006F6B9 /* female3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female3.png; path = "../assets/images/teacher-icons/female3.png"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* QuranConnect-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "QuranConnect-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* QuranConnect-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "QuranConnect-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E3C7B0DB8F04C989295C943 /* girl9.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl9.png; path = "../assets/images/student-icons/girl9.png"; sourceTree = "<group>"; };
 		2EF806E02FCB4A9BB0AF22C1 /* is-icon-13.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-13.png"; path = "../assets/images/generic-icons/is-icon-13.png"; sourceTree = "<group>"; };
-		2F6EBE17D5CF429AACC48999 /* Untitled-4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Untitled-4.png"; path = "../assets/images/badges/Untitled-4.png"; sourceTree = "<group>"; };
+		2F6EBE17D5CF429AACC48999 /* Untitled-4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Untitled-4.png"; path = "../assets/images/badges/Untitled-4.png"; sourceTree = "<group>"; };
 		32658A19844D91973FDEAE8F /* libPods-QuranConnect-QuranConnectTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-QuranConnect-QuranConnectTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		36F0D295D76C4F7FBC5DF643 /* trophie-2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "trophie-2.png"; path = "../assets/images/badges/trophie-2.png"; sourceTree = "<group>"; };
+		36F0D295D76C4F7FBC5DF643 /* trophie-2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "trophie-2.png"; path = "../assets/images/badges/trophie-2.png"; sourceTree = "<group>"; };
 		397C08836A564CA0973F0C05 /* salam.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = salam.png; path = ../assets/images/salam.png; sourceTree = "<group>"; };
 		39A0FD9CBFD84EE4B21240CB /* female8.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female8.png; path = "../assets/images/teacher-icons/female8.png"; sourceTree = "<group>"; };
 		3AA28E8080B648AC9BC00AA9 /* male13.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male13.png; path = "../assets/images/teacher-icons/male13.png"; sourceTree = "<group>"; };
-		3C86B46796E34AAFBCDFB4AE /* badge-1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "badge-1.png"; path = "../assets/images/badges/badge-1.png"; sourceTree = "<group>"; };
+		3C86B46796E34AAFBCDFB4AE /* badge-1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "badge-1.png"; path = "../assets/images/badges/badge-1.png"; sourceTree = "<group>"; };
 		3CF32EFED14AFE060E37BA07 /* Pods-QuranConnect-tvOS.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect-tvOS.staging.xcconfig"; path = "Target Support Files/Pods-QuranConnect-tvOS/Pods-QuranConnect-tvOS.staging.xcconfig"; sourceTree = "<group>"; };
 		3F9B3D0E86D84F43B2EDB344 /* salam.jpg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = salam.jpg; path = ../assets/images/salam.jpg; sourceTree = "<group>"; };
 		420353A5D8EE42AC99BAF591 /* boy2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boy2.png; path = "../assets/images/student-icons/boy2.png"; sourceTree = "<group>"; };
@@ -265,11 +265,11 @@
 		44AB6C8AF4504A8E9A540F4C /* Ubuntu-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Ubuntu-Light.ttf"; path = "../assets/fonts/Ubuntu-Light.ttf"; sourceTree = "<group>"; };
 		45362D793FE03DD9506F54E1 /* Pods-QuranConnect-QuranConnectTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect-QuranConnectTests.release.xcconfig"; path = "Target Support Files/Pods-QuranConnect-QuranConnectTests/Pods-QuranConnect-QuranConnectTests.release.xcconfig"; sourceTree = "<group>"; };
 		471A2E390A1C4832BB6AF8F0 /* female2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female2.png; path = "../assets/images/teacher-icons/female2.png"; sourceTree = "<group>"; };
-		48DCB147A877402796EFA3F1 /* star-trophie.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "star-trophie.png"; path = "../assets/images/badges/star-trophie.png"; sourceTree = "<group>"; };
+		48DCB147A877402796EFA3F1 /* star-trophie.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "star-trophie.png"; path = "../assets/images/badges/star-trophie.png"; sourceTree = "<group>"; };
 		4B5A67A8A5E848F2A184E1A5 /* splash.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = splash.png; path = ../assets/images/splash.png; sourceTree = "<group>"; };
 		4BC1FC098D4042F8A9AB10D2 /* is-icon-6.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-6.png"; path = "../assets/images/generic-icons/is-icon-6.png"; sourceTree = "<group>"; };
 		4C410B9BE5784066B72896D1 /* Pods-QuranConnect-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-QuranConnect-tvOS/Pods-QuranConnect-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		4E3060F151D548F5AA5873A8 /* medal-3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "medal-3.png"; path = "../assets/images/badges/medal-3.png"; sourceTree = "<group>"; };
+		4E3060F151D548F5AA5873A8 /* medal-3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "medal-3.png"; path = "../assets/images/badges/medal-3.png"; sourceTree = "<group>"; };
 		4F5247C611FB150AC2FD415C /* Pods-QuranConnect-QuranConnectTests.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect-QuranConnectTests.staging.xcconfig"; path = "Target Support Files/Pods-QuranConnect-QuranConnectTests/Pods-QuranConnect-QuranConnectTests.staging.xcconfig"; sourceTree = "<group>"; };
 		5211C2920AF741BCB20DCB0E /* male7.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male7.png; path = "../assets/images/teacher-icons/male7.png"; sourceTree = "<group>"; };
 		522B53FAC4794804AFA143F1 /* boy4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boy4.png; path = "../assets/images/student-icons/boy4.png"; sourceTree = "<group>"; };
@@ -312,7 +312,7 @@
 		93AC74C0EF0D4E9A90B7F523 /* boy11.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boy11.png; path = "../assets/images/student-icons/boy11.png"; sourceTree = "<group>"; };
 		966AD5E67D1D465C80EEF831 /* girl16.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl16.png; path = "../assets/images/student-icons/girl16.png"; sourceTree = "<group>"; };
 		96B6DA18127E4DE7B6707B39 /* is-icon-14.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-14.png"; path = "../assets/images/generic-icons/is-icon-14.png"; sourceTree = "<group>"; };
-		97CB7048858F4DF3AC387255 /* trophie-wings.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "trophie-wings.png"; path = "../assets/images/badges/trophie-wings.png"; sourceTree = "<group>"; };
+		97CB7048858F4DF3AC387255 /* trophie-wings.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "trophie-wings.png"; path = "../assets/images/badges/trophie-wings.png"; sourceTree = "<group>"; };
 		99C2E014696D400C82F13F7C /* is-icon-16.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-16.png"; path = "../assets/images/generic-icons/is-icon-16.png"; sourceTree = "<group>"; };
 		9B25A0D993B74144B3841DF8 /* male9.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male9.png; path = "../assets/images/teacher-icons/male9.png"; sourceTree = "<group>"; };
 		9B27459B2305082D001A8F1F /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNFirebase.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -323,7 +323,7 @@
 		9B2745A62305087A001A8F1F /* libFirebaseFirestore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFirebaseFirestore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B2745A8230508B7001A8F1F /* libFirebaseInstanceID.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFirebaseInstanceID.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C358CE3A0D04260A5F803E4 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
-		9D18A112196F4EA68D4421F0 /* flag-1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "flag-1.png"; path = "../assets/images/badges/flag-1.png"; sourceTree = "<group>"; };
+		9D18A112196F4EA68D4421F0 /* flag-1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "flag-1.png"; path = "../assets/images/badges/flag-1.png"; sourceTree = "<group>"; };
 		A4C2A518DE3E4150B76EEDA0 /* female6.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female6.png; path = "../assets/images/teacher-icons/female6.png"; sourceTree = "<group>"; };
 		A4C4D291D14846FBBF5DCA12 /* is-icon-8.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-8.png"; path = "../assets/images/generic-icons/is-icon-8.png"; sourceTree = "<group>"; };
 		A4FF231B9E7A44F08F09810A /* boyc2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boyc2.png; path = "../assets/images/student-icons/boyc2.png"; sourceTree = "<group>"; };
@@ -336,7 +336,7 @@
 		AF07BAEB0A284F4FAB1D6BAE /* msq4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = msq4.png; path = "../assets/images/student-icons/msq4.png"; sourceTree = "<group>"; };
 		AFBE13EEBAB6481F8302865D /* is-icon-0.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-0.png"; path = "../assets/images/generic-icons/is-icon-0.png"; sourceTree = "<group>"; };
 		B461B02942FB47F4BD472556 /* male10.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male10.png; path = "../assets/images/teacher-icons/male10.png"; sourceTree = "<group>"; };
-		B6BEA0DABE8244D19C0BD2F8 /* plate-1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "plate-1.png"; path = "../assets/images/badges/plate-1.png"; sourceTree = "<group>"; };
+		B6BEA0DABE8244D19C0BD2F8 /* plate-1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "plate-1.png"; path = "../assets/images/badges/plate-1.png"; sourceTree = "<group>"; };
 		B849C636B68E4E5CBF286982 /* boy9.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boy9.png; path = "../assets/images/student-icons/boy9.png"; sourceTree = "<group>"; };
 		BAB7EDE6C5414E558852809D /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		BAECA40928B2A4658A9E5EBE /* Pods-QuranConnect-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-QuranConnect-tvOSTests/Pods-QuranConnect-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -346,13 +346,13 @@
 		C4E43A04E52E4B669F7D0A2C /* is-icon-15.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-15.png"; path = "../assets/images/generic-icons/is-icon-15.png"; sourceTree = "<group>"; };
 		C671E8BE3F1E49A090715D1F /* salam.orig.jpg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = salam.orig.jpg; path = ../assets/images/salam.orig.jpg; sourceTree = "<group>"; };
 		CC7F6748991F49BA949DE591 /* girl10.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl10.png; path = "../assets/images/student-icons/girl10.png"; sourceTree = "<group>"; };
-		D5C9DAC72735412D8F49D103 /* trophie-1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "trophie-1.png"; path = "../assets/images/badges/trophie-1.png"; sourceTree = "<group>"; };
+		D5C9DAC72735412D8F49D103 /* trophie-1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "trophie-1.png"; path = "../assets/images/badges/trophie-1.png"; sourceTree = "<group>"; };
 		D71F5E351ABC4CA585BB6D49 /* girl6.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl6.png; path = "../assets/images/student-icons/girl6.png"; sourceTree = "<group>"; };
 		D7DB78FFAD284339B2AB45C8 /* female7.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female7.png; path = "../assets/images/teacher-icons/female7.png"; sourceTree = "<group>"; };
 		DB79D985B58B4F11A46360A7 /* is-icon-9.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-9.png"; path = "../assets/images/generic-icons/is-icon-9.png"; sourceTree = "<group>"; };
 		DDF4A35D790F4347BE692A61 /* salam.orig.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = salam.orig.png; path = ../assets/images/salam.orig.png; sourceTree = "<group>"; };
 		DFC6A5740BDD08CBD40887B3 /* libPods-QuranConnect.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-QuranConnect.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E0329E25264C4B3EBC417DB2 /* trophie-3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "trophie-3.png"; path = "../assets/images/badges/trophie-3.png"; sourceTree = "<group>"; };
+		E0329E25264C4B3EBC417DB2 /* trophie-3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "trophie-3.png"; path = "../assets/images/badges/trophie-3.png"; sourceTree = "<group>"; };
 		E1A91F06C5F343CC97992388 /* girl2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl2.png; path = "../assets/images/student-icons/girl2.png"; sourceTree = "<group>"; };
 		E208143ADD364957A8FE70B4 /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		E2F4578471F246539C19A7E8 /* girlc3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girlc3.png; path = "../assets/images/student-icons/girlc3.png"; sourceTree = "<group>"; };
@@ -361,7 +361,7 @@
 		EBB615236590451195990F95 /* is-icon-12.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-12.png"; path = "../assets/images/generic-icons/is-icon-12.png"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		EF097F8FF89C4F998753FF33 /* medal-1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "medal-1.png"; path = "../assets/images/badges/medal-1.png"; sourceTree = "<group>"; };
+		EF097F8FF89C4F998753FF33 /* medal-1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "medal-1.png"; path = "../assets/images/badges/medal-1.png"; sourceTree = "<group>"; };
 		F2412B9D9BB84F28AB634992 /* female11.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female11.png; path = "../assets/images/teacher-icons/female11.png"; sourceTree = "<group>"; };
 		F32E43F7FF013E3747E82336 /* Pods-QuranConnect.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect.debug.xcconfig"; path = "Target Support Files/Pods-QuranConnect/Pods-QuranConnect.debug.xcconfig"; sourceTree = "<group>"; };
 		F4312D6600294E3B8CEA6855 /* is-icon-7.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-7.png"; path = "../assets/images/generic-icons/is-icon-7.png"; sourceTree = "<group>"; };
@@ -374,8 +374,8 @@
 		F936FB71A0F24BB3B9B49663 /* girl14.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl14.png; path = "../assets/images/student-icons/girl14.png"; sourceTree = "<group>"; };
 		F9929FDA18D241EE85E19994 /* girl4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl4.png; path = "../assets/images/student-icons/girl4.png"; sourceTree = "<group>"; };
 		FA9C40B336B14B058DEECA8F /* is-icon-3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-3.png"; path = "../assets/images/generic-icons/is-icon-3.png"; sourceTree = "<group>"; };
-		FA9C5AE092C4421DA46CD1A4 /* crown.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = crown.png; path = ../assets/images/badges/crown.png; sourceTree = "<group>"; };
-		FACC962C7928466D96724150 /* medal-4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "medal-4.png"; path = "../assets/images/badges/medal-4.png"; sourceTree = "<group>"; };
+		FA9C5AE092C4421DA46CD1A4 /* crown.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = crown.png; path = ../assets/images/badges/crown.png; sourceTree = "<group>"; };
+		FACC962C7928466D96724150 /* medal-4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "medal-4.png"; path = "../assets/images/badges/medal-4.png"; sourceTree = "<group>"; };
 		FECB0FD8E76B4F9C8430C188 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		FF3E14CA335F9A6BF744F8EB /* Pods_QuranConnect_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QuranConnect_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFD7DDE8A928D4843398548A /* Pods-QuranConnect.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect.release.xcconfig"; path = "Target Support Files/Pods-QuranConnect/Pods-QuranConnect.release.xcconfig"; sourceTree = "<group>"; };
@@ -547,7 +547,7 @@
 				016EA16A2328BB8300CD20E2 /* Icon-App-40x40@1x.png */,
 				016EA16D2328BB8300CD20E2 /* Icon-App-40x40@3x.png */,
 				01B74AB324476F3000873E2E /* ding.m4a */,
-				0188157C23348C52006806B3 /* MADDINA.ttf */,
+				0188157C23348C52006806B3 /* ../assets/fonts/MADDINA.ttf */,
 				016EA1702328BB8400CD20E2 /* Icon-App-60x60@2x.png */,
 				01B74AB1244764A000873E2E /* ding.mp3 */,
 				016EA1752328BB8400CD20E2 /* Icon-App-60x60@3x.png */,
@@ -878,7 +878,7 @@
 				DB3C8CC34F5D48FF8D0B28DC /* is-icon-8.png in Resources */,
 				134C6DF41BF74CB595EDFC09 /* is-icon-9.png in Resources */,
 				0188158423349101006806B3 /* MADDINA.ttf in Resources */,
-				0188157D23348C52006806B3 /* MADDINA.ttf in Resources */,
+				0188157D23348C52006806B3 /* ../assets/fonts/MADDINA.ttf in Resources */,
 				AC79FAAFE82949FE864B8316 /* read_child_bg.jpg in Resources */,
 				362B6B1D5B5947A98D6D51BC /* read_child_bg.orig.jpg in Resources */,
 				CD4C3A352ABA488D9A2DFD37 /* salam.jpg in Resources */,
@@ -914,7 +914,7 @@
 				7B96A35E3F254841A90DD965 /* girl16.png in Resources */,
 				9EF5E08EE0A74474BE02426B /* girl2.png in Resources */,
 				488A4EBE8C7247BA8A23928F /* girl3.png in Resources */,
-				016EA18A2328BB9800CD20E2 /* BuildFile in Resources */,
+				016EA18A2328BB9800CD20E2 /* (null) in Resources */,
 				016EA1862328BB8400CD20E2 /* Icon-App-29x29@2x.png in Resources */,
 				016EA18C2328BB9800CD20E2 /* iTunesArtwork@3x.png in Resources */,
 				6749EB7078064E4D9E977415 /* girl4.png in Resources */,
@@ -1441,12 +1441,12 @@
 				CODE_SIGN_ENTITLEMENTS = QuranConnect/QuranConnect.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.1.35;
+				CURRENT_PROJECT_VERSION = 1.1.36;
 				DEVELOPMENT_TEAM = B65Y7865Z9;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = QuranConnect/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.1.35;
+				MARKETING_VERSION = 1.1.36;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1559,13 +1559,13 @@
 				CODE_SIGN_ENTITLEMENTS = QuranConnect/QuranConnect.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.1.35;
+				CURRENT_PROJECT_VERSION = 1.1.36;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = "";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = QuranConnect/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.1.35;
+				MARKETING_VERSION = 1.1.36;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1591,12 +1591,12 @@
 				CODE_SIGN_ENTITLEMENTS = QuranConnect/QuranConnect.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.1.35;
+				CURRENT_PROJECT_VERSION = 1.1.36;
 				DEVELOPMENT_TEAM = B65Y7865Z9;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = QuranConnect/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.1.35;
+				MARKETING_VERSION = 1.1.36;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
