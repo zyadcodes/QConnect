@@ -11,12 +11,36 @@ import { Icon } from "react-native-elements";
 import colors from "config/colors";
 import { screenWidth } from "config/dimensions";
 import { Popover, PopoverController } from "react-native-modal-popover";
+import { scale, moderateScale, verticalScale } from "utils/scaling";
+import { getFontScale } from "react-native-device-info";
+
+const getCircularReplacer = () => {
+  const seen = new WeakSet();
+  return (key, value) => {
+    if (typeof value === "object" && value !== null) {
+      if (seen.has(value)) {
+        return;
+      }
+      seen.add(value);
+    }
+    return value;
+  };
+};
+
+const mushafFontSize =
+  PixelRatio.get() <= 1.5
+    ? 14
+    : PixelRatio.get() < 2
+    ? 15
+    : screenWidth >= 400
+    ? 16
+    : 14;
 
 //Creates the higher order component
 class Word extends React.Component {
   state = {
     selected: this.props.selected,
-    isFirstSelectedWord: this.props.isFirstSelectedWord
+    isFirstSelectedWord: this.props.isFirstSelectedWord,
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -24,7 +48,8 @@ class Word extends React.Component {
       nextProps.selected === this.props.selected &&
       nextProps.isFirstSelectedWord === this.props.isFirstSelectedWord &&
       nextProps.isWordHighlighted === this.props.isWordHighlighted &&
-      nextProps.isAyahHighlighted === this.props.isAyahHighlighted
+      nextProps.isAyahHighlighted === this.props.isAyahHighlighted &&
+      nextProps.mushafFontScale === this.props.mushafFontScale
     ) {
       return false;
     }
@@ -35,16 +60,32 @@ class Word extends React.Component {
   //The content is then wrapped in either poppover control or simple touchable
   // depending on the mus7af version that is being rendered.
   renderWord() {
-    const { word, isWordHighlighted, isAyahHighlighted } = this.props;
+    const {
+      word,
+      isWordHighlighted,
+      isAyahHighlighted,
+      mushafFontScale,
+    } = this.props;
     const { text } = word;
+
+    let wordFontSize =
+      mushafFontScale === undefined
+        ? mushafFontSize
+        : mushafFontSize / mushafFontScale;
+
+    console.log("scale: " + mushafFontScale + ". fontSize: " + wordFontSize);
     return (
       <View>
         <Text
-          style={
+          style={[
             isWordHighlighted || isAyahHighlighted
               ? styles.highlightedWordText
-              : styles.wordText
-          }
+              : styles.wordText,
+            {
+              fontSize: wordFontSize
+            }
+          ]}
+          adjustsFontSizeToFit
         >
           {text}
         </Text>
@@ -63,7 +104,7 @@ class Word extends React.Component {
       showTooltipOnPress,
       word,
       removeHighlight,
-      curAyah
+      curAyah,
     } = this.props;
     let containerStyle = [styles.container];
     if (selected) {
@@ -171,26 +212,18 @@ class Word extends React.Component {
     );
   }
 }
-const mushafFontSize =
-  PixelRatio.get() <= 1.5
-    ? 14
-    : PixelRatio.get() < 2
-    ? 15
-    : screenWidth >= 400
-    ? 16
-    : 14;
 
 const styles = StyleSheet.create({
   wordText: {
     textAlign: "right",
     fontFamily: "me_quran",
-    fontSize: mushafFontSize,
+    //fontSize: moderateScale(mushafFontSize, 0.4),
     color: colors.darkGrey
   },
   highlightedWordText: {
     textAlign: "right",
     fontFamily: "me_quran",
-    fontSize: mushafFontSize,
+    //fontSize: moderateScale(mushafFontSize, 0.4),
     color: colors.white
   },
   container: {

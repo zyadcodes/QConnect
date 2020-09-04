@@ -7,7 +7,7 @@ import {
 } from "../Helpers/AyahsOrder";
 import AyahSelectionWord from "./AyahSelectionWord";
 import EndOfAyah from "./EndOfAyah";
-import { screenHeight } from "config/dimensions";
+import { screenHeight, screenWidth } from "config/dimensions";
 
 //Creates the higher order component
 const TextLine = ({
@@ -27,7 +27,8 @@ const TextLine = ({
   showLoadingOnHighlightedAyah,
   showTooltipOnPress,
   evalNotesComponent,
-  removeHighlight
+  removeHighlight,
+  mushafFontScale
 }) => {
   let isFirstWord = noSelectionInPreviousLines;
   return (
@@ -90,6 +91,7 @@ const TextLine = ({
                   isFirstSelectedWord={false}
                   evalNotesComponent={evalNotesComponent}
                   removeHighlight={removeHighlight}
+                  mushafFontScale={mushafFontScale}
                 />
               );
             } else if (word.char_type === "end") {
@@ -107,6 +109,7 @@ const TextLine = ({
                   isLastSelectedAyah={false}
                   evalNotesComponent={evalNotesComponent}
                   removeHighlight={removeHighlight}
+                  mushafFontScale={mushafFontScale}
                 />
               );
             }
@@ -153,6 +156,7 @@ const TextLine = ({
                   isFirstSelectedWord={isFirstSelectedWord}
                   evalNotesComponent={evalNotesComponent}
                   removeHighlight={removeHighlight}
+                  mushafFontScale={mushafFontScale}
                 />
               );
             } else if (word.char_type === "end") {
@@ -185,6 +189,7 @@ const TextLine = ({
                   isLastSelectedAyah={isLastSelectedAyah}
                   evalNotesComponent={evalNotesComponent}
                   removeHighlight={removeHighlight}
+                  mushafFontScale={mushafFontScale}
                 />
               );
             }
@@ -199,6 +204,7 @@ const styles = StyleSheet.create({
     flexDirection: "row-reverse",
     backgroundColor: "transparent",
     justifyContent: "space-between",
+    width: screenWidth
   },
   footer: {
     justifyContent: "center",

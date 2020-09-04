@@ -3,10 +3,15 @@ import { Text, StyleSheet } from "react-native";
 import colors from "config/colors";
 import { screenHeight } from "config/dimensions";
 
+const defaultFontSize = 17;
 //Creates the higher order component
-const Basmalah = ({ number, id }) => {
+const Basmalah = ({ number, id, fontSizeScale }) => {
+  let fontSize = defaultFontSize;
+  if (fontSizeScale !== undefined) {
+    fontSize = defaultFontSize / fontSizeScale;
+  }
   return (
-    <Text numberOfLines={1} style={styles.ayahText}>
+    <Text numberOfLines={1} style={[styles.ayahText, { fontSize: fontSize }]}>
       بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
     </Text>
   );
@@ -17,7 +22,6 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.05,
     textAlign: "center",
     fontFamily: "me_quran",
-    fontSize: 17,
     color: colors.darkishGrey
   }
 });

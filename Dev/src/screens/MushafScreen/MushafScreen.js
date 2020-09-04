@@ -8,6 +8,7 @@ import SelectionPage from "./Components/SelectionPage";
 import Swiper from "react-native-swiper";
 import { screenHeight, screenWidth } from "config/dimensions";
 import * as _ from "lodash";
+import { getFontScale } from "react-native-device-info";
 
 class MushafPage extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
@@ -15,11 +16,9 @@ class MushafPage extends React.Component {
       (nextProps.curIndex === nextProps.idx &&
         nextProps.page === this.props.page) ||
       ((!_.isEqual(nextProps.selection, this.props.selection) &&
-        (
-          nextProps.selection === undefined) ||
-          (nextProps.page <= nextProps.selection.end.page &&
-          nextProps.page >= nextProps.selection.start.page)
-      ))
+        nextProps.selection === undefined) ||
+        (nextProps.page <= nextProps.selection.end.page &&
+          nextProps.page >= nextProps.selection.start.page))
     ) {
       return true;
     }
@@ -46,7 +45,8 @@ class MushafPage extends React.Component {
       idx,
       onChangePage,
       isLoading,
-      currentClass
+      currentClass,
+      mushafFontScale
     } = this.props;
 
     const itemInt = parseInt(item);
@@ -97,6 +97,7 @@ class MushafPage extends React.Component {
           onUpdateAssignmentName={newAssignmentName =>
             this.props.setFreeFormAssignmentName(newAssignmentName)
           }
+          mushafFontScale={mushafFontScale}
         />
       </View>
     );
@@ -127,12 +128,20 @@ export default class MushafScreen extends QcParentScreen {
     assignmentType: this.props.assignmentType,
     loadScreenOnClose: this.props.loadScreenOnClose,
     popOnClose: this.props.popOnClose,
-    isLoading: true
+    isLoading: true,
   };
 
   async componentDidMount() {
     //we mimmic right to left pages scanning by reversing the pages order in the swiper component
     let allPages = Array.from(Array(604), (e, i) => 604 - i);
+    let scale = this.state.mushafFontScale;
+
+    getFontScale().then(fontScale => {
+      if (fontScale > 1) {
+        console.log("here..." + fontScale);
+        this.setState({ mushafFontScale: fontScale }, ()=> console.log("scale: " + mushafFontScale));
+      }
+    });
 
     this.setState({
       pages: allPages,
@@ -141,11 +150,14 @@ export default class MushafScreen extends QcParentScreen {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    console.log(nextState.mushafFontScale);
+    console.log(this.state.mus)
     if (
       nextState.isLoading === this.state.isLoading &&
       nextState.pages === this.state.pages &&
       nextState.index === this.state.index &&
       nextState.page === this.state.page &&
+      nextState.mushafFontScale === this.state.mushafFontScale &&
       nextState.assignmentType === this.state.assignmentType &&
       nextProps.assignToID === this.props.assignToID &&
       nextProps.profileImage === this.props.profileImage &&
@@ -201,11 +213,12 @@ export default class MushafScreen extends QcParentScreen {
 
   // ------------------------ Render the Mushhaf Component ----------------------------------------
   render() {
-    const { isLoading } = this.state;
+    const { isLoading, mushafFontScale } = this.state;
 
     const highlightedWords = Object.assign({}, this.props.highlightedWords);
     const highlightedAyahs = Object.assign({}, this.props.highlightedAyahs);
 
+    console.log("###: " + this.state.mushafFontScale)
     if (isLoading === true) {
       return (
         <View
@@ -236,6 +249,7 @@ export default class MushafScreen extends QcParentScreen {
                 item={item}
                 idx={idx}
                 page={this.state.page}
+                mushafFontScale={mushafFontScale}
                 curIndex={604 - this.state.page}
                 highlightedWords={highlightedWords}
                 highlightedAyahs={highlightedAyahs}

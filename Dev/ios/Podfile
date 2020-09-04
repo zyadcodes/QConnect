@@ -86,6 +86,8 @@ target 'QuranConnect' do
 
   pod 'react-native-keep-awake', :path => '../node_modules/react-native-keep-awake'
 
+  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+
   target 'QuranConnectTests' do
     inherit! :complete
     # Pods for testing
