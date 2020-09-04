@@ -16,7 +16,7 @@ import classImages from "config/classImages";
 import LoadingSpinner from "components/LoadingSpinner";
 import ActionButton from "react-native-action-button";
 import { Icon } from "react-native-elements";
-import { noAyahSelected, noSelection } from 'screens/MushafScreen/Helpers/consts';
+import { isNoSelection, noSelection } from 'screens/MushafScreen/Helpers/consts';
 
 //------- constants to indicate the case when there is no ayah selected
 
@@ -191,11 +191,6 @@ class MushafAssignmentScreen extends Component {
   //======= end of UI action handlers ==========================
 
   //======= methods handling assignment changes ================
-
-  isNoSelection(selection) {
-    return JSON.stringify(selection) === JSON.stringify(noSelection);
-  }
-
   onSaveAssignment(
     classID,
     studentID,
@@ -211,7 +206,7 @@ class MushafAssignmentScreen extends Component {
     if (
       !assignmentName ||
       (assignmentName && assignmentName.trim() === "") ||
-      this.isNoSelection(selection)
+      isNoSelection(selection)
     ) {
       Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
     } else {

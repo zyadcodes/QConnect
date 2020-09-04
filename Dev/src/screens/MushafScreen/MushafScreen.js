@@ -9,6 +9,10 @@ import Swiper from "react-native-swiper";
 import { screenHeight, screenWidth } from "config/dimensions";
 import * as _ from "lodash";
 import { getFontScale } from "react-native-device-info";
+import {
+  isNoSelection,
+  noSelection,
+} from "screens/MushafScreen/Helpers/consts";
 
 class MushafPage extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
@@ -134,7 +138,6 @@ export default class MushafScreen extends QcParentScreen {
   async componentDidMount() {
     //we mimmic right to left pages scanning by reversing the pages order in the swiper component
     let allPages = Array.from(Array(604), (e, i) => 604 - i);
-    let scale = this.state.mushafFontScale;
 
     getFontScale().then(fontScale => {
       if (fontScale > 1) {
@@ -174,7 +177,9 @@ export default class MushafScreen extends QcParentScreen {
   static getDerivedStateFromProps(nextProps, prevState) {
     if (
       JSON.stringify(prevState.selection) !==
-      JSON.stringify(nextProps.selection)
+        JSON.stringify(nextProps.selection) &&
+      nextProps.selection !== undefined &&
+      !isNoSelection(nextProps.selection)
     ) {
       let index =
         nextProps.selection && nextProps.selection.start
