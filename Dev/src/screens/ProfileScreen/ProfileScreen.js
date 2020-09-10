@@ -13,7 +13,7 @@ import strings from 'config/strings';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import SideMenu from 'react-native-side-menu';
 import TeacherLeftNavPane from '../TeacherScreens/LeftNavPane/LeftNavPane';
-import StudentLeftNavPane from '../StudentScreens/LeftNavPane';
+import StudentLeftNavPane from '../StudentScreens/LeftNavPane/LeftNavPane';
 import QCView from 'components/QCView';
 import fontStyles from 'config/fontStyles';
 import styles from './ProfileScreenStyle';

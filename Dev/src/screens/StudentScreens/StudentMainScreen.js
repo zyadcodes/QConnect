@@ -23,7 +23,7 @@ import strings from "config/strings";
 import TopBanner from "components/TopBanner";
 import FirebaseFunctions from "config/FirebaseFunctions";
 import QcActionButton from "components/QcActionButton";
-import LeftNavPane from "./LeftNavPane";
+import LeftNavPane from "./LeftNavPane/LeftNavPane";
 import SideMenu from "react-native-side-menu";
 import LoadingSpinner from "components/LoadingSpinner";
 import screenStyle from "config/screenStyle";

@@ -6,7 +6,7 @@ import { Icon } from 'react-native-elements';
 import strings from 'config/strings';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import TeacherLeftNavPane from '../../TeacherScreens/LeftNavPane/LeftNavPane';
-import StudentLeftNavPane from '../../StudentScreens/LeftNavPane';
+import StudentLeftNavPane from '../../StudentScreens/LeftNavPane/LeftNavPane';
 import SideMenu from 'react-native-side-menu';
 import QCView from 'components/QCView';
 import TopBanner from 'components/TopBanner';
