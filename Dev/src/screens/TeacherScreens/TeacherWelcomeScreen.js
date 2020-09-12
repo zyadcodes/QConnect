@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
   },
   filler: {
     height: 20
-  },
+   },
 });
 
 export default TeacherWelcomeScreen;

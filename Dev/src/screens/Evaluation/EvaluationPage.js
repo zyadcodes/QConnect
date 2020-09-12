@@ -13,6 +13,8 @@ import {
   KeyboardAvoidingView,
   Platform
 } from "react-native";
+import ImageSelectionRow from "components/ImageSelectionRow";
+import ImageSelectionModal from "components/ImageSelectionModal";
 import { AirbnbRating, Icon } from "react-native-elements";
 import colors from "config/colors";
 import ActionButton from "react-native-action-button";
@@ -36,6 +38,7 @@ import {
   toNumberString
 } from "../MushafScreen/Helpers/AyahsOrder";
 import DailyTracker, { getTodaysDateString } from "components/DailyTracker";
+import kudosBadges from "../../../config/kudosBadges";
 
 const isAndroid = Platform.OS === "android";
 
@@ -49,6 +52,15 @@ export class EvaluationPage extends QcParentScreen {
     strings.RulingsOfRaa,
     strings.Muduud,
     strings.Qalqalah
+  ];
+
+  kudos = [
+    strings.mashallah,
+    strings.goodJob, 
+    strings.greatTasmee, 
+    strings.stellarTajweed, 
+    strings.GreaProgress,
+  
   ];
 
   state = {
@@ -79,6 +91,7 @@ export class EvaluationPage extends QcParentScreen {
     audioFile: -1,
     notesHeight: 40,
     selectedImprovementAreas: [],
+    givenKudos: [],
     highlightedWords:
       this.props.navigation.state.params.highlightedWords !== undefined
         ? this.props.navigation.state.params.highlightedWords
@@ -98,7 +111,24 @@ export class EvaluationPage extends QcParentScreen {
         }
       : noSelection
   };
+  setModalVisible(isModalVisible) {
+    this.setState({ modalVisible: isModalVisible });
+  }
+  onImageSelected(index) {
+    
+    let candidateImages = this.state.highlightedImagesIndices;
 
+    if (!this.state.highlightedImagesIndices.includes(index)) {
+      candidateImages.splice(0, 1);
+      candidateImages.splice(0, 0, index);
+    }
+    
+    this.setState({
+      givenKudos: this.kudos[index]
+    },()=> console.log(JSON.stringify(this.state.givenKudos)));
+
+    this.setModalVisible(false);
+  }
   componentWillUnmount() {
     this.setState({
       currentPosition: "0:00",
@@ -155,6 +185,7 @@ export class EvaluationPage extends QcParentScreen {
     // Otherwise, if it is a new evaluation, we'll check if the teacher has custom tags, we'll use them,
     // otherwise, we'll use the default areas
     //-----------------------------------------------------------
+    
     let improvementAreas = this.areas;
     if (this.props.navigation.state.params.readOnly === true) {
       //show areas pressed when evaluating this history item (passed from calling screen)
@@ -178,7 +209,8 @@ export class EvaluationPage extends QcParentScreen {
       evaluationID,
       audioFile,
       audioSentDateTime,
-      improvementAreas
+      improvementAreas,
+
     });
   }
 
@@ -221,7 +253,8 @@ export class EvaluationPage extends QcParentScreen {
         notes,
         highlightedWords,
         highlightedAyahs,
-        improvementAreas: selectedImprovementAreas
+        improvementAreas: selectedImprovementAreas,
+        kudos: givenKudos
       },
       ...submission
     };
@@ -473,6 +506,15 @@ export class EvaluationPage extends QcParentScreen {
           }
         >
           <ScrollView>
+          <ImageSelectionModal
+              visible={this.state.modalVisible}
+              images={kudosBadges.images}
+              cancelText={strings.Cancel}
+              setModalVisible={this.setModalVisible.bind(this)}
+              onImageSelected={this.onImageSelected.bind(this)}
+              screen={this.name}
+            />
+          
             {showMushaf && (
               <View
                 style={{
@@ -574,7 +616,15 @@ export class EvaluationPage extends QcParentScreen {
                   {/**
                   The Things to work on button.
               */}
-
+              <ImageSelectionRow
+                labels = {this.kudos}
+                images={kudosBadges.images}
+                highlightedImagesIndices={this.state.highlightedImagesIndices}
+                onImageSelected={this.onImageSelected.bind(this)}
+                onShowMore={() => this.setModalVisible(true)}
+                selectedImageIndex={this.state.profileImageID}
+                screen={this.name}
+              />
                   <View
                     style={{
                       flexDirection: "row",
