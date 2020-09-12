@@ -99,6 +99,11 @@ export default {
   FailedToRecordAudio:
     "Failed to record the audio. We know it is a bummer. Please try again later.",
   OtherArea: "Other...",
+  mashallah: "Mashallah",
+  goodJob: "Good Job!", 
+  greatTasmee: "Great Tasme'e!", 
+  stellarTajweed: "Stellar Tajweed!", 
+  GreaProgress: "Great Progress!",
   //--------------------- First Run Screen ---------------------
   IAmATeacher: "I am a teacher",
   IAmAStudent: "I am a student",
