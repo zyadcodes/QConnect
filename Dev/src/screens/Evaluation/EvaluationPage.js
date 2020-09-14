@@ -31,9 +31,12 @@ import { noSelection } from "screens/MushafScreen/Helpers/consts";
 import * as _ from "lodash";
 import { toNumberString } from "../MushafScreen/Helpers/AyahsOrder";
 import EvaluationNotes from "../../components/EvaluationNotes";
+import ImageSelectionRow from "components/ImageSelectionRow";
+import ImageSelectionModal from "components/ImageSelectionModal";
 
 const isAndroid = Platform.OS === "android";
-
+import kudosBadges from "../../../config/kudosBadges"
+import { string } from "prop-types";
 export class EvaluationPage extends QcParentScreen {
   //Default improvement areas
   areas = [
@@ -45,6 +48,8 @@ export class EvaluationPage extends QcParentScreen {
     strings.Muduud,
     strings.Qalqalah
   ];
+  
+
 
   state = {
     notes: this.props.navigation.state.params.notes
@@ -73,6 +78,7 @@ export class EvaluationPage extends QcParentScreen {
     currentPosition: "0:00",
     audioFile: -1,
     selectedImprovementAreas: [],
+    
     highlightedWords:
       this.props.navigation.state.params.highlightedWords !== undefined
         ? this.props.navigation.state.params.highlightedWords
@@ -92,6 +98,9 @@ export class EvaluationPage extends QcParentScreen {
         }
       : noSelection
   };
+
+  
+
 
   componentWillUnmount() {
     this.setState({
@@ -211,7 +220,8 @@ export class EvaluationPage extends QcParentScreen {
       assignmentLocation,
       evaluationID,
       highlightedWords,
-      highlightedAyahs
+      highlightedAyahs,
+
     } = this.state;
 
     notes = notes.trim();
@@ -494,6 +504,7 @@ export class EvaluationPage extends QcParentScreen {
           }
         >
           <ScrollView>
+           
             {showMushaf && (
               <View
                 style={{
@@ -655,12 +666,15 @@ export class EvaluationPage extends QcParentScreen {
                         highlightedAyahs[ayahNumber],
                         "improvementAreas",
                         []
+                        
                       );
+                      
                       wordOrAyahNotes = _.get(
                         highlightedAyahs[ayahNumber],
                         "notes",
                         []
                       );
+                      
                     }
                   } catch (error) {
                     console.trace();
@@ -704,6 +718,7 @@ export class EvaluationPage extends QcParentScreen {
                       saveNotes={wordNotes =>
                         this.onSaveNotes(wordNotes, word, ayah)
                       }
+                      
                     />
                   );
                 }}
