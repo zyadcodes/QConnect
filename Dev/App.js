@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import MainStackNavigator from "./src/screens/MainStackNavigator";
 import { YellowBox, Alert, ScrollView, View } from "react-native";
-import NetInfo from '@react-native-community/netinfo';
+import NetInfo from "@react-native-community/netinfo";
 import QCView from "components/QCView";
 import ErrorBoundary from "./src/screens/ErrorBoundary";
 import screenStyle from "config/screenStyle";
-import strings from 'config/strings';
+import strings from "config/strings";
 import {
   checkNotifications,
   requestNotifications,
@@ -15,8 +15,9 @@ import {
 } from "react-native-permissions";
 import FirebaseFunctions from "config/FirebaseFunctions";
 import OfflineEmptyState from "./src/components/OfflineEmptyState";
+import codePush from "react-native-code-push";
 
-export default class App extends Component {
+class App extends Component {
   state = {
     requestingPermissions: true,
     isOnline: true,
@@ -41,6 +42,12 @@ export default class App extends Component {
 
     this.unsubscribe = NetInfo.addEventListener(state => {
       this.setState({ isOnline: state.isConnected });
+    });
+
+    codePush.getUpdateMetadata().then(update => {
+      if (update) {
+        console.log(JSON.stringify(update));
+      }
     });
   }
 
@@ -99,3 +106,5 @@ export default class App extends Component {
     }
   }
 }
+
+export default codePush(App);
