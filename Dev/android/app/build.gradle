@@ -132,8 +132,8 @@ android {
         applicationId "com.yungdevz.quranconnect"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 162
-        versionName "1.4.22"
+        versionCode 163
+        versionName "1.4.23"
         multiDexEnabled true
     }
     splits {
@@ -163,6 +163,8 @@ android {
             signingConfig signingConfigs.debug
             // Note: CodePush updates should not be tested in Debug mode as they are overriden by the RN packager. However, because CodePush checks for updates in all modes, we must supply a key.
             resValue "string", "CodePushDeploymentKey", '""'
+
+            resValue "string", "CodePushDeploymentKey", '"j5VfCm9KwwXwzlxdgBOoNRAYlSBa7yFccRAyY"'
         }
         releaseStaging {
             signingConfig signingConfigs.release
