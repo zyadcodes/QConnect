@@ -2,7 +2,6 @@
 //tabs navigator in the teacher screens & the drawerNavigators).
 import React from "react";
 import { createStackNavigator, createAppContainer } from "react-navigation";
-import MushafScreen from "./MushafScreen/MushafScreen";
 import MushafAssignmentScreen from "./MushafScreen/MushafAssignmentScreen";
 import MushafReadingScreen from "./MushafScreen/MushafReadingScreen";
 import FirstScreenLoader from "./FirstScreenLoader/FirstScreenLoader";

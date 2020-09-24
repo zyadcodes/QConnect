@@ -129,6 +129,7 @@ export default {
   EmptyClass: "Let's add your students",
   AddStudentButton: "Click here to add a student",
   AddClassButton: "Click here to add a class",
+  MeetOnline: "Meet Online",
   AddText:
     "It's hard to call a class without a name. Please enter a valid class name",
 
