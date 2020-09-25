@@ -243,7 +243,10 @@ class LeftNavPane extends QcParentScreen {
                       }}
                     >
                       <TextInput
-                        style={[styles.textInputStyle]}
+                        style={[
+                          styles.textInputStyle,
+                          fontStyles.hugeTextStyleBlack
+                        ]}
                         underlineColorAndroid="transparent"
                         selectionColor={colors.primaryDark}
                         keyboardType={"name-phone-pad"}
