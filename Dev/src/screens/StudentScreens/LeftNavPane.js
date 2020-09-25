@@ -1,6 +1,6 @@
 //This will be the actual drawer items that will display from the student side when the click on
 //the hamburger icon
-import React from 'react';
+import React from "react";
 import {
   View,
   FlatList,
@@ -9,15 +9,16 @@ import {
   Modal,
   Text,
   Alert,
+  TextInput,
   Image
-} from 'react-native';
-import colors from 'config/colors';
-import classImages from 'config/classImages';
-import { SafeAreaView } from 'react-navigation';
-import QcDrawerItem from 'components/QcDrawerItem';
-import studentImages from 'config/studentImages';
+} from "react-native";
+import colors from "config/colors";
+import classImages from "config/classImages";
+import { SafeAreaView } from "react-navigation";
+import QcDrawerItem from "components/QcDrawerItem";
+import studentImages from "config/studentImages";
 import strings from "config/strings";
-import QcParentScreen from 'screens/QcParentScreen';
+import QcParentScreen from "screens/QcParentScreen";
 import { Input } from "react-native-elements";
 import { screenHeight, screenWidth } from "config/dimensions";
 import QcActionButton from "components/QcActionButton";
@@ -25,8 +26,8 @@ import FirebaseFunctions from "config/FirebaseFunctions";
 import LoadingSpinner from "components/LoadingSpinner";
 import QCView from "components/QCView";
 import screenStyle from "config/screenStyle";
-import CodeInput from 'react-native-confirmation-code-input';
-import fontStyles from 'config/fontStyles';
+import CodeInput from "react-native-confirmation-code-input";
+import fontStyles from "config/fontStyles";
 
 class LeftNavPane extends QcParentScreen {
   state = {
@@ -34,13 +35,13 @@ class LeftNavPane extends QcParentScreen {
     userID: this.props.userID,
     classes: this.props.classes,
     modalVisible: false,
-    classCode: '',
+    classCode: "",
     isLoading: false,
   };
 
   //Sets the screen name for firebase analytics
   componentDidMount() {
-    FirebaseFunctions.setCurrentScreen('Student Left Nav Pane', 'LeftNavPane');
+    FirebaseFunctions.setCurrentScreen("Student Left Nav Pane", "LeftNavPane");
   }
 
   //Joins the class by first testing if this class exists. If the class doesn't exist, then it will
@@ -74,7 +75,7 @@ class LeftNavPane extends QcParentScreen {
           isLoading: false,
           modalVisible: false,
         });
-        this.props.navigation.push('StudentCurrentClass', {
+        this.props.navigation.push("StudentCurrentClass", {
           userID
         });
       }
@@ -88,7 +89,7 @@ class LeftNavPane extends QcParentScreen {
     });
 
     //navigate to the selected class
-    this.props.navigation.push('StudentCurrentClass', {
+    this.props.navigation.push("StudentCurrentClass", {
       userID: this.state.userID,
     });
   }
@@ -241,7 +242,20 @@ class LeftNavPane extends QcParentScreen {
                         alignItems: "center"
                       }}
                     >
-                      <CodeInput
+                      <TextInput
+                        style={[styles.textInputStyle]}
+                        underlineColorAndroid="transparent"
+                        selectionColor={colors.primaryDark}
+                        keyboardType={"name-phone-pad"}
+                        returnKeyType={"done"}
+                        autoCapitalize="none"
+                        autoFocus={true}
+                        onChangeText={code =>
+                          this.setState({ classCode: code })
+                        }
+                        maxLength={5}
+                      />
+                      {/* <CodeInput
                         space={2}
                         size={50}
                         codeLength={5}
@@ -253,7 +267,7 @@ class LeftNavPane extends QcParentScreen {
                         containerStyle={{ marginBottom: 60 }}
                         codeInputStyle={{ borderWidth: 1.5 }}
                         onFulfill={code => this.setState({ classCode: code })}
-                      />
+                      /> */}
                     </View>
                     <View
                       style={{
@@ -289,9 +303,9 @@ class LeftNavPane extends QcParentScreen {
 const styles = StyleSheet.create({
   modal: {
     backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
     height: 300,
     width: screenWidth * 0.75,
     borderWidth: screenHeight * 0.003,
@@ -303,17 +317,28 @@ const styles = StyleSheet.create({
     shadowRadius: screenHeight * 0.0045,
     elevation: screenHeight * 0.003,
   },
+  textInputStyle: {
+    marginLeft: 2,
+    marginTop: screenHeight * 0.01,
+    paddingVertical: screenHeight * 0.01,
+    paddingLeft: screenWidth * 0.03,
+    width: screenWidth * 0.7,
+    backgroundColor: colors.veryLightGrey,
+    borderRadius: 1,
+    textAlign: "center",
+    color: colors.black,
+  },
   CodeInputCell: {
     width: 40,
     height: 40,
     lineHeight: 38,
     fontSize: 24,
     borderWidth: 2,
-    borderColor: '#00000030',
-    textAlign: 'center'
+    borderColor: "#00000030",
+    textAlign: "center",
   },
   OnCellFocus: {
-    backgroundColor: '#fff'
+    backgroundColor: "#fff",
   }
 });
 
