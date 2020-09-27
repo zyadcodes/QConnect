@@ -21,19 +21,30 @@ import TopBanner from "components/TopBanner";
 import screenStyle from "config/screenStyle";
 import fontStyles from "config/fontStyles";
 import { screenHeight, screenWidth } from "config/dimensions";
+import codePush from "react-native-code-push";
 
 export default class AllSettingsScreen extends QcParentScreen {
   //The state controlling the side menu
   state = {
-    isOpen: false
+    isOpen: false,
+    version: ""
   };
 
   //Sets the screen for firebase analytics
-  componentDidMount() {
+  async componentDidMount() {
     FirebaseFunctions.setCurrentScreen(
       "All Settings Screen",
       "AllSettingsScreen"
     );
+
+    codePush.getCurrentPackage().then(update => {
+      // If the current app "session" represents the first time
+      // this update has run, and it had a description provided
+      // with it upon release, let's show it to the end user
+      if (update && update.appVersion && update.label) {
+        this.setState({ version: update.appVersion + "." + update.label });
+      }
+    });
   }
 
   render() {
@@ -104,6 +115,23 @@ export default class AllSettingsScreen extends QcParentScreen {
               color={colors.primaryDark}
             />
           </TouchableOpacity>
+          <View
+            style={[
+              styles.cardStyle,
+              {
+                marginTop: screenHeight * 0.03,
+              },
+            ]}
+          >
+            <Text
+              style={[
+                fontStyles.smallTextStyleDarkGrey,
+                { marginLeft: screenWidth * 0.017 },
+              ]}
+            >
+              QuranConnect. {this.state.version}
+            </Text>
+          </View>
         </View>
       </QCView>
     );

@@ -45,12 +45,12 @@ class MushafReadingScreen extends Component {
     this.track = undefined;
   }
 
-  closeScreen() {
+  closeScreen() {    
     const { userID } = this.props.navigation.state.params;
 
     //todo: if we need to generalize this, then we can add a props: onClose, and the caller specifies the onClose behavior with
     // the call to push navigation to the proper next screen.
-    this.props.navigation.navigate("StudentCurrentClass", {
+    this.props.navigation.push("StudentCurrentClass", {
       userID,
       logAsPractice: true
     });
