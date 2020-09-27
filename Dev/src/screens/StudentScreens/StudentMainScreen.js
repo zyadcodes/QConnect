@@ -92,10 +92,28 @@ class StudentMainScreen extends QcParentScreen {
         classes: [],
       });
     } else {
-      const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
-      const studentClassInfo = currentClass.students.find(student => {
+      let currentClass = await FirebaseFunctions.getClassByID(currentClassID);
+      let studentClassInfo = currentClass.students.find(student => {
         return student.ID === userID;
       });
+
+      //We saw instances where a student has a class in their classes list but there is
+      // no student instance in the class object.
+      // fix/mitigate that case by re-joining the class.
+      // this is a temporary mitigation until we migrate to new transaction based logic
+      // to avoid running in to this situation
+      if (studentClassInfo === undefined) {
+        console.log("Error: student object not found under class. Rejoining...")
+        await FirebaseFunctions.joinClass(
+          student,
+          currentClass.classInviteCode
+        );
+
+        currentClass = await FirebaseFunctions.getClassByID(currentClassID);
+        studentClassInfo = currentClass.students.find(student => {
+          return student.ID === userID;
+        });
+      }
       const classes = await FirebaseFunctions.getClassesByIDs(student.classes);
 
       //This constructs an array of the student's past assignments & only includes the "length" field which is how many
