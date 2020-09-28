@@ -38,6 +38,7 @@ import DailyTracker, { getTodaysDateString } from "components/DailyTracker";
 import themeStyles from "config/themeStyles";
 import TouchableText from "components/TouchableText";
 import QCView from "components/QCView";
+import ErrorComponent from "components/ErrorComponent";
 
 const translateY = new Animated.Value(-35);
 const opacity = new Animated.Value(0);
@@ -78,108 +79,122 @@ class StudentMainScreen extends QcParentScreen {
       "StudentMainScreen"
     );
 
-    const { userID, logAsPractice } = this.props.navigation.state.params;
-    const student = await FirebaseFunctions.getStudentByID(userID);
-    const { currentClassID } = student;
+    await this.initStudent();
+  }
 
-    if (currentClassID === "") {
-      this.setState({
-        isLoading: false,
-        noCurrentClass: true,
-        student,
-        userID,
-        isOpen: false,
-        classes: [],
-      });
-    } else {
-      let currentClass = await FirebaseFunctions.getClassByID(currentClassID);
-      let studentClassInfo = currentClass.students.find(student => {
-        return student.ID === userID;
-      });
+  async initStudent() {
+    try {
+      const { userID, logAsPractice } = this.props.navigation.state.params;
+      const student = await FirebaseFunctions.getStudentByID(userID);
+      const { currentClassID } = student;
 
-      //We saw instances where a student has a class in their classes list but there is
-      // no student instance in the class object.
-      // fix/mitigate that case by re-joining the class.
-      // this is a temporary mitigation until we migrate to new transaction based logic
-      // to avoid running in to this situation
-      if (studentClassInfo === undefined) {
-        console.log("Error: student object not found under class. Rejoining...")
-        await FirebaseFunctions.joinClass(
-          student,
-          currentClass.classInviteCode
-        );
-
-        currentClass = await FirebaseFunctions.getClassByID(currentClassID);
-        studentClassInfo = currentClass.students.find(student => {
-          return student.ID === userID;
-        });
-      }
-      const classes = await FirebaseFunctions.getClassesByIDs(student.classes);
-
-      //This constructs an array of the student's past assignments & only includes the "length" field which is how many
-      //words that assignment was. The method returns that array which is then passed to the line graph below as the data
-      const { dailyPracticeLog, currentAssignments } = studentClassInfo;
-
-      let { assignmentHistory } = studentClassInfo;
-
-      const data = [];
-      for (const assignment of assignmentHistory) {
-        if (assignment.assignmentLength && assignment.assignmentLength > 0) {
-          data.push(assignment);
-        }
-      }
-
-      //sort chart data from oldest to newest
-      data.sort(function(a, b) {
-        var dateA = new Date(a.completionDate),
-          dateB = new Date(b.completionDate);
-        return dateA - dateB;
-      });
-
-      //sort assignment history from newest to oldest
-      assignmentHistory.sort(function(a, b) {
-        var dateA = new Date(a.completionDate),
-          dateB = new Date(b.completionDate);
-        return dateB - dateA;
-      });
-
-      //initialize recordingUIVisible array to have the same number of elements
-      // as we have assignments, and initialize each flag to false (do not show any recording UI initially)
-      //this flag will be used to show option to record audio when students completes an assignment
-      let recordingUIVisible = currentAssignments
-        ? currentAssignments.map(assignment => false)
-        : [];
-
-      this.getAudioSubmissions(currentAssignments);
-
-      this.setState(
-        {
+      if (currentClassID === "") {
+        this.setState({
+          isLoading: false,
+          noCurrentClass: true,
           student,
           userID,
-          currentClass,
-          wordsPerAssignmentData: data,
-          currentClassID,
-          assignmentHistory,
-          dailyPracticeLog,
-          studentClassInfo,
-          isLoading: false,
           isOpen: false,
-          classes,
-          recordingUIVisible,
-          classesAttended: studentClassInfo.classesAttended
-            ? studentClassInfo.classesAttended
-            : 0,
-          classesMissed: studentClassInfo.classesMissed
-            ? studentClassInfo.classesMissed
-            : 0,
-        },
-        () => {
-          if (logAsPractice === true) {
-            let todaysDate = getTodaysDateString();
-            this.onDatePressed({ dateString: todaysDate }, false);
+          classes: [],
+        });
+      } else {
+        let currentClass = await FirebaseFunctions.getClassByID(currentClassID);
+        let studentClassInfo = currentClass.students.find(student => {
+          return student.ID === userID;
+        });
+
+        //We saw instances where a student has a class in their classes list but there is
+        // no student instance in the class object.
+        // fix/mitigate that case by re-joining the class.
+        // this is a temporary mitigation until we migrate to new transaction based logic
+        // to avoid running in to this situation
+        if (studentClassInfo === undefined) {
+          console.log(
+            "Error: student object not found under class. Rejoining..."
+          );
+          await FirebaseFunctions.joinClass(
+            student,
+            currentClass.classInviteCode
+          );
+
+          currentClass = await FirebaseFunctions.getClassByID(currentClassID);
+          studentClassInfo = currentClass.students.find(student => {
+            return student.ID === userID;
+          });
+        }
+        const classes = await FirebaseFunctions.getClassesByIDs(
+          student.classes
+        );
+
+        //This constructs an array of the student's past assignments & only includes the "length" field which is how many
+        //words that assignment was. The method returns that array which is then passed to the line graph below as the data
+        const { dailyPracticeLog, currentAssignments } = studentClassInfo;
+
+        let { assignmentHistory } = studentClassInfo;
+
+        const data = [];
+        for (const assignment of assignmentHistory) {
+          if (assignment.assignmentLength && assignment.assignmentLength > 0) {
+            data.push(assignment);
           }
         }
-      );
+
+        //sort chart data from oldest to newest
+        data.sort(function(a, b) {
+          var dateA = new Date(a.completionDate),
+            dateB = new Date(b.completionDate);
+          return dateA - dateB;
+        });
+
+        //sort assignment history from newest to oldest
+        assignmentHistory.sort(function(a, b) {
+          var dateA = new Date(a.completionDate),
+            dateB = new Date(b.completionDate);
+          return dateB - dateA;
+        });
+
+        //initialize recordingUIVisible array to have the same number of elements
+        // as we have assignments, and initialize each flag to false (do not show any recording UI initially)
+        //this flag will be used to show option to record audio when students completes an assignment
+        let recordingUIVisible = currentAssignments
+          ? currentAssignments.map(assignment => false)
+          : [];
+
+        this.getAudioSubmissions(currentAssignments);
+
+        this.setState(
+          {
+            student,
+            userID,
+            currentClass,
+            wordsPerAssignmentData: data,
+            currentClassID,
+            assignmentHistory,
+            dailyPracticeLog,
+            studentClassInfo,
+            isLoading: false,
+            isOpen: false,
+            classes,
+            recordingUIVisible,
+            classesAttended: studentClassInfo.classesAttended
+              ? studentClassInfo.classesAttended
+              : 0,
+            classesMissed: studentClassInfo.classesMissed
+              ? studentClassInfo.classesMissed
+              : 0,
+          },
+          () => {
+            if (logAsPractice === true) {
+              let todaysDate = getTodaysDateString();
+              this.onDatePressed({ dateString: todaysDate }, false);
+            }
+          }
+        );
+      }
+    } catch (error) {
+      this.setState({ isLoading: false, showError: true, error });
+      console.log("ERROR_INITIALIZING_STUDENT_MAIN", JSON.stringify(error));
+      FirebaseFunctions.logEvent("ERROR_INITIALIZING_STUDENT_MAIN", { error });
     }
   }
 
@@ -1491,14 +1506,26 @@ class StudentMainScreen extends QcParentScreen {
       userID,
       isLoading,
       student,
-      currentClassID,
       studentClassInfo,
-      currentClass,
       classes,
       isOpen,
       dailyPracticeLog,
-      assignmentHistory
+      assignmentHistory,
+      showError,
+      error
     } = this.state;
+    if (showError === true) {
+      return (
+        <ErrorComponent
+          error={error}
+          retry={() => {
+            this.setState({ isLoading: true, showError: false });
+            this.initStudent();
+          }}
+        />
+      );
+    }
+
     if (isLoading === true) {
       return (
         <View

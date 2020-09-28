@@ -103,7 +103,6 @@ class PageHeader extends FontLoadingComponent {
               >
                 {strings.AssignTo}
               </Text>
-              )
               {leftImage && (
                 <Image
                   size={20}

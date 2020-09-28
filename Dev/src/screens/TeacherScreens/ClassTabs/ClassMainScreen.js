@@ -26,7 +26,8 @@ import fontStyles from "config/fontStyles";
 import { Icon } from "react-native-elements";
 import { screenHeight, screenWidth } from "config/dimensions";
 import Toast, { DURATION } from "react-native-easy-toast";
-import themeStyles from 'config/themeStyles'
+import themeStyles from "config/themeStyles";
+import ErrorComponent from "components/ErrorComponent";
 
 export class ClassMainScreen extends QcParentScreen {
   state = {
@@ -50,48 +51,60 @@ export class ClassMainScreen extends QcParentScreen {
   }
 
   async initScreen() {
-    const { userID } = this.props.navigation.state.params;
-    const teacher = await FirebaseFunctions.getTeacherByID(userID);
-    const { currentClassID } = teacher;
-    let {
-      currentClass,
-      showAssignmentSentNotification,
-      assignedToAllClass,
-    } = this.props.navigation.state.params;
+    try {
+      const { userID } = this.props.navigation.state.params;
+      const teacher = await FirebaseFunctions.getTeacherByID(userID);
+      const { currentClassID } = teacher;
+      let {
+        currentClass,
+        showAssignmentSentNotification,
+        assignedToAllClass,
+      } = this.props.navigation.state.params;
 
-    if (currentClass === undefined) {
-      currentClass = await FirebaseFunctions.getClassByID(currentClassID);
-    }
+      if (currentClass === undefined) {
+        currentClass = await FirebaseFunctions.getClassByID(currentClassID);
+      }
 
-    const classInviteCode = currentClass.classInviteCode;
-    const classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
-    this.setState({
-      isLoading: false,
-      teacher,
-      userID,
-      classInviteCode,
-      currentClass,
-      currentClassID,
-      classes,
-    });
+      const classInviteCode = currentClass.classInviteCode;
+      const classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
+      this.setState({
+        isLoading: false,
+        teacher,
+        userID,
+        classInviteCode,
+        currentClass,
+        currentClassID,
+        classes,
+      });
 
-    if (showAssignmentSentNotification) {
-      this.showToast(assignedToAllClass);
+      if (showAssignmentSentNotification) {
+        this.showToast(assignedToAllClass);
+      }
+    } catch (error) {
+      this.setState({ isLoading: false, showError: true, error });
+      console.log("ERROR_INITIALIZING_TEACHER_MAIN", JSON.stringify(error));
+      FirebaseFunctions.logEvent("ERROR_INITIALIZING_TEACHER_MAIN", { error });
     }
   }
 
-  showToast(assignedToAllClass){
+  showToast(assignedToAllClass) {
     let toastMsg = assignedToAllClass
-        ? strings.ClassAssignmentSent
-        : strings.AssignmentSent;
-      this.refs.toast.show(toastMsg, DURATION.LENGTH_LONG);
+      ? strings.ClassAssignmentSent
+      : strings.AssignmentSent;
+    this.refs.toast.show(toastMsg, DURATION.LENGTH_LONG);
   }
 
-  updateStateWithNewAssignmentInfo(newAssignment, index, currentClass, showToast, assignedToAllClass) {
-    if(showToast === true){
+  updateStateWithNewAssignmentInfo(
+    newAssignment,
+    index,
+    currentClass,
+    showToast,
+    assignedToAllClass
+  ) {
+    if (showToast === true) {
       this.showToast(assignedToAllClass);
     }
-    
+
     //re-fetch data
     this.initScreen();
   }
@@ -444,7 +457,7 @@ export class ClassMainScreen extends QcParentScreen {
               onAssignmentPress={assignmentIndex => {
                 if (assignmentIndex < 0) {
                   //go to the screen to a new assignment
-                  this.props.navigation.push('MushafAssignmentScreen', {
+                  this.props.navigation.push("MushafAssignmentScreen", {
                     newAssignment: true,
                     popOnClose: true,
                     onSaveAssignment: this.updateStateWithNewAssignmentInfo.bind(
@@ -461,7 +474,7 @@ export class ClassMainScreen extends QcParentScreen {
                 } else {
                   //go to the passed in assignment
                   let assignment = item.currentAssignments[assignmentIndex];
-                  this.props.navigation.push('MushafAssignmentScreen', {
+                  this.props.navigation.push("MushafAssignmentScreen", {
                     isTeacher: true,
                     assignToAllClass: false,
                     popOnClose: true,
@@ -513,7 +526,22 @@ export class ClassMainScreen extends QcParentScreen {
       currentClassID,
       isEditing,
       userID,
+      showError,
+      error
     } = this.state;
+
+    if (showError === true) {
+      return (
+        <ErrorComponent
+          error={error}
+          retry={() => {
+            this.setState({ isLoading: true, showError: false });
+            this.initStudent();
+          }}
+        />
+      );
+    }
+
     if (isLoading === true) {
       return (
         <View
@@ -599,7 +627,7 @@ export class ClassMainScreen extends QcParentScreen {
           }
         >
           <Toast
-            position={'bottom'}
+            position={"bottom"}
             ref="toast"
             fadeInDuration={3000}
             positionValue={200}
