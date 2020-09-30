@@ -210,6 +210,7 @@ const styles = StyleSheet.create({
     paddingLeft: screenWidth * 0.03,
     width: screenWidth * 0.95,
     backgroundColor: colors.veryLightGrey,
+    color: colors.black,
     borderRadius: 1
   },
 });
