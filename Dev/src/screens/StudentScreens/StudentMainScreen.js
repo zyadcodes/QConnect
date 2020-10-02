@@ -13,7 +13,8 @@ import {
   Modal,
   Alert,
   Animated,
-  TouchableHighlight
+  TouchableHighlight,
+  TextInput
 } from "react-native";
 import { NavigationEvents } from "react-navigation";
 import { Icon, Avatar, Overlay } from "react-native-elements";
@@ -242,7 +243,6 @@ class StudentMainScreen extends QcParentScreen {
   async joinClass() {
     this.setState({ isLoading: true });
     const { userID, classCode, student } = this.state;
-
     //Tests if the user is already a part of this class and throws an alert if they are
     if (student.classes.includes(classCode)) {
       Alert.alert(strings.Whoops, strings.ClassAlreadyJoined);
@@ -350,18 +350,16 @@ class StudentMainScreen extends QcParentScreen {
             </Text>
 
             <View style={{ height: 100 }}>
-              <CodeInput
-                space={2}
-                size={50}
-                codeLength={5}
-                activeColor={colors.primaryDark}
-                inactiveColor={colors.primaryLight}
-                autoFocus={false}
-                blurOnSubmit={false}
-                inputPosition="center"
-                className="border-circle"
-                codeInputStyle={{ borderWidth: 1.5 }}
-                onFulfill={code => this.setState({ classCode: code })}
+              <TextInput
+                style={[styles.textInputStyle, fontStyles.hugeTextStyleBlack]}
+                underlineColorAndroid="transparent"
+                selectionColor={colors.primaryDark}
+                keyboardType={"name-phone-pad"}
+                returnKeyType={"done"}
+                autoCapitalize="none"
+                autoFocus={true}
+                onChangeText={code => this.setState({ classCode: code })}
+                maxLength={5}
               />
             </View>
 
@@ -1747,6 +1745,17 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     justifyContent: "center",
     alignItems: "center"
+  },
+  textInputStyle: {
+    marginLeft: 2,
+    marginTop: screenHeight * 0.01,
+    paddingVertical: screenHeight * 0.01,
+    paddingLeft: screenWidth * 0.03,
+    width: screenWidth * 0.7,
+    backgroundColor: colors.veryLightGrey,
+    borderRadius: 1,
+    textAlign: "center",
+    color: colors.black,
   },
 });
 
