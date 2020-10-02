@@ -17,6 +17,7 @@ import { screenHeight, screenWidth } from "config/dimensions";
 
 //props: retry(), error
 const ErrorComponent = props => {
+    
   return (
     <View
       style={{
@@ -38,14 +39,6 @@ const ErrorComponent = props => {
         ]}
       >
         {strings.WeAreWorkingOnIt}
-      </Text>
-      <Text
-        style={[
-          fontStyles.bigTextStyleWhite,
-          { textAlign: "center", marginVertical: 5 }
-        ]}
-      >
-        Error: {props.error}
       </Text>
       <View
         style={{
@@ -94,6 +87,14 @@ const ErrorComponent = props => {
           />
         </TouchableOpacity>
       </View>
+      <Text
+        style={[
+          fontStyles.bigTextStyleWhite,
+          { textAlign: "center", marginTop: 20 }
+        ]}
+      >
+        Error: {JSON.stringify(props.error)}
+      </Text>
       <Image
         source={require("assets/emptyStateIdeas/error.png")}
         style={{
