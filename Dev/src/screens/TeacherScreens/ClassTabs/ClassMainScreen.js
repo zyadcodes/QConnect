@@ -81,9 +81,17 @@ export class ClassMainScreen extends QcParentScreen {
         this.showToast(assignedToAllClass);
       }
     } catch (error) {
-      this.setState({ isLoading: false, showError: true, error });
+      this.setState({
+        isLoading: false,
+        showError: true,
+        error:
+          "Error initializing teacher's main screen: " + JSON.stringify(error),
+      });
       console.log("ERROR_INITIALIZING_TEACHER_MAIN", JSON.stringify(error));
-      FirebaseFunctions.logEvent("ERROR_INITIALIZING_TEACHER_MAIN", { error });
+      FirebaseFunctions.logEvent("ERROR_INITIALIZING_TEACHER_MAIN", {
+        error,
+        trace: error.trace || error,
+      });
     }
   }
 
@@ -536,7 +544,7 @@ export class ClassMainScreen extends QcParentScreen {
           error={error}
           retry={() => {
             this.setState({ isLoading: true, showError: false });
-            this.initStudent();
+            this.initScreen();
           }}
         />
       );

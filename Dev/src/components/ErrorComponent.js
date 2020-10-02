@@ -39,6 +39,14 @@ const ErrorComponent = props => {
       >
         {strings.WeAreWorkingOnIt}
       </Text>
+      <Text
+        style={[
+          fontStyles.bigTextStyleWhite,
+          { textAlign: "center", marginVertical: 5 }
+        ]}
+      >
+        Error: {props.error}
+      </Text>
       <View
         style={{
           flexDirection: "row",
