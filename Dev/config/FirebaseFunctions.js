@@ -23,11 +23,13 @@ export default class FirebaseFunctions {
   //Methods that can be called from any other class
 
   //Method calls a firebase function by taking the functions name as a parameter, the parameters of the cloud function
-	//as a second parameter, and then returns the functions result
-	static async call(functionName, parameters) {
-		const functionReturn = await this.functions.httpsCallable(functionName)(parameters);
-		return functionReturn.data;
-	}
+  //as a second parameter, and then returns the functions result
+  static async call(functionName, parameters) {
+    const functionReturn = await this.functions.httpsCallable(functionName)(
+      parameters
+    );
+    return functionReturn.data;
+  }
 
   //This functions will take in an email and a password & will sign a user up using
   //firebase authentication (will also sign the user in). Additionally, it will take
@@ -428,7 +430,7 @@ export default class FirebaseFunctions {
     newAssignmentName,
     assignmentType,
     assignmentLocation,
-    assignmentIndex,
+    assignmentIndex
   ) {
     if (assignmentIndex === undefined) {
       this.logEvent("UpdateClassAssignment_IndexIsUndefined");
@@ -779,6 +781,8 @@ export default class FirebaseFunctions {
       classToJoin.docs[0] == undefined ||
       !classToJoin.docs[0].exists
     ) {
+      console.log("JOIN_CLASS FAILED to find class to join: ");
+      this.logEvent("JOIN_CLASS_ERR_CLASS_NOT_FOUND");
       return -1;
     }
 
@@ -793,26 +797,34 @@ export default class FirebaseFunctions {
       totalAssignments: 0,
     };
 
-    await this.updateClassObject(classToJoin.docs[0].id, {
-      students: firebase.firestore.FieldValue.arrayUnion(studentObject),
-    });
-    //alert(classToJoin.docs[0].data().teachers);
-
-    await this.updateStudentObject(studentID, {
-      classes: firebase.firestore.FieldValue.arrayUnion(classToJoin.docs[0].id),
-      currentClassID: classToJoin.docs[0].id,
-    });
-    this.logEvent("JOIN_CLASS");
-
-    //Sends a notification to the teachers of that class saying that a student has joined the class
-    //alert(classToJoin.docs[0].data().teachers);
-    classToJoin.docs[0].data().teachers.forEach(teacherID => {
-      this.functions.httpsCallable("sendNotification", {
-        topic: teacherID,
-        title: strings.NewStudent,
-        body: student.name + strings.HasJoinedYourClass,
+    try {
+      await this.updateClassObject(classToJoin.docs[0].id, {
+        students: firebase.firestore.FieldValue.arrayUnion(studentObject),
       });
-    });
+
+      await this.updateStudentObject(studentID, {
+        classes: firebase.firestore.FieldValue.arrayUnion(
+          classToJoin.docs[0].id
+        ),
+        currentClassID: classToJoin.docs[0].id,
+      });
+
+      //Sends a notification to the teachers of that class saying that a student has joined the class
+      //alert(classToJoin.docs[0].data().teachers);
+      classToJoin.docs[0].data().teachers.forEach(teacherID => {
+        this.functions.httpsCallable("sendNotification", {
+          topic: teacherID,
+          title: strings.NewStudent,
+          body: student.name + strings.HasJoinedYourClass,
+        });
+      });
+
+      this.logEvent("JOIN_CLASS");
+    } catch (err) {
+      console.log("JOIN_CLASS FAILED: " + JSON.stringify(err));
+      this.logEvent("JOIN_CLASS_ERR", { err });
+    }
+
     return studentObject;
   }
 
