@@ -42,7 +42,7 @@ std::shared_ptr<T> atomic_exchange(
   auto refptr = ar->ref.lock();
   auto old = std::move(*refptr);
   *refptr = std::move(r);
-  return old;
+  return std::move(old);
 }
 
 template <typename T>

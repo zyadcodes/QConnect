@@ -86,7 +86,7 @@ void StreamsWriterImpl::writeNewStream(
         }
       },
       streamId,
-      FrameFlags::EMPTY_,
+      FrameFlags::EMPTY,
       std::move(payload));
 }
 
@@ -178,7 +178,7 @@ void StreamsWriterImpl::writeFragmented(
     auto const dataLeft = dataQueue.chainLength();
     auto const moreFragments = metaLeft || dataLeft;
     auto const flags =
-        (moreFragments ? FrameFlags::FOLLOWS : FrameFlags::EMPTY_) | addFlags;
+        (moreFragments ? FrameFlags::FOLLOWS : FrameFlags::EMPTY) | addFlags;
 
     if (isFirstFrame) {
       isFirstFrame = false;

@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2019-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include <folly/Portability.h>
 #include <folly/lang/StaticConst.h>
 
 //  FOLLY_DEFINE_CPO
@@ -32,7 +31,7 @@
 //  ensure that there is only a single instance of the CPO created and then a
 //  named reference in an anonymous namespace is required to avoid duplicate
 //  symbol definitions.
-#if FOLLY_HAS_INLINE_VARIABLES
+#if __cpp_inline_variables >= 201606L
 #define FOLLY_DEFINE_CPO(Type, Name) \
   namespace folly_cpo__ {            \
   inline constexpr Type Name{};      \

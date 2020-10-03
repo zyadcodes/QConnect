@@ -1,1 +1,1 @@
-../../../GoogleUtilities/GoogleUtilities/Environment/Private/GULAppEnvironmentUtil.h
+../../../GoogleUtilities/GoogleUtilities/Environment/third_party/GULAppEnvironmentUtil.h

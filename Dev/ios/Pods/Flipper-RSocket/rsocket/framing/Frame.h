@@ -70,7 +70,7 @@ class Frame_REQUEST_N {
 
   Frame_REQUEST_N() = default;
   Frame_REQUEST_N(StreamId streamId, uint32_t requestN)
-      : header_(FrameType::REQUEST_N, FrameFlags::EMPTY_, streamId),
+      : header_(FrameType::REQUEST_N, FrameFlags::EMPTY, streamId),
         requestN_(requestN) {
     DCHECK(requestN_ > 0);
     DCHECK(requestN_ <= kMaxRequestN);
@@ -226,7 +226,7 @@ class Frame_CANCEL {
  public:
   Frame_CANCEL() = default;
   explicit Frame_CANCEL(StreamId streamId)
-      : header_(FrameType::CANCEL, FrameFlags::EMPTY_, streamId) {}
+      : header_(FrameType::CANCEL, FrameFlags::EMPTY, streamId) {}
 
   FrameHeader header_;
 };
@@ -380,7 +380,7 @@ class Frame_LEASE {
       std::unique_ptr<folly::IOBuf> metadata = std::unique_ptr<folly::IOBuf>())
       : header_(
             FrameType::LEASE,
-            metadata ? FrameFlags::METADATA : FrameFlags::EMPTY_,
+            metadata ? FrameFlags::METADATA : FrameFlags::EMPTY,
             0),
         ttl_(ttl),
         numberOfRequests_(numberOfRequests),
@@ -407,7 +407,7 @@ class Frame_RESUME {
       ResumePosition lastReceivedServerPosition,
       ResumePosition clientPosition,
       ProtocolVersion protocolVersion)
-      : header_(FrameType::RESUME, FrameFlags::EMPTY_, 0),
+      : header_(FrameType::RESUME, FrameFlags::EMPTY, 0),
         versionMajor_(protocolVersion.major),
         versionMinor_(protocolVersion.minor),
         token_(token),
@@ -428,7 +428,7 @@ class Frame_RESUME_OK {
  public:
   Frame_RESUME_OK() = default;
   explicit Frame_RESUME_OK(ResumePosition position)
-      : header_(FrameType::RESUME_OK, FrameFlags::EMPTY_, 0),
+      : header_(FrameType::RESUME_OK, FrameFlags::EMPTY, 0),
         position_(position) {}
 
   FrameHeader header_;

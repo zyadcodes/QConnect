@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2017-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,7 +23,6 @@
 #include <folly/concurrency/UnboundedQueue.h>
 #include <folly/executors/GlobalExecutor.h>
 #include <folly/executors/SequencedExecutor.h>
-#include <folly/io/async/Request.h>
 
 namespace folly {
 
@@ -106,11 +105,6 @@ class SerialExecutor : public SequencedExecutor {
   void keepAliveRelease() override;
 
  private:
-  struct Task {
-    Func func;
-    std::shared_ptr<RequestContext> ctx;
-  };
-
   explicit SerialExecutor(KeepAlive<Executor> parent);
   ~SerialExecutor() override;
 
@@ -122,7 +116,7 @@ class SerialExecutor : public SequencedExecutor {
    * Unbounded multi producer single consumer queue where consumers don't block
    * on dequeue.
    */
-  folly::UnboundedQueue<Task, false, true, false> queue_;
+  folly::UnboundedQueue<Func, false, true, false> queue_;
 
   std::atomic<ssize_t> keepAliveCounter_{1};
 };

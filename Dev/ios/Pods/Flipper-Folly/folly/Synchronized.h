@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2011-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  * This module implements a Synchronized abstraction useful in
  * mutex-based concurrency.
@@ -88,7 +87,7 @@ class SynchronizedBase<Subclass, detail::MutexLevel::SHARED> {
   using ConstWLockedPtr =
       ::folly::LockedPtr<const Subclass, LockPolicyExclusive>;
 
-  using RLockedPtr = ::folly::LockedPtr<Subclass, LockPolicyShared>;
+  using RLockedPtr = ::folly::LockedPtr<const Subclass, LockPolicyShared>;
   using ConstRLockedPtr = ::folly::LockedPtr<const Subclass, LockPolicyShared>;
 
   using TryWLockedPtr = ::folly::LockedPtr<Subclass, LockPolicyTryExclusive>;
@@ -182,13 +181,9 @@ class SynchronizedBase<Subclass, detail::MutexLevel::SHARED> {
    * validity.)
    */
   template <class Rep, class Period>
-  RLockedPtr rlock(const std::chrono::duration<Rep, Period>& timeout) {
-    return RLockedPtr(static_cast<Subclass*>(this), timeout);
-  }
-  template <class Rep, class Period>
-  ConstRLockedPtr rlock(
+  ConstLockedPtr rlock(
       const std::chrono::duration<Rep, Period>& timeout) const {
-    return ConstRLockedPtr(static_cast<const Subclass*>(this), timeout);
+    return ConstLockedPtr(static_cast<const Subclass*>(this), timeout);
   }
 
   /**
@@ -484,6 +479,10 @@ class SynchronizedBase<Subclass, detail::MutexLevel::UNIQUE> {
  * Supported mutexes that work by default include std::mutex,
  * std::recursive_mutex, std::timed_mutex, std::recursive_timed_mutex,
  * folly::SharedMutex, folly::RWSpinLock, and folly::SpinLock.
+ * Include LockTraitsBoost.h to get additional LockTraits specializations to
+ * support the following boost mutex types: boost::mutex,
+ * boost::recursive_mutex, boost::shared_mutex, boost::timed_mutex, and
+ * boost::recursive_timed_mutex.
  */
 template <class T, class Mutex = SharedMutex>
 struct Synchronized : public SynchronizedBase<
@@ -620,7 +619,7 @@ struct Synchronized : public SynchronizedBase<
    */
   Synchronized& operator=(const T& rhs) {
     if (&datum_ != &rhs) {
-      auto guard = LockedPtr{this};
+      auto guard = operator->();
       datum_ = rhs;
     }
     return *this;
@@ -631,7 +630,7 @@ struct Synchronized : public SynchronizedBase<
    */
   Synchronized& operator=(T&& rhs) {
     if (&datum_ != &rhs) {
-      auto guard = LockedPtr{this};
+      auto guard = operator->();
       datum_ = std::move(rhs);
     }
     return *this;
@@ -689,8 +688,7 @@ struct Synchronized : public SynchronizedBase<
    * NOTE: This API is planned to be deprecated in an upcoming diff.
    * Prefer using lock(), wlock(), or rlock() instead.
    */
-  [[deprecated("use explicit lock(), wlock(), or rlock() instead")]] LockedPtr
-  operator->() {
+  LockedPtr operator->() {
     return LockedPtr(this);
   }
 
@@ -700,9 +698,7 @@ struct Synchronized : public SynchronizedBase<
    * NOTE: This API is planned to be deprecated in an upcoming diff.
    * Prefer using lock(), wlock(), or rlock() instead.
    */
-  [[deprecated(
-      "use explicit lock(), wlock(), or rlock() instead")]] ConstLockedPtr
-  operator->() const {
+  ConstLockedPtr operator->() const {
     return ConstLockedPtr(this);
   }
 
@@ -742,8 +738,8 @@ struct Synchronized : public SynchronizedBase<
     if (this > &rhs) {
       return rhs.swap(*this);
     }
-    auto guard1 = LockedPtr{this};
-    auto guard2 = LockedPtr{&rhs};
+    auto guard1 = operator->();
+    auto guard2 = rhs.operator->();
 
     using std::swap;
     swap(datum_, rhs.datum_);
@@ -782,23 +778,6 @@ struct Synchronized : public SynchronizedBase<
    */
   T copy() const {
     ConstLockedPtr guard(this);
-    return datum_;
-  }
-
-  /**
-   * Returns a reference to the datum without acquiring a lock.
-   *
-   * Provided as a backdoor for call-sites where it is known safe to be used.
-   * For example, when it is known that only one thread has access to the
-   * Synchronized instance.
-   *
-   * To be used with care - this method explicitly overrides the normal safety
-   * guarantees provided by the rest of the Synchronized API.
-   */
-  T& unsafeGetUnlocked() {
-    return datum_;
-  }
-  const T& unsafeGetUnlocked() const {
     return datum_;
   }
 
@@ -1774,16 +1753,7 @@ void swap(Synchronized<T, M>& lhs, Synchronized<T, M>& rhs) {
  */
 #define SYNCHRONIZED_VAR(var) FB_CONCATENATE(SYNCHRONIZED_##var##_, __LINE__)
 
-namespace detail {
-struct [[deprecated(
-    "use explicit lock(), wlock(), or rlock() instead")]] SYNCHRONIZED_macro_is_deprecated{};
-}
-
 /**
- * NOTE: This API is deprecated.  Use lock(), wlock(), rlock() or the withLock
- * functions instead.  In the future it will be marked with a deprecation
- * attribute to emit build-time warnings, and then it will be removed entirely.
- *
  * SYNCHRONIZED is the main facility that makes Synchronized<T>
  * helpful. It is a pseudo-statement that introduces a scope where the
  * object is locked. Inside that scope you get to access the unadorned
@@ -1800,36 +1770,29 @@ struct [[deprecated(
  * Refer to folly/docs/Synchronized.md for a detailed explanation and more
  * examples.
  */
-#define SYNCHRONIZED(...)                                                 \
-  FOLLY_PUSH_WARNING                                                      \
-  FOLLY_GNU_DISABLE_WARNING("-Wshadow")                                   \
-  FOLLY_MSVC_DISABLE_WARNING(4189) /* initialized but unreferenced */     \
-  FOLLY_MSVC_DISABLE_WARNING(4456) /* declaration hides local */          \
-  FOLLY_MSVC_DISABLE_WARNING(4457) /* declaration hides parameter */      \
-  FOLLY_MSVC_DISABLE_WARNING(4458) /* declaration hides member */         \
-  FOLLY_MSVC_DISABLE_WARNING(4459) /* declaration hides global */         \
-  FOLLY_GCC_DISABLE_NEW_SHADOW_WARNINGS                                   \
-  if (bool SYNCHRONIZED_VAR(state) = false) {                             \
-    ::folly::detail::SYNCHRONIZED_macro_is_deprecated{};                  \
-  } else                                                                  \
-    for (auto SYNCHRONIZED_VAR(lockedPtr) =                               \
-             (FB_VA_GLUE(FB_ARG_2_OR_1, (__VA_ARGS__))).contextualLock(); \
-         !SYNCHRONIZED_VAR(state);                                        \
-         SYNCHRONIZED_VAR(state) = true)                                  \
-      for (auto& FB_VA_GLUE(FB_ARG_1, (__VA_ARGS__)) =                    \
-               *SYNCHRONIZED_VAR(lockedPtr).operator->();                 \
-           !SYNCHRONIZED_VAR(state);                                      \
-           SYNCHRONIZED_VAR(state) = true)                                \
+#define SYNCHRONIZED(...)                                             \
+  FOLLY_PUSH_WARNING                                                  \
+  FOLLY_GNU_DISABLE_WARNING("-Wshadow")                               \
+  FOLLY_MSVC_DISABLE_WARNING(4189) /* initialized but unreferenced */ \
+  FOLLY_MSVC_DISABLE_WARNING(4456) /* declaration hides local */      \
+  FOLLY_MSVC_DISABLE_WARNING(4457) /* declaration hides parameter */  \
+  FOLLY_MSVC_DISABLE_WARNING(4458) /* declaration hides member */     \
+  FOLLY_MSVC_DISABLE_WARNING(4459) /* declaration hides global */     \
+  FOLLY_GCC_DISABLE_NEW_SHADOW_WARNINGS                               \
+  if (bool SYNCHRONIZED_VAR(state) = false) {                         \
+  } else                                                              \
+    for (auto SYNCHRONIZED_VAR(lockedPtr) =                           \
+             (FB_VA_GLUE(FB_ARG_2_OR_1, (__VA_ARGS__))).operator->(); \
+         !SYNCHRONIZED_VAR(state);                                    \
+         SYNCHRONIZED_VAR(state) = true)                              \
+      for (auto& FB_VA_GLUE(FB_ARG_1, (__VA_ARGS__)) =                \
+               *SYNCHRONIZED_VAR(lockedPtr).operator->();             \
+           !SYNCHRONIZED_VAR(state);                                  \
+           SYNCHRONIZED_VAR(state) = true)                            \
     FOLLY_POP_WARNING
 
-/**
- * NOTE: This API is deprecated.  Use lock(), wlock(), rlock() or the withLock
- * functions instead.  In the future it will be marked with a deprecation
- * attribute to emit build-time warnings, and then it will be removed entirely.
- */
 #define TIMED_SYNCHRONIZED(timeout, ...)                                       \
   if (bool SYNCHRONIZED_VAR(state) = false) {                                  \
-    ::folly::detail::SYNCHRONIZED_macro_is_deprecated{};                       \
   } else                                                                       \
     for (auto SYNCHRONIZED_VAR(lockedPtr) =                                    \
              (FB_VA_GLUE(FB_ARG_2_OR_1, (__VA_ARGS__))).timedAcquire(timeout); \
@@ -1843,10 +1806,6 @@ struct [[deprecated(
            SYNCHRONIZED_VAR(state) = true)
 
 /**
- * NOTE: This API is deprecated.  Use lock(), wlock(), rlock() or the withLock
- * functions instead.  In the future it will be marked with a deprecation
- * attribute to emit build-time warnings, and then it will be removed entirely.
- *
  * Similar to SYNCHRONIZED, but only uses a read lock.
  */
 #define SYNCHRONIZED_CONST(...)            \
@@ -1855,10 +1814,6 @@ struct [[deprecated(
       as_const(FB_VA_GLUE(FB_ARG_2_OR_1, (__VA_ARGS__))))
 
 /**
- * NOTE: This API is deprecated.  Use lock(), wlock(), rlock() or the withLock
- * functions instead.  In the future it will be marked with a deprecation
- * attribute to emit build-time warnings, and then it will be removed entirely.
- *
  * Similar to TIMED_SYNCHRONIZED, but only uses a read lock.
  */
 #define TIMED_SYNCHRONIZED_CONST(timeout, ...) \
@@ -1868,17 +1823,12 @@ struct [[deprecated(
       as_const(FB_VA_GLUE(FB_ARG_2_OR_1, (__VA_ARGS__))))
 
 /**
- * NOTE: This API is deprecated.  Use lock(), wlock(), rlock() or the withLock
- * functions instead.  In the future it will be marked with a deprecation
- * attribute to emit build-time warnings, and then it will be removed entirely.
- *
  * Synchronizes two Synchronized objects (they may encapsulate
  * different data). Synchronization is done in increasing address of
  * object order, so there is no deadlock risk.
  */
 #define SYNCHRONIZED_DUAL(n1, e1, n2, e2)                                      \
   if (bool SYNCHRONIZED_VAR(state) = false) {                                  \
-    ::folly::detail::SYNCHRONIZED_macro_is_deprecated{};                       \
   } else                                                                       \
     for (auto SYNCHRONIZED_VAR(ptrs) = acquireLockedPair(e1, e2);              \
          !SYNCHRONIZED_VAR(state);                                             \

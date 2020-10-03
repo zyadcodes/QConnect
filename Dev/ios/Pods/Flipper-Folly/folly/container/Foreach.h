@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2011-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -149,7 +149,7 @@ constexpr decltype(auto) fetch(Sequence&& sequence, Index&& index);
 /*
  * If you just want the element values, please use this (ranges-v3) construct:
  *
- *    for (auto&& element : collection | views::reverse)
+ *    for (auto&& element : collection | view::reverse)
  *
  * If you need access to the iterators please write an explicit iterator loop
  */
@@ -179,11 +179,11 @@ constexpr decltype(auto) fetch(Sequence&& sequence, Index&& index);
 /**
  * If you just want the keys, please use this (ranges-v3) construct:
  *
- *    for (auto&& element : collection | views::keys)
+ *    for (auto&& element : collection | view::keys)
  *
  * If you just want the values, please use this (ranges-v3) construct:
  *
- *    for (auto&& element : collection | views::values)
+ *    for (auto&& element : collection | view::values)
  *
  * If you need to see both, use:
  *

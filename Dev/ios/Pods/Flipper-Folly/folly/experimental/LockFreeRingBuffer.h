@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2015-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -58,6 +58,10 @@ class LockFreeRingBuffer {
   static_assert(
       std::is_nothrow_default_constructible<T>::value,
       "Element type must be nothrow default constructible");
+
+  static_assert(
+      folly::is_trivially_copyable<T>::value,
+      "Element type must be trivially copyable");
 
  public:
   /// Opaque pointer to a past or future write.
@@ -181,6 +185,10 @@ class LockFreeRingBuffer {
 namespace detail {
 template <typename T, template <typename> class Atom>
 class RingBufferSlot {
+  void copy(T& dest, T& src) {
+    memcpy(&dest, &src, sizeof(T));
+  }
+
   template <typename V>
   void copy(V& dest, T& src) {
     dest = src;

@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2014-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -36,7 +36,7 @@ namespace detail {
 template <class Container>
 class Interleave : public Operator<Interleave<Container>> {
   // see comment about copies in CopiedSource
-  const std::shared_ptr<Container> container_;
+  const std::shared_ptr<const Container> container_;
 
  public:
   explicit Interleave(Container container)
@@ -45,25 +45,30 @@ class Interleave : public Operator<Interleave<Container>> {
   template <class Value, class Source>
   class Generator : public GenImpl<Value, Generator<Value, Source>> {
     Source source_;
-    const std::shared_ptr<Container> container_;
+    const std::shared_ptr<const Container> container_;
+    typedef const typename Container::value_type& ConstRefType;
+
+    static_assert(
+        std::is_same<const Value&, ConstRefType>::value,
+        "Only matching types may be interleaved");
 
    public:
     explicit Generator(
         Source source,
-        const std::shared_ptr<Container> container)
+        const std::shared_ptr<const Container> container)
         : source_(std::move(source)), container_(container) {}
 
     template <class Handler>
     bool apply(Handler&& handler) const {
       auto iter = container_->begin();
-      return source_.apply([&](Value value) -> bool {
+      return source_.apply([&](const Value& value) -> bool {
         if (iter == container_->end()) {
           return false;
         }
-        if (!handler(std::forward<Value>(value))) {
+        if (!handler(value)) {
           return false;
         }
-        if (!handler(std::move(*iter))) {
+        if (!handler(*iter)) {
           return false;
         }
         iter++;
@@ -93,37 +98,38 @@ class Interleave : public Operator<Interleave<Container>> {
 template <class Container>
 class Zip : public Operator<Zip<Container>> {
   // see comment about copies in CopiedSource
-  const std::shared_ptr<Container> container_;
+  const std::shared_ptr<const Container> container_;
 
  public:
   explicit Zip(Container container)
       : container_(new Container(std::move(container))) {}
 
   template <
-      class Value,
+      class Value1,
       class Source,
+      class Value2 = decltype(*std::begin(*container_)),
       class Result = std::tuple<
-          typename std::decay<Value>::type,
-          typename std::decay<typename Container::value_type>::type>>
-  class Generator : public GenImpl<Result, Generator<Value, Source, Result>> {
+          typename std::decay<Value1>::type,
+          typename std::decay<Value2>::type>>
+  class Generator
+      : public GenImpl<Result, Generator<Value1, Source, Value2, Result>> {
     Source source_;
-    const std::shared_ptr<Container> container_;
+    const std::shared_ptr<const Container> container_;
 
    public:
     explicit Generator(
         Source source,
-        const std::shared_ptr<Container> container)
+        const std::shared_ptr<const Container> container)
         : source_(std::move(source)), container_(container) {}
 
     template <class Handler>
     bool apply(Handler&& handler) const {
       auto iter = container_->begin();
-      return (source_.apply([&](Value value) -> bool {
+      return (source_.apply([&](Value1 value) -> bool {
         if (iter == container_->end()) {
           return false;
         }
-        if (!handler(std::make_tuple(
-                std::forward<Value>(value), std::move(*iter)))) {
+        if (!handler(std::make_tuple(std::forward<Value1>(value), *iter))) {
           return false;
         }
         ++iter;
@@ -188,7 +194,8 @@ class MergeTuples {
 
 } // namespace detail
 
-// TODO(mcurtiss): support zip() for N>1 operands.
+// TODO(mcurtiss): support zip() for N>1 operands. Because of variadic problems,
+// this might not be easily possible until gcc4.8 is available.
 template <
     class Source,
     class Zip = detail::Zip<typename std::decay<Source>::type>>

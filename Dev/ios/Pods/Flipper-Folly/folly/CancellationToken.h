@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2018-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,11 +28,6 @@ namespace folly {
 
 class CancellationCallback;
 class CancellationSource;
-struct OperationCancelled : public std::exception {
-  const char* what() const noexcept override {
-    return "coroutine operation cancelled";
-  }
-};
 
 namespace detail {
 class CancellationState;
@@ -144,13 +139,6 @@ class CancellationSource {
   CancellationSource& operator=(const CancellationSource& other) noexcept;
   CancellationSource& operator=(CancellationSource&& other) noexcept;
 
-  // Construct a CancellationSource that cannot be cancelled.
-  //
-  // This factory function can be used to obtain a CancellationSource that
-  // is equivalent to a moved-from CancellationSource object without needing
-  // to allocate any shared-state.
-  static CancellationSource invalid() noexcept;
-
   // Query if cancellation has already been requested on this CancellationSource
   // or any other CancellationSource object copied from the same original
   // CancellationSource object.
@@ -197,9 +185,6 @@ class CancellationSource {
       const CancellationSource& b) noexcept;
 
  private:
-  explicit CancellationSource(
-      detail::CancellationStateSourcePtr&& state) noexcept;
-
   detail::CancellationStateSourcePtr state_;
 };
 

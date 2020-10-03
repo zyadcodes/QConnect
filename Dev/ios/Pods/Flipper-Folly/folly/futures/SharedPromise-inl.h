@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2015-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,13 +19,13 @@
 namespace folly {
 
 template <class T>
-size_t SharedPromise<T>::size() const {
+size_t SharedPromise<T>::size() {
   std::lock_guard<std::mutex> g(mutex_);
   return size_.value;
 }
 
 template <class T>
-SemiFuture<T> SharedPromise<T>::getSemiFuture() const {
+SemiFuture<T> SharedPromise<T>::getSemiFuture() {
   std::lock_guard<std::mutex> g(mutex_);
   size_.value++;
   if (hasResult()) {
@@ -40,7 +40,7 @@ SemiFuture<T> SharedPromise<T>::getSemiFuture() const {
 }
 
 template <class T>
-Future<T> SharedPromise<T>::getFuture() const {
+Future<T> SharedPromise<T>::getFuture() {
   return getSemiFuture().via(&InlineExecutor::instance());
 }
 
@@ -100,7 +100,7 @@ void SharedPromise<T>::setTry(Try<T>&& t) {
 }
 
 template <class T>
-bool SharedPromise<T>::isFulfilled() const {
+bool SharedPromise<T>::isFulfilled() {
   std::lock_guard<std::mutex> g(mutex_);
   return hasResult();
 }

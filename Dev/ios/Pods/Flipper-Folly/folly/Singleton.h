@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2014-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 // SingletonVault - a library to manage the creation and destruction
 // of interdependent singletons.
 //
@@ -131,7 +130,6 @@
 #include <folly/experimental/ReadMostlySharedPtr.h>
 #include <folly/hash/Hash.h>
 #include <folly/lang/Exception.h>
-#include <folly/memory/SanitizeLeak.h>
 #include <folly/synchronization/Baton.h>
 #include <folly/synchronization/RWSpinLock.h>
 
@@ -314,8 +312,6 @@ struct SingletonHolder : public SingletonHolderBase {
   inline std::weak_ptr<T> get_weak();
   inline std::shared_ptr<T> try_get();
   inline folly::ReadMostlySharedPtr<T> try_get_fast();
-  template <typename Func>
-  inline invoke_result_t<Func, T*> apply(Func f);
   inline void vivify();
 
   void registerSingleton(CreateFunc c, TeardownFunc t);
@@ -602,22 +598,6 @@ class Singleton {
     return getEntry().try_get_fast();
   }
 
-  /**
-   * Applies a callback to the possibly-nullptr singleton instance, returning
-   * the callback's result. That is, the following two are functionally
-   * equivalent:
-   *    singleton.apply(std::ref(f));
-   *    f(singleton.try_get().get());
-   *
-   * For example, the following returns the singleton
-   * instance directly without any extra operations on the instance:
-   * auto ret = Singleton<T>::apply([](auto* v) { return v; });
-   */
-  template <typename Func>
-  static invoke_result_t<Func, T*> apply(Func f) {
-    return getEntry().apply(std::ref(f));
-  }
-
   // Quickly ensure the instance exists.
   static void vivify() {
     getEntry().vivify();
@@ -737,7 +717,8 @@ class LeakySingleton {
 
     auto& entry = entryInstance();
     if (entry.ptr) {
-      annotate_object_leaked(std::exchange(entry.ptr, nullptr));
+      // Make sure existing pointer doesn't get reported as a leak by LSAN.
+      entry.leakedPtrs.push_back(std::exchange(entry.ptr, nullptr));
     }
     entry.createFunc = createFunc;
     entry.state = State::Dead;
@@ -756,6 +737,7 @@ class LeakySingleton {
     CreateFunc createFunc;
     std::mutex mutex;
     detail::TypeDescriptor type_{typeid(T), typeid(Tag)};
+    std::list<T*> leakedPtrs;
   };
 
   static Entry& entryInstance() {

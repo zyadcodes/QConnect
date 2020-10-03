@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2011-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /*
  * N.B. You most likely do _not_ want to use RWSpinLock or any other
  * kind of spinlock.  Use SharedMutex instead.
@@ -308,11 +307,11 @@ class RWSpinLock {
     return bits_.load(std::memory_order_acquire);
   }
 
-  class FOLLY_NODISCARD ReadHolder;
-  class FOLLY_NODISCARD UpgradedHolder;
-  class FOLLY_NODISCARD WriteHolder;
+  class ReadHolder;
+  class UpgradedHolder;
+  class WriteHolder;
 
-  class FOLLY_NODISCARD ReadHolder {
+  class ReadHolder {
    public:
     explicit ReadHolder(RWSpinLock* lock) : lock_(lock) {
       if (lock_) {
@@ -381,7 +380,7 @@ class RWSpinLock {
     RWSpinLock* lock_;
   };
 
-  class FOLLY_NODISCARD UpgradedHolder {
+  class UpgradedHolder {
    public:
     explicit UpgradedHolder(RWSpinLock* lock) : lock_(lock) {
       if (lock_) {
@@ -444,7 +443,7 @@ class RWSpinLock {
     RWSpinLock* lock_;
   };
 
-  class FOLLY_NODISCARD WriteHolder {
+  class WriteHolder {
    public:
     explicit WriteHolder(RWSpinLock* lock) : lock_(lock) {
       if (lock_) {
@@ -743,10 +742,10 @@ class RWTicketSpinLockT {
     __sync_fetch_and_add(&ticket.write, 1);
   }
 
-  class FOLLY_NODISCARD WriteHolder;
+  class WriteHolder;
 
   typedef RWTicketSpinLockT<kBitWidth, kFavorWriter> RWSpinLock;
-  class FOLLY_NODISCARD ReadHolder {
+  class ReadHolder {
    public:
     ReadHolder(ReadHolder const&) = delete;
     ReadHolder& operator=(ReadHolder const&) = delete;
@@ -795,7 +794,7 @@ class RWTicketSpinLockT {
     RWSpinLock* lock_;
   };
 
-  class FOLLY_NODISCARD WriteHolder {
+  class WriteHolder {
    public:
     WriteHolder(WriteHolder const&) = delete;
     WriteHolder& operator=(WriteHolder const&) = delete;

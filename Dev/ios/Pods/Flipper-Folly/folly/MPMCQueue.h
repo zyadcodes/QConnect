@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2013-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -114,9 +114,6 @@ class MPMCQueue : public detail::MPMCQueueBase<MPMCQueue<T, Atom, Dynamic>> {
 
   MPMCQueue() noexcept {}
 };
-
-/// *** The dynamic version of MPMCQueue is deprecated. ***
-/// Use UnboundedQueue instead.
 
 /// The dynamic version of MPMCQueue allows dynamic expansion of queue
 /// capacity, such that a queue may start with a smaller capacity than
@@ -1458,9 +1455,9 @@ struct SingleElementQueue {
     } catch (...) {
       // g++ doesn't seem to have std::is_nothrow_destructible yet
     }
-    if (kIsDebug) {
-      memset(&contents_, 'Q', sizeof(T));
-    }
+#ifndef NDEBUG
+    memset(&contents_, 'Q', sizeof(T));
+#endif
   }
 
   /// Tag classes for dispatching to enqueue/dequeue implementation.

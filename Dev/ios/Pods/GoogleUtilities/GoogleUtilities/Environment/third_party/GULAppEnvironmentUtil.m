@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "GoogleUtilities/Environment/Private/GULAppEnvironmentUtil.h"
+#import "GoogleUtilities/Environment/third_party/GULAppEnvironmentUtil.h"
 
 #import <Foundation/Foundation.h>
 #import <dlfcn.h>
@@ -187,10 +187,17 @@ static BOOL HasEmbeddedMobileProvision() {
       ![enableSandboxCheck boolValue]) {
     return NO;
   }
-
-  NSURL *appStoreReceiptURL = [NSBundle mainBundle].appStoreReceiptURL;
-  NSString *appStoreReceiptFileName = appStoreReceiptURL.lastPathComponent;
-  return [appStoreReceiptFileName isEqualToString:kFIRAIdentitySandboxReceiptFileName];
+// The #else is for pre Xcode 9 where @available is not yet implemented.
+#if __has_builtin(__builtin_available)
+  if (@available(iOS 7.0, *)) {
+#else
+  if ([[UIDevice currentDevice].systemVersion integerValue] >= 7) {
+#endif
+    NSURL *appStoreReceiptURL = [NSBundle mainBundle].appStoreReceiptURL;
+    NSString *appStoreReceiptFileName = appStoreReceiptURL.lastPathComponent;
+    return [appStoreReceiptFileName isEqualToString:kFIRAIdentitySandboxReceiptFileName];
+  }
+  return NO;
 }
 
 + (BOOL)isSimulator {
@@ -246,7 +253,15 @@ static BOOL HasEmbeddedMobileProvision() {
 }
 
 + (BOOL)isIOS7OrHigher {
-  return YES;
+#if __has_builtin(__builtin_available)
+  if (@available(iOS 7.0, *)) {
+#else
+  if ([[UIDevice currentDevice].systemVersion integerValue] >= 7) {
+#endif
+      return YES;
+    }
+
+    return NO;
 }
 
 @end

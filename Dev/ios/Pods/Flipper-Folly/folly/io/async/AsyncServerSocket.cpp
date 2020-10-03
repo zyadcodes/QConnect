@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2014-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,9 +31,9 @@
 #include <folly/portability/Sockets.h>
 #include <folly/portability/Unistd.h>
 
+#include <errno.h>
+#include <string.h>
 #include <sys/types.h>
-#include <cerrno>
-#include <cstring>
 
 namespace folly {
 
@@ -212,14 +212,16 @@ int AsyncServerSocket::stopAccepting(int shutdownFlags) {
   // removeAcceptCallback().
   std::vector<CallbackInfo> callbacksCopy;
   callbacks_.swap(callbacksCopy);
-  for (const auto& callback : callbacksCopy) {
+  for (std::vector<CallbackInfo>::iterator it = callbacksCopy.begin();
+       it != callbacksCopy.end();
+       ++it) {
     // consumer may not be set if we are running in primary event base
-    if (callback.consumer) {
-      DCHECK(callback.eventBase);
-      callback.consumer->stop(callback.eventBase, callback.callback);
+    if (it->consumer) {
+      DCHECK(it->eventBase);
+      it->consumer->stop(it->eventBase, it->callback);
     } else {
-      DCHECK(callback.callback);
-      callback.callback->acceptStopped();
+      DCHECK(it->callback);
+      it->callback->acceptStopped();
     }
   }
 
@@ -263,7 +265,7 @@ void AsyncServerSocket::useExistingSockets(
     eventBase_->dcheckIsInEventBaseThread();
   }
 
-  if (!sockets_.empty()) {
+  if (sockets_.size() > 0) {
     throw std::invalid_argument(
         "cannot call useExistingSocket() on a "
         "AsyncServerSocket that already has a socket");
@@ -277,7 +279,7 @@ void AsyncServerSocket::useExistingSockets(
     SocketAddress address;
     address.setFromLocalAddress(fd);
 
-#if defined(__linux__)
+#if __linux__
     if (noTransparentTls_) {
       // Ignore return value, errors are ok
       netops::setsockopt(fd, SOL_SOCKET, SO_NO_TRANSPARENT_TLS, nullptr, 0);
@@ -300,22 +302,17 @@ void AsyncServerSocket::bindSocket(
     bool isExistingSocket) {
   sockaddr_storage addrStorage;
   address.getAddress(&addrStorage);
-  auto saddr = reinterpret_cast<sockaddr*>(&addrStorage);
+  sockaddr* saddr = reinterpret_cast<sockaddr*>(&addrStorage);
 
   if (netops::bind(fd, saddr, address.getActualSize()) != 0) {
-    if (errno != EINPROGRESS) {
-      // Get a copy of errno so that it is not overwritten by subsequent calls.
-      auto errnoCopy = errno;
-      if (!isExistingSocket) {
-        closeNoInt(fd);
-      }
-      folly::throwSystemErrorExplicit(
-          errnoCopy,
-          "failed to bind to async server socket: " + address.describe());
+    if (!isExistingSocket) {
+      closeNoInt(fd);
     }
+    folly::throwSystemError(
+        errno, "failed to bind to async server socket: " + address.describe());
   }
 
-#if defined(__linux__)
+#if __linux__
   if (noTransparentTls_) {
     // Ignore return value, errors are ok
     netops::setsockopt(fd, SOL_SOCKET, SO_NO_TRANSPARENT_TLS, nullptr, 0);
@@ -330,18 +327,11 @@ void AsyncServerSocket::bindSocket(
 
 bool AsyncServerSocket::setZeroCopy(bool enable) {
   if (msgErrQueueSupported) {
-    // save the enable flag here
-    zeroCopyVal_ = enable;
+    int fd = getNetworkSocket().toFd();
     int val = enable ? 1 : 0;
-    size_t num = 0;
-    for (auto& s : sockets_) {
-      int ret = netops::setsockopt(
-          s.socket_, SOL_SOCKET, SO_ZEROCOPY, &val, sizeof(val));
+    int ret = setsockopt(fd, SOL_SOCKET, SO_ZEROCOPY, &val, sizeof(val));
 
-      num += (0 == ret) ? 1 : 0;
-    }
-
-    return num != 0;
+    return (0 == ret);
   }
 
   return false;
@@ -357,7 +347,7 @@ void AsyncServerSocket::bind(const SocketAddress& address) {
   // Don't set socket_ yet, so that socket_ will remain uninitialized if an
   // error occurs.
   NetworkSocket fd;
-  if (sockets_.empty()) {
+  if (sockets_.size() == 0) {
     fd = createSocket(address.getFamily());
   } else if (sockets_.size() == 1) {
     if (address.getFamily() != sockets_[0].addressFamily_) {
@@ -379,8 +369,10 @@ void AsyncServerSocket::bind(
   if (ipAddresses.empty()) {
     throw std::invalid_argument("No ip addresses were provided");
   }
-  if (eventBase_) {
-    eventBase_->dcheckIsInEventBaseThread();
+  if (!sockets_.empty()) {
+    throw std::invalid_argument(
+        "Cannot call bind on a AsyncServerSocket "
+        "that already has a socket.");
   }
 
   for (const IPAddress& ipAddress : ipAddresses) {
@@ -389,7 +381,7 @@ void AsyncServerSocket::bind(
 
     bindSocket(fd, address, false);
   }
-  if (sockets_.empty()) {
+  if (sockets_.size() == 0) {
     throw std::runtime_error(
         "did not bind any async server socket for port and addresses");
   }
@@ -451,7 +443,7 @@ void AsyncServerSocket::bind(uint16_t port) {
           SocketAddress::getFamilyNameFrom(res->ai_addr, "<unknown>"));
     }
 
-#if defined(__linux__)
+#if __linux__
     if (noTransparentTls_) {
       // Ignore return value, errors are ok
       netops::setsockopt(s, SOL_SOCKET, SO_NO_TRANSPARENT_TLS, nullptr, 0);
@@ -523,7 +515,7 @@ void AsyncServerSocket::bind(uint16_t port) {
     break;
   }
 
-  if (sockets_.empty()) {
+  if (sockets_.size() == 0) {
     throw std::runtime_error("did not bind any async server socket for port");
   }
 }
@@ -542,7 +534,7 @@ void AsyncServerSocket::listen(int backlog) {
 }
 
 void AsyncServerSocket::getAddress(SocketAddress* addressReturn) const {
-  CHECK(!sockets_.empty());
+  CHECK(sockets_.size() >= 1);
   VLOG_IF(2, sockets_.size() > 1)
       << "Warning: getAddress() called and multiple addresses available ("
       << sockets_.size() << "). Returning only the first one.";
@@ -551,7 +543,7 @@ void AsyncServerSocket::getAddress(SocketAddress* addressReturn) const {
 }
 
 std::vector<SocketAddress> AsyncServerSocket::getAddresses() const {
-  CHECK(!sockets_.empty());
+  CHECK(sockets_.size() >= 1);
   auto tsaVec = std::vector<SocketAddress>(sockets_.size());
   auto tsaIter = tsaVec.begin();
   for (const auto& socket : sockets_) {
@@ -621,7 +613,7 @@ void AsyncServerSocket::removeAcceptCallback(
   // We just do a simple linear search; we don't expect removeAcceptCallback()
   // to be called frequently, and we expect there to only be a small number of
   // callbacks anyway.
-  auto it = callbacks_.begin();
+  std::vector<CallbackInfo>::iterator it = callbacks_.begin();
   uint32_t n = 0;
   while (true) {
     if (it == callbacks_.end()) {
@@ -733,7 +725,7 @@ NetworkSocket AsyncServerSocket::createSocket(int family) {
  * TOS derived from the client's connect request
  */
 void AsyncServerSocket::setTosReflect(bool enable) {
-  if (!kIsLinux || !enable) {
+  if (!kIsLinux || enable == false) {
     tosReflect_ = false;
     return;
   }
@@ -766,10 +758,8 @@ void AsyncServerSocket::setupSocket(NetworkSocket fd, int family) {
   int one = 1;
   if (netops::setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one)) !=
       0) {
-    auto errnoCopy = errno;
     // This isn't a fatal error; just log an error message and continue
-    LOG(ERROR) << "failed to set SO_REUSEADDR on async server socket "
-               << errnoCopy;
+    LOG(ERROR) << "failed to set SO_REUSEADDR on async server socket " << errno;
   }
 
   // Set reuseport to support multiple accept threads
@@ -777,19 +767,15 @@ void AsyncServerSocket::setupSocket(NetworkSocket fd, int family) {
   if (reusePortEnabled_ &&
       netops::setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &one, sizeof(int)) !=
           0) {
-    auto errnoCopy = errno;
     LOG(ERROR) << "failed to set SO_REUSEPORT on async server socket "
-               << errnoStr(errnoCopy);
+               << errnoStr(errno);
 #ifdef WIN32
-    folly::throwSystemErrorExplicit(
-        errnoCopy, "failed to set SO_REUSEPORT on async server socket");
+    folly::throwSystemError(errno, "failed to bind to the async server socket");
 #else
     SocketAddress address;
     address.setFromLocalAddress(fd);
-    folly::throwSystemErrorExplicit(
-        errnoCopy,
-        "failed to set SO_REUSEPORT on async server socket: " +
-            address.describe());
+    folly::throwSystemError(
+        errno, "failed to bind to async server socket: " + address.describe());
 #endif
   }
 
@@ -800,16 +786,14 @@ void AsyncServerSocket::setupSocket(NetworkSocket fd, int family) {
           SO_KEEPALIVE,
           (keepAliveEnabled_) ? &one : &zero,
           sizeof(int)) != 0) {
-    auto errnoCopy = errno;
     LOG(ERROR) << "failed to set SO_KEEPALIVE on async server socket: "
-               << errnoStr(errnoCopy);
+               << errnoStr(errno);
   }
 
   // Setup FD_CLOEXEC flag
   if (closeOnExec_ && (-1 == netops::set_socket_close_on_exec(fd))) {
-    auto errnoCopy = errno;
     LOG(ERROR) << "failed to set FD_CLOEXEC on async server socket: "
-               << errnoStr(errnoCopy);
+               << errnoStr(errno);
   }
 
   // Set TCP nodelay if available, MAC OS X Hack
@@ -818,10 +802,9 @@ void AsyncServerSocket::setupSocket(NetworkSocket fd, int family) {
   if (family != AF_UNIX) {
     if (netops::setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &one, sizeof(one)) !=
         0) {
-      auto errnoCopy = errno;
       // This isn't a fatal error; just log an error message and continue
       LOG(ERROR) << "failed to set TCP_NODELAY on async server socket: "
-                 << errnoStr(errnoCopy);
+                 << errnoStr(errno);
     }
   }
 #else
@@ -830,23 +813,11 @@ void AsyncServerSocket::setupSocket(NetworkSocket fd, int family) {
 
 #if FOLLY_ALLOW_TFO
   if (tfo_ && detail::tfo_enable(fd, tfoMaxQueueSize_) != 0) {
-    auto errnoCopy = errno;
     // This isn't a fatal error; just log an error message and continue
     LOG(WARNING) << "failed to set TCP_FASTOPEN on async server socket: "
-                 << folly::errnoStr(errnoCopy);
+                 << folly::errnoStr(errno);
   }
 #endif
-
-  if (zeroCopyVal_) {
-    int val = 1;
-    int ret =
-        netops::setsockopt(fd, SOL_SOCKET, SO_ZEROCOPY, &val, sizeof(val));
-    if (ret) {
-      auto errnoCopy = errno;
-      LOG(WARNING) << "failed to set SO_ZEROCOPY on async server socket: "
-                   << folly::errnoStr(errnoCopy);
-    }
-  }
 
   if (const auto shutdownSocketSet = wShutdownSocketSet_.lock()) {
     shutdownSocketSet->add(fd);
@@ -865,9 +836,9 @@ void AsyncServerSocket::handlerReady(
   for (uint32_t n = 0; n < maxAcceptAtOnce_; ++n) {
     SocketAddress address;
 
-    sockaddr_storage addrStorage = {};
+    sockaddr_storage addrStorage;
     socklen_t addrLen = sizeof(addrStorage);
-    auto saddr = reinterpret_cast<sockaddr*>(&addrStorage);
+    sockaddr* saddr = reinterpret_cast<sockaddr*>(&addrStorage);
 
     // In some cases, accept() doesn't seem to update these correctly.
     saddr->sa_family = addressFamily;
@@ -876,7 +847,7 @@ void AsyncServerSocket::handlerReady(
     }
 
     // Accept a new client socket
-#if FOLLY_HAVE_ACCEPT4
+#ifdef SOCK_NONBLOCK
     auto clientSocket = NetworkSocket::fromFd(
         accept4(fd.toFd(), saddr, &addrLen, SOCK_NONBLOCK));
 #else
@@ -901,21 +872,16 @@ void AsyncServerSocket::handlerReady(
         uint32_t tosWord = folly::Endian::big(buffer[0]);
         if (addressFamily == AF_INET6) {
           tosWord = (tosWord & 0x0FC00000) >> 20;
-          // Set the TOS on the return socket only if it is non-zero
-          if (tosWord) {
-            ret = netops::setsockopt(
-                clientSocket,
-                IPPROTO_IPV6,
-                IPV6_TCLASS,
-                &tosWord,
-                sizeof(tosWord));
-          }
+          ret = netops::setsockopt(
+              clientSocket,
+              IPPROTO_IPV6,
+              IPV6_TCLASS,
+              &tosWord,
+              sizeof(tosWord));
         } else if (addressFamily == AF_INET) {
           tosWord = (tosWord & 0x00FC0000) >> 16;
-          if (tosWord) {
-            ret = netops::setsockopt(
-                clientSocket, IPPROTO_IP, IP_TOS, &tosWord, sizeof(tosWord));
-          }
+          ret = netops::setsockopt(
+              clientSocket, IPPROTO_IP, IP_TOS, &tosWord, sizeof(tosWord));
         }
 
         if (ret != 0) {
@@ -976,7 +942,7 @@ void AsyncServerSocket::handlerReady(
       return;
     }
 
-#if !FOLLY_HAVE_ACCEPT4
+#ifndef SOCK_NONBLOCK
     // Explicitly set the new connection to non-blocking mode
     if (netops::set_socket_non_blocking(clientSocket) != 0) {
       closeNoInt(clientSocket);
@@ -1070,7 +1036,7 @@ void AsyncServerSocket::dispatchError(const char* msgstr, int errnoValue) {
   QueueMessage msg;
   msg.type = MessageType::MSG_ERROR;
   msg.err = errnoValue;
-  msg.msg = msgstr;
+  msg.msg = std::move(msgstr);
 
   while (true) {
     // Short circuit if the callback is in the primary EventBase thread

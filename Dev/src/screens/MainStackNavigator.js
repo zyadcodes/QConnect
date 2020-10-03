@@ -22,6 +22,7 @@ import EvaluationPage from "./Evaluation/EvaluationPage";
 import ShareClassCodeScreen from "./TeacherScreens/AddStudents/ShareClassCodeScreen";
 import strings from "config/strings";
 import TopBanner from "components/TopBanner";
+import StudentTabsNavigator from "./StudentScreens/StudentTabsNavigator"
 
 //The routes containing all the screens & their navigation options
 routeConfig = {
@@ -62,7 +63,7 @@ routeConfig = {
   },
 
   StudentCurrentClass: {
-    screen: StudentMainScreen,
+    screen: StudentTabsNavigator,
     navigationOptions: ({ navigation }) => ({
       header: null,
       gesturesEnabled: false

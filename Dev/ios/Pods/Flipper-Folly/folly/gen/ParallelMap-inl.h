@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2014-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,13 +20,11 @@
 
 #include <atomic>
 #include <cassert>
-#include <exception>
 #include <thread>
 #include <type_traits>
 #include <utility>
 #include <vector>
 
-#include <folly/Expected.h>
 #include <folly/MPMCPipeline.h>
 #include <folly/experimental/EventCount.h>
 #include <folly/functional/Invoke.h>
@@ -68,13 +66,11 @@ class PMap : public Operator<PMap<Predicate>> {
     Predicate pred_;
     const size_t nThreads_;
 
-    using Result = folly::Expected<Output, std::exception_ptr>;
     class ExecutionPipeline {
       std::vector<std::thread> workers_;
       std::atomic<bool> done_{false};
       const Predicate& pred_;
-      using Pipeline = MPMCPipeline<Input, Result>;
-      Pipeline pipeline_;
+      MPMCPipeline<Input, Output> pipeline_;
       EventCount wake_;
 
      public:
@@ -113,12 +109,12 @@ class PMap : public Operator<PMap<Predicate>> {
         wake_.notify();
       }
 
-      bool read(Result& result) {
-        return pipeline_.read(result);
+      bool read(Output& out) {
+        return pipeline_.read(out);
       }
 
-      void blockingRead(Result& result) {
-        pipeline_.blockingRead(result);
+      void blockingRead(Output& out) {
+        pipeline_.blockingRead(out);
       }
 
      private:
@@ -132,16 +128,11 @@ class PMap : public Operator<PMap<Predicate>> {
         for (;;) {
           auto key = wake_.prepareWait();
 
-          typename Pipeline::template Ticket<0> ticket;
+          typename MPMCPipeline<Input, Output>::template Ticket<0> ticket;
           if (pipeline_.template readStage<0>(ticket, in)) {
             wake_.cancelWait();
-            try {
-              Output out = pred_(std::move(in));
-              pipeline_.template blockingWriteStage<0>(ticket, std::move(out));
-            } catch (...) {
-              pipeline_.template blockingWriteStage<0>(
-                  ticket, makeUnexpected(std::current_exception()));
-            }
+            Output out = pred_(std::move(in));
+            pipeline_.template blockingWriteStage<0>(ticket, std::move(out));
             continue;
           }
 
@@ -155,13 +146,6 @@ class PMap : public Operator<PMap<Predicate>> {
         }
       }
     };
-
-    static Output&& getOutput(Result& result) {
-      if (result.hasError()) {
-        std::rethrow_exception(std::move(result).error());
-      }
-      return std::move(result).value();
-    }
 
    public:
     Generator(Source source, const Predicate& pred, size_t nThreads)
@@ -184,10 +168,10 @@ class PMap : public Operator<PMap<Predicate>> {
         }
 
         // input queue full; drain ready items from the queue
-        Result result;
-        while (pipeline.read(result)) {
+        Output out;
+        while (pipeline.read(out)) {
           ++read;
-          body(getOutput(result));
+          body(std::move(out));
         }
 
         // write the value we were going to write before we made room.
@@ -199,10 +183,10 @@ class PMap : public Operator<PMap<Predicate>> {
 
       // flush the output queue
       while (read < wrote) {
-        Result result;
-        pipeline.blockingRead(result);
+        Output out;
+        pipeline.blockingRead(out);
         ++read;
-        body(getOutput(result));
+        body(std::move(out));
       }
     }
 
@@ -222,10 +206,10 @@ class PMap : public Operator<PMap<Predicate>> {
         }
 
         // input queue full; drain ready items from the queue
-        Result result;
-        while (pipeline.read(result)) {
+        Output out;
+        while (pipeline.read(out)) {
           ++read;
-          if (!handler(getOutput(result))) {
+          if (!handler(std::move(out))) {
             more = false;
             return false;
           }
@@ -241,11 +225,11 @@ class PMap : public Operator<PMap<Predicate>> {
 
       // flush the output queue
       while (read < wrote) {
-        Result result;
-        pipeline.blockingRead(result);
+        Output out;
+        pipeline.blockingRead(out);
         ++read;
-        if (more && !handler(getOutput(result))) {
-          more = false;
+        if (more) {
+          more = more && handler(std::move(out));
         }
       }
       return more;
