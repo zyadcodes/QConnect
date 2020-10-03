@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import MainStackNavigator from "./src/screens/MainStackNavigator";
-import { YellowBox, Alert, View } from "react-native";
+import { YellowBox, Alert, ScrollView, View } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 import QCView from "components/QCView";
 import ErrorBoundary from "./src/screens/ErrorBoundary";
@@ -70,8 +70,8 @@ class App extends Component {
   renderMainApp() {
     return (
       <ErrorBoundary>
-        <View
-          style={{
+        <ScrollView
+          contentContainerStyle={{
             flex: 1,
           }}
         >
@@ -84,7 +84,7 @@ class App extends Component {
           ) : (
             <OfflineEmptyState retry={this.onRetry.bind(this)} />
           )}
-        </View>
+        </ScrollView>
       </ErrorBoundary>
     );
   }

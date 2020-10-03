@@ -19,8 +19,7 @@ export default {
   workingOnItColorBrown: "#EFDECC",
   primaryVeryLight: "#F8FCF0",
   actionButtonColor: "rgba(231,76,60,1)",
-  magenta: "#1abc9c",
-  lightGreen: "#90cdbd"
+  magenta: "#1abc9c"
  
   
 };
