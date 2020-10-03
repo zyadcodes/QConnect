@@ -47,6 +47,8 @@ class App extends Component {
     codePush.getUpdateMetadata().then(update => {
       if (update) {
         console.log(JSON.stringify(update));
+      } else {
+        console.log("no udpates available.")
       }
     });
   }
