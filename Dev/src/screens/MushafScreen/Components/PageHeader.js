@@ -99,46 +99,53 @@ class PageHeader extends FontLoadingComponent {
               ]}
               numberOfLines={1}
             >
-              {strings.AssignTo}
-            </Text>
-            {leftImage && (
-              <Image
-                size={20}
-                style={styles.profilePic}
-                source={leftImage}
-                ResizeMode="contain"
-              />
-            )}
-
-            {currentClass && (
-              <StudentSelectorModal
-                currentClass={currentClass}
-                visible={this.state.selectorModalVisible}
-                setModalVisible={visible => {
-                  const { selectorModalVisible } = this.state;
-                  this.setState({ selectorModalVisible: visible });
-                }}
-                selectedItemID={assignToID}
-                onSelect={(id, imageID, isClassID) => {
-                  this.setLeftImage(id, imageID, isClassID);
-                  onSelect(id, imageID, isClassID);
-                }}
-              />
-            )}
-
-            <Text
-              style={fontStyles.mainTextStyleBlack}
-              onPress={
-                currentClass
-                  ? () => {
-                      LeftOnPress();
-                    }
-                  : () => {}
-              }
-            >
-              {LeftTextName}
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={[
+                  fontStyles.smallTextStylePrimaryDark,
+                  { paddingBottom: 2 },
+                ]}
+                numberOfLines={1}
+              >
+                {strings.AssignTo}
+              </Text>
+              )
+              {leftImage && (
+                <Image
+                  size={20}
+                  style={styles.profilePic}
+                  source={leftImage}
+                  ResizeMode="contain"
+                />
+              )}
+              {currentClass && (
+                <StudentSelectorModal
+                  currentClass={currentClass}
+                  visible={this.state.selectorModalVisible}
+                  setModalVisible={visible => {
+                    const { selectorModalVisible } = this.state;
+                    this.setState({ selectorModalVisible: visible });
+                  }}
+                  selectedItemID={assignToID}
+                  onSelect={(id, imageID, isClassID) => {
+                    this.setLeftImage(id, imageID, isClassID);
+                    onSelect(id, imageID, isClassID);
+                  }}
+                />
+              )}
+              <Text
+                style={fontStyles.mainTextStyleBlack}
+                onPress={
+                  currentClass
+                    ? () => {
+                        LeftOnPress();
+                      }
+                    : () => {}
+                }
+              >
+                {LeftTextName}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         <View style={styles.topMiddleView}>
