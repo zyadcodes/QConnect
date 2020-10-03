@@ -19,7 +19,7 @@ export default (TeacherInfoEntries = props => {
       }
       <View style={styles.infoRow}>
         <TextInput
-          style={[fontStyles.smallTextStyleDarkestGrey, styles.textInput]}
+          style={[fontStyles.smallTextStyleBlack, styles.textInput]}
           textContentType="name"
           placeholder={strings.namePlaceHolder}
           placeholderTextColor={colors.darkestGrey}
@@ -41,6 +41,7 @@ export default (TeacherInfoEntries = props => {
           textProps={{
             placeholder: strings.phoneNumberPlaceHolder,
             placeholderTextColor: colors.darkestGrey,
+            ...fontStyles.smallTextStyleBlack
           }}
           value={props.phoneNumber}
           onChangePhoneNumber={() => props.onPhoneNumberChanged(this.phone)}
@@ -53,7 +54,7 @@ export default (TeacherInfoEntries = props => {
       {!props.noEmailField ? (
         <View style={styles.infoRow}>
           <TextInput
-            style={[fontStyles.smallTextStyleDarkestGrey, styles.textInput]}
+            style={[fontStyles.smallTextStyleBlack, styles.textInput]}
             keyboardType="email-address"
             placeholder={strings.emailPlaceHolder}
             placeholderTextColor={colors.darkestGrey}
@@ -80,7 +81,7 @@ export default (TeacherInfoEntries = props => {
          */
         <View style={styles.infoRow}>
           <TextInput
-            style={[fontStyles.smallTextStyleDarkestGrey, styles.textInput]}
+            style={[fontStyles.smallTextStyleBlack, styles.textInput]}
             textContentType="password"
             autoCompleteType="password"
             placeholderTextColor={colors.darkestGrey}
@@ -100,7 +101,7 @@ export default (TeacherInfoEntries = props => {
          */
         <View style={styles.infoRow}>
           <TextInput
-            style={[fontStyles.smallTextStyleDarkestGrey, styles.textInput]}
+            style={[fontStyles.smallTextStyleBlack, styles.textInput]}
             textContentType="password"
             autoCorrect={false}
             placeholder={strings.ConfirmPasswordPlaceholder}
