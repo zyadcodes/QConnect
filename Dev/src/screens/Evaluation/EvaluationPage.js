@@ -274,6 +274,10 @@ export class EvaluationPage extends QcParentScreen {
       selectedImprovementAreas,
       assignmentLength
     } = this.state;
+    console.log(JSON.stringify(selectedImprovementAreas));
+    console.log(JSON.stringify(improvementAreas));
+    
+    
     const { assignmentType } = this.props.navigation.state.params;
     this.setState({ isLoading: true });
     let evaluationDetails = {

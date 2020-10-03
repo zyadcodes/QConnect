@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2013-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,13 +29,11 @@
 
 #include <folly/FBString.h>
 #include <folly/FBVector.h>
-#include <folly/Function.h>
 #include <folly/Portability.h>
 #include <folly/Range.h>
 #include <folly/detail/Iterators.h>
 #include <folly/lang/Ordering.h>
 #include <folly/portability/SysUio.h>
-#include <folly/synchronization/MicroSpinLock.h>
 
 // Ignore shadowing warnings within this file, so includers can use -Wshadow.
 FOLLY_PUSH_WARNING
@@ -117,7 +115,7 @@ namespace folly {
  * ------------
  *
  * IOBuf objects also contain pointers to next and previous IOBuf objects.
- * This can be used to represent a single logical piece of data that is stored
+ * This can be used to represent a single logical piece of data that its stored
  * in non-contiguous chunks in separate buffers.
  *
  * A single IOBuf object can only belong to one chain at a time.
@@ -132,7 +130,8 @@ namespace folly {
  * it is simplest to treat this as if the head of the chain owns all other
  * IOBufs in the chain.  When you delete the head of the chain, it will delete
  * the other elements as well.  For this reason, prependChain() and
- * appendChain() take ownership of the new elements being added to this chain.
+ * appendChain() take ownership of of the new elements being added to this
+ * chain.
  *
  * When the coalesce() method is used to coalesce an entire IOBuf chain into a
  * single IOBuf, all other IOBufs in the chain are eliminated and automatically
@@ -189,7 +188,7 @@ namespace folly {
  * However, note that stack-allocated IOBufs may only be used as the head of a
  * chain (or standalone as the only IOBuf in a chain).  All non-head members of
  * an IOBuf chain must be heap allocated.  (All functions to add nodes to a
- * chain require a std::unique_ptr<IOBuf>, which enforces this requirement.)
+ * chain require a std::unique_ptr<IOBuf>, which enforces this requrement.)
  *
  * Copying IOBufs is only meaningful for the head of a chain. The entire chain
  * is cloned; the IOBufs will become shared, and the old and new IOBufs will
@@ -227,8 +226,6 @@ class IOBuf {
   enum WrapBufferOp { WRAP_BUFFER };
   enum TakeOwnershipOp { TAKE_OWNERSHIP };
   enum CopyBufferOp { COPY_BUFFER };
-
-  enum class CombinedOption { DEFAULT, COMBINED, SEPARATE };
 
   typedef ByteRange value_type;
   typedef Iterator iterator;
@@ -279,20 +276,6 @@ class IOBuf {
   static std::unique_ptr<IOBuf> createChain(
       size_t totalCapacity,
       std::size_t maxBufCapacity);
-
-  /**
-   * Uses folly::goodMallocSize() to figure out what the largest capacity would
-   * be that would trigger the same underlying allocation size as would be
-   * triggered by the given capacity.
-   *
-   * Note that IOBufs do this up-sizing for you: they will round up to the full
-   * allocation size and make that capacity available to you without your using
-   * this function. This just lets you introspect into that process, so you can
-   * for example figure out whether a given IOBuf can be usefully compacted.
-   */
-  static size_t goodSize(
-      size_t minCapacity,
-      CombinedOption combined = CombinedOption::DEFAULT);
 
   /**
    * Create a new IOBuf pointing to an existing data buffer.
@@ -545,8 +528,7 @@ class IOBuf {
   }
 
   /**
-   * Get the length of the data for this individual IOBuf in the chain. See
-   * computeChainDataLength() for the sum of data length for the full chain.
+   * Get the data length.
    */
   std::size_t length() const {
     return length_;
@@ -936,7 +918,7 @@ class IOBuf {
    * is not nullptr, nullptr otherwise
    *
    **/
-  void* getUserData() const noexcept {
+  void* getUserData() const {
     SharedInfo* info = sharedInfo();
     return info ? info->userData : nullptr;
   }
@@ -946,32 +928,9 @@ class IOBuf {
    * Returns free function if sharedInfo() is not nullputr, nullptr otherwise
    *
    **/
-  FreeFunction getFreeFn() const noexcept {
+  FreeFunction getFreeFn() const {
     SharedInfo* info = sharedInfo();
     return info ? info->freeFn : nullptr;
-  }
-
-  template <typename Observer>
-  bool appendSharedInfoObserver(Observer&& observer) {
-    SharedInfo* info = sharedInfo();
-    if (!info) {
-      return false;
-    }
-
-    auto* entry =
-        new SharedInfoObserverEntry<Observer>(std::forward<Observer>(observer));
-    std::lock_guard<MicroSpinLock> guard(info->observerListLock);
-    if (!info->observerListHead) {
-      info->observerListHead = entry;
-    } else {
-      // prepend
-      entry->next = info->observerListHead;
-      entry->prev = info->observerListHead->prev;
-      info->observerListHead->prev->next = entry;
-      info->observerListHead->prev = entry;
-    }
-
-    return true;
   }
 
   /**
@@ -997,12 +956,12 @@ class IOBuf {
    * (and so the lifetime of the underlying memory can be extended by
    * cloneOne()).
    */
-  bool isManagedOne() const noexcept {
+  bool isManagedOne() const {
     return sharedInfo();
   }
 
   /**
-   * For most of the use-cases where it seems like a good idea to call this
+   * For most of the  use-cases where it seems like a good idea to call this
    * function, what you really want is `isSharedOne()`.
    *
    * If this IOBuf is managed by the usual refcounting mechanism (ie
@@ -1026,7 +985,7 @@ class IOBuf {
    *
    * This only checks the current IOBuf, and not other IOBufs in the chain.
    */
-  bool isSharedOne() const noexcept {
+  bool isSharedOne() const {
     // If this is a user-owned buffer, it is always considered shared
     if (UNLIKELY(!sharedInfo())) {
       return true;
@@ -1036,7 +995,19 @@ class IOBuf {
       return true;
     }
 
-    return sharedInfo()->refcount.load(std::memory_order_acquire) > 1;
+    if (LIKELY(!(flags() & kFlagMaybeShared))) {
+      return false;
+    }
+
+    // kFlagMaybeShared is set, so we need to check the reference count.
+    // (Checking the reference count requires an atomic operation, which is why
+    // we prefer to only check kFlagMaybeShared if possible.)
+    bool shared = sharedInfo()->refcount.load(std::memory_order_acquire) > 1;
+    if (!shared) {
+      // we're the last one left
+      clearFlags(kFlagMaybeShared);
+    }
+    return shared;
   }
 
   /**
@@ -1413,56 +1384,23 @@ class IOBuf {
     // as these flags are stashed in the least significant 2 bits of a
     // max-align-aligned pointer.
     kFlagFreeSharedInfo = 0x1,
-    kFlagMask = (1 << 2 /* least significant bits */) - 1,
-  };
-
-  struct SharedInfoObserverEntryBase {
-    SharedInfoObserverEntryBase* prev{this};
-    SharedInfoObserverEntryBase* next{this};
-
-    virtual ~SharedInfoObserverEntryBase() = default;
-
-    virtual void afterFreeExtBuffer() const noexcept = 0;
-    virtual void afterReleaseExtBuffer() const noexcept = 0;
-  };
-
-  template <typename Observer>
-  struct SharedInfoObserverEntry : SharedInfoObserverEntryBase {
-    std::decay_t<Observer> observer;
-
-    explicit SharedInfoObserverEntry(Observer&& obs) noexcept(
-        noexcept(Observer(std::forward<Observer>(obs))))
-        : observer(std::forward<Observer>(obs)) {}
-
-    void afterFreeExtBuffer() const noexcept final {
-      observer.afterFreeExtBuffer();
-    }
-
-    void afterReleaseExtBuffer() const noexcept final {
-      observer.afterReleaseExtBuffer();
-    }
+    kFlagMaybeShared = 0x2,
+    kFlagMask = kFlagFreeSharedInfo | kFlagMaybeShared
   };
 
   struct SharedInfo {
     SharedInfo();
     SharedInfo(FreeFunction fn, void* arg, bool hfs = false);
 
-    static void releaseStorage(SharedInfo* info) noexcept;
-
-    using ObserverCb = folly::FunctionRef<void(SharedInfoObserverEntryBase&)>;
-    static void invokeAndDeleteEachObserver(
-        SharedInfoObserverEntryBase* observerListHead,
-        ObserverCb cb) noexcept;
+    static void releaseStorage(SharedInfo* info);
 
     // A pointer to a function to call to free the buffer when the refcount
     // hits 0.  If this is null, free() will be used instead.
     FreeFunction freeFn;
     void* userData;
-    SharedInfoObserverEntryBase* observerListHead{nullptr};
     std::atomic<uint32_t> refcount;
     bool externallyShared{false};
     bool useHeapFullStorage{false};
-    MicroSpinLock observerListLock{0};
   };
   // Helper structs for use by operator new and delete
   struct HeapPrefix;
@@ -1500,9 +1438,9 @@ class IOBuf {
   void coalesceAndReallocate(size_t newLength, IOBuf* end) {
     coalesceAndReallocate(headroom(), newLength, end, end->prev_->tailroom());
   }
-  void decrementRefcount() noexcept;
+  void decrementRefcount();
   void reserveSlow(std::size_t minHeadroom, std::size_t minTailroom);
-  void freeExtBuffer() noexcept;
+  void freeExtBuffer();
 
   static size_t goodExtBufferSize(std::size_t minCapacity);
   static void initExtBuffer(
@@ -1515,8 +1453,8 @@ class IOBuf {
       uint8_t** bufReturn,
       SharedInfo** infoReturn,
       std::size_t* capacityReturn);
-  static void releaseStorage(HeapStorage* storage, uint16_t freeFlags) noexcept;
-  static void freeInternalBuf(void* buf, void* userData) noexcept;
+  static void releaseStorage(HeapStorage* storage, uint16_t freeFlags);
+  static void freeInternalBuf(void* buf, void* userData);
 
   /*
    * Member variables
@@ -1544,51 +1482,49 @@ class IOBuf {
   std::size_t capacity_{0};
 
   // Pack flags in least significant 2 bits, sharedInfo in the rest
-  uintptr_t flagsAndSharedInfo_{0};
+  mutable uintptr_t flagsAndSharedInfo_{0};
 
   static inline uintptr_t packFlagsAndSharedInfo(
       uintptr_t flags,
-      SharedInfo* info) noexcept {
+      SharedInfo* info) {
     uintptr_t uinfo = reinterpret_cast<uintptr_t>(info);
     DCHECK_EQ(flags & ~kFlagMask, 0u);
     DCHECK_EQ(uinfo & kFlagMask, 0u);
     return flags | uinfo;
   }
 
-  inline SharedInfo* sharedInfo() const noexcept {
+  inline SharedInfo* sharedInfo() const {
     return reinterpret_cast<SharedInfo*>(flagsAndSharedInfo_ & ~kFlagMask);
   }
 
-  inline void setSharedInfo(SharedInfo* info) noexcept {
+  inline void setSharedInfo(SharedInfo* info) {
     uintptr_t uinfo = reinterpret_cast<uintptr_t>(info);
     DCHECK_EQ(uinfo & kFlagMask, 0u);
     flagsAndSharedInfo_ = (flagsAndSharedInfo_ & kFlagMask) | uinfo;
   }
 
-  inline uintptr_t flags() const noexcept {
+  inline uintptr_t flags() const {
     return flagsAndSharedInfo_ & kFlagMask;
   }
 
   // flags_ are changed from const methods
-  inline void setFlags(uintptr_t flags) noexcept {
+  inline void setFlags(uintptr_t flags) const {
     DCHECK_EQ(flags & ~kFlagMask, 0u);
     flagsAndSharedInfo_ |= flags;
   }
 
-  inline void clearFlags(uintptr_t flags) noexcept {
+  inline void clearFlags(uintptr_t flags) const {
     DCHECK_EQ(flags & ~kFlagMask, 0u);
     flagsAndSharedInfo_ &= ~flags;
   }
 
-  inline void setFlagsAndSharedInfo(
-      uintptr_t flags,
-      SharedInfo* info) noexcept {
+  inline void setFlagsAndSharedInfo(uintptr_t flags, SharedInfo* info) {
     flagsAndSharedInfo_ = packFlagsAndSharedInfo(flags, info);
   }
 
   struct DeleterBase {
     virtual ~DeleterBase() {}
-    virtual void dispose(void* p) noexcept = 0;
+    virtual void dispose(void* p) = 0;
   };
 
   template <class UniquePtr>
@@ -1597,16 +1533,20 @@ class IOBuf {
     typedef typename UniquePtr::deleter_type Deleter;
 
     explicit UniquePtrDeleter(Deleter deleter) : deleter_(std::move(deleter)) {}
-    void dispose(void* p) noexcept override {
-      deleter_(static_cast<Pointer>(p));
-      delete this;
+    void dispose(void* p) override {
+      try {
+        deleter_(static_cast<Pointer>(p));
+        delete this;
+      } catch (...) {
+        abort();
+      }
     }
 
    private:
     Deleter deleter_;
   };
 
-  static void freeUniquePtrBuffer(void* ptr, void* userData) noexcept {
+  static void freeUniquePtrBuffer(void* ptr, void* userData) {
     static_cast<DeleterBase*>(userData)->dispose(ptr);
   }
 };

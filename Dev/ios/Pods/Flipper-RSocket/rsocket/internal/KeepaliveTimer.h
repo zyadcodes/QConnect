@@ -34,7 +34,7 @@ class KeepaliveTimer {
 
   void start(const std::shared_ptr<FrameSink>& connection);
 
-  void sendKeepalive(FrameSink& sink);
+  void sendKeepalive();
 
   void keepaliveReceived();
 

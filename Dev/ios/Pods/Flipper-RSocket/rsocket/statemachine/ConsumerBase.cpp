@@ -130,7 +130,8 @@ void ConsumerBase::errorConsumer(folly::exception_wrapper ew) {
 void ConsumerBase::sendRequests() {
   auto toSync = std::min<size_t>(pendingAllowance_.get(), kMaxRequestN);
   auto actives = activeRequests_.get();
-  if (actives <= toSync) {
+  if (actives < (toSync + 1) / 2) {
+    toSync = toSync - actives;
     toSync = pendingAllowance_.consumeUpTo(toSync);
     if (toSync > 0) {
       writeRequestN(static_cast<uint32_t>(toSync));

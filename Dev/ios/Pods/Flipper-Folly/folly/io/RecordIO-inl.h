@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2013-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,21 +18,18 @@
 #error This file may only be included from folly/io/RecordIO.h
 #endif
 
-#include <folly/detail/Iterators.h>
+#include <boost/iterator/iterator_facade.hpp>
+
 #include <folly/hash/SpookyHashV2.h>
 
 namespace folly {
 
-class RecordIOReader::Iterator : public detail::IteratorFacade<
+class RecordIOReader::Iterator : public boost::iterator_facade<
                                      RecordIOReader::Iterator,
                                      const std::pair<ByteRange, off_t>,
-                                     std::forward_iterator_tag> {
-  friend class detail::
-      IteratorFacade<Iterator, value_type, std::forward_iterator_tag>;
+                                     boost::forward_traversal_tag> {
+  friend class boost::iterator_core_access;
   friend class RecordIOReader;
-
- public:
-  Iterator() = default;
 
  private:
   Iterator(ByteRange range, uint32_t fileId, off_t pos);
@@ -52,7 +49,7 @@ class RecordIOReader::Iterator : public detail::IteratorFacade<
 
   void advanceToValid();
   ByteRange range_;
-  uint32_t fileId_ = 0;
+  uint32_t fileId_;
   // stored as a pair so we can return by reference in dereference()
   std::pair<ByteRange, off_t> recordAndPos_;
 };

@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2014-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include <folly/io/async/AsyncPipe.h>
 
 #include <folly/FileUtil.h>
-#include <folly/Utility.h>
-#include <folly/detail/FileUtilDetail.h>
 #include <folly/io/async/AsyncSocketException.h>
 
+using folly::IOBuf;
+using folly::IOBufQueue;
 using std::string;
 using std::unique_ptr;
 
@@ -43,27 +42,17 @@ void AsyncPipeReader::failRead(const AsyncSocketException& ex) {
 
 void AsyncPipeReader::close() {
   unregisterHandler();
-  if (fd_ != NetworkSocket()) {
+  if (fd_ >= 0) {
     changeHandlerFD(NetworkSocket());
 
     if (closeCb_) {
       closeCb_(fd_);
     } else {
-      netops::close(fd_);
+      ::close(fd_);
     }
-    fd_ = NetworkSocket();
+    fd_ = -1;
   }
 }
-
-#ifdef _WIN32
-static int recv_internal(NetworkSocket s, void* buf, size_t count) {
-  auto r = netops::recv(s, buf, count, 0);
-  if (r == -1 && WSAGetLastError() == WSAEWOULDBLOCK) {
-    errno = EAGAIN;
-  }
-  return folly::to_narrow(r);
-}
-#endif
 
 void AsyncPipeReader::handlerReady(uint16_t events) noexcept {
   DestructorGuard dg(this);
@@ -115,13 +104,7 @@ void AsyncPipeReader::handlerReady(uint16_t events) noexcept {
     }
 
     // Perform the read
-#ifdef _WIN32
-    // On Windows you can't call read on a socket, so call recv instead.
-    ssize_t bytesRead =
-        folly::fileutil_detail::wrapNoInt(recv_internal, fd_, buf, buflen);
-#else
-    ssize_t bytesRead = folly::readNoInt(fd_.toFd(), buf, buflen);
-#endif
+    ssize_t bytesRead = folly::readNoInt(fd_, buf, buflen);
 
     if (bytesRead > 0) {
       if (movable) {
@@ -207,15 +190,15 @@ void AsyncPipeWriter::closeNow() {
     failAllWrites(AsyncSocketException(
         AsyncSocketException::NOT_OPEN, "closed with pending writes"));
   }
-  if (fd_ != NetworkSocket()) {
+  if (fd_ >= 0) {
     unregisterHandler();
     changeHandlerFD(NetworkSocket());
     if (closeCb_) {
       closeCb_(fd_);
     } else {
-      netops::close(fd_);
+      close(fd_);
     }
-    fd_ = NetworkSocket();
+    fd_ = -1;
   }
 }
 
@@ -237,16 +220,6 @@ void AsyncPipeWriter::handlerReady(uint16_t events) noexcept {
   handleWrite();
 }
 
-#ifdef _WIN32
-static int send_internal(NetworkSocket s, const void* buf, size_t count) {
-  auto r = netops::send(s, buf, count, 0);
-  if (r == -1 && WSAGetLastError() == WSAEWOULDBLOCK) {
-    errno = EAGAIN;
-  }
-  return folly::to_narrow(r);
-}
-#endif
-
 void AsyncPipeWriter::handleWrite() {
   DestructorGuard dg(this);
   assert(!queue_.empty());
@@ -257,13 +230,7 @@ void AsyncPipeWriter::handleWrite() {
     // someday, support writev.  The logic for partial writes is a bit complex
     const IOBuf* head = curQueue.front();
     CHECK(head->length());
-#ifdef _WIN32
-    // On Windows you can't call write on a socket.
-    ssize_t rc = folly::fileutil_detail::wrapNoInt(
-        send_internal, fd_, head->data(), head->length());
-#else
-    ssize_t rc = folly::writeNoInt(fd_.toFd(), head->data(), head->length());
-#endif
+    ssize_t rc = folly::writeNoInt(fd_, head->data(), head->length());
     if (rc < 0) {
       if (errno == EAGAIN || errno == EWOULDBLOCK) {
         // pipe is full

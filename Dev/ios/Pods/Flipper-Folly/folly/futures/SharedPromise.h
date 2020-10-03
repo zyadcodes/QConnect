@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2014-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -44,7 +44,7 @@ class SharedPromise {
    * Return a Future tied to the shared core state. Unlike Promise::getFuture,
    * this can be called an unlimited number of times per SharedPromise.
    */
-  SemiFuture<T> getSemiFuture() const;
+  SemiFuture<T> getSemiFuture();
 
   /**
    * Return a Future tied to the shared core state. Unlike Promise::getFuture,
@@ -53,10 +53,10 @@ class SharedPromise {
    *       appropriate executor to .via on the returned SemiFuture to get a
    *       valid Future where necessary.
    */
-  Future<T> getFuture() const;
+  Future<T> getFuture();
 
   /** Return the number of Futures associated with this SharedPromise */
-  size_t size() const;
+  size_t size();
 
   /** Fulfill the SharedPromise with an exception_wrapper */
   void setException(exception_wrapper ew);
@@ -97,7 +97,7 @@ class SharedPromise {
   template <class F>
   void setWith(F&& func);
 
-  bool isFulfilled() const;
+  bool isFulfilled();
 
  private:
   // this allows SharedPromise move-ctor/move-assign to be defaulted
@@ -125,14 +125,14 @@ class SharedPromise {
     }
   };
 
-  bool hasResult() const {
+  bool hasResult() {
     return try_.value.hasValue() || try_.value.hasException();
   }
 
-  mutable Mutex mutex_;
-  mutable Defaulted<size_t> size_;
+  Mutex mutex_;
+  Defaulted<size_t> size_;
   Defaulted<Try<T>> try_;
-  mutable std::vector<Promise<T>> promises_;
+  std::vector<Promise<T>> promises_;
   std::function<void(exception_wrapper const&)> interruptHandler_;
 };
 

@@ -16,9 +16,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "GoogleUtilities/Logger/Private/GULLogger.h"
+#import <GoogleUtilities/GULLoggerLevel.h>
 
-#import "GoogleUtilities/Network/Private/GULNetworkMessageCode.h"
+#import "GULNetworkMessageCode.h"
 
 /// The log levels used by GULNetworkLogger.
 typedef NS_ENUM(NSInteger, GULNetworkLogLevel) {

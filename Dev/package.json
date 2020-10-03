@@ -7,8 +7,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "test": "jest",
-    "lint": "eslint .",
-    "postinstall": "patch-package"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@react-native-community/netinfo": "^5.7.1",
@@ -46,7 +45,7 @@
     "react-native-swiper": "^1.6.0-rc.3",
     "react-native-switch-selector": "^2.0.0",
     "react-native-vector-icons": "^6.6.0",
-    "react-native-webview": "^10.9.1",
+    "react-native-webview": "^10.9.0",
     "react-navigation": "^3.11.1",
     "react-redux": "^7.1.0",
     "redux": "^4.0.4",

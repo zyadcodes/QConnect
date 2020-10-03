@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2015-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #pragma once
 
-#include <folly/Executor.h>
 #include <folly/futures/Future.h>
 #include <folly/futures/SharedPromise.h>
 
@@ -24,16 +22,14 @@ namespace folly {
 
 class FutureDAG : public std::enable_shared_from_this<FutureDAG> {
  public:
-  static std::shared_ptr<FutureDAG> create(
-      Executor::KeepAlive<> defaultExecutor) {
-    return std::shared_ptr<FutureDAG>(
-        new FutureDAG(std::move(defaultExecutor)));
+  static std::shared_ptr<FutureDAG> create() {
+    return std::shared_ptr<FutureDAG>(new FutureDAG());
   }
 
   typedef size_t Handle;
   typedef std::function<Future<Unit>()> FutureFunc;
 
-  Handle add(FutureFunc func, Executor::KeepAlive<> executor) {
+  Handle add(FutureFunc func, Executor* executor = nullptr) {
     nodes.emplace_back(std::move(func), executor);
     return nodes.size() - 1;
   }
@@ -109,12 +105,12 @@ class FutureDAG : public std::enable_shared_from_this<FutureDAG> {
       }
     }
 
-    auto sinkHandle = add([] { return Future<Unit>(); }, defaultExecutor_);
+    auto sinkHandle = add([] { return Future<Unit>(); });
     for (auto handle : leafNodes) {
       dependency(handle, sinkHandle);
     }
 
-    auto sourceHandle = add(nullptr, defaultExecutor_);
+    auto sourceHandle = add(nullptr);
     for (auto handle : rootNodes) {
       dependency(sourceHandle, handle);
     }
@@ -132,7 +128,7 @@ class FutureDAG : public std::enable_shared_from_this<FutureDAG> {
               nodes[handle].promise.setTry(std::move(t));
             });
           })
-          .thenError([this, handle](exception_wrapper ew) {
+          .onError([this, handle](exception_wrapper ew) {
             nodes[handle].promise.setException(std::move(ew));
           });
     }
@@ -145,8 +141,7 @@ class FutureDAG : public std::enable_shared_from_this<FutureDAG> {
   }
 
  private:
-  FutureDAG(Executor::KeepAlive<> defaultExecutor)
-      : defaultExecutor_{std::move(defaultExecutor)} {}
+  FutureDAG() = default;
 
   bool hasCycle() {
     // Perform a modified topological sort to detect cycles
@@ -191,11 +186,11 @@ class FutureDAG : public std::enable_shared_from_this<FutureDAG> {
   }
 
   struct Node {
-    Node(FutureFunc&& funcArg, Executor::KeepAlive<> executorArg)
-        : func(std::move(funcArg)), executor(std::move(executorArg)) {}
+    Node(FutureFunc&& funcArg, Executor* executorArg)
+        : func(std::move(funcArg)), executor(executorArg) {}
 
     FutureFunc func{nullptr};
-    Executor::KeepAlive<> executor;
+    Executor* executor{nullptr};
     SharedPromise<Unit> promise;
     std::vector<Handle> dependencies;
     bool hasDependents{false};
@@ -203,14 +198,13 @@ class FutureDAG : public std::enable_shared_from_this<FutureDAG> {
   };
 
   std::vector<Node> nodes;
-  Executor::KeepAlive<> defaultExecutor_;
 };
 
 // Polymorphic functor implementation
 template <typename T>
 class FutureDAGFunctor {
  public:
-  std::shared_ptr<FutureDAG> dag;
+  std::shared_ptr<FutureDAG> dag = FutureDAG::create();
   T state;
   std::vector<T> dep_states;
   T result() {
@@ -225,10 +219,8 @@ class FutureDAGFunctor {
     this->dag->go().get();
   }
   virtual void operator()() {}
-  explicit FutureDAGFunctor(T init_val, Executor::KeepAlive<> defaultExecutor)
-      : dag(FutureDAG::create(std::move(defaultExecutor))), state(init_val) {}
-  FutureDAGFunctor(Executor::KeepAlive<> defaultExecutor)
-      : dag(FutureDAG::create(std::move(defaultExecutor))), state() {}
+  explicit FutureDAGFunctor(T init_val) : state(init_val) {}
+  FutureDAGFunctor() : state() {}
   virtual ~FutureDAGFunctor() {}
 };
 

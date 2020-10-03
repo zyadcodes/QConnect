@@ -174,9 +174,7 @@ class MapOperator : public FlowableOperator<U, D> {
 
     void onNextImpl(U value) override {
       try {
-        if (auto flowable = yarpl::atomic_load(&flowable_)) {
-          this->subscriberOnNext(flowable->function_(std::move(value)));
-        }
+        this->subscriberOnNext(flowable_->function_(std::move(value)));
       } catch (const std::exception& exn) {
         folly::exception_wrapper ew{std::current_exception(), exn};
         this->terminateErr(std::move(ew));
@@ -185,9 +183,7 @@ class MapOperator : public FlowableOperator<U, D> {
 
     void onErrorImpl(folly::exception_wrapper ew) override {
       try {
-        if (auto flowable = yarpl::atomic_load(&flowable_)) {
-          SuperSubscription::onErrorImpl(flowable->errFunction_(std::move(ew)));
-        }
+        SuperSubscription::onErrorImpl(flowable_->errFunction_(std::move(ew)));
       } catch (const std::exception& exn) {
         this->terminateErr(
             folly::exception_wrapper{std::current_exception(), exn});
@@ -195,12 +191,12 @@ class MapOperator : public FlowableOperator<U, D> {
     }
 
     void onTerminateImpl() override {
-      yarpl::atomic_exchange(&flowable_, nullptr);
+      flowable_.reset();
       SuperSubscription::onTerminateImpl();
     }
 
    private:
-    AtomicReference<MapOperator> flowable_;
+    std::shared_ptr<MapOperator> flowable_;
   };
 
   std::shared_ptr<Flowable<U>> upstream_;
@@ -237,22 +233,20 @@ class FilterOperator : public FlowableOperator<U, U> {
           flowable_(std::move(flowable)) {}
 
     void onNextImpl(U value) override {
-      if (auto flowable = yarpl::atomic_load(&flowable_)) {
-        if (flowable->function_(value)) {
-          SuperSubscription::subscriberOnNext(std::move(value));
-        } else {
-          SuperSubscription::request(1);
-        }
+      if (flowable_->function_(value)) {
+        SuperSubscription::subscriberOnNext(std::move(value));
+      } else {
+        SuperSubscription::request(1);
       }
     }
 
     void onTerminateImpl() override {
-      yarpl::atomic_exchange(&flowable_, nullptr);
+      flowable_.reset();
       SuperSubscription::onTerminateImpl();
     }
 
    private:
-    AtomicReference<FilterOperator> flowable_;
+    std::shared_ptr<FilterOperator> flowable_;
   };
 
   std::shared_ptr<Flowable<U>> upstream_;
@@ -295,9 +289,7 @@ class ReduceOperator : public FlowableOperator<U, D> {
 
     void onNextImpl(U value) override {
       if (accInitialized_) {
-        if (auto flowable = yarpl::atomic_load(&flowable_)) {
-          acc_ = flowable->function_(std::move(acc_), std::move(value));
-        }
+        acc_ = flowable_->function_(std::move(acc_), std::move(value));
       } else {
         acc_ = std::move(value);
         accInitialized_ = true;
@@ -312,12 +304,12 @@ class ReduceOperator : public FlowableOperator<U, D> {
     }
 
     void onTerminateImpl() override {
-      yarpl::atomic_exchange(&flowable_, nullptr);
+      flowable_.reset();
       SuperSubscription::onTerminateImpl();
     }
 
    private:
-    AtomicReference<ReduceOperator> flowable_;
+    std::shared_ptr<ReduceOperator> flowable_;
     bool accInitialized_;
     D acc_;
   };
@@ -573,7 +565,7 @@ class FlatMapOperator : public FlowableOperator<T, R> {
         folly::exception_wrapper ew{std::current_exception(), exn};
         {
           std::lock_guard<std::mutex> g(onErrorExGuard_);
-          onErrorEx_ = ew;
+          onErrorEx_ = std::move(folly::exception_wrapper{ew});
         }
         // next iteration of drainLoop will cancel this subscriber as well
         drainLoop();
