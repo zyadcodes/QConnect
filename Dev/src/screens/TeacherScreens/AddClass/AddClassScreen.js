@@ -4,17 +4,17 @@ import colors from "config/colors";
 import classImages from "config/classImages";
 import QcActionButton from "components/QcActionButton";
 import QcParentScreen from "screens/QcParentScreen";
-import ImageSelectionModal from "components/ImageSelectionModal"
-import LoadingSpinner from 'components/LoadingSpinner';
-import FirebaseFunctions from 'config/FirebaseFunctions';
-import strings from 'config/strings';
-import TopBanner from 'components/TopBanner';
-import QCView from 'components/QCView';
-import screenStyle from 'config/screenStyle';
-import { screenHeight, screenWidth } from 'config/dimensions';
+import ImageSelectionModal from "components/ImageSelectionModal";
+import LoadingSpinner from "components/LoadingSpinner";
+import FirebaseFunctions from "config/FirebaseFunctions";
+import strings from "config/strings";
+import TopBanner from "components/TopBanner";
+import QCView from "components/QCView";
+import screenStyle from "config/screenStyle";
+import { screenHeight, screenWidth } from "config/dimensions";
+import TouchableText from "components/TouchableText";
 
 export class AddClassScreen extends QcParentScreen {
-
   //----------------------- state -------------------------------------
   state = {
     className: "",
@@ -24,34 +24,37 @@ export class AddClassScreen extends QcParentScreen {
     userID: "",
     teacher: "",
     isOpen: false,
-    classes: '',
+    classes: "",
     addClassButton: false
   };
 
   //Sets the current screen for firebase analytics
   async componentDidMount() {
-
-    if (this.props.navigation.state.params && this.props.navigation.state.params.userID && this.props.navigation.state.params.teacher) {
-      const classes = await FirebaseFunctions.getClassesByIDs(this.props.navigation.state.params.teacher.classes);
+    if (
+      this.props.navigation.state.params &&
+      this.props.navigation.state.params.userID &&
+      this.props.navigation.state.params.teacher
+    ) {
+      const classes = await FirebaseFunctions.getClassesByIDs(
+        this.props.navigation.state.params.teacher.classes
+      );
       this.setState({
         isLoading: false,
         userID: this.props.navigation.state.params.userID,
         teacher: this.props.navigation.state.params.teacher,
         classes
-      })
+      });
     } else {
       this.setState({ isLoading: true });
     }
     FirebaseFunctions.setCurrentScreen("Add Class", "AddClassScreen");
-
   }
   //disable add class button to prohibit duplication of a class feom having the same name
-  disableAddClassButton(){
+  disableAddClassButton() {
     this.setState({
-      addClassButton: !this.state.addClassButton    
+      addClassButton: !this.state.addClassButton
     });
   }
-
 
   // -------- event handlers, respond to user initiated events ----------
   setModalVisible(visible) {
@@ -59,7 +62,7 @@ export class AddClassScreen extends QcParentScreen {
   }
 
   onImageSelected(imageId) {
-    this.setState({ classImageID: imageId })
+    this.setState({ classImageID: imageId });
     this.setModalVisible(false);
   }
 
@@ -67,7 +70,9 @@ export class AddClassScreen extends QcParentScreen {
   classNameAlreadyExists() {
     let { classes } = this.state;
     for (let i = 0; i < classes.length; i++) {
-      if (classes[i].name.toLowerCase() === this.state.className.toLowerCase()) {
+      if (
+        classes[i].name.toLowerCase() === this.state.className.toLowerCase()
+      ) {
         return true;
       }
     }
@@ -77,35 +82,39 @@ export class AddClassScreen extends QcParentScreen {
 
   // saves the class into firebase
   async addNewClass() {
-
     if (!this.state.className || this.state.className.trim().length === 0) {
       Alert.alert(strings.Whoops, strings.PleaseMakeSureAllFieldsAreFilledOut);
       return;
     }
 
     if (this.classNameAlreadyExists()) {
-      Alert.alert(strings.Whoops,
+      Alert.alert(
+        strings.Whoops,
         /*Message to say that it is an invalid input:*/
         "Class Name already exists!",
-        [/*Button to exit */
+        [
+          /*Button to exit */
           { text: "OK" }
         ]
-      )
+      );
       return;
     }
     //End of check for bad input--------------------------------------------
-    
+
     this.disableAddClassButton();
-    
+
     let classInfo = {
       name: this.state.className,
       classImageID: this.state.classImageID,
       students: [],
-      classInviteCode: '',
+      classInviteCode: "",
       teachers: [this.state.userID]
     };
 
-    const newClassID = await FirebaseFunctions.addNewClass(classInfo, this.state.userID);
+    const newClassID = await FirebaseFunctions.addNewClass(
+      classInfo,
+      this.state.userID
+    );
     const newClass = await FirebaseFunctions.getClassByID(newClassID);
 
     //Navigates to the class
@@ -121,20 +130,25 @@ export class AddClassScreen extends QcParentScreen {
   render() {
     if (this.state.isLoading === true) {
       return (
-        <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+        <View
+          style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
+        >
           <LoadingSpinner isVisible={true} />
         </View>
-      )
+      );
     }
     return (
       <QCView style={screenStyle.container}>
         <View style={{ flex: 1 }}>
           <TopBanner
             LeftIconName="angle-left"
-            LeftOnPress={() => this.props.navigation.push("TeacherCurrentClass", {
-              userID: this.state.userID
-            })}
-            Title={strings.AddNewClass} />
+            LeftOnPress={() =>
+              this.props.navigation.push("TeacherCurrentClass", {
+                userID: this.state.userID
+              })
+            }
+            Title={strings.AddNewClass}
+          />
 
           <ImageSelectionModal
             visible={this.state.modalVisible}
@@ -149,10 +163,12 @@ export class AddClassScreen extends QcParentScreen {
             <Image
               style={styles.profilePic}
               source={classImages.images[this.state.classImageID]}
-              ResizeMode="contain" />
+              ResizeMode="contain"
+            />
             <TouchableText
               text={strings.EditClassImage}
-              onPress={() => this.setModalVisible(true)} />
+              onPress={() => this.setModalVisible(true)}
+            />
           </View>
 
           <View style={styles.bottomContainer}>
@@ -164,14 +180,14 @@ export class AddClassScreen extends QcParentScreen {
                 this.setState({
                   className: classInput
                 })
-              } />
+              }
+            />
 
             <QcActionButton
               disabled={this.state.addClassButton}
               text={strings.AddClass}
               onPress={() => {
                 this.addNewClass();
-                
               }}
               screen={this.name}
             />
@@ -186,14 +202,14 @@ export class AddClassScreen extends QcParentScreen {
 const styles = StyleSheet.create({
   picContainer: {
     paddingVertical: screenHeight * 0.033,
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: screenHeight * 0.015,
     backgroundColor: colors.white,
   },
   profilePic: {
-    width: screenHeight * 0.10,
-    height: screenHeight * 0.10,
-    borderRadius: screenHeight * 0.10 / 2,
+    width: screenHeight * 0.1,
+    height: screenHeight * 0.1,
+    borderRadius: (screenHeight * 0.1) / 2,
     marginBottom: screenHeight * 0.01
   },
   bottomContainer: {
@@ -210,6 +226,7 @@ const styles = StyleSheet.create({
     paddingLeft: screenWidth * 0.03,
     width: screenWidth * 0.95,
     backgroundColor: colors.veryLightGrey,
+    color: colors.black,
     borderRadius: 1
   },
 });

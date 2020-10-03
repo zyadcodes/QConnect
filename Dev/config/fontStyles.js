@@ -40,6 +40,12 @@ export default StyleSheet.create({
     color: colors.primaryDark
   },
 
+  smallTextStyleBlack: {
+    fontFamily,
+    fontSize: bodyFontSmaller,
+    color: colors.black
+  },
+
   mainTextStylePrimaryDark: {
     fontFamily,
     fontSize: bodyFont,
