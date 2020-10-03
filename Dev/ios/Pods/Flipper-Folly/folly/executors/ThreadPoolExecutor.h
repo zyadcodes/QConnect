@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2017-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,13 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #pragma once
-
-#include <algorithm>
-#include <mutex>
-#include <queue>
-
 #include <folly/DefaultKeepAliveExecutor.h>
 #include <folly/Memory.h>
 #include <folly/SharedMutex.h>
@@ -29,6 +23,10 @@
 #include <folly/io/async/Request.h>
 #include <folly/portability/GFlags.h>
 #include <folly/synchronization/Baton.h>
+
+#include <algorithm>
+#include <mutex>
+#include <queue>
 
 #include <glog/logging.h>
 
@@ -53,15 +51,6 @@ namespace folly {
  * ensureJoined() is called on add(), such that we can join idle
  * threads that were destroyed (which can't be joined from
  * themselves).
- *
- * Thread pool stats accounting:
- *
- * Derived classes must register instances to keep stats on all thread
- * pools by calling registerThreadPoolExecutor(this) on constructions
- * and deregisterThreadPoolExecutor(this) on destruction.
- *
- * Registration must be done wherever getPendingTaskCountImpl is implemented
- * and getPendingTaskCountImpl should be marked 'final' to avoid data races.
  */
 class ThreadPoolExecutor : public DefaultKeepAliveExecutor {
  public:
@@ -75,23 +64,23 @@ class ThreadPoolExecutor : public DefaultKeepAliveExecutor {
 
   void add(Func func) override = 0;
   virtual void
-  add(Func func, std::chrono::milliseconds expiration, Func expireCallback);
+  add(Func func, std::chrono::milliseconds expiration, Func expireCallback) = 0;
 
   void setThreadFactory(std::shared_ptr<ThreadFactory> threadFactory) {
     CHECK(numThreads() == 0);
     threadFactory_ = std::move(threadFactory);
   }
 
-  std::shared_ptr<ThreadFactory> getThreadFactory() const {
+  std::shared_ptr<ThreadFactory> getThreadFactory() {
     return threadFactory_;
   }
 
-  size_t numThreads() const;
+  size_t numThreads();
   void setNumThreads(size_t numThreads);
 
   // Return actual number of active threads -- this could be different from
   // numThreads() due to ThreadPoolExecutor's dynamic behavior.
-  size_t numActiveThreads() const;
+  size_t numActiveThreads();
 
   /*
    * stop() is best effort - there is no guarantee that unexecuted tasks won't
@@ -120,9 +109,9 @@ class ThreadPoolExecutor : public DefaultKeepAliveExecutor {
     std::chrono::nanoseconds maxIdleTime;
   };
 
-  PoolStats getPoolStats() const;
-  size_t getPendingTaskCount() const;
-  std::string getName() const;
+  PoolStats getPoolStats();
+  size_t getPendingTaskCount();
+  std::string getName();
 
   struct TaskStats {
     TaskStats() : expired(false), waitTime(0), runTime(0) {}
@@ -177,7 +166,8 @@ class ThreadPoolExecutor : public DefaultKeepAliveExecutor {
 
   struct TaskStatsCallbackRegistry;
 
-  struct alignas(folly::cacheline_align_v) Thread : public ThreadHandle {
+  struct alignas(hardware_destructive_interference_size) Thread
+      : public ThreadHandle {
     explicit Thread(ThreadPoolExecutor* pool)
         : id(nextId++),
           handle(),
@@ -233,11 +223,8 @@ class ThreadPoolExecutor : public DefaultKeepAliveExecutor {
     return std::make_shared<Thread>(this);
   }
 
-  static void registerThreadPoolExecutor(ThreadPoolExecutor* tpe);
-  static void deregisterThreadPoolExecutor(ThreadPoolExecutor* tpe);
-
   // Prerequisite: threadListLock_ readlocked or writelocked
-  virtual size_t getPendingTaskCountImpl() const = 0;
+  virtual size_t getPendingTaskCountImpl() = 0;
 
   class ThreadList {
    public:

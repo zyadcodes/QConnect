@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2015-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -46,7 +46,6 @@
 
 #include <folly/Portability.h>
 #include <folly/lang/Align.h>
-#include <folly/synchronization/SanitizeThread.h>
 #include <folly/synchronization/detail/Sleeper.h>
 
 namespace folly {
@@ -75,28 +74,21 @@ struct MicroSpinLock {
   }
 
   bool try_lock() noexcept {
-    bool ret = cas(FREE, LOCKED);
-    annotate_rwlock_try_acquired(
-        this, annotate_rwlock_level::wrlock, ret, __FILE__, __LINE__);
-    return ret;
+    return cas(FREE, LOCKED);
   }
 
   void lock() noexcept {
     detail::Sleeper sleeper;
-    while (!cas(FREE, LOCKED)) {
+    while (!try_lock()) {
       do {
         sleeper.wait();
       } while (payload()->load(std::memory_order_relaxed) == LOCKED);
     }
     assert(payload()->load() == LOCKED);
-    annotate_rwlock_acquired(
-        this, annotate_rwlock_level::wrlock, __FILE__, __LINE__);
   }
 
   void unlock() noexcept {
     assert(payload()->load() == LOCKED);
-    annotate_rwlock_released(
-        this, annotate_rwlock_level::wrlock, __FILE__, __LINE__);
     payload()->store(FREE, std::memory_order_release);
   }
 
@@ -126,6 +118,9 @@ static_assert(
  * contention is unlikely.
  */
 
+// TODO: generate it from configure (`getconf LEVEL1_DCACHE_LINESIZE`)
+#define FOLLY_CACHE_LINE_SIZE 64
+
 template <class T, size_t N>
 struct alignas(max_align_v) SpinLockArray {
   T& operator[](size_t i) noexcept {
@@ -144,20 +139,19 @@ struct alignas(max_align_v) SpinLockArray {
   struct PaddedSpinLock {
     PaddedSpinLock() : lock() {}
     T lock;
-    char padding[hardware_destructive_interference_size - sizeof(T)];
+    char padding[FOLLY_CACHE_LINE_SIZE - sizeof(T)];
   };
   static_assert(
-      sizeof(PaddedSpinLock) == hardware_destructive_interference_size,
+      sizeof(PaddedSpinLock) == FOLLY_CACHE_LINE_SIZE,
       "Invalid size of PaddedSpinLock");
 
   // Check if T can theoretically cross a cache line.
   static_assert(
-      max_align_v > 0 &&
-          hardware_destructive_interference_size % max_align_v == 0 &&
+      max_align_v > 0 && FOLLY_CACHE_LINE_SIZE % max_align_v == 0 &&
           sizeof(T) <= max_align_v,
       "T can cross cache line boundaries");
 
-  char padding_[hardware_destructive_interference_size];
+  char padding_[FOLLY_CACHE_LINE_SIZE];
   std::array<PaddedSpinLock, N> data_;
 };
 

@@ -43,7 +43,7 @@ class FrameHeader {
   }
 
   FrameType type{FrameType::RESERVED};
-  FrameFlags flags{FrameFlags::EMPTY_};
+  FrameFlags flags{FrameFlags::EMPTY};
   StreamId streamId{0};
 };
 

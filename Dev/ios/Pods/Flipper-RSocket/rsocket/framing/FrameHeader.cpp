@@ -76,7 +76,7 @@ folly::Range<const FlagString*> allowedFlags(FrameType type) {
 
 std::ostream&
 writeFlags(std::ostream& os, FrameFlags frameFlags, FrameType frameType) {
-  FrameFlags foundFlags = FrameFlags::EMPTY_;
+  FrameFlags foundFlags = FrameFlags::EMPTY;
 
   std::string delimiter;
   for (const auto& pair : allowedFlags(frameType)) {

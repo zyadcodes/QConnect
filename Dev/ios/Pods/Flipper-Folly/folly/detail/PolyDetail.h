@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 2017-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,7 +23,6 @@
 #include <typeinfo>
 #include <utility>
 
-#include <folly/Portability.h>
 #include <folly/Traits.h>
 #include <folly/Utility.h>
 #include <folly/detail/TypeList.h>
@@ -32,13 +31,6 @@
 #include <folly/lang/StaticConst.h>
 
 #include <folly/PolyException.h>
-
-#if defined(__cpp_template_auto) || \
-    defined(__cpp_nontype_template_parameter_auto)
-#define FOLLY_POLY_NTTP_AUTO 1
-#else
-#define FOLLY_POLY_NTTP_AUTO 0
-#endif
 
 namespace folly {
 /// \cond
@@ -74,7 +66,7 @@ detail::AddCvrefOf<T, I>& poly_cast(detail::PolyRoot<I>&);
 template <class T, class I>
 detail::AddCvrefOf<T, I> const& poly_cast(detail::PolyRoot<I> const&);
 
-#if !FOLLY_POLY_NTTP_AUTO
+#if !defined(__cpp_template_auto)
 #define FOLLY_AUTO class
 template <class... Ts>
 using PolyMembers = detail::TypeList<Ts...>;
@@ -241,7 +233,7 @@ using MembersOf = typename I::template Members<remove_cvref_t<T>>;
 template <class I, class T>
 using InterfaceOf = typename I::template Interface<T>;
 
-#if !FOLLY_POLY_NTTP_AUTO
+#if !defined(__cpp_template_auto)
 template <class T, T V>
 using Member = std::integral_constant<T, V>;
 
@@ -405,19 +397,6 @@ struct SignatureOf_<R (C::*)(As...) const, I> {
   using type = Ret<R, I> (*)(Data const&, Arg<As, I>...);
 };
 
-#if FOLLY_HAVE_NOEXCEPT_FUNCTION_TYPE
-template <class R, class C, class... As, class I>
-struct SignatureOf_<R (C::*)(As...) noexcept, I> {
-  using type = std::add_pointer_t<Ret<R, I>(Data&, Arg<As, I>...) noexcept>;
-};
-
-template <class R, class C, class... As, class I>
-struct SignatureOf_<R (C::*)(As...) const noexcept, I> {
-  using type =
-      std::add_pointer_t<Ret<R, I>(Data const&, Arg<As, I>...) noexcept>;
-};
-#endif
-
 template <class R, class This, class... As, class I>
 struct SignatureOf_<R (*)(This&, As...), I> {
   using type = Ret<R, I> (*)(Data&, Arg<As, I>...);
@@ -438,13 +417,6 @@ template <FOLLY_AUTO User, class I, class Ret, class Data, class... Args>
 struct ArgTypes_<User, I, Ret (*)(Data, Args...)> {
   using type = TypeList<Args...>;
 };
-
-#if FOLLY_HAVE_NOEXCEPT_FUNCTION_TYPE
-template <FOLLY_AUTO User, class I, class Ret, class Data, class... Args>
-struct ArgTypes_<User, I, Ret (*)(Data, Args...) noexcept> {
-  using type = TypeList<Args...>;
-};
-#endif
 
 template <FOLLY_AUTO User, class I>
 using ArgTypes = _t<ArgTypes_<User, I>>;
@@ -521,14 +493,6 @@ struct IsConstMember<R (C::*)(As...) const> : std::true_type {};
 
 template <class R, class C, class... As>
 struct IsConstMember<R (*)(C const&, As...)> : std::true_type {};
-
-#if FOLLY_HAVE_NOEXCEPT_FUNCTION_TYPE
-template <class R, class C, class... As>
-struct IsConstMember<R (C::*)(As...) const noexcept> : std::true_type {};
-
-template <class R, class C, class... As>
-struct IsConstMember<R (*)(C const&, As...) noexcept> : std::true_type {};
-#endif
 
 template <
     class T,
@@ -704,19 +668,14 @@ struct BasePtr {
   VTable<I> const* vptr_;
 };
 
-template <class I, class T>
-constexpr void* (*getOpsImpl(std::true_type) noexcept)(Op, Data*, void*) {
+template <class I, class T, std::enable_if_t<inSitu<T>(), int> = 0>
+constexpr void* (*getOps() noexcept)(Op, Data*, void*) {
   return &execInSitu<I, T>;
 }
 
-template <class I, class T>
-constexpr void* (*getOpsImpl(std::false_type) noexcept)(Op, Data*, void*) {
-  return &execOnHeap<I, T>;
-}
-
-template <class I, class T>
+template <class I, class T, std::enable_if_t<!inSitu<T>(), int> = 0>
 constexpr void* (*getOps() noexcept)(Op, Data*, void*) {
-  return getOpsImpl<I, T>(std::integral_constant<bool, inSitu<T>()>{});
+  return &execOnHeap<I, T>;
 }
 
 template <class I, FOLLY_AUTO... Arch, class... S>
@@ -935,31 +894,20 @@ struct Sig<R(A&, As...)> : SigImpl<R, A&, As...> {
   }
 };
 
-template <class T, class I, class = void>
-struct ModelsInterface2_ : std::false_type {};
+template <
+    class T,
+    class I,
+    class U = std::decay_t<T>,
+    std::enable_if_t<Negation<std::is_base_of<PolyBase, U>>::value, int> = 0,
+    std::enable_if_t<std::is_constructible<AddCvrefOf<U, I>, T>::value, int> =
+        0,
+    class = MembersOf<std::decay_t<I>, U>>
+std::true_type modelsInterface_(int);
+template <class T, class I>
+std::false_type modelsInterface_(long);
 
 template <class T, class I>
-struct ModelsInterface2_<
-    T,
-    I,
-    void_t<
-        std::enable_if_t<
-            std::is_constructible<AddCvrefOf<std::decay_t<T>, I>, T>::value>,
-        MembersOf<std::decay_t<I>, std::decay_t<T>>>> : std::true_type {};
-
-template <class T, class I, class = void>
-struct ModelsInterface_ : std::false_type {};
-
-template <class T, class I>
-struct ModelsInterface_<
-    T,
-    I,
-    std::enable_if_t<
-        Negation<std::is_base_of<PolyBase, std::decay_t<T>>>::value>>
-    : ModelsInterface2_<T, I> {};
-
-template <class T, class I>
-struct ModelsInterface : ModelsInterface_<T, I> {};
+struct ModelsInterface : decltype(modelsInterface_<T, I>(0)) {};
 
 template <class I1, class I2>
 struct ValueCompatible : std::is_base_of<I1, I2> {};

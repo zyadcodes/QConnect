@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-#import "GoogleUtilities/Environment/Private/GULHeartbeatDateStorage.h"
-#import "GoogleUtilities/Environment/Private/GULSecureCoding.h"
+#import <GoogleUtilities/GULHeartbeatDateStorage.h>
+#import <GoogleUtilities/GULSecureCoding.h>
 
 @interface GULHeartbeatDateStorage ()
 /** The storage to store the date of the last sent heartbeat. */
 @property(nonatomic, readonly) NSFileCoordinator *fileCoordinator;
-/** The name of the file that stores heartbeat information. */
-@property(nonatomic, readonly) NSString *fileName;
 @end
 
 @implementation GULHeartbeatDateStorage
-
-@synthesize fileURL = _fileURL;
 
 - (instancetype)initWithFileName:(NSString *)fileName {
   if (fileName == nil) {
@@ -36,21 +32,11 @@
   self = [super init];
   if (self) {
     _fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
-    _fileName = fileName;
-  }
-  return self;
-}
-
-/** Lazy getter for fileURL
- * @return fileURL where heartbeat information is stored.
- */
-- (NSURL *)fileURL {
-  if (!_fileURL) {
     NSURL *directoryURL = [[self class] directoryPathURL];
     [[self class] checkAndCreateDirectory:directoryURL fileCoordinator:_fileCoordinator];
-    _fileURL = [directoryURL URLByAppendingPathComponent:_fileName];
+    _fileURL = [directoryURL URLByAppendingPathComponent:fileName];
   }
-  return _fileURL;
+  return self;
 }
 
 /** Returns the URL path of the Application Support folder.

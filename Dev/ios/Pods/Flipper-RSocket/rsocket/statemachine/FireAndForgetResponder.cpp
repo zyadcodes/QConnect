@@ -16,6 +16,7 @@
 
 namespace rsocket {
 
+using namespace yarpl;
 using namespace yarpl::flowable;
 
 void FireAndForgetResponder::handlePayload(

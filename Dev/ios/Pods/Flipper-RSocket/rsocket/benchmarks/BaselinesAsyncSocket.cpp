@@ -20,6 +20,8 @@
 
 #define PORT (35437)
 
+using namespace folly;
+
 // namespace {
 //
 // class TcpReader : public ::folly::AsyncTransportWrapper::ReadCallback {
