@@ -79,6 +79,21 @@ class PageHeader extends FontLoadingComponent {
       disableChangingUser
     } = this.props;
 
+    let ab =  {
+      LeftTextName,
+      LeftOnPress,
+      Title,
+      TitleOnPress,
+      currentClass,
+      RightIconName,
+      RightTextName,
+      RightOnPress,
+      onSelect,
+      disableChangingUser
+    };
+    console.log("!!! " + JSON.stringify(ab));
+    
+
     const { leftImage, assignToID } = this.state;
     return (
       <View style={styles.entireTopView}>
@@ -103,7 +118,6 @@ class PageHeader extends FontLoadingComponent {
               >
                 {strings.AssignTo}
               </Text>
-              )
               {leftImage && (
                 <Image
                   size={20}
