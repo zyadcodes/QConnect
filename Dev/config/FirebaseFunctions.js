@@ -216,21 +216,21 @@ export default class FirebaseFunctions {
   static async addNewClass(newClassObject, teacherID) {
     //Adds the new class document and makes sure it has a reference to its own ID
     let newClass = await this.classes.add(newClassObject);
-    const ID = (currentClassID = newClass.id + "");
+    const currentClassID = newClass.id + "";
     //Creates a class Invite code and updates it as well as making sure the document has a reference to its own ID
-    const updatedClassIC = ID.substring(0, 5);
+    const classInvitationCode = currentClassID.substring(0, 5);
     await this.updateClassObject(newClass.id, {
-      ID,
-      classInviteCode: updatedClassIC,
+      currentClassID,
+      classInviteCode: classInvitationCode,
     });
     //Appends the class ID to the array of classes belonging to this teacher
     let ref = this.teachers.doc(teacherID);
     await ref.update({
       currentClassID,
-      classes: firebase.firestore.FieldValue.arrayUnion(ID),
+      classes: firebase.firestore.FieldValue.arrayUnion(currentClassID),
     });
     this.logEvent("ADD_NEW_CLASS");
-    return ID;
+    return currentClassID;
   }
 
   //This method will disasociate a class from a specific teacher. It will take in the class ID & the teacher ID and disconnect the
@@ -638,28 +638,35 @@ export default class FirebaseFunctions {
     evaluationID,
     newEvaluation
   ) {
-    let currentClass = await this.getClassByID(classID);
-    let arrayOfStudents = currentClass.students;
-    let studentIndex = arrayOfStudents.findIndex(student => {
-      return student.ID === studentID;
-    });
+    try {
+      let currentClass = await this.getClassByID(classID);
 
-    let copyOfEvaluationObjectIndex = arrayOfStudents[
-      studentIndex
-    ].assignmentHistory.findIndex(assignment => {
-      return assignment.ID === evaluationID;
-    });
+      let arrayOfStudents = currentClass.students;
+      let studentIndex = arrayOfStudents.findIndex(student => {
+        return student.ID === studentID;
+      });
 
-    arrayOfStudents[studentIndex].assignmentHistory[
-      copyOfEvaluationObjectIndex
-    ].evaluation = newEvaluation;
+      let copyOfEvaluationObjectIndex = arrayOfStudents[
+        studentIndex
+      ].assignmentHistory.findIndex(assignment => {
+        return assignment.ID === evaluationID;
+      });
 
-    await this.updateClassObject(classID, {
-      students: arrayOfStudents,
-    });
-    this.analytics.logEvent("OVERWRITE_PAST_EVALUATION", {
-      improvementAreas: newEvaluation.improvementAreas,
-    });
+      arrayOfStudents[studentIndex].assignmentHistory[
+        copyOfEvaluationObjectIndex
+      ].evaluation = newEvaluation;
+
+      await this.updateClassObject(classID, {
+        students: arrayOfStudents,
+      });
+      this.analytics.logEvent("OVERWRITE_PAST_EVALUATION", {
+        improvementAreas: newEvaluation.improvementAreas,
+      });
+    } catch (err) {
+      this.analytics.logEvent("OVERWRITE_PAST_EVALUATION_ERR", { err });
+      console.log("Error editing old evaluation. ", { err });
+      return -1;
+    }
 
     return 0;
   }
