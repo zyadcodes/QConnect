@@ -55,6 +55,7 @@ export class ClassMainScreen extends QcParentScreen {
       const { userID } = this.props.navigation.state.params;
       const teacher = await FirebaseFunctions.getTeacherByID(userID);
       const { currentClassID } = teacher;
+
       let {
         currentClass,
         showAssignmentSentNotification,
@@ -85,12 +86,16 @@ export class ClassMainScreen extends QcParentScreen {
         isLoading: false,
         showError: true,
         error:
-          "Error initializing teacher's main screen: " + JSON.stringify(error),
+          "Error initializing teacher's main screen: " + error.toString() ||
+          error
       });
-      console.log("ERROR_INITIALIZING_TEACHER_MAIN", JSON.stringify(error));
+      console.log(
+        "ERROR_INITIALIZING_TEACHER_MAIN",
+        +error.toString() || error
+      );
       FirebaseFunctions.logEvent("ERROR_INITIALIZING_TEACHER_MAIN", {
         error,
-        trace: error.trace || error,
+        trace: +error.toString() || error
       });
     }
   }
