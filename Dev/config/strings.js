@@ -286,7 +286,7 @@ export default {
   Credits: "Photo Credit",
   PrivacyPolicy: "Privacy Policy",
   LogOut: "Log Out",
-  Mushaf: "Mushaf",
+  Mushaf: "Holy Quran",
 
   //--------------------------- Credits -------------------------------------------
   FirstScreenImageCredits:

@@ -14,6 +14,20 @@ var iconSizeNotSelected = PixelRatio.get() < 2 ? 14 : 20;
 var fontSize = PixelRatio.get() < 2 ? 12 : 14;
 
 const routeConfig = {
+  OnlineMeetingTab: {
+    screen: OnlineMeetingScreen,
+    navigationOptions: {
+      tabBarLabel: strings.MeetOnline,
+      tabBarIcon: ({ tintColor, focused }) => (
+        <Icon
+          name="video"
+          size={focused ? iconSizeSelected : iconSizeNotSelected}
+          type="feather"
+          color={tintColor}
+        />
+      ),
+    },
+  },
   ClassStudentsTab: {
     screen: StudentMainScreen,
     navigationOptions: {
@@ -28,7 +42,7 @@ const routeConfig = {
       ),
     },
   },
-  AssignmentsTab: {
+  MushafTab: {
     screen: MushafReadingScreen,
     navigationOptions: ({ navigation }) => {
       return {
@@ -48,20 +62,6 @@ const routeConfig = {
       };
     },
   },
-  OnlineMeetingTab: {
-    screen: OnlineMeetingScreen,
-    navigationOptions: {
-      tabBarLabel: strings.MeetOnline,
-      tabBarIcon: ({ tintColor, focused }) => (
-        <Icon
-          name="video"
-          size={focused ? iconSizeSelected : iconSizeNotSelected}
-          type="feather"
-          color={tintColor}
-        />
-      ),
-    },
-  }
 };
 
 const navigatorConfig = {

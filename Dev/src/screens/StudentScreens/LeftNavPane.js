@@ -138,24 +138,6 @@ class LeftNavPane extends QcParentScreen {
             }
           />
 
-          <QcDrawerItem
-            title="Holy Quran"
-            image={classImages.images[2]}
-            onPress={() =>
-              this.props.navigation.push("MushafReadingScreen", {
-                isTeacher: false,
-                studentID: this.state.userID,
-                accountObject: this.state.student,
-                classID:
-                  this.state.classes && this.state.classes.length > 0
-                    ? this.state.classes[0].ID
-                    : undefined,
-                userID: this.state.userID,
-                imageID: studentImageId
-              })
-            }
-          />
-
           <FlatList
             data={classes}
             keyExtractor={(item, index) => item.name}
