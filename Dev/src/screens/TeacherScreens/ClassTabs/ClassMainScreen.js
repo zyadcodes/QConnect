@@ -28,6 +28,7 @@ import { screenHeight, screenWidth } from "config/dimensions";
 import Toast, { DURATION } from "react-native-easy-toast";
 import themeStyles from "config/themeStyles";
 import ErrorComponent from "components/ErrorComponent";
+import { ASSIGNMENT_DELETED, ASSGINMENT_SENT } from "utils/consts";
 
 export class ClassMainScreen extends QcParentScreen {
   state = {
@@ -60,6 +61,7 @@ export class ClassMainScreen extends QcParentScreen {
         currentClass,
         showAssignmentSentNotification,
         assignedToAllClass,
+        notificationType
       } = this.props.navigation.state.params;
 
       if (currentClass === undefined) {
@@ -79,7 +81,7 @@ export class ClassMainScreen extends QcParentScreen {
       });
 
       if (showAssignmentSentNotification) {
-        this.showToast(assignedToAllClass);
+        this.showToast(assignedToAllClass, notificationType);
       }
     } catch (error) {
       this.setState({
@@ -100,10 +102,13 @@ export class ClassMainScreen extends QcParentScreen {
     }
   }
 
-  showToast(assignedToAllClass) {
+  showToast(assignedToAllClass, notificationType) {
     let toastMsg = assignedToAllClass
       ? strings.ClassAssignmentSent
       : strings.AssignmentSent;
+    if (notificationType === ASSIGNMENT_DELETED) {
+      toastMsg = strings.AssignmentDeleted;
+    }
     this.refs.toast.show(toastMsg, DURATION.LENGTH_LONG);
   }
 
@@ -112,10 +117,11 @@ export class ClassMainScreen extends QcParentScreen {
     index,
     currentClass,
     showToast,
-    assignedToAllClass
+    assignedToAllClass,
+    notificationType
   ) {
     if (showToast === true) {
-      this.showToast(assignedToAllClass);
+      this.showToast(assignedToAllClass, notificationType);
     }
 
     //re-fetch data
