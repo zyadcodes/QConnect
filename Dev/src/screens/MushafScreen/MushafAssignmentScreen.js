@@ -691,7 +691,7 @@ class MushafAssignmentScreen extends Component {
       res.push(
         <ActionButton.Item
           buttonColor={colors.darkGreen}
-          title="Add another assignment"
+          title={strings.AddAnotherAssignment}
           key={"add_new"}
           onPress={() => {
             this.setState({ isLoading: true });
@@ -755,6 +755,31 @@ class MushafAssignmentScreen extends Component {
           <Icon
             name="clipboard-check-outline"
             type="material-community"
+            color="#fff"
+            style={styles.actionButtonIcon}
+          />
+        </ActionButton.Item>
+      );
+
+      // offer option to delete the current assignment
+      res.push(
+        <ActionButton.Item
+          buttonColor={colors.darkRed}
+          key={"remove_" + assignmentName}
+          title={strings.RemoveAssignment}
+          onPress={async () => {
+            this.setState({ isLoading: true });
+            await FirebaseFunctions.removeStudentAssignment(
+              classID,
+              studentID,
+              assignmentIndex
+            );
+            this.closeScreen(false);
+          }}
+        >
+          <Icon
+            name="page-remove"
+            type="foundation"
             color="#fff"
             style={styles.actionButtonIcon}
           />
