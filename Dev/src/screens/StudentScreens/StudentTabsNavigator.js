@@ -4,7 +4,7 @@ import { PixelRatio } from 'react-native';
 import colors from 'config/colors';
 import { Icon } from 'react-native-elements';
 import StudentMainScreen from './StudentMainScreen';
-import OnlineMeetingScreen from 'screens/OnlineMeetingScreen';
+import StudentOnlineMeetingScreen from 'screens/StudentOnlineMeetingScreen';
 import strings from 'config/strings';
 import MushafReadingScreen from 'screens/MushafScreen/MushafReadingScreen';
 import { screenHeight } from 'config/dimensions';
@@ -15,7 +15,7 @@ var fontSize = PixelRatio.get() < 2 ? 12 : 14;
 
 const routeConfig = {
   OnlineMeetingTab: {
-    screen: OnlineMeetingScreen,
+    screen: StudentOnlineMeetingScreen,
     navigationOptions: {
       tabBarLabel: strings.MeetOnline,
       tabBarIcon: ({ tintColor, focused }) => (

@@ -18,8 +18,7 @@ class OnlineMeetingScreen extends Component {
   }
 
   async initScreen() {
-    
-    const { userID, isStudent } = this.props.navigation.state.params;
+    const { userID, isStudent } = this.props;
     let currentClassID = "";
 
     if (isStudent === true) {
@@ -32,7 +31,7 @@ class OnlineMeetingScreen extends Component {
 
     const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
     const { name } = currentClass;
-    let { meetingLink } = currentClass.meetingLink;
+    let { meetingLink } = currentClass;
 
     if (meetingLink === undefined) {
       meetingLink = await getMeetingLink(name);

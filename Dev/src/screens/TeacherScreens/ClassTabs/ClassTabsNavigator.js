@@ -4,7 +4,7 @@ import { PixelRatio } from 'react-native';
 import colors from 'config/colors';
 import { Icon } from 'react-native-elements';
 import ClassMainScreen from './ClassMainScreen';
-import OnlineMeetingScreen from 'screens/OnlineMeetingScreen';
+import TeacherOnlineMeetingScreen from 'screens/TeacherOnlineMeetingScreen';
 import ClassAttendanceScreen from './ClassAttendanceScreen';
 import strings from '../../../../config/strings';
 import MushafAssignmentScreen from '../../MushafScreen/MushafAssignmentScreen';
@@ -64,7 +64,7 @@ const routeConfig = {
     },
   },
   OnlineMeetingTab: {
-    screen: OnlineMeetingScreen,
+    screen: TeacherOnlineMeetingScreen,
     navigationOptions: {
       tabBarLabel: strings.MeetOnline,
       tabBarIcon: ({ tintColor, focused }) => (
