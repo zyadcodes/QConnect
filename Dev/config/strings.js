@@ -296,4 +296,9 @@ export default {
   //---------------------------  Mushaf ---------------------------------------
   InvalidPageNumber:
     "Invalid page number. Please enter a page between 1 and 604.",
+  AddAnotherAssignment: "Add another assignment",
+  RemoveAssignment: "Remove this assignment",
+  AssignmentDeleted: "Assignment is deleted. The student is notified.",
+  AreYouSureYouWantToRemoveAssignment:
+    "Are you sure you want to remove this assignment?",
 };

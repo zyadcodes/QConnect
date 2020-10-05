@@ -381,7 +381,10 @@ export default class FirebaseFunctions {
       const download = await file.getDownloadURL();
       return download;
     } catch (error) {
-      this.logEvent("DOWNLOAD_AUDIO_FAILED", { audioFileID, error });
+      this.logEvent("DOWNLOAD_AUDIO_FAILED", {
+        audioFileID,
+        error: error.toString() || error,
+      });
       return -1;
     }
   }
@@ -422,6 +425,49 @@ export default class FirebaseFunctions {
       title: strings.AssignmentUpdate,
       body: strings.YourTeacherHasUpdatedYourCurrentAssignment,
     });
+    return 0;
+  }
+
+  static async removeStudentAssignment(classID, studentID, assignmentIndex) {
+    try {
+      let currentClass = await this.getClassByID(classID);
+      let arrayOfStudents = currentClass.students;
+      let studentIndex = arrayOfStudents.findIndex(student => {
+        return student.ID === studentID;
+      });
+
+      if (studentIndex > -1) {
+        arrayOfStudents[studentIndex].currentAssignments.splice(
+          assignmentIndex,
+          1
+        );
+
+        await this.updateClassObject(classID, {
+          students: arrayOfStudents,
+        });
+        this.logEvent("REMOVE_ASSIGNMENT_SUCCESS");
+
+        //Notifies that student that their assignment has been updated
+        this.functions.httpsCallable("sendNotification")({
+          topic: studentID,
+          title: strings.AssignmentUpdate,
+          body: strings.YourTeacherHasUpdatedYourCurrentAssignment,
+        });
+      } else {
+        console.log("Student not found: " + studentID);
+        this.logEvent("ERROR_REMOVE_ASSIGNMENT", {
+          error: "student not found",
+        });
+        return -1;
+      }
+    } catch (error) {
+      this.logEvent("ERROR_REMOVE_ASSIGNMENT", {
+        error: error.toString() || error,
+      });
+      console.log("ERROR_REMOVE_ASSIGNMENT: " + error.toString() || error);
+
+      return -1;
+    }
     return 0;
   }
 

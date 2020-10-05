@@ -16,7 +16,11 @@ import classImages from "config/classImages";
 import LoadingSpinner from "components/LoadingSpinner";
 import ActionButton from "react-native-action-button";
 import { Icon } from "react-native-elements";
-import { isNoSelection, noSelection } from 'screens/MushafScreen/Helpers/consts';
+import {
+  isNoSelection,
+  noSelection
+} from "screens/MushafScreen/Helpers/consts";
+import { ASSIGNMENT_DELETED, ASSGINMENT_SENT } from "utils/consts";
 
 //------- constants to indicate the case when there is no ayah selected
 
@@ -133,7 +137,7 @@ class MushafAssignmentScreen extends Component {
   //======== end of Initialize Component ========================
 
   //======== action methods to handle user interation actions ===
-  closeScreen(showNotifications) {
+  closeScreen(showNotifications, notificationType) {
     const {
       popOnClose,
       loadScreenOnClose,
@@ -170,7 +174,8 @@ class MushafAssignmentScreen extends Component {
           assignmentIndex,
           currentClass,
           showNotifications,
-          assignToAllClass
+          assignToAllClass,
+          notificationType
         );
       }
       this.props.navigation.pop();
@@ -183,7 +188,8 @@ class MushafAssignmentScreen extends Component {
         userID,
         currentClass,
         showAssignmentSentNotification: showNotifications,
-        assignedToAllClass: assignToAllClass //tell target screen whether updated assignment was for all class. (used for notification strings)
+        assignedToAllClass: assignToAllClass, //tell target screen whether updated assignment was for all class. (used for notification strings)
+        notificationType
       });
     }
   }
@@ -266,7 +272,7 @@ class MushafAssignmentScreen extends Component {
       name: newAssignmentName,
       type: assignmentType,
       location: assignmentLocation,
-      isReadyEnum: 'NOT_STARTED'
+      isReadyEnum: "NOT_STARTED",
     };
 
     //since there might be a latency before firebase returns the updated assignments,
@@ -298,7 +304,7 @@ class MushafAssignmentScreen extends Component {
       },
       () => {
         if (closeAfterSave) {
-          this.closeScreen(true); //true sends a param to next screen to show a toast notification that assignment is updated.
+          this.closeScreen(true, ASSIGNMENT_SENT); //true sends a param to next screen to show a toast notification that assignment is updated.
         }
       }
     );
@@ -360,7 +366,7 @@ class MushafAssignmentScreen extends Component {
       },
       () => {
         if (closeAfterSave) {
-          this.closeScreen(true); //true sends a param to next screen to show a toast notification that assignment is updated.
+          this.closeScreen(true, ASSGINMENT_SENT); //true sends a param to next screen to show a toast notification that assignment is updated.
         }
       }
     );
@@ -691,7 +697,7 @@ class MushafAssignmentScreen extends Component {
       res.push(
         <ActionButton.Item
           buttonColor={colors.darkGreen}
-          title="Add another assignment"
+          title={strings.AddAnotherAssignment}
           key={"add_new"}
           onPress={() => {
             this.setState({ isLoading: true });
@@ -755,6 +761,45 @@ class MushafAssignmentScreen extends Component {
           <Icon
             name="clipboard-check-outline"
             type="material-community"
+            color="#fff"
+            style={styles.actionButtonIcon}
+          />
+        </ActionButton.Item>
+      );
+
+      // offer option to delete the current assignment
+      res.push(
+        <ActionButton.Item
+          buttonColor={colors.darkRed}
+          key={"remove_" + assignmentName}
+          title={strings.RemoveAssignment}
+          onPress={async () => {
+            //todo: add confirmation modal dialog (are you sure...)
+            Alert.alert(
+              strings.RemoveAssignment,
+              strings.AreYouSureYouWantToRemoveAssignment,
+              [
+                {
+                  text: strings.Remove,
+                  onPress: async () => {
+                    this.setState({ isLoading: true });
+                    await FirebaseFunctions.removeStudentAssignment(
+                      classID,
+                      studentID,
+                      assignmentIndex
+                    );
+                    this.closeScreen(true, ASSIGNMENT_DELETED);
+                  },
+                },
+                { text: strings.Cancel, style: "cancel" },
+              ]
+            );
+            
+          }}
+        >
+          <Icon
+            name="page-remove"
+            type="foundation"
             color="#fff"
             style={styles.actionButtonIcon}
           />
