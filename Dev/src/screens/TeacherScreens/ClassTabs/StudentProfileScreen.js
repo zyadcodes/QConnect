@@ -221,7 +221,7 @@ class StudentProfileScreen extends QcParentScreen {
             rating: item.evaluation.rating,
             notes: item.evaluation.notes,
             improvementAreas: item.evaluation.improvementAreas,
-            userID: this.state.userID,
+            userID: this.props.navigation.state.params.userID,
             highlightedWords: item.evaluation.highlightedWords,
             highlightedAyahs: item.evaluation.highlightedAyahs,
             evaluationObject: item.evaluation,
