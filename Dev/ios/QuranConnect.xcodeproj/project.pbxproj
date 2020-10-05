@@ -1441,12 +1441,12 @@
 				CODE_SIGN_ENTITLEMENTS = QuranConnect/QuranConnect.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.1.37;
+				CURRENT_PROJECT_VERSION = 1.1.39;
 				DEVELOPMENT_TEAM = B65Y7865Z9;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = QuranConnect/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.1.37;
+				MARKETING_VERSION = 1.1.39;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1559,13 +1559,13 @@
 				CODE_SIGN_ENTITLEMENTS = QuranConnect/QuranConnect.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.1.37;
+				CURRENT_PROJECT_VERSION = 1.1.39;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = B65Y7865Z9;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = QuranConnect/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.1.37;
+				MARKETING_VERSION = 1.1.39;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1591,12 +1591,12 @@
 				CODE_SIGN_ENTITLEMENTS = QuranConnect/QuranConnect.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.1.37;
+				CURRENT_PROJECT_VERSION = 1.1.39;
 				DEVELOPMENT_TEAM = B65Y7865Z9;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = QuranConnect/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.1.37;
+				MARKETING_VERSION = 1.1.39;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
