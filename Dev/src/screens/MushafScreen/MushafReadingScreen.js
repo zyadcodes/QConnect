@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
+import { Avatar } from "react-native-elements";
 import { View } from "react-native";
 import MushafScreen from "./MushafScreen";
 import LoadingSpinner from "components/LoadingSpinner";
@@ -8,6 +8,7 @@ import Sound from "react-native-sound";
 import KeepAwake from "react-native-keep-awake";
 import { noSelection } from "screens/MushafScreen/Helpers/consts";
 import { toNumberString } from "../MushafScreen/Helpers/AyahsOrder";
+import colors from "config/colors";
 
 class MushafReadingScreen extends Component {
   state = {
@@ -45,7 +46,7 @@ class MushafReadingScreen extends Component {
     this.track = undefined;
   }
 
-  closeScreen() {    
+  closeScreen() {
     const { userID } = this.props.navigation.state.params;
 
     //todo: if we need to generalize this, then we can add a props: onClose, and the caller specifies the onClose behavior with
@@ -129,6 +130,10 @@ class MushafReadingScreen extends Component {
     });
   };
 
+  playSelectionAudio = () => {
+    
+  }
+
   render() {
     const {
       userID,
@@ -181,6 +186,22 @@ class MushafReadingScreen extends Component {
             onSelectAyah={this.onSelectAyah.bind(this)}
             disableChangingUser={true}
           />
+          <View
+            style={{
+              flexDirection: "row",
+              margin: 10,
+              justifyContent: "center",
+            }}
+          >
+            <Avatar
+              rounded
+              size="large"
+              overlayContainerStyle={{ backgroundColor: colors.white }}
+              icon={{ name: "play", color: colors.darkRed, type: "antdesign" }}
+              onPress={() => playSelectionAudio()}
+              containerStyle={{ justifyContent: "center" }}
+            />
+          </View>
         </View>
       );
     }
