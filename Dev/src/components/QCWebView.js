@@ -5,7 +5,7 @@ import { WebView } from "react-native-webview";
 export default class QCWebView extends Component {
   render() {
     const { uri } = this.props;
-    if (uri === undefined || uri.length === 0) {
+    if (!uri || uri.length === 0) {
       return <View />;
     }
     return (

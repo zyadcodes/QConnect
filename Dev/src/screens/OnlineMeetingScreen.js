@@ -32,10 +32,9 @@ class OnlineMeetingScreen extends Component {
     const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
     const { name } = currentClass;
     let { meetingLink } = currentClass;
-
-    if (meetingLink === undefined) {
+    if (!meetingLink || meetingLink.length === 0) {
+      
       meetingLink = await getMeetingLink(name);
-      console.log("Saving class meeting link: " + meetingLink);
       FirebaseFunctions.updateClassObject(currentClassID, {
         meetingLink
       });
@@ -46,6 +45,7 @@ class OnlineMeetingScreen extends Component {
 
   render() {
     const { meetingLink } = this.state;
+    
     return <QCWebView uri={meetingLink} />;
   }
 }

@@ -8,12 +8,12 @@ export async function getMeetingLink(meetingName) {
 
   try {
     const response = await fetch(
-      "http://api.join.skype.com/v1/meetnow/createjoinlinkguest",
+      "https://api.join.skype.com/v1/meetnow/createjoinlinkguest",
       request
     );
     const responseJson = await response.json();
     return responseJson.joinLink;
   } catch (error) {
-    console.log(`Error retrieving the meeting link: ${error}`);
+    console.log(`Error retrieving the meeting link: ${error.toString() || error}`);
   }
 }
