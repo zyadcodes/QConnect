@@ -257,6 +257,7 @@ export default {
   //--------------------- Class Tabs Navigator ---------------------
   Attendance: "Attendance",
   Class: "Class",
+  Grades: "Grades",
 
   //--------------------- Teacher Profile Navigator ---------------------
   MyProfile: "My Profile",

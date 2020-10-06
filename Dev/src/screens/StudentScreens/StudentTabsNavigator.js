@@ -4,6 +4,7 @@ import { PixelRatio } from 'react-native';
 import colors from 'config/colors';
 import { Icon } from 'react-native-elements';
 import StudentMainScreen from './StudentMainScreen';
+import StudentGradesScreen from './StudentGradesScreen';
 import StudentOnlineMeetingScreen from 'screens/StudentOnlineMeetingScreen';
 import strings from 'config/strings';
 import MushafReadingScreen from 'screens/MushafScreen/MushafReadingScreen';
@@ -35,6 +36,20 @@ const routeConfig = {
       tabBarIcon: ({ tintColor, focused }) => (
         <Icon
           name="feather"
+          size={focused ? iconSizeSelected : iconSizeNotSelected}
+          type="material-community"
+          color={tintColor}
+        />
+      ),
+    },
+  },
+  GradesTab: {
+    screen: StudentGradesScreen,
+    navigationOptions: {
+      tabBarLabel: strings.Grades,
+      tabBarIcon: ({ tintColor, focused }) => (
+        <Icon
+          name="clipboard-check-outline"
           size={focused ? iconSizeSelected : iconSizeNotSelected}
           type="material-community"
           color={tintColor}
