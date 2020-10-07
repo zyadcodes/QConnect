@@ -105,7 +105,7 @@ class LeftNavPane extends QcParentScreen {
     const { classCode } = this.state;
 
     return (
-      <ScrollView>
+      <ScrollView bounces={false}>
         <SafeAreaView forceInset={{ top: "always", horizontal: "never" }}>
           <View
             style={{

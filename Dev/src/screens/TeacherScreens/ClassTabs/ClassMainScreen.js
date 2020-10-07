@@ -652,7 +652,7 @@ export class ClassMainScreen extends QcParentScreen {
             positionValue={200}
             style={themeStyles.toastStyle}
           />
-          <ScrollView style={styles.container}>
+          <ScrollView bounces={false} style={styles.container}>
             <View>{this.renderTopBanner()}</View>
             {isEditing && this.showClassEditHeader()}
             {//render students who need help with their assignments

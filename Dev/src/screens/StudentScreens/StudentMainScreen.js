@@ -1144,7 +1144,7 @@ class StudentMainScreen extends QcParentScreen {
           positionValue={100}
           style={themeStyles.toastStyle}
         />
-        <ScrollView style={screenStyle.container}>
+        <ScrollView bounces={false} style={screenStyle.container}>
           {this.renderTopView()}
           {this.renderAssignmentsSectionHeader(
             strings.DailyPracticeLog,
