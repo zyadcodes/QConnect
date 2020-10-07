@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Linking, View, Text, Share, Image, Clipboard } from "react-native";
-import { screenWidth } from "config/dimensions";
+import { screenHeight, screenWidth } from "config/dimensions";
 import fontStyles from "config/fontStyles";
 import { Icon } from "react-native-elements";
 import colors from "config/colors";
@@ -36,8 +36,10 @@ export default class QCWebView extends Component {
         <Image
           style={{
             width: screenWidth * 0.7,
+            height: screenHeight * 0.25,
             resizeMode: "contain",
             resizeMethod: "scale",
+            marginVertical: 10,
           }}
           source={require("assets/images/online-meeting.png")}
         />
