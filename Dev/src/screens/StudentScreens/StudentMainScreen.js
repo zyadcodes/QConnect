@@ -836,7 +836,7 @@ class StudentMainScreen extends QcParentScreen {
               <Text style={fontStyles.mainTextStyleBlack}>
                 {item.type ? item.type : strings.Memorize}
               </Text>
-              <Text style={[fontStyles.bigTextStyleBlack]}>
+              <Text style={[fontStyles.mainTextStyleBlack]}>
                 {item.name ? item.name.toUpperCase() : "No Assignment Yet"}
               </Text>
             </View>

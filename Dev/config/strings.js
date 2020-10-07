@@ -138,6 +138,7 @@ export default {
     'Press the meeting link below and then press on "Join conversation" to join class online meeting room.',
   ShareMeetingLink: "Share class online meeting link",
   MeetingLinkSharingMsg: "Please use this link to join the class meeting: ",
+  MeetingLinkCopiedToClipboard: "The meeting link is copied to the clipboard.",
   AddText:
     "It's hard to call a class without a name. Please enter a valid class name",
 

@@ -1,10 +1,13 @@
 import React, { Component } from "react";
-import { Linking, View, Text, Share } from "react-native";
-import { WebView } from "react-native-webview";
+import { Linking, View, Text, Share, Image, Clipboard } from "react-native";
+import { screenWidth } from "config/dimensions";
 import fontStyles from "config/fontStyles";
 import { Icon } from "react-native-elements";
 import colors from "config/colors";
 import strings from "config/strings";
+import Toast, { DURATION } from 'react-native-easy-toast';
+import themeStyles from "config/themeStyles";
+
 
 export default class QCWebView extends Component {
   render() {
@@ -14,7 +17,7 @@ export default class QCWebView extends Component {
     }
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={fontStyles.bigTextStyleDarkGrey}>
+        <Text style={[fontStyles.bigTextStyleDarkGrey, { marginBottom: 15 }]}>
           {strings.MeetingLink}
         </Text>
         <Text
@@ -30,16 +33,29 @@ export default class QCWebView extends Component {
         >
           {strings.MeetingLinkDesc}
         </Text>
+        <Image
+          style={{
+            width: screenWidth * 0.7,
+            resizeMode: "contain",
+            resizeMethod: "scale",
+          }}
+          source={require("assets/images/online-meeting.png")}
+        />
         <Text
-          style={[fontStyles.mainTextStylePrimaryDark, { padding: 10 }]}
+          style={[fontStyles.mainTextStylePrimaryDark, { padding: 5 }]}
           onPress={() => Linking.openURL(uri)}
         >
           {uri}
         </Text>
+        <Toast
+          position={"center"}
+          ref="toast"
+          style={themeStyles.toastStyle}
+        />
         <View
           style={{
             flexDirection: "row",
-            marginTop: 20,
+            marginTop: 5,
             alignItems: "center",
             justifyContent: "center",
           }}
@@ -57,6 +73,21 @@ export default class QCWebView extends Component {
                 message: strings.MeetingLinkSharingMsg + uri,
               })
             }
+          />
+
+          <Icon
+            name="content-copy"
+            size={18}
+            raised
+            type="material-community"
+            color={colors.primaryDark}
+            onPress={() => {
+              Clipboard.setString(uri);
+              this.refs.toast.show(
+                strings.MeetingLinkCopiedToClipboard,
+                DURATION.LENGTH_SHORT
+              );
+              }}
           />
         </View>
       </View>

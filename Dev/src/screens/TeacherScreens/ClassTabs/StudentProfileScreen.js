@@ -689,7 +689,7 @@ class StudentProfileScreen extends QcParentScreen {
                     </Text>
                   </View>
                   <Text
-                    style={[fontStyles.bigTextStyleBlack, { paddingTop: 5 }]}
+                    style={[fontStyles.mainTextStyleBlack, { paddingTop: 5 }]}
                   >
                     {item.name.toUpperCase()}
                   </Text>
