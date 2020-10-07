@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
-  Modal,
   Alert,
   Animated,
   TouchableHighlight,
@@ -19,7 +18,6 @@ import {
 import { NavigationEvents } from "react-navigation";
 import { Icon, Avatar, Overlay } from "react-native-elements";
 import studentImages from "config/studentImages";
-import { Rating } from "react-native-elements";
 import colors from "config/colors";
 import strings from "config/strings";
 import TopBanner from "components/TopBanner";
@@ -33,8 +31,6 @@ import fontStyles from "config/fontStyles";
 import { screenHeight, screenWidth } from "config/dimensions";
 import AudioPlayer from "components/AudioPlayer/AudioPlayer";
 import Toast, { DURATION } from "react-native-easy-toast";
-import { LineChart } from "react-native-chart-kit";
-import CodeInput from "react-native-confirmation-code-input";
 import DailyTracker, { getTodaysDateString } from "components/DailyTracker";
 import themeStyles from "config/themeStyles";
 import TouchableText from "components/TouchableText";
