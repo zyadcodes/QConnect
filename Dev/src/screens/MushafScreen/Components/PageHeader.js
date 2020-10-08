@@ -90,9 +90,7 @@ class PageHeader extends FontLoadingComponent {
       RightOnPress,
       onSelect,
       disableChangingUser
-    };
-    console.log("!!! " + JSON.stringify(ab));
-    
+    };    
 
     const { leftImage, assignToID } = this.state;
     return (
