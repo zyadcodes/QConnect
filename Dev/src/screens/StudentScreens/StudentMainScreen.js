@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
-  Modal,
   Alert,
   Animated,
   TouchableHighlight,
@@ -19,7 +18,6 @@ import {
 import { NavigationEvents } from "react-navigation";
 import { Icon, Avatar, Overlay } from "react-native-elements";
 import studentImages from "config/studentImages";
-import { Rating } from "react-native-elements";
 import colors from "config/colors";
 import strings from "config/strings";
 import TopBanner from "components/TopBanner";
@@ -33,8 +31,6 @@ import fontStyles from "config/fontStyles";
 import { screenHeight, screenWidth } from "config/dimensions";
 import AudioPlayer from "components/AudioPlayer/AudioPlayer";
 import Toast, { DURATION } from "react-native-easy-toast";
-import { LineChart } from "react-native-chart-kit";
-import CodeInput from "react-native-confirmation-code-input";
 import DailyTracker, { getTodaysDateString } from "components/DailyTracker";
 import themeStyles from "config/themeStyles";
 import TouchableText from "components/TouchableText";
@@ -264,22 +260,6 @@ class StudentMainScreen extends QcParentScreen {
     }
   }
 
-  //Returns the correct caption based on the student's average grade
-  getRatingCaption() {
-    let caption = strings.GetStarted;
-    let { averageRating } = this.state.studentClassInfo;
-
-    if (averageRating > 4) {
-      caption = strings.OutStanding;
-    } else if (averageRating >= 3) {
-      caption = strings.GreatJob;
-    } else if (averageRating > 0) {
-      caption = strings.PracticePerfect;
-    }
-
-    return caption;
-  }
-
   //---------- Helper methods to render parts of the screen, or certain cases ------------
   //Renders the screen when student didn't join any class
   renderEmptyState() {
@@ -373,358 +353,18 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 
-  //renders a past assignment info card
-  renderHistoryItem(item, index, studentClassInfo) {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          //To-Do: Navigates to more specific evaluation for this assignment
-          this.props.navigation.push("EvaluationPage", {
-            classID: this.state.currentClassID,
-            studentID: this.state.userID,
-            studentClassInfo: studentClassInfo,
-            classStudent: studentClassInfo,
-            assignment: item,
-            completionDate: item.completionDate,
-            assignmentLocation: item.location,
-            rating: item.evaluation.rating,
-            notes: item.evaluation.notes,
-            improvementAreas: item.evaluation.improvementAreas,
-            submission: item.submission,
-            userID: this.state.userID,
-            highlightedWords: item.evaluation.highlightedWords,
-            highlightedAyahs: item.evaluation.highlightedAyahs,
-            isStudentSide: true,
-            evaluationID: item.ID,
-            readOnly: true,
-            newAssignment: false,
-            assignmentName: item.name,
-          });
-        }}
-      >
-        <View style={styles.prevAssignmentCard} key={index}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center"
-            }}
-          >
-            <View
-              style={{
-                flex: 3,
-                justifyContent: "center",
-                alignItems: "flex-start"
-              }}
-            >
-              <Text style={fontStyles.mainTextStylePrimaryDark}>
-                {item.completionDate}
-              </Text>
-            </View>
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                flex: 3,
-              }}
-            >
-              <Text
-                numberOfLines={1}
-                style={[
-                  fontStyles.mainTextStyleBlack,
-                  {
-                    color:
-                      item.assignmentType === strings.Reading ||
-                      item.assignmentType === strings.Read
-                        ? colors.grey
-                        : item.assignmentType === strings.Memorization ||
-                          item.assignmentType === strings.Memorize ||
-                          item.assignmentType == null
-                        ? colors.darkGreen
-                        : colors.darkishGrey,
-                  },
-                ]}
-              >
-                {item.assignmentType ? item.assignmentType : strings.Memorize}
-              </Text>
-            </View>
-            <View
-              style={{
-                flex: 3,
-                justifyContent: "center",
-                alignItems: "flex-end"
-              }}
-            >
-              <Rating
-                readonly={true}
-                startingValue={item.evaluation.rating}
-                imageSize={17}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center"
-            }}
-          >
-            <Text numberOfLines={1} style={fontStyles.bigTextStyleBlack}>
-              {item.name}
-            </Text>
-          </View>
-          {item.evaluation.notes ? (
-            <Text numberOfLines={2} style={fontStyles.smallTextStyleDarkGrey}>
-              {"Notes: " + item.evaluation.notes}
-            </Text>
-          ) : (
-            <View />
-          )}
-          {item.evaluation.improvementAreas &&
-          item.evaluation.improvementAreas.length > 0 ? (
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                height: screenHeight * 0.03,
-              }}
-            >
-              <Text
-                style={[
-                  fontStyles.smallTextStyleDarkGrey,
-                  { textVerticalAlign: "center", paddingTop: 5 },
-                ]}
-              >
-                {strings.ImprovementAreas}
-              </Text>
-              {item.evaluation.improvementAreas.map((tag, cnt) => {
-                return (
-                  <View
-                    style={[
-                      styles.corner,
-                      {
-                        flexDirection: "row",
-                        backgroundColor: colors.primaryVeryLight,
-                      },
-                    ]}
-                  >
-                    <Icon
-                      name="tag"
-                      size={10}
-                      containerStyle={{ paddingRight: 5 }}
-                      style={{ paddingRight: 3 }}
-                      type="simple-line-icon"
-                      color={colors.darkGrey}
-                    />
-
-                    <Text
-                      key={tag}
-                      style={[
-                        fontStyles.smallTextStyleDarkGrey,
-                        { textAlign: "center" },
-                      ]}
-                    >
-                      {tag}
-                    </Text>
-                  </View>
-                );
-              })}
-            </View>
-          ) : (
-            <View />
-          )}
-          {item.submission ? (
-            <View style={{ justifyContent: "flex-end", flexDirection: "row" }}>
-              <Icon
-                name="microphone"
-                type="material-community"
-                color={colors.darkRed}
-              />
-            </View>
-          ) : (
-            <View />
-          )}
-        </View>
-      </TouchableOpacity>
-    );
-  }
-
-  renderTopBanner(className) {
-    return (
-      <TopBanner
-        LeftIconName="navicon"
-        LeftOnPress={() => this.setState({ isOpen: true })}
-        Title={className}
-      />
-    );
-  }
-
   renderTopView() {
     const {
-      student,
-      studentClassInfo,
       currentClass,
-      classesAttended,
-      classesMissed,
     } = this.state;
 
     return (
       <View style={styles.topView}>
-        {this.renderTopBanner(currentClass.name)}
-        <View style={styles.profileInfo}>
-          <View style={styles.profileInfoTop}>
-            <Image
-              style={styles.profilePic}
-              source={studentImages.images[student.profileImageID]}
-            />
-            <View style={styles.profileInfoTopRight}>
-              <Text numberOfLines={1} style={fontStyles.mainTextStyleBlack}>
-                {student.name.toUpperCase()}
-              </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  height: screenHeight * 0.04,
-                }}
-              >
-                <Rating
-                  readonly={true}
-                  startingValue={studentClassInfo.averageRating}
-                  imageSize={25}
-                />
-                <View
-                  style={{
-                    flexDirection: "column",
-                    justifyContent: "center"
-                  }}
-                >
-                  <Text style={fontStyles.bigTextStyleDarkGrey}>
-                    {studentClassInfo.averageRating === 0
-                      ? ""
-                      : parseFloat(studentClassInfo.averageRating).toFixed(1)}
-                  </Text>
-                </View>
-              </View>
-              <Text style={fontStyles.mainTextStylePrimaryDark}>
-                {this.getRatingCaption()}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.profileInfoBottom}>
-            <View
-              style={{
-                paddingTop: 10,
-                flexDirection: "row",
-                justifyContent: "flex-start"
-              }}
-            >
-              <Text
-                style={[
-                  fontStyles.mainTextStyleDarkGrey,
-                  { paddingLeft: 5, paddingRight: 10 },
-                ]}
-              >
-                {strings.Attendance}:
-              </Text>
-
-              <View style={styles.classesAttended}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "flex-start"
-                  }}
-                >
-                  <Icon
-                    name="account-check-outline"
-                    type="material-community"
-                    color={colors.darkGreen}
-                    size={20}
-                  />
-                  <Text
-                    style={[
-                      fontStyles.mainTextStyleDarkGreen,
-                      { paddingLeft: 5, paddingRight: 10 },
-                    ]}
-                  >
-                    {strings.Attended}
-                  </Text>
-                  <Text style={[fontStyles.mainTextStyleDarkGreen]}>
-                    {classesAttended}
-                  </Text>
-                </View>
-              </View>
-              <View style={{ width: 20 }} />
-              <View style={styles.classesMissed}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "flex-start"
-                  }}
-                >
-                  <Icon
-                    name="account-remove-outline"
-                    type="material-community"
-                    color={colors.darkRed}
-                    size={20}
-                  />
-                  <Text
-                    style={[
-                      fontStyles.mainTextStyleDarkRed,
-                      { paddingLeft: 5, paddingRight: 10 },
-                    ]}
-                  >
-                    {strings.Missed}
-                  </Text>
-                  <Text style={[fontStyles.mainTextStyleDarkRed]}>
-                    {classesMissed}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        </View>
-      </View>
-    );
-  }
-
-  getCustomPickerOptionTemplate(settings) {
-    const { item, getLabel } = settings;
-    return (
-      <View style={styles.optionContainer}>
-        <View style={styles.innerContainer}>
-          <View style={[styles.box, { backgroundColor: item.color }]} />
-          <Text style={fontStyles.bigTextStyleBlack}>{getLabel(item)}</Text>
-        </View>
-      </View>
-    );
-  }
-
-  getCustomPickerTemplate(item) {
-    return (
-      <View
-        style={{
-          flexDirection: "row",
-          paddingLeft: screenWidth * 0.02,
-          justifyContent: "space-between"
-        }}
-      >
-        <Text style={fontStyles.mainTextStylePrimaryDark}>
-          {item.isReadyEnum === "READY" && strings.Ready}
-          {item.isReadyEnum === "WORKING_ON_IT" && strings.WorkingOnIt}
-          {item.isReadyEnum === "NOT_STARTED" && strings.NotStarted}
-          {item.isReadyEnum === "NEED_HELP" && strings.NeedHelp}
-        </Text>
-        <View
-          style={{
-            flexDirection: "row",
-            paddingRight: screenWidth * 0.02,
-            justifyContent: "space-between"
-          }}
-        >
-          <Text style={fontStyles.mainTextStylePrimaryDark}>
-            {strings.ChangeStatus}
-          </Text>
-        </View>
+        <TopBanner
+        LeftIconName="navicon"
+        LeftOnPress={() => this.setState({ isOpen: true })}
+        Title={currentClass.name}
+      />
       </View>
     );
   }
@@ -879,8 +519,15 @@ class StudentMainScreen extends QcParentScreen {
             }}
             onSend={(recordedFileUri, localPath) => {
               let sent = this.getFormattedDateTimeString(new Date());
-              this.setState({ audioFilePath: localPath, sent });
-
+              let { submittedRecordings } = this.state;
+              if(submittedRecordings &&
+                submittedRecordings.length > 0 &&
+                submittedRecordings[assignmentIndex]){
+                  
+                submittedRecordings[assignmentIndex]  = recordedFileUri;
+                this.setState({ submittedRecordings, recordingChanged: !this.state.recordingChanged });
+              }
+              
               FirebaseFunctions.submitRecordingAudio(
                 recordedFileUri,
                 userID,
@@ -1189,7 +836,7 @@ class StudentMainScreen extends QcParentScreen {
               <Text style={fontStyles.mainTextStyleBlack}>
                 {item.type ? item.type : strings.Memorize}
               </Text>
-              <Text style={[fontStyles.bigTextStyleBlack]}>
+              <Text style={[fontStyles.mainTextStyleBlack]}>
                 {item.name ? item.name.toUpperCase() : "No Assignment Yet"}
               </Text>
             </View>
@@ -1400,76 +1047,6 @@ class StudentMainScreen extends QcParentScreen {
     );
   }
 
-  renderStudentProgressChart() {
-    const { wordsPerAssignmentData } = this.state;
-    let sum = 0;
-    return (
-      <View>
-        {wordsPerAssignmentData.length > 0 && (
-          <View style={{ justifyContent: "center", alignItems: "center" }}>
-            <Text style={fontStyles.bigTextStyleBlack}>
-              {strings.WordsPerAssignment}
-            </Text>
-            <View style={{ height: screenHeight * 0.0075 }} />
-            <LineChart
-              data={{
-                labels:
-                  wordsPerAssignmentData.length > 1
-                    ? [
-                        wordsPerAssignmentData[0].completionDate.substring(
-                          0,
-                          wordsPerAssignmentData[0].completionDate.lastIndexOf(
-                            "/"
-                          )
-                        ),
-                        wordsPerAssignmentData[
-                          wordsPerAssignmentData.length - 1
-                        ].completionDate.substring(
-                          0,
-                          wordsPerAssignmentData[
-                            wordsPerAssignmentData.length - 1
-                          ].completionDate.lastIndexOf("/")
-                        ),
-                      ]
-                    : [
-                        wordsPerAssignmentData[0].completionDate.substring(
-                          0,
-                          wordsPerAssignmentData[0].completionDate.lastIndexOf(
-                            "/"
-                          )
-                        ),
-                      ],
-                datasets: [
-                  {
-                    data: wordsPerAssignmentData.map(data => {
-                      sum += data.assignmentLength;
-                      return sum;
-                    }),
-                  },
-                ],
-              }}
-              fromZero={true}
-              withInnerLines={false}
-              chartConfig={{
-                backgroundColor: colors.primaryDark,
-                backgroundGradientFrom: colors.lightGrey,
-                backgroundGradientTo: colors.primaryDark,
-                decimalPlaces: 0,
-                color: (opacity = 1) => colors.primaryDark,
-                labelColor: (opacity = 1) => colors.black,
-                style: {
-                  borderRadius: 16,
-                },
-              }}
-              width={screenWidth}
-              height={170}
-            />
-          </View>
-        )}
-      </View>
-    );
-  }
-
   onDatePressed(date, untoggleAction) {
     let dailyPracticeLog = this.state.dailyPracticeLog;
 
@@ -1567,7 +1144,7 @@ class StudentMainScreen extends QcParentScreen {
           positionValue={100}
           style={themeStyles.toastStyle}
         />
-        <ScrollView style={screenStyle.container}>
+        <ScrollView bounces={false} style={screenStyle.container}>
           {this.renderTopView()}
           {this.renderAssignmentsSectionHeader(
             strings.DailyPracticeLog,
@@ -1583,24 +1160,6 @@ class StudentMainScreen extends QcParentScreen {
           studentClassInfo.currentAssignments.length !== 0
             ? this.renderCurrentAssignmentCards()
             : this.renderEmptyAssignmentCard()}
-          <View>
-            <ScrollView>
-              {this.renderStudentProgressChart()}
-              {assignmentHistory &&
-                assignmentHistory.length > 0 &&
-                this.renderAssignmentsSectionHeader(
-                  strings.PastAssignments,
-                  "history"
-                )}
-              <FlatList
-                data={assignmentHistory}
-                keyExtractor={(item, index) => item.name + index}
-                renderItem={({ item, index }) => {
-                  return this.renderHistoryItem(item, index, studentClassInfo);
-                }}
-              />
-            </ScrollView>
-          </View>
         </ScrollView>
       </SideMenu>
     );

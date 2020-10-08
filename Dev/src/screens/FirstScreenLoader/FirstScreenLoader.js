@@ -37,11 +37,13 @@ class FirstScreenLoader extends Component {
           if (student !== -1) {
             this.props.navigation.push("StudentCurrentClass", {
               userID: user.uid,
+              isStudent: true
             });
             return;
           }
           this.props.navigation.push("TeacherCurrentClass", {
             userID: user.uid,
+            isTeacher: true
           });
           return;
         }

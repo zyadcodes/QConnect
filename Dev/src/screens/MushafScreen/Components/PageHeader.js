@@ -79,6 +79,19 @@ class PageHeader extends FontLoadingComponent {
       disableChangingUser
     } = this.props;
 
+    let ab =  {
+      LeftTextName,
+      LeftOnPress,
+      Title,
+      TitleOnPress,
+      currentClass,
+      RightIconName,
+      RightTextName,
+      RightOnPress,
+      onSelect,
+      disableChangingUser
+    };    
+
     const { leftImage, assignToID } = this.state;
     return (
       <View style={styles.entireTopView}>

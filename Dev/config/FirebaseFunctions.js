@@ -220,13 +220,13 @@ export default class FirebaseFunctions {
     //Creates a class Invite code and updates it as well as making sure the document has a reference to its own ID
     const classInvitationCode = currentClassID.substring(0, 5);
     await this.updateClassObject(newClass.id, {
-      currentClassID,
+      ID: currentClassID,
       classInviteCode: classInvitationCode,
     });
     //Appends the class ID to the array of classes belonging to this teacher
     let ref = this.teachers.doc(teacherID);
     await ref.update({
-      currentClassID,
+      ID: currentClassID,
       classes: firebase.firestore.FieldValue.arrayUnion(currentClassID),
     });
     this.logEvent("ADD_NEW_CLASS");

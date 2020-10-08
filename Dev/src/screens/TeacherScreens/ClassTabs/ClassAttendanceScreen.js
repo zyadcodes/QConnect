@@ -1,5 +1,5 @@
-import React from 'react';
-import _ from 'lodash';
+import React from "react";
+import _ from "lodash";
 import {
   ScrollView,
   StyleSheet,
@@ -8,44 +8,44 @@ import {
   Text,
   Dimensions,
   Alert,
-} from 'react-native';
-import Toast, { DURATION } from 'react-native-easy-toast';
-import StudentCard from 'components/StudentCard';
-import QcActionButton from 'components/QcActionButton';
-import colors from 'config/colors';
-import studentImages from 'config/studentImages';
-import strings from 'config/strings';
-import QcParentScreen from 'screens/QcParentScreen';
-import FirebaseFunctions from 'config/FirebaseFunctions';
-import LoadingSpinner from 'components/LoadingSpinner';
-import LeftNavPane from '../LeftNavPane';
-import TopBanner from 'components/TopBanner';
-import SideMenu from 'react-native-side-menu';
-import QCView from 'components/QCView';
-import screenStyle from 'config/screenStyle';
-import { screenHeight, screenWidth } from 'config/dimensions';
-import fontStyles from 'config/fontStyles';
-import DailyTracker from 'components/DailyTracker';
-import moment from 'moment';
-import { Icon } from 'react-native-elements';
+} from "react-native";
+import Toast, { DURATION } from "react-native-easy-toast";
+import StudentCard from "components/StudentCard";
+import QcActionButton from "components/QcActionButton";
+import colors from "config/colors";
+import studentImages from "config/studentImages";
+import strings from "config/strings";
+import QcParentScreen from "screens/QcParentScreen";
+import FirebaseFunctions from "config/FirebaseFunctions";
+import LoadingSpinner from "components/LoadingSpinner";
+import LeftNavPane from "../LeftNavPane";
+import TopBanner from "components/TopBanner";
+import SideMenu from "react-native-side-menu";
+import QCView from "components/QCView";
+import screenStyle from "config/screenStyle";
+import { screenHeight, screenWidth } from "config/dimensions";
+import fontStyles from "config/fontStyles";
+import DailyTracker from "components/DailyTracker";
+import moment from "moment";
+import { Icon } from "react-native-elements";
 
 export class ClassAttendanceScreen extends QcParentScreen {
   state = {
     isLoading: true,
-    currentClass: '',
-    currentClassID: '',
-    students: '',
-    userID: '',
-    teacher: '',
+    currentClass: "",
+    currentClassID: "",
+    students: "",
+    userID: "",
+    teacher: "",
     absentStudents: [],
-    selectedDate: new Date().toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
+    selectedDate: new Date().toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
     }),
-    classes: '',
+    classes: "",
     isOpen: false,
-    classInviteCode: '',
+    classInviteCode: "",
     attendanceHistory: {},
     //passed in as a key to the calendar view
     // incremented when attendance record is saved to force
@@ -57,8 +57,8 @@ export class ClassAttendanceScreen extends QcParentScreen {
   //Sets the screen name for firebase analytics and gets the initial students
   async componentDidMount() {
     FirebaseFunctions.setCurrentScreen(
-      'Class Attendance Screen',
-      'ClassAttendanceScreen'
+      "Class Attendance Screen",
+      "ClassAttendanceScreen"
     );
 
     const { userID } = this.props.navigation.state.params;
@@ -111,7 +111,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
         let isPresent = entry[1];
 
         //format string in the format expected by the date picker
-        let dateString = moment(date).format('YYYY-MM-DD');
+        let dateString = moment(date).format("YYYY-MM-DD");
 
         //build the sub-object path
         let path = dateString;
@@ -169,7 +169,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
       .map(student => student.ID);
 
     //format string in the format expected by the date picker
-    let dateString = moment(date).format('YYYY-MM-DD');
+    let dateString = moment(date).format("YYYY-MM-DD");
     let path = dateString;
     path += ".absent";
     _.update(updatedHistory, path, function(n) {
@@ -251,7 +251,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
               profileImageID={currentClass.classImageID}
               RightIconName="edit"
               RightOnPress={() =>
-                this.props.navigation.push('ShareClassCode', {
+                this.props.navigation.push("ShareClassCode", {
                   classInviteCode,
                   currentClassID,
                   userID: this.state.userID,
@@ -263,9 +263,9 @@ export class ClassAttendanceScreen extends QcParentScreen {
           <View
             style={{
               flex: 2,
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-              alignSelf: 'center'
+              justifyContent: "flex-start",
+              alignItems: "center",
+              alignSelf: "center",
             }}
           >
             <Text style={fontStyles.hugeTextStylePrimaryDark}>
@@ -273,18 +273,18 @@ export class ClassAttendanceScreen extends QcParentScreen {
             </Text>
 
             <Image
-              source={require('assets/emptyStateIdeas/welcome-girl.png')}
+              source={require("assets/emptyStateIdeas/welcome-girl.png")}
               style={{
                 width: 0.73 * screenWidth,
                 height: 0.22 * screenHeight,
-                resizeMode: 'contain'
+                resizeMode: "contain",
               }}
             />
 
             <QcActionButton
               text={strings.AddStudentButton}
               onPress={() =>
-                this.props.navigation.push('ShareClassCode', {
+                this.props.navigation.push("ShareClassCode", {
                   classInviteCode,
                   currentClassID,
                   userID: this.state.userID,
@@ -302,7 +302,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
     if (this.state.isLoading === true) {
       return (
         <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
           <LoadingSpinner isVisible={true} />
         </View>
@@ -310,11 +310,15 @@ export class ClassAttendanceScreen extends QcParentScreen {
     }
 
     //If the class doesn't currently have students
-    if (this.state.currentClass.students.length === 0) {
+    if (
+      !this.state.currentClass ||
+      !this.state.currentClass.students ||
+      this.state.currentClass.students.length === 0
+    ) {
       return this.renderEmptyClass();
     }
 
-    let dateString = moment(this.state.selectedDate).format('YYYY-MM-DD');
+    let dateString = moment(this.state.selectedDate).format("YYYY-MM-DD");
     let absentCnt = this.state.absentStudents
       ? this.state.absentStudents.length
       : 0;
@@ -349,11 +353,11 @@ export class ClassAttendanceScreen extends QcParentScreen {
             </View>
             <View
               style={styles.saveAttendance}
-              key={'' + this.state.calendarRefreshCnt}
+              key={"" + this.state.calendarRefreshCnt}
             >
               <DailyTracker
                 data={{
-                  [dateString]: { type: 'attendance' },
+                  [dateString]: { type: "attendance" },
                   ...this.state.attendanceHistory,
                 }}
                 selectedDate={dateString}
@@ -391,8 +395,8 @@ export class ClassAttendanceScreen extends QcParentScreen {
               <View
                 style={{
                   paddingTop: 10,
-                  flexDirection: 'row',
-                  justifyContent: 'flex-start'
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
                 }}
               >
                 <Text
@@ -407,8 +411,8 @@ export class ClassAttendanceScreen extends QcParentScreen {
                 <View style={styles.present}>
                   <View
                     style={{
-                      flexDirection: 'row',
-                      justifyContent: 'flex-start'
+                      flexDirection: "row",
+                      justifyContent: "flex-start",
                     }}
                   >
                     <Icon
@@ -434,8 +438,8 @@ export class ClassAttendanceScreen extends QcParentScreen {
                 <View style={styles.absent}>
                   <View
                     style={{
-                      flexDirection: 'row',
-                      justifyContent: 'flex-start'
+                      flexDirection: "row",
+                      justifyContent: "flex-start",
                     }}
                   >
                     <Icon
@@ -480,7 +484,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
                 />
               );
             })}
-            <Toast position={'center'} ref="toast" />
+            <Toast position={"center"} ref="toast" />
           </ScrollView>
         </QCView>
       </SideMenu>
@@ -491,12 +495,12 @@ export class ClassAttendanceScreen extends QcParentScreen {
 //Styles for the entire container along with the top banner
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'column',
+    flexDirection: "column",
     backgroundColor: colors.lightGrey,
     flex: 1,
   },
   saveAttendance: {
-    alignItems: 'center',
+    alignItems: "center",
     backgroundColor: colors.lightGrey,
     flex: 1,
     width: screenWidth,

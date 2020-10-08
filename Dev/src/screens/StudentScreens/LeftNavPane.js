@@ -105,7 +105,7 @@ class LeftNavPane extends QcParentScreen {
     const { classCode } = this.state;
 
     return (
-      <ScrollView>
+      <ScrollView bounces={false}>
         <SafeAreaView forceInset={{ top: "always", horizontal: "never" }}>
           <View
             style={{
@@ -134,24 +134,6 @@ class LeftNavPane extends QcParentScreen {
                 accountObject: this.state.student,
                 classes: this.state.classes,
                 userID: this.state.userID
-              })
-            }
-          />
-
-          <QcDrawerItem
-            title="Holy Quran"
-            image={classImages.images[2]}
-            onPress={() =>
-              this.props.navigation.push("MushafReadingScreen", {
-                isTeacher: false,
-                studentID: this.state.userID,
-                accountObject: this.state.student,
-                classID:
-                  this.state.classes && this.state.classes.length > 0
-                    ? this.state.classes[0].ID
-                    : undefined,
-                userID: this.state.userID,
-                imageID: studentImageId
               })
             }
           />

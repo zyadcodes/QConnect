@@ -15,6 +15,8 @@ const QCViewHOC = (Comp) => {
             <KeyboardAwareScrollView
                 resetScrollToCoords={{ x: 0, y: 0 }}
                 scrollEnabled={true}
+                bounces={false} 
+                alwaysBounceVertical={false} 
                 contentContainerStyle={screenStyle.container}
                 extraScrollHeight={screenHeight * 0.007}
                 showsVerticalScrollIndicator={false}

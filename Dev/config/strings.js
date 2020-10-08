@@ -25,11 +25,14 @@ export default {
   SomethingWentWrongDesc:
     "Please try again. If the problem persists, please report it to quranconnect@outlook.com",
   Retry: "Check again",
-  SendBugToSupport: "To get help on this issue, please send the error info the support team at: quranconnect@outlook.com",
+  SendBugToSupport:
+    "To get help on this issue, please send the error info the support team at: quranconnect@outlook.com",
   BugReport: "QuranConnect: Bug report",
   InfoSentTitle: "Thanks for your feedback",
-  InfoSentToSupport: "The support team has received the error info and is working to resolve it as soon as possible",
-  WeAreWorkingOnIt: "Please try again.\nIf the problem persists, please contact us.",
+  InfoSentToSupport:
+    "The support team has received the error info and is working to resolve it as soon as possible",
+  WeAreWorkingOnIt:
+    "Please try again.\nIf the problem persists, please contact us.",
   RecordingSent: "Congrats! Your recording is sent to the teacher.",
   //--------------------- Student Main Screen ---------------------
   TotalAssignments: "Total assignments completed",
@@ -129,6 +132,13 @@ export default {
   EmptyClass: "Let's add your students",
   AddStudentButton: "Click here to add a student",
   AddClassButton: "Click here to add a class",
+  MeetOnline: "Meet Online",
+  MeetingLink: "Meeting link",
+  MeetingLinkDesc:
+    'Press the meeting link below and then press on "Join conversation" to join class online meeting room.',
+  ShareMeetingLink: "Share class online meeting link",
+  MeetingLinkSharingMsg: "Please use this link to join the class meeting: ",
+  MeetingLinkCopiedToClipboard: "The meeting link is copied to the clipboard.",
   AddText:
     "It's hard to call a class without a name. Please enter a valid class name",
 
@@ -256,6 +266,7 @@ export default {
   //--------------------- Class Tabs Navigator ---------------------
   Attendance: "Attendance",
   Class: "Class",
+  Grades: "Grades",
 
   //--------------------- Teacher Profile Navigator ---------------------
   MyProfile: "My Profile",
@@ -285,7 +296,7 @@ export default {
   Credits: "Photo Credit",
   PrivacyPolicy: "Privacy Policy",
   LogOut: "Log Out",
-  Mushaf: "Mushaf",
+  Mushaf: "Holy Quran",
 
   //--------------------------- Credits -------------------------------------------
   FirstScreenImageCredits:
