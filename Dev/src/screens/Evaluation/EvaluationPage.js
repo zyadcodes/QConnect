@@ -274,7 +274,7 @@ export class EvaluationPage extends QcParentScreen {
       selectedImprovementAreas,
       assignmentLength
     } = this.state;
-    
+
     const { assignmentType } = this.props.navigation.state.params;
     this.setState({ isLoading: true });
     let evaluationDetails = {
@@ -609,8 +609,8 @@ export class EvaluationPage extends QcParentScreen {
                     _.isEqual(this.state.highlightedAyahs, {}))
                 }
                 selection={this.state.selection}
-                highlightedWords={highlightedWords}
-                highlightedAyahs={highlightedAyahs}
+                highlightedWords={_.clone(highlightedWords)}
+                highlightedAyahs={_.clone(highlightedAyahs)}
                 highlightedColor={colors.darkRed}
                 assignmentName={assignmentName}
                 assignmentType={assignmentType}
