@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: colors.white,
     borderRadius: 8,
-    width: screenWidth * 0.96,
+    width: screenWidth * 0.9,
     minHeight: 150
   },
   arrow: {
