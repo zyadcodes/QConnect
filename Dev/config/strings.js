@@ -135,7 +135,7 @@ export default {
   MeetOnline: "Meet Online",
   MeetingLink: "Meeting link",
   MeetingLinkDesc:
-    'Press the meeting link below and then press on "Join conversation" to join class online meeting room.',
+    'Press the meeting link below and then press on "Join conversation" to join class online meeting room. \n\nPlease install the Skype app if your browser does not support hosting the meeting.',
   ShareMeetingLink: "Share class online meeting link",
   MeetingLinkSharingMsg: "Please use this link to join the class meeting: ",
   MeetingLinkCopiedToClipboard: "The meeting link is copied to the clipboard.",

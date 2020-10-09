@@ -28,7 +28,8 @@ const TextLine = ({
   showTooltipOnPress,
   evalNotesComponent,
   removeHighlight,
-  mushafFontScale
+  mushafFontScale,
+  readOnly
 }) => {
   let isFirstWord = noSelectionInPreviousLines;
   return (
@@ -92,6 +93,7 @@ const TextLine = ({
                   highlighted={highlighted}
                   highlightedColor={highlightedColor}
                   selected={false}
+                  readOnly={readOnly}
                   curAyah={curAyah}
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={false}
@@ -106,6 +108,7 @@ const TextLine = ({
                   word={word}
                   curAyah={curAyah}
                   showTooltipOnPress={showTooltip}
+                  readOnly={readOnly}
                   onPress={() => onSelectAyah(curAyah, word)}
                   selected={false}
                   highlighted={highlighted}
@@ -152,6 +155,7 @@ const TextLine = ({
                   // to know which styling to apply
                   isWordHighlighted={isCurWordHighlighted}
                   isAyahHighlighted={isCurAyahHighlighted}
+                  readOnly={readOnly}
                   highlightedColor={highlightedColor}
                   highlighted={highlighted}
                   selected={isAyaSelected}
@@ -178,6 +182,7 @@ const TextLine = ({
                   word={word}
                   curAyah={curAyah}
                   showTooltipOnPress={showTooltip}
+                  readOnly={readOnly}
                   onPress={() => onSelectAyah(curAyah, word)}
                   highlighted={highlighted}
                   showLoading={showLoading}

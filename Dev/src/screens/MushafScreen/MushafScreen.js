@@ -50,7 +50,8 @@ class MushafPage extends React.Component {
       onChangePage,
       isLoading,
       currentClass,
-      mushafFontScale
+      mushafFontScale,
+      readOnly
     } = this.props;
 
     const itemInt = parseInt(item);
@@ -65,6 +66,7 @@ class MushafPage extends React.Component {
           highlightedWords={highlightedWords}
           highlightedAyahs={highlightedAyahs}
           highlightedColor={highlightedColor}
+          readOnly={readOnly}
           showLoadingOnHighlightedAyah={showLoadingOnHighlightedAyah}
           selectedAyahsStart={selection.start}
           selectedAyahsEnd={selection.end}
@@ -160,6 +162,7 @@ export default class MushafScreen extends QcParentScreen {
       nextState.mushafFontScale === this.state.mushafFontScale &&
       nextState.assignmentType === this.state.assignmentType &&
       nextProps.assignToID === this.props.assignToID &&
+      nextProps.readOnly === this.props.readOnly &&
       nextProps.profileImage === this.props.profileImage &&
       nextProps.showLoadingOnHighlightedAyah ===
         this.props.showLoadingOnHighlightedAyah &&
