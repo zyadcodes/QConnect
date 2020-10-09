@@ -5,9 +5,8 @@ import fontStyles from "config/fontStyles";
 import { Icon } from "react-native-elements";
 import colors from "config/colors";
 import strings from "config/strings";
-import Toast, { DURATION } from 'react-native-easy-toast';
+import Toast, { DURATION } from "react-native-easy-toast";
 import themeStyles from "config/themeStyles";
-
 
 export default class QCWebView extends Component {
   render() {
@@ -17,7 +16,9 @@ export default class QCWebView extends Component {
     }
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={[fontStyles.bigTextStyleDarkGrey, { marginBottom: 15 }]}>
+        <Text
+          style={[fontStyles.bigTextStylePrimaryDark, { marginBottom: 15 }]}
+        >
           {strings.MeetingLink}
         </Text>
         <Text
@@ -49,11 +50,7 @@ export default class QCWebView extends Component {
         >
           {uri}
         </Text>
-        <Toast
-          position={"center"}
-          ref="toast"
-          style={themeStyles.toastStyle}
-        />
+        <Toast position={"center"} ref="toast" style={themeStyles.toastStyle} />
         <View
           style={{
             flexDirection: "row",
@@ -89,7 +86,7 @@ export default class QCWebView extends Component {
                 strings.MeetingLinkCopiedToClipboard,
                 DURATION.LENGTH_SHORT
               );
-              }}
+            }}
           />
         </View>
       </View>
