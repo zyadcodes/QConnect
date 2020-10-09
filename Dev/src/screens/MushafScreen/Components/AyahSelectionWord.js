@@ -11,8 +11,6 @@ import { Icon } from "react-native-elements";
 import colors from "config/colors";
 import { screenWidth } from "config/dimensions";
 import { Popover, PopoverController } from "react-native-modal-popover";
-import { scale, moderateScale, verticalScale } from "utils/scaling";
-import { getFontScale } from "react-native-device-info";
 
 const getCircularReplacer = () => {
   const seen = new WeakSet();
@@ -43,13 +41,14 @@ class Word extends React.Component {
     isFirstSelectedWord: this.props.isFirstSelectedWord,
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     if (
       nextProps.selected === this.props.selected &&
       nextProps.isFirstSelectedWord === this.props.isFirstSelectedWord &&
       nextProps.isWordHighlighted === this.props.isWordHighlighted &&
       nextProps.isAyahHighlighted === this.props.isAyahHighlighted &&
-      nextProps.mushafFontScale === this.props.mushafFontScale
+      nextProps.mushafFontScale === this.props.mushafFontScale &&
+      nextProps.readOnly === this.props.readOnly
     ) {
       return false;
     }
@@ -105,6 +104,7 @@ class Word extends React.Component {
       removeHighlight,
       curAyah,
       evalNotesComponent,
+      readOnly
     } = this.props;
     let containerStyle = [styles.container];
     if (selected) {
@@ -165,25 +165,26 @@ class Word extends React.Component {
                   <View
                     style={{
                       top: 5,
-                      left: screenWidth * 0.75,
+                      right: 5,
                       flexDirection: "row",
                       zIndex: 1,
                       position: "absolute" // add if dont work with above
                     }}
                   >
-                    <TouchableOpacity
-                      onPress={() => {
-                        removeHighlight(word, curAyah);
-                        closePopover();
-                      }}
-                    >
-                      <Icon
-                        name="delete-forever-outline"
-                        type="material-community"
-                        color={colors.darkRed}
-                      />
-                    </TouchableOpacity>
-
+                    {!readOnly && (
+                      <TouchableOpacity
+                        onPress={() => {
+                          removeHighlight(word, curAyah);
+                          closePopover();
+                        }}
+                      >
+                        <Icon
+                          name="delete-forever-outline"
+                          type="material-community"
+                          color={colors.darkRed}
+                        />
+                      </TouchableOpacity>
+                    )}
                     <View style={{ width: 10, height: 10 }} />
                     <TouchableOpacity
                       onPress={() => {

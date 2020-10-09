@@ -156,6 +156,7 @@ class SelectionPage extends React.Component {
     if (
       nextProps.selectionOn != this.state.selectionOn ||
       nextProps.isLoading !== this.state.isLoading ||
+      nextProps.readOnly !== this.props.readOnly || 
       nextState.isSurahSelectionVisible !==
         this.state.isSurahSelectionVisible ||
       nextState.editPageNumber !== this.state.editPageNumber ||
@@ -485,6 +486,7 @@ class SelectionPage extends React.Component {
                           highlightedWords={this.props.highlightedWords}
                           highlightedAyahs={this.props.highlightedAyahs}
                           highlightedColor={this.props.highlightedColor}
+                          readOnly={this.props.readOnly}
                           showLoadingOnHighlightedAyah={
                             this.props.showLoadingOnHighlightedAyah
                           }
