@@ -1,29 +1,24 @@
-import React, { Component } from 'react';
-import { View, ImageBackground, StyleSheet, Alert } from 'react-native';
-import Form from 'components/Form';
-import ButtonSubmit from 'components/ButtonSubmit';
-import SignupSection from 'components/SignupSection';
-import QcAppBanner from 'components/QcAppBanner';
-import FirebaseFunctions from 'config/FirebaseFunctions';
+import React, { Component } from "react";
+import { View, ImageBackground, StyleSheet, Alert } from "react-native";
+import Form from "components/Form";
+import ButtonSubmit from "components/ButtonSubmit";
+import SignupSection from "components/SignupSection";
+import QcAppBanner from "components/QcAppBanner";
+import FirebaseFunctions from "config/FirebaseFunctions";
 import strings from "config/strings";
-import LoadingSpinner from 'components/LoadingSpinner';
-import QCView from 'components/QCView';
-import screenStyle from 'config/screenStyle';
-import { screenHeight, screenWidth } from 'config/dimensions';
-
+import LoadingSpinner from "components/LoadingSpinner";
+import QCView from "components/QCView";
+import screenStyle from "config/screenStyle";
+import { screenHeight, screenWidth } from "config/dimensions";
 
 const BG_IMAGE = require("assets/images/read_child_bg.jpg");
 
-
 class LoginScreen extends Component {
-
   _isMounted = false;
   //Sets the screen for firebase analytics
   componentDidMount() {
-
     this._isMounted = true;
     FirebaseFunctions.setCurrentScreen("Log In Screen", "LogInScreen");
-
   }
 
   componentWillUnmount() {
@@ -37,35 +32,37 @@ class LoginScreen extends Component {
     isLoading: false
   };
 
-  onUserNameChange = (_username) => {
+  onUserNameChange = _username => {
     this.setState({ username: _username });
-  }
+  };
 
-  onPwChange = (_pwd) => {
+  onPwChange = _pwd => {
     this.setState({ password: _pwd });
-  }
+  };
 
   onCreateAccount = () => {
-
-    this.props.navigation.push("AccountTypeScreen")
-  }
+    this.props.navigation.push("AccountTypeScreen");
+  };
 
   //Logs the user in, fetches their ID, and then navigates to the correct screen according to whether they
   //are a student or a teacher
   async signIn() {
-    this.setState({ isLoading: true });
     const { username, password } = this.state;
 
-    if (username.trim() === "" || (!password.replace(/\s/g, '').length)) {
-      Alert.alert(string.Whoops, strings.PleaseMakeSureAllFieldsAreFilledOut);
+    if (username.trim() === "" || !password.replace(/\s/g, "").length) {
+      Alert.alert(strings.Whoops, strings.PleaseMakeSureAllFieldsAreFilledOut);
     } else {
-      const account = await FirebaseFunctions.logIn(username.trim(), password.trim());
+      this.setState({ isLoading: true });
+      const account = await FirebaseFunctions.logIn(
+        username.trim(),
+        password.trim()
+      );
       if (account === -1) {
         this.setState({
           isLoading: false,
         });
         this.onUserNameChange(username);
-        this.onPwChange(password)
+        this.onPwChange(password);
         Alert.alert(strings.Whoops, strings.IncorrectInfo);
       } else {
         const userID = account.uid;
@@ -79,55 +76,61 @@ class LoginScreen extends Component {
           FirebaseFunctions.logEvent("TEACHER_LOG_IN");
           this.props.navigation.push("TeacherCurrentClass", {
             userID,
-          })
+          });
         }
       }
     }
   }
 
   onForgotPassword = () => {
-    this.props.navigation.navigate('ForgotPassword');
-  }
+    this.props.navigation.navigate("ForgotPassword");
+  };
 
   render() {
-
     if (this.state.isLoading === true) {
       return (
         <QCView style={screenStyle.container}>
           <ImageBackground source={BG_IMAGE} style={styles.bgImage}>
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <LoadingSpinner isVisible={true} />
             </View>
           </ImageBackground>
         </QCView>
-      )
+      );
     }
     return (
       <QCView style={screenStyle.container}>
         <ImageBackground source={BG_IMAGE} style={styles.bgImage}>
-          <View style={{ flex: 4, justifyContent: 'center' }}>
+          <View style={{ flex: 4, justifyContent: "center" }}>
             <QcAppBanner />
           </View>
-          <View style={{ flex: 1, justifyContent: 'center' }}>
+          <View style={{ flex: 1, justifyContent: "center" }}>
             <Form
               onUserNameChange={this.onUserNameChange.bind(this)}
               onPwChange={this.onPwChange.bind(this)}
             />
           </View>
-          <View style={{ flex: 1, justifyContent: 'center' }}>
+          <View style={{ flex: 1, justifyContent: "center" }}>
             <ButtonSubmit
               text={strings.Login}
               onSubmit={this.signIn.bind(this)}
               navigation={this.props.navigation}
-              screen="LoginScreen" />
+              screen="LoginScreen"
+            />
           </View>
-          <View style={{ flex: 0.5, justifyContent: 'flex-start' }}>
+          <View style={{ flex: 0.5, justifyContent: "flex-start" }}>
             <SignupSection
               onCreateAccount={this.onCreateAccount.bind(this)}
               onForgotPassword={this.onForgotPassword.bind(this)}
             />
           </View>
-          <View style={{ flex: 1 }}></View>
+          <View style={{ flex: 1 }} />
         </ImageBackground>
       </QCView>
     );
@@ -152,7 +155,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
 export default LoginScreen;
-
