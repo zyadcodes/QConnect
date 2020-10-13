@@ -11,7 +11,7 @@ import { screenHeight, screenWidth } from 'config/dimensions';
 // Teacher info entries (Name, Phone number, and Email address).
 // Used from Teacher welcome flow as well as Teacher profile edit page
 //--------------------------------------------------------------------------
-export default (TeacherInfoEntries = props => {
+const TeacherInfoEntries = props => {
   return (
     <View style={styles.container}>
       {
@@ -41,8 +41,8 @@ export default (TeacherInfoEntries = props => {
           textProps={{
             placeholder: strings.phoneNumberPlaceHolder,
             placeholderTextColor: colors.darkestGrey,
-            ...fontStyles.smallTextStyleBlack
           }}
+          textStyle={fontStyles.smallTextStyleBlack}
           value={props.phoneNumber}
           onChangePhoneNumber={() => props.onPhoneNumberChanged(this.phone)}
         />
@@ -63,7 +63,6 @@ export default (TeacherInfoEntries = props => {
             textContentType="emailAddress"
             onChangeText={props.onEmailAddressChanged}
             value={props.emailAddress}
-            autoCapitalize="none"
           />
         </View>
       ) : (
@@ -116,7 +115,7 @@ export default (TeacherInfoEntries = props => {
       }
     </View>
   );
-});
+}
 
 TeacherInfoEntries.propTypes = {
   name: PropTypes.string.isRequired,
@@ -168,3 +167,5 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch'
   },
 });
+
+export default TeacherInfoEntries;

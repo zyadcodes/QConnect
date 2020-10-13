@@ -12,6 +12,7 @@ export default class UserInput extends Component {
         <Image source={this.props.source} style={styles.inlineImg} />
         <TextInput
           style={styles.input}
+          accessibilityLabel={this.props.accessibilityLabel}
           placeholder={this.props.placeholder}
           secureTextEntry={this.props.secureTextEntry}
           autoCorrect={false}
@@ -32,6 +33,7 @@ UserInput.propTypes = {
   secureTextEntry: PropTypes.bool,
   autoCorrect: PropTypes.bool,
   autoCapitalize: PropTypes.string,
+  accessibilityLabel: PropTypes.string,
   returnKeyType: PropTypes.string,
 };
 

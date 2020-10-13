@@ -1,5 +1,15 @@
 import React from "react";
-import { StyleSheet, View, Image, TouchableOpacity, Alert, ScrollView, LayoutAnimation, Platform, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Image,
+  TouchableOpacity,
+  Alert,
+  ScrollView,
+  LayoutAnimation,
+  Platform,
+  Dimensions,
+} from "react-native";
 import QcActionButton from "components/QcActionButton";
 import Toast, { DURATION } from "react-native-easy-toast";
 import colors from "config/colors";
@@ -10,48 +20,57 @@ import studentImages from "config/studentImages";
 import strings from "config/strings";
 import QcParentScreen from "screens/QcParentScreen";
 import FadeInView from "../../components/FadeInView";
-import FirebaseFunctions from 'config/FirebaseFunctions';
-import { Icon } from 'react-native-elements';
-import QCView from 'components/QCView';
-import screenStyle from 'config/screenStyle';
-import { screenHeight, screenWidth } from 'config/dimensions';
-import firebase from 'react-native-firebase';
-
+import FirebaseFunctions from "config/FirebaseFunctions";
+import { Icon } from "react-native-elements";
+import QCView from "components/QCView";
+import screenStyle from "config/screenStyle";
+import { screenHeight, screenWidth } from "config/dimensions";
+import firebase from "react-native-firebase";
 
 export class StudentWelcomeScreen extends QcParentScreen {
-
   getRandomGenderNeutralImage = () => {
-    index = Math.floor(Math.random() * Math.floor(studentImages.genderNeutralImages.length));
-    imageIndex = studentImages.genderNeutralImages[index];
+    let index = Math.floor(
+      Math.random() * Math.floor(studentImages.genderNeutralImages.length)
+    );
+    let imageIndex = studentImages.genderNeutralImages[index];
     return imageIndex;
-  }
+  };
 
   getRandomMaleImage = () => {
-    index = Math.floor(Math.random() * Math.floor(studentImages.maleImages.length));
-    imageIndex = studentImages.maleImages[index];
+    let index = Math.floor(
+      Math.random() * Math.floor(studentImages.maleImages.length)
+    );
+    let imageIndex = studentImages.maleImages[index];
     return imageIndex;
-  }
+  };
 
   getRandomFemaleImage = () => {
-    index = Math.floor(Math.random() * Math.floor(studentImages.femaleImages.length));
-    imageIndex = studentImages.femaleImages[index];
+    let index = Math.floor(
+      Math.random() * Math.floor(studentImages.femaleImages.length)
+    );
+    let imageIndex = studentImages.femaleImages[index];
     return imageIndex;
-  }
+  };
 
-  initialDefaultImageId = this.getRandomGenderNeutralImage()
+  initialDefaultImageId = this.getRandomGenderNeutralImage();
 
   getHighlightedImages = () => {
-    defaultImageId = this.initialDefaultImageId;
-
+    let defaultImageId = this.initialDefaultImageId;
+    let secondGenericImageId = this.getRandomGenderNeutralImage();
     // get a second gender neutral image, make sure it is different than the first one
-    do {
+    while (secondGenericImageId === defaultImageId){
       secondGenericImageId = this.getRandomGenderNeutralImage();
-    } while (secondGenericImageId === defaultImageId)
+    }
 
     //initialize the array of suggested images
-    let proposedImages = [defaultImageId, secondGenericImageId, this.getRandomFemaleImage(), this.getRandomMaleImage()]
+    let proposedImages = [
+      defaultImageId,
+      secondGenericImageId,
+      this.getRandomFemaleImage(),
+      this.getRandomMaleImage(),
+    ];
     return proposedImages;
-  }
+  };
 
   //--- state captures the inputted user info ------------------
   state = {
@@ -90,8 +109,13 @@ export class StudentWelcomeScreen extends QcParentScreen {
   // In studnet welcome page, student ID will be passed as undefined, in which case
   // we will generate a new ID before saving to the store.
   async saveProfileInfo() {
-
-    let { name, phoneNumber, emailAddress, password, profileImageID } = this.state;
+    let {
+      name,
+      phoneNumber,
+      emailAddress,
+      password,
+      profileImageID,
+    } = this.state;
     name = name.trim();
     phoneNumber = phoneNumber.trim();
     emailAddress = emailAddress.trim();
@@ -105,42 +129,49 @@ export class StudentWelcomeScreen extends QcParentScreen {
       name,
       phoneNumber,
       profileImageID
-    }
+    };
 
-    const ID = await FirebaseFunctions.signUp(emailAddress, password, false, studentObject);
+    const ID = await FirebaseFunctions.signUp(
+      emailAddress,
+      password,
+      false,
+      studentObject
+    );
     this.props.navigation.push("StudentCurrentClass", {
       userID: ID,
     });
-
-  };
-
+  }
 
   //Creates new account, or launches confirmation dialog if account was created but not confirmed yet.
   async onCreateOrConfirmAccount() {
     //validate entries first
     const { name, phoneNumber, emailAddress, password } = this.state;
-    if (!name ||
+    if (
+      !name ||
       !phoneNumber ||
       !emailAddress ||
       !password ||
-      name.trim() === ""
-      || phoneNumber.trim() === ""
-      || emailAddress.trim() === ""
-      || password.trim() === "") {
+      name.trim() === "" ||
+      phoneNumber.trim() === "" ||
+      emailAddress.trim() === "" ||
+      password.trim() === ""
+    ) {
       Alert.alert(strings.Whoops, strings.PleaseMakeSureAllFieldsAreFilledOut);
     } else if (!this.state.isPhoneValid) {
       Alert.alert(strings.Whoops, strings.InvalidPhoneNumber);
     } else if (!emailAddress.includes("@")) {
-      Alert.alert(strings.Whoops, strings.BadEmail)
+      Alert.alert(strings.Whoops, strings.BadEmail);
     } else if (password.length <= 6) {
-      Alert.alert(strings.Whoops, strings.PasswordError)
+      Alert.alert(strings.Whoops, strings.PasswordError);
     } else {
-      const doesThisUserExist = await firebase.auth().fetchSignInMethodsForEmail(emailAddress);
+      const doesThisUserExist = await firebase
+        .auth()
+        .fetchSignInMethodsForEmail(emailAddress);
       if (doesThisUserExist.length > 0) {
         Alert.alert(strings.Whoops, strings.EmailExists);
       } else {
         //else, create account and save profile info
-        this.saveProfileInfo()
+        this.saveProfileInfo();
       }
     }
   }
@@ -161,12 +192,15 @@ export class StudentWelcomeScreen extends QcParentScreen {
     this.setState({ emailAddress: value });
   };
   onPasswordChanged = value => {
-    this.setState({ password: value })
-  }
+    this.setState({ password: value });
+  };
 
   componentWillMount() {
-    FirebaseFunctions.setCurrentScreen("Student Welcome Screen", "StudentWelcomeScreen");
-    if (Platform.OS === 'ios') {
+    FirebaseFunctions.setCurrentScreen(
+      "Student Welcome Screen",
+      "StudentWelcomeScreen"
+    );
+    if (Platform.OS === "ios") {
       LayoutAnimation.easeInEaseOut();
     }
   }
@@ -178,7 +212,6 @@ export class StudentWelcomeScreen extends QcParentScreen {
   // -    ImageSelectionRow: a row with suggested avatars, and a button to invoke the pop up with more avatars
   //-----------------------------------------------------------
   render() {
-
     return (
       <QCView style={screenStyle.container}>
         <ScrollView>
@@ -193,19 +226,40 @@ export class StudentWelcomeScreen extends QcParentScreen {
             />
 
             <View style={styles.picContainer}>
-              <View style={{ flex: 1 }}></View>
-              <View style={{ flex: 1, alignSelf: 'flex-start', flexDirection: 'row' }}>
-                <View style={{ flex: 0.1 }}></View>
-                <TouchableOpacity style={{ flex: 2, paddingTop: screenHeight * 0.025, justifyContent: 'flex-start', alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
-                  <Icon
-                    name={'angle-left'}
-                    type="font-awesome" />
+              <View style={{ flex: 1 }} />
+              <View
+                style={{
+                  flex: 1,
+                  alignSelf: "flex-start",
+                  flexDirection: "row",
+                }}
+              >
+                <View style={{ flex: 0.1 }} />
+                <TouchableOpacity
+                  style={{
+                    flex: 2,
+                    paddingTop: screenHeight * 0.025,
+                    justifyContent: "flex-start",
+                    alignItems: "flex-start",
+                  }}
+                  onPress={() => {
+                    this.props.navigation.goBack();
+                  }}
+                >
+                  <Icon name={"angle-left"} type="font-awesome" />
                 </TouchableOpacity>
-                <View style={{ flex: 3 }}></View>
+                <View style={{ flex: 3 }} />
               </View>
-              <View style={{ flex: 1, paddingLeft: screenWidth * 0.05, paddingRight: screenWidth * 0.05 }}>
+              <View
+                style={{
+                  flex: 1,
+                  paddingLeft: screenWidth * 0.05,
+                  paddingRight: screenWidth * 0.05,
+                }}
+              >
                 <FadeInView
-                  style={{ alignItems: 'center', justifyContent: 'center' }}>
+                  style={{ alignItems: "center", justifyContent: "center" }}
+                >
                   <Image
                     style={styles.welcomeImage}
                     source={require("assets/images/salam.png")}
@@ -242,7 +296,7 @@ export class StudentWelcomeScreen extends QcParentScreen {
               />
             </View>
             <View style={styles.filler} />
-            <Toast position={'center'} ref="toast" />
+            <Toast position={"center"} ref="toast" />
           </View>
         </ScrollView>
       </QCView>
@@ -259,7 +313,7 @@ const styles = StyleSheet.create({
     marginBottom: screenHeight * 0.015,
     backgroundColor: colors.white,
     width: screenWidth,
-    flexDirection: 'column'
+    flexDirection: "column",
   },
   welcomeImage: {
     marginTop: screenHeight * 0.022,
@@ -284,6 +338,5 @@ const styles = StyleSheet.create({
     flex: 1
   },
 });
-
 
 export default StudentWelcomeScreen;
