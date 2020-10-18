@@ -14,28 +14,28 @@ import {
   Share,
   TextInput,
   PixelRatio,
-  Platform,
+  Platform
 } from "react-native";
 import StudentCard from "components/StudentCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages";
-import { Icon } from 'react-native-elements';
+import { Icon } from "react-native-elements";
 import strings from "config/strings";
-import QcActionButton from 'components/QcActionButton';
-import ImageSelectionModal from 'components/ImageSelectionModal';
-import ImageSelectionRow from 'components/ImageSelectionRow';
-import FirebaseFunctions from 'config/FirebaseFunctions';
-import LoadingSpinner from 'components/LoadingSpinner';
-import QCView from 'components/QCView';
+import QcActionButton from "components/QcActionButton";
+import ImageSelectionModal from "components/ImageSelectionModal";
+import ImageSelectionRow from "components/ImageSelectionRow";
+import FirebaseFunctions from "config/FirebaseFunctions";
+import LoadingSpinner from "components/LoadingSpinner";
+import QCView from "components/QCView";
 import fontStyles from "config/fontStyles";
-import { screenHeight, screenWidth } from 'config/dimensions';
+import { screenHeight, screenWidth } from "config/dimensions";
 
 class AddManualStudentsScreen extends Component {
   componentDidMount() {
     //Sets the screen for firebase analytics
     FirebaseFunctions.setCurrentScreen(
-      'Add Students Manually Screen',
-      'AddManualStudentsScreen'
+      "Add Students Manually Screen",
+      "AddManualStudentsScreen"
     );
   }
 
@@ -77,7 +77,7 @@ class AddManualStudentsScreen extends Component {
       this.defaultImageId,
       secondGenericImageId,
       this.getRandomFemaleImage(),
-      this.getRandomMaleImage(),
+      this.getRandomMaleImage()
     ];
     return proposedImages;
   };
@@ -104,10 +104,10 @@ class AddManualStudentsScreen extends Component {
 
   //This method adds a student manually without them actually having to have a profile
   async addManualStudent() {
-    if (this.state.newStudentName.trim() === '') {
+    if (this.state.newStudentName.trim() === "") {
       Alert.alert(strings.Whoops, strings.PleaseInputAName);
     } else {
-      this.setState({ isLoading: true, newStudentName: '' });
+      this.setState({ isLoading: true, newStudentName: "" });
 
       //First pushes the manual student to the firebase database
       const { newStudentName, profileImageID } = this.state;
@@ -138,7 +138,7 @@ class AddManualStudentsScreen extends Component {
     classID: this.props.navigation.state.params.classID,
     currentClass: this.props.navigation.state.params.currentClass,
     students: this.props.navigation.state.params.currentClass.students,
-    newStudentName: '',
+    newStudentName: "",
     isLoading: false,
     profileImageID: this.defaultImageId,
     highlightedImagesIndices: this.getHighlightedImages(),
@@ -152,7 +152,7 @@ class AddManualStudentsScreen extends Component {
     return (
       <QCView
         style={{
-          flexDirection: 'column',
+          flexDirection: "column",
           backgroundColor: colors.lightGrey,
           width: screenWidth,
           height: screenHeight
@@ -174,11 +174,11 @@ class AddManualStudentsScreen extends Component {
                 {strings.EnterYourStudentsName}
               </Text>
             </View>
-            <View style={{ flex: 0.7, alignSelf: 'flex-start' }}>
+            <View style={{ flex: 0.7, alignSelf: "flex-start" }}>
               <TextInput
                 style={[
                   fontStyles.mainTextStyleDarkGrey,
-                  styles.studentNameTextInput,
+                  styles.studentNameTextInput
                 ]}
                 placeholder={strings.StudentName}
                 autoCorrect={false}
@@ -186,6 +186,7 @@ class AddManualStudentsScreen extends Component {
                   this.setState({ newStudentName })
                 }
                 value={this.state.newStudentName}
+                accessibilityLabel="text_input_student_name"
               />
             </View>
             <View style={{ flex: 1 }}>
@@ -200,14 +201,14 @@ class AddManualStudentsScreen extends Component {
             <View
               style={{
                 flex: 2,
-                justifyContent: 'flex-end',
-                alignItems: 'center'
+                justifyContent: "flex-end",
+                alignItems: "center"
               }}
             >
               <QcActionButton
                 text={strings.AddStudent}
                 onPress={async () => {
-                  FirebaseFunctions.logEvent('TEACHER_ADD_STUDENT_MANUAL');
+                  FirebaseFunctions.logEvent("TEACHER_ADD_STUDENT_MANUAL");
                   await this.addManualStudent();
                 }}
               />
@@ -220,7 +221,7 @@ class AddManualStudentsScreen extends Component {
               <QcActionButton
                 text={strings.Done}
                 onPress={() =>
-                  this.props.navigation.push('TeacherCurrentClass', {
+                  this.props.navigation.push("TeacherCurrentClass", {
                     userID: this.props.navigation.state.params.userID
                   })
                 }
@@ -259,7 +260,7 @@ class AddManualStudentsScreen extends Component {
                         }
                       },
 
-                      { text: strings.Cancel, style: 'cancel' },
+                      { text: strings.Cancel, style: "cancel" }
                     ]
                   );
                 }}
@@ -284,16 +285,16 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
     backgroundColor: colors.lightGrey,
-    flex: 1,
+    flex: 1
   },
   addStudentsView: {
     backgroundColor: colors.white,
-    paddingTop: screenHeight * 0.05,
+    paddingTop: screenHeight * 0.05
   },
   enterStudentNameText: {
     paddingLeft: screenWidth * 0.05,
     flex: 0.5,
-    alignSelf: 'flex-start'
+    alignSelf: "flex-start"
   },
   studentNameTextInput: {
     marginLeft: screenWidth * 0.02,
@@ -304,10 +305,10 @@ const styles = StyleSheet.create({
     borderRadius: 1
   },
   doneButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     height: screenHeight * 0.125
-  },
+  }
 });
 
 export default AddManualStudentsScreen;

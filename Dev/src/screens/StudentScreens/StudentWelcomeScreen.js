@@ -1,3 +1,4 @@
+/* eslint-disable comma-dangle */
 import React from "react";
 import {
   StyleSheet,
@@ -8,7 +9,7 @@ import {
   ScrollView,
   LayoutAnimation,
   Platform,
-  Dimensions,
+  Dimensions
 } from "react-native";
 import QcActionButton from "components/QcActionButton";
 import Toast, { DURATION } from "react-native-easy-toast";
@@ -25,7 +26,8 @@ import { Icon } from "react-native-elements";
 import QCView from "components/QCView";
 import screenStyle from "config/screenStyle";
 import { screenHeight, screenWidth } from "config/dimensions";
-import firebase from "react-native-firebase";
+import LoadingSpinner from "components/LoadingSpinner";
+import { validateAccountEntries } from "utils/accountsHelper";
 
 export class StudentWelcomeScreen extends QcParentScreen {
   getRandomGenderNeutralImage = () => {
@@ -58,7 +60,7 @@ export class StudentWelcomeScreen extends QcParentScreen {
     let defaultImageId = this.initialDefaultImageId;
     let secondGenericImageId = this.getRandomGenderNeutralImage();
     // get a second gender neutral image, make sure it is different than the first one
-    while (secondGenericImageId === defaultImageId){
+    while (secondGenericImageId === defaultImageId) {
       secondGenericImageId = this.getRandomGenderNeutralImage();
     }
 
@@ -67,7 +69,7 @@ export class StudentWelcomeScreen extends QcParentScreen {
       defaultImageId,
       secondGenericImageId,
       this.getRandomFemaleImage(),
-      this.getRandomMaleImage(),
+      this.getRandomMaleImage()
     ];
     return proposedImages;
   };
@@ -76,11 +78,14 @@ export class StudentWelcomeScreen extends QcParentScreen {
   state = {
     phoneNumber: "",
     emailAddress: "",
+    password: "",
+    passwordTwo: "",
     name: "",
     profileImageID: this.initialDefaultImageId,
     highlightedImagesIndices: this.getHighlightedImages(),
     modalVisible: false,
-    isPhoneValid: false, //todo: this should be properly validated or saved
+    isPhoneValid: false, //todo: this should be properly validated or saved,
+    isLoading: false
   };
 
   //--- event handlers, handle user interaction ------------------
@@ -114,7 +119,7 @@ export class StudentWelcomeScreen extends QcParentScreen {
       phoneNumber,
       emailAddress,
       password,
-      profileImageID,
+      profileImageID
     } = this.state;
     name = name.trim();
     phoneNumber = phoneNumber.trim();
@@ -138,41 +143,37 @@ export class StudentWelcomeScreen extends QcParentScreen {
       studentObject
     );
     this.props.navigation.push("StudentCurrentClass", {
-      userID: ID,
+      userID: ID
     });
   }
 
   //Creates new account, or launches confirmation dialog if account was created but not confirmed yet.
   async onCreateOrConfirmAccount() {
     //validate entries first
-    const { name, phoneNumber, emailAddress, password } = this.state;
-    if (
-      !name ||
-      !phoneNumber ||
-      !emailAddress ||
-      !password ||
-      name.trim() === "" ||
-      phoneNumber.trim() === "" ||
-      emailAddress.trim() === "" ||
-      password.trim() === ""
-    ) {
-      Alert.alert(strings.Whoops, strings.PleaseMakeSureAllFieldsAreFilledOut);
-    } else if (!this.state.isPhoneValid) {
-      Alert.alert(strings.Whoops, strings.InvalidPhoneNumber);
-    } else if (!emailAddress.includes("@")) {
-      Alert.alert(strings.Whoops, strings.BadEmail);
-    } else if (password.length <= 6) {
-      Alert.alert(strings.Whoops, strings.PasswordError);
+    const {
+      name,
+      phoneNumber,
+      emailAddress,
+      password,
+      passwordTwo,
+      isPhoneValid
+    } = this.state;
+
+    let areAccountEntriesValid = await validateAccountEntries(
+      name,
+      phoneNumber,
+      emailAddress,
+      password,
+      passwordTwo,
+      isPhoneValid,
+      isLoading => this.setState({ isLoading })
+    );
+
+    if (areAccountEntriesValid) {
+      //else, create account and save profile info
+      this.saveProfileInfo();
     } else {
-      const doesThisUserExist = await firebase
-        .auth()
-        .fetchSignInMethodsForEmail(emailAddress);
-      if (doesThisUserExist.length > 0) {
-        Alert.alert(strings.Whoops, strings.EmailExists);
-      } else {
-        //else, create account and save profile info
-        this.saveProfileInfo();
-      }
+      this.setState({ isLoading: false });
     }
   }
 
@@ -195,6 +196,10 @@ export class StudentWelcomeScreen extends QcParentScreen {
     this.setState({ password: value });
   };
 
+  onPasswordTwoChanged = value => {
+    this.setState({ passwordTwo: value });
+  };
+
   componentWillMount() {
     FirebaseFunctions.setCurrentScreen(
       "Student Welcome Screen",
@@ -212,95 +217,107 @@ export class StudentWelcomeScreen extends QcParentScreen {
   // -    ImageSelectionRow: a row with suggested avatars, and a button to invoke the pop up with more avatars
   //-----------------------------------------------------------
   render() {
-    return (
-      <QCView style={screenStyle.container}>
-        <ScrollView>
-          <View>
-            <ImageSelectionModal
-              visible={this.state.modalVisible}
-              images={studentImages.images}
-              cancelText={strings.Cancel}
-              setModalVisible={this.setModalVisible.bind(this)}
-              onImageSelected={this.onImageSelected.bind(this)}
-              screen={this.name}
-            />
-
-            <View style={styles.picContainer}>
-              <View style={{ flex: 1 }} />
-              <View
-                style={{
-                  flex: 1,
-                  alignSelf: "flex-start",
-                  flexDirection: "row",
-                }}
-              >
-                <View style={{ flex: 0.1 }} />
-                <TouchableOpacity
-                  style={{
-                    flex: 2,
-                    paddingTop: screenHeight * 0.025,
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start",
-                  }}
-                  onPress={() => {
-                    this.props.navigation.goBack();
-                  }}
-                >
-                  <Icon name={"angle-left"} type="font-awesome" />
-                </TouchableOpacity>
-                <View style={{ flex: 3 }} />
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  paddingLeft: screenWidth * 0.05,
-                  paddingRight: screenWidth * 0.05,
-                }}
-              >
-                <FadeInView
-                  style={{ alignItems: "center", justifyContent: "center" }}
-                >
-                  <Image
-                    style={styles.welcomeImage}
-                    source={require("assets/images/salam.png")}
-                  />
-                </FadeInView>
-              </View>
-            </View>
-            <View style={styles.editInfo} behavior="padding">
-              <TeacherInfoEntries
-                name={this.state.name}
-                phoneNumber={this.state.phoneNumber}
-                emailAddress={this.state.emailAddress}
-                password={this.state.password}
-                onNameChanged={this.onNameChanged}
-                onPhoneNumberChanged={this.onPhoneNumberChanged}
-                onEmailAddressChanged={this.onEmailAddressChanged}
-                showPasswordField={true}
-                onPasswordChanged={this.onPasswordChanged}
-              />
-              <ImageSelectionRow
+    if (this.state.isLoading === true) {
+      return (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <LoadingSpinner isVisible={true} />
+        </View>
+      );
+    } else {
+      return (
+        <QCView style={screenStyle.container}>
+          <ScrollView>
+            <View>
+              <ImageSelectionModal
+                visible={this.state.modalVisible}
                 images={studentImages.images}
-                highlightedImagesIndices={this.state.highlightedImagesIndices}
+                cancelText={strings.Cancel}
+                setModalVisible={this.setModalVisible.bind(this)}
                 onImageSelected={this.onImageSelected.bind(this)}
-                onShowMore={() => this.setModalVisible(true)}
-                selectedImageIndex={this.state.profileImageID}
                 screen={this.name}
               />
+
+              <View style={styles.picContainer}>
+                <View style={{ flex: 1 }} />
+                <View
+                  style={{
+                    flex: 1,
+                    alignSelf: "flex-start",
+                    flexDirection: "row"
+                  }}
+                >
+                  <View style={{ flex: 0.1 }} />
+                  <TouchableOpacity
+                    style={{
+                      flex: 2,
+                      paddingTop: screenHeight * 0.025,
+                      justifyContent: "flex-start",
+                      alignItems: "flex-start"
+                    }}
+                    onPress={() => {
+                      this.props.navigation.goBack();
+                    }}
+                  >
+                    <Icon name={"angle-left"} type="font-awesome" />
+                  </TouchableOpacity>
+                  <View style={{ flex: 3 }} />
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    paddingLeft: screenWidth * 0.05,
+                    paddingRight: screenWidth * 0.05
+                  }}
+                >
+                  <FadeInView
+                    style={{ alignItems: "center", justifyContent: "center" }}
+                  >
+                    <Image
+                      style={styles.welcomeImage}
+                      source={require("assets/images/salam.png")}
+                    />
+                  </FadeInView>
+                </View>
+              </View>
+              <View style={styles.editInfo} behavior="padding">
+                <TeacherInfoEntries
+                  name={this.state.name}
+                  phoneNumber={this.state.phoneNumber}
+                  emailAddress={this.state.emailAddress}
+                  password={this.state.password}
+                  onNameChanged={this.onNameChanged}
+                  onPhoneNumberChanged={this.onPhoneNumberChanged}
+                  onEmailAddressChanged={this.onEmailAddressChanged}
+                  showPasswordField={true}
+                  onPasswordChanged={this.onPasswordChanged}
+                  passwordTwo={this.state.passwordTwo}
+                  onPasswordTwoChanged={this.onPasswordTwoChanged}
+                />
+                <ImageSelectionRow
+                  images={studentImages.images}
+                  highlightedImagesIndices={this.state.highlightedImagesIndices}
+                  onImageSelected={this.onImageSelected.bind(this)}
+                  onShowMore={() => this.setModalVisible(true)}
+                  selectedImageIndex={this.state.profileImageID}
+                  screen={this.name}
+                />
+              </View>
+              <View style={styles.buttonsContainer}>
+                <QcActionButton
+                  text={strings.GetStarted}
+                  onPress={() => this.onCreateOrConfirmAccount()}
+                  screen={this.name}
+                />
+              </View>
+              <View style={styles.filler} />
+              <Toast position={"center"} ref="toast" />
             </View>
-            <View style={styles.buttonsContainer}>
-              <QcActionButton
-                text={strings.CreateAccount}
-                onPress={() => this.onCreateOrConfirmAccount()}
-                screen={this.name}
-              />
-            </View>
-            <View style={styles.filler} />
-            <Toast position={"center"} ref="toast" />
-          </View>
-        </ScrollView>
-      </QCView>
-    );
+          </ScrollView>
+        </QCView>
+      );
+    }
   }
 }
 
@@ -313,7 +330,7 @@ const styles = StyleSheet.create({
     marginBottom: screenHeight * 0.015,
     backgroundColor: colors.white,
     width: screenWidth,
-    flexDirection: "column",
+    flexDirection: "column"
   },
   welcomeImage: {
     marginTop: screenHeight * 0.022,
@@ -336,7 +353,7 @@ const styles = StyleSheet.create({
   filler: {
     flexDirection: "column",
     flex: 1
-  },
+  }
 });
 
 export default StudentWelcomeScreen;

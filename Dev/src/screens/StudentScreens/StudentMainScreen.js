@@ -281,7 +281,7 @@ class StudentMainScreen extends QcParentScreen {
           />
         }
       >
-        <QCView>
+        <QCView style={{backgroundColor: colors.white}}>
           <View>
             <TopBanner
               LeftIconName="navicon"
@@ -347,7 +347,9 @@ class StudentMainScreen extends QcParentScreen {
               text={strings.JoinClass}
               onPress={() => this.joinClass()}
             />
+            <View style={{flex: 1}}></View>
           </View>
+          
         </QCView>
       </SideMenu>
     );

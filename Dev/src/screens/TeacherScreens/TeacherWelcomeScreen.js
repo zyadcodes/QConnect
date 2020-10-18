@@ -22,15 +22,16 @@ import QcParentScreen from "screens/QcParentScreen";
 import FadeInView from "../../components/FadeInView";
 import FirebaseFunctions from "config/FirebaseFunctions";
 import { Icon } from "react-native-elements";
-import QCView from "components/QCView";
-import screenStyle from "config/screenStyle";
 import fontStyles from "config/fontStyles";
 import { screenHeight, screenWidth } from "config/dimensions";
+import { validateAccountEntries } from "utils/accountsHelper";
+import LoadingSpinner from "components/LoadingSpinner";
 
 const initialState = {
   authCode: "",
   password: "",
-  passwordTwo: ""
+  passwordTwo: "",
+  isLoading: false
 };
 
 //To-Do: All info in this class is static, still needs to be hooked up to data base in order
@@ -168,37 +169,33 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   }
 
   //Creates new account, or launches confirmation dialog if account was created but not confirmed yet.
-  onCreateOrConfirmAccount() {
+  async onCreateOrConfirmAccount() {
     //validate entries first
-    const { name, phoneNumber, emailAddress, password } = this.state;
-    if (
-      !name ||
-      !phoneNumber ||
-      !emailAddress ||
-      !password ||
-      name.trim() === "" ||
-      phoneNumber.trim() === "" ||
-      emailAddress.trim() === "" ||
-      password.trim() === ""
-    ) {
-      Alert.alert(strings.Whoops, strings.PleaseMakeSureAllFieldsAreFilledOut);
-    } else if (!this.state.isPhoneValid) {
-      /**
-       * Phone input Check
-       */
-      Alert.alert(strings.Whoops, strings.InvalidPhoneNumber);
-    } else if (!(this.state.password === this.state.passwordTwo)) {
-      /**
-       * Password Input Check
-       */
-      Alert.alert(strings.Whoops, strings.PasswordsDontMatch);
-    }
+    const {
+      name,
+      phoneNumber,
+      emailAddress,
+      password,
+      passwordTwo,
+      isPhoneValid
+    } = this.state;
 
-    /**
-     * Save Profile info
-     */
-    //else, create account and save profile info
-    this.saveProfileInfo();
+    let areAccountEntriesValid = await validateAccountEntries(
+      name,
+      phoneNumber,
+      emailAddress,
+      password,
+      passwordTwo,
+      isPhoneValid,
+      isLoading => this.setState({ isLoading })
+    );
+
+    if (areAccountEntriesValid) {
+      //else, create account and save profile info
+      this.saveProfileInfo();
+    } else {
+      this.setState({ isLoading: false });
+    }
   }
 
   //------ event handlers to capture user input into state as user modifies the entries -----
@@ -240,99 +237,109 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   // -    ImageSelectionRow: a row with suggested avatars, and a button to invoke the pop up with more avatars
   //-----------------------------------------------------------
   render() {
-    return (
-      <View>
-        <ScrollView>
-          <View>
-            <ImageSelectionModal
-              visible={this.state.modalVisible}
-              images={teacherImages.images}
-              cancelText={strings.Cancel}
-              setModalVisible={this.setModalVisible.bind(this)}
-              onImageSelected={this.onImageSelected.bind(this)}
-              screen={this.name}
-            />
-            <View style={styles.picContainer}>
-              <View
-                style={{
-                  flex: 1,
-                  paddingTop: screenHeight * 0.04,
-                  alignSelf: "flex-start",
-                  flexDirection: "row"
-                }}
-              >
-                <TouchableOpacity
-                  style={{
-                    flex: 2,
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start",
-                    paddingLeft: screenWidth * 0.03
-                  }}
-                  onPress={() => {
-                    this.props.navigation.goBack();
-                  }}
-                >
-                  <Icon name={"angle-left"} type="font-awesome" />
-                </TouchableOpacity>
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  paddingLeft: screenWidth * 0.05,
-                  paddingRight: screenWidth * 0.05,
-                  paddingBottom: screenHeight * 0.02
-                }}
-              >
-                <FadeInView
-                  style={{ alignItems: "center", justifyContent: "center" }}
-                >
-                  <Image
-                    style={styles.welcomeImage}
-                    source={require("assets/images/salam.png")}
-                  />
-                  <Text style={fontStyles.mainTextStyleDarkGrey}>
-                    {strings.TeacherWelcomeMessage}
-                  </Text>
-                </FadeInView>
-              </View>
-            </View>
-            <View style={styles.editInfo} behavior="padding">
-              <TeacherInfoEntries
-                name={this.state.name}
-                phoneNumber={this.state.phoneNumber}
-                emailAddress={this.state.emailAddress}
-                password={this.state.password}
-                passwordTwo={this.state.passwordTwo}
-                onNameChanged={this.onNameChanged}
-                onPhoneNumberChanged={this.onPhoneNumberChanged}
-                onEmailAddressChanged={this.onEmailAddressChanged}
-                showPasswordField={true}
-                onPasswordChanged={this.onPasswordChanged}
-                onPasswordTwoChanged={this.onPasswordTwoChanged}
-              />
-              <Text />
-              <ImageSelectionRow
+    if (this.state.isLoading === true) {
+      return (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <LoadingSpinner isVisible={true} />
+        </View>
+      );
+    } else {
+      return (
+        <View>
+          <ScrollView>
+            <View>
+              <ImageSelectionModal
+                visible={this.state.modalVisible}
                 images={teacherImages.images}
-                highlightedImagesIndices={this.state.highlightedImagesIndices}
+                cancelText={strings.Cancel}
+                setModalVisible={this.setModalVisible.bind(this)}
                 onImageSelected={this.onImageSelected.bind(this)}
-                onShowMore={() => this.setModalVisible(true)}
-                selectedImageIndex={this.state.profileImageID}
                 screen={this.name}
               />
+              <View style={styles.picContainer}>
+                <View
+                  style={{
+                    flex: 1,
+                    paddingTop: screenHeight * 0.04,
+                    alignSelf: "flex-start",
+                    flexDirection: "row"
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{
+                      flex: 2,
+                      justifyContent: "flex-start",
+                      alignItems: "flex-start",
+                      paddingLeft: screenWidth * 0.03
+                    }}
+                    onPress={() => {
+                      this.props.navigation.goBack();
+                    }}
+                  >
+                    <Icon name={"angle-left"} type="font-awesome" />
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    paddingLeft: screenWidth * 0.05,
+                    paddingRight: screenWidth * 0.05,
+                    paddingBottom: screenHeight * 0.02
+                  }}
+                >
+                  <FadeInView
+                    style={{ alignItems: "center", justifyContent: "center" }}
+                  >
+                    <Image
+                      style={styles.welcomeImage}
+                      source={require("assets/images/salam.png")}
+                    />
+                    <Text style={fontStyles.mainTextStyleDarkGrey}>
+                      {strings.TeacherWelcomeMessage}
+                    </Text>
+                  </FadeInView>
+                </View>
+              </View>
+              <View style={styles.editInfo} behavior="padding">
+                <TeacherInfoEntries
+                  name={this.state.name}
+                  phoneNumber={this.state.phoneNumber}
+                  emailAddress={this.state.emailAddress}
+                  password={this.state.password}
+                  passwordTwo={this.state.passwordTwo}
+                  onNameChanged={this.onNameChanged}
+                  onPhoneNumberChanged={this.onPhoneNumberChanged}
+                  onEmailAddressChanged={this.onEmailAddressChanged}
+                  showPasswordField={true}
+                  onPasswordChanged={this.onPasswordChanged}
+                  onPasswordTwoChanged={this.onPasswordTwoChanged}
+                />
+                <Text />
+                <ImageSelectionRow
+                  images={teacherImages.images}
+                  highlightedImagesIndices={this.state.highlightedImagesIndices}
+                  onImageSelected={this.onImageSelected.bind(this)}
+                  onShowMore={() => this.setModalVisible(true)}
+                  selectedImageIndex={this.state.profileImageID}
+                  screen={this.name}
+                />
+              </View>
+              <View style={styles.buttonsContainer}>
+                <QcActionButton
+                  text={strings.GetStarted}
+                  onPress={() => this.onCreateOrConfirmAccount()}
+                  screen={this.name}
+                />
+              </View>
+              <View style={styles.filler} />
+              <Toast position={"center"} ref="toast" />
             </View>
-            <View style={styles.buttonsContainer}>
-              <QcActionButton
-                text={strings.CreateAccount}
-                onPress={() => this.onCreateOrConfirmAccount()}
-                screen={this.name}
-              />
-            </View>
-            <View style={styles.filler} />
-            <Toast position={"center"} ref="toast" />
-          </View>
-        </ScrollView>
-      </View>
-    );
+          </ScrollView>
+        </View>
+      );
+    }
   }
 }
 
