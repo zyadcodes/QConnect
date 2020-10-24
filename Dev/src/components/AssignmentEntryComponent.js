@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, StyleSheet, KeyboardAvoidingView } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Overlay } from "react-native-elements";
 import QcActionButton from "components/QcActionButton";
 import strings from "config/strings";
@@ -24,7 +24,7 @@ export default class AssignmentEntryComponent extends React.Component {
 
   render() {
     return (
-      <KeyboardAvoidingView>
+      <View>
         <Overlay
           isVisible={this.props.visible}
           onBackdropPress={() => this.props.onCancel()}
@@ -66,7 +66,7 @@ export default class AssignmentEntryComponent extends React.Component {
             </View>
           </View>
         </Overlay>
-      </KeyboardAvoidingView>
+      </View>
     );
   }
 }

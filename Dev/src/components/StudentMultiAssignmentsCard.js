@@ -90,6 +90,12 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
             currentAssignments.map((assignment, index) => (
               <TouchableOpacity
                 onPress={() => this.props.onAssignmentPress(index)}
+                accessibilityLabel={
+                  "student_multi_assignment_card_student_" +
+                  studentName +
+                  "_assignment_" +
+                  index
+                }
               >
                 <ListItem
                   key={assignment.name}
@@ -178,7 +184,12 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
             ))
           ) : (
             <ListItem
-              key="NewAssignment"
+              key={
+                "student_multi_assignment_card_new_assignment_" + studentName
+              }
+              accessibilityLabel={
+                "student_multi_assignment_card_new_assignment_" + studentName
+              }
               // title={strings.NeedAssignment}
               // titleStyle={[fontStyles.mediumTextStyleDarkestGrey, { flex: 1 }]}
               chevron
@@ -195,6 +206,9 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
           <View style={styles.removeStudentStyle}>
             <TouchableOpacity
               style={styles.removeStudentTouchableStyle}
+              accessibilityLabel={
+                "student_multi_assignment_card_remove_student_" + studentName
+              }
               onPress={() => {
                 compOnPress();
               }}
