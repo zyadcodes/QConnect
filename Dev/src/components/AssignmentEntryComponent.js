@@ -1,11 +1,6 @@
 import React from "react";
-import {
-  Modal,
-  Text,
-  View,
-  StyleSheet,
-  KeyboardAvoidingView
-} from "react-native";
+import { Text, View, StyleSheet, KeyboardAvoidingView } from "react-native";
+import { Overlay } from "react-native-elements";
 import QcActionButton from "components/QcActionButton";
 import strings from "config/strings";
 import colors from "config/colors";
@@ -32,22 +27,8 @@ export default class AssignmentEntryComponent extends React.Component {
   render() {
     return (
       <KeyboardAvoidingView>
-        <Modal
-          animationType="fade"
-          transparent={true}
-          presentationStyle="overFullScreen"
-          visible={this.props.visible}
-          onRequestClose={() => {}}
-        >
-          <View
-            style={{
-              marginVertical: screenHeight * 0.073,
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              paddingBottom: screenHeight * 0.029
-            }}
-          >
+        <Overlay isVisible={this.props.visible}>
+          <View style={styles.container}>
             <View style={styles.modal}>
               <Text style={fontStyles.mainTextStyleDarkGrey}>
                 {strings.EnterAssignment}
@@ -126,12 +107,7 @@ export default class AssignmentEntryComponent extends React.Component {
               ) : (
                 <View />
               )}
-              <View
-                style={{
-                  flexDirection: "row-reverse",
-                  marginBottom: 30
-                }}
-              >
+              <View style={styles.footer}>
                 <QcActionButton
                   text={strings.Submit}
                   screen={this.props.screen}
@@ -148,13 +124,20 @@ export default class AssignmentEntryComponent extends React.Component {
               </View>
             </View>
           </View>
-        </Modal>
+        </Overlay>
       </KeyboardAvoidingView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    marginVertical: screenHeight * 0.073,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingBottom: screenHeight * 0.029
+  },
   modal: {
     backgroundColor: colors.lightGrey,
     alignItems: "center",
@@ -178,5 +161,9 @@ const styles = StyleSheet.create({
   },
   spacer: {
     height: screenHeight * 0.01
+  },
+  footer: {
+    flexDirection: "row-reverse",
+    marginBottom: 30
   }
 });
