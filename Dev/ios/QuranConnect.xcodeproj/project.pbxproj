@@ -165,6 +165,7 @@
 		FC65562ADC5844F094ACAAFA /* msq1.png in Resources */ = {isa = PBXBuildFile; fileRef = 909BBB6F7275477AA5735F2B /* msq1.png */; };
 		FDBCAF6B880442CF90CE4E37 /* is-icon-7.png in Resources */ = {isa = PBXBuildFile; fileRef = F4312D6600294E3B8CEA6855 /* is-icon-7.png */; };
 		FEF02C517164452DB3D398D4 /* shiled.png in Resources */ = {isa = PBXBuildFile; fileRef = 25D403CD5D9045A1984B91D9 /* shiled.png */; };
+		FA387BD1D219421FAADC99D0 /* online-meeting.png in Resources */ = {isa = PBXBuildFile; fileRef = CC54AF2967C9428EB6E44D5C /* online-meeting.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -379,6 +380,7 @@
 		FECB0FD8E76B4F9C8430C188 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		FF3E14CA335F9A6BF744F8EB /* Pods_QuranConnect_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QuranConnect_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFD7DDE8A928D4843398548A /* Pods-QuranConnect.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect.release.xcconfig"; path = "Target Support Files/Pods-QuranConnect/Pods-QuranConnect.release.xcconfig"; sourceTree = "<group>"; };
+		CC54AF2967C9428EB6E44D5C /* online-meeting.png */ = {isa = PBXFileReference; name = "online-meeting.png"; path = "../assets/images/online-meeting.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -687,6 +689,7 @@
 				1CA2100DCC2F4F168792C5E5 /* trophie-4.png */,
 				97CB7048858F4DF3AC387255 /* trophie-wings.png */,
 				2F6EBE17D5CF429AACC48999 /* Untitled-4.png */,
+				CC54AF2967C9428EB6E44D5C /* online-meeting.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -980,6 +983,7 @@
 				64C40CCB799E45C19476B3F2 /* trophie-4.png in Resources */,
 				2DE22E8C24DB4E6AB673B92F /* trophie-wings.png in Resources */,
 				39521CA6C9AC4975830BFBFD /* Untitled-4.png in Resources */,
+				FA387BD1D219421FAADC99D0 /* online-meeting.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
