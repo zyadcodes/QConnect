@@ -220,6 +220,7 @@ class AddManualStudentsScreen extends Component {
             ) : (
               <QcActionButton
                 text={strings.Done}
+                accessibilityLabel="add_student_done_btn"
                 onPress={() =>
                   this.props.navigation.push("TeacherCurrentClass", {
                     userID: this.props.navigation.state.params.userID

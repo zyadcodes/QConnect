@@ -12,11 +12,11 @@ class QcActionButton extends FontLoadingComponent {
   }
 
   render() {
-    const { text, disabled, style, textStyle } = this.props;
+    const { text, disabled, style, textStyle, accessibilityLabel } = this.props;
     return (
       <TouchableOpacity
         disabled={disabled ? disabled : false}
-        accessibilityLabel={text}
+        accessibilityLabel={accessibilityLabel ? accessibilityLabel : text}
         style={[styles.buttonStyle, style]}
         onPress={() => this.onButtonPress()}
       >
@@ -34,7 +34,7 @@ QcActionButton.propTypes = {
   text: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
   screen: PropTypes.string,
-  style: PropTypes.object,
+  style: PropTypes.object
 };
 
 const styles = StyleSheet.create({
@@ -47,8 +47,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryLight,
     justifyContent: "center",
     alignItems: "center",
-    textAlign: "center",
-  },
+    textAlign: "center"
+  }
 });
 
 export default QcActionButton;

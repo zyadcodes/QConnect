@@ -12,7 +12,11 @@ class SuggestionListItem extends PureComponent {
   render() {
     const { name, ename, textStyle, enameStyle } = this.props;
     return (
-      <TouchableOpacity style={styles.card} onPress={this.onPress}>
+      <TouchableOpacity
+        style={styles.card}
+        accessibilityLabel={"surahs_toc_item_" + ename}
+        onPress={this.onPress}
+      >
         <View style={styles.listItemContainer}>
           <Text
             style={[fontStyles.mainTextStylePrimaryDark, styles.centerText]}
