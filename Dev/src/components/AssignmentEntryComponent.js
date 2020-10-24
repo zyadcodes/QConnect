@@ -3,7 +3,6 @@ import { Text, View, StyleSheet, KeyboardAvoidingView } from "react-native";
 import { Overlay } from "react-native-elements";
 import QcActionButton from "components/QcActionButton";
 import strings from "config/strings";
-import colors from "config/colors";
 import surahNames from "config/surahNames";
 import InputAutoSuggest from "components/AutoCompleteComponent/InputAutoSuggest";
 import fontStyles from "config/fontStyles";

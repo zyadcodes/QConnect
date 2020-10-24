@@ -15,19 +15,13 @@ class SuggestionListItem extends PureComponent {
       <TouchableOpacity style={styles.card} onPress={this.onPress}>
         <View style={styles.listItemContainer}>
           <Text
-            style={[
-              fontStyles.mainTextStylePrimaryDark,
-              { textAlign: "center", textAlignVertical: "center" }
-            ]}
+            style={[fontStyles.mainTextStylePrimaryDark, styles.centerText]}
           >
             {name}
           </Text>
           <Text
             key={ename}
-            style={[
-              fontStyles.smallTextStyleDarkGrey,
-              { textAlign: "center", textAlignVertical: "center" }
-            ]}
+            style={[fontStyles.smallTextStyleDarkGrey, styles.centerText]}
           >
             {ename}
           </Text>
@@ -75,7 +69,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
-  }
+  },
+  centerText: { textAlign: "center", textAlignVertical: "center" }
 });
 
 /**

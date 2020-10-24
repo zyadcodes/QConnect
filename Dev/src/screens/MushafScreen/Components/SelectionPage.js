@@ -513,12 +513,7 @@ class SelectionPage extends React.Component {
               <View style={styles.footer}>
                 <ImageBackground
                   source={require("assets/images/quran/title-frame.png")}
-                  style={{
-                    width: "100%",
-                    justifyContent: "center",
-                    alignSelf: "center",
-                    alignItems: "center"
-                  }}
+                  style={styles.titleBackgroundContainer}
                   resizeMethod="scale"
                 >
                   {!this.state.editPageNumber && (
@@ -534,14 +529,7 @@ class SelectionPage extends React.Component {
                     />
                   )}
                   {this.state.editPageNumber && (
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignSelf: "stretch",
-                        alignItems: "center",
-                        justifyContent: "center"
-                      }}
-                    >
+                    <View style={styles.footerContainer}>
                       <TextInput
                         style={[
                           styles.textInputStyle,
@@ -638,6 +626,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 2,
     backgroundColor: colors.white,
     width: screenWidth
+  },
+  footerContainer: {
+    flexDirection: "row",
+    alignSelf: "stretch",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  titleBackgroundContainer: {
+    width: "100%",
+    justifyContent: "center",
+    alignSelf: "center",
+    alignItems: "center"
   }
 });
 
