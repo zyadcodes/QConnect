@@ -152,6 +152,7 @@ class PageHeader extends FontLoadingComponent {
         <View style={styles.topMiddleView}>
           <TouchableOpacity
             style={styles.titleContainer}
+            accessibilityLabel="surah_title_touchable"
             onPress={
               TitleOnPress
                 ? () => {
@@ -165,7 +166,20 @@ class PageHeader extends FontLoadingComponent {
               style={styles.titleImageBackground}
               resizeMethod="scale"
             >
-              <Text style={fontStyles.bigTextStylePrimaryDark}>{Title}</Text>
+              <Text
+                accessibilityLabel="surah_title_text"
+                style={fontStyles.bigTextStylePrimaryDark}
+              >
+                {Title}
+              </Text>
+
+              <Icon
+                name="table-of-contents"
+                type="material-community"
+                containerStyle={{ marginHorizontal: 5 }}
+                color={colors.primaryDark}
+                size={15}
+              />
             </ImageBackground>
           </TouchableOpacity>
         </View>
@@ -272,6 +286,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   titleImageBackground: {
+    flexDirection: "row",
     width: "100%",
     justifyContent: "center",
     alignSelf: "center",
