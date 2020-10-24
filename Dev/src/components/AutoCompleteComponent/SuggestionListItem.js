@@ -1,7 +1,7 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import PropTypes from 'prop-types';
-import React, { PureComponent } from 'react';
-import fontStyles from 'config/fontStyles';
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import PropTypes from "prop-types";
+import React, { PureComponent } from "react";
+import fontStyles from "config/fontStyles";
 
 class SuggestionListItem extends PureComponent {
   onPress = () => {
@@ -13,17 +13,11 @@ class SuggestionListItem extends PureComponent {
     const { name, ename, textStyle, enameStyle } = this.props;
     return (
       <TouchableOpacity style={styles.card} onPress={this.onPress}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
-        >
+        <View style={styles.listItemContainer}>
           <Text
             style={[
               fontStyles.mainTextStylePrimaryDark,
-              { textAlign: 'center', textAlignVertical: 'center' },
+              { textAlign: "center", textAlignVertical: "center" }
             ]}
           >
             {name}
@@ -32,7 +26,7 @@ class SuggestionListItem extends PureComponent {
             key={ename}
             style={[
               fontStyles.smallTextStyleDarkGrey,
-              { textAlign: 'center', textAlignVertical: 'center' },
+              { textAlign: "center", textAlignVertical: "center" }
             ]}
           >
             {ename}
@@ -48,25 +42,25 @@ SuggestionListItem.propTypes = {
   name: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   ename: PropTypes.string.isRequired,
-  onPressItem: PropTypes.func.isRequired,
+  onPressItem: PropTypes.func.isRequired
 };
 SuggestionListItem.defaultProps = {
   textStyle: {},
-  enameStyle: {},
+  enameStyle: {}
 };
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
+    justifyContent: "center",
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     height: 40,
-    margin: 5,
+    margin: 5
   },
   card: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: 'black',
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "black",
     shadowOpacity: 0.26,
     shadowOffset: { width: 0, height: 0.1 },
     shadowRadius: 1,
@@ -75,7 +69,12 @@ const styles = StyleSheet.create({
     height: 50,
     margin: 5,
     borderRadius: 2,
-    backgroundColor: 'white'
+    backgroundColor: "white"
+  },
+  listItemContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   }
 });
 

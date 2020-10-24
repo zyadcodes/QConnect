@@ -39,12 +39,12 @@ class SelectionPage extends React.Component {
     selectedAyahsStart: {
       surah: 0,
       page: this.lastPage,
-      ayah: 0,
+      ayah: 0
     },
     selectedAyahsEnd: {
       surah: 0,
       page: this.lastPage,
-      ayah: 0,
+      ayah: 0
     },
     selectionStarted: false,
     selectionCompleted: false,
@@ -70,7 +70,7 @@ class SelectionPage extends React.Component {
       retValue = {
         page: nextProps.page,
         isLoading: false,
-        lines: pages[nextProps.page - 1],
+        lines: pages[nextProps.page - 1]
       };
     }
 
@@ -92,7 +92,7 @@ class SelectionPage extends React.Component {
         selectionStarted: nextProps.selectionStarted,
         selectionCompleted: nextProps.selectionCompleted,
         selectionOn: nextProps.selectionOn,
-        isLoading: false,
+        isLoading: false
       };
     }
 
@@ -106,7 +106,7 @@ class SelectionPage extends React.Component {
         selectionStarted: nextProps.selectionStarted,
         selectionCompleted: nextProps.selectionCompleted,
         selectionOn: nextProps.selectionOn,
-        isLoading: false,
+        isLoading: false
       };
     }
     return retValue;
@@ -156,7 +156,7 @@ class SelectionPage extends React.Component {
     if (
       nextProps.selectionOn != this.state.selectionOn ||
       nextProps.isLoading !== this.state.isLoading ||
-      nextProps.readOnly !== this.props.readOnly || 
+      nextProps.readOnly !== this.props.readOnly ||
       nextState.isSurahSelectionVisible !==
         this.state.isSurahSelectionVisible ||
       nextState.editPageNumber !== this.state.editPageNumber ||
@@ -195,7 +195,7 @@ class SelectionPage extends React.Component {
     this.setState({
       page: page,
       isLoading: false,
-      lines: pages[page - 1],
+      lines: pages[page - 1]
     });
   }
 
@@ -210,7 +210,7 @@ class SelectionPage extends React.Component {
     const lines = await getPageTextWbW(page);
     this.setState({
       isLoading: false,
-      lines,
+      lines
     });
   }
 
@@ -278,7 +278,7 @@ class SelectionPage extends React.Component {
       ayah: lastAyah,
       surah: Number(lastLine.surahNumber),
       page: page,
-      wordNum: Number(lastLine.text[lastLine.text.length - 1].id),
+      wordNum: Number(lastLine.text[lastLine.text.length - 1].id)
     };
   }
 
@@ -354,7 +354,7 @@ class SelectionPage extends React.Component {
       selectedAyahsEnd,
       selectionStarted,
       selectionCompleted,
-      selectionOn,
+      selectionOn
     } = this.state;
 
     if (isLoading === true) {
@@ -389,7 +389,7 @@ class SelectionPage extends React.Component {
               id={this.state.page + "upperWrapper"}
               style={{
                 backgroundColor: colors.white,
-                justifyContent: "flex-end",
+                justifyContent: "flex-end"
               }}
             >
               <AssignmentEntryComponent
@@ -590,7 +590,7 @@ const styles = StyleSheet.create({
     textAlign: "right",
     fontFamily: "me_quran",
     fontSize: 20,
-    color: colors.darkGrey,
+    color: colors.darkGrey
   },
   footer: {
     justifyContent: "center",
@@ -606,7 +606,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     textAlign: "center",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center"
   },
   topMiddleView: {
     justifyContent: "center",
@@ -614,7 +614,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 10,
     paddingTop: screenHeight * 0.035,
-    paddingBottom: screenHeight * 0.01,
+    paddingBottom: screenHeight * 0.01
   },
   entireTopView: {
     height: screenHeight * 0.05,
@@ -638,7 +638,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 2,
     backgroundColor: colors.white,
     width: screenWidth
-  },
+  }
 });
 
 export default SelectionPage;

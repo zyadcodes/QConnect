@@ -80,7 +80,7 @@ export default {
   CheckEmail:
     "If a user with this email exists, we've sent a link to your email to reset your password",
   Ok: "Ok",
-  Go: "Change",
+  Go: "Go",
   PasswordsDontMatch: "Please make sure your passwords match",
 
   //--------------------- Evaluation Page ---------------------
