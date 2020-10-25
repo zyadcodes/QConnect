@@ -349,7 +349,6 @@ class StudentMainScreen extends QcParentScreen {
             />
             <View style={{ flex: 1 }} />
           </View>
-
         </QCView>
       </SideMenu>
     );
@@ -518,17 +517,18 @@ class StudentMainScreen extends QcParentScreen {
               this.animateHideAudioUI(assignmentIndex);
             }}
             onSend={(recordedFileUri, localPath) => {
-              let sent = this.getFormattedDateTimeString(new Date());
               let { submittedRecordings } = this.state;
-              if (submittedRecordings &&
+              if (
+                submittedRecordings &&
                 submittedRecordings.length > 0 &&
                 submittedRecordings[assignmentIndex]
-
+              ) {
                 submittedRecordings[assignmentIndex] = recordedFileUri;
                 this.setState({
                   submittedRecordings,
                   recordingChanged: !this.state.recordingChanged
                 });
+              }
 
               FirebaseFunctions.submitRecordingAudio(
                 recordedFileUri,
