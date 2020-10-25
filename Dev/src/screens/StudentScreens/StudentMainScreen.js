@@ -62,7 +62,7 @@ class StudentMainScreen extends QcParentScreen {
     classesAttended: 0,
     classesMissed: 0,
     dailyPracticeLog: {},
-    audioPlaybackVisible: false
+    audioPlaybackVisible: false,
   };
 
   //-------------- Component lifecycle methods -----------------------------------
@@ -92,7 +92,7 @@ class StudentMainScreen extends QcParentScreen {
           student,
           userID,
           isOpen: false,
-          classes: []
+          classes: [],
         });
       } else {
         let currentClass = await FirebaseFunctions.getClassByID(currentClassID);
@@ -178,7 +178,7 @@ class StudentMainScreen extends QcParentScreen {
               : 0,
             classesMissed: studentClassInfo.classesMissed
               ? studentClassInfo.classesMissed
-              : 0
+              : 0,
           },
           () => {
             if (logAsPractice === true) {
@@ -254,7 +254,7 @@ class StudentMainScreen extends QcParentScreen {
       } else {
         //Refetches the student object to reflect the updated database
         this.props.navigation.push("StudentCurrentClass", {
-          userID
+          userID,
         });
       }
     }
@@ -281,7 +281,7 @@ class StudentMainScreen extends QcParentScreen {
           />
         }
       >
-        <QCView style={{ backgroundColor: colors.white }}>
+        <QCView style={{backgroundColor: colors.white}}>
           <View>
             <TopBanner
               LeftIconName="navicon"
@@ -300,7 +300,7 @@ class StudentMainScreen extends QcParentScreen {
             <Text
               style={[
                 fontStyles.hugeTextStyleDarkGrey,
-                { textAlign: "center", alignSelf: "center" }
+                { textAlign: "center", alignSelf: "center" },
               ]}
             >
               {strings.StudentNoClassHeaderMsg}
@@ -308,7 +308,7 @@ class StudentMainScreen extends QcParentScreen {
             <Text
               style={[
                 fontStyles.bigTextStyleDarkGrey,
-                { textAlign: "center", alignSelf: "center" }
+                { textAlign: "center", alignSelf: "center" },
               ]}
             >
               {strings.HaventJoinedClassYet}
@@ -347,23 +347,29 @@ class StudentMainScreen extends QcParentScreen {
               text={strings.JoinClass}
               onPress={() => this.joinClass()}
             />
-            <View style={{ flex: 1 }} />
+            <View style={{flex: 1}}></View>
           </View>
+<<<<<<< HEAD
+=======
+          
+>>>>>>> parent of 98cad74c... Install new Modal component + fixed StudMainScr formatting
         </QCView>
       </SideMenu>
     );
   }
 
   renderTopView() {
-    const { currentClass } = this.state;
+    const {
+      currentClass,
+    } = this.state;
 
     return (
       <View style={styles.topView}>
         <TopBanner
-          LeftIconName="navicon"
-          LeftOnPress={() => this.setState({ isOpen: true })}
-          Title={currentClass.name}
-        />
+        LeftIconName="navicon"
+        LeftOnPress={() => this.setState({ isOpen: true })}
+        Title={currentClass.name}
+      />
       </View>
     );
   }
@@ -375,8 +381,8 @@ class StudentMainScreen extends QcParentScreen {
     this.setState({
       studentClassInfo: {
         ...studentClassInfo,
-        currentAssignments: updatedAssignments
-      }
+        currentAssignments: updatedAssignments,
+      },
     });
 
     FirebaseFunctions.updateStudentAssignmentStatus(
@@ -405,7 +411,7 @@ class StudentMainScreen extends QcParentScreen {
         this.animateHideAudioUI();
       }
       this.setState({
-        recordingUIVisible: this.setRecUIForAssignmentIndex(index, false)
+        recordingUIVisible: this.setRecUIForAssignmentIndex(index, false),
       });
     }
   }
@@ -421,9 +427,9 @@ class StudentMainScreen extends QcParentScreen {
       Animated.timing(translateY, {
         toValue: 0,
         duration: 500,
-        useNativeDriver: true
+        useNativeDriver: true,
       }),
-      Animated.timing(opacity, { toValue: 1, useNativeDriver: true })
+      Animated.timing(opacity, { toValue: 1, useNativeDriver: true }),
     ]).start();
   }
 
@@ -432,12 +438,12 @@ class StudentMainScreen extends QcParentScreen {
       Animated.timing(translateY, {
         toValue: -35,
         duration: 200,
-        useNativeDriver: true
+        useNativeDriver: true,
       }),
-      Animated.timing(opacity, { toValue: 0, useNativeDriver: true })
+      Animated.timing(opacity, { toValue: 0, useNativeDriver: true }),
     ]).start(() =>
       this.setState({
-        recordingUIVisible: this.setRecUIForAssignmentIndex(index, false)
+        recordingUIVisible: this.setRecUIForAssignmentIndex(index, false),
       })
     );
   }
@@ -484,12 +490,12 @@ class StudentMainScreen extends QcParentScreen {
       studentClassInfo,
       userID,
       currentClassID,
-      recordingUIVisible
+      recordingUIVisible,
     } = this.state;
 
     const transformStyle = {
       transform: [{ translateY }],
-      opacity: opacityInterpolate
+      opacity: opacityInterpolate,
     };
 
     return (
@@ -501,7 +507,7 @@ class StudentMainScreen extends QcParentScreen {
               alignItems: "center",
               alignSelf: "flex-start"
             },
-            transformStyle
+            transformStyle,
           ]}
         >
           <AudioPlayer
@@ -518,6 +524,7 @@ class StudentMainScreen extends QcParentScreen {
             }}
             onSend={(recordedFileUri, localPath) => {
               let { submittedRecordings } = this.state;
+<<<<<<< HEAD
               if (
                 submittedRecordings &&
                 submittedRecordings.length > 0 &&
@@ -530,6 +537,16 @@ class StudentMainScreen extends QcParentScreen {
                 });
               }
 
+=======
+              if(submittedRecordings &&
+                submittedRecordings.length > 0 &&
+                submittedRecordings[assignmentIndex]){
+                  
+                submittedRecordings[assignmentIndex]  = recordedFileUri;
+                this.setState({ submittedRecordings, recordingChanged: !this.state.recordingChanged });
+              }
+              
+>>>>>>> parent of 98cad74c... Install new Modal component + fixed StudMainScr formatting
               FirebaseFunctions.submitRecordingAudio(
                 recordedFileUri,
                 userID,
@@ -587,7 +604,7 @@ class StudentMainScreen extends QcParentScreen {
           style={{
             justifyContent: "center",
             alignItems: "center",
-            marginBottom: 10
+            marginBottom: 10,
           }}
         >
           <Text style={fontStyles.bigTextStylePrimaryDark}>
@@ -609,7 +626,7 @@ class StudentMainScreen extends QcParentScreen {
           style={{
             flexDirection: "row",
             justifyContent: "flex-end",
-            height: 15
+            height: 15,
           }}
         >
           <TouchableText
@@ -621,7 +638,7 @@ class StudentMainScreen extends QcParentScreen {
                   recordingUIVisible: this.setRecUIForAssignmentIndex(
                     assignmentIndex,
                     true
-                  )
+                  ),
                 },
                 () => this.animateShowAudioUI()
               );
@@ -639,28 +656,28 @@ class StudentMainScreen extends QcParentScreen {
       iconName: "check",
       iconType: "material-community",
       innerColor: colors.darkGreen,
-      outerColor: colors.green
+      outerColor: colors.green,
     };
     statusAvatarsConfig.WORKING_ON_IT = {
       name: strings.WorkingOnItNonCap,
       iconName: "update",
       iconType: "material-community",
       innerColor: colors.primaryDark,
-      outerColor: colors.primaryLight
+      outerColor: colors.primaryLight,
     };
     statusAvatarsConfig.NEED_HELP = {
       name: strings.NeedHelpNonCap,
       iconName: "issue-opened",
       iconType: "octicon",
       innerColor: colors.darkRed,
-      outerColor: colors.red
+      outerColor: colors.red,
     };
     statusAvatarsConfig.NOT_STARTED = {
       name: strings.NotStartedNonCap,
       iconName: "bookmark-off-outline",
       iconType: "material-community",
       innerColor: colors.darkGrey,
-      outerColor: colors.grey
+      outerColor: colors.grey,
     };
 
     let statusKeys = ["NOT_STARTED", "WORKING_ON_IT", "NEED_HELP", "READY"];
@@ -674,20 +691,20 @@ class StudentMainScreen extends QcParentScreen {
           paddingVertical: 3,
           backgroundColor: "rgba(255,255,250,0.6)",
           borderRadius: 3,
-          marginHorizontal: 5
+          marginHorizontal: 5,
         }}
       >
         <View
           style={{
             justifyContent: "center",
             alignItems: "center",
-            minHeight: 25
+            minHeight: 25,
           }}
         >
           <Text
             style={[
               fontStyles.mainTextStyleDarkGrey,
-              { textAlign: "center", textVerticalAlign: "center" }
+              { textAlign: "center", textVerticalAlign: "center" },
             ]}
           >
             {strings.Status}
@@ -707,9 +724,9 @@ class StudentMainScreen extends QcParentScreen {
                     justifyContent: "center",
                     alignItems: "center",
                     width: 40,
-                    marginHorizontal: 15
+                    marginHorizontal: 15,
                   },
-                  statusKey !== currentStatus ? { opacity: 0.5 } : {}
+                  statusKey !== currentStatus ? { opacity: 0.5 } : {},
                 ]}
               >
                 <Avatar
@@ -718,10 +735,10 @@ class StudentMainScreen extends QcParentScreen {
                   icon={{
                     name: statusAvatarsConfig[statusKey].iconName,
                     type: statusAvatarsConfig[statusKey].iconType,
-                    color: colors.white
+                    color: colors.white,
                   }}
                   overlayContainerStyle={{
-                    backgroundColor: statusAvatarsConfig[statusKey].innerColor
+                    backgroundColor: statusAvatarsConfig[statusKey].innerColor,
                   }}
                 />
                 <Text
@@ -733,8 +750,8 @@ class StudentMainScreen extends QcParentScreen {
                       width: 100,
                       textAlign: "center",
                       paddingTop: 3,
-                      color: statusAvatarsConfig[statusKey].innerColor
-                    }
+                      color: statusAvatarsConfig[statusKey].innerColor,
+                    },
                   ]}
                 >
                   {statusAvatarsConfig[statusKey].name}
@@ -753,7 +770,7 @@ class StudentMainScreen extends QcParentScreen {
         style={{
           marginLeft: screenWidth * 0.017,
           paddingTop: screenHeight * 0.005,
-          paddingBottom: screenHeight * 0.01
+          paddingBottom: screenHeight * 0.01,
         }}
       >
         <View
@@ -770,7 +787,7 @@ class StudentMainScreen extends QcParentScreen {
           <Text
             style={[
               { marginLeft: screenWidth * 0.017 },
-              fontStyles.mainTextStyleDarkGrey
+              fontStyles.mainTextStyleDarkGrey,
             ]}
           >
             {label ? label.toUpperCase() : strings.Assignment}
@@ -808,8 +825,8 @@ class StudentMainScreen extends QcParentScreen {
                   ? colors.green
                   : item.isReadyEnum === "NOT_STARTED"
                   ? colors.primaryVeryLight
-                  : colors.red
-            }
+                  : colors.red,
+            },
           ]}
         >
           <View>
@@ -856,7 +873,7 @@ class StudentMainScreen extends QcParentScreen {
                 height: 50,
                 justifyContent: "center",
                 alignContent: "center",
-                flex: 1
+                flex: 1,
               }}
             >
               <TouchableHighlight
@@ -876,7 +893,7 @@ class StudentMainScreen extends QcParentScreen {
                   <Text
                     style={[
                       fontStyles.mainTextStylePrimaryDark,
-                      { paddingLeft: 5 }
+                      { paddingLeft: 5 },
                     ]}
                   >
                     {strings.CompleteAssignment}
@@ -904,7 +921,7 @@ class StudentMainScreen extends QcParentScreen {
                     assignmentType: item.type,
                     assignmentName: item.name,
                     assignmentIndex: index,
-                    imageID: studentClassInfo.profileImageID
+                    imageID: studentClassInfo.profileImageID,
                   });
                 }}
               >
@@ -918,7 +935,7 @@ class StudentMainScreen extends QcParentScreen {
                   <Text
                     style={[
                       fontStyles.mainTextStylePrimaryDark,
-                      { paddingLeft: 5 }
+                      { paddingLeft: 5 },
                     ]}
                   >
                     {strings.OpenAssignment}
@@ -962,8 +979,8 @@ class StudentMainScreen extends QcParentScreen {
           style={[
             styles.currentAssignment,
             {
-              backgroundColor: colors.primaryVeryLight
-            }
+              backgroundColor: colors.primaryVeryLight,
+            },
           ]}
         >
           <View
@@ -971,7 +988,7 @@ class StudentMainScreen extends QcParentScreen {
               flex: 0.5,
               justifyContent: "center",
               alignItems: "center",
-              paddingVertical: screenHeight * 0.04
+              paddingVertical: screenHeight * 0.04,
             }}
           >
             <Text style={fontStyles.bigTextStyleBlack}>
@@ -984,7 +1001,7 @@ class StudentMainScreen extends QcParentScreen {
             <Text
               style={[
                 fontStyles.mainTextStylePrimaryDark,
-                { paddingBottom: 30 }
+                { paddingBottom: 30 },
               ]}
             >
               {strings.EnjoyYourTime}
@@ -1003,7 +1020,7 @@ class StudentMainScreen extends QcParentScreen {
               fontStyles.bigTextStylePrimaryDark,
               {
                 textAlign: "center"
-              }
+              },
             ]}
           >
             {strings.ReadQuranMotivation}
@@ -1013,7 +1030,7 @@ class StudentMainScreen extends QcParentScreen {
               fontStyles.mainTextStyleDarkGrey,
               {
                 textAlign: "center"
-              }
+              },
             ]}
           >
             {strings.ReadQuranMotivationDesc}
@@ -1040,7 +1057,7 @@ class StudentMainScreen extends QcParentScreen {
                 classID: this.state.currentClassID,
                 studentID: this.state.userID,
                 currentClass: this.state.studentClassInfo,
-                imageID: this.state.studentClassInfo.profileImageID
+                imageID: this.state.studentClassInfo.profileImageID,
               });
             }}
           />
@@ -1058,8 +1075,8 @@ class StudentMainScreen extends QcParentScreen {
       dailyPracticeLog = {
         ...this.state.dailyPracticeLog,
         [date.dateString]: {
-          type: strings.Reading
-        }
+          type: strings.Reading,
+        },
       };
     }
 
@@ -1073,7 +1090,7 @@ class StudentMainScreen extends QcParentScreen {
     );
 
     this.setState({
-      dailyPracticeLog
+      dailyPracticeLog,
     });
   }
   //-------------------------- render method: Main UI entry point for the component ------------
@@ -1277,10 +1294,10 @@ const styles = StyleSheet.create({
   },
   classesAttended: {
     paddingLeft: 5,
-    paddingRight: 5
+    paddingRight: 5,
   },
   classesMissed: {
-    paddingRight: 5
+    paddingRight: 5,
   },
   modal: {
     backgroundColor: colors.white,
@@ -1316,8 +1333,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.veryLightGrey,
     borderRadius: 1,
     textAlign: "center",
-    color: colors.black
-  }
+    color: colors.black,
+  },
 });
 
 export default StudentMainScreen;

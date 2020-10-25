@@ -25,7 +25,7 @@
 	<key>CodePushDeploymentKey</key>
 	<string>xgHCRhRz4PRViwFB0N0fD2yEl4CN1nmwRwh4W</string>
 	<key>LSApplicationCategoryType</key>
-	<string/>
+	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>mailto</string>
@@ -46,7 +46,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Quran Connect would like to record your voice to submit your assignment</string>
 	<key>UIAppFonts</key>
