@@ -10,7 +10,7 @@ class SuggestionListItem extends PureComponent {
   };
 
   render() {
-    const { name, ename, textStyle, enameStyle } = this.props;
+    const { name, ename, id } = this.props;
     return (
       <TouchableOpacity
         style={styles.card}
