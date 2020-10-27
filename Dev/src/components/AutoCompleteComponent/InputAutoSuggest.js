@@ -98,9 +98,9 @@ class InputAutoSuggest extends Component {
 
   render() {
     const { value, data } = this.state;
-    const { inputStyle, flatListStyle } = this.props;
+    const { style, inputStyle, flatListStyle } = this.props;
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, style]}>
         <TextInput
           style={[styles.inputDefaultStyle, inputStyle]}
           value={value}
@@ -119,6 +119,7 @@ class InputAutoSuggest extends Component {
           numColumns={4}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
+          columnWrapperStyle={styles.reverseColumns}
           initialNumToRender={10}
           keyboardShouldPersistTaps="handled"
         />
@@ -165,6 +166,9 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 0,
     padding: 0
+  },
+  reverseColumns: {
+    flexDirection: "row-reverse"
   },
   input: {
     fontSize: 22,
