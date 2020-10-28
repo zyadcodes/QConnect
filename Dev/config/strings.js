@@ -310,5 +310,6 @@ export default {
   RemoveAssignment: "Remove this assignment",
   AssignmentDeleted: "Assignment is deleted. The student is notified.",
   AreYouSureYouWantToRemoveAssignment:
-    "Are you sure you want to remove this assignment?"
+    "Are you sure you want to remove this assignment?",
+  TypeSurahName: "Tap on destination or start typing to filter"
 };

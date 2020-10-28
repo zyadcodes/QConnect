@@ -1,4 +1,4 @@
-import { FlatList, View, TextInput, StyleSheet, Text } from "react-native";
+import { FlatList, View, Platform, StyleSheet, Text } from "react-native";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import * as _ from "lodash";
@@ -7,6 +7,9 @@ import suggest from "./services/suggest";
 import { screenWidth, screenHeight } from "config/dimensions";
 import fontStyles from "config/fontStyles";
 import colors from "config/colors";
+import QcTextInput from "components/QcTextInput";
+import strings from "config/strings";
+import { Icon } from "react-native-elements";
 
 class InputAutoSuggest extends Component {
   constructor(props) {
@@ -34,7 +37,6 @@ class InputAutoSuggest extends Component {
     this.props.onSurahTap(name, ename, id);
 
     this.searchList;
-    //this.myTextInput.focus();
   };
 
   keyExtractor = (item, index) => item.id + "";
@@ -96,22 +98,33 @@ class InputAutoSuggest extends Component {
     );
   };
 
-  render() {
-    const { value, data } = this.state;
-    const { style, inputStyle, flatListStyle } = this.props;
+  renderTextInput(inputStyle, value) {
     return (
-      <View style={[styles.container, style]}>
-        <TextInput
+      <View style={styles.footerRow}>
+        <QcTextInput
           style={[styles.inputDefaultStyle, inputStyle]}
+          placeholder={strings.TypeSurahName}
           value={value}
           clearButtonMode="while-editing"
           selectTextOnFocus
           autoCorrect={false}
           onChangeText={this.searchList}
-          ref={ref => {
-            this.myTextInput = ref;
-          }}
         />
+      </View>
+    );
+  }
+
+  render() {
+    const { value, data } = this.state;
+    const { style, inputStyle, flatListStyle } = this.props;
+    return (
+      <View style={[styles.container, style]}>
+        {//due to the difference in behavior of keyborad padding in ios vs android
+        // we will bring textInput to the bottom of the layout for Android and keep it
+        // to avoid it temporarily padding off top of the screen
+        // we will keep text input on top for iOS since this problem doesn't exist
+        // and it offers a simpler / cleaner UI there.
+        Platform.OS !== "android" && this.renderTextInput(inputStyle, value)}
         <FlatList
           style={[styles.flatList, flatListStyle]}
           data={data}
@@ -123,6 +136,12 @@ class InputAutoSuggest extends Component {
           initialNumToRender={10}
           keyboardShouldPersistTaps="handled"
         />
+        {//due to the difference in behavior of keyborad padding in ios vs android
+        // we will bring textInput to the bottom of the layout for Android and keep it
+        // to avoid it temporarily padding off top of the screen
+        // we will keep text input on top for iOS since this problem doesn't exist
+        // and it offers a simpler / cleaner UI there.
+        Platform.OS === "android" && this.renderTextInput(inputStyle, value)}
       </View>
     );
   }
@@ -185,7 +204,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5
   },
-  itemTextStyle: fontStyles.bigTextStylePrimaryDark
+  itemTextStyle: fontStyles.bigTextStylePrimaryDark,
+  footerRow: {
+    flexDirection: "row",
+    backgroundColor: colors.lightGrey,
+    alignItems: "center",
+    justifyContent: "center"
+  }
 });
 
 export default InputAutoSuggest;

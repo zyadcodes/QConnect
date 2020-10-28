@@ -3,6 +3,15 @@ import { View, TextInput } from "react-native";
 import colors from "config/colors";
 import strings from "config/strings";
 
+/**
+ *
+ * @param {style={[styles.inputDefaultStyle, inputStyle]}
+          value={value}
+          clearButtonMode="while-editing"
+          selectTextOnFocus
+          autoCorrect={false}
+          onChangeText={this.searchList}} props
+ */
 const QcTextInput = props => {
   return (
     <View
@@ -11,9 +20,9 @@ const QcTextInput = props => {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "flex-end",
-        backgroundColor: Colors.pink,
-        borderColor: Colors.lime,
-        borderTopWidth: 4,
+        backgroundColor: colors.lightGrey,
+        borderColor: colors.lightGrey,
+        flex: 1,
         padding: 6
       }}
     >
@@ -22,23 +31,25 @@ const QcTextInput = props => {
           flex: 1,
           borderRadius: 6,
           padding: 0,
-          backgroundColor: Colors.white,
+          backgroundColor: colors.white,
           alignItems: "stretch"
         }}
       >
         <TextInput
-          placeholder={Strings.child_keyboard_placeholder}
-          value={this.state.messageTextInput}
-          onChangeText={text => this.setState({ messageTextInput: text })}
+          placeholder={props.placeholder}
+          value={props.value}
+          selectTextOnFocus
+          onChangeText={text => props.onChangeText(text)}
           style={{
             height: 50,
             marginLeft: 10,
-            marginRight: CONFIRM_BUTTON_SIZE / 2
+            marginRight: 10
           }}
           underlineColorAndroid="transparent"
           numberOfLines={2}
           maxLength={70}
           autoCorrect={false}
+          clearButtonMode="while-editing"
           returnKeyType="next"
         />
       </View>
