@@ -28,6 +28,7 @@ import FirebaseFunctions from "config/FirebaseFunctions";
 import LoadingSpinner from "components/LoadingSpinner";
 import QCView from "components/QCView";
 import fontStyles from "config/fontStyles";
+import QcTextInput from "components/QcTextInput";
 import { screenHeight, screenWidth } from "config/dimensions";
 
 class AddManualStudentsScreen extends Component {
@@ -41,32 +42,33 @@ class AddManualStudentsScreen extends Component {
 
   //Helpers to retrieve the selected image index
   getRandomGenderNeutralImage = () => {
-    index = Math.floor(
+    let index = Math.floor(
       Math.random() * Math.floor(studentImages.genderNeutralImages.length)
     );
-    imageIndex = studentImages.genderNeutralImages[index];
+    let imageIndex = studentImages.genderNeutralImages[index];
     return imageIndex;
   };
 
   getRandomMaleImage = () => {
-    index = Math.floor(
+    let index = Math.floor(
       Math.random() * Math.floor(studentImages.maleImages.length)
     );
-    imageIndex = studentImages.maleImages[index];
+    let imageIndex = studentImages.maleImages[index];
     return imageIndex;
   };
 
   getRandomFemaleImage = () => {
-    index = Math.floor(
+    let index = Math.floor(
       Math.random() * Math.floor(studentImages.femaleImages.length)
     );
-    imageIndex = studentImages.femaleImages[index];
+    let imageIndex = studentImages.femaleImages[index];
     return imageIndex;
   };
 
   defaultImageId = this.getRandomGenderNeutralImage();
 
   getHighlightedImages = () => {
+    let secondGenericImageId;
     // get a second gender neutral image, make sure it is different than the first one
     do {
       secondGenericImageId = this.getRandomGenderNeutralImage();
@@ -150,14 +152,7 @@ class AddManualStudentsScreen extends Component {
   render() {
     const { classID, students } = this.state;
     return (
-      <QCView
-        style={{
-          flexDirection: "column",
-          backgroundColor: colors.lightGrey,
-          width: screenWidth,
-          height: screenHeight
-        }}
-      >
+      <QCView style={styles.wrapper}>
         <ScrollView nestedScrollEnabled={true} style={styles.container}>
           <ImageSelectionModal
             visible={this.state.modalVisible}
@@ -168,28 +163,20 @@ class AddManualStudentsScreen extends Component {
           />
           <View style={styles.addStudentsView}>
             <View style={styles.enterStudentNameText}>
-              <Text
-                style={{ ...fontStyles.mainTextStyleBlack, marginBottom: 3 }}
-              >
-                {strings.EnterYourStudentsName}
-              </Text>
+              <Text style={styles.desc}>{strings.EnterYourStudentsName}</Text>
             </View>
-            <View style={{ flex: 0.7, alignSelf: "flex-start" }}>
-              <TextInput
-                style={[
-                  fontStyles.mainTextStyleDarkGrey,
-                  styles.studentNameTextInput
-                ]}
-                placeholder={strings.StudentName}
-                autoCorrect={false}
-                onChangeText={newStudentName =>
-                  this.setState({ newStudentName })
-                }
-                value={this.state.newStudentName}
-                accessibilityLabel="text_input_student_name"
-              />
-            </View>
-            <View style={{ flex: 1 }}>
+            <QcTextInput
+              style={[
+                fontStyles.mainTextStyleDarkGrey,
+                styles.studentNameTextInput
+              ]}
+              placeholder={strings.StudentName}
+              autoCorrect={false}
+              onChangeText={newStudentName => this.setState({ newStudentName })}
+              value={this.state.newStudentName}
+              accessibilityLabel="text_input_student_name"
+            />
+            <View style={styles.actionButtons}>
               <ImageSelectionRow
                 images={studentImages.images}
                 highlightedImagesIndices={this.state.highlightedImagesIndices}
@@ -198,13 +185,7 @@ class AddManualStudentsScreen extends Component {
                 selectedImageIndex={this.state.profileImageID}
               />
             </View>
-            <View
-              style={{
-                flex: 2,
-                justifyContent: "flex-end",
-                alignItems: "center"
-              }}
-            >
+            <View style={styles.footer}>
               <QcActionButton
                 text={strings.AddStudent}
                 onPress={async () => {
@@ -221,11 +202,11 @@ class AddManualStudentsScreen extends Component {
               <QcActionButton
                 text={strings.Done}
                 accessibilityLabel="add_student_done_btn"
-                onPress={() =>
+                onPress={() => {
                   this.props.navigation.push("TeacherCurrentClass", {
                     userID: this.props.navigation.state.params.userID
-                  })
-                }
+                  });
+                }}
               />
             )}
           </View>
@@ -288,6 +269,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightGrey,
     flex: 1
   },
+  wrapper: {
+    flexDirection: "column",
+    backgroundColor: colors.lightGrey,
+    width: screenWidth,
+    height: screenHeight
+  },
   addStudentsView: {
     backgroundColor: colors.white,
     paddingTop: screenHeight * 0.05
@@ -295,6 +282,10 @@ const styles = StyleSheet.create({
   enterStudentNameText: {
     paddingLeft: screenWidth * 0.05,
     flex: 0.5,
+    alignSelf: "flex-start"
+  },
+  textInputWrapper: {
+    flex: 0.7,
     alignSelf: "flex-start"
   },
   studentNameTextInput: {
@@ -305,10 +296,20 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.06,
     borderRadius: 1
   },
+  actionButtons: { flex: 1 },
   doneButton: {
     alignItems: "center",
     justifyContent: "center",
     height: screenHeight * 0.125
+  },
+  desc: {
+    ...fontStyles.mainTextStyleBlack,
+    marginBottom: 3
+  },
+  footer: {
+    flex: 2,
+    justifyContent: "flex-end",
+    alignItems: "center"
   }
 });
 
