@@ -38,7 +38,7 @@ const mushafFontSize =
 class Word extends React.Component {
   state = {
     selected: this.props.selected,
-    isFirstSelectedWord: this.props.isFirstSelectedWord,
+    isFirstSelectedWord: this.props.isFirstSelectedWord
   };
 
   shouldComponentUpdate(nextProps) {
@@ -63,7 +63,7 @@ class Word extends React.Component {
       word,
       isWordHighlighted,
       isAyahHighlighted,
-      mushafFontScale,
+      mushafFontScale
     } = this.props;
     const { text } = word;
 
@@ -75,6 +75,13 @@ class Word extends React.Component {
     return (
       <View>
         <Text
+          accessibilityLabel={
+            "mushaf_word_text_" + word.id + isAyahHighlighted
+              ? "_ah"
+              : "" + isWordHighlighted
+              ? "_wh"
+              : ""
+          }
           style={[
             isWordHighlighted || isAyahHighlighted
               ? styles.highlightedWordText
@@ -143,6 +150,7 @@ class Word extends React.Component {
               <React.Fragment>
                 <TouchableWithoutFeedback
                   ref={setPopoverAnchor}
+                  accessibilityLabel={"mushaf_word_" + word.id}
                   onPress={() => {
                     openPopover();
                     if (!highlightWord) {

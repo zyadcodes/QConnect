@@ -272,7 +272,7 @@ class MushafAssignmentScreen extends Component {
       name: newAssignmentName,
       type: assignmentType,
       location: assignmentLocation,
-      isReadyEnum: "NOT_STARTED",
+      isReadyEnum: "NOT_STARTED"
     };
 
     //since there might be a latency before firebase returns the updated assignments,
@@ -789,12 +789,11 @@ class MushafAssignmentScreen extends Component {
                       assignmentIndex
                     );
                     this.closeScreen(true, ASSIGNMENT_DELETED);
-                  },
+                  }
                 },
-                { text: strings.Cancel, style: "cancel" },
+                { text: strings.Cancel, style: "cancel" }
               ]
             );
-            
           }}
         >
           <Icon
@@ -902,7 +901,10 @@ class MushafAssignmentScreen extends Component {
             <View style={{ padding: 5 }}>
               {this.state.selection.start.surah > 0 ||
               this.state.freeFormAssignment ? (
-                <Text style={fontStyles.mainTextStyleDarkGrey}>
+                <Text
+                  accessibilityLabel={"footer_label_" + assignmentName}
+                  style={fontStyles.mainTextStyleDarkGrey}
+                >
                   {assignmentName}
                 </Text>
               ) : (
