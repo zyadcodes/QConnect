@@ -384,7 +384,10 @@ class SelectionPage extends React.Component {
 
       return (
         <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-          <ScrollView>
+          <ScrollView
+            keyboardShouldPersistTaps="handled"
+            nestedScrollEnabled={true}
+          >
             <View
               id={this.state.page + "upperWrapper"}
               style={{

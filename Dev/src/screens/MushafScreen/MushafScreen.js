@@ -11,7 +11,7 @@ import * as _ from "lodash";
 import { getFontScale } from "react-native-device-info";
 import {
   isNoSelection,
-  noSelection,
+  noSelection
 } from "screens/MushafScreen/Helpers/consts";
 
 class MushafPage extends React.Component {
@@ -134,7 +134,7 @@ export default class MushafScreen extends QcParentScreen {
     assignmentType: this.props.assignmentType,
     loadScreenOnClose: this.props.loadScreenOnClose,
     popOnClose: this.props.popOnClose,
-    isLoading: true,
+    isLoading: true
   };
 
   async componentDidMount() {
@@ -237,6 +237,7 @@ export default class MushafScreen extends QcParentScreen {
         <View style={{ flex: 1 }}>
           <Swiper
             index={this.state.index}
+            keyboardShouldPersistTaps="handled"
             containerStyle={[{ width: screenWidth, height: screenHeight }]}
             key={this.state.key}
             loop={false}
