@@ -354,7 +354,8 @@ class SelectionPage extends React.Component {
       selectedAyahsEnd,
       selectionStarted,
       selectionCompleted,
-      selectionOn
+      selectionOn,
+      editedPageNumber
     } = this.state;
 
     if (isLoading === true) {
@@ -383,7 +384,7 @@ class SelectionPage extends React.Component {
       }
 
       return (
-        <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+        <KeyboardAvoidingView style={{ flex: 1 }}>
           <ScrollView
             keyboardShouldPersistTaps="handled"
             nestedScrollEnabled={true}
@@ -521,6 +522,11 @@ class SelectionPage extends React.Component {
                 >
                   {!this.state.editPageNumber && (
                     <TouchableText
+                      accessibilityLabel={
+                        "touchable_text_page_number_" +
+                        page.toString() +
+                        "_footer"
+                      }
                       text={page.toString() + " (Change page)"}
                       style={{
                         ...fontStyles.mainTextStylePrimaryDark,
@@ -538,10 +544,15 @@ class SelectionPage extends React.Component {
                           styles.textInputStyle,
                           fontStyles.mainTextStyleDarkGrey
                         ]}
+                        accessibilityLabel="text_input_mushaf_page_number"
                         autoFocus={true}
                         selectTextOnFocus={true}
                         autoCorrect={false}
-                        value={this.state.editedPageNumber.toString()}
+                        value={
+                          editedPageNumber !== 0
+                            ? editedPageNumber.toString()
+                            : ""
+                        }
                         onChangeText={value =>
                           this.setState({ editedPageNumber: Number(value) })
                         }
@@ -550,6 +561,7 @@ class SelectionPage extends React.Component {
                       />
 
                       <TouchableText
+                        accessibilityLabel="touchable_text_go"
                         text={strings.Go}
                         style={{
                           ...fontStyles.mainTextStylePrimaryDark,

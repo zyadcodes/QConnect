@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, Alert, PixelRatio } from "react-native";
 import MushafScreen from "./MushafScreen";
-import { screenHeight, screenWidth } from "config/dimensions";
 import FirebaseFunctions from "config/FirebaseFunctions";
 import QcActionButton from "components/QcActionButton";
 import strings from "config/strings";
-import { ScrollView } from "react-native-gesture-handler";
 import surahs from "./Data/Surahs.json";
 import { compareOrder } from "./Helpers/AyahsOrder";
 import colors from "config/colors";
@@ -20,7 +18,7 @@ import {
   isNoSelection,
   noSelection
 } from "screens/MushafScreen/Helpers/consts";
-import { ASSIGNMENT_DELETED, ASSGINMENT_SENT } from "utils/consts";
+import { ASSIGNMENT_DELETED, ASSIGNMENT_SENT } from "utils/consts";
 
 //------- constants to indicate the case when there is no ayah selected
 

@@ -7,8 +7,7 @@ const QcTextInput = props => {
     <View style={styles.container}>
       <View style={styles.innerWrapper}>
         <TextInput
-          placeholder={props.placeholder}
-          value={props.value}
+          {...props}
           selectTextOnFocus
           onChangeText={text => props.onChangeText(text)}
           style={styles.textInputStyle}
@@ -19,6 +18,7 @@ const QcTextInput = props => {
           autoCorrect={false}
           clearButtonMode="while-editing"
           returnKeyType="next"
+          {...props}
         />
       </View>
     </View>

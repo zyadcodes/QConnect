@@ -8,8 +8,18 @@ import fontStyles from "config/fontStyles";
 //--------------------------------------------------------------------------
 const TouchableText = props => {
   return (
-    <TouchableHighlight onPress={props.onPress} accessibilityLabel={props.Text}>
-      <Text style={[fontStyles.smallTextStylePrimaryDark, props.style]}>
+    <TouchableHighlight
+      onPress={props.onPress}
+      accessibilityLabel={
+        props.accessibilityLabel
+          ? props.accessibilityLabel
+          : "touchable_text_" + props.Text
+      }
+    >
+      <Text
+        accessibilityLabel={props.Text}
+        style={[fontStyles.smallTextStylePrimaryDark, props.style]}
+      >
         {props.text}
       </Text>
     </TouchableHighlight>
@@ -19,7 +29,7 @@ const TouchableText = props => {
 TouchableText.propTypes = {
   text: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
-  style: PropTypes.object,
+  style: PropTypes.object
 };
 
 export default TouchableText;

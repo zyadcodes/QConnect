@@ -63,6 +63,7 @@ class Word extends React.Component {
       word,
       isWordHighlighted,
       isAyahHighlighted,
+      selected,
       mushafFontScale
     } = this.props;
     const { text } = word;
@@ -72,16 +73,17 @@ class Word extends React.Component {
         ? mushafFontSize
         : mushafFontSize / mushafFontScale;
 
+    let label =
+      "mwt_" +
+      word.id +
+      (selected ? "_sel" : "") +
+      (isAyahHighlighted ? "_ah" : "") +
+      (isWordHighlighted ? "_wh" : "");
+
     return (
       <View>
         <Text
-          accessibilityLabel={
-            "mushaf_word_text_" + word.id + isAyahHighlighted
-              ? "_ah"
-              : "" + isWordHighlighted
-              ? "_wh"
-              : ""
-          }
+          accessibilityLabel={label}
           style={[
             isWordHighlighted || isAyahHighlighted
               ? styles.highlightedWordText
@@ -170,15 +172,7 @@ class Word extends React.Component {
                   fromRect={popoverAnchorRect}
                   supportedOrientations={["portrait"]}
                 >
-                  <View
-                    style={{
-                      top: 5,
-                      right: 5,
-                      flexDirection: "row",
-                      zIndex: 1,
-                      position: "absolute" // add if dont work with above
-                    }}
-                  >
+                  <View style={styles.popOverContainer}>
                     {!readOnly && (
                       <TouchableOpacity
                         onPress={() => {
@@ -193,7 +187,7 @@ class Word extends React.Component {
                         />
                       </TouchableOpacity>
                     )}
-                    <View style={{ width: 10, height: 10 }} />
+                    <View style={styles.closeIconContainer} />
                     <TouchableOpacity
                       onPress={() => {
                         closePopover();
@@ -212,7 +206,10 @@ class Word extends React.Component {
             )}
           </PopoverController>
         ) : (
-          <TouchableWithoutFeedback onPress={() => onPress()}>
+          <TouchableWithoutFeedback
+            accessibilityLabel={"mushaf_word_" + word.id}
+            onPress={() => onPress()}
+          >
             {this.renderWord()}
           </TouchableWithoutFeedback>
         )}
@@ -242,6 +239,7 @@ const styles = StyleSheet.create({
   selectionStyle: {
     backgroundColor: colors.green
   },
+  closeIconContainer: { width: 10, height: 10 },
   wordHighlightedStyle: {
     backgroundColor: "rgba(107,107,107,0.8)",
     borderRadius: 3,
@@ -272,6 +270,13 @@ const styles = StyleSheet.create({
   },
   background: {
     backgroundColor: "rgba(107,107,107,0.2)"
+  },
+  popOverContainer: {
+    top: 5,
+    right: 5,
+    flexDirection: "row",
+    zIndex: 1,
+    position: "absolute" // add if dont work with above
   }
 });
 
