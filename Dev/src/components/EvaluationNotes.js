@@ -23,9 +23,12 @@ class EvaluationNotes extends React.Component {
           <TextInput
             style={styles.notesStyle}
             multiline={true}
+            accessibilityLabel="eval_note"
             height={notesHeightExpanded}
-            onChangeText={teacherNotes =>
-              this.setState({ notes: teacherNotes })
+            onChangeText={teacherNotes => {
+              this.setState({notes: teacherNotes});
+              this.props.saveNotes(teacherNotes);
+              }  
             }
             returnKeyType={"done"}
             autoCorrect={false}
@@ -51,11 +54,7 @@ class EvaluationNotes extends React.Component {
             this.props.improvementAreas.length > 0)) && (
           <View>
             <View
-              style={{
-                marginTop: 10,
-                flexDirection: "row",
-                justifyContent: "flex-start"
-              }}
+              style={styles.improvementsContainer}
             >
               <Text style={fontStyles.smallTextStyleDarkGrey}>
                 {strings.ImprovementAreas}
@@ -71,7 +70,7 @@ class EvaluationNotes extends React.Component {
               onSelectionChanged={this.props.onImprovementAreasSelectionChanged}
               onImprovementsCustomized={this.props.onImprovementsCustomized}
             />
-            <View style={{ height: 30 }} />
+            <View style={styles.spacer} />
           </View>
         )}
       </View>
@@ -88,7 +87,13 @@ const styles = StyleSheet.create({
     marginLeft: screenWidth * 0.012,
     marginRight: screenWidth * 0.012,
     textAlignVertical: "top"
-  }
+  },
+  improvementsContainer: {
+    marginTop: 10,
+    flexDirection: "row",
+    justifyContent: "flex-start"
+  },
+  spacer: { height: 30 }
 });
 
 export default EvaluationNotes;

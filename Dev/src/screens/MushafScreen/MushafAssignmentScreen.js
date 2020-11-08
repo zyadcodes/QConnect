@@ -364,7 +364,7 @@ class MushafAssignmentScreen extends Component {
       },
       () => {
         if (closeAfterSave) {
-          this.closeScreen(true, ASSGINMENT_SENT); //true sends a param to next screen to show a toast notification that assignment is updated.
+          this.closeScreen(true, ASSIGNMENT_SENT); //true sends a param to next screen to show a toast notification that assignment is updated.
         }
       }
     );
@@ -678,12 +678,18 @@ class MushafAssignmentScreen extends Component {
                 });
               }}
             >
-              <Icon
-                name={actionItemConfig[assignment.type].iconName}
-                type={actionItemConfig[assignment.type].iconType}
-                color="#fff"
-                style={styles.actionButtonIcon}
-              />
+              <View
+                accessibilityLabel={
+                  "goto_" + assignment.type + ": " + assignment.name
+                }
+              >
+                <Icon
+                  name={actionItemConfig[assignment.type].iconName}
+                  type={actionItemConfig[assignment.type].iconType}
+                  color="#fff"
+                  style={styles.actionButtonIcon}
+                />
+              </View>
             </ActionButton.Item>
           );
         }
@@ -713,12 +719,14 @@ class MushafAssignmentScreen extends Component {
             });
           }}
         >
-          <Icon
-            name="plus"
-            type="feather"
-            color="#fff"
-            style={styles.actionButtonIcon}
-          />
+          <View accessibilityLabel="btn_add_new_assignment">
+            <Icon
+              name="plus"
+              type="feather"
+              color="#fff"
+              style={styles.actionButtonIcon}
+            />
+          </View>
         </ActionButton.Item>
       );
     }
@@ -756,12 +764,14 @@ class MushafAssignmentScreen extends Component {
             });
           }}
         >
-          <Icon
-            name="clipboard-check-outline"
-            type="material-community"
-            color="#fff"
-            style={styles.actionButtonIcon}
-          />
+          <View accessibilityLabel="btn_evaluate_assignment">
+            <Icon
+              name="clipboard-check-outline"
+              type="material-community"
+              color="#fff"
+              style={styles.actionButtonIcon}
+            />
+          </View>
         </ActionButton.Item>
       );
 
@@ -794,12 +804,14 @@ class MushafAssignmentScreen extends Component {
             );
           }}
         >
-          <Icon
-            name="page-remove"
-            type="foundation"
-            color="#fff"
-            style={styles.actionButtonIcon}
-          />
+          <View accessibilityLabel="btn_remove_assignment">
+            <Icon
+              name="page-remove"
+              type="foundation"
+              color="#fff"
+              style={styles.actionButtonIcon}
+            />
+          </View>
         </ActionButton.Item>
       );
     }
@@ -951,12 +963,14 @@ class MushafAssignmentScreen extends Component {
             <ActionButton
               buttonColor={colors.actionButtonColor}
               renderIcon={() => (
-                <Icon
-                  name="ellipsis1"
-                  color="#fff"
-                  type="antdesign"
-                  style={styles.actionButtonIcon}
-                />
+                <View accessibilityLabel="ellipsis">
+                  <Icon
+                    name="ellipsis1"
+                    color="#fff"
+                    type="antdesign"
+                    style={styles.actionButtonIcon}
+                  />
+                </View>
               )}
             >
               {actionItems}

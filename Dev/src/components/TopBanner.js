@@ -105,7 +105,9 @@ class TopBanner extends FontLoadingComponent {
                 style={styles.topBannerTitleTextInput}
               />
             ) : (
-              <Text style={fontStyles.bigTextStylePrimaryDark}>{Title}</Text>
+              <Text
+              accessibilityLabel="TopBannerMiddleTitle"
+              style={fontStyles.bigTextStylePrimaryDark}>{Title}</Text>
             )}
           </View>
 

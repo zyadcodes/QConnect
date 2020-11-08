@@ -54,6 +54,7 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
       //student name, and student assignment
       <TouchableOpacity
         key={studentName + "_" + profilePic}
+        accessibilityLabel={"student_card_" + studentName}
         style={[styles.cardStyle, { backgroundColor: colors.white }]}
         borderColor={colors.black}
         //The on press function is for when the teacher clicks the card, the color of it
@@ -91,10 +92,7 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
               <TouchableOpacity
                 onPress={() => this.props.onAssignmentPress(index)}
                 accessibilityLabel={
-                  "student_multi_assignment_card_student_" +
-                  studentName +
-                  "_assignment_" +
-                  index
+                  "card_stud_" + studentName + "_assignment_" + assignment.name
                 }
               >
                 <ListItem

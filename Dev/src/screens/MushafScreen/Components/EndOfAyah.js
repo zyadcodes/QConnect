@@ -23,8 +23,6 @@ const mushafFontSize =
     : 14;
 
 const EndOfAyahView = ({ highlighted, ayahNumber, mushafFontScale }) => {
-  const rightBracket = "  \uFD3F";
-  const leftBracket = "\uFD3E";
   const endOfAyahSymbol = "\u06DD";
 
   const textfontSize =
@@ -91,13 +89,7 @@ const EndOfAyah = ({
   return (
     <View style={containerStyle}>
       {showLoading === true ? (
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            paddingTop: 3,
-          }}
-        >
+        <View style={styles.spinnerContainer}>
           <ActivityIndicator
             size="small"
             color={highlighted ? colors.white : colors.primaryDark}
@@ -111,10 +103,11 @@ const EndOfAyah = ({
             closePopover,
             popoverVisible,
             setPopoverAnchor,
-            popoverAnchorRect,
+            popoverAnchorRect
           }) => (
             <React.Fragment>
               <TouchableHighlight
+                accessibilityLabel={"end_of_ayah_" + ayahNumber}
                 ref={setPopoverAnchor}
                 onPress={() => {
                   openPopover();
@@ -138,16 +131,9 @@ const EndOfAyah = ({
                 fromRect={popoverAnchorRect}
                 supportedOrientations={["portrait"]}
               >
-                <View
-                  style={{
-                    top: 5,
-                    left: screenWidth * 0.75,
-                    flexDirection: "row",
-                    zIndex: 1,
-                    position: "absolute" // add if dont work with above
-                  }}
-                >
+                <View style={styles.popOverContainer}>
                   <TouchableOpacity
+                    accessibilityLabel="remove_eval_note"
                     onPress={() => {
                       removeHighlight(word, curAyah);
                       closePopover();
@@ -160,8 +146,9 @@ const EndOfAyah = ({
                     />
                   </TouchableOpacity>
 
-                  <View style={{ width: 10, height: 10 }} />
+                  <View style={styles.spacer} />
                   <TouchableOpacity
+                    accessibilityLabel="close_eval_note"
                     onPress={() => {
                       closePopover();
                     }}
@@ -179,7 +166,10 @@ const EndOfAyah = ({
           )}
         </PopoverController>
       ) : (
-        <TouchableHighlight onPress={() => onPress()}>
+        <TouchableHighlight
+          accessibilityLabel={"end_of_ayah_" + ayahNumber}
+          onPress={() => onPress()}
+        >
           <EndOfAyahView
             ayahNumber={ayahNumber}
             highlighted={highlighted}
@@ -204,13 +194,13 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
   ayahNumber: {
     textAlign: "right",
     fontFamily: "me_quran",
     fontSize: mushafFontSize * 0.55,
-    color: colors.primaryDark,
+    color: colors.primaryDark
   },
   ayahSeparator: {
     textAlign: "right",
@@ -218,7 +208,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     fontSize: mushafFontSize,
-    color: colors.primaryDark,
+    color: colors.primaryDark
   },
   selectionStyle: {
     backgroundColor: colors.green
@@ -244,6 +234,22 @@ const styles = StyleSheet.create({
   },
   background: {
     backgroundColor: "rgba(107,107,107,0.2)"
+  },
+  spacer: {
+    width: 10,
+    height: 10
+  },
+  popOverContainer: {
+    top: 5,
+    left: screenWidth * 0.75,
+    flexDirection: "row",
+    zIndex: 1,
+    position: "absolute" // add if dont work with above
+  },
+  spinnerContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 3
   }
 });
 

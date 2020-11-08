@@ -234,8 +234,8 @@ export class EvaluationPage extends QcParentScreen {
         notes,
         highlightedWords,
         highlightedAyahs,
-        improvementAreas: selectedImprovementAreas,
-        },
+        improvementAreas: selectedImprovementAreas
+      },
       ...submission
     };
     try {
@@ -282,9 +282,9 @@ export class EvaluationPage extends QcParentScreen {
       notes,
       highlightedWords,
       highlightedAyahs,
-      improvementAreas: selectedImprovementAreas,
+      improvementAreas: selectedImprovementAreas
     };
-    
+
     await FirebaseFunctions.overwriteOldEvaluation(
       classID,
       studentID,
@@ -348,6 +348,7 @@ export class EvaluationPage extends QcParentScreen {
 
   //this function is called when users
   onSelectAyah(selectedAyah, selectedWord, evalNotes) {
+    
     if (this.state.readOnly) {
       // don't change highlighted words/ayahs on read-only mode.
       return;
@@ -386,7 +387,7 @@ export class EvaluationPage extends QcParentScreen {
       : this.props.navigation.goBack();
   }
 
-  //handles when teacher taps on an improvement area durig tasmee3 evaluation
+  //handles when teacher taps on an improvement area during tasmee3 evaluation
   onImprovementAreasSelectionChanged = (
     selectedImprovementAreas,
     word,
@@ -406,6 +407,7 @@ export class EvaluationPage extends QcParentScreen {
     if (word === undefined) {
       this.setState({ notes });
     } else {
+      let a = JSON.stringify(notes);
       this.onSelectAyah(ayah, word, { notes });
     }
   }
@@ -510,6 +512,7 @@ export class EvaluationPage extends QcParentScreen {
                 }}
               >
                 <TouchableOpacity
+                  accessibilityLabel="btn_expand_notes"
                   onPress={() =>
                     this.setState({
                       evaluationCollapsed: !this.state.evaluationCollapsed
@@ -560,7 +563,10 @@ export class EvaluationPage extends QcParentScreen {
               <Text style={fontStyles.mainTextStyleDarkGrey}>
                 {headerTitle}
               </Text>
-              <View style={{ paddingVertical: 15 }}>
+              <View
+                accessibilityLabel="rating_view"
+                style={{ paddingVertical: 15 }}
+              >
                 <AirbnbRating
                   defaultRating={rating}
                   size={30}
@@ -708,8 +714,10 @@ export class EvaluationPage extends QcParentScreen {
                           newAreas
                         );
                       }}
-                      saveNotes={wordNotes =>
+                      saveNotes={
+                        wordNotes => {console.log("hola:" + wordNotes)
                         this.onSaveNotes(wordNotes, word, ayah)
+                        }
                       }
                     />
                   );
@@ -724,12 +732,14 @@ export class EvaluationPage extends QcParentScreen {
                 this.submitRating();
               }}
               renderIcon={() => (
-                <Icon
-                  name="check-bold"
-                  color="#fff"
-                  type="material-community"
-                  style={styles.actionButtonIcon}
-                />
+                <View accessibilityLabel="btn_save_eval">
+                  <Icon
+                    name="check-bold"
+                    color="#fff"
+                    type="material-community"
+                    style={styles.actionButtonIcon}
+                  />
+                </View>
               )}
             />
           )}

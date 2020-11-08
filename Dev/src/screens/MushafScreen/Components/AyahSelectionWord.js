@@ -91,7 +91,7 @@ class Word extends React.Component {
             {
               fontSize: wordFontSize
             }
-          ]}
+          ] }
           adjustsFontSizeToFit
         >
           {text}
@@ -175,6 +175,7 @@ class Word extends React.Component {
                   <View style={styles.popOverContainer}>
                     {!readOnly && (
                       <TouchableOpacity
+                        accessibilityLabel="remove_eval_note"
                         onPress={() => {
                           removeHighlight(word, curAyah);
                           closePopover();
@@ -189,6 +190,7 @@ class Word extends React.Component {
                     )}
                     <View style={styles.closeIconContainer} />
                     <TouchableOpacity
+                      accessibilityLabel="close_eval_note"
                       onPress={() => {
                         closePopover();
                       }}

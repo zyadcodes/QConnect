@@ -29,7 +29,7 @@ const Header = props => {
         </HorizontalContainer>
       </LeftAvatarContainer>
       <MiddleContainer>
-        <Title>{props.title}</Title>
+        <Title accessibilityLabel="header_title">{props.title}</Title>
         <SubtitleContainer>
           <Subtitle>{props.subtitle}</Subtitle>
           {props.allowSwitchAssignments && (

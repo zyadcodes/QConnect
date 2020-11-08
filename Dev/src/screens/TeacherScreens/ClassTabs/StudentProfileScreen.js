@@ -209,6 +209,7 @@ class StudentProfileScreen extends QcParentScreen {
   renderHistoryItem(item, index, thisClassInfo) {
     return (
       <TouchableOpacity
+        accessibilityLabel={"past_assignment_" + item.name} 
         onPress={() => {
           //To-Do: Navigates to more specific evaluation for this assignment
           this.props.navigation.push("EvaluationPage", {
