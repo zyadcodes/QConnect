@@ -73,7 +73,11 @@ class FlowView extends Component {
       <View>
         <TouchableOpacity
           disabled={this.props.readOnly}
-          accessibilityLabel={"eval_tag_" + this.props.text + (this.props.isSelected? "_sel" : "")}
+          accessibilityLabel={
+            "eval_tag_" +
+            this.props.text +
+            (this.props.isSelected ? "_sel" : "")
+          }
           onPress={() => {
             if (!this.props.readOnly) {
               this.props.onClick();
@@ -101,8 +105,8 @@ class FlowView extends Component {
             <Icon
               name="tag"
               size={10}
-              containerStyle={{ paddingRight: 5 }}
-              style={{ paddingRight: 5 }}
+              containerStyle={styles.padRight}
+              style={styles.padRight}
               type="simple-line-icon"
               color={colors.darkGrey}
             />
@@ -444,7 +448,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 3,
     elevation: 0.003 * screenHeight,
-    marginHorizontal: screenWidth * 0.05
+    marginHorizontal: 5
   },
   rowSpace: {
     justifyContent: "space-between",
@@ -481,8 +485,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginHorizontal: 0.036 * screenWidth,
-    width: screenWidth * 0.9
+    margin: 5,
+    flex: 1
   },
   text: {
     fontSize: 16,
@@ -502,5 +506,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 2,
     right: 2
+  },
+  padRight: {
+    paddingRight: 5
   }
 });

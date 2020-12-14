@@ -9,8 +9,6 @@ import {
   TouchableOpacity
 } from "react-native";
 import { Icon } from "react-native-elements";
-import QcActionButton from "components/QcActionButton";
-import strings from "config/strings";
 import surahNames from "config/surahNames";
 import InputAutoSuggest from "components/AutoCompleteComponent/InputAutoSuggest";
 import fontStyles from "config/fontStyles";

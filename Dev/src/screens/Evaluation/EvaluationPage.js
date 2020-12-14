@@ -2,37 +2,25 @@
 /* eslint-disable quotes */
 /* eslint-disable comma-dangle */
 import React from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  Alert,
-  ScrollView,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform
-} from "react-native";
-import { AirbnbRating, Icon } from "react-native-elements";
+import { StyleSheet, View, Alert } from "react-native";
+import { Icon } from "react-native-elements";
 import colors from "config/colors";
 import ActionButton from "react-native-action-button";
 import strings from "config/strings";
 import studentImages from "config/studentImages";
 import QcParentScreen from "screens/QcParentScreen";
-import TopBanner from "components/TopBanner";
 import FirebaseFunctions from "config/FirebaseFunctions";
 import LoadingSpinner from "components/LoadingSpinner";
-import fontStyles from "config/fontStyles";
 import { screenWidth, screenHeight } from "config/dimensions";
-import AudioPlayer from "components/AudioPlayer/AudioPlayer";
-import Header, { headerHeight } from "components/Header";
+import { headerHeight } from "components/Header";
 import MushafScreen from "screens/MushafScreen/MushafScreen";
 import KeepAwake from "react-native-keep-awake";
 import { noSelection } from "screens/MushafScreen/Helpers/consts";
 import * as _ from "lodash";
 import { toNumberString } from "../MushafScreen/Helpers/AyahsOrder";
 import EvaluationNotes from "../../components/EvaluationNotes";
-
-const isAndroid = Platform.OS === "android";
+import EvaluationHeader from "./EvaluationHeader";
+import EvaluationCard from "./EvaluationCard";
 
 export class EvaluationPage extends QcParentScreen {
   //Default improvement areas
@@ -99,8 +87,274 @@ export class EvaluationPage extends QcParentScreen {
       audioFile: -1
     });
   }
+
   //Sets the screen name according to whether this is a new assignment evaluation or an old one
   async componentDidMount() {
+    this.initScreen();
+  }
+
+  // --------------  Renders Evaluation scree UI --------------
+  render() {
+    const {
+      improvementAreas,
+      readOnly,
+      rating,
+      classStudent,
+      assignmentName,
+      isLoading,
+      studentObject,
+      studentID,
+      classID,
+      assignmentType,
+      showMushaf,
+      highlightedAyahs,
+      highlightedWords,
+      selectedImprovementAreas,
+      audioSentDateTime,
+      audioFile,
+      notes
+    } = this.state;
+
+    if (isLoading === true) {
+      return (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <LoadingSpinner isVisible={true} />
+        </View>
+      );
+    }
+
+    const { profileImageID } = studentObject;
+    const headerTitle = readOnly
+      ? strings.Completed +
+        ": " +
+        this.props.navigation.state.params.completionDate
+      : strings.HowWas + classStudent.name + strings.sTasmee3;
+
+    return (
+      //----- outer view, gray background ------------------------
+      //Makes it so keyboard is dismissed when clicked somewhere else
+      <View
+        style={{
+          flex: 1
+        }}
+      >
+        <EvaluationHeader
+          newAssignment={this.props.navigation.state.params.newAssignment}
+          assignmentType={assignmentType}
+          assignmentName={assignmentName}
+          avatarName={classStudent.name}
+          profileImageID={profileImageID}
+          closeScreen={this.closeScreen.bind(this)}
+          readOnly={readOnly}
+          isStudentSide={this.props.navigation.state.params.isStudentSide}
+          enableEditMode={() => {
+            this.setState({
+              readOnly: false,
+              selectedImprovementAreas: this.state.improvementAreas
+            });
+            this.getTeacherCustomImprovementAreas();
+          }}
+        />
+        {
+          // -----------------The eval notes card -------------------------
+        }
+        <EvaluationCard
+          audioFile={audioFile}
+          profileImageID={profileImageID}
+          studentName={classStudent.name}
+          audioSentDateTime={audioSentDateTime}
+          title={headerTitle}
+          rating={rating}
+          readOnly={readOnly}
+          improvementAreas={improvementAreas}
+          onImprovementAreasSelectionChanged={this.onImprovementAreasSelectionChanged.bind(
+            this
+          )}
+          onImprovementsCustomized={this.onImprovementsCustomized.bind(this)}
+          onSaveNotes={evalNotes => this.onSaveNotes(evalNotes)}
+          notes={notes}
+          selectedImprovementAreas={selectedImprovementAreas}
+          userID={this.props.navigation.state.params.userID}
+          showExpandCollapseFooter={showMushaf}
+          evaluationCollapsed={this.state.evaluationCollapsed}
+          onFinishRating={value =>
+            this.setState({
+              rating: value
+            })
+          }
+          onExpandCollapse={() =>
+            this.setState({
+              evaluationCollapsed: !this.state.evaluationCollapsed
+            })
+          }
+        />
+
+        <View style={{ flex: 1 }}>
+          {//---------------- Mushaf Section -----------------------------------------------
+
+          showMushaf && (
+            <View
+              style={{
+                height: screenHeight - headerHeight
+              }}
+            >
+              <KeepAwake />
+              <MushafScreen
+                assignToID={studentID}
+                hideHeader={true}
+                readOnly={readOnly}
+                showSelectedLinesOnly={false}
+                classID={classID}
+                showTooltipOnPress={readOnly ? "whenHighlighted" : "true"}
+                profileImage={studentImages.images[profileImageID]}
+                showLoadingOnHighlightedAyah={
+                  this.state.isAudioLoading === true &&
+                  (this.state.highlightedAyahs !== undefined ||
+                    _.isEqual(this.state.highlightedAyahs, {}))
+                }
+                selection={this.state.selection}
+                highlightedWords={_.cloneDeep(highlightedWords)}
+                highlightedAyahs={_.cloneDeep(highlightedAyahs)}
+                highlightedColor={colors.darkRed}
+                assignmentName={assignmentName}
+                assignmentType={assignmentType}
+                topRightIconName="close"
+                onClose={this.closeScreen.bind(this)}
+                currentClass={classStudent}
+                onSelectAyah={this.onSelectAyah.bind(this)}
+                disableChangingUser={true}
+                removeHighlight={this.unhighlightWord.bind(this)}
+                evalNotesComponent={
+                  (word, ayah) => {
+                    let wordOrAyahImprovements = [];
+                    let wordOrAyahNotes = "";
+                    let wordHasFeedback = false;
+                    try {
+                      //if user taps on a word, and teacher has put feedback specific to that word, show it
+                      if (word.char_type !== "end") {
+                        wordOrAyahImprovements = _.get(
+                          highlightedWords[word.id],
+                          "improvementAreas",
+                          []
+                        );
+                        wordOrAyahNotes = _.get(
+                          highlightedWords[word.id],
+                          "notes",
+                          []
+                        );
+
+                        if (
+                          wordOrAyahImprovements.length > 0 ||
+                          wordOrAyahNotes.length > 0
+                        ) {
+                          wordHasFeedback = true;
+                        }
+                      }
+
+                      //show ayah feedback if:
+                      // 1: user taps on an ayah number of an ayah that has feedback associated with it
+                      // 2: user taps on a word that belongs to an ayah with feedback items AND there is no other
+                      //    feedback specific to tha word
+                      if (
+                        word.char_type === "end" ||
+                        wordHasFeedback === false
+                      ) {
+                        let ayahNumber = toNumberString(ayah);
+                        wordOrAyahImprovements = _.get(
+                          highlightedAyahs[ayahNumber],
+                          "improvementAreas",
+                          []
+                        );
+                        wordOrAyahNotes = _.get(
+                          highlightedAyahs[ayahNumber],
+                          "notes",
+                          []
+                        );
+                      }
+                    } catch (error) {
+                      console.trace();
+                      console.log(
+                        "ERROR_GET_WRD_AYAH_IMPROVEMENTS" +
+                          JSON.stringify(error)
+                      );
+                      FirebaseFunctions.logEvent(
+                        "ERROR_GET_WRD_AYAH_IMPROVEMENTS",
+                        {
+                          error
+                        }
+                      );
+                    }
+                    return (
+                      <EvaluationNotes
+                        //TODO: This logic needs cleaning
+                        // for now: if the teacher is evaluating, then we pass the full set of improvement ares for her to choose from
+                        // if this is readonly (ie: student or teacher are seeing a past assignment),
+                        //  then we show only imp. areas entered for ths word.
+                        improvementAreas={
+                          readOnly ? wordOrAyahImprovements : improvementAreas
+                        }
+                        notes={wordOrAyahNotes}
+                        selectedImprovementAreas={wordOrAyahImprovements}
+                        readOnly={readOnly}
+                        userID={this.props.navigation.state.params.userID}
+                        onImprovementAreasSelectionChanged={selectedImprovementAreas =>
+                          this.onImprovementAreasSelectionChanged(
+                            selectedImprovementAreas,
+                            word,
+                            ayah
+                          )
+                        }
+                        onImprovementsCustomized={newAreas => {
+                          this.setState({ improvementAreas: newAreas });
+                          FirebaseFunctions.saveTeacherCustomImprovementTags(
+                            this.props.navigation.state.params.userID,
+                            newAreas
+                          );
+                        }}
+                        saveNotes={wordNotes => {
+                          console.log("hola:" + wordNotes);
+                          this.onSaveNotes(wordNotes, word, ayah);
+                        }}
+                      />
+                    );
+                  }
+                  // ------ End of Mushaf Section ---------------------------------
+                }
+              />
+            </View>
+          )}
+          {// ----------  Submit floating action button -----------------------------
+          !readOnly && (
+            <ActionButton
+              buttonColor={colors.darkGreen}
+              onPress={() => {
+                this.submitRating();
+              }}
+              renderIcon={() => (
+                <View accessibilityLabel="btn_save_eval">
+                  <Icon
+                    name="check-bold"
+                    color="#fff"
+                    type="material-community"
+                    style={styles.actionButtonIcon}
+                  />
+                </View>
+              )}
+            />
+          )
+          // --------------- End of Submit floating action button ----------------
+          }
+        </View>
+      </View>
+    );
+  }
+
+  //===========================================================================
+  // =====                      Supporting Functions                       ====
+  //===========================================================================
+  async initScreen() {
     if (this.state.readOnly === true) {
       FirebaseFunctions.setCurrentScreen(
         "Past Evaluation Page",
@@ -348,7 +602,6 @@ export class EvaluationPage extends QcParentScreen {
 
   //this function is called when users
   onSelectAyah(selectedAyah, selectedWord, evalNotes) {
-    
     if (this.state.readOnly) {
       // don't change highlighted words/ayahs on read-only mode.
       return;
@@ -419,334 +672,6 @@ export class EvaluationPage extends QcParentScreen {
       newAreas
     );
   };
-
-  // --------------  Renders Evaluation scree UI --------------
-  render() {
-    const {
-      improvementAreas,
-      readOnly,
-      rating,
-      classStudent,
-      assignmentName,
-      isLoading,
-      studentObject,
-      studentID,
-      classID,
-      assignmentType,
-      showMushaf,
-      highlightedAyahs,
-      highlightedWords
-    } = this.state;
-
-    if (isLoading === true) {
-      return (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <LoadingSpinner isVisible={true} />
-        </View>
-      );
-    }
-    const { profileImageID } = studentObject;
-    const headerTitle = readOnly
-      ? strings.Completed +
-        ": " +
-        this.props.navigation.state.params.completionDate
-      : strings.HowWas + classStudent.name + strings.sTasmee3;
-    return (
-      //----- outer view, gray background ------------------------
-      //Makes it so keyboard is dismissed when clicked somewhere else
-      <View
-        style={{
-          flex: 1
-        }}
-      >
-        {this.props.navigation.state.params.newAssignment === true ? (
-          <Header
-            title={assignmentType}
-            subtitle={assignmentName}
-            avatarName={classStudent.name}
-            avatarImage={studentImages.images[profileImageID]}
-            onClose={this.closeScreen.bind(this)}
-          />
-        ) : readOnly === true &&
-          !this.props.navigation.state.params.isStudentSide ? (
-          <TopBanner
-            LeftIconName="angle-left"
-            LeftOnPress={this.closeScreen.bind(this)}
-            Title={strings.Evaluation}
-            RightIconName="edit"
-            RightOnPress={() => {
-              this.setState({
-                readOnly: false,
-                selectedImprovementAreas: this.state.improvementAreas
-              });
-              this.getTeacherCustomImprovementAreas();
-            }}
-          />
-        ) : (
-          <Header
-            title={assignmentType}
-            avatarName={classStudent.name}
-            subtitle={assignmentName}
-            avatarImage={studentImages.images[profileImageID]}
-            onClose={this.closeScreen.bind(this)}
-          />
-        )}
-        <KeyboardAvoidingView
-          behavior={isAndroid ? undefined : "padding"}
-          style={
-            showMushaf
-              ? styles.evaluationContainer
-              : { justifyContent: "center", alignItems: "center" }
-          }
-        >
-          <ScrollView>
-            {showMushaf && (
-              <View
-                style={{
-                  bottom: 5,
-                  left: screenWidth * 0.9,
-                  zIndex: 1,
-                  position: "absolute" // add if dont work with above
-                }}
-              >
-                <TouchableOpacity
-                  accessibilityLabel="btn_expand_notes"
-                  onPress={() =>
-                    this.setState({
-                      evaluationCollapsed: !this.state.evaluationCollapsed
-                    })
-                  }
-                >
-                  <Icon
-                    name={
-                      this.state.evaluationCollapsed
-                        ? "angle-double-down"
-                        : "angle-double-up"
-                    }
-                    type="font-awesome"
-                    color={colors.primaryDark}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-
-            {this.state.audioFile !== -1 ? (
-              <View
-                style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                  margin: 10
-                }}
-              >
-                <View style={styles.playAudio}>
-                  <AudioPlayer
-                    visible={true}
-                    compensateForVerticalMove={false}
-                    image={studentImages.images[profileImageID]}
-                    reciter={classStudent.name}
-                    audioFilePath={this.state.audioFile}
-                    hideCancel={true}
-                    sent={
-                      this.state.audioSentDateTime
-                        ? this.state.audioSentDateTime
-                        : ""
-                    }
-                  />
-                </View>
-              </View>
-            ) : (
-              <View />
-            )}
-            <View style={styles.section}>
-              <Text style={fontStyles.mainTextStyleDarkGrey}>
-                {headerTitle}
-              </Text>
-              <View
-                accessibilityLabel="rating_view"
-                style={{ paddingVertical: 15 }}
-              >
-                <AirbnbRating
-                  defaultRating={rating}
-                  size={30}
-                  showRating={false}
-                  onFinishRating={value =>
-                    this.setState({
-                      rating: value
-                    })
-                  }
-                  isDisabled={readOnly}
-                />
-              </View>
-
-              {this.state.evaluationCollapsed === false && (
-                <EvaluationNotes
-                  improvementAreas={improvementAreas}
-                  readOnly={readOnly}
-                  onImprovementAreasSelectionChanged={this.onImprovementAreasSelectionChanged.bind(
-                    this
-                  )}
-                  onImprovementsCustomized={this.onImprovementsCustomized.bind(
-                    this
-                  )}
-                  saveNotes={evalNotes => this.onSaveNotes(evalNotes)}
-                  notes={this.state.notes}
-                  selectedImprovementAreas={this.state.selectedImprovementAreas}
-                  userID={this.props.navigation.state.params.userID}
-                />
-              )}
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-        <View style={{ flex: 1 }}>
-          {showMushaf && (
-            <View
-              style={{
-                height: screenHeight - headerHeight
-              }}
-            >
-              <KeepAwake />
-              <MushafScreen
-                assignToID={studentID}
-                hideHeader={true}
-                readOnly={readOnly}
-                showSelectedLinesOnly={false}
-                classID={classID}
-                showTooltipOnPress={readOnly ? "whenHighlighted" : "true"}
-                profileImage={studentImages.images[profileImageID]}
-                showLoadingOnHighlightedAyah={
-                  this.state.isAudioLoading === true &&
-                  (this.state.highlightedAyahs !== undefined ||
-                    _.isEqual(this.state.highlightedAyahs, {}))
-                }
-                selection={this.state.selection}
-                highlightedWords={_.cloneDeep(highlightedWords)}
-                highlightedAyahs={_.cloneDeep(highlightedAyahs)}
-                highlightedColor={colors.darkRed}
-                assignmentName={assignmentName}
-                assignmentType={assignmentType}
-                topRightIconName="close"
-                onClose={this.closeScreen.bind(this)}
-                currentClass={classStudent}
-                onSelectAyah={this.onSelectAyah.bind(this)}
-                disableChangingUser={true}
-                removeHighlight={this.unhighlightWord.bind(this)}
-                evalNotesComponent={(word, ayah) => {
-                  let wordOrAyahImprovements = [];
-                  let wordOrAyahNotes = "";
-                  let wordHasFeedback = false;
-                  try {
-                    //if user taps on a word, and teacher has put feedback specific to that word, show it
-                    if (word.char_type !== "end") {
-                      wordOrAyahImprovements = _.get(
-                        highlightedWords[word.id],
-                        "improvementAreas",
-                        []
-                      );
-                      wordOrAyahNotes = _.get(
-                        highlightedWords[word.id],
-                        "notes",
-                        []
-                      );
-
-                      if (
-                        wordOrAyahImprovements.length > 0 ||
-                        wordOrAyahNotes.length > 0
-                      ) {
-                        wordHasFeedback = true;
-                      }
-                    }
-
-                    //show ayah feedback if:
-                    // 1: user taps on an ayah number of an ayah that has feedback associated with it
-                    // 2: user taps on a word that belongs to an ayah with feedback items AND there is no other
-                    //    feedback specific to tha word
-                    if (word.char_type === "end" || wordHasFeedback === false) {
-                      let ayahNumber = toNumberString(ayah);
-                      wordOrAyahImprovements = _.get(
-                        highlightedAyahs[ayahNumber],
-                        "improvementAreas",
-                        []
-                      );
-                      wordOrAyahNotes = _.get(
-                        highlightedAyahs[ayahNumber],
-                        "notes",
-                        []
-                      );
-                    }
-                  } catch (error) {
-                    console.trace();
-                    console.log(
-                      "ERROR_GET_WRD_AYAH_IMPROVEMENTS" + JSON.stringify(error)
-                    );
-                    FirebaseFunctions.logEvent(
-                      "ERROR_GET_WRD_AYAH_IMPROVEMENTS",
-                      {
-                        error
-                      }
-                    );
-                  }
-                  return (
-                    <EvaluationNotes
-                      //TODO: This logic needs cleaning
-                      // for now: if the teacher is evaluating, then we pass the full set of improvement ares for her to choose from
-                      // if this is readonly (ie: student or teacher are seeing a past assignment),
-                      //  then we show only imp. areas entered for ths word.
-                      improvementAreas={
-                        readOnly ? wordOrAyahImprovements : improvementAreas
-                      }
-                      notes={wordOrAyahNotes}
-                      selectedImprovementAreas={wordOrAyahImprovements}
-                      readOnly={readOnly}
-                      userID={this.props.navigation.state.params.userID}
-                      onImprovementAreasSelectionChanged={selectedImprovementAreas =>
-                        this.onImprovementAreasSelectionChanged(
-                          selectedImprovementAreas,
-                          word,
-                          ayah
-                        )
-                      }
-                      onImprovementsCustomized={newAreas => {
-                        this.setState({ improvementAreas: newAreas });
-                        FirebaseFunctions.saveTeacherCustomImprovementTags(
-                          this.props.navigation.state.params.userID,
-                          newAreas
-                        );
-                      }}
-                      saveNotes={
-                        wordNotes => {console.log("hola:" + wordNotes)
-                        this.onSaveNotes(wordNotes, word, ayah)
-                        }
-                      }
-                    />
-                  );
-                }}
-              />
-            </View>
-          )}
-          {!readOnly && (
-            <ActionButton
-              buttonColor={colors.darkGreen}
-              onPress={() => {
-                this.submitRating();
-              }}
-              renderIcon={() => (
-                <View accessibilityLabel="btn_save_eval">
-                  <Icon
-                    name="check-bold"
-                    color="#fff"
-                    type="material-community"
-                    style={styles.actionButtonIcon}
-                  />
-                </View>
-              )}
-            />
-          )}
-        </View>
-      </View>
-    );
-  }
 }
 
 //--------------- Styles used on this screen -------------------
