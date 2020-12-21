@@ -66,7 +66,7 @@ class StudentGradesScreen extends QcParentScreen {
     classesAttended: 0,
     classesMissed: 0,
     dailyPracticeLog: {},
-    audioPlaybackVisible: false,
+    audioPlaybackVisible: false
   };
 
   //-------------- Component lifecycle methods -----------------------------------
@@ -96,7 +96,7 @@ class StudentGradesScreen extends QcParentScreen {
           student,
           userID,
           isOpen: false,
-          classes: [],
+          classes: []
         });
       } else {
         let currentClass = await FirebaseFunctions.getClassByID(currentClassID);
@@ -163,28 +163,26 @@ class StudentGradesScreen extends QcParentScreen {
 
         this.getAudioSubmissions(currentAssignments);
 
-        this.setState(
-          {
-            student,
-            userID,
-            currentClass,
-            wordsPerAssignmentData: data,
-            currentClassID,
-            assignmentHistory,
-            dailyPracticeLog,
-            studentClassInfo,
-            isLoading: false,
-            isOpen: false,
-            classes,
-            recordingUIVisible,
-            classesAttended: studentClassInfo.classesAttended
-              ? studentClassInfo.classesAttended
-              : 0,
-            classesMissed: studentClassInfo.classesMissed
-              ? studentClassInfo.classesMissed
-              : 0,
-          }
-        );
+        this.setState({
+          student,
+          userID,
+          currentClass,
+          wordsPerAssignmentData: data,
+          currentClassID,
+          assignmentHistory,
+          dailyPracticeLog,
+          studentClassInfo,
+          isLoading: false,
+          isOpen: false,
+          classes,
+          recordingUIVisible,
+          classesAttended: studentClassInfo.classesAttended
+            ? studentClassInfo.classesAttended
+            : 0,
+          classesMissed: studentClassInfo.classesMissed
+            ? studentClassInfo.classesMissed
+            : 0
+        });
       }
     } catch (error) {
       this.setState({ isLoading: false, showError: true, error });
@@ -252,7 +250,7 @@ class StudentGradesScreen extends QcParentScreen {
       } else {
         //Refetches the student object to reflect the updated database
         this.props.navigation.push("StudentCurrentClass", {
-          userID,
+          userID
         });
       }
     }
@@ -314,7 +312,7 @@ class StudentGradesScreen extends QcParentScreen {
             <Text
               style={[
                 fontStyles.hugeTextStyleDarkGrey,
-                { textAlign: "center", alignSelf: "center" },
+                { textAlign: "center", alignSelf: "center" }
               ]}
             >
               {strings.StudentNoClassHeaderMsg}
@@ -322,7 +320,7 @@ class StudentGradesScreen extends QcParentScreen {
             <Text
               style={[
                 fontStyles.bigTextStyleDarkGrey,
-                { textAlign: "center", alignSelf: "center" },
+                { textAlign: "center", alignSelf: "center" }
               ]}
             >
               {strings.HaventJoinedClassYet}
@@ -392,7 +390,7 @@ class StudentGradesScreen extends QcParentScreen {
             evaluationID: item.ID,
             readOnly: true,
             newAssignment: false,
-            assignmentName: item.name,
+            assignmentName: item.name
           });
         }}
       >
@@ -419,7 +417,7 @@ class StudentGradesScreen extends QcParentScreen {
               style={{
                 alignItems: "center",
                 justifyContent: "center",
-                flex: 3,
+                flex: 3
               }}
             >
               <Text
@@ -435,8 +433,8 @@ class StudentGradesScreen extends QcParentScreen {
                           item.assignmentType === strings.Memorize ||
                           item.assignmentType == null
                         ? colors.darkGreen
-                        : colors.darkishGrey,
-                  },
+                        : colors.darkishGrey
+                  }
                 ]}
               >
                 {item.assignmentType ? item.assignmentType : strings.Memorize}
@@ -480,13 +478,13 @@ class StudentGradesScreen extends QcParentScreen {
                 flexDirection: "row",
                 justifyContent: "flex-start",
                 alignItems: "center",
-                height: screenHeight * 0.03,
+                height: screenHeight * 0.03
               }}
             >
               <Text
                 style={[
                   fontStyles.smallTextStyleDarkGrey,
-                  { textVerticalAlign: "center", paddingTop: 5 },
+                  { textVerticalAlign: "center", paddingTop: 5 }
                 ]}
               >
                 {strings.ImprovementAreas}
@@ -498,28 +496,26 @@ class StudentGradesScreen extends QcParentScreen {
                       styles.corner,
                       {
                         flexDirection: "row",
-                        backgroundColor: colors.primaryVeryLight,
-                      },
+                        backgroundColor: colors.primaryVeryLight
+                      }
                     ]}
                   >
-                    <Icon
-                      name="tag"
-                      size={10}
-                      containerStyle={{ paddingRight: 5 }}
-                      style={{ paddingRight: 3 }}
-                      type="simple-line-icon"
-                      color={colors.darkGrey}
-                    />
-
                     <Text
                       key={tag}
                       style={[
                         fontStyles.smallTextStyleDarkGrey,
-                        { textAlign: "center" },
+                        styles.tagsRightPad
                       ]}
                     >
                       {tag}
                     </Text>
+
+                    <Icon
+                      name="tag"
+                      size={10}
+                      type="simple-line-icon"
+                      color={colors.darkGrey}
+                    />
                   </View>
                 );
               })}
@@ -559,7 +555,7 @@ class StudentGradesScreen extends QcParentScreen {
       studentClassInfo,
       currentClass,
       classesAttended,
-      classesMissed,
+      classesMissed
     } = this.state;
 
     return (
@@ -578,7 +574,7 @@ class StudentGradesScreen extends QcParentScreen {
               <View
                 style={{
                   flexDirection: "row",
-                  height: screenHeight * 0.04,
+                  height: screenHeight * 0.04
                 }}
               >
                 <Rating
@@ -615,7 +611,7 @@ class StudentGradesScreen extends QcParentScreen {
               <Text
                 style={[
                   fontStyles.mainTextStyleDarkGrey,
-                  { paddingLeft: 5, paddingRight: 10 },
+                  { paddingLeft: 5, paddingRight: 10 }
                 ]}
               >
                 {strings.Attendance}:
@@ -637,7 +633,7 @@ class StudentGradesScreen extends QcParentScreen {
                   <Text
                     style={[
                       fontStyles.mainTextStyleDarkGreen,
-                      { paddingLeft: 5, paddingRight: 10 },
+                      { paddingLeft: 5, paddingRight: 10 }
                     ]}
                   >
                     {strings.Attended}
@@ -664,7 +660,7 @@ class StudentGradesScreen extends QcParentScreen {
                   <Text
                     style={[
                       fontStyles.mainTextStyleDarkRed,
-                      { paddingLeft: 5, paddingRight: 10 },
+                      { paddingLeft: 5, paddingRight: 10 }
                     ]}
                   >
                     {strings.Missed}
@@ -687,7 +683,7 @@ class StudentGradesScreen extends QcParentScreen {
         style={{
           marginLeft: screenWidth * 0.017,
           paddingTop: screenHeight * 0.005,
-          paddingBottom: screenHeight * 0.01,
+          paddingBottom: screenHeight * 0.01
         }}
       >
         <View
@@ -704,7 +700,7 @@ class StudentGradesScreen extends QcParentScreen {
           <Text
             style={[
               { marginLeft: screenWidth * 0.017 },
-              fontStyles.mainTextStyleDarkGrey,
+              fontStyles.mainTextStyleDarkGrey
             ]}
           >
             {label ? label.toUpperCase() : strings.Assignment}
@@ -744,7 +740,7 @@ class StudentGradesScreen extends QcParentScreen {
                           wordsPerAssignmentData[
                             wordsPerAssignmentData.length - 1
                           ].completionDate.lastIndexOf("/")
-                        ),
+                        )
                       ]
                     : [
                         wordsPerAssignmentData[0].completionDate.substring(
@@ -752,16 +748,16 @@ class StudentGradesScreen extends QcParentScreen {
                           wordsPerAssignmentData[0].completionDate.lastIndexOf(
                             "/"
                           )
-                        ),
+                        )
                       ],
                 datasets: [
                   {
                     data: wordsPerAssignmentData.map(data => {
                       sum += data.assignmentLength;
                       return sum;
-                    }),
-                  },
-                ],
+                    })
+                  }
+                ]
               }}
               fromZero={true}
               withInnerLines={false}
@@ -773,8 +769,8 @@ class StudentGradesScreen extends QcParentScreen {
                 color: (opacity = 1) => colors.primaryDark,
                 labelColor: (opacity = 1) => colors.black,
                 style: {
-                  borderRadius: 16,
-                },
+                  borderRadius: 16
+                }
               }}
               width={screenWidth}
               height={170}
@@ -881,7 +877,6 @@ class StudentGradesScreen extends QcParentScreen {
   }
 }
 
-
 //------------------ Component styles ----------------------------
 //Styles for the entire container along with the top banner
 const styles = StyleSheet.create({
@@ -976,14 +971,16 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white
   },
   corner: {
-    borderColor: "#D0D0D0",
+    flexDirection: "row",
+    borderColor: colors.grey,
     borderWidth: 1,
-    borderRadius: 3,
+    borderRadius: 12,
+    height: 24,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: screenWidth * 0.012,
-    marginRight: screenWidth * 0.015,
-    marginTop: screenHeight * 0.007
+    paddingHorizontal: 10,
+    marginRight: 5,
+    marginTop: 5
   },
   prevAssignments: {
     flexDirection: "column",
@@ -992,10 +989,10 @@ const styles = StyleSheet.create({
   },
   classesAttended: {
     paddingLeft: 5,
-    paddingRight: 5,
+    paddingRight: 5
   },
   classesMissed: {
-    paddingRight: 5,
+    paddingRight: 5
   },
   modal: {
     backgroundColor: colors.white,
@@ -1031,8 +1028,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.veryLightGrey,
     borderRadius: 1,
     textAlign: "center",
-    color: colors.black,
+    color: colors.black
   },
+  tagsRightPad: {
+    textAlign: "center",
+    paddingRight: 5
+  }
 });
 
 export default StudentGradesScreen;

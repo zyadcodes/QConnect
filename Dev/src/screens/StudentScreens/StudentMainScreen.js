@@ -1261,14 +1261,16 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white
   },
   corner: {
-    borderColor: "#D0D0D0",
+    flexDirection: "row",
+    borderColor: colors.grey,
     borderWidth: 1,
-    borderRadius: 3,
+    borderRadius: 12,
+    height: 24,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: screenWidth * 0.012,
-    marginRight: screenWidth * 0.015,
-    marginTop: screenHeight * 0.007
+    paddingHorizontal: 10,
+    marginRight: 5,
+    marginTop: 5
   },
   prevAssignments: {
     flexDirection: "column",
