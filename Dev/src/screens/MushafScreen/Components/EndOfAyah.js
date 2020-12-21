@@ -5,13 +5,10 @@ import {
   View,
   ActivityIndicator,
   PixelRatio,
-  TouchableHighlight,
-  TouchableOpacity
+  TouchableHighlight
 } from "react-native";
 import colors from "config/colors";
 import { screenWidth } from "config/dimensions";
-import { Popover, PopoverController } from "react-native-modal-popover";
-import { Icon } from "react-native-elements";
 
 const mushafFontSize =
   PixelRatio.get() <= 1.5
@@ -58,15 +55,12 @@ const EndOfAyahView = ({ highlighted, ayahNumber, mushafFontScale }) => {
 //Creates the higher order component
 const EndOfAyah = ({
   word,
-  curAyah,
   onPress,
   selected,
   highlighted,
   isLastSelectedAyah,
   showLoading,
   highlightedColor,
-  showTooltipOnPress,
-  removeHighlight,
   mushafFontScale
 }) => {
   const ayahNumber = word.aya;

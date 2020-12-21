@@ -41,9 +41,7 @@ const EvaluationCard = props => {
 
           {/** =============== Rating Stars ==================== */}
           <EvaluationRating
-            defaultRating={props.rating}
-            size={30}
-            showRating={false}
+            rating={props.rating}
             onFinishRating={props.onFinishRating}
             isDisabled={props.readOnly}
           />

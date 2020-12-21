@@ -263,6 +263,8 @@ export class EvaluationPage extends QcParentScreen {
           }
         </View>
         <EvaluationCalloutModal
+          word={currentEvaluatedWord}
+          ayah={currentEvaluatedAyah}
           visible={showEvalCalloutModal}
           onClose={this.onCloseCallout.bind(this)}
           wordOrAyahImprovements={wordOrAyahImprovements}
@@ -285,9 +287,9 @@ export class EvaluationPage extends QcParentScreen {
               currentEvaluatedAyah
             )
           }
-          onClear={() => {
+          onClear={(word, ayah) => {
             this.onCloseCallout();
-            this.unhighlightWord(currentEvaluatedWord, currentEvaluatedAyah);
+            this.unhighlightWord(word, ayah);
           }}
         />
       </View>

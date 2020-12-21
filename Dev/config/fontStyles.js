@@ -186,7 +186,11 @@ export default StyleSheet.create({
     fontSize: titleFont,
     color: colors.darkestGrey
   },
-
+  hugeTextStyleDarkRed: {
+    fontFamily,
+    fontSize: titleFont,
+    color: colors.darkRed
+  },
   hugeTextStyleBlack: {
     fontFamily,
     fontSize: titleFont,

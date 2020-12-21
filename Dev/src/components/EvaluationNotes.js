@@ -12,13 +12,14 @@ class EvaluationNotes extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        {(!this.props.readOnly ||
+        {/************** TEXT NOTES SECTION  ********************************/
+        (!this.props.readOnly ||
           (this.props.notes !== undefined && this.props.notes.length > 0)) && (
-          <View style={styles.notesContainer}>
+          <View style={!this.props.noTopMargin ? styles.notesContainer : {}}>
             <Text
               style={[fontStyles.smallTextStyleDarkGrey, { marginBottom: 5 }]}
             >
-              NOTES
+              {strings.NOTES}
             </Text>
             <TextInput
               style={styles.notesStyle}
@@ -42,7 +43,8 @@ class EvaluationNotes extends React.Component {
           </View>
         )}
 
-        {(!this.props.readOnly ||
+        {/********* IMPROVEMENT AREAS / TAGS SECTION  ******************/
+        (!this.props.readOnly ||
           (this.props.improvementAreas !== undefined &&
             this.props.improvementAreas.length > 0)) && (
           <View>

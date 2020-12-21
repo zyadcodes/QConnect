@@ -102,6 +102,9 @@ export default {
   FailedToRecordAudio:
     "Failed to record the audio. We know it is a bummer. Please try again later.",
   OtherArea: "Other...",
+  EvaluationCalloutHeaderTitle: "Evaluation notes for",
+  NOTES: "NOTES",
+
   //--------------------- First Run Screen ---------------------
   IAmATeacher: "I am a teacher",
   IAmAStudent: "I am a student",

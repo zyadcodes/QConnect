@@ -12,7 +12,7 @@ import colors from "config/colors";
 import TouchableText from "components/TouchableText";
 import LoadingSpinner from "components/LoadingSpinner";
 import { getPageTextWbW } from "../ServiceActions/getQuranContent";
-import Basmalah  from "./Basmalah";
+import Basmalah from "./Basmalah";
 import fontStyles from "config/fontStyles";
 import strings from "config/strings";
 import { screenHeight, screenWidth } from "config/dimensions";
@@ -54,7 +54,8 @@ class SelectionPage extends React.Component {
   //------------------------ initialize component ----------------------------------------
   componentDidMount() {
     if (!this.props.isLoading) {
-      this.getPageLines(this.props.page);
+      let page = this.props.page > 0 ? this.props.page : 1;
+      this.getPageLines(page);
     }
   }
 
