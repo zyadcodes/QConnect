@@ -41,7 +41,7 @@ const EvaluationCalloutModal = props => {
         <View style={styles.container}>
           <View style={styles.modal}>
             <ScrollView>
-              <View style={styles.header}>
+              <View style={styles.headerRow}>
                 <Text style={fontStyles.bigTextStyleDarkestGrey}>
                   Word Evaluation Notes
                 </Text>
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignSelf: "center"
   },
-  header: {
+  headerRow: {
     flexDirection: "row",
     flex: 1,
     justifyContent: "space-between"
