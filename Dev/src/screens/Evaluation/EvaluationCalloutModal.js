@@ -6,12 +6,13 @@ import {
   TouchableWithoutFeedback,
   StyleSheet
 } from "react-native";
-import { Icon, Button } from "react-native-elements";
+import { Icon } from "react-native-elements";
 import colors from "config/colors";
 import fontStyles from "config/fontStyles";
-import EvaluationNotes from "components/EvaluationNotes";
 import { screenHeight, screenWidth } from "config/dimensions";
 import { ScrollView } from "react-native-gesture-handler";
+import EvaluationNotes from "components/EvaluationNotes";
+import EvaluationCalloutFooter from "./EvaluationCalloutFooter";
 
 const EvaluationCalloutModal = props => {
   let {
@@ -22,6 +23,7 @@ const EvaluationCalloutModal = props => {
     readOnly,
     userID,
     onClose,
+    onClear,
     onImprovementAreasSelectionChanged,
     onImprovementsCustomized,
     saveNotes
@@ -63,37 +65,7 @@ const EvaluationCalloutModal = props => {
                 onImprovementsCustomized={onImprovementsCustomized}
                 saveNotes={saveNotes}
               />
-              <View style={styles.buttonsFooter}>
-                <View style={{ marginTop: 5 }}>
-                  <Button
-                    title="Clear"
-                    type="clear"
-                    titleStyle={fontStyles.mainTextStyleDarkishGrey}
-                    buttonStyle={{
-                      marginRight: 5
-                    }}
-                    onPress={() => props.onClear()}
-                  />
-                </View>
-                <View
-                  style={{
-                    flex: 1,
-                    marginTop: 5,
-                    flexDirection: "row",
-                    justifyContent: "flex-end"
-                  }}
-                >
-                  <Button
-                    titleStyle={fontStyles.mainTextStyleWhite}
-                    title="Save"
-                    buttonStyle={{
-                      backgroundColor: colors.primaryDark,
-                      paddingHorizontal: 25
-                    }}
-                    onPress={() => onClose()}
-                  />
-                </View>
-              </View>
+              <EvaluationCalloutFooter onClose={onClose} onClear={onClear} />
             </ScrollView>
           </View>
         </View>
@@ -124,12 +96,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flex: 1,
     justifyContent: "space-between"
-  },
-  buttonsFooter: {
-    flexDirection: "row",
-    height: 40,
-    borderTopWidth: 1,
-    borderTopColor: colors.lightGrey
   }
 });
 
