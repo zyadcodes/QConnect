@@ -4,6 +4,7 @@ import FlowLayout from "components/FlowLayout";
 import strings from "config/strings";
 import colors from "config/colors";
 import fontStyles from "config/fontStyles";
+import { ScrollView } from "react-native-gesture-handler";
 
 class EvaluationNotes extends React.Component {
   state = {
@@ -15,7 +16,11 @@ class EvaluationNotes extends React.Component {
         {/************** TEXT NOTES SECTION  ********************************/
         (!this.props.readOnly ||
           (this.props.notes !== undefined && this.props.notes.length > 0)) && (
-          <View style={!this.props.noTopMargin ? styles.notesContainer : {}}>
+          <ScrollView
+            contentContainerStyle={
+              !this.props.noTopMargin ? styles.notesContainer : {}
+            }
+          >
             <Text
               style={[fontStyles.smallTextStyleDarkGrey, { marginBottom: 5 }]}
             >
@@ -40,7 +45,7 @@ class EvaluationNotes extends React.Component {
                 this.props.saveNotes(this.state.notes);
               }}
             />
-          </View>
+          </ScrollView>
         )}
 
         {/********* IMPROVEMENT AREAS / TAGS SECTION  ******************/

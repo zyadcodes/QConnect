@@ -358,7 +358,7 @@ class SelectionPage extends React.Component {
       editedPageNumber
     } = this.state;
 
-    if (isLoading === true) {
+    if (isLoading === true || lines === undefined) {
       return (
         <View id={this.state.page + "spinner"} style={styles.spinner}>
           <LoadingSpinner isVisible={true} />
@@ -373,8 +373,8 @@ class SelectionPage extends React.Component {
       let noSelectionInPreviousLines;
 
       const surahName =
-        lines[0] && lines[0].surah
-          ? lines[0].surah
+        lines && lines[0] && lines[0].surah
+          ? lines && lines[0].surah
           : lines[1] && lines[1].surah
           ? lines[1].surah
           : "Select new assignment";

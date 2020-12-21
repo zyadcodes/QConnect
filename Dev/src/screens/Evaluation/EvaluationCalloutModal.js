@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   },
   modal: {
     width: screenWidth * 0.8,
-    marginTop: screenHeight * 0.2,
+    marginTop: screenHeight * 0.1,
     padding: 10,
     backgroundColor: colors.white,
     borderRadius: 5,
