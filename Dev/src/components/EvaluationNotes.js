@@ -15,7 +15,11 @@ class EvaluationNotes extends React.Component {
         {(!this.props.readOnly ||
           (this.props.notes !== undefined && this.props.notes.length > 0)) && (
           <View style={styles.notesContainer}>
-            <Text style={fontStyles.smallTextStyleDarkGrey}>Notes:</Text>
+            <Text
+              style={[fontStyles.smallTextStyleDarkGrey, { marginBottom: 5 }]}
+            >
+              NOTES
+            </Text>
             <TextInput
               style={styles.notesStyle}
               multiline={true}
@@ -44,7 +48,7 @@ class EvaluationNotes extends React.Component {
           <View>
             <View style={styles.improvementsContainer}>
               <Text style={fontStyles.smallTextStyleDarkGrey}>
-                {strings.ImprovementAreas}
+                {strings.ImprovementAreas.toUpperCase()}
               </Text>
             </View>
             <FlowLayout
@@ -76,7 +80,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightGrey,
     alignSelf: "stretch",
     textAlignVertical: "top",
-    padding: 5
+    padding: 5,
+    minHeight: 40
   },
   improvementsContainer: {
     marginTop: 10,

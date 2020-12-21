@@ -4,13 +4,10 @@ import {
   StyleSheet,
   View,
   TouchableWithoutFeedback,
-  TouchableOpacity,
   PixelRatio
 } from "react-native";
-import { Icon } from "react-native-elements";
 import colors from "config/colors";
 import { screenWidth } from "config/dimensions";
-import { Popover, PopoverController } from "react-native-modal-popover";
 
 const getCircularReplacer = () => {
   const seen = new WeakSet();
@@ -91,7 +88,7 @@ class Word extends React.Component {
             {
               fontSize: wordFontSize
             }
-          ] }
+          ]}
           adjustsFontSizeToFit
         >
           {text}
@@ -108,12 +105,7 @@ class Word extends React.Component {
       isFirstSelectedWord,
       highlightedColor,
       isAyahHighlighted,
-      showTooltipOnPress,
-      word,
-      removeHighlight,
-      curAyah,
-      evalNotesComponent,
-      readOnly
+      word
     } = this.props;
     let containerStyle = [styles.container];
     if (selected) {
@@ -140,81 +132,12 @@ class Word extends React.Component {
     }
     return (
       <View style={containerStyle}>
-        {showTooltipOnPress === true ? (
-          <PopoverController>
-            {({
-              openPopover,
-              closePopover,
-              popoverVisible,
-              setPopoverAnchor,
-              popoverAnchorRect
-            }) => (
-              <React.Fragment>
-                <TouchableWithoutFeedback
-                  ref={setPopoverAnchor}
-                  accessibilityLabel={"mushaf_word_" + word.id}
-                  onPress={() => {
-                    openPopover();
-                    if (!highlightWord) {
-                      onPress();
-                    }
-                  }}
-                >
-                  {this.renderWord()}
-                </TouchableWithoutFeedback>
-
-                <Popover
-                  contentStyle={styles.content}
-                  arrowStyle={styles.arrow}
-                  backgroundStyle={styles.background}
-                  visible={popoverVisible}
-                  onClose={closePopover}
-                  fromRect={popoverAnchorRect}
-                  supportedOrientations={["portrait"]}
-                >
-                  <View style={styles.popOverContainer}>
-                    {!readOnly && (
-                      <TouchableOpacity
-                        accessibilityLabel="remove_eval_note"
-                        onPress={() => {
-                          removeHighlight(word, curAyah);
-                          closePopover();
-                        }}
-                      >
-                        <Icon
-                          name="delete-forever-outline"
-                          type="material-community"
-                          color={colors.darkRed}
-                        />
-                      </TouchableOpacity>
-                    )}
-                    <View style={styles.closeIconContainer} />
-                    <TouchableOpacity
-                      accessibilityLabel="close_eval_note"
-                      onPress={() => {
-                        closePopover();
-                      }}
-                    >
-                      <Icon
-                        name="close"
-                        type="antdesign"
-                        color={colors.darkGrey}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  {evalNotesComponent(word, curAyah)}
-                </Popover>
-              </React.Fragment>
-            )}
-          </PopoverController>
-        ) : (
-          <TouchableWithoutFeedback
-            accessibilityLabel={"mushaf_word_" + word.id}
-            onPress={() => onPress()}
-          >
-            {this.renderWord()}
-          </TouchableWithoutFeedback>
-        )}
+        <TouchableWithoutFeedback
+          accessibilityLabel={"mushaf_word_" + word.id}
+          onPress={() => onPress()}
+        >
+          {this.renderWord()}
+        </TouchableWithoutFeedback>
       </View>
     );
   }

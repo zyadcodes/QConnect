@@ -66,7 +66,6 @@ const EndOfAyah = ({
   showLoading,
   highlightedColor,
   showTooltipOnPress,
-  evalNotesComponent,
   removeHighlight,
   mushafFontScale
 }) => {
@@ -96,75 +95,6 @@ const EndOfAyah = ({
             animating={showLoading}
           />
         </View>
-      ) : showTooltipOnPress === true ? (
-        <PopoverController>
-          {({
-            openPopover,
-            closePopover,
-            popoverVisible,
-            setPopoverAnchor,
-            popoverAnchorRect
-          }) => (
-            <React.Fragment>
-              <TouchableHighlight
-                accessibilityLabel={"end_of_ayah_" + ayahNumber}
-                ref={setPopoverAnchor}
-                onPress={() => {
-                  openPopover();
-                  if (!highlighted) {
-                    onPress();
-                  }
-                }}
-              >
-                <EndOfAyahView
-                  ayahNumber={ayahNumber}
-                  highlighted={highlighted}
-                />
-              </TouchableHighlight>
-
-              <Popover
-                contentStyle={styles.content}
-                arrowStyle={styles.arrow}
-                backgroundStyle={styles.background}
-                visible={popoverVisible}
-                onClose={closePopover}
-                fromRect={popoverAnchorRect}
-                supportedOrientations={["portrait"]}
-              >
-                <View style={styles.popOverContainer}>
-                  <TouchableOpacity
-                    accessibilityLabel="remove_eval_note"
-                    onPress={() => {
-                      removeHighlight(word, curAyah);
-                      closePopover();
-                    }}
-                  >
-                    <Icon
-                      name="delete-forever-outline"
-                      type="material-community"
-                      color={colors.darkRed}
-                    />
-                  </TouchableOpacity>
-
-                  <View style={styles.spacer} />
-                  <TouchableOpacity
-                    accessibilityLabel="close_eval_note"
-                    onPress={() => {
-                      closePopover();
-                    }}
-                  >
-                    <Icon
-                      name="close"
-                      type="antdesign"
-                      color={colors.darkGrey}
-                    />
-                  </TouchableOpacity>
-                </View>
-                {evalNotesComponent(word, curAyah)}
-              </Popover>
-            </React.Fragment>
-          )}
-        </PopoverController>
       ) : (
         <TouchableHighlight
           accessibilityLabel={"end_of_ayah_" + ayahNumber}

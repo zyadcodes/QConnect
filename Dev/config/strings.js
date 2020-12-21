@@ -174,7 +174,7 @@ export default {
   CurrentAssignments: "Current Assignments",
   Grade: "Grade",
   PleaseEnterAnAssignmentName: "Please select an assignment.",
-  ImprovementAreas: "Things to work on: ",
+  ImprovementAreas: "Things to work on ",
   NoClass: "Let's get you started",
   addClassButton: "Click Here to Add A Class",
   NotesColon: "Notes: ",

@@ -18,7 +18,7 @@ import KeepAwake from "react-native-keep-awake";
 import { noSelection } from "screens/MushafScreen/Helpers/consts";
 import * as _ from "lodash";
 import { toNumberString } from "../MushafScreen/Helpers/AyahsOrder";
-import EvaluationNotes from "../../components/EvaluationNotes";
+import EvaluationCalloutModal from "./EvaluationCalloutModal";
 import EvaluationHeader from "./EvaluationHeader";
 import EvaluationCard from "./EvaluationCard";
 
@@ -34,6 +34,9 @@ export class EvaluationPage extends QcParentScreen {
     strings.Qalqalah
   ];
 
+  /**********************************************************************
+   *    Component State Initialization
+   * ********************************************************************/
   state = {
     notes: this.props.navigation.state.params.notes
       ? this.props.navigation.state.params.notes
@@ -71,6 +74,7 @@ export class EvaluationPage extends QcParentScreen {
         : {},
     audioPlaybackVisible: true,
     evaluationCollapsed: true,
+    showEvalCalloutModal: false,
     selection: this.props.navigation.state.params.assignmentLocation
       ? {
           start: this.props.navigation.state.params.assignmentLocation.start,
@@ -93,7 +97,7 @@ export class EvaluationPage extends QcParentScreen {
     this.initScreen();
   }
 
-  // --------------  Renders Evaluation scree UI --------------
+  // --------------  Renders Evaluation screen UI --------------
   render() {
     const {
       improvementAreas,
@@ -112,7 +116,12 @@ export class EvaluationPage extends QcParentScreen {
       selectedImprovementAreas,
       audioSentDateTime,
       audioFile,
-      notes
+      notes,
+      showEvalCalloutModal,
+      currentEvaluatedWord,
+      currentEvaluatedAyah,
+      wordOrAyahImprovements,
+      wordOrAyahNotes
     } = this.state;
 
     if (isLoading === true) {
@@ -226,105 +235,11 @@ export class EvaluationPage extends QcParentScreen {
                 onSelectAyah={this.onSelectAyah.bind(this)}
                 disableChangingUser={true}
                 removeHighlight={this.unhighlightWord.bind(this)}
-                evalNotesComponent={
-                  (word, ayah) => {
-                    let wordOrAyahImprovements = [];
-                    let wordOrAyahNotes = "";
-                    let wordHasFeedback = false;
-                    try {
-                      //if user taps on a word, and teacher has put feedback specific to that word, show it
-                      if (word.char_type !== "end") {
-                        wordOrAyahImprovements = _.get(
-                          highlightedWords[word.id],
-                          "improvementAreas",
-                          []
-                        );
-                        wordOrAyahNotes = _.get(
-                          highlightedWords[word.id],
-                          "notes",
-                          []
-                        );
-
-                        if (
-                          wordOrAyahImprovements.length > 0 ||
-                          wordOrAyahNotes.length > 0
-                        ) {
-                          wordHasFeedback = true;
-                        }
-                      }
-
-                      //show ayah feedback if:
-                      // 1: user taps on an ayah number of an ayah that has feedback associated with it
-                      // 2: user taps on a word that belongs to an ayah with feedback items AND there is no other
-                      //    feedback specific to tha word
-                      if (
-                        word.char_type === "end" ||
-                        wordHasFeedback === false
-                      ) {
-                        let ayahNumber = toNumberString(ayah);
-                        wordOrAyahImprovements = _.get(
-                          highlightedAyahs[ayahNumber],
-                          "improvementAreas",
-                          []
-                        );
-                        wordOrAyahNotes = _.get(
-                          highlightedAyahs[ayahNumber],
-                          "notes",
-                          []
-                        );
-                      }
-                    } catch (error) {
-                      console.trace();
-                      console.log(
-                        "ERROR_GET_WRD_AYAH_IMPROVEMENTS" +
-                          JSON.stringify(error)
-                      );
-                      FirebaseFunctions.logEvent(
-                        "ERROR_GET_WRD_AYAH_IMPROVEMENTS",
-                        {
-                          error
-                        }
-                      );
-                    }
-                    return (
-                      <EvaluationNotes
-                        //TODO: This logic needs cleaning
-                        // for now: if the teacher is evaluating, then we pass the full set of improvement ares for her to choose from
-                        // if this is readonly (ie: student or teacher are seeing a past assignment),
-                        //  then we show only imp. areas entered for ths word.
-                        improvementAreas={
-                          readOnly ? wordOrAyahImprovements : improvementAreas
-                        }
-                        notes={wordOrAyahNotes}
-                        selectedImprovementAreas={wordOrAyahImprovements}
-                        readOnly={readOnly}
-                        userID={this.props.navigation.state.params.userID}
-                        onImprovementAreasSelectionChanged={selectedImprovementAreas =>
-                          this.onImprovementAreasSelectionChanged(
-                            selectedImprovementAreas,
-                            word,
-                            ayah
-                          )
-                        }
-                        onImprovementsCustomized={newAreas => {
-                          this.setState({ improvementAreas: newAreas });
-                          FirebaseFunctions.saveTeacherCustomImprovementTags(
-                            this.props.navigation.state.params.userID,
-                            newAreas
-                          );
-                        }}
-                        saveNotes={wordNotes => {
-                          console.log("hola:" + wordNotes);
-                          this.onSaveNotes(wordNotes, word, ayah);
-                        }}
-                      />
-                    );
-                  }
-                  // ------ End of Mushaf Section ---------------------------------
-                }
               />
             </View>
-          )}
+          )
+          // ------ End of Mushaf Section ---------------------------------
+          }
           {// ----------  Submit floating action button -----------------------------
           !readOnly && (
             <ActionButton
@@ -347,6 +262,34 @@ export class EvaluationPage extends QcParentScreen {
           // --------------- End of Submit floating action button ----------------
           }
         </View>
+        <EvaluationCalloutModal
+          visible={showEvalCalloutModal}
+          onClose={this.onCloseCallout.bind(this)}
+          wordOrAyahImprovements={wordOrAyahImprovements}
+          improvementAreas={improvementAreas}
+          wordOrAyahNotes={wordOrAyahNotes}
+          readOnly={readOnly}
+          userID={this.props.navigation.state.params.userID}
+          onImprovementAreasSelectionChanged={imps =>
+            this.onImprovementAreasSelectionChanged(
+              imps,
+              currentEvaluatedWord,
+              currentEvaluatedAyah
+            )
+          }
+          onImprovementsCustomized={this.onImprovementsCustomized.bind(this)}
+          saveNotes={newNote =>
+            this.onSaveNotes(
+              newNote,
+              currentEvaluatedWord,
+              currentEvaluatedAyah
+            )
+          }
+          onClear={() => {
+            this.onCloseCallout();
+            this.unhighlightWord(currentEvaluatedWord, currentEvaluatedAyah);
+          }}
+        />
       </View>
     );
   }
@@ -432,6 +375,59 @@ export class EvaluationPage extends QcParentScreen {
       improvementAreas
     });
   }
+
+  getWordOrAyahEvaluation = (word, ayah) => {
+    let { highlightedWords, highlightedAyahs } = this.state;
+
+    let wordOrAyahImprovements = [];
+    let wordOrAyahNotes = "";
+    let wordHasFeedback = false;
+    try {
+      //if user taps on a word, and teacher has put feedback specific to that word, show it
+      if (word.char_type !== "end") {
+        wordOrAyahImprovements = _.get(
+          highlightedWords[word.id],
+          "improvementAreas",
+          []
+        );
+        wordOrAyahNotes = _.get(highlightedWords[word.id], "notes", []);
+
+        if (wordOrAyahImprovements.length > 0 || wordOrAyahNotes.length > 0) {
+          wordHasFeedback = true;
+        }
+      }
+
+      //show ayah feedback if:
+      // 1: user taps on an ayah number of an ayah that has feedback associated with it
+      // 2: user taps on a word that belongs to an ayah with feedback items AND there is no other
+      //    feedback specific to tha word
+      if (word.char_type === "end" || wordHasFeedback === false) {
+        let ayahNumber = toNumberString(ayah);
+        wordOrAyahImprovements = _.get(
+          highlightedAyahs[ayahNumber],
+          "improvementAreas",
+          []
+        );
+        wordOrAyahNotes = _.get(highlightedAyahs[ayahNumber], "notes", []);
+      }
+    } catch (error) {
+      console.trace();
+      console.log("ERROR_GET_WRD_AYAH_IMPROVEMENTS" + JSON.stringify(error));
+      FirebaseFunctions.logEvent("ERROR_GET_WRD_AYAH_IMPROVEMENTS", {
+        error
+      });
+    }
+
+    this.setState({ wordOrAyahNotes, wordOrAyahImprovements });
+  };
+
+  onCloseCallout = () => {
+    this.setState({
+      showEvalCalloutModal: false,
+      currentEvaluatedWord: undefined,
+      currentEvaluatedAyah: undefined
+    });
+  };
 
   //asynchronously loads custom evaluation tags that the teacher might have
   // saved on firebase and update the state once loaded.
@@ -600,8 +596,32 @@ export class EvaluationPage extends QcParentScreen {
     }
   }
 
+  onSelectAyah(selectedAyah, selectedWord) {
+    //if the word/ayah is tapped, and there was no word/ayah evaluation callout
+    // shown, then show it, otherwise, hide it and save values.
+    //toggle word/ayah evaluation callout on/off
+    let showEvalCalloutModal = !this.state.showEvalCalloutModal;
+
+    this.setState({ showEvalCalloutModal });
+    if (showEvalCalloutModal) {
+      this.getWordOrAyahEvaluation(selectedWord, selectedAyah);
+
+      this.setState({
+        currentEvaluatedWord: selectedWord,
+        currentEvaluatedAyah: selectedAyah
+      });
+    } else {
+      this.setState({
+        currentEvaluatedWord: undefined,
+        currentEvaluatedAyah: undefined,
+        wordOrAyahImprovements: undefined,
+        wordOrAyahNotes: undefined
+      });
+    }
+  }
+
   //this function is called when users
-  onSelectAyah(selectedAyah, selectedWord, evalNotes) {
+  updateEvaluation(selectedAyah, selectedWord, evalNotes) {
     if (this.state.readOnly) {
       // don't change highlighted words/ayahs on read-only mode.
       return;
@@ -649,7 +669,7 @@ export class EvaluationPage extends QcParentScreen {
     if (word === undefined) {
       this.setState({ selectedImprovementAreas });
     } else {
-      this.onSelectAyah(ayah, word, {
+      this.updateEvaluation(ayah, word, {
         improvementAreas: selectedImprovementAreas
       });
     }
@@ -660,8 +680,7 @@ export class EvaluationPage extends QcParentScreen {
     if (word === undefined) {
       this.setState({ notes });
     } else {
-      let a = JSON.stringify(notes);
-      this.onSelectAyah(ayah, word, { notes });
+      this.updateEvaluation(ayah, word, { notes });
     }
   }
 

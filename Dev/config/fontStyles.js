@@ -1,7 +1,7 @@
 //This class will contain all of the font styles that should be used through out the app. The default size & fontFamily will be
 //defined here.
-import colors from './colors';
-import { PixelRatio, StyleSheet } from 'react-native';
+import colors from "./colors";
+import { PixelRatio, StyleSheet } from "react-native";
 
 //The default font family that'll be used throughout the app
 export const fontFamily = "Montserrat-Regular";
@@ -51,6 +51,11 @@ export default StyleSheet.create({
     fontSize: bodyFont,
     color: colors.primaryDark
   },
+  mainTextStyleWhite: {
+    fontFamily,
+    fontSize: bodyFont,
+    color: colors.white
+  },
 
   bigTextStyleWhite: {
     fontFamily,
@@ -74,6 +79,12 @@ export default StyleSheet.create({
     fontFamily,
     fontSize: bodyFont,
     color: colors.darkGrey
+  },
+
+  mainTextStyleDarkishGrey: {
+    fontFamily,
+    fontSize: bodyFont,
+    color: colors.darkishGrey
   },
 
   mediumTextStyleDarkestGrey: {
@@ -136,12 +147,6 @@ export default StyleSheet.create({
     color: colors.darkestGrey
   },
 
-  bigTextStyleWhite: {
-    fontFamily,
-    fontSize: bodyFontBigger,
-    color: colors.white
-  },
-
   smallTextStyleDarkGreen: {
     fontFamily,
     fontSize: bodyFont,
@@ -198,5 +203,5 @@ export default StyleSheet.create({
     fontFamily,
     fontSize: titleFont,
     color: colors.darkGrey
-  },
+  }
 });

@@ -32,7 +32,7 @@ class FlowView extends Component {
   };
 
   static defaultProps = {
-    backgroundColors: [colors.lightGrey, colors.primaryLight],
+    backgroundColors: [colors.veryLightGrey, colors.primaryLight],
     textColors: [colors.darkGrey, colors.primaryDark],
     isSelected: false,
     readOnly: false
@@ -96,21 +96,11 @@ class FlowView extends Component {
             style={[
               styles.corner,
               {
-                flexDirection: "row",
                 backgroundColor:
                   this.props.backgroundColor || this._backgoundColor()
               }
             ]}
           >
-            <Icon
-              name="tag"
-              size={10}
-              containerStyle={styles.padRight}
-              style={styles.padRight}
-              type="simple-line-icon"
-              color={colors.darkGrey}
-            />
-
             <Text
               style={[
                 fontStyles.smallTextStyleDarkGrey,
@@ -119,6 +109,14 @@ class FlowView extends Component {
             >
               {this.props.text}
             </Text>
+            <Icon
+              name="tag"
+              size={10}
+              containerStyle={styles.padLeft}
+              style={styles.padRight}
+              type="simple-line-icon"
+              color={colors.darkGrey}
+            />
           </View>
           {this.props.isBadgeVisible ? (
             <Badge
@@ -464,21 +462,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderColor: colors.grey,
     borderWidth: 1 / PixelRatio.get(),
-    borderRadius: 5,
-    height: 30,
-    paddingHorizontal: 3,
+    borderRadius: 12,
+    height: 24,
+    paddingHorizontal: 10,
     marginRight: 5,
     marginTop: 5,
     paddingVertical: 0
   },
   corner: {
+    flexDirection: "row",
     borderColor: colors.grey,
     borderWidth: 1 / PixelRatio.get(),
-    borderRadius: 5,
-    height: 30,
+    borderRadius: 12,
+    height: 24,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 3,
+    paddingHorizontal: 10,
     marginRight: 5,
     marginTop: 5
   },
@@ -509,5 +508,8 @@ const styles = StyleSheet.create({
   },
   padRight: {
     paddingRight: 5
+  },
+  padLeft: {
+    paddingLeft: 7
   }
 });

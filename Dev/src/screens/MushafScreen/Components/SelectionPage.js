@@ -6,14 +6,13 @@ import {
   TextInput,
   Alert,
   ScrollView,
-  KeyboardAvoidingView,
-  PixelRatio
+  KeyboardAvoidingView
 } from "react-native";
 import colors from "config/colors";
 import TouchableText from "components/TouchableText";
 import LoadingSpinner from "components/LoadingSpinner";
 import { getPageTextWbW } from "../ServiceActions/getQuranContent";
-import Basmalah from "./Basmalah";
+import Basmalah  from "./Basmalah";
 import fontStyles from "config/fontStyles";
 import strings from "config/strings";
 import { screenHeight, screenWidth } from "config/dimensions";
@@ -506,7 +505,6 @@ class SelectionPage extends React.Component {
                           }
                           page={this.state.page}
                           lineAlign={lineAlign}
-                          evalNotesComponent={this.props.evalNotesComponent}
                           removeHighlight={this.props.removeHighlight}
                           mushafFontScale={this.props.mushafFontScale}
                         />
