@@ -54,7 +54,9 @@ const EvaluationCalloutModal = props => {
                 />
               </View>
               <EvaluationNotes
-                improvementAreas={improvementAreas}
+                improvementAreas={
+                  readOnly ? wordOrAyahImprovements : improvementAreas
+                }
                 notes={wordOrAyahNotes}
                 selectedImprovementAreas={wordOrAyahImprovements}
                 readOnly={readOnly}
@@ -65,7 +67,10 @@ const EvaluationCalloutModal = props => {
                 onImprovementsCustomized={onImprovementsCustomized}
                 saveNotes={saveNotes}
               />
-              <EvaluationCalloutFooter onClose={onClose} onClear={onClear} />
+              {//only show the save/clear action button if we are not in readOnly view mode
+              !readOnly && (
+                <EvaluationCalloutFooter onClose={onClose} onClear={onClear} />
+              )}
             </ScrollView>
           </View>
         </View>
