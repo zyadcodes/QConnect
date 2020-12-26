@@ -745,15 +745,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: colors.white
   },
-  notesStyle: {
-    backgroundColor: colors.lightGrey,
-    alignSelf: "stretch",
-    marginTop: screenHeight * 0.007,
-    marginBottom: screenHeight * 0.007,
-    marginLeft: screenWidth * 0.012,
-    marginRight: screenWidth * 0.012,
-    textAlignVertical: "top"
-  },
   filler: {
     flexDirection: "column",
     backgroundColor: colors.blue,

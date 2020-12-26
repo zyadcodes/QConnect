@@ -131,6 +131,7 @@ export default class MushafScreen extends QcParentScreen {
     ) {
       return false;
     }
+
     return true;
   }
 
@@ -213,7 +214,6 @@ export default class MushafScreen extends QcParentScreen {
                 highlightedWords={highlightedWords}
                 highlightedAyahs={highlightedAyahs}
                 onChangePage={this.onChangePage.bind(this)}
-                isLoading={this.state.isLoading}
                 {...this.props}
               />
             ))}

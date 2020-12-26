@@ -4,6 +4,7 @@ import FlowLayout from "components/FlowLayout";
 import strings from "config/strings";
 import colors from "config/colors";
 import fontStyles from "config/fontStyles";
+import themeStyles from "config/themeStyles";
 import { ScrollView } from "react-native-gesture-handler";
 
 class EvaluationNotes extends React.Component {
@@ -27,7 +28,7 @@ class EvaluationNotes extends React.Component {
               {strings.NOTES}
             </Text>
             <TextInput
-              style={styles.notesStyle}
+              style={themeStyles.notesStyle}
               multiline={true}
               accessibilityLabel="eval_note"
               onChangeText={teacherNotes => {
@@ -82,13 +83,6 @@ const styles = StyleSheet.create({
   },
   notesContainer: {
     marginTop: 30
-  },
-  notesStyle: {
-    backgroundColor: colors.lightGrey,
-    alignSelf: "stretch",
-    textAlignVertical: "top",
-    padding: 5,
-    minHeight: 40
   },
   improvementsContainer: {
     marginTop: 10,

@@ -24,6 +24,7 @@ import pages from "../Data/mushaf-wbw.json";
 import SurahHeader from "./SurahHeader";
 import { compareOrder, isLineSelected } from "../Helpers/AyahsOrder";
 import * as _ from "lodash";
+import PageEditModal from "./PageEditModal";
 
 //Creates the higher order component
 class SelectionPage extends React.Component {
@@ -53,23 +54,17 @@ class SelectionPage extends React.Component {
 
   //------------------------ initialize component ----------------------------------------
   componentDidMount() {
-    if (!this.props.isLoading) {
-      let page = this.props.page > 0 ? this.props.page : 1;
-      this.getPageLines(page);
-    }
+    let page = this.props.page > 0 ? this.props.page : 1;
+    this.getPageLines(page);
   }
 
   // only redraw lines if the page have changed
   static getDerivedStateFromProps(nextProps, prevState) {
     let retValue = null;
     //if we didn't have the page text initialized before, let's initialize it.
-    if (
-      (!prevState.lines || prevState.lines.length === 0) &&
-      !nextProps.isLoading
-    ) {
+    if (!prevState.lines || prevState.lines.length === 0) {
       retValue = {
         page: nextProps.page,
-        isLoading: false,
         lines: pages[nextProps.page - 1]
       };
     }
@@ -91,8 +86,7 @@ class SelectionPage extends React.Component {
         selectedAyahsEnd: nextProps.selectedAyahsEnd,
         selectionStarted: nextProps.selectionStarted,
         selectionCompleted: nextProps.selectionCompleted,
-        selectionOn: nextProps.selectionOn,
-        isLoading: false
+        selectionOn: nextProps.selectionOn
       };
     }
 
@@ -255,7 +249,7 @@ class SelectionPage extends React.Component {
     let word = line.text
       .slice()
       .reverse()
-      .find(word => word.char_type === "end");
+      .find(w => w.char_type === "end");
 
     return Number(word.aya);
   }
@@ -296,10 +290,8 @@ class SelectionPage extends React.Component {
     }
 
     this.setState({
-      isLoading: editedPageNumber !== page ? true : false,
       editPageNumber: false
     });
-
     this.props.onChangePage(editedPageNumber, true);
   }
 
@@ -332,8 +324,6 @@ class SelectionPage extends React.Component {
 
   //selects the entire page
   onSelectPage() {
-    const { page, lines } = this.state;
-
     //capture the first ayah (where the selection starts from)
     let firstAyah = this.getFirstAyahOfPage();
 
@@ -344,6 +334,10 @@ class SelectionPage extends React.Component {
     this.props.onSelectAyahs(firstAyah, lastAyah);
   }
 
+  onEditPageNumber() {
+    //toggle page edit mode on/off on tap
+    this.setState({ editPageNumber: !this.state.editPageNumber });
+  }
   //------------------------ render component ----------------------------------------
   render() {
     const {
@@ -354,8 +348,7 @@ class SelectionPage extends React.Component {
       selectedAyahsEnd,
       selectionStarted,
       selectionCompleted,
-      selectionOn,
-      editedPageNumber
+      selectionOn
     } = this.state;
 
     if (isLoading === true || lines === undefined) {
@@ -384,17 +377,14 @@ class SelectionPage extends React.Component {
       }
 
       return (
-        <KeyboardAvoidingView style={{ flex: 1 }}>
+        <KeyboardAvoidingView style={styles.container}>
           <ScrollView
             keyboardShouldPersistTaps="handled"
             nestedScrollEnabled={true}
           >
             <View
               id={this.state.page + "upperWrapper"}
-              style={{
-                backgroundColor: colors.white,
-                justifyContent: "flex-end"
-              }}
+              style={styles.innerContainer}
             >
               <AssignmentEntryComponent
                 visible={this.state.isSurahSelectionVisible}
@@ -519,63 +509,31 @@ class SelectionPage extends React.Component {
                   style={styles.titleBackgroundContainer}
                   resizeMethod="scale"
                 >
-                  {!this.state.editPageNumber && (
-                    <TouchableText
-                      accessibilityLabel={
-                        "touchable_text_page_number_" +
-                        page.toString() +
-                        "_footer"
-                      }
-                      text={page.toString() + " (Change page)"}
-                      style={{
-                        ...fontStyles.mainTextStylePrimaryDark,
-                        ...fontStyles.textInputStyle
-                      }}
-                      onPress={() => {
-                        this.setState({ editPageNumber: true });
-                      }}
-                    />
-                  )}
-                  {this.state.editPageNumber && (
-                    <View style={styles.footerContainer}>
-                      <TextInput
-                        style={[
-                          styles.textInputStyle,
-                          fontStyles.mainTextStyleDarkGrey
-                        ]}
-                        accessibilityLabel="text_input_mushaf_page_number"
-                        autoFocus={true}
-                        selectTextOnFocus={true}
-                        autoCorrect={false}
-                        value={
-                          editedPageNumber !== 0
-                            ? editedPageNumber.toString()
-                            : ""
-                        }
-                        onChangeText={value =>
-                          this.setState({ editedPageNumber: Number(value) })
-                        }
-                        onEndEditing={() => this.updatePage()}
-                        keyboardType="numeric"
-                      />
-
-                      <TouchableText
-                        accessibilityLabel="touchable_text_go"
-                        text={strings.Go}
-                        style={{
-                          ...fontStyles.mainTextStylePrimaryDark,
-                          marginLeft: screenWidth * 0.01
-                        }}
-                        onPress={() => {
-                          this.updatePage();
-                        }}
-                      />
-                    </View>
-                  )}
+                  <TouchableText
+                    accessibilityLabel={
+                      "touchable_text_page_number_" +
+                      page.toString() +
+                      "_footer"
+                    }
+                    text={page.toString() + " (Change page)"}
+                    style={{
+                      ...fontStyles.mainTextStylePrimaryDark,
+                      ...fontStyles.textInputStyle
+                    }}
+                    onPress={this.onEditPageNumber.bind(this)}
+                  />
                 </ImageBackground>
               </View>
             </View>
-            <View style={{ height: 300 }} />
+            <PageEditModal
+              visible={this.state.editPageNumber}
+              onClose={() => this.setState({ editPageNumber: false })}
+              onChangeText={value =>
+                this.setState({ editedPageNumber: Number(value) })
+              }
+              updatePage={this.updatePage.bind(this)}
+            />
+            <View style={styles.verticalSpacer} />
           </ScrollView>
         </KeyboardAvoidingView>
       );
@@ -584,10 +542,16 @@ class SelectionPage extends React.Component {
 }
 
 /**
- *
     Page styles
  */
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  innerContainer: {
+    backgroundColor: colors.white,
+    justifyContent: "flex-end"
+  },
   ayahText: {
     textAlign: "right",
     fontFamily: "me_quran",
@@ -627,9 +591,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.25,
     borderBottomColor: colors.grey
   },
-  container: {
-    flex: 1
-  },
   spinner: {
     flex: 1,
     justifyContent: "center",
@@ -652,6 +613,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignSelf: "center",
     alignItems: "center"
+  },
+  verticalSpacer: {
+    height: 300
   }
 });
 

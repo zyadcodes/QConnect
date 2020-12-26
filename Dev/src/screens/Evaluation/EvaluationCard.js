@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  KeyboardAvoidingView,
-  ScrollView,
-  View,
-  Text,
-  StyleSheet
-} from "react-native";
+import { ScrollView, View, Text, StyleSheet } from "react-native";
 import EvaluationAudioPlayer from "./EvaluationAudioPlayer";
 import EvaluationRating from "./EvaluationRating";
 import fontStyles from "config/fontStyles";
@@ -22,7 +16,7 @@ import { screenWidth } from "config/dimensions";
  */
 const EvaluationCard = props => {
   return (
-    <KeyboardAvoidingView
+    <View
       behavior={"padding"}
       style={props.style ? props.style : styles.container}
     >
@@ -73,7 +67,7 @@ const EvaluationCard = props => {
           )}
         </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 

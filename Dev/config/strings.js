@@ -104,6 +104,7 @@ export default {
   OtherArea: "Other...",
   EvaluationCalloutHeaderTitle: "Evaluation notes for",
   NOTES: "NOTES",
+  GoToPage: "Go to page",
 
   //--------------------- First Run Screen ---------------------
   IAmATeacher: "I am a teacher",
