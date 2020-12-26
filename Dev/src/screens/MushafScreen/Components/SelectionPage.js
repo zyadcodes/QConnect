@@ -278,16 +278,7 @@ class SelectionPage extends React.Component {
 
   //------------------------ event handlers ----------------------------------------
   updatePage() {
-    const { editedPageNumber, page } = this.state;
-
-    if (
-      isNaN(editedPageNumber) ||
-      Number(editedPageNumber) < 1 ||
-      Number(editedPageNumber) > this.lastPage
-    ) {
-      Alert.alert(strings.Whoops, strings.InvalidPageNumber);
-      return;
-    }
+    const { editedPageNumber } = this.state;
 
     this.setState({
       editPageNumber: false

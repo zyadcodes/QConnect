@@ -6,7 +6,8 @@ import {
   Modal,
   StyleSheet,
   TouchableWithoutFeedback,
-  ScrollView
+  ScrollView,
+  Alert
 } from "react-native";
 import { Button } from "react-native-elements";
 import strings from "config/strings";
@@ -18,6 +19,7 @@ import colors from "config/colors";
 const PageEditMode = props => {
   const { visible, onClose, onChangeText, updatePage } = props;
   const [loading, setLoading] = useState(false);
+  const [pageNumber, setPageNumber] = useState("");
 
   return (
     <Modal
@@ -34,7 +36,7 @@ const PageEditMode = props => {
                 <Text
                   style={[fontStyles.bigTextStyleDarkGrey, styles.textPadding]}
                 >
-                  {strings.GoToPage}
+                  {loading ? strings.LoadingPage : strings.GoToPage}
                 </Text>
               </View>
               <View style={[styles.footerContainer]}>
@@ -48,15 +50,29 @@ const PageEditMode = props => {
                   autoFocus={true}
                   selectTextOnFocus={true}
                   autoCorrect={false}
-                  onChangeText={onChangeText}
+                  onChangeText={value => {
+                    setPageNumber(value);
+                    onChangeText(value);
+                  }}
                   keyboardType="numeric"
                   maxLength={3}
+                  value={pageNumber}
                 />
 
                 <Button
                   accessibilityLabel="touchable_text_go"
                   title={strings.Go}
                   onPress={() => {
+                    //Ensure the entered value is a valid Mushaf page number
+                    if (
+                      isNaN(pageNumber) ||
+                      Number(pageNumber) < 1 ||
+                      Number(pageNumber) > 604
+                    ) {
+                      Alert.alert(strings.Whoops, strings.InvalidPageNumber);
+                      return;
+                    }
+
                     setLoading(true);
 
                     //hack to work around the fact that I can't dismiss the modal then
