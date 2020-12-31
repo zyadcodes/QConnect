@@ -28,13 +28,12 @@ class MushafPage extends React.Component {
 
   render() {
     const { selection, item, idx, mushafFontScale } = this.props;
-
     const itemInt = parseInt(item, 10);
     return (
       <View style={styles.container} key={idx}>
         <SelectionPage
-          page={itemInt}
           {...this.props}
+          page={itemInt}
           selectedAyahsStart={selection.start}
           selectedAyahsEnd={selection.end}
           selectionStarted={selection.started}
