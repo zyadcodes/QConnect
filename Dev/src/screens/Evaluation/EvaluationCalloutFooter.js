@@ -11,6 +11,7 @@ const EvaluationCalloutFooter = props => {
     <View style={styles.buttonsFooter}>
       <Button
         title="Clear"
+        accessibilityLabel="eval_callout_clear"
         type="clear"
         titleStyle={fontStyles.mainTextStyleDarkishGrey}
         buttonStyle={styles.clearButtonStyle}
@@ -19,6 +20,7 @@ const EvaluationCalloutFooter = props => {
       <View style={styles.saveButtonContainer}>
         <Button
           titleStyle={fontStyles.mainTextStyleWhite}
+          accessibilityLabel="eval_callout_save"
           title="Save"
           buttonStyle={styles.saveButton}
           onPress={() => onClose()}

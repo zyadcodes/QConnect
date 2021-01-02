@@ -76,7 +76,7 @@ class FlowView extends Component {
           accessibilityLabel={
             "eval_tag_" +
             this.props.text +
-            (this.props.isSelected ? "_sel" : "")
+            (this.state.isSelected ? "_sel" : "")
           }
           onPress={() => {
             if (!this.props.readOnly) {
