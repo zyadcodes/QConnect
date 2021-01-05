@@ -375,10 +375,14 @@ namespace QConnectUITestsAndroid
             app.Screenshot("Teacher no class FRE screen");
             app.Tap("Click here to add a class");
             enterText("textInput_addClass", getRandomClassName());
+            app.Screenshot("teacher_create_account_flow_welcome");
+
             app.Tap("Edit class image");
 
             //select image id: 5
             app.WaitForElement("avatar_grid_item_5");
+            app.Screenshot("teacher_create_account_flow_edit_class_image");
+
             app.Tap("avatar_grid_item_5");
 
             //ensure that the class avatar image has sifted to imageID: 5
@@ -386,6 +390,7 @@ namespace QConnectUITestsAndroid
 
             app.Tap("Add class");
             app.WaitForElement(x => x.Text("Class Code"));
+            app.Screenshot("teacher_create_account_flow_add_class");
 
             //save class code to be used later by student to join class
             string newClassCode = app.Query(x => x.Marked("classCodeValue")).FirstOrDefault().Text;
@@ -411,12 +416,14 @@ namespace QConnectUITestsAndroid
 
 
             app.WaitForElement("Assignments");
+            app.Screenshot("teacher_create_account_flow_main");
             app.Tap("Assignments");
             app.WaitForElement("surah_title_touchable");
 
             //tap on surah ToC to change surah
             app.WaitForElement("surah_title_touchable");
             app.Tap("surah_title_touchable");
+            app.Screenshot("teacher_create_account_flow_surah_toc");
 
             //type to filter surah
             app.WaitForElement("qc_text_input");
@@ -426,6 +433,7 @@ namespace QConnectUITestsAndroid
             app.WaitForElement("surahs_toc_item_Yusuf");
             app.Tap("surahs_toc_item_Yusuf");
             app.WaitForElement("surah_header_يوسف");
+            app.Screenshot("teacher_create_account_flow_surah");
 
             //change page
             app.ScrollDownTo("touchable_text_page_number_235_footer");
@@ -466,12 +474,14 @@ namespace QConnectUITestsAndroid
             app.Tap("mushaf_word_15504");
             app.WaitForElement(x => x.Marked("mwt_15504_sel"));
             app.Query(x => x.Marked("footer_label_" + assignmentName));
+            app.Screenshot("teacher_create_account_flow_assignment_mushaf");
 
             //save assignment, verify assignment name in student card
             app.Tap("Save");
 
             app.WaitForElement("card_stud_" + studentName + "_assignment_" + assignmentName);
             app.Tap("card_stud_" + studentName + "_assignment_" + assignmentName);
+            app.Screenshot("teacher_create_account_flow_main_assigment");
 
             app.WaitForElement("card_stud_" + studentName + "_assignment_" + assignmentName);
             app.Tap("card_stud_" + studentName + "_assignment_" + assignmentName);
@@ -500,17 +510,21 @@ namespace QConnectUITestsAndroid
             app.Tap("end_of_ayah_14");
             fillEvalCardNotes("ayah needs some more practice", new string[] { "Memorization", "Ekhfae" }, true);
 
+
             //tap on rating
             app.Tap("rating_view");
             app.Tap("btn_expand_notes");
+
             fillEvalCardNotes("overall recitation was fine. Practice some more the ayah.", new string [] { "Memorization", "Ekhfae", "Makharej" }, false);
+            app.Screenshot("teacher_create_account_flow_evaluation");
 
             //save evaluation
             app.Tap("btn_save_eval");
             //verify profile screen: grade, label, history
 
-            app.ScrollDown("past_assignment_" + assignmentName, ScrollStrategy.Gesture);
+            app.ScrollTo("past_assignment_Al-Ma'idah (14) p. 110", "student_profile_container");
             app.WaitForElement("past_assignment_" + assignmentName);
+            app.Screenshot("teacher_create_account_flow_student_profile");
 
             app.Tap("past_assignment_" + assignmentName);
             //wait for old evaluation page to load
