@@ -1,6 +1,6 @@
 //Screen which will provide all of the possible settings for the user to click on
 import React from "react";
-import { View, StyleSheet, ScrollView, PixelRatio } from "react-native";
+import { View, StyleSheet } from "react-native";
 import LoadingSpinner from "components/LoadingSpinner";
 import colors from "config/colors";
 import QcParentScreen from "screens/QcParentScreen";
@@ -9,10 +9,7 @@ import Swiper from "react-native-swiper";
 import { screenHeight, screenWidth } from "config/dimensions";
 import * as _ from "lodash";
 import { getFontScale } from "react-native-device-info";
-import {
-  isNoSelection,
-  noSelection,
-} from "screens/MushafScreen/Helpers/consts";
+import { isNoSelection } from "screens/MushafScreen/Helpers/consts";
 
 class MushafPage extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
@@ -30,59 +27,20 @@ class MushafPage extends React.Component {
   }
 
   render() {
-    const {
-      profileImage,
-      assignToID,
-      selection,
-      disableChangingUser,
-      showLoadingOnHighlightedAyah,
-      hideHeader,
-      showSelectedLinesOnly,
-      highlightedColor,
-      showTooltipOnPress,
-      evalNotesComponent,
-      removeHighlight,
-      assignmentType,
-      highlightedWords,
-      highlightedAyahs,
-      item,
-      idx,
-      onChangePage,
-      isLoading,
-      currentClass,
-      mushafFontScale,
-      readOnly
-    } = this.props;
-
-    const itemInt = parseInt(item);
+    const { selection, item, idx, mushafFontScale } = this.props;
+    const itemInt = parseInt(item, 10);
     return (
-      <View style={{ flex: 1 }} key={idx}>
+      <View style={styles.container} key={idx}>
         <SelectionPage
+          {...this.props}
           page={itemInt}
-          hideHeader={hideHeader}
-          showSelectedLinesOnly={showSelectedLinesOnly}
-          showTooltipOnPress={showTooltipOnPress} //if the prop is not passed, we default to false
-          onChangePage={onChangePage}
-          highlightedWords={highlightedWords}
-          highlightedAyahs={highlightedAyahs}
-          highlightedColor={highlightedColor}
-          readOnly={readOnly}
-          showLoadingOnHighlightedAyah={showLoadingOnHighlightedAyah}
           selectedAyahsStart={selection.start}
           selectedAyahsEnd={selection.end}
           selectionStarted={selection.started}
           selectionCompleted={selection.completed}
-          evalNotesComponent={evalNotesComponent}
-          removeHighlight={removeHighlight}
           selectionOn={
             itemInt >= selection.start.page && itemInt <= selection.end.page
           }
-          profileImage={profileImage}
-          currentClass={currentClass}
-          isLoading={isLoading}
-          assignmentType={assignmentType}
-          assignToID={assignToID}
-          disableChangingUser={disableChangingUser}
           onChangeAssignee={(id, imageID, isClassID) => {
             if (this.props.onChangeAssignee !== undefined) {
               this.props.onChangeAssignee(id, imageID, isClassID);
@@ -98,8 +56,6 @@ class MushafPage extends React.Component {
           onSelectAyahs={(firstAyah, lastAyah) =>
             this.props.onSelectAyahs(firstAyah, lastAyah)
           }
-          topRightIconName={this.props.topRightIconName}
-          topRightOnPress={this.props.topRightOnPress}
           onUpdateAssignmentName={newAssignmentName =>
             this.props.setFreeFormAssignmentName(newAssignmentName)
           }
@@ -134,10 +90,10 @@ export default class MushafScreen extends QcParentScreen {
     assignmentType: this.props.assignmentType,
     loadScreenOnClose: this.props.loadScreenOnClose,
     popOnClose: this.props.popOnClose,
-    isLoading: true,
+    isLoading: true
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     //we mimmic right to left pages scanning by reversing the pages order in the swiper component
     let allPages = Array.from(Array(604), (e, i) => 604 - i);
 
@@ -174,6 +130,7 @@ export default class MushafScreen extends QcParentScreen {
     ) {
       return false;
     }
+
     return true;
   }
 
@@ -225,18 +182,16 @@ export default class MushafScreen extends QcParentScreen {
 
     if (isLoading === true) {
       return (
-        <View
-          id={this.state.page + "spinner"}
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
+        <View id={this.state.page + "spinner"} style={styles.spinnerContainer}>
           <LoadingSpinner isVisible={true} />
         </View>
       );
     } else {
       return (
-        <View style={{ flex: 1 }}>
+        <View style={styles.container}>
           <Swiper
             index={this.state.index}
+            keyboardShouldPersistTaps="handled"
             containerStyle={[{ width: screenWidth, height: screenHeight }]}
             key={this.state.key}
             loop={false}
@@ -258,7 +213,6 @@ export default class MushafScreen extends QcParentScreen {
                 highlightedWords={highlightedWords}
                 highlightedAyahs={highlightedAyahs}
                 onChangePage={this.onChangePage.bind(this)}
-                isLoading={this.state.isLoading}
                 {...this.props}
               />
             ))}
@@ -270,12 +224,10 @@ export default class MushafScreen extends QcParentScreen {
 }
 
 const styles = StyleSheet.create({
-  container: {},
-  ayahText: {
-    padding: 5,
-    textAlign: "right",
-    fontFamily: "me_quran",
-    fontSize: 30,
-    color: colors.darkGrey
+  container: { flex: 1 },
+  spinnerContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   }
 });

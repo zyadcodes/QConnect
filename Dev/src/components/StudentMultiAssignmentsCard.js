@@ -1,19 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  Image,
-  View,
-  FlatList
-} from "react-native";
+import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
 import colors from "config/colors";
 import FontLoadingComponent from "./FontLoadingComponent";
 import fontStyles from "config/fontStyles";
 import { screenHeight, screenWidth } from "config/dimensions";
 import { ListItem } from "react-native-elements";
-import strings from 'config/strings';
+import strings from "config/strings";
 import { Avatar, Icon } from "react-native-elements";
 
 /*Class represents the student card that will show up in the list of students
@@ -29,32 +22,30 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
       studentName,
       profilePic,
       currentAssignments,
-      background,
       onPress,
       comp,
-      compOnPress,
-      status
+      compOnPress
     } = this.props;
 
     let assignmentTypes = [];
     assignmentTypes[strings.Memorization] = {
       color: colors.darkGreen,
-      iconName: 'brain',
-      iconType: 'material-community',
+      iconName: "brain",
+      iconType: "material-community",
       name: strings.Memorize
     };
 
     assignmentTypes[strings.Reading] = {
       color: colors.magenta,
-      iconName: 'book-open',
-      iconType: 'feather',
+      iconName: "book-open",
+      iconType: "feather",
       name: strings.Read
     };
 
     assignmentTypes[strings.Revision] = {
       color: colors.blue,
-      iconName: 'redo',
-      iconType: 'evilicon',
+      iconName: "redo",
+      iconType: "evilicon",
       name: strings.Review
     };
 
@@ -63,6 +54,7 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
       //student name, and student assignment
       <TouchableOpacity
         key={studentName + "_" + profilePic}
+        accessibilityLabel={"student_card_" + studentName}
         style={[styles.cardStyle, { backgroundColor: colors.white }]}
         borderColor={colors.black}
         //The on press function is for when the teacher clicks the card, the color of it
@@ -72,23 +64,14 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
         }}
       >
         <View style={styles.infoStyle}>
-          <View
-            style={{ flexDirection: 'row', marginTop: 10, marginBottom: 3 }}
-          >
+          <View style={styles.wrapperView}>
             <ListItem
               key={studentName}
               title={studentName}
-              titleStyle={[fontStyles.mediumTextStyleDarkestGrey, { flex: 1 }]}
+              titleStyle={[fontStyles.mediumTextStyleDarkestGrey, styles.flex1]}
               chevron
-              containerStyle={{
-                flex: 1,
-                borderRadius: 2,
-                marginLeft: 3,
-                width: screenWidth * 0.95
-              }}
-              contentContainerStyle={{
-                flex: 2
-              }}
+              containerStyle={styles.listItemContainerStyle}
+              contentContainerStyle={styles.contentContainerStyle}
               leftAvatar={{ source: profilePic, size: "medium" }}
               //convert status to shorter strings to fit in the single line ListItem
               rightTitle={strings.GoToProfile}
@@ -96,13 +79,7 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
             />
           </View>
           {currentAssignments && currentAssignments.length > 0 && (
-            <View
-              style={{
-                flexDirection: 'row',
-                paddingLeft: 18,
-                paddingBottom: 10,
-              }}
-            >
+            <View style={styles.assignmentTitleView}>
               <Text style={[fontStyles.mainTextStyleDarkGrey]}>
                 {currentAssignments.length === 1
                   ? strings.CurrentAssignment + ":"
@@ -114,13 +91,16 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
             currentAssignments.map((assignment, index) => (
               <TouchableOpacity
                 onPress={() => this.props.onAssignmentPress(index)}
+                accessibilityLabel={
+                  "card_stud_" + studentName + "_assignment_" + assignment.name
+                }
               >
                 <ListItem
                   key={assignment.name}
                   title={assignment.name}
                   titleStyle={[
                     fontStyles.mediumTextStyleDarkestGrey,
-                    { flex: 1 },
+                    styles.flex1
                   ]}
                   subtitle={
                     assignment.isReadyEnum === "NEED_HELP"
@@ -142,30 +122,16 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
                       : {}
                   ]}
                   chevron={assignment.submission ? false : true}
-                  containerStyle={{
-                    flex: 1,
-                    width: screenWidth * 0.95,
-                    borderRadius: 2,
-                    marginLeft: 3,
-                  }}
-                  contentContainerStyle={{
-                    flex: 1
-                  }}
+                  containerStyle={styles.cardContainer}
+                  contentContainerStyle={styles.mainContentContainerStyle}
                   badge={
                     assignment.submission
                       ? {
                           badgeStyle: {
-                            backgroundColor: 'rgba(255,255,250,0.1)'
+                            backgroundColor: "rgba(255,255,250,0.1)"
                           },
                           value: (
-                            <View
-                              style={{
-                                position: "absolute",
-                                zIndex: 10,
-                                bottom: 0,
-                                right: 0
-                              }}
-                            >
+                            <View style={styles.recordIconContainer}>
                               <Icon
                                 size={15}
                                 name="microphone"
@@ -178,29 +144,23 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
                       : undefined
                   }
                   leftElement={
-                    <View
-                      style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        width: 40,
-                      }}
-                    >
+                    <View style={styles.leftElementView}>
                       <Avatar
                         rounded
                         icon={{
                           name: assignmentTypes[assignment.type].iconName,
                           type: assignmentTypes[assignment.type].iconType,
-                          color: colors.white,
+                          color: colors.white
                         }}
                         overlayContainerStyle={{
                           backgroundColor:
-                            assignmentTypes[assignment.type].color,
+                            assignmentTypes[assignment.type].color
                         }}
                       />
                       <Text
                         style={[
                           fontStyles.smallestTextStyleDarkGrey,
-                          { width: 45, textAlign: 'center', paddingTop: 3 },
+                          styles.assignmentTextStyle
                         ]}
                       >
                         {assignmentTypes[assignment.type].name}
@@ -211,7 +171,7 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
                   rightTitle="Open"
                   rightTitleStyle={[
                     fontStyles.smallestTextStyleDarkGrey,
-                    { width: 25 }
+                    styles.openStyle
                   ]}
                   bottomDivider={
                     index !== currentAssignments.length - 1 ? true : false
@@ -222,19 +182,17 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
             ))
           ) : (
             <ListItem
-              key="NewAssignment"
+              key={
+                "student_multi_assignment_card_new_assignment_" + studentName
+              }
+              accessibilityLabel={
+                "student_multi_assignment_card_new_assignment_" + studentName
+              }
               // title={strings.NeedAssignment}
               // titleStyle={[fontStyles.mediumTextStyleDarkestGrey, { flex: 1 }]}
               chevron
-              containerStyle={{
-                flex: 1,
-                borderRadius: 2,
-                marginLeft: 3,
-                width: screenWidth * 0.8
-              }}
-              contentContainerStyle={{
-                flex: 2
-              }}
+              containerStyle={styles.newAssignmentListItemStyle}
+              contentContainerStyle={styles.newAssignmentContainerStyle}
               //convert status to shorter strings to fit in the single line ListItem
               title={strings.AddAssignment}
               titleStyle={fontStyles.smallTextStyleDarkGrey}
@@ -245,12 +203,10 @@ export default class StudentMultiAssignmentsCard extends FontLoadingComponent {
         {comp ? (
           <View style={styles.removeStudentStyle}>
             <TouchableOpacity
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: screenHeight * 0.2,
-                width: screenWidth * 0.2,
-              }}
+              style={styles.removeStudentTouchableStyle}
+              accessibilityLabel={
+                "student_multi_assignment_card_remove_student_" + studentName
+              }
               onPress={() => {
                 compOnPress();
               }}
@@ -291,28 +247,85 @@ const styles = StyleSheet.create({
     shadowColor: colors.black,
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: 1
     },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
-    elevation: 2,
+    elevation: 2
+  },
+  assignmentTextStyle: {
+    width: 45,
+    textAlign: "center",
+    paddingTop: 3
+  },
+  openStyle: { width: 25 },
+  contentContainerStyle: {
+    flex: 2
+  },
+  flex1: { flex: 1 },
+  wrapperView: { flexDirection: "row", marginTop: 10, marginBottom: 3 },
+  listItemContainerStyle: {
+    flex: 1,
+    borderRadius: 2,
+    marginLeft: 3,
+    width: screenWidth * 0.95
+  },
+  mainContentContainerStyle: {
+    flex: 1
+  },
+  cardContainer: {
+    flex: 1,
+    width: screenWidth * 0.95,
+    borderRadius: 2,
+    marginLeft: 3
+  },
+  assignmentTitleView: {
+    flexDirection: "row",
+    paddingLeft: 18,
+    paddingBottom: 10
   },
   removeStudentStyle: {
     flexDirection: "row",
     justifyContent: "center",
     marginRight: screenWidth * 0.05,
-    flex: 1,
+    flex: 1
   },
   infoStyle: {
     flexDirection: "column",
     justifyContent: "center",
     fontFamily: "Montserrat-Regular",
-    flex: 4,
+    flex: 4
   },
   profilePicStyle: {
     width: screenWidth * 0.12,
     height: screenWidth * 0.12,
     borderRadius: screenWidth * 0.06,
-    marginLeft: screenWidth * 0.05,
+    marginLeft: screenWidth * 0.05
+  },
+  leftElementView: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 40
+  },
+  newAssignmentListItemStyle: {
+    flex: 1,
+    borderRadius: 2,
+    marginLeft: 3,
+    width: screenWidth * 0.8
+  },
+  recordIconContainer: {
+    position: "absolute",
+    zIndex: 10,
+    bottom: 0,
+    right: 0
+  },
+  removeStudentTouchableStyle: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: screenHeight * 0.2,
+    width: screenWidth * 0.2
+  },
+  newAssignmentContainerStyle: {
+    flex: 2
   }
 });

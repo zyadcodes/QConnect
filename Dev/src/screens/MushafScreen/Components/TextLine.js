@@ -26,7 +26,6 @@ const TextLine = ({
   highlightedColor,
   showLoadingOnHighlightedAyah,
   showTooltipOnPress,
-  evalNotesComponent,
   removeHighlight,
   mushafFontScale,
   readOnly
@@ -37,7 +36,7 @@ const TextLine = ({
       style={{
         ...styles.line,
         alignItems: lineAlign,
-        flexWrap: mushafFontScale > 1 ? "wrap" : "nowrap",
+        flexWrap: mushafFontScale > 1 ? "wrap" : "nowrap"
       }}
     >
       {lineText &&
@@ -97,7 +96,6 @@ const TextLine = ({
                   curAyah={curAyah}
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={false}
-                  evalNotesComponent={evalNotesComponent}
                   removeHighlight={removeHighlight}
                 />
               );
@@ -115,7 +113,6 @@ const TextLine = ({
                   highlightedColor={highlightedColor}
                   showLoading={showLoading}
                   isLastSelectedAyah={false}
-                  evalNotesComponent={evalNotesComponent}
                   removeHighlight={removeHighlight}
                 />
               );
@@ -162,12 +159,11 @@ const TextLine = ({
                   curAyah={curAyah}
                   onPress={() => onSelectAyah(curAyah, word)}
                   isFirstSelectedWord={isFirstSelectedWord}
-                  evalNotesComponent={evalNotesComponent}
                   removeHighlight={removeHighlight}
                 />
               );
             } else if (word.char_type === "end") {
-              let showTooltip = false;
+              showTooltip = false;
               if (
                 showTooltipOnPress === "true" ||
                 (showTooltipOnPress === "whenHighlighted" &&
@@ -195,7 +191,6 @@ const TextLine = ({
                     selectedAyahsEnd
                   )}
                   isLastSelectedAyah={isLastSelectedAyah}
-                  evalNotesComponent={evalNotesComponent}
                   removeHighlight={removeHighlight}
                 />
               );
@@ -217,13 +212,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignSelf: "stretch",
     height: screenHeight * 0.25,
-    alignItems: "center",
+    alignItems: "center"
   },
   imageContainer: {
     width: "100%",
     justifyContent: "center",
     alignSelf: "center",
-    alignItems: "center",
+    alignItems: "center"
   }
 });
 

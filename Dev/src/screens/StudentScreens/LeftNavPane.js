@@ -140,6 +140,7 @@ class LeftNavPane extends QcParentScreen {
 
           <FlatList
             data={classes}
+            accessibilityLabel="StudentLeftNavMenu"
             keyExtractor={(item, index) => item.name}
             renderItem={({ item, index }) => (
               <QcDrawerItem

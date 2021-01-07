@@ -4,55 +4,55 @@ import QcActionButton from "components/QcActionButton";
 import QcAppBanner from "components/QcAppBanner";
 import strings from "../../../config/strings";
 import QcParentScreen from "screens/QcParentScreen";
-import FirebaseFunctions from 'config/FirebaseFunctions';
-import QCView from 'components/QCView';
-import screenStyle from 'config/screenStyle';
-import { screenHeight, screenWidth } from 'config/dimensions';
+import FirebaseFunctions from "config/FirebaseFunctions";
+import QCView from "components/QCView";
+import screenStyle from "config/screenStyle";
+import { screenHeight, screenWidth } from "config/dimensions";
 
 const BG_IMAGE = require("assets/images/read_child_bg.jpg");
 
 class AccountTypeScreen extends QcParentScreen {
-
   componentDidMount() {
-    FirebaseFunctions.setCurrentScreen("Account Type Screen", "AccountTypeScreen");
+    FirebaseFunctions.setCurrentScreen(
+      "Account Type Screen",
+      "AccountTypeScreen"
+    );
   }
 
   //Navigates to the teacher side
   onTeacherFlow() {
-    this.props.navigation.push('TeacherWelcomeScreen');
+    this.props.navigation.push("TeacherWelcomeScreen");
   }
 
   //Navigates to the student side
   onStudentFlow() {
-    this.props.navigation.push('StudentWelcomeScreen');
+    this.props.navigation.push("StudentWelcomeScreen");
   }
 
   render() {
     const { navigation } = this.props;
     return (
       <View style={screenStyle.container}>
-      <ScrollView>
-        <ImageBackground source={BG_IMAGE} style={styles.bgImage}>
-          <View style={{ flex: 3 }} />
-          <QcAppBanner />
-          <View style={styles.spacer} />
-          <View style={{ flex: 1 }}>
-            <QcActionButton
-              navigation={navigation}
-              text={strings.IAmATeacher}
-              onPress={() => this.onTeacherFlow()}
-              screen={this.name}
-            />
-            <View style={{ flex: 1 }} />
-            <QcActionButton
-              navigation={navigation}
-              text={strings.IAmAStudent}
-              onPress={() => this.onStudentFlow()}
-              screen={this.name}
-            />
-          </View>
-          <View style={{ flex: 1 }} />
-        </ImageBackground>
+        <ScrollView>
+          <ImageBackground source={BG_IMAGE} style={styles.bgImage}>
+            <View style={{ flex: 3 }} />
+            <QcAppBanner />
+            <View style={styles.spacer} />
+            <View style={styles.flexAll}>
+              <QcActionButton
+                navigation={navigation}
+                text={strings.IAmATeacher}
+                onPress={() => this.onTeacherFlow()}
+              />
+              <View style={styles.flexAll} />
+              <QcActionButton
+                navigation={navigation}
+                text={strings.IAmAStudent}
+                onPress={() => this.onStudentFlow()}
+              />
+            </View>
+            <View style={styles.flexAll} />
+          </ImageBackground>
         </ScrollView>
       </View>
     );
@@ -60,6 +60,7 @@ class AccountTypeScreen extends QcParentScreen {
 }
 
 const styles = StyleSheet.create({
+  flexAll: { flex: 1 },
   spacer: {
     flex: 3
   },

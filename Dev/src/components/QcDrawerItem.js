@@ -1,13 +1,13 @@
-import React from 'react'
-import { ListItem } from 'react-native-elements'
-import PropTypes from 'prop-types';
+import React from "react";
+import { ListItem } from "react-native-elements";
+import PropTypes from "prop-types";
 import colors from "config/colors";
 import { StyleSheet } from "react-native";
-import FontLoadingComponent from './FontLoadingComponent';
-import { screenHeight, screenWidth } from 'config/dimensions';
+import FontLoadingComponent from "./FontLoadingComponent";
+import { screenHeight, screenWidth } from "config/dimensions";
 
 // a card that displays one menu item in the left navigation menu (hamburger menu)
-// params: 
+// params:
 class QcDrawerItem extends FontLoadingComponent {
   render() {
     const { title, image, icon, onPress, backColor, borderColor } = this.props;
@@ -16,29 +16,34 @@ class QcDrawerItem extends FontLoadingComponent {
 
     return (
       <ListItem
-        style = {{
+        style={{
           borderColor: containerBordr
         }}
         backgroundColor={containerBg}
+        accessible={true}
+        accessibilityLabel={"QcDrawerItem_" + title }
         containerStyle={[styles.cardStyle, { backgroundColor: containerBg }]}
         title={title}
-        fontFamily='regular'
-        leftAvatar={image ? {
-          rounded: true,
-          source: image
-        } : {
-            rounded: true,
-            icon: {
-              name: icon,
-              type: 'font-awesome',
-              color: colors.primaryDark,
-            },
-            overlayContainerStyle: styles.avatarStyle
-          }}
-
+        fontFamily="regular"
+        leftAvatar={
+          image
+            ? {
+                rounded: true,
+                source: image
+              }
+            : {
+                rounded: true,
+                icon: {
+                  name: icon,
+                  type: "font-awesome",
+                  color: colors.primaryDark,
+                },
+                overlayContainerStyle: styles.avatarStyle
+              }
+        }
         onPress={() => onPress()}
       />
-    )
+    );
   }
 }
 
@@ -49,7 +54,7 @@ QcDrawerItem.propTypes = {
   icon: PropTypes.string,
   backColor: PropTypes.string,
   borderColor: PropTypes.string,
-}
+};
 
 //Styles that control the look of the card, and everything within it
 const styles = StyleSheet.create({

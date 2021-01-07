@@ -1,7 +1,10 @@
 {
     "cSpell.words": [
         "Basmalah",
+        "consts",
+        "mushaf",
         "unhighlight"
     ],
-    "java.configuration.updateBuildConfiguration": "automatic"
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "editor.codeActionsOnSave": { "source.fixAll.eslint": true }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable comma-dangle */
 import React from "react";
 import {
   ScrollView,
@@ -7,7 +8,7 @@ import {
   Text,
   Image,
   PixelRatio,
-  Alert,
+  Alert
 } from "react-native";
 import StudentMultiAssignmentsCard from "components/StudentMultiAssignmentsCard";
 import colors from "config/colors";
@@ -28,7 +29,8 @@ import { screenHeight, screenWidth } from "config/dimensions";
 import Toast, { DURATION } from "react-native-easy-toast";
 import themeStyles from "config/themeStyles";
 import ErrorComponent from "components/ErrorComponent";
-import { ASSIGNMENT_DELETED, ASSGINMENT_SENT } from "utils/consts";
+import { ASSIGNMENT_DELETED } from "utils/consts";
+import TouchableText from "components/TouchableText";
 
 export class ClassMainScreen extends QcParentScreen {
   state = {
@@ -41,13 +43,11 @@ export class ClassMainScreen extends QcParentScreen {
     isOpen: false,
     classes: "",
     isEditing: false,
-    titleHasChanged: false,
+    titleHasChanged: false
   };
 
   async componentDidMount() {
     FirebaseFunctions.setCurrentScreen("Class Main Screen", "ClassMainScreen");
-
-    this.setState({ isLoading: true });
     await this.initScreen();
   }
 
@@ -77,7 +77,7 @@ export class ClassMainScreen extends QcParentScreen {
         classInviteCode,
         currentClass,
         currentClassID,
-        classes,
+        classes
       });
 
       if (showAssignmentSentNotification) {
@@ -154,9 +154,9 @@ export class ClassMainScreen extends QcParentScreen {
             });
             arrayOfClassStudents.splice(indexOfStudent, 1);
             this.setState({ currentClass });
-          },
+          }
         },
-        { text: strings.Cancel, style: "cancel" },
+        { text: strings.Cancel, style: "cancel" }
       ]
     );
   }
@@ -164,16 +164,16 @@ export class ClassMainScreen extends QcParentScreen {
   updateTitle(newTitle) {
     this.setState({ titleHasChanged: true });
     this.setState({
-      currentClass: { ...this.state.currentClass, name: newTitle },
+      currentClass: { ...this.state.currentClass, name: newTitle }
     });
   }
   async updatePicture(newPicture) {
     this.setState({ pictureHasChanged: true });
     this.setState({
-      currentClass: { ...this.state.currentClass, classImageID: newPicture },
+      currentClass: { ...this.state.currentClass, classImageID: newPicture }
     });
     await FirebaseFunctions.updateClassObject(this.state.currentClassID, {
-      classImageID: newPicture,
+      classImageID: newPicture
     });
   }
 
@@ -201,7 +201,7 @@ export class ClassMainScreen extends QcParentScreen {
       userID,
       currentClass,
       currentClassID,
-      classInviteCode,
+      classInviteCode
     } = this.state;
 
     return (
@@ -218,7 +218,7 @@ export class ClassMainScreen extends QcParentScreen {
         }
       >
         <QCView style={screenStyle.container}>
-          <View style={{ flex: 1, width: screenWidth }}>
+          <View style={styles.flexWide}>
             <TopBanner
               LeftIconName="navicon"
               LeftOnPress={() => this.setState({ isOpen: true })}
@@ -234,30 +234,19 @@ export class ClassMainScreen extends QcParentScreen {
                   classInviteCode,
                   currentClassID,
                   userID: this.state.userID,
-                  currentClass,
+                  currentClass
                 })
               }
             />
           </View>
-          <View
-            style={{
-              flex: 2,
-              justifyContent: "flex-start",
-              alignItems: "center",
-              alignSelf: "center"
-            }}
-          >
+          <View style={styles.emptyClassStyle}>
             <Text style={fontStyles.hugeTextStylePrimaryDark}>
               {strings.EmptyClass}
             </Text>
 
             <Image
               source={require("assets/emptyStateIdeas/welcome-girl.png")}
-              style={{
-                width: 0.73 * screenWidth,
-                height: 0.22 * screenHeight,
-                resizeMode: "contain"
-              }}
+              style={styles.welcomeGirlImageStyle}
             />
 
             <QcActionButton
@@ -267,7 +256,7 @@ export class ClassMainScreen extends QcParentScreen {
                   classInviteCode,
                   currentClassID,
                   userID: this.state.userID,
-                  currentClass,
+                  currentClass
                 })
               }
             />
@@ -319,25 +308,14 @@ export class ClassMainScreen extends QcParentScreen {
               profileImageID={currentClass.classImageID}
             />
           </View>
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "flex-start",
-              alignSelf: "center",
-              flex: 2,
-            }}
-          >
+          <View style={styles.noClassStyle}>
             <Text style={fontStyles.hugeTextStylePrimaryDark}>
               {strings.NoClass}
             </Text>
 
             <Image
               source={require("assets/emptyStateIdeas/welcome-girl.png")}
-              style={{
-                width: 0.73 * screenWidth,
-                height: 0.22 * screenHeight,
-                resizeMode: "contain"
-              }}
+              style={styles.welcomeImageStyle}
             />
 
             <QcActionButton
@@ -345,7 +323,7 @@ export class ClassMainScreen extends QcParentScreen {
               onPress={() => {
                 this.props.navigation.push("AddClass", {
                   userID: this.state.userID,
-                  teacher: this.state.teacher,
+                  teacher: this.state.teacher
                 });
               }}
             />
@@ -379,7 +357,7 @@ export class ClassMainScreen extends QcParentScreen {
           } else {
             if (isEditing && titleHasChanged) {
               FirebaseFunctions.updateClassObject(this.state.currentClassID, {
-                name: this.state.currentClass.name,
+                name: this.state.currentClass.name
               });
               this.setState({ titleHasChanged: false });
             }
@@ -396,7 +374,7 @@ export class ClassMainScreen extends QcParentScreen {
       currentClassID,
       userID,
       classInviteCode,
-      currentClass,
+      currentClass
     } = this.state;
 
     return (
@@ -409,13 +387,10 @@ export class ClassMainScreen extends QcParentScreen {
               currentClassID,
               userID,
               classInviteCode,
-              currentClass,
+              currentClass
             });
           }}
-          style={{
-            ...fontStyles.bigTextStylePrimaryDark,
-            paddingTop: 10,
-          }}
+          style={styles.touchableTextWithPadding}
         />
       </View>
     );
@@ -433,14 +408,7 @@ export class ClassMainScreen extends QcParentScreen {
 
     return (
       <View>
-        <View
-          style={{
-            alignItems: "center",
-            marginLeft: screenWidth * 0.017,
-            flexDirection: "row",
-            paddingTop: screenHeight * 0.025,
-          }}
-        >
+        <View style={styles.studentSectionContainer}>
           <Icon
             name={sectionIcon}
             type={sectionIconType}
@@ -450,7 +418,7 @@ export class ClassMainScreen extends QcParentScreen {
             style={[
               { marginLeft: screenWidth * 0.017 },
               fontStyles.mainTextStyleDarkRed,
-              { color: sectionColor },
+              { color: sectionColor }
             ]}
           >
             {sectionTitle}
@@ -470,7 +438,7 @@ export class ClassMainScreen extends QcParentScreen {
                   userID: userID,
                   studentID: item.ID,
                   currentClass: currentClass,
-                  classID: currentClassID,
+                  classID: currentClassID
                 })
               }
               onAssignmentPress={assignmentIndex => {
@@ -509,7 +477,7 @@ export class ClassMainScreen extends QcParentScreen {
                     assignmentName: assignment.name,
                     assignmentIndex: assignmentIndex,
                     newAssignment: false,
-                    imageID: item.profileImageID,
+                    imageID: item.profileImageID
                   });
                 }
               }}
@@ -652,7 +620,11 @@ export class ClassMainScreen extends QcParentScreen {
             positionValue={200}
             style={themeStyles.toastStyle}
           />
-          <ScrollView bounces={false} alwaysBounceVertical={false} style={styles.container}>
+          <ScrollView
+            bounces={false}
+            alwaysBounceVertical={false}
+            style={styles.container}
+          >
             <View>{this.renderTopBanner()}</View>
             {isEditing && this.showClassEditHeader()}
             {//render students who need help with their assignments
@@ -717,13 +689,46 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
     backgroundColor: colors.lightGrey,
-    flex: 3,
+    flex: 3
   },
   AddStudentButton: {
     height: screenHeight * 0.04,
     alignItems: "flex-end",
-    paddingRight: screenWidth * 0.025,
+    paddingRight: screenWidth * 0.025
   },
+  studentSectionContainer: {
+    alignItems: "center",
+    marginLeft: screenWidth * 0.017,
+    flexDirection: "row",
+    paddingTop: screenHeight * 0.025
+  },
+  emptyClassStyle: {
+    flex: 2,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    alignSelf: "center"
+  },
+  noClassStyle: {
+    alignItems: "center",
+    justifyContent: "flex-start",
+    alignSelf: "center",
+    flex: 2
+  },
+  welcomeImageStyle: {
+    width: 0.73 * screenWidth,
+    height: 0.22 * screenHeight,
+    resizeMode: "contain"
+  },
+  welcomeGirlImageStyle: {
+    width: 0.73 * screenWidth,
+    height: 0.22 * screenHeight,
+    resizeMode: "contain"
+  },
+  touchableTextWithPadding: {
+    ...fontStyles.bigTextStylePrimaryDark,
+    paddingTop: 10
+  },
+  flexWide: { flex: 1, width: screenWidth }
 });
 
 export default ClassMainScreen;

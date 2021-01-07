@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, Alert, PixelRatio } from "react-native";
 import MushafScreen from "./MushafScreen";
-import { screenHeight, screenWidth } from "config/dimensions";
 import FirebaseFunctions from "config/FirebaseFunctions";
 import QcActionButton from "components/QcActionButton";
 import strings from "config/strings";
-import { ScrollView } from "react-native-gesture-handler";
 import surahs from "./Data/Surahs.json";
 import { compareOrder } from "./Helpers/AyahsOrder";
 import colors from "config/colors";
@@ -20,7 +18,7 @@ import {
   isNoSelection,
   noSelection
 } from "screens/MushafScreen/Helpers/consts";
-import { ASSIGNMENT_DELETED, ASSGINMENT_SENT } from "utils/consts";
+import { ASSIGNMENT_DELETED, ASSIGNMENT_SENT } from "utils/consts";
 
 //------- constants to indicate the case when there is no ayah selected
 
@@ -272,7 +270,7 @@ class MushafAssignmentScreen extends Component {
       name: newAssignmentName,
       type: assignmentType,
       location: assignmentLocation,
-      isReadyEnum: "NOT_STARTED",
+      isReadyEnum: "NOT_STARTED"
     };
 
     //since there might be a latency before firebase returns the updated assignments,
@@ -366,7 +364,7 @@ class MushafAssignmentScreen extends Component {
       },
       () => {
         if (closeAfterSave) {
-          this.closeScreen(true, ASSGINMENT_SENT); //true sends a param to next screen to show a toast notification that assignment is updated.
+          this.closeScreen(true, ASSIGNMENT_SENT); //true sends a param to next screen to show a toast notification that assignment is updated.
         }
       }
     );
@@ -680,12 +678,18 @@ class MushafAssignmentScreen extends Component {
                 });
               }}
             >
-              <Icon
-                name={actionItemConfig[assignment.type].iconName}
-                type={actionItemConfig[assignment.type].iconType}
-                color="#fff"
-                style={styles.actionButtonIcon}
-              />
+              <View
+                accessibilityLabel={
+                  "goto_" + assignment.type + ": " + assignment.name
+                }
+              >
+                <Icon
+                  name={actionItemConfig[assignment.type].iconName}
+                  type={actionItemConfig[assignment.type].iconType}
+                  color="#fff"
+                  style={styles.actionButtonIcon}
+                />
+              </View>
             </ActionButton.Item>
           );
         }
@@ -715,12 +719,14 @@ class MushafAssignmentScreen extends Component {
             });
           }}
         >
-          <Icon
-            name="plus"
-            type="feather"
-            color="#fff"
-            style={styles.actionButtonIcon}
-          />
+          <View accessibilityLabel="btn_add_new_assignment">
+            <Icon
+              name="plus"
+              type="feather"
+              color="#fff"
+              style={styles.actionButtonIcon}
+            />
+          </View>
         </ActionButton.Item>
       );
     }
@@ -758,12 +764,14 @@ class MushafAssignmentScreen extends Component {
             });
           }}
         >
-          <Icon
-            name="clipboard-check-outline"
-            type="material-community"
-            color="#fff"
-            style={styles.actionButtonIcon}
-          />
+          <View accessibilityLabel="btn_evaluate_assignment">
+            <Icon
+              name="clipboard-check-outline"
+              type="material-community"
+              color="#fff"
+              style={styles.actionButtonIcon}
+            />
+          </View>
         </ActionButton.Item>
       );
 
@@ -789,20 +797,21 @@ class MushafAssignmentScreen extends Component {
                       assignmentIndex
                     );
                     this.closeScreen(true, ASSIGNMENT_DELETED);
-                  },
+                  }
                 },
-                { text: strings.Cancel, style: "cancel" },
+                { text: strings.Cancel, style: "cancel" }
               ]
             );
-            
           }}
         >
-          <Icon
-            name="page-remove"
-            type="foundation"
-            color="#fff"
-            style={styles.actionButtonIcon}
-          />
+          <View accessibilityLabel="btn_remove_assignment">
+            <Icon
+              name="page-remove"
+              type="foundation"
+              color="#fff"
+              style={styles.actionButtonIcon}
+            />
+          </View>
         </ActionButton.Item>
       );
     }
@@ -902,7 +911,10 @@ class MushafAssignmentScreen extends Component {
             <View style={{ padding: 5 }}>
               {this.state.selection.start.surah > 0 ||
               this.state.freeFormAssignment ? (
-                <Text style={fontStyles.mainTextStyleDarkGrey}>
+                <Text
+                  accessibilityLabel={"footer_label_" + assignmentName}
+                  style={fontStyles.mainTextStyleDarkGrey}
+                >
                   {assignmentName}
                 </Text>
               ) : (
@@ -951,12 +963,14 @@ class MushafAssignmentScreen extends Component {
             <ActionButton
               buttonColor={colors.actionButtonColor}
               renderIcon={() => (
-                <Icon
-                  name="ellipsis1"
-                  color="#fff"
-                  type="antdesign"
-                  style={styles.actionButtonIcon}
-                />
+                <View accessibilityLabel="ellipsis">
+                  <Icon
+                    name="ellipsis1"
+                    color="#fff"
+                    type="antdesign"
+                    style={styles.actionButtonIcon}
+                  />
+                </View>
               )}
             >
               {actionItems}

@@ -2,6 +2,7 @@ module.exports = {
   root: true,
   extends: '@react-native-community',
   rules: {
+    "comma-dangle": ["error", "never"],
     quotes: [0, "double"]
 }
 };

@@ -4,13 +4,10 @@ import {
   StyleSheet,
   View,
   TouchableWithoutFeedback,
-  TouchableOpacity,
   PixelRatio
 } from "react-native";
-import { Icon } from "react-native-elements";
 import colors from "config/colors";
 import { screenWidth } from "config/dimensions";
-import { Popover, PopoverController } from "react-native-modal-popover";
 
 const getCircularReplacer = () => {
   const seen = new WeakSet();
@@ -38,7 +35,7 @@ const mushafFontSize =
 class Word extends React.Component {
   state = {
     selected: this.props.selected,
-    isFirstSelectedWord: this.props.isFirstSelectedWord,
+    isFirstSelectedWord: this.props.isFirstSelectedWord
   };
 
   shouldComponentUpdate(nextProps) {
@@ -63,7 +60,8 @@ class Word extends React.Component {
       word,
       isWordHighlighted,
       isAyahHighlighted,
-      mushafFontScale,
+      selected,
+      mushafFontScale
     } = this.props;
     const { text } = word;
 
@@ -72,9 +70,17 @@ class Word extends React.Component {
         ? mushafFontSize
         : mushafFontSize / mushafFontScale;
 
+    let label =
+      "mwt_" +
+      word.id +
+      (selected ? "_sel" : "") +
+      (isAyahHighlighted ? "_ah" : "") +
+      (isWordHighlighted ? "_wh" : "");
+
     return (
       <View>
         <Text
+          accessibilityLabel={label}
           style={[
             isWordHighlighted || isAyahHighlighted
               ? styles.highlightedWordText
@@ -99,12 +105,7 @@ class Word extends React.Component {
       isFirstSelectedWord,
       highlightedColor,
       isAyahHighlighted,
-      showTooltipOnPress,
-      word,
-      removeHighlight,
-      curAyah,
-      evalNotesComponent,
-      readOnly
+      word
     } = this.props;
     let containerStyle = [styles.container];
     if (selected) {
@@ -131,83 +132,12 @@ class Word extends React.Component {
     }
     return (
       <View style={containerStyle}>
-        {showTooltipOnPress === true ? (
-          <PopoverController>
-            {({
-              openPopover,
-              closePopover,
-              popoverVisible,
-              setPopoverAnchor,
-              popoverAnchorRect
-            }) => (
-              <React.Fragment>
-                <TouchableWithoutFeedback
-                  ref={setPopoverAnchor}
-                  onPress={() => {
-                    openPopover();
-                    if (!highlightWord) {
-                      onPress();
-                    }
-                  }}
-                >
-                  {this.renderWord()}
-                </TouchableWithoutFeedback>
-
-                <Popover
-                  contentStyle={styles.content}
-                  arrowStyle={styles.arrow}
-                  backgroundStyle={styles.background}
-                  visible={popoverVisible}
-                  onClose={closePopover}
-                  fromRect={popoverAnchorRect}
-                  supportedOrientations={["portrait"]}
-                >
-                  <View
-                    style={{
-                      top: 5,
-                      right: 5,
-                      flexDirection: "row",
-                      zIndex: 1,
-                      position: "absolute" // add if dont work with above
-                    }}
-                  >
-                    {!readOnly && (
-                      <TouchableOpacity
-                        onPress={() => {
-                          removeHighlight(word, curAyah);
-                          closePopover();
-                        }}
-                      >
-                        <Icon
-                          name="delete-forever-outline"
-                          type="material-community"
-                          color={colors.darkRed}
-                        />
-                      </TouchableOpacity>
-                    )}
-                    <View style={{ width: 10, height: 10 }} />
-                    <TouchableOpacity
-                      onPress={() => {
-                        closePopover();
-                      }}
-                    >
-                      <Icon
-                        name="close"
-                        type="antdesign"
-                        color={colors.darkGrey}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  {evalNotesComponent(word, curAyah)}
-                </Popover>
-              </React.Fragment>
-            )}
-          </PopoverController>
-        ) : (
-          <TouchableWithoutFeedback onPress={() => onPress()}>
-            {this.renderWord()}
-          </TouchableWithoutFeedback>
-        )}
+        <TouchableWithoutFeedback
+          accessibilityLabel={"mushaf_word_" + word.id}
+          onPress={() => onPress()}
+        >
+          {this.renderWord()}
+        </TouchableWithoutFeedback>
       </View>
     );
   }
@@ -234,6 +164,7 @@ const styles = StyleSheet.create({
   selectionStyle: {
     backgroundColor: colors.green
   },
+  closeIconContainer: { width: 10, height: 10 },
   wordHighlightedStyle: {
     backgroundColor: "rgba(107,107,107,0.8)",
     borderRadius: 3,
@@ -264,6 +195,13 @@ const styles = StyleSheet.create({
   },
   background: {
     backgroundColor: "rgba(107,107,107,0.2)"
+  },
+  popOverContainer: {
+    top: 5,
+    right: 5,
+    flexDirection: "row",
+    zIndex: 1,
+    position: "absolute" // add if dont work with above
   }
 });
 

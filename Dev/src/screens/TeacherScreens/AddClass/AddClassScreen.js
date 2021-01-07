@@ -162,6 +162,7 @@ export class AddClassScreen extends QcParentScreen {
           <View style={styles.picContainer}>
             <Image
               style={styles.profilePic}
+              accessibilityLabel={"class_avatar_" + this.state.classImageID}
               source={classImages.images[this.state.classImageID]}
               ResizeMode="contain"
             />
@@ -175,6 +176,7 @@ export class AddClassScreen extends QcParentScreen {
             <TextInput
               style={styles.textInputStyle}
               autoCorrect={false}
+              accessibilityLabel="textInput_addClass"
               placeholder={strings.WriteClassNameHere}
               onChangeText={classInput =>
                 this.setState({

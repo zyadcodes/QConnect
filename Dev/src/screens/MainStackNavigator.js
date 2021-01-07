@@ -10,7 +10,7 @@ import AccountTypeScreen from "./AuthenticationScreens/AccountTypeScreen";
 import TeacherWelcomeScreen from "./TeacherScreens/TeacherWelcomeScreen";
 import AddClassScreen from "./TeacherScreens/AddClass/AddClassScreen";
 import ForgotPassword from "./AuthenticationScreens/ForgotPassword";
-import StudentWelcomeScren from "./StudentScreens/StudentWelcomeScreen";
+import StudentWelcomeScreen from "./StudentScreens/StudentWelcomeScreen";
 import allSettingsScreen from "./SettingsScreen/allSettingsScreen";
 import creditsScreen from "./SettingsScreen/creditsScreen";
 import ProfileScreen from "./ProfileScreen";
@@ -24,7 +24,7 @@ import strings from "config/strings";
 import TopBanner from "components/TopBanner";
 
 //The routes containing all the screens & their navigation options
-routeConfig = {
+var routeConfig = {
   MushafAssignmentScreen: {
     screen: MushafAssignmentScreen,
     navigationOptions: ({ navigation }) => ({
@@ -99,7 +99,7 @@ routeConfig = {
   },
 
   StudentWelcomeScreen: {
-    screen: StudentWelcomeScren,
+    screen: StudentWelcomeScreen,
     navigationOptions: ({ navigation }) => ({
       header: null,
       gesturesEnabled: false

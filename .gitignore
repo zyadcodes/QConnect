@@ -14,3 +14,7 @@ Dev/T0rXfpM1FtPipSrXKI7bxG8GyBj2
 Dev/android/java_pid54642.hprof
 Dev/android/java_pid66929.hprof
 *.hprof
+*.apk
+Dev/__tests__/UITests/QConnectUITestsAndroid/QConnectUITestsAndroid/bin/*
+Dev/__tests__/UITests/QConnectUITestsAndroid/QConnectUITestsAndroid/obj/*
+Dev/__tests__/UITests/QConnectUITestsAndroid/packages/*

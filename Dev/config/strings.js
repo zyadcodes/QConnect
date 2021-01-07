@@ -80,8 +80,8 @@ export default {
   CheckEmail:
     "If a user with this email exists, we've sent a link to your email to reset your password",
   Ok: "Ok",
-  Go: "Change",
-  PasswordsDontMatch: "Passwords Don't match",
+  Go: "Go",
+  PasswordsDontMatch: "Please make sure your passwords match",
 
   //--------------------- Evaluation Page ---------------------
   None: "None",
@@ -102,6 +102,11 @@ export default {
   FailedToRecordAudio:
     "Failed to record the audio. We know it is a bummer. Please try again later.",
   OtherArea: "Other...",
+  EvaluationCalloutHeaderTitle: "Evaluation notes for",
+  NOTES: "NOTES",
+  GoToPage: "Go to page",
+  LoadingPage: "Loading page...",
+
   //--------------------- First Run Screen ---------------------
   IAmATeacher: "I am a teacher",
   IAmAStudent: "I am a student",
@@ -124,7 +129,7 @@ export default {
   ErrorSigningIn: "Error signing in",
   InvalidPhoneNumber:
     "The phone number is invalid. Please enter a valid phone number.",
-  EmailExists: "This email already exists.",
+  EmailExists: "This email already exists",
   BadEmail: "Please enter a valid email address",
   PasswordError: "Password must be longer than six characters",
 
@@ -174,7 +179,7 @@ export default {
   CurrentAssignments: "Current Assignments",
   Grade: "Grade",
   PleaseEnterAnAssignmentName: "Please select an assignment.",
-  ImprovementAreas: "Things to work on: ",
+  ImprovementAreas: "Things to work on ",
   NoClass: "Let's get you started",
   addClassButton: "Click Here to Add A Class",
   NotesColon: "Notes: ",
@@ -208,13 +213,13 @@ export default {
   PleaseMakeSureToHaveAnInput: "Please make sure to have an input",
   EditClassImage: "Edit class image",
   WriteClassNameHere: "Enter the new class name",
-  AddClass: "Add Class",
+  AddClass: "Add class",
   ClassAlreadyExists: "Class Name already exists",
 
   //--------------------- Add Class Navigator ---------------------
   AddNewClass: "Add New Class",
 
-  //--------------------- Class Attendance Screen ---------------------
+  //--------------------- Class Attendanc e Screen ---------------------
   AttendanceFor: "Attendance for ",
   HasBeenSaved: " has been saved",
   SaveAttendance: "Save Attendance",
@@ -233,7 +238,7 @@ export default {
   IsNowAddedToTheClass: " is now added to the class",
   PleaseInputAName: "Please input a name",
   StudentName: "Student name",
-  AddStudent: "Add Student",
+  AddStudent: "Add student",
   ThereIsAlreadyAStudentWithThatName:
     // eslint-disable-next-line quotes
     "There is already a student with that name",
@@ -311,4 +316,5 @@ export default {
   AssignmentDeleted: "Assignment is deleted. The student is notified.",
   AreYouSureYouWantToRemoveAssignment:
     "Are you sure you want to remove this assignment?",
+  TypeSurahName: "Tap on destination or start typing to filter"
 };

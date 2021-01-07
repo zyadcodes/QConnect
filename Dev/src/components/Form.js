@@ -30,6 +30,7 @@ export default class Form extends Component {
           <UserInput
             source={usernameImg}
             placeholder={strings.emailPlaceHolder}
+            accessibilityLabel="Email"
             autoCapitalize={'none'}
             returnKeyType={'done'}
             autoCorrect={false}
@@ -40,6 +41,7 @@ export default class Form extends Component {
           <UserInput
             source={passwordImg}
             secureTextEntry={this.state.showPass}
+            accessibilityLabel="Password"
             placeholder="Password"
             returnKeyType={'done'}
             autoCapitalize={'none'}

@@ -6,8 +6,7 @@ import {
   TextInput,
   Alert,
   ScrollView,
-  KeyboardAvoidingView,
-  PixelRatio
+  KeyboardAvoidingView
 } from "react-native";
 import colors from "config/colors";
 import TouchableText from "components/TouchableText";
@@ -25,6 +24,7 @@ import pages from "../Data/mushaf-wbw.json";
 import SurahHeader from "./SurahHeader";
 import { compareOrder, isLineSelected } from "../Helpers/AyahsOrder";
 import * as _ from "lodash";
+import PageEditModal from "./PageEditModal";
 
 //Creates the higher order component
 class SelectionPage extends React.Component {
@@ -39,12 +39,12 @@ class SelectionPage extends React.Component {
     selectedAyahsStart: {
       surah: 0,
       page: this.lastPage,
-      ayah: 0,
+      ayah: 0
     },
     selectedAyahsEnd: {
       surah: 0,
       page: this.lastPage,
-      ayah: 0,
+      ayah: 0
     },
     selectionStarted: false,
     selectionCompleted: false,
@@ -54,23 +54,18 @@ class SelectionPage extends React.Component {
 
   //------------------------ initialize component ----------------------------------------
   componentDidMount() {
-    if (!this.props.isLoading) {
-      this.getPageLines(this.props.page);
-    }
+    let page = this.props.page > 0 ? this.props.page : 1;
+    this.getPageLines(page);
   }
 
   // only redraw lines if the page have changed
   static getDerivedStateFromProps(nextProps, prevState) {
     let retValue = null;
     //if we didn't have the page text initialized before, let's initialize it.
-    if (
-      (!prevState.lines || prevState.lines.length === 0) &&
-      !nextProps.isLoading
-    ) {
+    if (!prevState.lines || prevState.lines.length === 0) {
       retValue = {
         page: nextProps.page,
-        isLoading: false,
-        lines: pages[nextProps.page - 1],
+        lines: pages[nextProps.page - 1]
       };
     }
 
@@ -91,8 +86,7 @@ class SelectionPage extends React.Component {
         selectedAyahsEnd: nextProps.selectedAyahsEnd,
         selectionStarted: nextProps.selectionStarted,
         selectionCompleted: nextProps.selectionCompleted,
-        selectionOn: nextProps.selectionOn,
-        isLoading: false,
+        selectionOn: nextProps.selectionOn
       };
     }
 
@@ -106,7 +100,7 @@ class SelectionPage extends React.Component {
         selectionStarted: nextProps.selectionStarted,
         selectionCompleted: nextProps.selectionCompleted,
         selectionOn: nextProps.selectionOn,
-        isLoading: false,
+        isLoading: false
       };
     }
     return retValue;
@@ -156,7 +150,7 @@ class SelectionPage extends React.Component {
     if (
       nextProps.selectionOn != this.state.selectionOn ||
       nextProps.isLoading !== this.state.isLoading ||
-      nextProps.readOnly !== this.props.readOnly || 
+      nextProps.readOnly !== this.props.readOnly ||
       nextState.isSurahSelectionVisible !==
         this.state.isSurahSelectionVisible ||
       nextState.editPageNumber !== this.state.editPageNumber ||
@@ -195,7 +189,7 @@ class SelectionPage extends React.Component {
     this.setState({
       page: page,
       isLoading: false,
-      lines: pages[page - 1],
+      lines: pages[page - 1]
     });
   }
 
@@ -210,7 +204,7 @@ class SelectionPage extends React.Component {
     const lines = await getPageTextWbW(page);
     this.setState({
       isLoading: false,
-      lines,
+      lines
     });
   }
 
@@ -255,7 +249,7 @@ class SelectionPage extends React.Component {
     let word = line.text
       .slice()
       .reverse()
-      .find(word => word.char_type === "end");
+      .find(w => w.char_type === "end");
 
     return Number(word.aya);
   }
@@ -278,28 +272,17 @@ class SelectionPage extends React.Component {
       ayah: lastAyah,
       surah: Number(lastLine.surahNumber),
       page: page,
-      wordNum: Number(lastLine.text[lastLine.text.length - 1].id),
+      wordNum: Number(lastLine.text[lastLine.text.length - 1].id)
     };
   }
 
   //------------------------ event handlers ----------------------------------------
   updatePage() {
-    const { editedPageNumber, page } = this.state;
-
-    if (
-      isNaN(editedPageNumber) ||
-      Number(editedPageNumber) < 1 ||
-      Number(editedPageNumber) > this.lastPage
-    ) {
-      Alert.alert(strings.Whoops, strings.InvalidPageNumber);
-      return;
-    }
+    const { editedPageNumber } = this.state;
 
     this.setState({
-      isLoading: editedPageNumber !== page ? true : false,
       editPageNumber: false
     });
-
     this.props.onChangePage(editedPageNumber, true);
   }
 
@@ -332,8 +315,6 @@ class SelectionPage extends React.Component {
 
   //selects the entire page
   onSelectPage() {
-    const { page, lines } = this.state;
-
     //capture the first ayah (where the selection starts from)
     let firstAyah = this.getFirstAyahOfPage();
 
@@ -344,6 +325,10 @@ class SelectionPage extends React.Component {
     this.props.onSelectAyahs(firstAyah, lastAyah);
   }
 
+  onEditPageNumber() {
+    //toggle page edit mode on/off on tap
+    this.setState({ editPageNumber: !this.state.editPageNumber });
+  }
   //------------------------ render component ----------------------------------------
   render() {
     const {
@@ -354,10 +339,10 @@ class SelectionPage extends React.Component {
       selectedAyahsEnd,
       selectionStarted,
       selectionCompleted,
-      selectionOn,
+      selectionOn
     } = this.state;
 
-    if (isLoading === true) {
+    if (isLoading === true || lines === undefined) {
       return (
         <View id={this.state.page + "spinner"} style={styles.spinner}>
           <LoadingSpinner isVisible={true} />
@@ -372,8 +357,8 @@ class SelectionPage extends React.Component {
       let noSelectionInPreviousLines;
 
       const surahName =
-        lines[0] && lines[0].surah
-          ? lines[0].surah
+        lines && lines[0] && lines[0].surah
+          ? lines && lines[0].surah
           : lines[1] && lines[1].surah
           ? lines[1].surah
           : "Select new assignment";
@@ -383,14 +368,14 @@ class SelectionPage extends React.Component {
       }
 
       return (
-        <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-          <ScrollView>
+        <KeyboardAvoidingView style={styles.container}>
+          <ScrollView
+            keyboardShouldPersistTaps="handled"
+            nestedScrollEnabled={true}
+          >
             <View
               id={this.state.page + "upperWrapper"}
-              style={{
-                backgroundColor: colors.white,
-                justifyContent: "flex-end",
-              }}
+              style={styles.innerContainer}
             >
               <AssignmentEntryComponent
                 visible={this.state.isSurahSelectionVisible}
@@ -502,7 +487,6 @@ class SelectionPage extends React.Component {
                           }
                           page={this.state.page}
                           lineAlign={lineAlign}
-                          evalNotesComponent={this.props.evalNotesComponent}
                           removeHighlight={this.props.removeHighlight}
                           mushafFontScale={this.props.mushafFontScale}
                         />
@@ -513,67 +497,34 @@ class SelectionPage extends React.Component {
               <View style={styles.footer}>
                 <ImageBackground
                   source={require("assets/images/quran/title-frame.png")}
-                  style={{
-                    width: "100%",
-                    justifyContent: "center",
-                    alignSelf: "center",
-                    alignItems: "center"
-                  }}
+                  style={styles.titleBackgroundContainer}
                   resizeMethod="scale"
                 >
-                  {!this.state.editPageNumber && (
-                    <TouchableText
-                      text={page.toString() + " (Change page)"}
-                      style={{
-                        ...fontStyles.mainTextStylePrimaryDark,
-                        ...fontStyles.textInputStyle
-                      }}
-                      onPress={() => {
-                        this.setState({ editPageNumber: true });
-                      }}
-                    />
-                  )}
-                  {this.state.editPageNumber && (
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignSelf: "stretch",
-                        alignItems: "center",
-                        justifyContent: "center"
-                      }}
-                    >
-                      <TextInput
-                        style={[
-                          styles.textInputStyle,
-                          fontStyles.mainTextStyleDarkGrey
-                        ]}
-                        autoFocus={true}
-                        selectTextOnFocus={true}
-                        autoCorrect={false}
-                        value={this.state.editedPageNumber.toString()}
-                        onChangeText={value =>
-                          this.setState({ editedPageNumber: Number(value) })
-                        }
-                        onEndEditing={() => this.updatePage()}
-                        keyboardType="numeric"
-                      />
-
-                      <TouchableText
-                        text={strings.Go}
-                        style={{
-                          ...fontStyles.mainTextStylePrimaryDark,
-                          marginLeft: screenWidth * 0.01
-                        }}
-                        onPress={() => {
-                          this.updatePage();
-                        }}
-                      />
-                    </View>
-                  )}
+                  <TouchableText
+                    accessibilityLabel={
+                      "touchable_text_page_number_" +
+                      page.toString() +
+                      "_footer"
+                    }
+                    text={page.toString() + " (Change page)"}
+                    style={{
+                      ...fontStyles.mainTextStylePrimaryDark,
+                      ...fontStyles.textInputStyle
+                    }}
+                    onPress={this.onEditPageNumber.bind(this)}
+                  />
                 </ImageBackground>
               </View>
             </View>
-            <View style={{ height: 300 }} />
+            <PageEditModal
+              visible={this.state.editPageNumber}
+              onClose={() => this.setState({ editPageNumber: false })}
+              onChangeText={value =>
+                this.setState({ editedPageNumber: Number(value) })
+              }
+              updatePage={this.updatePage.bind(this)}
+            />
+            <View style={styles.verticalSpacer} />
           </ScrollView>
         </KeyboardAvoidingView>
       );
@@ -582,15 +533,21 @@ class SelectionPage extends React.Component {
 }
 
 /**
- *
     Page styles
  */
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  innerContainer: {
+    backgroundColor: colors.white,
+    justifyContent: "flex-end"
+  },
   ayahText: {
     textAlign: "right",
     fontFamily: "me_quran",
     fontSize: 20,
-    color: colors.darkGrey,
+    color: colors.darkGrey
   },
   footer: {
     justifyContent: "center",
@@ -606,7 +563,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     textAlign: "center",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center"
   },
   topMiddleView: {
     justifyContent: "center",
@@ -614,7 +571,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 10,
     paddingTop: screenHeight * 0.035,
-    paddingBottom: screenHeight * 0.01,
+    paddingBottom: screenHeight * 0.01
   },
   entireTopView: {
     height: screenHeight * 0.05,
@@ -624,9 +581,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderBottomWidth: 0.25,
     borderBottomColor: colors.grey
-  },
-  container: {
-    flex: 1
   },
   spinner: {
     flex: 1,
@@ -639,6 +593,21 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     width: screenWidth
   },
+  footerContainer: {
+    flexDirection: "row",
+    alignSelf: "stretch",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  titleBackgroundContainer: {
+    width: "100%",
+    justifyContent: "center",
+    alignSelf: "center",
+    alignItems: "center"
+  },
+  verticalSpacer: {
+    height: 300
+  }
 });
 
 export default SelectionPage;

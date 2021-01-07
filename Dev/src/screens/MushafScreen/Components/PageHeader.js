@@ -9,13 +9,13 @@ import {
   View,
   TouchableOpacity,
   ImageBackground,
-  Image,
+  Image
 } from "react-native";
 import { Icon } from "react-native-elements";
 import StudentSelectorModal from "components/StudentSelector/StudentSelectorModal";
 import colors from "config/colors";
 import fontStyles from "config/fontStyles";
-import { screenHeight, screenWidth } from "config/dimensions";
+import { screenHeight } from "config/dimensions";
 import studentImages from "config/studentImages";
 import classImages from "config/classImages";
 import strings from "config/strings";
@@ -79,7 +79,7 @@ class PageHeader extends FontLoadingComponent {
       disableChangingUser
     } = this.props;
 
-    let ab =  {
+    let ab = {
       LeftTextName,
       LeftOnPress,
       Title,
@@ -90,27 +90,22 @@ class PageHeader extends FontLoadingComponent {
       RightOnPress,
       onSelect,
       disableChangingUser
-    };    
+    };
 
     const { leftImage, assignToID } = this.state;
     return (
       <View style={styles.entireTopView}>
-        <View style={{ flex: 0.5 }} />
+        <View style={styles.pad} />
         <View style={styles.topLeftView}>
           {!disableChangingUser && (
             <TouchableOpacity
-              style={{
-                flex: 1,
-                height: screenHeight * 0.2,
-                justifyContent: "flex-start",
-                alignItems: "center",
-              }}
+              style={styles.leftTouchableContainer}
               onPress={() => this.onLeftImagePress()}
             >
               <Text
                 style={[
                   fontStyles.smallTextStylePrimaryDark,
-                  { paddingBottom: 2 },
+                  { paddingBottom: 2 }
                 ]}
                 numberOfLines={1}
               >
@@ -129,7 +124,6 @@ class PageHeader extends FontLoadingComponent {
                   currentClass={currentClass}
                   visible={this.state.selectorModalVisible}
                   setModalVisible={visible => {
-                    const { selectorModalVisible } = this.state;
                     this.setState({ selectorModalVisible: visible });
                   }}
                   selectedItemID={assignToID}
@@ -157,13 +151,8 @@ class PageHeader extends FontLoadingComponent {
 
         <View style={styles.topMiddleView}>
           <TouchableOpacity
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              height: screenHeight * 0.03,
-              justifyContent: "flex-end",
-              alignItems: "center",
-            }}
+            style={styles.titleContainer}
+            accessibilityLabel="surah_title_touchable"
             onPress={
               TitleOnPress
                 ? () => {
@@ -174,28 +163,30 @@ class PageHeader extends FontLoadingComponent {
           >
             <ImageBackground
               source={require("assets/images/quran/title-frame.png")}
-              style={{
-                width: "100%",
-                justifyContent: "center",
-                alignSelf: "center",
-                alignItems: "center",
-              }}
+              style={styles.titleImageBackground}
               resizeMethod="scale"
             >
-              <Text style={fontStyles.bigTextStylePrimaryDark}>{Title}</Text>
+              <Text
+                accessibilityLabel="surah_title_text"
+                style={fontStyles.bigTextStylePrimaryDark}
+              >
+                {Title}
+              </Text>
+
+              <Icon
+                name="table-of-contents"
+                type="material-community"
+                containerStyle={{ marginHorizontal: 5 }}
+                color={colors.primaryDark}
+                size={15}
+              />
             </ImageBackground>
           </TouchableOpacity>
         </View>
 
         <View style={styles.topRightView}>
           <TouchableOpacity
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              height: screenHeight * 0.03,
-              justifyContent: "flex-end",
-              alignItems: "center",
-            }}
+            style={styles.rightTouchableContainer}
             onPress={
               RightOnPress
                 ? () => {
@@ -219,7 +210,7 @@ class PageHeader extends FontLoadingComponent {
             </Text>
           </TouchableOpacity>
         </View>
-        <View style={{ flex: 0.5 }} />
+        <View style={styles.pad} />
       </View>
     );
   }
@@ -233,7 +224,7 @@ PageHeader.propTypes = {
   Title: PropTypes.string,
   RightIconName: PropTypes.string,
   RightTextName: PropTypes.string,
-  RightOnPress: PropTypes.func,
+  RightOnPress: PropTypes.func
 };
 
 const styles = StyleSheet.create({
@@ -244,7 +235,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.white,
     borderBottomWidth: 0.25,
-    borderBottomColor: colors.black,
+    borderBottomColor: colors.black
   },
   topLeftView: {
     width: 70,
@@ -252,6 +243,7 @@ const styles = StyleSheet.create({
     paddingTop: screenHeight * 0.035,
     paddingBottom: screenHeight * 0.001
   },
+  pad: { flex: 0.5 },
   topMiddleView: {
     justifyContent: "center",
     alignSelf: "center",
@@ -273,5 +265,32 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     paddingBottom: 18
   },
+  leftTouchableContainer: {
+    flex: 1,
+    height: screenHeight * 0.2,
+    justifyContent: "flex-start",
+    alignItems: "center"
+  },
+  titleContainer: {
+    flex: 1,
+    flexDirection: "row",
+    height: screenHeight * 0.03,
+    justifyContent: "flex-end",
+    alignItems: "center"
+  },
+  rightTouchableContainer: {
+    flex: 1,
+    flexDirection: "row",
+    height: screenHeight * 0.03,
+    justifyContent: "flex-end",
+    alignItems: "center"
+  },
+  titleImageBackground: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "center",
+    alignSelf: "center",
+    alignItems: "center"
+  }
 });
 export default PageHeader;

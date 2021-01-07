@@ -1,64 +1,62 @@
-import styled from "styled-components";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { View, TextInput, Text, StyleSheet } from "react-native";
 import FlowLayout from "components/FlowLayout";
 import strings from "config/strings";
 import colors from "config/colors";
-import { screenWidth, screenHeight } from "config/dimensions";
 import fontStyles from "config/fontStyles";
-
-const notesHeightCollapsed = 40;
-const notesHeightExpanded = screenHeight * 0.1;
+import themeStyles from "config/themeStyles";
+import { ScrollView } from "react-native-gesture-handler";
 
 class EvaluationNotes extends React.Component {
   state = {
-    notes: this.props.notes === undefined ? "" : this.props.notes,
-    notesHeight: notesHeightCollapsed
+    notes: this.props.notes === undefined ? "" : this.props.notes
   };
   render() {
     return (
-      <View>
-        {(!this.props.readOnly ||
+      <View style={styles.container}>
+        {/************** TEXT NOTES SECTION  ********************************/
+        (!this.props.readOnly ||
           (this.props.notes !== undefined && this.props.notes.length > 0)) && (
-          <TextInput
-            style={styles.notesStyle}
-            multiline={true}
-            height={notesHeightExpanded}
-            onChangeText={teacherNotes =>
-              this.setState({ notes: teacherNotes })
+          <ScrollView
+            contentContainerStyle={
+              !this.props.noTopMargin ? styles.notesContainer : {}
             }
-            returnKeyType={"done"}
-            autoCorrect={false}
-            blurOnSubmit={true}
-            placeholder={strings.WriteANote}
-            placeholderColor={colors.black}
-            editable={!this.props.readOnly}
-            value={this.state.notes}
-            onFocus={() => this.setState({ notesHeight: notesHeightExpanded })}
-            onEndEditing={() => {
-              this.setState({ notesHeight: notesHeightCollapsed });
-              this.props.saveNotes(this.state.notes);
-            }}
-          />
+          >
+            <Text
+              style={[fontStyles.smallTextStyleDarkGrey, { marginBottom: 5 }]}
+            >
+              {strings.NOTES}
+            </Text>
+            <TextInput
+              style={themeStyles.notesStyle}
+              multiline={true}
+              accessibilityLabel="eval_note"
+              onChangeText={teacherNotes => {
+                this.setState({ notes: teacherNotes });
+                this.props.saveNotes(teacherNotes);
+              }}
+              returnKeyType={"done"}
+              autoCorrect={false}
+              blurOnSubmit={true}
+              placeholder={strings.WriteANote}
+              placeholderColor={colors.black}
+              editable={!this.props.readOnly}
+              value={this.state.notes}
+              onEndEditing={() => {
+                this.props.saveNotes(this.state.notes);
+              }}
+            />
+          </ScrollView>
         )}
 
-        {/**
-        The Things to work on button.
-    */}
-
-        {(!this.props.readOnly ||
+        {/********* IMPROVEMENT AREAS / TAGS SECTION  ******************/
+        (!this.props.readOnly ||
           (this.props.improvementAreas !== undefined &&
             this.props.improvementAreas.length > 0)) && (
           <View>
-            <View
-              style={{
-                marginTop: 10,
-                flexDirection: "row",
-                justifyContent: "flex-start"
-              }}
-            >
+            <View style={styles.improvementsContainer}>
               <Text style={fontStyles.smallTextStyleDarkGrey}>
-                {strings.ImprovementAreas}
+                {strings.ImprovementAreas.toUpperCase()}
               </Text>
             </View>
             <FlowLayout
@@ -71,7 +69,7 @@ class EvaluationNotes extends React.Component {
               onSelectionChanged={this.props.onImprovementAreasSelectionChanged}
               onImprovementsCustomized={this.props.onImprovementsCustomized}
             />
-            <View style={{ height: 30 }} />
+            <View style={styles.spacer} />
           </View>
         )}
       </View>
@@ -80,15 +78,18 @@ class EvaluationNotes extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  notesStyle: {
-    backgroundColor: colors.lightGrey,
-    alignSelf: "stretch",
-    marginTop: 30,
-    marginBottom: screenHeight * 0.007,
-    marginLeft: screenWidth * 0.012,
-    marginRight: screenWidth * 0.012,
-    textAlignVertical: "top"
-  }
+  container: {
+    flex: 1
+  },
+  notesContainer: {
+    marginTop: 30
+  },
+  improvementsContainer: {
+    marginTop: 10,
+    flexDirection: "row",
+    justifyContent: "flex-start"
+  },
+  spacer: { height: 30 }
 });
 
 export default EvaluationNotes;

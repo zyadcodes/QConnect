@@ -14,59 +14,61 @@ import {
   Share,
   TextInput,
   PixelRatio,
-  Platform,
+  Platform
 } from "react-native";
 import StudentCard from "components/StudentCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages";
-import { Icon } from 'react-native-elements';
+import { Icon } from "react-native-elements";
 import strings from "config/strings";
-import QcActionButton from 'components/QcActionButton';
-import ImageSelectionModal from 'components/ImageSelectionModal';
-import ImageSelectionRow from 'components/ImageSelectionRow';
-import FirebaseFunctions from 'config/FirebaseFunctions';
-import LoadingSpinner from 'components/LoadingSpinner';
-import QCView from 'components/QCView';
+import QcActionButton from "components/QcActionButton";
+import ImageSelectionModal from "components/ImageSelectionModal";
+import ImageSelectionRow from "components/ImageSelectionRow";
+import FirebaseFunctions from "config/FirebaseFunctions";
+import LoadingSpinner from "components/LoadingSpinner";
+import QCView from "components/QCView";
 import fontStyles from "config/fontStyles";
-import { screenHeight, screenWidth } from 'config/dimensions';
+import QcTextInput from "components/QcTextInput";
+import { screenHeight, screenWidth } from "config/dimensions";
 
 class AddManualStudentsScreen extends Component {
   componentDidMount() {
     //Sets the screen for firebase analytics
     FirebaseFunctions.setCurrentScreen(
-      'Add Students Manually Screen',
-      'AddManualStudentsScreen'
+      "Add Students Manually Screen",
+      "AddManualStudentsScreen"
     );
   }
 
   //Helpers to retrieve the selected image index
   getRandomGenderNeutralImage = () => {
-    index = Math.floor(
+    let index = Math.floor(
       Math.random() * Math.floor(studentImages.genderNeutralImages.length)
     );
-    imageIndex = studentImages.genderNeutralImages[index];
+    let imageIndex = studentImages.genderNeutralImages[index];
     return imageIndex;
   };
 
   getRandomMaleImage = () => {
-    index = Math.floor(
+    let index = Math.floor(
       Math.random() * Math.floor(studentImages.maleImages.length)
     );
-    imageIndex = studentImages.maleImages[index];
+    let imageIndex = studentImages.maleImages[index];
     return imageIndex;
   };
 
   getRandomFemaleImage = () => {
-    index = Math.floor(
+    let index = Math.floor(
       Math.random() * Math.floor(studentImages.femaleImages.length)
     );
-    imageIndex = studentImages.femaleImages[index];
+    let imageIndex = studentImages.femaleImages[index];
     return imageIndex;
   };
 
   defaultImageId = this.getRandomGenderNeutralImage();
 
   getHighlightedImages = () => {
+    let secondGenericImageId;
     // get a second gender neutral image, make sure it is different than the first one
     do {
       secondGenericImageId = this.getRandomGenderNeutralImage();
@@ -77,7 +79,7 @@ class AddManualStudentsScreen extends Component {
       this.defaultImageId,
       secondGenericImageId,
       this.getRandomFemaleImage(),
-      this.getRandomMaleImage(),
+      this.getRandomMaleImage()
     ];
     return proposedImages;
   };
@@ -104,10 +106,10 @@ class AddManualStudentsScreen extends Component {
 
   //This method adds a student manually without them actually having to have a profile
   async addManualStudent() {
-    if (this.state.newStudentName.trim() === '') {
+    if (this.state.newStudentName.trim() === "") {
       Alert.alert(strings.Whoops, strings.PleaseInputAName);
     } else {
-      this.setState({ isLoading: true, newStudentName: '' });
+      this.setState({ isLoading: true, newStudentName: "" });
 
       //First pushes the manual student to the firebase database
       const { newStudentName, profileImageID } = this.state;
@@ -138,7 +140,7 @@ class AddManualStudentsScreen extends Component {
     classID: this.props.navigation.state.params.classID,
     currentClass: this.props.navigation.state.params.currentClass,
     students: this.props.navigation.state.params.currentClass.students,
-    newStudentName: '',
+    newStudentName: "",
     isLoading: false,
     profileImageID: this.defaultImageId,
     highlightedImagesIndices: this.getHighlightedImages(),
@@ -150,14 +152,7 @@ class AddManualStudentsScreen extends Component {
   render() {
     const { classID, students } = this.state;
     return (
-      <QCView
-        style={{
-          flexDirection: 'column',
-          backgroundColor: colors.lightGrey,
-          width: screenWidth,
-          height: screenHeight
-        }}
-      >
+      <QCView style={styles.wrapper}>
         <ScrollView nestedScrollEnabled={true} style={styles.container}>
           <ImageSelectionModal
             visible={this.state.modalVisible}
@@ -168,27 +163,20 @@ class AddManualStudentsScreen extends Component {
           />
           <View style={styles.addStudentsView}>
             <View style={styles.enterStudentNameText}>
-              <Text
-                style={{ ...fontStyles.mainTextStyleBlack, marginBottom: 3 }}
-              >
-                {strings.EnterYourStudentsName}
-              </Text>
+              <Text style={styles.desc}>{strings.EnterYourStudentsName}</Text>
             </View>
-            <View style={{ flex: 0.7, alignSelf: 'flex-start' }}>
-              <TextInput
-                style={[
-                  fontStyles.mainTextStyleDarkGrey,
-                  styles.studentNameTextInput,
-                ]}
-                placeholder={strings.StudentName}
-                autoCorrect={false}
-                onChangeText={newStudentName =>
-                  this.setState({ newStudentName })
-                }
-                value={this.state.newStudentName}
-              />
-            </View>
-            <View style={{ flex: 1 }}>
+            <QcTextInput
+              style={[
+                fontStyles.mainTextStyleDarkGrey,
+                styles.studentNameTextInput
+              ]}
+              placeholder={strings.StudentName}
+              autoCorrect={false}
+              onChangeText={newStudentName => this.setState({ newStudentName })}
+              value={this.state.newStudentName}
+              accessibilityLabel="text_input_student_name"
+            />
+            <View style={styles.actionButtons}>
               <ImageSelectionRow
                 images={studentImages.images}
                 highlightedImagesIndices={this.state.highlightedImagesIndices}
@@ -197,17 +185,11 @@ class AddManualStudentsScreen extends Component {
                 selectedImageIndex={this.state.profileImageID}
               />
             </View>
-            <View
-              style={{
-                flex: 2,
-                justifyContent: 'flex-end',
-                alignItems: 'center'
-              }}
-            >
+            <View style={styles.footer}>
               <QcActionButton
                 text={strings.AddStudent}
                 onPress={async () => {
-                  FirebaseFunctions.logEvent('TEACHER_ADD_STUDENT_MANUAL');
+                  FirebaseFunctions.logEvent("TEACHER_ADD_STUDENT_MANUAL");
                   await this.addManualStudent();
                 }}
               />
@@ -219,11 +201,12 @@ class AddManualStudentsScreen extends Component {
             ) : (
               <QcActionButton
                 text={strings.Done}
-                onPress={() =>
-                  this.props.navigation.push('TeacherCurrentClass', {
+                accessibilityLabel="add_student_done_btn"
+                onPress={() => {
+                  this.props.navigation.push("TeacherCurrentClass", {
                     userID: this.props.navigation.state.params.userID
-                  })
-                }
+                  });
+                }}
               />
             )}
           </View>
@@ -259,7 +242,7 @@ class AddManualStudentsScreen extends Component {
                         }
                       },
 
-                      { text: strings.Cancel, style: 'cancel' },
+                      { text: strings.Cancel, style: "cancel" }
                     ]
                   );
                 }}
@@ -284,16 +267,26 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
     backgroundColor: colors.lightGrey,
-    flex: 1,
+    flex: 1
+  },
+  wrapper: {
+    flexDirection: "column",
+    backgroundColor: colors.lightGrey,
+    width: screenWidth,
+    height: screenHeight
   },
   addStudentsView: {
     backgroundColor: colors.white,
-    paddingTop: screenHeight * 0.05,
+    paddingTop: screenHeight * 0.05
   },
   enterStudentNameText: {
     paddingLeft: screenWidth * 0.05,
     flex: 0.5,
-    alignSelf: 'flex-start'
+    alignSelf: "flex-start"
+  },
+  textInputWrapper: {
+    flex: 0.7,
+    alignSelf: "flex-start"
   },
   studentNameTextInput: {
     marginLeft: screenWidth * 0.02,
@@ -303,11 +296,21 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.06,
     borderRadius: 1
   },
+  actionButtons: { flex: 1 },
   doneButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     height: screenHeight * 0.125
   },
+  desc: {
+    ...fontStyles.mainTextStyleBlack,
+    marginBottom: 3
+  },
+  footer: {
+    flex: 2,
+    justifyContent: "flex-end",
+    alignItems: "center"
+  }
 });
 
 export default AddManualStudentsScreen;
