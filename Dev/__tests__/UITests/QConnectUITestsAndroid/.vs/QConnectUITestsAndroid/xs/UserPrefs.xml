@@ -1,12 +1,35 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workbench ActiveDocument="QConnectUITestsAndroid/Tests.cs">
     <Files>
-      <File FileName="QConnectUITestsAndroid/Tests.cs" Line="486" Column="1" />
+      <File FileName="QConnectUITestsAndroid/Tests.cs" Line="534" Column="25" />
     </Files>
     <Pads>
       <Pad Id="MonoDevelop.UnitTesting.TestPad">
         <State name="__root__">
-          <Node name="QConnectUITestsAndroid" expanded="True" selected="True" />
+          <Node name="QConnectUITestsAndroid" expanded="True">
+            <Node name="QConnectUITestsAndroid" expanded="True">
+              <Node name="QConnectUITestsAndroid" expanded="True">
+                <Node name="Tests" expanded="True">
+                  <Node name="AppLaunches" selected="True" />
+                  <Node name="TestCreatingExistingUserStudent" selected="True" />
+                  <Node name="TestCreatingExistingUserTeacher" selected="True" />
+                  <Node name="TestLoginBadPassword" selected="True" />
+                  <Node name="TestLoginEmptyFields" selected="True" />
+                  <Node name="TestLoginEmptyPassword" selected="True" />
+                  <Node name="TestLoginEmptyUsername" selected="True" />
+                  <Node name="TestStudentCreateAccountWrongEmailAddress" selected="True" />
+                  <Node name="TestStudentCreateAccountWrongPhoneNumber" selected="True" />
+                  <Node name="TestStudentLoginLogoutSuccess" selected="True" />
+                  <Node name="TestStudentNewAccountFlow" selected="True" />
+                  <Node name="TestTeacherCreateAccountWrongEmailAddress" selected="True" />
+                  <Node name="TestTeacherCreateAccountWrongPhoneNumber" selected="True" />
+                  <Node name="TestTeacherNewAccountFlow" selected="True" />
+                  <Node name="TestWrongConfirmPasswordStudent" selected="True" />
+                  <Node name="TestWrongConfirmPasswordTeacher" selected="True" />
+                </Node>
+              </Node>
+            </Node>
+          </Node>
         </State>
       </Pad>
     </Pads>

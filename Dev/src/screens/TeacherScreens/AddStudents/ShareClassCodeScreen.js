@@ -34,7 +34,10 @@ class ShareClassCodeScreen extends Component {
           />
         </View>
         <View style={styles.classCode}>
-          <View style={styles.classCodeTitle}>
+          <View
+            accessibilityLabel="classCodeLabel"
+            style={styles.classCodeTitle}
+          >
             <Text style={[fontStyles.bigTextStyleBlack, { marginBottom: 10 }]}>
               {strings.YourClassCode}
             </Text>
@@ -71,7 +74,10 @@ class ShareClassCodeScreen extends Component {
             }}
           />
         </View>
-        <View style={styles.addStudentsManually}>
+        <View
+          accessibilityLabel="AddStudentsManually"
+          style={styles.addStudentsManually}
+        >
           <TouchableOpacity
             style={styles.touchableText}
             onPress={() => {

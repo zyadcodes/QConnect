@@ -18,3 +18,7 @@ Dev/android/java_pid66929.hprof
 Dev/__tests__/UITests/QConnectUITestsAndroid/QConnectUITestsAndroid/bin/*
 Dev/__tests__/UITests/QConnectUITestsAndroid/QConnectUITestsAndroid/obj/*
 Dev/__tests__/UITests/QConnectUITestsAndroid/packages/*
+Dev/__tests__/UITests/QConnectUITestsiOS/bin/*
+Dev/__tests__/UITests/QConnectUITestsiOS/obj/*
+Dev/ios/calabash.framework/*
+Dev/__tests__/UITests/QConnectUITestsiOS/packages/*

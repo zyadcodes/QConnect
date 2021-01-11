@@ -132,8 +132,8 @@ android {
         applicationId "com.yungdevz.quranconnect"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 164
-        versionName "1.4.24"
+        versionCode 165
+        versionName "1.4.25"
         multiDexEnabled true
     }
     splits {

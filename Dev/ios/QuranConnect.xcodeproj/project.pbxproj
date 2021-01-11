@@ -122,6 +122,7 @@
 		9EF5E08EE0A74474BE02426B /* girl2.png in Resources */ = {isa = PBXBuildFile; fileRef = E1A91F06C5F343CC97992388 /* girl2.png */; };
 		A002C81CA9F148E4AE726F65 /* girl5.png in Resources */ = {isa = PBXBuildFile; fileRef = F520220A3BB948CB8CBB0D98 /* girl5.png */; };
 		A318DD1EB18E49A8B4263F2C /* boy6.png in Resources */ = {isa = PBXBuildFile; fileRef = 914A291396DA4F02AEEA4566 /* boy6.png */; };
+		A6505F1495F044EA8AF03D29 /* online-meeting.png in Resources */ = {isa = PBXBuildFile; fileRef = 127C3B6A67D1454591C39745 /* online-meeting.png */; };
 		AB44C133114F4E4CB81246C9 /* female12.png in Resources */ = {isa = PBXBuildFile; fileRef = 857737C83C474DFFAF8808AC /* female12.png */; };
 		AC79FAAFE82949FE864B8316 /* read_child_bg.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0CC5147CC11442E2AC9D44B2 /* read_child_bg.jpg */; };
 		ACDF2177CA15408EBE8A6528 /* boyc4.png in Resources */ = {isa = PBXBuildFile; fileRef = 840B1DD2776E4887998DC860 /* boyc4.png */; };
@@ -165,7 +166,6 @@
 		FC65562ADC5844F094ACAAFA /* msq1.png in Resources */ = {isa = PBXBuildFile; fileRef = 909BBB6F7275477AA5735F2B /* msq1.png */; };
 		FDBCAF6B880442CF90CE4E37 /* is-icon-7.png in Resources */ = {isa = PBXBuildFile; fileRef = F4312D6600294E3B8CEA6855 /* is-icon-7.png */; };
 		FEF02C517164452DB3D398D4 /* shiled.png in Resources */ = {isa = PBXBuildFile; fileRef = 25D403CD5D9045A1984B91D9 /* shiled.png */; };
-		A6505F1495F044EA8AF03D29 /* online-meeting.png in Resources */ = {isa = PBXBuildFile; fileRef = 127C3B6A67D1454591C39745 /* online-meeting.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -226,6 +226,7 @@
 		0CC5147CC11442E2AC9D44B2 /* read_child_bg.jpg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = read_child_bg.jpg; path = ../assets/images/read_child_bg.jpg; sourceTree = "<group>"; };
 		11707C11C7464EED86D40CF6 /* is-icon-1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-1.png"; path = "../assets/images/generic-icons/is-icon-1.png"; sourceTree = "<group>"; };
 		11E233642F56417886364E55 /* female10.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female10.png; path = "../assets/images/teacher-icons/female10.png"; sourceTree = "<group>"; };
+		127C3B6A67D1454591C39745 /* online-meeting.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "online-meeting.png"; path = "../assets/images/online-meeting.png"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* QuranConnect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuranConnect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = QuranConnect/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = QuranConnect/AppDelegate.m; sourceTree = "<group>"; };
@@ -272,6 +273,7 @@
 		4C410B9BE5784066B72896D1 /* Pods-QuranConnect-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-QuranConnect-tvOS/Pods-QuranConnect-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		4E3060F151D548F5AA5873A8 /* medal-3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "medal-3.png"; path = "../assets/images/badges/medal-3.png"; sourceTree = "<group>"; };
 		4F5247C611FB150AC2FD415C /* Pods-QuranConnect-QuranConnectTests.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect-QuranConnectTests.staging.xcconfig"; path = "Target Support Files/Pods-QuranConnect-QuranConnectTests/Pods-QuranConnect-QuranConnectTests.staging.xcconfig"; sourceTree = "<group>"; };
+		50B75774BDCBB19F4D4B7176 /* Pods-QuranConnect-QuranConnectTests.calabash.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect-QuranConnectTests.calabash.xcconfig"; path = "Target Support Files/Pods-QuranConnect-QuranConnectTests/Pods-QuranConnect-QuranConnectTests.calabash.xcconfig"; sourceTree = "<group>"; };
 		5211C2920AF741BCB20DCB0E /* male7.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male7.png; path = "../assets/images/teacher-icons/male7.png"; sourceTree = "<group>"; };
 		522B53FAC4794804AFA143F1 /* boy4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boy4.png; path = "../assets/images/student-icons/boy4.png"; sourceTree = "<group>"; };
 		56AE46E9F32C402DB7FA4CBB /* female4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = female4.png; path = "../assets/images/teacher-icons/female4.png"; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 		7206B33C97284A0AB970F0BB /* Georgia.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Georgia.ttf; path = ../assets/fonts/Georgia.ttf; sourceTree = "<group>"; };
 		735F5F5BB2EB4508A7866569 /* title-frame.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "title-frame.png"; path = "../assets/images/quran/title-frame.png"; sourceTree = "<group>"; };
 		747BC5DF8EC94BE0AD0880A1 /* read_child_bg.orig.jpg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = read_child_bg.orig.jpg; path = ../assets/images/read_child_bg.orig.jpg; sourceTree = "<group>"; };
+		7554DE2BB4CDCBE1257E56BA /* Pods-QuranConnect-tvOS.calabash.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect-tvOS.calabash.xcconfig"; path = "Target Support Files/Pods-QuranConnect-tvOS/Pods-QuranConnect-tvOS.calabash.xcconfig"; sourceTree = "<group>"; };
 		7A7DC28CD697DDA38007F36A /* Pods_QuranConnect_tvOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QuranConnect_tvOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B63694406A54FED934DB66E /* male2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = male2.png; path = "../assets/images/teacher-icons/male2.png"; sourceTree = "<group>"; };
 		7C59AEA0C4544A66AF7A0216 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
@@ -330,6 +333,7 @@
 		A4FF231B9E7A44F08F09810A /* boyc2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = boyc2.png; path = "../assets/images/student-icons/boyc2.png"; sourceTree = "<group>"; };
 		A5BEE9EFE2E24C7F8DC08ABA /* girl13.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl13.png; path = "../assets/images/student-icons/girl13.png"; sourceTree = "<group>"; };
 		A71F5333996842FAA9B5DAD3 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		A7907BF9B400F5C91EEF68A6 /* Pods-QuranConnect-tvOSTests.calabash.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect-tvOSTests.calabash.xcconfig"; path = "Target Support Files/Pods-QuranConnect-tvOSTests/Pods-QuranConnect-tvOSTests.calabash.xcconfig"; sourceTree = "<group>"; };
 		A7BAEF273DAE4552AEB518D0 /* quran-page-frame.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "quran-page-frame.png"; path = "../assets/images/quran-page-frame.png"; sourceTree = "<group>"; };
 		ABA5B1577BA343D1AFCB441D /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		ADB3AFB655F04828B1463E25 /* girl1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = girl1.png; path = "../assets/images/student-icons/girl1.png"; sourceTree = "<group>"; };
@@ -377,10 +381,10 @@
 		FA9C40B336B14B058DEECA8F /* is-icon-3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "is-icon-3.png"; path = "../assets/images/generic-icons/is-icon-3.png"; sourceTree = "<group>"; };
 		FA9C5AE092C4421DA46CD1A4 /* crown.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = crown.png; path = ../assets/images/badges/crown.png; sourceTree = "<group>"; };
 		FACC962C7928466D96724150 /* medal-4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "medal-4.png"; path = "../assets/images/badges/medal-4.png"; sourceTree = "<group>"; };
+		FC184351F77BF22B2D8D07D8 /* Pods-QuranConnect.calabash.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect.calabash.xcconfig"; path = "Target Support Files/Pods-QuranConnect/Pods-QuranConnect.calabash.xcconfig"; sourceTree = "<group>"; };
 		FECB0FD8E76B4F9C8430C188 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		FF3E14CA335F9A6BF744F8EB /* Pods_QuranConnect_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QuranConnect_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFD7DDE8A928D4843398548A /* Pods-QuranConnect.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuranConnect.release.xcconfig"; path = "Target Support Files/Pods-QuranConnect/Pods-QuranConnect.release.xcconfig"; sourceTree = "<group>"; };
-		127C3B6A67D1454591C39745 /* online-meeting.png */ = {isa = PBXFileReference; name = "online-meeting.png"; path = "../assets/images/online-meeting.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -493,6 +497,10 @@
 				4F5247C611FB150AC2FD415C /* Pods-QuranConnect-QuranConnectTests.staging.xcconfig */,
 				3CF32EFED14AFE060E37BA07 /* Pods-QuranConnect-tvOS.staging.xcconfig */,
 				1A32D67C41A6C031FD911341 /* Pods-QuranConnect-tvOSTests.staging.xcconfig */,
+				FC184351F77BF22B2D8D07D8 /* Pods-QuranConnect.calabash.xcconfig */,
+				50B75774BDCBB19F4D4B7176 /* Pods-QuranConnect-QuranConnectTests.calabash.xcconfig */,
+				7554DE2BB4CDCBE1257E56BA /* Pods-QuranConnect-tvOS.calabash.xcconfig */,
+				A7907BF9B400F5C91EEF68A6 /* Pods-QuranConnect-tvOSTests.calabash.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1384,6 +1392,193 @@
 			};
 			name = Release;
 		};
+		0183968A25A8DD81006CE997 /* Calabash */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODEPUSH_KEY = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = B65Y7865Z9;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-force_load",
+					"\"$(SOURCE_ROOT)/calabash.framework/calabash\"",
+					"-framework",
+					CFNetwork,
+				);
+				PROVISIONING_PROFILE_SPECIFIER = QConnectV3;
+				SDKROOT = iphoneos;
+			};
+			name = Calabash;
+		};
+		0183968B25A8DD81006CE997 /* Calabash */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FC184351F77BF22B2D8D07D8 /* Pods-QuranConnect.calabash.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = QuranConnect/QuranConnect.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1.1.40;
+				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = B65Y7865Z9;
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = QuranConnect/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.1.40;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.yungdevz.quranconnect;
+				PRODUCT_NAME = QuranConnect;
+				PROVISIONING_PROFILE_SPECIFIER = QConnectV2;
+				SWIFT_OBJC_BRIDGING_HEADER = "QuranConnect-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Calabash;
+		};
+		0183968C25A8DD81006CE997 /* Calabash */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 50B75774BDCBB19F4D4B7176 /* Pods-QuranConnect-QuranConnectTests.calabash.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = QuranConnectTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lc++",
+					"$(inherited)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuranConnect.app/QuranConnect";
+			};
+			name = Calabash;
+		};
+		0183968D25A8DD81006CE997 /* Calabash */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7554DE2BB4CDCBE1257E56BA /* Pods-QuranConnect-tvOS.calabash.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = YHBQA8J78F;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "QuranConnect-tvOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.QuranConnect-tvOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.2;
+			};
+			name = Calabash;
+		};
+		0183968E25A8DD81006CE997 /* Calabash */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A7907BF9B400F5C91EEF68A6 /* Pods-QuranConnect-tvOSTests.calabash.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = YHBQA8J78F;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "QuranConnect-tvOSTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.QuranConnect-tvOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuranConnect-tvOS.app/QuranConnect-tvOS";
+				TVOS_DEPLOYMENT_TARGET = 10.1;
+			};
+			name = Calabash;
+		};
 		01F6F35B24B7D00700E0E845 /* Staging */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1427,7 +1622,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PROVISIONING_PROFILE_SPECIFIER = QConnectV3;
 				SDKROOT = iphoneos;
@@ -1785,7 +1980,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE_SPECIFIER = QConnectV3;
@@ -1836,7 +2031,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PROVISIONING_PROFILE_SPECIFIER = QConnectV3;
 				SDKROOT = iphoneos;
@@ -1851,6 +2046,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
+				0183968C25A8DD81006CE997 /* Calabash */,
 				00E356F71AD99517003FC87E /* Release */,
 				01F6F35D24B7D00700E0E845 /* Staging */,
 			);
@@ -1861,6 +2057,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
+				0183968B25A8DD81006CE997 /* Calabash */,
 				13B07F951A680F5B00A75B9A /* Release */,
 				01F6F35C24B7D00700E0E845 /* Staging */,
 			);
@@ -1871,6 +2068,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4971E0B4A5E006451C7 /* Debug */,
+				0183968D25A8DD81006CE997 /* Calabash */,
 				2D02E4981E0B4A5E006451C7 /* Release */,
 				01F6F35E24B7D00700E0E845 /* Staging */,
 			);
@@ -1881,6 +2079,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4991E0B4A5E006451C7 /* Debug */,
+				0183968E25A8DD81006CE997 /* Calabash */,
 				2D02E49A1E0B4A5E006451C7 /* Release */,
 				01F6F35F24B7D00700E0E845 /* Staging */,
 			);
@@ -1891,6 +2090,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
+				0183968A25A8DD81006CE997 /* Calabash */,
 				83CBBA211A601CBA00E9B192 /* Release */,
 				01F6F35B24B7D00700E0E845 /* Staging */,
 			);

@@ -1,0 +1,29 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Tests.cs">
+    <Files>
+      <File FileName="Tests.cs" Line="34" Column="55" />
+    </Files>
+    <Pads>
+      <Pad Id="MonoDevelop.UnitTesting.TestPad">
+        <State name="__root__">
+          <Node name="QConnectUITestsiOS" expanded="True" selected="True">
+            <Node name="QConnectUITestsiOS" expanded="True">
+              <Node name="QConnectUITestsiOS" expanded="True">
+                <Node name="Tests" expanded="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/elyasse/Documents/GitHub/v3QConnect/QConnect/Dev/__tests__/UITests/QConnectUITestsiOS/Tests.cs" relfile="Tests.cs" line="409" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.QConnectUITestsiOS PreferredExecutionTarget="MonoDevelop.Default" />
+</Properties>
