@@ -196,7 +196,8 @@ namespace QConnectUITestsiOS
             app.WaitForElement("student_card_right_comp_" + studentName);
 
             //verify that the student text input field is now empty
-            app.Query(x => x.Marked("text_input_student_name")).FirstOrDefault().Text.Equals("");
+            AppResult[] results = app.Query(x => x.Marked("text_input_student_name"));
+            results[results.Length - 1].Text.Equals("");
             app.Screenshot("Manual student added");
 
             return studentName;
