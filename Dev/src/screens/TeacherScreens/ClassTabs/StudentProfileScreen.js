@@ -839,7 +839,7 @@ const styles = StyleSheet.create({
     marginVertical: 5
   },
   improvementAreasText: {
-    textVerticalAlign: "center",
+    alignItems: "center",
     paddingTop: 5
   },
   nameContainer: {

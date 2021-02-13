@@ -484,7 +484,7 @@ class StudentGradesScreen extends QcParentScreen {
               <Text
                 style={[
                   fontStyles.smallTextStyleDarkGrey,
-                  { textVerticalAlign: "center", paddingTop: 5 }
+                  { alignItems: "center", paddingTop: 5 }
                 ]}
               >
                 {strings.ImprovementAreas}

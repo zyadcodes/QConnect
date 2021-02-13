@@ -31,6 +31,7 @@ import themeStyles from "config/themeStyles";
 import ErrorComponent from "components/ErrorComponent";
 import { ASSIGNMENT_DELETED } from "utils/consts";
 import TouchableText from "components/TouchableText";
+import NoClassScreen from "./NoClassScreen";
 
 export class ClassMainScreen extends QcParentScreen {
   state = {
@@ -266,73 +267,6 @@ export class ClassMainScreen extends QcParentScreen {
     );
   }
 
-  /**
-   * ------Overview:
-   * The Page will display a message that will redirect the teacher to the
-   * create a new class
-   *
-   * ------Components:
-   * We are using a touchable opacity with a large message telling the
-   * teacher that there are no students in the class, and a smaller message
-   * telling the teacher to click the text to create a new class.
-   *
-   * ------Conditonal:
-   * The conditional will check to see if the length of the classes array is 0,
-   * if it is, then teacher has no classes yet
-   * triggering the message. */
-  renderNoClassView() {
-    const { teacher, userID, currentClass } = this.state;
-    return (
-      <SideMenu
-        isOpen={this.state.isOpen}
-        menu={
-          <LeftNavPane
-            teacher={teacher}
-            userID={userID}
-            classes={this.state.classes}
-            edgeHitWidth={0}
-            navigation={this.props.navigation}
-          />
-        }
-      >
-        <QCView style={screenStyle.container}>
-          <View style={{ flex: 1, width: screenWidth }}>
-            <TopBanner
-              LeftIconName="navicon"
-              LeftOnPress={() => this.setState({ isOpen: true })}
-              isEditingTitle={this.state.isEditing}
-              isEditingPicture={this.state.isEditing}
-              onEditingPicture={newPicture => this.updatePicture(newPicture)}
-              Title={"Quran Connect"}
-              onTitleChanged={newTitle => this.updateTitle(newTitle)}
-              profileImageID={currentClass.classImageID}
-            />
-          </View>
-          <View style={styles.noClassStyle}>
-            <Text style={fontStyles.hugeTextStylePrimaryDark}>
-              {strings.NoClass}
-            </Text>
-
-            <Image
-              source={require("assets/emptyStateIdeas/welcome-girl.png")}
-              style={styles.welcomeImageStyle}
-            />
-
-            <QcActionButton
-              text={strings.AddClassButton}
-              onPress={() => {
-                this.props.navigation.push("AddClass", {
-                  userID: this.state.userID,
-                  teacher: this.state.teacher
-                });
-              }}
-            />
-          </View>
-        </QCView>
-      </SideMenu>
-    );
-  }
-
   renderTopBanner() {
     const { currentClass } = this.state;
     return (
@@ -529,17 +463,24 @@ export class ClassMainScreen extends QcParentScreen {
       );
     }
 
+    const noClassAddedYet = currentClass === -1 || currentClassID === "";
     if (isLoading === true) {
       return (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
+        <View style={styles.spinnerContainer}>
           <LoadingSpinner isVisible={true} />
         </View>
       );
-    } else if (currentClass === -1 || currentClassID === "") {
+    } else if (noClassAddedYet) {
       //---------------------------------no class state
-      return this.renderNoClassView();
+      return (
+        <NoClassScreen
+          teacher={teacher}
+          userID={userID}
+          currentClass={currentClass}
+          isEditing={isEditing}
+          navigation={this.props.navigation}
+        />
+      );
     } else if (currentClass.students.length === 0) {
       //---------------------------------no students state
       return this.renderEmptyClass();
@@ -728,7 +669,12 @@ const styles = StyleSheet.create({
     ...fontStyles.bigTextStylePrimaryDark,
     paddingTop: 10
   },
-  flexWide: { flex: 1, width: screenWidth }
+  flexWide: { flex: 1, width: screenWidth },
+  spinnerContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  }
 });
 
 export default ClassMainScreen;

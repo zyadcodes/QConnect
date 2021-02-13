@@ -687,7 +687,7 @@ class StudentMainScreen extends QcParentScreen {
           <Text
             style={[
               fontStyles.mainTextStyleDarkGrey,
-              { textAlign: "center", textVerticalAlign: "center" }
+              { textAlign: "center", alignItems: "center" }
             ]}
           >
             {strings.Status}
