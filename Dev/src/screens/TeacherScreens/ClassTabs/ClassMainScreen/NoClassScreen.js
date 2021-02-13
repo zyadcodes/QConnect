@@ -8,7 +8,7 @@ import screenStyle from "config/screenStyle";
 import QcActionButton from "components/QcActionButton";
 import fontStyles from "config/fontStyles";
 import strings from "config/strings";
-import { screenWidth } from "config/dimensions";
+import { screenWidth, screenHeight } from "config/dimensions";
 
 /**
  * ------Overview:
@@ -89,6 +89,18 @@ const styles = StyleSheet.create({
   topBannerContainer: {
     flex: 1,
     width: screenWidth
+  },
+  noClassStyle: {
+    alignItems: "center",
+    justifyContent: "flex-start",
+    alignSelf: "center",
+    flex: 2
+  },
+  welcomeImageStyle: {
+    width: 0.73 * screenWidth,
+    height: 0.22 * screenHeight,
+    resizeMode: "contain",
+    marginTop: 30
   }
 });
 export default NoClassScreen;

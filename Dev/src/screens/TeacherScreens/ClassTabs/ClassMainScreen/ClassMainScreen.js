@@ -649,17 +649,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center"
   },
-  noClassStyle: {
-    alignItems: "center",
-    justifyContent: "flex-start",
-    alignSelf: "center",
-    flex: 2
-  },
-  welcomeImageStyle: {
-    width: 0.73 * screenWidth,
-    height: 0.22 * screenHeight,
-    resizeMode: "contain"
-  },
   welcomeGirlImageStyle: {
     width: 0.73 * screenWidth,
     height: 0.22 * screenHeight,
