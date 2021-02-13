@@ -372,10 +372,12 @@ class SelectionPage extends React.Component {
           <ScrollView
             keyboardShouldPersistTaps="handled"
             nestedScrollEnabled={true}
+            accessibilityLabel={"page_wrapper_" + this.state.page}
           >
             <View
               id={this.state.page + "upperWrapper"}
               style={styles.innerContainer}
+              accessibilityLabel={"page_inner_container_" + this.state.page}
             >
               <AssignmentEntryComponent
                 visible={this.state.isSurahSelectionVisible}
@@ -414,7 +416,11 @@ class SelectionPage extends React.Component {
                 />
               )}
 
-              <View id={this.state.page} style={styles.pageContent}>
+              <View
+                id={this.state.page}
+                style={styles.pageContent}
+                accessibilityLabel={"page_" + this.state.page}
+              >
                 {lines !== undefined &&
                   lines.map((line, index) => {
                     if (line.type === "start_sura") {

@@ -33,7 +33,7 @@ namespace QConnectUITestsiOS
                 // code if the app is not included in the solution.
                 //AFF83A7A-A063-4EF2-9371-91EC680DBF99
                 .AppBundle ("/Users/elyasse/Library/Developer/Xcode/DerivedData/QuranConnect-aatvodfrdgdntqbujjjygvlvfbur/Build/Products/Calabash-iphonesimulator/QuranConnect.app")
-                //.DeviceIdentifier("AFF83A7A-A063-4EF2-9371-91EC680DBF99")
+                .DeviceIdentifier("AFF83A7A-A063-4EF2-9371-91EC680DBF99")
                 .EnableLocalScreenshots()
                 .StartApp();
 
@@ -42,6 +42,7 @@ namespace QConnectUITestsiOS
 
         private static readonly string validPhoneNumber = "+12064251111";
         private static readonly string validPwd = "testPwd";
+        private static readonly string testPwd = "test@temp!Pw6";
 
         [Test]
         public void AppLaunches()
@@ -153,7 +154,6 @@ namespace QConnectUITestsiOS
             bootAndGoToWelcomeScreen(userType);
 
             //fill in the entries
-            const string testPwd = "test@temp!Pw6";
             fillCreateAccountEntries(getRandomName(), validPhoneNumber, getRandomEmailAddress(), testPwd, testPwd);
 
             //------ change avatar tests ----------------
@@ -205,23 +205,34 @@ namespace QConnectUITestsiOS
 
         private void fillEvalCardNotes(string notes, string[] tags, bool popOutFlyout)
         {
-            app.WaitForElement("eval_note");
-            enterText("eval_note", notes);
-            int componentIndex = popOutFlyout ? 1 : 0;
+            app.WaitForElement(x => x.Class("RCTUITextView"));
+
+            //failed here
+            enterText("eval_note Write a note", notes);
 
             //tap on Muduud evaluation tag on the card
             foreach (string tag in tags)
             {
-                Tap("eval_tag_" + tag, componentIndex);
-                //check if it becomes selected in the UI
+                app.WaitForElement("eval_tag_" + tag);
 
-                app.WaitForElement("eval_tag_" + tag + "_sel");
+                AppResult[] results = app.Query(x => x.Marked("eval_tag_" + tag));
+                int componentIndex = popOutFlyout ? results.Length - 1 : 0;
+                Tap("eval_tag_" + tag, componentIndex);
+                
+                //check if it becomes selected in the UI
+                app.WaitForElement("eval_tag_" + tag + "_sel", "Timeout waiting for element: " + tag + "_sel", new TimeSpan(0, 2, 0));
             }
 
             //close eval note;
             if (popOutFlyout)
             {
-                Tap("eval_callout_save", componentIndex);
+                Tap("eval_callout_save");
+
+                //new try.. may fail..
+                if(app.Query(x => x.Marked("eval_callout_save")).Length > 0)
+                {
+                    app.Repl();
+                }
             }
 
         }
@@ -452,82 +463,108 @@ namespace QConnectUITestsiOS
 
             app.WaitForElement("Assignments");
             app.Screenshot("teacher_create_account_flow_main");
-            app.Tap("Assignments");
-            app.WaitForElement("surah_title_touchable");
+            
 
-            //tap on surah ToC to change surah
-            app.WaitForElement("surah_title_touchable");
-            app.Tap("surah_title_touchable");
-            app.Screenshot("teacher_create_account_flow_surah_toc");
+            //attendance
+        }
 
-            //type to filter surah
-            app.WaitForElement("qc_text_input");
-            app.EnterText("qc_text_input", "Yus");
+        [Test]
+        public void TestAssignmentEvaluation()
+        {
+            string studentName = "UTest_Manual_Student_cn3";
 
-            //tap on the fitered surah name
-            app.WaitForElement("surahs_toc_item_Yusuf");
-            app.Tap("surahs_toc_item_Yusuf");
-            app.WaitForElement("surah_header_يوسف");
-            app.Screenshot("teacher_create_account_flow_surah");
+            enterUserNamePwd("UTest_bmx136umq1@testing.ignore",testPwd);
 
-            //change page
-            app.ScrollDownTo("touchable_text_page_number_235_footer");
-            app.Tap("touchable_text_page_number_235_footer");
-            app.WaitForElement("text_input_mushaf_page_number");
-            app.ClearText("text_input_mushaf_page_number");
-            app.EnterText("text_input_mushaf_page_number", "111");
+            //AppResult[] results = app.Query(x => x.Marked("Assignments"));
+            //app.Tap(x => x.Marked("Assignments").Index(3));
 
-            app.Tap("touchable_text_go");
-            app.Tap("touchable_text_go");
-            app.WaitForNoElement("touchable_text_go");
-            //verify that page has been changed
-            app.WaitForElement(x => x.Text("المائدة"));
-            app.ScrollDownTo("touchable_text_page_number_111_footer");
+    
+            //app.WaitForElement("surah_title_touchable");
 
-            //swipe pages left and right
+            ////tap on surah ToC to change surah
+            //app.WaitForElement("surah_title_touchable");
+            //Tap("surah_title_touchable");
+            //app.Screenshot("teacher_create_account_flow_surah_toc");
 
-            app.SwipeLeftToRight();
-            app.ScrollDownTo("touchable_text_page_number_112_footer");
-            //swipe right twice
-            app.SwipeRightToLeft();
-            app.SwipeRightToLeft();
-            app.ScrollDownTo("touchable_text_page_number_110_footer");
-            app.ScrollUpTo("surah_title_text");
+            ////type to filter surah
+            //app.WaitForElement("qc_text_input");
+            //app.EnterText("qc_text_input", "Yus");
 
-            //select ayah, verify selection assignment name
-            app.Tap("mushaf_word_15504");
-            app.WaitForElement(x => x.Marked("mwt_15504_sel"));
+            ////tap on the fitered surah name
+            //app.WaitForElement("surahs_toc_item_Yusuf");
+            //Tap("surahs_toc_item_Yusuf");
+            //app.WaitForElement("surah_header_يوسف", "Timeout waiting for element", new TimeSpan(0, 1, 0));
+            //app.Screenshot("teacher_create_account_flow_surah");
+
+            ////change page
+            //app.ScrollDown(b => b.Marked("page_wrapper_235"), ScrollStrategy.Gesture, swipePercentage: 0.67, swipeSpeed: 2000);
+            //app.Tap("touchable_text_page_number_235_footer");
+            //app.WaitForElement("text_input_mushaf_page_number");
+            //app.ClearText("text_input_mushaf_page_number");
+            //app.EnterText("text_input_mushaf_page_number", "111");
+
+            //Tap("touchable_text_go");
+            //Tap("touchable_text_go");
+            ////app.WaitForNoElement("touchable_text_go");
+
+            ////verify that page has been changed
+            ////app.WaitForElement(x => x.Text("المائدة"));
+            //app.ScrollDown(b => b.Marked("page_wrapper_111"), ScrollStrategy.Gesture, swipePercentage: 0.67, swipeSpeed: 2000);
+
+            ////swipe pages left and right
+
+            //app.SwipeLeftToRight();
+            //app.ScrollDown(b => b.Marked("page_wrapper_112"), ScrollStrategy.Gesture, swipePercentage: 0.67, swipeSpeed: 2000);
+            ////swipe right twice
+            //app.SwipeRightToLeft();
+            //app.SwipeRightToLeft();
+            //app.ScrollDown(b => b.Marked("page_wrapper_110"), ScrollStrategy.Gesture, swipePercentage: 0.67, swipeSpeed: 2000);
+            //app.ScrollUp(b => b.Marked("page_wrapper_110"), ScrollStrategy.Gesture, swipePercentage: 0.67, swipeSpeed: 2000);
+
+            ////---- select ayah, verify selection assignment name
+
+            ////if the ayah was already selectred from a previous test, let's clear selection
+            //results = app.Query(x => x.Marked("mwt_15504_sel"));
+            //if (results.Any()) {
+            //    //tap on it to clear selection
+            //    //todo: this is hacky, we should implement an etry point to explicitly clear selection
+            //    Tap("mushaf_word_15504");
+            //}
+
+            //Tap("mushaf_word_15504");
+            //app.WaitForElement(x => x.Marked("mwt_15504_sel"));
             string assignmentName = "Al-Ma'idah (14) p. 110";
 
-            app.Query(x => x.Marked("footer_label_" + assignmentName));
+            //app.Query(x => x.Marked("footer_label_" + assignmentName));
 
-            //select end ayah, verify selection assignment name,
-            app.Tap("mushaf_word_15554");
-            app.WaitForElement("footer_label_Al-Ma'idah (14 to 15) p. 110");
+            ////select end ayah, verify selection assignment name,
+            //Tap("mushaf_word_15554");
+            //app.WaitForElement("footer_label_Al-Ma'idah (14 to 15) p. 110");
 
-            //change selection to one ayah again
-            app.Tap("mushaf_word_15504");
-            app.WaitForElement(x => x.Marked("mwt_15504_sel"));
-            app.Query(x => x.Marked("footer_label_" + assignmentName));
-            app.Screenshot("teacher_create_account_flow_assignment_mushaf");
+            ////change selection to one ayah again
+            //Tap("mushaf_word_15504");
+            //app.WaitForElement(x => x.Marked("mwt_15504_sel"));
+            //app.Query(x => x.Marked("footer_label_" + assignmentName));
+            //app.Screenshot("teacher_create_account_flow_assignment_mushaf");
 
             //save assignment, verify assignment name in student card
-            app.Tap("Save");
+            //Tap("Save");
 
             app.WaitForElement("card_stud_" + studentName + "_assignment_" + assignmentName);
-            app.Tap("card_stud_" + studentName + "_assignment_" + assignmentName);
+            Tap("card_stud_" + studentName + "_assignment_" + assignmentName);
             app.Screenshot("teacher_create_account_flow_main_assigment");
 
             app.WaitForElement("card_stud_" + studentName + "_assignment_" + assignmentName);
-            app.Tap("card_stud_" + studentName + "_assignment_" + assignmentName);
+            Tap("card_stud_" + studentName + "_assignment_" + assignmentName);
 
             //edit assignment
             //save
 
             //grade assignment
-            app.Tap("ellipsis");
+            AppResult[] results = app.Query(x => x.Marked("ellipsis"));
+            app.Tap(x => x.Marked("ellipsis").Index(results.Length - 1));
             app.WaitForElement("btn_evaluate_assignment");
-            app.Tap("btn_evaluate_assignment");
+            Tap("btn_evaluate_assignment");
             app.WaitForElement("btn_save_eval");
 
             //-- enter word level evaluation ----
@@ -536,42 +573,54 @@ namespace QConnectUITestsiOS
             //For some reasons there are two instances of the word item, may be a bug that needs to
             // be investigated later. For now, to get around it, we query how many instances,
             // and tap on the last time since it would be the active one.
-            Tap("mwt_15504_sel", 1);
-
+            Tap("mwt_15504_sel");
             fillEvalCardNotes("Pay attention to harakat", new string[] { "Muduud" }, true);
 
             //--- enter ayah level evaluation --
             //tap on end of ayah
-            app.Tap("end_of_ayah_14");
+            Tap("end_of_ayah_14");
             fillEvalCardNotes("ayah needs some more practice", new string[] { "Memorization", "Ekhfae" }, true);
 
 
             //tap on rating
-            app.Tap("rating_view");
-            app.Tap("btn_expand_notes");
+            Tap("rating_view");
+            Tap("btn_expand_notes");
 
             fillEvalCardNotes("overall recitation was fine. Practice some more the ayah.", new string[] { "Memorization", "Ekhfae", "Makharej" }, false);
             app.Screenshot("teacher_create_account_flow_evaluation");
 
             //save evaluation
-            app.Tap("btn_save_eval");
+            results = app.Query(x => x.Marked("btn_save_eval"));
+            Tap("btn_save_eval");
             //verify profile screen: grade, label, history
 
-            app.ScrollTo("past_assignment_Al-Ma'idah (14) p. 110", "student_profile_container");
+            //app.ScrollTo("past_assignment_Al-Ma'idah (14) p. 110", "student_profile_container");
+            app.ScrollDown(b => b.Marked("student_profile_container"), ScrollStrategy.Gesture, swipePercentage: 0.67, swipeSpeed: 2000);
+
             app.WaitForElement("past_assignment_" + assignmentName);
             app.Screenshot("teacher_create_account_flow_student_profile");
 
-            app.Tap("past_assignment_" + assignmentName);
+            Tap("past_assignment_" + assignmentName);
             //wait for old evaluation page to load
             app.WaitForElement("TopBannerMiddleTitle");
             app.WaitForElement(x => x.Marked("mwt_15504_sel"));
-
-            //attendance
         }
-
+           
         private void Tap(string label, int itemIndex)
         {
             app.Tap(c => c.Marked(label).Index(itemIndex));
+        }
+
+        private void Tap(string label)
+        {
+            AppResult[] results = app.Query(x => x.Marked(label));
+            Tap(label, results.Length - 1); //tap the last instance
+
+            //
+            /*
+             * Xamarin.UITest.Query.AppResult[] results = app.Query(x => x.Marked("mushaf_word_15504"));
+                app.Tap(c => c.Marked("mushaf_word_15504").Index(results.Length - 1));
+             */
         }
     }
 }
