@@ -13,13 +13,13 @@ import {
 import StudentMultiAssignmentsCard from "components/StudentMultiAssignmentsCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages";
-import LoadingSpinner from "../../../components/LoadingSpinner";
+import LoadingSpinner from "../../../../components/LoadingSpinner";
 import strings from "config/strings";
 import QcParentScreen from "screens/QcParentScreen";
 import QcActionButton from "components/QcActionButton";
 import FirebaseFunctions from "config/FirebaseFunctions";
 import TopBanner from "components/TopBanner";
-import LeftNavPane from "../LeftNavPane";
+import LeftNavPane from "../../LeftNavPane";
 import SideMenu from "react-native-side-menu";
 import QCView from "components/QCView";
 import screenStyle from "config/screenStyle";
