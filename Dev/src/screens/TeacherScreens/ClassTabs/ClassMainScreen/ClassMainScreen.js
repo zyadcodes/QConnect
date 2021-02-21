@@ -331,112 +331,6 @@ export class ClassMainScreen extends QcParentScreen {
     );
   }
 
-  renderStudentSection(
-    sectionTitle,
-    sectionIcon,
-    sectionIconType,
-    studentsList,
-    sectionColor,
-    sectionBackgroundColor
-  ) {
-    const { currentClass, currentClassID, isEditing, userID } = this.state;
-
-    return (
-      <View>
-        <View style={styles.studentSectionContainer}>
-          <Icon
-            name={sectionIcon}
-            type={sectionIconType}
-            color={sectionColor}
-          />
-          <Text
-            style={[
-              { marginLeft: screenWidth * 0.017 },
-              fontStyles.mainTextStyleDarkRed,
-              { color: sectionColor }
-            ]}
-          >
-            {sectionTitle}
-          </Text>
-        </View>
-        <FlatList
-          data={studentsList}
-          keyExtractor={item => item.name} // fix, should be item.id (add id to classes)
-          renderItem={({ item }) => (
-            <StudentMultiAssignmentsCard
-              key={item.ID}
-              studentName={item.name}
-              profilePic={studentImages.images[item.profileImageID]}
-              currentAssignments={item.currentAssignments}
-              onPress={() =>
-                this.props.navigation.push("TeacherStudentProfile", {
-                  userID: userID,
-                  studentID: item.ID,
-                  currentClass: currentClass,
-                  classID: currentClassID
-                })
-              }
-              onAssignmentPress={assignmentIndex => {
-                if (assignmentIndex < 0) {
-                  //go to the screen to a new assignment
-                  this.props.navigation.push("MushafAssignmentScreen", {
-                    newAssignment: true,
-                    popOnClose: true,
-                    onSaveAssignment: this.updateStateWithNewAssignmentInfo.bind(
-                      this
-                    ),
-                    isTeacher: true,
-                    assignToAllClass: false,
-                    userID: userID,
-                    classID: currentClassID,
-                    studentID: item.ID,
-                    currentClass,
-                    imageID: item.profileImageID
-                  });
-                } else {
-                  //go to the passed in assignment
-                  let assignment = item.currentAssignments[assignmentIndex];
-                  this.props.navigation.push("MushafAssignmentScreen", {
-                    isTeacher: true,
-                    assignToAllClass: false,
-                    popOnClose: true,
-                    onSaveAssignment: this.updateStateWithNewAssignmentInfo.bind(
-                      this
-                    ),
-                    userID: userID,
-                    classID: currentClassID,
-                    studentID: item.ID,
-                    currentClass,
-                    assignmentLocation: assignment.location,
-                    assignmentType: assignment.type,
-                    assignmentName: assignment.name,
-                    assignmentIndex: assignmentIndex,
-                    newAssignment: false,
-                    imageID: item.profileImageID
-                  });
-                }
-              }}
-              background={sectionBackgroundColor}
-              comp={
-                isEditing === true ? (
-                  <Icon
-                    name="user-times"
-                    size={PixelRatio.get() * 9}
-                    type="font-awesome"
-                    color={colors.primaryDark}
-                  />
-                ) : null
-              }
-              compOnPress={() => {
-                this.removeStudent(item.ID);
-              }}
-            />
-          )}
-        />
-      </View>
-    );
-  }
-
   //-----------------------------------------------------------------------------------------
   // render main screen
   //-----------------------------------------------------------------------------------------
@@ -518,60 +412,13 @@ export class ClassMainScreen extends QcParentScreen {
       );
     } else {
       //---------------------------------steady state (class has students)---------------------------------
-      //studentNeedHelp: students with any assignment with current status === NeedHelp
-      let studentsNeedHelp = [];
-
-      //studentsReady: students with any assignment with current status === Ready
-      //or for old versions support, student object isReady === true
-      let studentsReady = [];
-
-      //studentsWorkingOnIt: students with any assignment with current status === WorkingOnIt
-      let studentsWorkingOnIt = [];
-
-      //studentsNotStarted: students with any assignment with current status === NotStarted
-      let studentsNotStarted = [];
-
-      //studentsWithNoAssignments: students with empty currentAssignments
-      let studentsWithNoAssignments = [];
-
-      currentClass.students.map(student => {
-        if (
-          student.currentAssignments &&
-          student.currentAssignments.some(
-            assignment => assignment.isReadyEnum === "NEED_HELP"
-          )
-        ) {
-          studentsNeedHelp.push(student);
-        } else if (
-          student.currentAssignments.some(
-            assignment => assignment.isReadyEnum === "READY"
-          ) ||
-          (!student.isReadyEnum && student.isReady === true)
-        ) {
-          studentsReady.push(student);
-        } else if (
-          student.currentAssignments.some(
-            assignment => assignment.isReadyEnum === "WORKING_ON_IT"
-          ) ||
-          (!student.isReadyEnum && student.isReady === false)
-        ) {
-          studentsWorkingOnIt.push(student);
-        } else if (
-          student.currentAssignments &&
-          student.currentAssignments.some(
-            assignment =>
-              assignment.isReadyEnum === "NOT_STARTED" ||
-              assignment.isReadyEnum === undefined
-          )
-        ) {
-          studentsNotStarted.push(student);
-        } else if (
-          !student.currentAssignments ||
-          student.currentAssignments.length === 0
-        ) {
-          studentsWithNoAssignments.push(student);
-        }
-      });
+      let {
+        studentsNeedHelp,
+        studentsReady,
+        studentsWorkingOnIt,
+        studentsNotStarted,
+        studentsWithNoAssignments
+      } = this.getStudentsByStatus(currentClass);
 
       return (
         <SideMenu
@@ -654,6 +501,75 @@ export class ClassMainScreen extends QcParentScreen {
         </SideMenu>
       );
     }
+  }
+
+  //--------- getStudentsByStatus -----------------------------
+  // Returns the list of students classified by their assignment
+  // status, ie: ready, no assignment yet, etc..
+  //------------------------------------------------------------
+  getAssignmentByStatus(currentClass) {
+    //studentNeedHelp: students with any assignment with current status === NeedHelp
+    let studentsNeedHelp = [];
+
+    //studentsReady: students with any assignment with current status === Ready
+    //or for old versions support, student object isReady === true
+    let studentsReady = [];
+
+    //studentsWorkingOnIt: students with any assignment with current status === WorkingOnIt
+    let studentsWorkingOnIt = [];
+
+    //studentsNotStarted: students with any assignment with current status === NotStarted
+    let studentsNotStarted = [];
+
+    //studentsWithNoAssignments: students with empty currentAssignments
+    let studentsWithNoAssignments = [];
+
+    currentClass.students.map(student => {
+      if (
+        student.currentAssignments &&
+        student.currentAssignments.some(
+          assignment => assignment.isReadyEnum === "NEED_HELP"
+        )
+      ) {
+        studentsNeedHelp.push(student);
+      } else if (
+        student.currentAssignments.some(
+          assignment => assignment.isReadyEnum === "READY"
+        ) ||
+        (!student.isReadyEnum && student.isReady === true)
+      ) {
+        studentsReady.push(student);
+      } else if (
+        student.currentAssignments.some(
+          assignment => assignment.isReadyEnum === "WORKING_ON_IT"
+        ) ||
+        (!student.isReadyEnum && student.isReady === false)
+      ) {
+        studentsWorkingOnIt.push(student);
+      } else if (
+        student.currentAssignments &&
+        student.currentAssignments.some(
+          assignment =>
+            assignment.isReadyEnum === "NOT_STARTED" ||
+            assignment.isReadyEnum === undefined
+        )
+      ) {
+        studentsNotStarted.push(student);
+      } else if (
+        !student.currentAssignments ||
+        student.currentAssignments.length === 0
+      ) {
+        studentsWithNoAssignments.push(student);
+      }
+    });
+
+    return {
+      studentsNeedHelp,
+      studentsReady,
+      studentsWorkingOnIt,
+      studentsNotStarted,
+      studentsWithNoAssignments
+    };
   }
 }
 
