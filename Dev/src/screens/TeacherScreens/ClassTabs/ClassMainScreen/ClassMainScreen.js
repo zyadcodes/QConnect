@@ -32,6 +32,7 @@ import ErrorComponent from "components/ErrorComponent";
 import { ASSIGNMENT_DELETED } from "utils/consts";
 import TouchableText from "components/TouchableText";
 import NoClassScreen from "./NoClassScreen";
+import EmptyClassScreen from "./EmptyClassScreen";
 
 export class ClassMainScreen extends QcParentScreen {
   state = {
@@ -448,7 +449,10 @@ export class ClassMainScreen extends QcParentScreen {
       isEditing,
       userID,
       showError,
-      error
+      error,
+      isOpen,
+      classes,
+      classInviteCode
     } = this.state;
 
     if (showError === true) {
@@ -483,7 +487,20 @@ export class ClassMainScreen extends QcParentScreen {
       );
     } else if (currentClass.students.length === 0) {
       //---------------------------------no students state
-      return this.renderEmptyClass();
+      return <EmptyClassScreen 
+      teacher = {teacher}
+      isOpen = {isOpen}
+      userID = {userID}
+      classes = {classes}
+      navigation = {this.props.navigation}
+      isEditing = {isEditing}
+      setIsOpen = {(flag) => {this.setState({isOpen: flag})}}
+      updateTitle = {this.updateTitle}
+      updatePicture = {this.updatePicture}
+      currentClass = {currentClass}
+      currentClassID = {currentClassID}
+      classInviteCode = {classInviteCode}
+      />;
     } else {
       //---------------------------------steady state (class has students)---------------------------------
       //studentNeedHelp: students with any assignment with current status === NeedHelp
