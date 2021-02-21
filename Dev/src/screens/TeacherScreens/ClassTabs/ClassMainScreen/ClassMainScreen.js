@@ -455,6 +455,10 @@ export class ClassMainScreen extends QcParentScreen {
       classInviteCode
     } = this.state;
 
+    //----- If there is an error, show the error message
+    // this is the screen with the person holding a wire
+    // and explaining the error
+    //------------------------------------------------
     if (showError === true) {
       return (
         <ErrorComponent
@@ -467,7 +471,10 @@ export class ClassMainScreen extends QcParentScreen {
       );
     }
 
+    // flag holding whether the teacher didn't add any class yet
     const noClassAddedYet = currentClass === -1 || currentClassID === "";
+
+    // if we are still loading data, show spinner
     if (isLoading === true) {
       return (
         <View style={styles.spinnerContainer}>
@@ -475,7 +482,9 @@ export class ClassMainScreen extends QcParentScreen {
         </View>
       );
     } else if (noClassAddedYet) {
-      //---------------------------------no class state
+      //---------------------------------
+      // if teacher didn't add any class yet, show screen asking them to add a class
+      //------------------------------
       return (
         <NoClassScreen
           teacher={teacher}
@@ -486,21 +495,27 @@ export class ClassMainScreen extends QcParentScreen {
         />
       );
     } else if (currentClass.students.length === 0) {
-      //---------------------------------no students state
-      return <EmptyClassScreen 
-      teacher = {teacher}
-      isOpen = {isOpen}
-      userID = {userID}
-      classes = {classes}
-      navigation = {this.props.navigation}
-      isEditing = {isEditing}
-      setIsOpen = {(flag) => {this.setState({isOpen: flag})}}
-      updateTitle = {this.updateTitle}
-      updatePicture = {this.updatePicture}
-      currentClass = {currentClass}
-      currentClassID = {currentClassID}
-      classInviteCode = {classInviteCode}
-      />;
+      //---------------------------------
+      // if teacher didn't add any class yet, show screen asking them to add a class
+      //------------------------------
+      return (
+        <EmptyClassScreen
+          teacher={teacher}
+          isOpen={isOpen}
+          userID={userID}
+          classes={classes}
+          navigation={this.props.navigation}
+          isEditing={isEditing}
+          setIsOpen={flag => {
+            this.setState({ isOpen: flag });
+          }}
+          updateTitle={this.updateTitle}
+          updatePicture={this.updatePicture}
+          currentClass={currentClass}
+          currentClassID={currentClassID}
+          classInviteCode={classInviteCode}
+        />
+      );
     } else {
       //---------------------------------steady state (class has students)---------------------------------
       //studentNeedHelp: students with any assignment with current status === NeedHelp
