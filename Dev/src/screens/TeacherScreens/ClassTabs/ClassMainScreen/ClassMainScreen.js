@@ -1,38 +1,24 @@
 /* eslint-disable comma-dangle */
 import React from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  FlatList,
-  View,
-  Text,
-  Image,
-  PixelRatio,
-  Alert
-} from "react-native";
-import StudentMultiAssignmentsCard from "components/StudentMultiAssignmentsCard";
+import { ScrollView, StyleSheet, View, Alert } from "react-native";
 import colors from "config/colors";
-import studentImages from "config/studentImages";
 import LoadingSpinner from "../../../../components/LoadingSpinner";
 import strings from "config/strings";
 import QcParentScreen from "screens/QcParentScreen";
-import QcActionButton from "components/QcActionButton";
 import FirebaseFunctions from "config/FirebaseFunctions";
 import TopBanner from "components/TopBanner";
 import LeftNavPane from "../../LeftNavPane";
 import SideMenu from "react-native-side-menu";
-import QCView from "components/QCView";
-import screenStyle from "config/screenStyle";
 import fontStyles from "config/fontStyles";
-import { Icon } from "react-native-elements";
 import { screenHeight, screenWidth } from "config/dimensions";
-import Toast, { DURATION } from "react-native-easy-toast";
+import Toast from "react-native-easy-toast";
 import themeStyles from "config/themeStyles";
 import ErrorComponent from "components/ErrorComponent";
 import { ASSIGNMENT_DELETED } from "utils/consts";
 import TouchableText from "components/TouchableText";
 import NoClassScreen from "./NoClassScreen";
 import EmptyClassScreen from "./EmptyClassScreen";
+import StudentSection from "./StudentsSection";
 
 export class ClassMainScreen extends QcParentScreen {
   state = {
@@ -115,9 +101,6 @@ export class ClassMainScreen extends QcParentScreen {
   }
 
   updateStateWithNewAssignmentInfo(
-    newAssignment,
-    index,
-    currentClass,
     showToast,
     assignedToAllClass,
     notificationType
@@ -163,7 +146,7 @@ export class ClassMainScreen extends QcParentScreen {
     );
   }
   //to write implemntation of the function, updates class name
-  updateTitle(newTitle) {
+  updateTitle() {
     this.setState({ titleHasChanged: true });
     this.setState({
       currentClass: { ...this.state.currentClass, name: newTitle }
@@ -183,91 +166,6 @@ export class ClassMainScreen extends QcParentScreen {
   //render subcomponents
   //----------------------------
 
-  /**
-   * ------Overview:
-   * The Page will display a message that will redirect the teacher to the
-   * add student page if the class does not contain any students.
-   *
-   * ------Components:
-   * We are using a touchable opacity with a large message telling the
-   * teacher that there are no students in the class, and a smaller message
-   * telling the teacher to click the text to add students.
-   *
-   * ------Conditonal:
-   * The conditional will check to see if the length of the students array is 0,
-   * if it is, then there is no students in the class, and thus the class is empty,
-   * triggering the message. */
-  renderEmptyClass() {
-    const {
-      teacher,
-      userID,
-      currentClass,
-      currentClassID,
-      classInviteCode
-    } = this.state;
-
-    return (
-      <SideMenu
-        isOpen={this.state.isOpen}
-        menu={
-          <LeftNavPane
-            teacher={teacher}
-            userID={userID}
-            classes={this.state.classes}
-            edgeHitWidth={0}
-            navigation={this.props.navigation}
-          />
-        }
-      >
-        <QCView style={screenStyle.container}>
-          <View style={styles.flexWide}>
-            <TopBanner
-              LeftIconName="navicon"
-              LeftOnPress={() => this.setState({ isOpen: true })}
-              isEditingTitle={this.state.isEditing}
-              isEditingPicture={this.state.isEditing}
-              Title={currentClass.name}
-              onTitleChanged={newTitle => this.updateTitle(newTitle)}
-              onEditingPicture={newPicture => this.updatePicture(newPicture)}
-              profileImageID={currentClass.classImageID}
-              RightIconName="edit"
-              RightOnPress={() =>
-                this.props.navigation.push("ShareClassCode", {
-                  classInviteCode,
-                  currentClassID,
-                  userID: this.state.userID,
-                  currentClass
-                })
-              }
-            />
-          </View>
-          <View style={styles.emptyClassStyle}>
-            <Text style={fontStyles.hugeTextStylePrimaryDark}>
-              {strings.EmptyClass}
-            </Text>
-
-            <Image
-              source={require("assets/emptyStateIdeas/welcome-girl.png")}
-              style={styles.welcomeGirlImageStyle}
-            />
-
-            <QcActionButton
-              text={strings.AddStudentButton}
-              onPress={() =>
-                this.props.navigation.push("ShareClassCode", {
-                  classInviteCode,
-                  currentClassID,
-                  userID: this.state.userID,
-                  currentClass
-                })
-              }
-            />
-          </View>
-        </QCView>
-      </SideMenu>
-    );
-  }
-
   renderTopBanner() {
     const { currentClass } = this.state;
     return (
@@ -279,7 +177,7 @@ export class ClassMainScreen extends QcParentScreen {
         RightTextName={this.state.isEditing === true ? strings.Done : null}
         isEditingTitle={this.state.isEditing}
         isEditingPicture={this.state.isEditing}
-        onTitleChanged={newTitle => this.updateTitle(newTitle)}
+        onTitleChanged={newTitle => this.updateTitle()}
         onEditingPicture={newPicture => this.updatePicture(newPicture)}
         profileImageID={currentClass.classImageID}
         RightOnPress={() => {
@@ -447,56 +345,97 @@ export class ClassMainScreen extends QcParentScreen {
           >
             <View>{this.renderTopBanner()}</View>
             {isEditing && this.showClassEditHeader()}
-            {//render students who need help with their assignments
-            studentsNeedHelp.length > 0 &&
-              this.renderStudentSection(
-                strings.NeedHelp,
-                "issue-opened",
-                "octicon",
-                studentsNeedHelp,
-                colors.darkRed,
-                colors.red
+            {/*render students who need help with their assignments*/}
+            <StudentSection
+              sectionTitle={strings.NeedHelp}
+              sectionIcon="issue-opened"
+              sectionIconType="octicon"
+              studentsList={studentsNeedHelp}
+              sectionColor={colors.darkRed}
+              sectionBackgroundColor={colors.red}
+              currentClass={currentClass}
+              currentClassID={currentClassID}
+              isEditing={isEditing}
+              userID={userID}
+              navigation={this.props.navigation}
+              removeStudent={this.removeStudent.bind(this)}
+              updateAssignment={this.updateStateWithNewAssignmentInfo.bind(
+                this
               )}
-            {//render students who are ready for tasmee'
-            studentsReady.length > 0 &&
-              this.renderStudentSection(
-                strings.Ready,
-                "check-circle-outline",
-                "material-community",
-                studentsReady,
-                colors.darkGreen,
-                colors.green
+            />
+            {/*render students who are ready for tasmee'*/}
+            <StudentSection
+              sectionTitle={strings.Ready}
+              sectionIcon="check-circle-outline"
+              sectionIconType="material-community"
+              studentsList={studentsReady}
+              sectionColor={colors.darkGreen}
+              sectionBackgroundColor={colors.green}
+              currentClass={currentClass}
+              currentClassID={currentClassID}
+              isEditing={isEditing}
+              userID={userID}
+              navigation={this.props.navigation}
+              removeStudent={this.removeStudent.bind(this)}
+              updateAssignment={this.updateStateWithNewAssignmentInfo.bind(
+                this
               )}
-            {//render section of students who don't have an active assignment yet
-            studentsWithNoAssignments.length > 0 &&
-              this.renderStudentSection(
-                strings.NeedAssignment,
-                "pencil-plus-outline",
-                "material-community",
-                studentsWithNoAssignments,
-                colors.primaryDark,
-                colors.white
+            />
+            {/*render section of students who don't have an active assignment yet*/}
+            <StudentSection
+              sectionTitle={strings.NeedAssignment}
+              sectionIcon="pencil-plus-outline"
+              sectionIconType="material-community"
+              studentsList={studentsWithNoAssignments}
+              sectionColor={colors.primaryDark}
+              sectionBackgroundColor={colors.white}
+              currentClass={currentClass}
+              currentClassID={currentClassID}
+              isEditing={isEditing}
+              userID={userID}
+              navigation={this.props.navigation}
+              removeStudent={this.removeStudent.bind(this)}
+              updateAssignment={this.updateStateWithNewAssignmentInfo.bind(
+                this
               )}
-            {//Remder section of students who haven't started on their homework yet
-            studentsNotStarted.length > 0 &&
-              this.renderStudentSection(
-                strings.NotStarted,
-                "bookmark-off-outline",
-                "material-community",
-                studentsNotStarted,
-                colors.primaryDark,
-                colors.white
+            />
+            {/*Render section of students who haven't started on their homework yet */}
+            <StudentSection
+              sectionTitle={strings.NotStarted}
+              sectionIcon="bookmark-off-outline"
+              sectionIconType="material-community"
+              studentsList={studentsNotStarted}
+              sectionColor={colors.primaryDark}
+              sectionBackgroundColor={colors.white}
+              currentClass={currentClass}
+              currentClassID={currentClassID}
+              isEditing={isEditing}
+              userID={userID}
+              navigation={this.props.navigation}
+              removeStudent={this.removeStudent.bind(this)}
+              updateAssignment={this.updateStateWithNewAssignmentInfo.bind(
+                this
               )}
-            {//Remder section of students who haven't started on their homework yet
-            studentsWorkingOnIt.length > 0 &&
-              this.renderStudentSection(
-                strings.WorkingOnIt,
-                "update",
-                "material-community",
-                studentsWorkingOnIt,
-                colors.primaryDark,
-                colors.white
+            />
+
+            {/*Remder section of students who haven't started on their homework yet */}
+            <StudentSection
+              sectionTitle={strings.WorkingOnIt}
+              sectionIcon="update"
+              sectionIconType="material-community"
+              studentsList={studentsWorkingOnIt}
+              sectionColor={colors.primaryDark}
+              sectionBackgroundColor={colors.white}
+              currentClass={currentClass}
+              currentClassID={currentClassID}
+              isEditing={isEditing}
+              userID={userID}
+              navigation={this.props.navigation}
+              removeStudent={this.removeStudent.bind(this)}
+              updateAssignment={this.updateStateWithNewAssignmentInfo.bind(
+                this
               )}
+            />
           </ScrollView>
         </SideMenu>
       );
@@ -507,7 +446,7 @@ export class ClassMainScreen extends QcParentScreen {
   // Returns the list of students classified by their assignment
   // status, ie: ready, no assignment yet, etc..
   //------------------------------------------------------------
-  getAssignmentByStatus(currentClass) {
+  getStudentsByStatus(currentClass) {
     //studentNeedHelp: students with any assignment with current status === NeedHelp
     let studentsNeedHelp = [];
 
@@ -585,18 +524,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     paddingRight: screenWidth * 0.025
   },
-  studentSectionContainer: {
-    alignItems: "center",
-    marginLeft: screenWidth * 0.017,
-    flexDirection: "row",
-    paddingTop: screenHeight * 0.025
-  },
-  emptyClassStyle: {
-    flex: 2,
-    justifyContent: "flex-start",
-    alignItems: "center",
-    alignSelf: "center"
-  },
+
   welcomeGirlImageStyle: {
     width: 0.73 * screenWidth,
     height: 0.22 * screenHeight,
