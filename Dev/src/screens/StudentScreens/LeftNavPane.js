@@ -14,21 +14,21 @@ import {
 import colors from 'config/colors';
 import classImages from 'config/classImages';
 import { SafeAreaView } from 'react-navigation';
-import QcDrawerItem from 'components/QcDrawerItem';
+import QcDrawerItem from 'components/QcDrawerItem/QcDrawerItem';
 import studentImages from 'config/studentImages';
 import strings from "config/strings";
 import QcParentScreen from 'screens/QcParentScreen';
 import { Input } from "react-native-elements";
 import { screenHeight, screenWidth } from "config/dimensions";
-import QcActionButton from "components/QcActionButton";
+import QcActionButton from "components/QcActionButton/QcActionButton";
 import FirebaseFunctions from "config/FirebaseFunctions";
-import LoadingSpinner from "components/LoadingSpinner";
-import QCView from "components/QCView";
+import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
+import QCView from "QCView/QCView";
 import screenStyle from "config/screenStyle";
 import CodeInput from 'react-native-confirmation-code-input';
 import fontStyles from 'config/fontStyles';
 
-class LeftNavPane extends QcParentScreen {
+class LeftNavPane extends React.Component {
   state = {
     student: this.props.student,
     userID: this.props.userID,

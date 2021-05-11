@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ImageBackground, StyleSheet } from 'react-native';
 import colors from 'config/colors';
 import Ayah from './Basmalah';
-import LoadingSpinner from 'components/LoadingSpinner';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import { getPageTextWbW, getPageText } from '../ServiceActions/getQuranContent';
 import Word from './Word';
 import EndOfAyah from './EndOfAyah';

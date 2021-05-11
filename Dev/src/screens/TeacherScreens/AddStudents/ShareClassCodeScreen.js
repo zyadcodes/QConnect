@@ -8,9 +8,9 @@ import fontStyles from 'config/fontStyles';
 import screenStyle from 'config/screenStyle';
 import { screenHeight, screenWidth } from 'config/dimensions';
 import strings from 'config/strings';
-import QcActionButton from "components/QcActionButton";
+import QcActionButton from "components/QcActionButton/QcActionButton";
 import FirebaseFunctions from 'config/FirebaseFunctions';
-import QCView from 'components/QCView';
+import QCView from 'QCView/QCView';
 import colors from 'config/colors';
 import {Icon} from 'react-native-elements'
 

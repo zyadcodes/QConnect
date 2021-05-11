@@ -9,18 +9,18 @@ import {
   PixelRatio,
   Alert,
 } from "react-native";
-import StudentMultiAssignmentsCard from "components/StudentMultiAssignmentsCard";
+import StudentMultiAssignmentsCard from "components/StudentMultiAssignmentsCard/StudentMultiAssignmentsCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages";
-import LoadingSpinner from "../../../components/LoadingSpinner";
+import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 import strings from "config/strings";
 import QcParentScreen from "screens/QcParentScreen";
-import QcActionButton from "components/QcActionButton";
+import QcActionButton from "components/QcActionButton/QcActionButton";
 import FirebaseFunctions from "config/FirebaseFunctions";
-import TopBanner from "components/TopBanner";
+import TopBanner from "components/TopBanner/TopBanner";
 import LeftNavPane from "../LeftNavPane";
 import SideMenu from "react-native-side-menu";
-import QCView from "components/QCView";
+import QCView from "QCView/QCView";
 import screenStyle from "config/screenStyle";
 import fontStyles from "config/fontStyles";
 import { Icon } from "react-native-elements";
@@ -28,7 +28,7 @@ import { screenHeight, screenWidth } from "config/dimensions";
 import Toast, { DURATION } from "react-native-easy-toast";
 import themeStyles from 'config/themeStyles'
 
-export class ClassMainScreen extends QcParentScreen {
+class ClassMainScreen extends React.Component {
   state = {
     isLoading: true,
     teacher: "",

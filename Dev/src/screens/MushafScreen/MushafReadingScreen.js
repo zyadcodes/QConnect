@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { View } from "react-native";
 import MushafScreen from "./MushafScreen";
-import LoadingSpinner from "components/LoadingSpinner";
+import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 import studentImages from "config/studentImages";
 import Sound from 'react-native-sound';
 import KeepAwake from 'react-native-keep-awake';

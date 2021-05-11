@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image } from 'react-native';
-import QcActionButton from 'components/QcActionButton';
+import QcActionButton from 'components/QcActionButton/QcActionButton';
 import fontStyles from 'config/fontStyles';
 import strings from 'config/strings';
 import OfflineEmptyStateStyle from './OfflineEmptyStateStyle';

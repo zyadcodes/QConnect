@@ -5,12 +5,12 @@ import colors from 'config/colors';
 import strings from 'config/strings';
 import QcParentScreen from "screens/QcParentScreen";
 import FirebaseFunctions from 'config/FirebaseFunctions';
-import QCView from 'components/QCView';
+import QCView from 'QCView/QCView';
 import screenStyle from 'config/screenStyle';
 import fontStyles from 'config/fontStyles';
 import { screenWidth, screenHeight } from 'config/dimensions';
 
-export default class CreditsScreen extends QcParentScreen {
+export default class CreditsScreen extends React.Component {
 
     componentDidMount() {
 

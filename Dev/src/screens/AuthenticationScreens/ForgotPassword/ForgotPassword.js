@@ -1,10 +1,10 @@
 // This file is the ForgotPassword screen where users will be able to reset their passwords
 import React, { useState, useEffect } from 'react';
 import { Text, View, TextInput } from 'react-native';
-import QCView from 'components/QCView';
+import QCView from 'QCView/QCView';
 import strings from 'config/strings';
 import colors from 'config/colors';
-import QcActionButton from 'components/QcActionButton';
+import QcActionButton from 'components/QcActionButton/QcActionButton';
 import { Alert } from 'react-native';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import screenStyle from 'config/screenStyle';

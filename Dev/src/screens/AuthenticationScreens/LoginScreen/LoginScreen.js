@@ -1,14 +1,14 @@
 // This is the screen that users will be able to log in from using email and password
 import React, { useState, useEffect } from 'react';
 import { View, ImageBackground, Alert } from 'react-native';
-import Form from 'components/Form';
-import ButtonSubmit from 'components/ButtonSubmit';
-import SignupSection from 'components/SignupSection';
-import QcAppBanner from 'components/QcAppBanner';
+import Form from 'components/Form/Form';
+import ButtonSubmit from 'components/ButtonSubmit/ButtonSubmit';
+import SignupSection from 'components/SignupSection/SignupSection';
+import QcAppBanner from 'components/QcAppBanner/QcAppBanner';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import strings from 'config/strings';
-import LoadingSpinner from 'components/LoadingSpinner';
-import QCView from 'components/QCView';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
+import QCView from 'QCView/QCView';
 import screenStyle from 'config/screenStyle';
 import styles from './LoginScreenStyle';
 import BG_IMAGE from 'assets/images/read_child_bg.jpg';

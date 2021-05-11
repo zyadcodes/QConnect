@@ -16,13 +16,13 @@ import allSettingsScreen from './SettingsScreen/allSettingsScreen';
 import creditsScreen from './SettingsScreen/creditsScreen';
 import ProfileScreen from './ProfileScreen';
 import AddManualStudentsScreen from './TeacherScreens/AddStudents/AddManualStudentsScreen';
-import StudentMainScreen from './StudentScreens/StudentMainScreen';
+import StudentMainScreen from './StudentScreens/StudentMainScreen/StudentMainScreen';
 import ClassTabsNavigator from './TeacherScreens/ClassTabs/ClassTabsNavigator';
 import StudentProfileScreen from './TeacherScreens/ClassTabs/StudentProfileScreen';
 import EvaluationPage from './Evaluation/EvaluationPage';
 import ShareClassCodeScreen from './TeacherScreens/AddStudents/ShareClassCodeScreen';
 import strings from 'config/strings';
-import TopBanner from 'components/TopBanner';
+import TopBanner from 'components/TopBanner/TopBanner';
 
 //The routes containing all the screens & their navigation options
 routeConfig = {

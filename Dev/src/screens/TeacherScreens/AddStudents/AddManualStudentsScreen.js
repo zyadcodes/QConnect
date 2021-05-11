@@ -16,17 +16,17 @@ import {
   PixelRatio,
   Platform,
 } from "react-native";
-import StudentCard from "components/StudentCard";
+import StudentCard from "components/StudentCard/StudentCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages";
 import { Icon } from 'react-native-elements';
 import strings from "config/strings";
-import QcActionButton from 'components/QcActionButton';
-import ImageSelectionModal from 'components/ImageSelectionModal';
-import ImageSelectionRow from 'components/ImageSelectionRow';
+import QcActionButton from 'components/QcActionButton/QcActionButton';
+import ImageSelectionModal from 'components/ImageSelectionModal/ImageSelectionModal';
+import ImageSelectionRow from 'components/ImageSelectionRow/ImageSelectionRow';
 import FirebaseFunctions from 'config/FirebaseFunctions';
-import LoadingSpinner from 'components/LoadingSpinner';
-import QCView from 'components/QCView';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
+import QCView from 'QCView/QCView';
 import fontStyles from "config/fontStyles";
 import { screenHeight, screenWidth } from 'config/dimensions';
 

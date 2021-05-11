@@ -10,26 +10,26 @@ import {
   Alert,
 } from 'react-native';
 import Toast, { DURATION } from 'react-native-easy-toast';
-import StudentCard from 'components/StudentCard';
-import QcActionButton from 'components/QcActionButton';
+import StudentCard from 'components/StudentCard/StudentCard';
+import QcActionButton from 'components/QcActionButton/QcActionButton';
 import colors from 'config/colors';
 import studentImages from 'config/studentImages';
 import strings from 'config/strings';
 import QcParentScreen from 'screens/QcParentScreen';
 import FirebaseFunctions from 'config/FirebaseFunctions';
-import LoadingSpinner from 'components/LoadingSpinner';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import LeftNavPane from '../LeftNavPane';
-import TopBanner from 'components/TopBanner';
+import TopBanner from 'components/TopBanner/TopBanner';
 import SideMenu from 'react-native-side-menu';
-import QCView from 'components/QCView';
+import QCView from 'QCView/QCView';
 import screenStyle from 'config/screenStyle';
 import { screenHeight, screenWidth } from 'config/dimensions';
 import fontStyles from 'config/fontStyles';
-import DailyTracker from 'components/DailyTracker';
+import DailyTracker from 'components/DailyTracker/DailyTracker';
 import moment from 'moment';
 import { Icon } from 'react-native-elements';
 
-export class ClassAttendanceScreen extends QcParentScreen {
+export class ClassAttendanceScreen extends React.Component {
   state = {
     isLoading: true,
     currentClass: '',

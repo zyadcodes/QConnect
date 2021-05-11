@@ -1,7 +1,7 @@
 //Screen which will provide all of the possible settings for the user to click on
 import React from "react";
 import { View, StyleSheet, ScrollView, PixelRatio } from "react-native";
-import LoadingSpinner from "components/LoadingSpinner";
+import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 import colors from "config/colors";
 import QcParentScreen from 'screens/QcParentScreen';
 import SelectionPage from "./Components/SelectionPage";
@@ -13,7 +13,7 @@ import { screenHeight, screenWidth } from "config/dimensions";
 // swiping screens back and forth changes the loaded pages but keeps the set to 3 screens and the loaded page as the middle screen
 // this way a user can always swipe left and right
 // Todo: currently the first and last screen of the mushhaf have a hack since they deviate from this paradigm. Need to fix later on.
-export default class MushafScreen extends QcParentScreen {
+export default class MushafScreen extends React.Component {
   //------------------------ initial state ----------------------------
   lastPage = 604;
   state = {

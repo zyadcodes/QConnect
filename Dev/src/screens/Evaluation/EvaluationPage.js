@@ -19,14 +19,14 @@ import ActionButton from "react-native-action-button";
 import strings from "config/strings";
 import studentImages from "config/studentImages";
 import QcParentScreen from "screens/QcParentScreen";
-import FlowLayout from "components/FlowLayout";
-import TopBanner from "components/TopBanner";
+import FlowLayout from "components/FlowLayout/FlowLayout";
+import TopBanner from "components/TopBanner/TopBanner";
 import FirebaseFunctions from "config/FirebaseFunctions";
-import LoadingSpinner from "components/LoadingSpinner";
+import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 import fontStyles from "config/fontStyles";
 import { screenWidth, screenHeight } from "config/dimensions";
 import AudioPlayer from "components/AudioPlayer/AudioPlayer";
-import Header, { headerHeight } from "components/Header";
+import Header, { headerHeight } from "components/Header/Header";
 import MushafScreen from "screens/MushafScreen/MushafScreen";
 import KeepAwake from "react-native-keep-awake";
 import { noSelection } from "screens/MushafScreen/Helpers/consts";
@@ -35,11 +35,11 @@ import {
   compareOrder,
   toNumberString
 } from "../MushafScreen/Helpers/AyahsOrder";
-import DailyTracker, { getTodaysDateString } from "components/DailyTracker";
+import DailyTracker, { getTodaysDateString } from "components/DailyTracker/DailyTracker";
 
 const isAndroid = Platform.OS === "android";
 
-export class EvaluationPage extends QcParentScreen {
+export class EvaluationPage extends React.Component {
   //Default improvement areas
   areas = [
     strings.Memorization,

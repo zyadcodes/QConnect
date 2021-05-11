@@ -5,7 +5,7 @@ import colors from 'config/colors';
 import { Icon } from 'react-native-elements';
 import ClassMainScreen from './ClassMainScreen';
 import ClassAttendanceScreen from './ClassAttendanceScreen';
-import strings from '../../../../config/strings';
+import strings from 'config/strings';
 import MushafAssignmentScreen from '../../MushafScreen/MushafAssignmentScreen';
 import { screenHeight } from 'config/dimensions';
 

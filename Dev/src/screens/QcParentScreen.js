@@ -1,4 +1,4 @@
-import FontLoadingComponent from 'components/FontLoadingComponent';
+import FontLoadingComponent from 'components/FontLoadingComponent/FontLoadingComponent';
 
 class QcParentScreen extends FontLoadingComponent {
 

@@ -2,18 +2,18 @@ import React from "react";
 import { View, TextInput, Image, StyleSheet, Alert } from "react-native";
 import colors from "config/colors";
 import classImages from "config/classImages";
-import QcActionButton from "components/QcActionButton";
+import QcActionButton from "components/QcActionButton/QcActionButton";
 import QcParentScreen from "screens/QcParentScreen";
-import ImageSelectionModal from "components/ImageSelectionModal"
-import LoadingSpinner from 'components/LoadingSpinner';
+import ImageSelectionModal from "components/ImageSelectionModal/ImageSelectionModal"
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import strings from 'config/strings';
-import TopBanner from 'components/TopBanner';
-import QCView from 'components/QCView';
+import TopBanner from 'components/TopBanner/TopBanner';
+import QCView from 'QCView/QCView';
 import screenStyle from 'config/screenStyle';
 import { screenHeight, screenWidth } from 'config/dimensions';
 
-export class AddClassScreen extends QcParentScreen {
+export class AddClassScreen extends React.Component {
 
   //----------------------- state -------------------------------------
   state = {

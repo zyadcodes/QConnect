@@ -1,6 +1,6 @@
 //Component represents a top banner that will have three components within it,
 //an icon, a title, and another icon that will all be equally seperated
-import FontLoadingComponent from 'components/FontLoadingComponent';
+import FontLoadingComponent from 'components/FontLoadingComponent/FontLoadingComponent';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -12,7 +12,7 @@ import {
   Image,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
-import StudentSelectorModal from 'components/StudentSelector/StudentSelectorModal';
+import StudentSelectorModal from 'components/StudentSelector/StudentSelectorModal/StudentSelectorModal';
 import colors from 'config/colors';
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
@@ -20,7 +20,7 @@ import studentImages from 'config/studentImages';
 import classImages from 'config/classImages';
 import strings from "config/strings";
 
-class PageHeader extends FontLoadingComponent {
+class PageHeader extends React.Component {
   state = {
     selectorModalVisible: false,
 

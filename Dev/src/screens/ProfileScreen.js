@@ -9,25 +9,25 @@ import {
   ScrollView,
 } from 'react-native';
 import Toast, { DURATION } from 'react-native-easy-toast';
-import QcActionButton from 'components/QcActionButton';
-import TouchableText from 'components/TouchableText';
+import QcActionButton from 'components/QcActionButton/QcActionButton';
+import TouchableText from 'components/TouchableText/TouchableText';
 import teacherImages from 'config/teacherImages';
 import studentImages from 'config/studentImages';
 import colors from 'config/colors';
-import TopBanner from 'components/TopBanner';
-import ImageSelectionModal from 'components/ImageSelectionModal';
-import TeacherInfoEntries from 'components/TeacherInfoEntries';
+import TopBanner from 'components/TopBanner/TopBanner';
+import ImageSelectionModal from 'components/ImageSelectionModal/ImageSelectionModal';
+import TeacherInfoEntries from 'components/TeacherInfoEntries/TeacherInfoEntries';
 import strings from 'config/strings';
 import QcParentScreen from 'screens/QcParentScreen';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import SideMenu from 'react-native-side-menu';
 import TeacherLeftNavPane from '../screens/TeacherScreens/LeftNavPane';
 import StudentLeftNavPane from '../screens/StudentScreens/LeftNavPane';
-import QCView from 'components/QCView';
+import QCView from 'QCView/QCView';
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
 
-export class ProfileScreen extends QcParentScreen {
+export class ProfileScreen extends React.Component {
   //Sets the current screen for firebase analytics
   componentDidMount() {
     if (this.props.navigation.state.params.isTeacher === true) {

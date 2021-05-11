@@ -11,12 +11,12 @@ import {
 	LayoutAnimation,
 	Platform,
 } from 'react-native';
-import QcActionButton from 'components/QcActionButton';
-import ImageSelectionRow from 'components/ImageSelectionRow';
-import ImageSelectionModal from 'components/ImageSelectionModal';
-import TeacherInfoEntries from 'components/TeacherInfoEntries';
+import QcActionButton from 'components/QcActionButton/QcActionButton';
+import ImageSelectionRow from 'components/ImageSelectionRow/ImageSelectionRow';
+import ImageSelectionModal from 'components/ImageSelectionModal/ImageSelectionModal';
+import TeacherInfoEntries from 'components/TeacherInfoEntries/TeacherInfoEntries';
 import strings from 'config/strings';
-import FadeInView from '../../../components/FadeInView';
+import FadeInView from 'components/FadeInView/FadeInView';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import { Icon } from 'react-native-elements';
 import fontStyles from 'config/fontStyles';

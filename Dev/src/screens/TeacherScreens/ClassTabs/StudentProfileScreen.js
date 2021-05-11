@@ -10,23 +10,23 @@ import {
   TouchableOpacity
 } from 'react-native';
 import colors from 'config/colors';
-import QcActionButton from 'components/QcActionButton';
+import QcActionButton from 'components/QcActionButton/QcActionButton';
 import { Rating, ListItem } from 'react-native-elements';
 import strings from 'config/strings';
 import studentImages from 'config/studentImages';
 import QcParentScreen from 'screens/QcParentScreen';
 import FirebaseFunctions from 'config/FirebaseFunctions';
-import LoadingSpinner from 'components/LoadingSpinner';
+import LoadingSpinner from 'components/LoadingSpinner/LoadingSpinner';
 import fontStyles from 'config/fontStyles';
 import { screenHeight, screenWidth } from 'config/dimensions';
 import { LineChart } from 'react-native-chart-kit';
 import { Icon } from 'react-native-elements';
-import DailyTracker from "components/DailyTracker";
+import DailyTracker from "components/DailyTracker/DailyTracker";
 import Toast, { DURATION } from "react-native-easy-toast";
 import themeStyles from 'config/themeStyles'
 
 
-class StudentProfileScreen extends QcParentScreen {
+class StudentProfileScreen extends React.Component {
   state = {
     studentID: this.props.navigation.state.params.studentID,
     currentClass: this.props.navigation.state.params.currentClass,
