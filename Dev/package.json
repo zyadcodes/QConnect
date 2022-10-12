@@ -25,7 +25,7 @@
     "react-native-autocomplete-search": "^1.0.8",
     "react-native-calendars": "^1.265.0",
     "react-native-chart-kit": "^4.4.1",
-    "react-native-code-push": "^6.2.1",
+    "react-native-code-push": "^7.0.5",
     "react-native-confirmation-code-input": "^1.0.4",
     "react-native-custom-picker": "^0.4.0",
     "react-native-device-info": "^6.0.1",
